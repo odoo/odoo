@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_address_extended
-# 
+#
 # Translators:
 # Martin Trigaux, 2019
 # Chris Egal <sodaswed@web.de>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_address_extended
@@ -52,8 +52,6 @@ msgstr "Tür"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
 msgid "Door Number"
 msgstr "Hausnummer"
 
@@ -62,14 +60,19 @@ msgstr "Hausnummer"
 msgid ""
 "Format to use for streets belonging to this country.\n"
 "\n"
-"You can use the python-style string pattern with all the fields of the street (for example, use '%(street_name)s, %(street_number)s' if you want to display the street name, followed by a comma and the house number)\n"
+"You can use the python-style string pattern with all the fields of the "
+"street (for example, use '%(street_name)s, %(street_number)s' if you want to "
+"display the street name, followed by a comma and the house number)\n"
 "%(street_name)s: the name of the street\n"
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
 "Format für Straßen, die zu diesem Land gehören.\n"
 "\n"
-"Sie können das pythonartige String-Muster mit allen Feldern der Straße verwenden z.B. , benutze '%(street_name)s, %(street_number)s' wenn Sie den Straßennamen, gefolgt von einem Komma und der Hausnummer, anzeigen möchten.)\n"
+"Sie können das pythonartige String-Muster mit allen Feldern der Straße "
+"verwenden z.B. , benutze '%(street_name)s, %(street_number)s' wenn Sie den "
+"Straßennamen, gefolgt von einem Komma und der Hausnummer, anzeigen "
+"möchten.)\n"
 "%(street_name)s: Der Name von der Starße\n"
 "%(street_number)s: Die Hausnummer\n"
 "%(street_number2)s: Die Türnummer"
@@ -82,8 +85,6 @@ msgstr "Haus"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
 msgid "House Number"
 msgstr "Hausnummer"
 
@@ -112,8 +113,7 @@ msgid "Street format..."
 msgstr "Straßenformat..."
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:64
-#: code:addons/base_address_extended/models/base_address_extended.py:112
+#: code:addons/base_address_extended/models/res_partner.py:0
 #, python-format
 msgid "Unrecognized field %s in street format."
 msgstr "Unerkanntes Feld %s in Straßenformat"

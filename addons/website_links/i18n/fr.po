@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_links
-# 
+#
 # Translators:
 # e2f <projects@e2f.com>, 2019
 # bb76cd9ac0cb7e20167a14728edb858b, 2019
@@ -14,19 +14,19 @@
 # Magali <mch@openerp.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:12+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_links
@@ -52,10 +52,8 @@ msgstr "Nombre de clics"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
+msgid "<span title=\"Track this page to count clicks\">Link Tracker</span>"
 msgstr ""
-"<span title=\"Surveiller cette page pour compter les clics\">Surveiller "
-"cette page</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -167,15 +165,15 @@ msgstr "Suivi de liens"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
+"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
+"\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the medium "
+"used to share your link. It might be an email, or a Facebook Ads for "
+"instance.\"/>"
 msgstr ""
-"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Définit "
-"le support utilisé pour partager votre lien. Ce peut être un email, ou une "
-"publicité Facebook par exemple.\"/>"
+"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
+"\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Définit le support "
+"utilisé pour partager votre lien. Ce peut être un email, ou une publicité "
+"Facebook par exemple.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -186,6 +184,13 @@ msgstr "Le plus cliqué"
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Newest"
 msgstr "Le plus récent"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#, python-format
+msgid "No data"
+msgstr "Pas de données"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -204,14 +209,13 @@ msgstr ""
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
+"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
+"\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the source "
+"from which your traffic will come from, Facebook or Twitter for instance.\"/>"
 msgstr ""
-"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Définit "
-"la source d'où proviendra votre trafic, Facebook ou Twitter par exemple.\"/>"
+"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
+"\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Définit la source "
+"d'où proviendra votre trafic, Facebook ou Twitter par exemple.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -232,12 +236,10 @@ msgstr "Statistiques"
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "The code cannot be left empty"
-msgstr ""
+msgstr "Le code ne peut pas être laissé vide"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "There is no data to show"
@@ -249,17 +251,17 @@ msgstr "Pas de données à afficher"
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "This code is already taken"
-msgstr ""
+msgstr "Ce code est déjà pris"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Those trackers can be used in Google Analytics to track clicks and visitors,"
-" or in Odoo reports to track opportunities and related revenues."
+"Those trackers can be used in Google Analytics to track clicks and visitors, "
+"or in Odoo reports to track opportunities and related revenues."
 msgstr ""
-"Ces mouchards peuvent être utilisés dans Google Analytics afin de surveiller"
-" les clics et les visiteurs, ou dans les rapports Odoo afin de surveiller "
-"les opportunités et revenus liés."
+"Ces mouchards peuvent être utilisés dans Google Analytics afin de surveiller "
+"les clics et les visiteurs, ou dans les rapports Odoo afin de surveiller les "
+"opportunités et revenus liés."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -284,7 +286,7 @@ msgstr "Indéfini"
 #: code:addons/website_links/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage Statistics"
-msgstr ""
+msgstr "Statistiques de Visite de page Web"
 
 #. module: website_links
 #. openerp-web
@@ -341,8 +343,8 @@ msgstr "ex.: Moteur de recherche, Page web, ..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "e.g. https://www.odoo.com/page/contactus"
-msgstr "ex.: https://www.odoo.com/page/contactus"
+msgid "e.g. https://www.odoo.com/contactus"
+msgstr ""
 
 #. module: website_links
 #. openerp-web

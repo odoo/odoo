@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-02-11 13:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
@@ -19,9 +19,14 @@ msgstr ""
 
 #. module: google_spreadsheet
 #. openerp-web
-#: code:addons/google_spreadsheet/static/src/xml/addtospreadsheet.xml:3
+#: code:addons/google_spreadsheet/static/src/xml/addtospreadsheet.xml:0
 #, python-format
 msgid "Add to Google Spreadsheet"
+msgstr ""
+
+#. module: google_spreadsheet
+#: model:ir.model,name:google_spreadsheet.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: google_spreadsheet
@@ -30,9 +35,9 @@ msgid "Google Drive templates config"
 msgstr ""
 
 #. module: google_spreadsheet
-#: model_terms:ir.actions.act_window,help:google_spreadsheet.action_ir_attachment_google_spreadsheet_tree
 #: model:ir.actions.act_window,name:google_spreadsheet.action_ir_attachment_google_spreadsheet_tree
 #: model:ir.ui.menu,name:google_spreadsheet.menu_reporting_dashboard_google_spreadsheets
+#: model_terms:ir.actions.act_window,help:google_spreadsheet.action_ir_attachment_google_spreadsheet_tree
 #: model_terms:ir.ui.view,arch_db:google_spreadsheet.view_ir_attachment_google_spreadsheet_form
 #: model_terms:ir.ui.view,arch_db:google_spreadsheet.view_ir_attachment_google_spreadsheet_tree
 msgid "Google Spreadsheets"
@@ -43,3 +48,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:google_spreadsheet.view_ir_attachment_google_spreadsheet_tree
 msgid "Name"
 msgstr "பெயர்"
+
+#. module: google_spreadsheet
+#: model_terms:ir.ui.view,arch_db:google_spreadsheet.res_config_settings_view_form
+msgid ""
+"Please use the settings of Google Drive\n"
+"                            on the left or above."
+msgstr ""
+
+#. module: google_spreadsheet
+#: model:ir.model.fields,help:google_spreadsheet.field_res_config_settings__google_drive_uri_copy
+msgid "The URL to generate the authorization code from Google"
+msgstr ""
+
+#. module: google_spreadsheet
+#: model:ir.model.fields,field_description:google_spreadsheet.field_res_config_settings__google_drive_uri_copy
+msgid "URI Copy"
+msgstr ""

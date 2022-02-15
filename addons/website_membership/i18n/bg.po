@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2015-09-08 10:38+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -23,12 +23,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External link"
+"\" title=\"External link\"/>"
+msgstr ""
+
+#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "All"
 msgstr "Всички"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:88
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "Всички Държави"
@@ -39,12 +46,17 @@ msgid "Associations"
 msgstr ""
 
 #. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid "Close"
+msgstr ""
+
+#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Find a business partner"
 msgstr ""
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:130
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "Free Members"
 msgstr ""
@@ -55,10 +67,16 @@ msgid "Location"
 msgstr "Местонахождение"
 
 #. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.footer_custom
+#: code:addons/website_membership/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_membership.index
+#, python-format
 msgid "Members"
 msgstr "Членове"
+
+#. module: website_membership
+#: model:ir.model,name:website_membership.model_membership_membership_line
+msgid "Membership Line"
+msgstr ""
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
@@ -71,16 +89,11 @@ msgid "Our Members Directory"
 msgstr ""
 
 #. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
-msgid "World Map"
-msgstr "Карта на света"
-
-#. module: website_membership
-#: model:ir.model,name:website_membership.model_membership_membership_line
-msgid "membership.membership_line"
+#: model:ir.model,name:website_membership.model_website
+msgid "Website"
 msgstr ""
 
 #. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.index
-msgid "pull-left"
-msgstr "дръпни в ляво"
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid "World Map"
+msgstr "Карта на света"

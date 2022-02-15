@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_address_extended
-# 
+#
 # Translators:
 # Martin Trigaux, 2019
 # Silvija Butko <silvija.butko@gmail.com>, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
@@ -53,8 +55,6 @@ msgstr "Butas"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
 msgid "Door Number"
 msgstr "Buto numeris"
 
@@ -63,14 +63,18 @@ msgstr "Buto numeris"
 msgid ""
 "Format to use for streets belonging to this country.\n"
 "\n"
-"You can use the python-style string pattern with all the fields of the street (for example, use '%(street_name)s, %(street_number)s' if you want to display the street name, followed by a comma and the house number)\n"
+"You can use the python-style string pattern with all the fields of the "
+"street (for example, use '%(street_name)s, %(street_number)s' if you want to "
+"display the street name, followed by a comma and the house number)\n"
 "%(street_name)s: the name of the street\n"
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
 "Adresų formatas, naudojamas šioje šalyje.\n"
 "\n"
-"Galite naudoti python tipo struktūrą gatvės laukams (pavyzdžiui, naudokite '%(street_name)s, %(street_number)s' norėdami atvaizduoti gatvės pavadinimą ir namo numerį, atskirtus kableliu)\n"
+"Galite naudoti python tipo struktūrą gatvės laukams (pavyzdžiui, naudokite "
+"'%(street_name)s, %(street_number)s' norėdami atvaizduoti gatvės pavadinimą "
+"ir namo numerį, atskirtus kableliu)\n"
 "%(street_name)s: gatvės pavadinimas\n"
 "%(street_number)s: namo numeris\n"
 "%(street_number2)s: buto numeris"
@@ -83,8 +87,6 @@ msgstr "Namas"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
 msgid "House Number"
 msgstr "Namo numeris"
 
@@ -113,8 +115,7 @@ msgid "Street format..."
 msgstr "Adreso formatas..."
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:64
-#: code:addons/base_address_extended/models/base_address_extended.py:112
+#: code:addons/base_address_extended/models/res_partner.py:0
 #, python-format
 msgid "Unrecognized field %s in street format."
 msgstr "Neatpažintas laukas %s adreso formate."

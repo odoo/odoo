@@ -1,32 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_iap_lead_website
-# 
+#
 # Translators:
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Charles Vervaecke <cvk@odoo.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid ""
-"1 credit is consumed per visitor matching the website traffic conditions and"
-" whose company can be identified.<br/>"
+"1 credit is consumed per visitor matching the website traffic conditions and "
+"whose company can be identified.<br/>"
 msgstr ""
 "1 credit wordt gebruikt per bezoeker die voldoet aan de website trafiek "
 "condities en waar het bedrijf voor gevonden kan worden. <br/>"
@@ -314,7 +314,7 @@ msgid "Number of Contacts"
 msgstr "Aantal contacten"
 
 #. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__leads_count
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_count
 msgid "Number of Generated Leads"
 msgstr "Aantal gegenereerde leads"
 
@@ -326,20 +326,19 @@ msgstr "Aantal gegenereerde opportuniteiten"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__country_ids
 msgid ""
-"Only visitors of following countries will be converted into "
-"leads/opportunities (using GeoIP)."
+"Only visitors of following countries will be converted into leads/"
+"opportunities (using GeoIP)."
 msgstr ""
-"Alleen bezoekers van de volgende landen worden geconverteerd in "
-"leads/prospects (gebruik makende van GeoIP)."
+"Alleen bezoekers van de volgende landen worden geconverteerd in leads/"
+"prospects (gebruik makende van GeoIP)."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__state_ids
 msgid ""
-"Only visitors of following states will be converted into "
-"leads/opportunities."
+"Only visitors of following states will be converted into leads/opportunities."
 msgstr ""
-"Alleen bezoekers van de volgende provincies worden geconverteerd in "
-"leads/prospects."
+"Alleen bezoekers van de volgende provincies worden geconverteerd in leads/"
+"prospects."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_type__opportunity
@@ -355,6 +354,12 @@ msgstr "Prospect gegevens"
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Opportunity Generation Conditions"
 msgstr "Condities genereren opportuniteiten"
+
+#. module: crm_iap_lead_website
+#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
+#, python-format
+msgid "Opportunity created by Odoo Lead Generation"
+msgstr "Opportuniteit aangemaakt via de Odoo Lead generatie"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__other_role_ids
@@ -379,8 +384,8 @@ msgid ""
 "with /page"
 msgstr ""
 "Regex om website-pagina's bij te houden. Laat leeg om de hele website te "
-"volgen, of / om de startpagina te volgen. Voorbeeld: /page* om alle pagina's"
-" te volgen die beginnen met /page"
+"volgen, of / om de startpagina te volgen. Voorbeeld: /page* om alle pagina's "
+"te volgen die beginnen met /page"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__website_id
@@ -456,18 +461,18 @@ msgid ""
 "leads/opportunities. One credit is consumed per tracked contact."
 msgstr ""
 "Dit is het aantal contacten om bij te houden of hun rol en senioriteit "
-"overeenkomen met uw criteria. Hun details worden getoond in de historiek van"
-" de gegenereerde leads/prospects. Er wordt één credit per gevolgd contact "
+"overeenkomen met uw criteria. Hun details worden getoond in de historiek van "
+"de gegenereerde leads/prospects. Er wordt één credit per gevolgd contact "
 "gebruikt."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__suffix
 msgid ""
-"This will be appended in name of generated lead so you can identify "
-"lead/opportunity is generated with this rule"
+"This will be appended in name of generated lead so you can identify lead/"
+"opportunity is generated with this rule"
 msgstr ""
-"Dit wordt toegevoegd aan de naam van de gegenereerde lead, zodat u deze "
-"lead/prospects gemakkelijk kunt identificeren"
+"Dit wordt toegevoegd aan de naam van de gegenereerde lead, zodat u deze lead/"
+"prospects gemakkelijk kunt identificeren"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__to_process

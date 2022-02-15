@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-30 18:44+0000\n"
+"POT-Creation-Date: 2020-03-30 18:43+0000\n"
 "PO-Revision-Date: 2020-03-30 18:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -40,8 +41,8 @@ msgid ""
 msgstr ""
 "Análogo a account.move.type de Odoo pero con más opciones, permitiendo "
 "identificar el tipo de documento sobre el que estamos trabajando. (no "
-"solamente relativo a account.move, podría ser relativo a otros modelos, como"
-" por ejemplo stock.picking)"
+"solamente relativo a account.move, podría ser relativo a otros modelos, como "
+"por ejemplo stock.picking)"
 
 #. module: l10n_latam_invoice_document
 #: model_terms:ir.ui.view,arch_db:l10n_latam_invoice_document.view_document_type_filter
@@ -154,13 +155,13 @@ msgstr "ID (identificación)"
 #: model:ir.model.fields,help:l10n_latam_invoice_document.field_account_journal__l10n_latam_use_documents
 #: model:ir.model.fields,help:l10n_latam_invoice_document.field_account_move__l10n_latam_use_documents
 msgid ""
-"If active: will be using for legal invoicing (invoices, debit/credit notes)."
-" If not set means that will be used to register accounting entries not "
+"If active: will be using for legal invoicing (invoices, debit/credit notes). "
+"If not set means that will be used to register accounting entries not "
 "related to invoicing legal documents. For Example: Receipts, Tax Payments, "
 "Register journal entries"
 msgstr ""
-"Si esta activo: será utilizado para facturación (facturas, notas de débito y"
-" crédito). SI esta desactivado significa que que será usado para registrar "
+"Si esta activo: será utilizado para facturación (facturas, notas de débito y "
+"crédito). SI esta desactivado significa que que será usado para registrar "
 "movimientos contables que no están relacionas con facturación como tal. Por "
 "ejemplo: Recibos, Pagos de Impuestos, Registrar asientos contables"
 
@@ -281,20 +282,20 @@ msgstr "Nombre en Reportes"
 #. module: l10n_latam_invoice_document
 #: model:ir.model.fields,help:l10n_latam_invoice_document.field_l10n_latam_document_type__report_name
 msgid "Name that will be printed in reports, for example \"CREDIT NOTE\""
-msgstr "Nombre que será impreso en los reportes, por ejemplo \"NOTA DE CREDITO\""
+msgstr ""
+"Nombre que será impreso en los reportes, por ejemplo \"NOTA DE CREDITO\""
 
 #. module: l10n_latam_invoice_document
 #: code:addons/l10n_latam_invoice_document/models/account_move.py:0
 #, python-format
 msgid "Please set the document number on the following invoices %s."
-msgstr ""
-"Por favor asigne el número de documento en las siguientes facturas %s."
+msgstr "Por favor asigne el número de documento en las siguientes facturas %s."
 
 #. module: l10n_latam_invoice_document
 #: model:ir.model.fields,help:l10n_latam_invoice_document.field_l10n_latam_document_type__doc_code_prefix
 msgid ""
-"Prefix for Documents Codes on Invoices and Account Moves. For eg. 'FA ' will"
-" build 'FA 0001-0000001' Document Number"
+"Prefix for Documents Codes on Invoices and Account Moves. For eg. 'FA ' will "
+"build 'FA 0001-0000001' Document Number"
 msgstr ""
 "Prefijo para Códigos de Documentos en Facturas y Asientos. Por eje: 'FA ' "
 "será construirá 'FA 0001-0000001' como el numero de documento"
@@ -385,15 +386,16 @@ msgstr "No puedes utilizar el tipo de documento %s en una factura"
 #: code:addons/l10n_latam_invoice_document/models/account_move.py:0
 #, python-format
 msgid "You can not use a %s document type with a refund invoice"
-msgstr ""
-"No puedes utilizar el tipo de documento %s en una factura de reembolso"
+msgstr "No puedes utilizar el tipo de documento %s en una factura de reembolso"
 
 #. module: l10n_latam_invoice_document
 #: code:addons/l10n_latam_invoice_document/wizards/account_move_reversal.py:0
 #, python-format
 msgid ""
-"You can only reverse documents with legal invoicing documents from Latin America one at a time.\n"
+"You can only reverse documents with legal invoicing documents from Latin "
+"America one at a time.\n"
 "Problematic documents: %s"
 msgstr ""
-"Solo puede revertir documentos con documentos de facturación legales de Latino américa de uno en uno.\n"
+"Solo puede revertir documentos con documentos de facturación legales de "
+"Latino américa de uno en uno.\n"
 "Documentos problemáticos:%s"
