@@ -43,11 +43,8 @@
                 <p class="oe_view_nocontent_create">Create the first certificate</p>
             </field>
         </record>
-
-        <menuitem id="menu_l10n_es_tbai_root" name="Spain" sequence="110"
-            groups="account.group_account_manager" parent="account.menu_finance_configuration">
-            <menuitem id="menu_l10n_es_tbai_certificates" name="Certificates (TicketBAI)" sequence="100"
-                action="l10n_es_tbai_certificate_action" groups="account.group_account_manager"/>
-        </menuitem>
+        <menuitem id="menu_l10n_es_tbai_certificates" name="Certificates (TicketBAI)" sequence="101"
+            parent="l10n_es_edi_sii.menu_l10n_es_edi_root" action="l10n_es_tbai_certificate_action"
+            groups="account.group_account_manager"/>
     </data>
 </odoo>
