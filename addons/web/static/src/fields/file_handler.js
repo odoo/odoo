@@ -108,7 +108,6 @@ FileUploader.props = {
     type: { type: String, optional: true },
 };
 FileUploader.template = "web.FileUploader";
-
 FileUploader.nextId = 0;
 
 export class FileDownloader extends Component {

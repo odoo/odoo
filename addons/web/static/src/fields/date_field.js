@@ -25,27 +25,23 @@ export class DateField extends Component {
     }
 }
 
-Object.assign(DateField, {
-    template: "web.DateField",
-    props: {
-        ...standardFieldProps,
-        pickerOptions: { type: Object, optional: true },
-    },
-    defaultProps: {
-        pickerOptions: {},
-    },
-    components: {
-        DatePicker,
-    },
-
-    displayName: _lt("Date"),
-    supportedTypes: ["date", "datetime"],
-
-    convertAttrsToProps(attrs) {
+DateField.template = "web.DateField";
+DateField.props = {
+    ...standardFieldProps,
+    pickerOptions: { type: Object, optional: true },
+};
+DateField.defaultProps = {
+    pickerOptions: {},
+};
+DateField.components = {
+    DatePicker,
+};
+(DateField.displayName = _lt("Date")),
+    (DateField.supportedTypes = ["date", "datetime"]),
+    (DateField.convertAttrsToProps = (attrs) => {
         return {
             pickerOptions: attrs.options.datepicker,
         };
-    },
-});
+    });
 
 registry.category("fields").add("date", DateField);

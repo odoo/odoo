@@ -19,6 +19,7 @@ export class BadgeField extends Component {
         return "";
     }
 }
+
 BadgeField.template = "web.BadgeField";
 
 registry.category("fields").add("badge", BadgeField);

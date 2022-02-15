@@ -26,19 +26,13 @@ export class BooleanToggleField extends Component {
     }
 }
 
-Object.assign(BooleanToggleField, {
-    template: "web.BooleanToggleField",
-    props: {
-        ...standardFieldProps,
-    },
-
-    displayName: _lt("Toggle"),
-    supportedTypes: ["boolean"],
-
-    isEmpty() {
-        return false;
-    },
-    components: { CheckBox },
-});
+BooleanToggleField.template = "web.BooleanToggleField";
+BooleanToggleField.props = {
+    ...standardFieldProps,
+};
+BooleanToggleField.displayName = _lt("Toggle");
+BooleanToggleField.supportedTypes = ["boolean"];
+BooleanToggleField.isEmpty = () => false;
+BooleanToggleField.components = { CheckBox };
 
 registry.category("fields").add("boolean_toggle", BooleanToggleField);

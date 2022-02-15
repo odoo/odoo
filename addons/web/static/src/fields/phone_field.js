@@ -23,14 +23,11 @@ export class PhoneField extends Component {
     }
 }
 
-Object.assign(PhoneField, {
-    template: "web.PhoneField",
-    props: {
-        ...standardFieldProps,
-    },
-
-    displayName: _lt("Phone"),
-    supportedTypes: ["char"],
-});
+PhoneField.template = "web.PhoneField";
+PhoneField.props = {
+    ...standardFieldProps,
+};
+PhoneField.displayName = _lt("Phone");
+PhoneField.supportedTypes = ["char"];
 
 registry.category("fields").add("phone", PhoneField);

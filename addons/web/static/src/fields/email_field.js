@@ -23,14 +23,11 @@ export class EmailField extends Component {
     }
 }
 
-Object.assign(EmailField, {
-    template: "web.EmailField",
-    props: {
-        ...standardFieldProps,
-    },
-
-    displayName: _lt("Email"),
-    supportedTypes: ["char"],
-});
+EmailField.template = "web.EmailField";
+EmailField.props = {
+    ...standardFieldProps,
+};
+EmailField.displayName = _lt("Email");
+EmailField.supportedTypes = ["char"];
 
 registry.category("fields").add("email", EmailField);

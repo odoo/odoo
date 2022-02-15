@@ -29,13 +29,10 @@ export class ColorField extends Component {
     }
 }
 
-Object.assign(ColorField, {
-    template: "web.ColorField",
-    props: {
-        ...standardFieldProps,
-    },
-
-    supportedTypes: ["char"],
-});
+ColorField.template = "web.ColorField";
+ColorField.props = {
+    ...standardFieldProps,
+};
+ColorField.supportedTypes = ["char"];
 
 registry.category("fields").add("color", ColorField);

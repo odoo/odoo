@@ -23,25 +23,19 @@ export class StatInfoField extends Component {
     }
 }
 
-Object.assign(StatInfoField, {
-    template: "web.StatInfoField",
-    props: {
-        ...standardFieldProps,
-        labelField: { type: String, optional: true },
-        noLabel: { type: Boolean, optional: true },
-    },
-
-    supportedTypes: ["float", "integer"],
-
-    isEmpty() {
-        return false;
-    },
-    convertAttrsToProps(attrs) {
-        return {
-            labelField: attrs.options.label_field,
-            noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
-        };
-    },
-});
+StatInfoField.template = "web.StatInfoField";
+StatInfoField.props = {
+    ...standardFieldProps,
+    labelField: { type: String, optional: true },
+    noLabel: { type: Boolean, optional: true },
+};
+StatInfoField.supportedTypes = ["float", "integer"];
+StatInfoField.isEmpty = () => false;
+StatInfoField.convertAttrsToProps = (attrs) => {
+    return {
+        labelField: attrs.options.label_field,
+        noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
+    };
+};
 
 registry.category("fields").add("statinfo", StatInfoField);

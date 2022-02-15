@@ -47,9 +47,8 @@ FloatField.props = {
 FloatField.defaultProps = {
     inputType: "text",
 };
-
 FloatField.isEmpty = () => false;
-FloatField.convertAttrsToProps = function (attrs) {
+FloatField.convertAttrsToProps = (attrs) => {
     return {
         inputType: attrs.type,
         // Sadly, digits param was available as an option and an attr.

@@ -34,24 +34,20 @@ export class UrlField extends Component {
     }
 }
 
-Object.assign(UrlField, {
-    template: "web.UrlField",
-    props: {
-        ...standardFieldProps,
-        placeholder: { type: String, optional: true },
-        text: { type: String, optional: true },
-        websitePath: { type: Boolean, optional: true },
-    },
-
-    displayName: _lt("URL"),
-    supportedTypes: ["char"],
-
-    convertAttrsToProps(attrs) {
-        return {
-            text: attrs.text,
-            websitePath: Boolean(attrs.options.website_path),
-        };
-    },
-});
+UrlField.template = "web.UrlField";
+UrlField.props = {
+    ...standardFieldProps,
+    placeholder: { type: String, optional: true },
+    text: { type: String, optional: true },
+    websitePath: { type: Boolean, optional: true },
+};
+UrlField.displayName = _lt("URL");
+UrlField.supportedTypes = ["char"];
+UrlField.convertAttrsToProps = (attrs) => {
+    return {
+        text: attrs.text,
+        websitePath: Boolean(attrs.options.website_path),
+    };
+};
 
 registry.category("fields").add("url", UrlField);

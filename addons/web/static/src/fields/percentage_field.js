@@ -25,14 +25,11 @@ export class PercentageField extends Component {
     }
 }
 
-Object.assign(PercentageField, {
-    template: "web.PercentageField",
-    props: {
-        ...standardFieldProps,
-    },
-
-    displayName: _lt("Percentage"),
-    supportedTypes: ["integer", "float"],
-});
+PercentageField.template = "web.PercentageField";
+PercentageField.props = {
+    ...standardFieldProps,
+};
+PercentageField.displayName = _lt("Percentage");
+PercentageField.supportedTypes = ["integer", "float"];
 
 registry.category("fields").add("percentage", PercentageField);

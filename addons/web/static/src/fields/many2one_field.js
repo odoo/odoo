@@ -210,43 +210,39 @@ export class Many2OneField extends Component {
         }
     }
 }
-Object.assign(Many2OneField, {
-    template: "web.Many2OneField",
-    props: {
-        ...standardFieldProps,
-        placeholder: { type: String, optional: true },
-        noOpen: { type: Boolean, optional: true },
-        noCreate: { type: Boolean, optional: true },
-        canCreate: { type: Boolean, optional: true },
-        canWrite: { type: Boolean, optional: true },
-        noQuickCreate: { type: Boolean, optional: true },
-        noCreateEdit: { type: Boolean, optional: true },
-        alwaysReload: { type: Boolean, optional: true },
-    },
-    defaultProps: {
-        canCreate: true,
-        canWrite: true,
-    },
-    components: {
-        AutoComplete,
-    },
 
-    displayName: _lt("Many2one"),
-    supportedTypes: ["many2one"],
-
-    convertAttrsToProps(attrs) {
-        return {
-            noOpen: Boolean(attrs.options.no_open),
-            noCreate: Boolean(attrs.options.no_create),
-            canCreate: attrs.can_create && Boolean(JSON.parse(attrs.can_create)),
-            canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
-            noQuickCreate: Boolean(attrs.options.no_quick_create),
-            noCreateEdit: Boolean(attrs.options.no_create_edit),
-            alwaysReload: Boolean(attrs.options.always_reload),
-        };
-    },
-
-    searchLimit: 7,
-});
+Many2OneField.template = "web.Many2OneField";
+Many2OneField.props = {
+    ...standardFieldProps,
+    placeholder: { type: String, optional: true },
+    noOpen: { type: Boolean, optional: true },
+    noCreate: { type: Boolean, optional: true },
+    canCreate: { type: Boolean, optional: true },
+    canWrite: { type: Boolean, optional: true },
+    noQuickCreate: { type: Boolean, optional: true },
+    noCreateEdit: { type: Boolean, optional: true },
+    alwaysReload: { type: Boolean, optional: true },
+};
+Many2OneField.defaultProps = {
+    canCreate: true,
+    canWrite: true,
+};
+Many2OneField.components = {
+    AutoComplete,
+};
+Many2OneField.displayName = _lt("Many2one");
+Many2OneField.supportedTypes = ["many2one"];
+Many2OneField.convertAttrsToProps = (attrs) => {
+    return {
+        noOpen: Boolean(attrs.options.no_open),
+        noCreate: Boolean(attrs.options.no_create),
+        canCreate: attrs.can_create && Boolean(JSON.parse(attrs.can_create)),
+        canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
+        noQuickCreate: Boolean(attrs.options.no_quick_create),
+        noCreateEdit: Boolean(attrs.options.no_create_edit),
+        alwaysReload: Boolean(attrs.options.always_reload),
+    };
+};
+Many2OneField.searchLimit = 7;
 
 registry.category("fields").add("many2one", Many2OneField);

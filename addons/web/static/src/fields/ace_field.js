@@ -93,23 +93,19 @@ export class AceField extends Component {
     }
 }
 
-Object.assign(AceField, {
-    template: "web.AceField",
-    props: {
-        ...standardFieldProps,
-        mode: { type: String, optional: true },
-    },
-    defaultProps: {
-        mode: "qweb",
-    },
-
-    supportedTypes: ["text"],
-
-    convertAttrsToProps(attrs) {
-        return {
-            mode: attrs.options.mode,
-        };
-    },
-});
+AceField.template = "web.AceField";
+AceField.props = {
+    ...standardFieldProps,
+    mode: { type: String, optional: true },
+};
+AceField.defaultProps = {
+    mode: "qweb",
+};
+AceField.supportedTypes = ["text"];
+AceField.convertAttrsToProps = (attrs) => {
+    return {
+        mode: attrs.options.mode,
+    };
+};
 
 registry.category("fields").add("ace", AceField);

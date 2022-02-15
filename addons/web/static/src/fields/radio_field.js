@@ -49,27 +49,20 @@ export class RadioField extends Component {
     }
 }
 
-Object.assign(RadioField, {
-    template: "web.RadioField",
-    props: {
-        ...standardFieldProps,
-        horizontal: { type: Boolean, optional: true },
-    },
-
-    displayName: _lt("Radio"),
-    supportedTypes: ["many2one", "selection"],
-
-    isEmpty() {
-        return false;
-    },
-    convertAttrsToProps(attrs) {
-        return {
-            horizontal: Boolean(attrs.options.horizontal),
-        };
-    },
-
-    nextId: 0,
-});
+RadioField.template = "web.RadioField";
+RadioField.props = {
+    ...standardFieldProps,
+    horizontal: { type: Boolean, optional: true },
+};
+RadioField.displayName = _lt("Radio");
+RadioField.supportedTypes = ["many2one", "selection"];
+RadioField.isEmpty = () => false;
+RadioField.convertAttrsToProps = (attrs) => {
+    return {
+        horizontal: Boolean(attrs.options.horizontal),
+    };
+};
+RadioField.nextId = 0;
 
 registry.category("fields").add("radio", RadioField);
 

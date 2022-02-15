@@ -77,8 +77,7 @@ PdfViewerField.props = {
     previewImage: { type: String, optional: true },
 };
 PdfViewerField.template = "web.PdfViewerField";
-
-PdfViewerField.convertAttrsToProps = function (attrs) {
+PdfViewerField.convertAttrsToProps = (attrs) => {
     return {
         filename: attrs.filename,
         previewImage: attrs.options.preview_image,

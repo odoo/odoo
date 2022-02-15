@@ -36,14 +36,11 @@ export class RemainingDaysField extends Component {
     }
 }
 
-Object.assign(RemainingDaysField, {
-    template: "web.RemainingDaysField",
-    props: {
-        ...standardFieldProps,
-    },
-
-    displayName: _lt("Remaining Days"),
-    supportedTypes: ["date", "datetime"],
-});
+RemainingDaysField.template = "web.RemainingDaysField";
+RemainingDaysField.props = {
+    ...standardFieldProps,
+};
+RemainingDaysField.displayName = _lt("Remaining Days");
+RemainingDaysField.supportedTypes = ["date", "datetime"];
 
 registry.category("fields").add("remaining_days", RemainingDaysField);

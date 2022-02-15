@@ -80,8 +80,7 @@ BinaryField.defaultProps = {
     acceptedFileExtensions: "*",
 };
 BinaryField.template = "web.BinaryField";
-
-BinaryField.convertAttrsToProps = function (attrs) {
+BinaryField.convertAttrsToProps = (attrs) => {
     return {
         filename: attrs.filename,
         acceptedFileExtensions: attrs.options.accepted_file_extensions,

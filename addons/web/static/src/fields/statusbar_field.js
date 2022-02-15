@@ -81,31 +81,25 @@ export class StatusBarField extends Component {
     }
 }
 
-Object.assign(StatusBarField, {
-    template: "web.StatusBarField",
-    props: {
-        ...standardFieldProps,
-        clickable: { type: Boolean, optional: true },
-        visibleSelection: { type: Array, optional: true },
-    },
-    components: {
-        Dropdown,
-        DropdownItem,
-    },
-
-    supportedTypes: ["many2one", "selection"],
-
-    isEmpty() {
-        return false;
-    },
-    convertAttrsToProps(attrs) {
-        return {
-            clickable: Boolean(attrs.options.clickable),
-            visibleSelection:
-                attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
-        };
-    },
-});
+StatusBarField.template = "web.StatusBarField";
+StatusBarField.props = {
+    ...standardFieldProps,
+    clickable: { type: Boolean, optional: true },
+    visibleSelection: { type: Array, optional: true },
+};
+StatusBarField.components = {
+    Dropdown,
+    DropdownItem,
+};
+StatusBarField.supportedTypes = ["many2one", "selection"];
+StatusBarField.isEmpty = () => false;
+StatusBarField.convertAttrsToProps = (attrs) => {
+    return {
+        clickable: Boolean(attrs.options.clickable),
+        visibleSelection:
+            attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
+    };
+};
 
 registry.category("fields").add("statusbar", StatusBarField);
 

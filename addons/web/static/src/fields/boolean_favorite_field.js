@@ -12,28 +12,21 @@ export class BooleanFavoriteField extends Component {
     }
 }
 
-Object.assign(BooleanFavoriteField, {
-    template: "web.BooleanFavoriteField",
-    props: {
-        ...standardFieldProps,
-        noLabel: { type: Boolean, optional: true },
-    },
-    defaultProps: {
-        noLabel: false,
-    },
-
-    displayName: _lt("Favorite"),
-    supportedTypes: ["boolean"],
-
-    isEmpty() {
-        return false;
-    },
-
-    convertAttrsToProps(attrs) {
-        return {
-            noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
-        };
-    },
-});
+BooleanFavoriteField.template = "web.BooleanFavoriteField";
+BooleanFavoriteField.props = {
+    ...standardFieldProps,
+    noLabel: { type: Boolean, optional: true },
+};
+BooleanFavoriteField.defaultProps = {
+    noLabel: false,
+};
+BooleanFavoriteField.displayName = _lt("Favorite");
+BooleanFavoriteField.supportedTypes = ["boolean"];
+BooleanFavoriteField.isEmpty = () => false;
+BooleanFavoriteField.convertAttrsToProps = (attrs) => {
+    return {
+        noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
+    };
+};
 
 registry.category("fields").add("boolean_favorite", BooleanFavoriteField);

@@ -58,20 +58,14 @@ export class SelectionField extends Component {
     }
 }
 
-Object.assign(SelectionField, {
-    template: "web.SelectionField",
-    props: {
-        ...standardFieldProps,
-        placeholder: { type: String, optional: true },
-    },
-
-    displayName: _lt("Selection"),
-    supportedTypes: ["many2one", "selection"],
-
-    isEmpty(record, fieldName) {
-        return record.data[fieldName] === false;
-    },
-});
+SelectionField.template = "web.SelectionField";
+SelectionField.props = {
+    ...standardFieldProps,
+    placeholder: { type: String, optional: true },
+};
+SelectionField.displayName = _lt("Selection");
+SelectionField.supportedTypes = ["many2one", "selection"];
+SelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 
 registry.category("fields").add("selection", SelectionField);
 

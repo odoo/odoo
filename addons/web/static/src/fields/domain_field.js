@@ -72,27 +72,21 @@ export class DomainField extends Component {
     }
 }
 
-Object.assign(DomainField, {
-    template: "web.DomainField",
-    props: {
-        ...standardFieldProps,
-        model: { type: String, optional: true },
-    },
-    components: {
-        CharField,
-        DomainSelector,
-    },
-
-    supportedTypes: ["char"],
-
-    isEmpty() {
-        return false;
-    },
-    convertAttrsToProps(attrs) {
-        return {
-            model: attrs.options.model,
-        };
-    },
-});
+DomainField.template = "web.DomainField";
+DomainField.props = {
+    ...standardFieldProps,
+    model: { type: String, optional: true },
+};
+DomainField.components = {
+    CharField,
+    DomainSelector,
+};
+DomainField.supportedTypes = ["char"];
+DomainField.isEmpty = () => false;
+DomainField.convertAttrsToProps = (attrs) => {
+    return {
+        model: attrs.options.model,
+    };
+};
 
 registry.category("fields").add("domain", DomainField);

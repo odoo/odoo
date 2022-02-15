@@ -205,7 +205,7 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(
                 form.el.querySelector(".o_field_binary_file span").innerText,
                 "fake_file.txt",
-                'input value should be changed to "fake_file.txt"'
+                'displayed value should be changed to "fake_file.txt"'
             );
 
             await click(form.el.querySelector(".o_clear_file_button"));

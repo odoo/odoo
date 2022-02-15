@@ -72,33 +72,29 @@ export class ImageField extends Component {
     }
 }
 
-Object.assign(ImageField, {
-    template: "web.ImageField",
-    props: {
-        ...standardFieldProps,
-        previewImage: { type: String, optional: true },
-        acceptedFileExtensions: { type: String, optional: true },
-        width: { type: Number, optional: true },
-        height: { type: Number, optional: true },
-    },
-    defaultProps: {
-        acceptedFileExtensions: "image/*",
-    },
-    components: {
-        FileUploader,
-    },
-
-    displayName: _lt("Image"),
-    supportedTypes: ["binary"],
-
-    convertAttrsToProps(attrs) {
+ImageField.template = "web.ImageField";
+ImageField.props = {
+    ...standardFieldProps,
+    previewImage: { type: String, optional: true },
+    acceptedFileExtensions: { type: String, optional: true },
+    width: { type: Number, optional: true },
+    height: { type: Number, optional: true },
+};
+ImageField.defaultProps = {
+    acceptedFileExtensions: "image/*",
+};
+ImageField.components = {
+    FileUploader,
+};
+(ImageField.displayName = _lt("Image")),
+    (ImageField.supportedTypes = ["binary"]),
+    (ImageField.convertAttrsToProps = (attrs) => {
         return {
             previewImage: attrs.preview_image,
             acceptedFileExtensions: attrs.options.accepted_file_extensions,
             width: attrs.options.size && attrs.options.size[0],
             height: attrs.options.size && attrs.options.size[1],
         };
-    },
-});
+    });
 
 registry.category("fields").add("image", ImageField);

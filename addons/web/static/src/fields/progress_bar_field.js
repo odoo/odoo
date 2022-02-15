@@ -103,6 +103,7 @@ export class ProgressBarField extends Component {
         }, 100);
     }
 }
+
 ProgressBarField.components = {
     PercentageEditor,
     PercentageViewer,
@@ -116,8 +117,7 @@ ProgressBarField.props = {
     editMaxValue: { type: Boolean, optional: true },
 };
 ProgressBarField.template = "web.ProgressBarField";
-
-ProgressBarField.convertAttrsToProps = function (attrs) {
+ProgressBarField.convertAttrsToProps = (attrs) => {
     return {
         currentValue: attrs.options.current_value,
         maxValue: attrs.options.max_value,

@@ -31,14 +31,11 @@ export class PriorityField extends Component {
     }
 }
 
-Object.assign(PriorityField, {
-    template: "web.PriorityField",
-    props: {
-        ...standardFieldProps,
-    },
-
-    displayName: _lt("Priority"),
-    supportedTypes: ["selection"],
-});
+PriorityField.template = "web.PriorityField";
+PriorityField.props = {
+    ...standardFieldProps,
+};
+PriorityField.displayName = _lt("Priority");
+PriorityField.supportedTypes = ["selection"];
 
 registry.category("fields").add("priority", PriorityField);

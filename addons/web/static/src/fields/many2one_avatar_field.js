@@ -11,17 +11,15 @@ export class Many2OneAvatarField extends Component {
         return this.props.record.fields[this.props.name].relation;
     }
 }
-Object.assign(Many2OneAvatarField, {
-    template: "web.Many2OneAvatarField",
-    props: {
-        ...standardFieldProps,
-        placeholder: { type: String, optional: true },
-    },
-    components: {
-        Many2OneField,
-    },
 
-    supportedTypes: ["many2one"],
-});
+Many2OneAvatarField.template = "web.Many2OneAvatarField";
+Many2OneAvatarField.props = {
+    ...standardFieldProps,
+    placeholder: { type: String, optional: true },
+};
+Many2OneAvatarField.components = {
+    Many2OneField,
+};
+Many2OneAvatarField.supportedTypes = ["many2one"];
 
 registry.category("fields").add("many2one_avatar", Many2OneAvatarField);

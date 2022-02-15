@@ -33,27 +33,21 @@ export class CharField extends Component {
     }
 }
 
-Object.assign(CharField, {
-    template: "web.CharField",
-    props: {
-        ...standardFieldProps,
-        autocomplete: { type: String, optional: true },
-        isPassword: { type: Boolean, optional: true },
-        placeholder: { type: String, optional: true },
-    },
-
-    displayName: _lt("Text"),
-    supportedTypes: ["char"],
-
-    convertAttrsToProps(attrs) {
-        return {
-            autocomplete: attrs.autocomplete,
-            isPassword: Boolean(attrs.password && !/^(0|false)$/i.test(attrs.password)),
-            placeholder: attrs.placeholder,
-        };
-    },
-});
-
 CharField.template = "web.CharField";
+CharField.props = {
+    ...standardFieldProps,
+    autocomplete: { type: String, optional: true },
+    isPassword: { type: Boolean, optional: true },
+    placeholder: { type: String, optional: true },
+};
+CharField.displayName = _lt("Text");
+CharField.supportedTypes = ["char"];
+CharField.convertAttrsToProps = (attrs) => {
+    return {
+        autocomplete: attrs.autocomplete,
+        isPassword: Boolean(attrs.password && !/^(0|false)$/i.test(attrs.password)),
+        placeholder: attrs.placeholder,
+    };
+};
 
 registry.category("fields").add("char", CharField);

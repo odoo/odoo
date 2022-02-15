@@ -30,21 +30,19 @@ export class ImageUrlField extends Component {
     }
 }
 
-Object.assign(ImageUrlField, {
-    template: "web.ImageUrlField",
-    props: {
-        ...standardFieldProps,
-        width: { type: Number, optional: true },
-        height: { type: Number, optional: true },
-    },
-    displayName: _lt("Image"),
-    supportedTypes: ["char"],
-    convertAttrsToProps(attrs) {
-        return {
-            width: attrs.options.size && attrs.options.size[0],
-            height: attrs.options.size && attrs.options.size[1],
-        };
-    },
-});
+ImageUrlField.template = "web.ImageUrlField";
+ImageUrlField.props = {
+    ...standardFieldProps,
+    width: { type: Number, optional: true },
+    height: { type: Number, optional: true },
+};
+ImageUrlField.displayName = _lt("Image");
+ImageUrlField.supportedTypes = ["char"];
+ImageUrlField.convertAttrsToProps = (attrs) => {
+    return {
+        width: attrs.options.size && attrs.options.size[0],
+        height: attrs.options.size && attrs.options.size[1],
+    };
+};
 
 registry.category("fields").add("image_url", ImageUrlField);

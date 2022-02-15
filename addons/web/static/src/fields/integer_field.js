@@ -35,9 +35,8 @@ IntegerField.props = {
 IntegerField.defaultProps = {
     inputType: "text",
 };
-
 IntegerField.isEmpty = () => false;
-IntegerField.convertAttrsToProps = function (attrs) {
+IntegerField.convertAttrsToProps = (attrs) => {
     return {
         inputType: attrs.options.type,
     };

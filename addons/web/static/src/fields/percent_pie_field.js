@@ -18,24 +18,19 @@ export class PercentPieField extends Component {
     }
 }
 
-Object.assign(PercentPieField, {
-    components: {
-        PercentageViewer,
-    },
-    template: "web.PercentPieField",
-    props: {
+PercentPieField.components = {
+    PercentageViewer,
+};
+(PercentPieField.template = "web.PercentPieField"),
+    (PercentPieField.props = {
         ...standardFieldProps,
         string: { type: String, optional: true },
-    },
-
-    displayName: _lt("PercentPie"),
-    supportedTypes: ["integer", "float"],
-
-    convertAttrsToProps(attrs) {
-        return {
-            string: attrs.string,
-        };
-    },
-});
+    });
+PercentPieField.displayName = _lt("PercentPie");
+PercentPieField.convertAttrsToProps = (attrs) => {
+    return {
+        string: attrs.string,
+    };
+};
 
 registry.category("fields").add("percentpie", PercentPieField);

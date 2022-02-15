@@ -27,20 +27,14 @@ export class Many2ManyCheckboxesField extends Component {
     }
 }
 
-Object.assign(Many2ManyCheckboxesField, {
-    components: { CheckBox },
-    template: "web.Many2ManyCheckboxesField",
-    props: {
-        ...standardFieldProps,
-    },
-
-    displayName: _lt("Checkboxes"),
-    supportedTypes: ["many2many"],
-
-    isEmpty() {
-        return false;
-    },
-});
+Many2ManyCheckboxesField.components = { CheckBox };
+Many2ManyCheckboxesField.template = "web.Many2ManyCheckboxesField";
+Many2ManyCheckboxesField.props = {
+    ...standardFieldProps,
+};
+Many2ManyCheckboxesField.displayName = _lt("Checkboxes");
+Many2ManyCheckboxesField.supportedTypes = ["many2many"];
+Many2ManyCheckboxesField.isEmpty = () => false;
 
 registry.category("fields").add("many2many_checkboxes", Many2ManyCheckboxesField);
 

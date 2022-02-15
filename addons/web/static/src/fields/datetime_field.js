@@ -14,27 +14,23 @@ export class DateTimeField extends Component {
     }
 }
 
-Object.assign(DateTimeField, {
-    template: "web.DateTimeField",
-    props: {
-        ...standardFieldProps,
-        pickerOptions: { type: Object, optional: true },
-    },
-    defaultProps: {
-        pickerOptions: {},
-    },
-    components: {
-        DateTimePicker,
-    },
-
-    displayName: _lt("Date & Time"),
-    supportedTypes: ["datetime"],
-
-    convertAttrsToProps(attrs) {
-        return {
-            pickerOptions: attrs.options.datepicker,
-        };
-    },
-});
+DateTimeField.template = "web.DateTimeField";
+DateTimeField.props = {
+    ...standardFieldProps,
+    pickerOptions: { type: Object, optional: true },
+};
+DateTimeField.defaultProps = {
+    pickerOptions: {},
+};
+DateTimeField.components = {
+    DateTimePicker,
+};
+DateTimeField.displayName = _lt("Date & Time");
+DateTimeField.supportedTypes = ["datetime"];
+DateTimeField.convertAttrsToProps = (attrs) => {
+    return {
+        pickerOptions: attrs.options.datepicker,
+    };
+};
 
 registry.category("fields").add("datetime", DateTimeField);

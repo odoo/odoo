@@ -25,41 +25,40 @@ class CopyClipboard extends Component {
         });
     }
 }
-Object.assign(CopyClipboard, {
-    props: {
-        isInline: { type: Boolean, optional: true },
-        type: String,
-        value: String | null,
-    },
-    template: "web.CopyClipboard",
-});
+
+CopyClipboard.props = {
+    isInline: { type: Boolean, optional: true },
+    type: String,
+    value: String | null,
+};
+CopyClipboard.template = "web.CopyClipboard";
 
 export class CopyClipboardCharField extends Component {}
-Object.assign(CopyClipboardCharField, {
-    components: { CopyClipboard },
-    props: {
-        ...standardFieldProps,
-    },
-    template: "web.CopyClipboardCharField",
-});
+
+CopyClipboardCharField.components = { CopyClipboard };
+CopyClipboardCharField.props = {
+    ...standardFieldProps,
+};
+CopyClipboardCharField.template = "web.CopyClipboardCharField";
+
 registry.category("fields").add("CopyClipboardChar", CopyClipboardCharField);
 
 export class CopyClipboardTextField extends Component {}
-Object.assign(CopyClipboardTextField, {
-    components: { CopyClipboard },
-    props: {
-        ...standardFieldProps,
-    },
-    template: "web.CopyClipboardTextField",
-});
+
+CopyClipboardTextField.components = { CopyClipboard };
+CopyClipboardTextField.props = {
+    ...standardFieldProps,
+};
+CopyClipboardTextField.template = "web.CopyClipboardTextField";
+
 registry.category("fields").add("CopyClipboardText", CopyClipboardTextField);
 
 export class CopyClipboardURLField extends Component {}
-Object.assign(CopyClipboardURLField, {
-    components: { CopyClipboard },
-    props: {
-        ...standardFieldProps,
-    },
-    template: "web.CopyClipboardURLField",
-});
+
+CopyClipboardURLField.components = { CopyClipboard };
+CopyClipboardURLField.props = {
+    ...standardFieldProps,
+};
+CopyClipboardURLField.template = "web.CopyClipboardURLField";
+
 registry.category("fields").add("CopyClipboardURL", CopyClipboardURLField);

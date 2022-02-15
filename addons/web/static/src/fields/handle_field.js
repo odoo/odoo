@@ -8,18 +8,12 @@ const { Component } = owl;
 
 export class HandleField extends Component {}
 
-Object.assign(HandleField, {
-    template: "web.HandleField",
-    props: {
-        ...standardFieldProps,
-    },
-
-    displayName: _lt("Handle"),
-    supportedTypes: ["integer"],
-
-    isEmpty() {
-        return false;
-    },
-});
+HandleField.template = "web.HandleField";
+HandleField.props = {
+    ...standardFieldProps,
+};
+HandleField.displayName = _lt("Handle");
+HandleField.supportedTypes = ["integer"];
+HandleField.isEmpty = () => false;
 
 registry.category("fields").add("handle", HandleField);

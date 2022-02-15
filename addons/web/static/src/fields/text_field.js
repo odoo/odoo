@@ -39,16 +39,13 @@ export class TextField extends Component {
     }
 }
 
-Object.assign(TextField, {
-    template: "web.TextField",
-    props: {
-        ...standardFieldProps,
-        placeholder: { type: String, optional: true },
-    },
-
-    displayName: _lt("Multiline Text"),
-    supportedTypes: ["html", "text"],
-});
+TextField.template = "web.TextField";
+TextField.props = {
+    ...standardFieldProps,
+    placeholder: { type: String, optional: true },
+};
+TextField.displayName = _lt("Multiline Text");
+TextField.supportedTypes = ["html", "text"];
 
 registry.category("fields").add("text", TextField);
 registry.category("fields").add("html", TextField);
