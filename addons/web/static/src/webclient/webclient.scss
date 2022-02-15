@@ -76,6 +76,12 @@ div.o_boolean_toggle.custom-control.custom-checkbox {
   }
 }
 
+// User input typically entered via keyboard
+kbd {
+  border: 1px solid $o-gray-200;
+  box-shadow: $kbd-box-shadow;
+}  
+
 //== Backgound light colors variations (bootstrap extensions)
 @each $-name, $-bg-color in $theme-colors {
   $-safe-text-color: color-yiq(mix($-bg-color, $o-view-background-color));
