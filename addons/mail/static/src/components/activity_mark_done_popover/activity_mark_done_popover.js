@@ -85,10 +85,11 @@ export class ActivityMarkDonePopover extends Component {
     /**
      * @private
      */
-    _onClickDoneAndScheduleNext() {
-        this.activity.markAsDoneAndScheduleNext({
+    async _onClickDoneAndScheduleNext() {
+        await this.activity.markAsDoneAndScheduleNext({
             feedback: this._feedbackTextareaRef.el.value,
         });
+        this.trigger('reload', { keepChanges: true });
     }
 
     /**
