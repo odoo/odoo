@@ -18,6 +18,7 @@ _logger = logging.getLogger(__name__)
 
 
 DEFAULT_SERVER_URL = 'https://l10n-it-edi.api.odoo.com'
+DEFAULT_TEST_SERVER_URL = 'https://iap-services-test-saas12-test-13-test-14-test-15.test.odoo.com'
 TIMEOUT = 30
 
 
@@ -54,6 +55,13 @@ class AccountEdiProxyClientUser(models.Model):
         ('unique_edi_identification_per_format', 'unique(edi_identification, edi_format_id)', 'This edi identification is already assigned to a user'),
     ]
 
+    def _get_demo_state(self):
+        demo_state = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False)
+        return 'prod' if demo_state in ['prod', False] else 'test' if demo_state == 'test' else 'demo'
+
+    def _get_server_url(self):
+        return DEFAULT_TEST_SERVER_URL if self._get_demo_state() == 'test' else self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
+
     def _make_request(self, url, params=False):
         ''' Make a request to proxy and handle the generic elements of the reponse (errors, new refresh token).
         '''
@@ -64,7 +72,7 @@ class AccountEdiProxyClientUser(models.Model):
             'id': uuid.uuid4().hex,
         }
 
-        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+        if self._get_demo_state() == 'demo':
             # Last barrier : in case the demo mode is not handled by the caller, we block access.
             raise Exception("Can't access the proxy in demo mode")
 
@@ -124,14 +132,13 @@ class AccountEdiProxyClientUser(models.Model):
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
-        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+        if self._get_demo_state() == 'demo':
             # simulate registration
             response = {'id_client': 'demo', 'refresh_token': 'demo'}
         else:
             try:
                 # b64encode returns a bytestring, we need it as a string
-                server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
-                response = self._make_request(server_url + '/iap/account_edi/1/create_user', params={
+                response = self._make_request(self._get_server_url() + '/iap/account_edi/1/create_user', params={
                     'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
                     'company_id': company.id,
                     'edi_format_code': edi_format.code,
@@ -159,8 +166,7 @@ class AccountEdiProxyClientUser(models.Model):
         that multiple database use the same credentials. When receiving an error for an expired refresh_token,
         This method makes a request to get a new refresh token.
         '''
-        server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
-        response = self._make_request(server_url + '/iap/account_edi/1/renew_token')
+        response = self._make_request(self._get_server_url() + '/iap/account_edi/1/renew_token')
         if 'error' in response:
             # can happen if the database was duplicated and the refresh_token was refreshed by the other database.
             # we don't want two database to be able to query the proxy with the same user
