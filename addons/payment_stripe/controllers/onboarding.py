@@ -24,9 +24,7 @@ class OnboardingController(http.Controller):
         """
         stripe_acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
         stripe_acquirer.company_id._mark_payment_onboarding_step_as_done()
-        action = request.env.ref(
-            'payment_stripe.action_payment_acquirer_onboarding', raise_if_not_found=False
-        ) or request.env.ref('payment.action_payment_acquirer')
+        action = request.env.ref('payment_stripe.action_payment_acquirer_onboarding')
         get_params_string = url_encode({'action': action.id, 'id': acquirer_id, 'menu_id': menu_id})
         return request.redirect(f'/web?#{get_params_string}')
 
