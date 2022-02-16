@@ -36,6 +36,9 @@ export default class ProjectRightPanel extends Component {
     }
 
     async _loadQwebContext() {
+        if (!this.project_id){ // If this is called from notif, multiples updates but no specific project
+            return {};
+        }
         const data = await this.rpc({
             model: 'project.project',
             method: 'get_panel_data',
