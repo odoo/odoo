@@ -13,6 +13,8 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment_stripe.const import HANDLED_WEBHOOK_EVENTS
+
 _logger = logging.getLogger(__name__)
 
 
@@ -84,36 +86,27 @@ class StripeController(http.Controller):
         event = json.loads(request.httprequest.data)
         _logger.info("notification received from Stripe with data:\n%s", pprint.pformat(event))
         try:
-            if event['type'] == 'checkout.session.completed':
-                checkout_session = event['data']['object']
+            if event['type'] in HANDLED_WEBHOOK_EVENTS:
+                intent = event['data']['object']  # PaymentIntent/SetupIntent, depending on the flow
 
                 # Check the integrity of the event
-                data = {'reference': checkout_session['client_reference_id']}
+                data = {'reference': intent['description']}
                 tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                     'stripe', data
                 )
                 self._verify_notification_signature(tx_sudo)
-                # Fetch the PaymentIntent, Charge and PaymentMethod objects from Stripe
-                if checkout_session.get('payment_intent'):  # Can be None
-                    payment_intent = tx_sudo.acquirer_id._stripe_make_request(
-                        f'payment_intents/{tx_sudo.stripe_payment_intent}', method='GET'
+                if event['type'].startswith('payment_intent'):
+                    self._include_payment_intent_in_notification_data(intent, data)
+                else:  # Validation
+                    # Fetch the missing PaymentMethod object.
+                    payment_method = tx_sudo.acquirer_id._stripe_make_request(
+                        f'payment_methods/{intent["payment_method"]}', method='GET'
                     )
                     _logger.info(
-                        "received payment_intents response:\n%s", pprint.pformat(payment_intent)
+                        "received payment_methods response:\n%s", pprint.pformat(payment_method)
                     )
-                    self._include_payment_intent_in_notification_data(payment_intent, data)
-
-                # Fetch the SetupIntent and PaymentMethod objects from Stripe
-                if checkout_session.get('setup_intent'):  # Can be None
-                    setup_intent = tx_sudo.acquirer_id._stripe_make_request(
-                        f'setup_intents/{checkout_session.get("setup_intent")}',
-                        payload={'expand[]': 'payment_method'},
-                        method='GET'
-                    )
-                    _logger.info(
-                        "received setup_intents response:\n%s", pprint.pformat(setup_intent)
-                    )
-                    self._include_setup_intent_in_notification_data(setup_intent, data)
+                    intent['payment_method'] = payment_method
+                    self._include_setup_intent_in_notification_data(intent, data)
 
                 # Handle the notification data crafted with Stripe API objects
                 tx_sudo._handle_notification_data('stripe', data)
@@ -135,7 +128,7 @@ class StripeController(http.Controller):
     def _include_setup_intent_in_notification_data(setup_intent, notification_data):
         notification_data.update({
             'setup_intent': setup_intent,
-            'payment_method': setup_intent.get('payment_method')
+            'payment_method': setup_intent.get('payment_method'),
         })
 
     def _verify_notification_signature(self, tx_sudo):

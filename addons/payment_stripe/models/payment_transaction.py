@@ -118,6 +118,7 @@ class PaymentTransaction(models.Model):
                     'mode': 'setup',
                     'success_url': return_url,
                     'cancel_url': return_url,
+                    'setup_intent_data[description]': self.reference,
                 }
             )
         return checkout_session
@@ -155,7 +156,6 @@ class PaymentTransaction(models.Model):
         """
         return {
             **pmt_values,
-            'client_reference_id': self.reference,
             # Assign a customer to the session so that Stripe automatically attaches the payment
             # method to it in a validation flow. In checkout flow, a customer is automatically
             # created if not provided but we still do it here to avoid requiring the customer to
@@ -384,8 +384,7 @@ class PaymentTransaction(models.Model):
             payment_method_id = notification_data.get('charge', {}).get('payment_method')
             customer_id = notification_data.get('charge', {}).get('customer')
         else:  # 'validation'
-            payment_method_id = notification_data.get('setup_intent', {}) \
-                .get('payment_method', {}).get('id')
+            payment_method_id = notification_data.get('payment_method', {}).get('id')
             customer_id = notification_data.get('setup_intent', {}).get('customer')
         payment_method = notification_data.get('payment_method')
         if not payment_method_id or not payment_method:

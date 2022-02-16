@@ -9,7 +9,7 @@ from werkzeug.urls import url_join, url_encode
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-from odoo.addons.payment_stripe.const import API_VERSION, PROXY_URL, WEBHOOK_HANDLED_EVENTS
+from odoo.addons.payment_stripe.const import API_VERSION, PROXY_URL, HANDLED_WEBHOOK_EVENTS
 from odoo.addons.payment_stripe.controllers.onboarding import OnboardingController
 from odoo.addons.payment_stripe.controllers.main import StripeController
 
@@ -133,7 +133,7 @@ class PaymentAcquirer(models.Model):
             webhook = self._stripe_make_request(
                 'webhook_endpoints', payload={
                     'url': self._get_stripe_webhook_url(),
-                    'enabled_events[]': WEBHOOK_HANDLED_EVENTS,
+                    'enabled_events[]': HANDLED_WEBHOOK_EVENTS,
                     'api_version': API_VERSION,
                 }
             )
