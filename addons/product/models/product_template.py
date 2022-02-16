@@ -738,6 +738,7 @@ class ProductTemplate(models.Model):
 
         :return: dict of exclusions
             - exclusions: from this product itself
+            - archived_combinations: list of archived combinations
             - parent_combination: ids of the given parent_combination
             - parent_exclusions: from the parent_combination
            - parent_product_name: the name of the parent product if any, used in the interface
@@ -749,8 +750,10 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
         parent_combination = parent_combination or self.env['product.template.attribute.value']
+        archived_products = self.with_context(active_test=False).product_variant_ids.filtered(lambda l: not l.active)
         return {
             'exclusions': self._complete_inverse_exclusions(self._get_own_attribute_exclusions()),
+            'archived_combinations': [product.product_template_attribute_value_ids.ids for product in archived_products],
             'parent_exclusions': self._get_parent_attribute_exclusions(parent_combination),
             'parent_combination': parent_combination.ids,
             'parent_product_name': parent_name,

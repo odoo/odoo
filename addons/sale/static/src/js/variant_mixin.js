@@ -382,6 +382,44 @@ var VariantMixin = {
                 }
             });
         }
+        // combination exclusions: array of array of ptav
+        // for example a product with 3 variation and one specific variation is disabled (archived)
+        //  requires the first 2 to be selected for the third to be disabled
+        if (combinationData.archived_combinations) {
+            combinationData.archived_combinations.forEach((excludedCombination) => {
+                const ptavCommon = excludedCombination.filter((ptav) => combination.includes(ptav));
+                if (ptavCommon.length === combination.length) {
+                    // Selected combination is archived, all attributes must be disabled from each other
+                    combination.forEach((ptav) => {
+                        combination.forEach((ptavOther) => {
+                            if (ptav === ptavOther) {
+                                return;
+                            }
+                            self._disableInput(
+                                $parent,
+                                ptav,
+                                ptavOther,
+                                combinationData.mapped_attribute_names,
+                            );
+                        })
+                    })
+                } else if (ptavCommon.length === (combination.length - 1)) {
+                    // In this case we only need to disable the remaining ptav
+                    const disabledPtav = excludedCombination.find((ptav) => !combination.includes(ptav));
+                    excludedCombination.forEach((ptav) => {
+                        if (ptav === disabledPtav) {
+                            return;
+                        }
+                        self._disableInput(
+                            $parent,
+                            disabledPtav,
+                            ptav,
+                            combinationData.mapped_attribute_names,
+                        )
+                    });
+                }
+            });
+        }
 
         // parent exclusions (tell which attributes are excluded from parent)
         _.each(combinationData.parent_exclusions, function (exclusions, excluded_by){
