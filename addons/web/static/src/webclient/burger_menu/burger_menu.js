@@ -45,6 +45,12 @@ export class BurgerMenu extends Component {
             (this.currentApp && this.menuRepo.getMenuAsTree(this.currentApp.id).childrenTree) || []
         );
     }
+    get isUserMenuUnfolded() {
+        return !this.isUserMenuTogglable || this.state.isUserMenuOpened;
+    }
+    get isUserMenuTogglable() {
+        return this.currentApp && this.currentAppSections.length > 0;
+    }
     _closeBurger() {
         this.state.isUserMenuOpened = false;
         this.state.isBurgerOpened = false;
