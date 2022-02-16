@@ -1091,6 +1091,16 @@ const Wysiwyg = Widget.extend({
             return;
         }
         if (this.snippetsMenu && !options.forceDialog) {
+            if (options.link && options.link.querySelector(mediaSelector) &&
+                    !options.link.textContent.trim() && wysiwygUtils.isImg(this.lastElement)) {
+                // If the link contains a media without text, the link is
+                // editable in the media options instead.
+                this.snippetsMenu._mutex.exec(() => {
+                    // Wait for the editor panel to be fully updated.
+                    core.bus.trigger('activate_image_link_tool');
+                });
+                return;
+            }
             if (options.forceOpen || !this.linkTools) {
                 const $btn = this.toolbar.$el.find('#create-link');
                 if (!this.linkTools || ![options.link, ...wysiwygUtils.ancestors(options.link)].includes(this.linkTools.$link[0])) {
@@ -1171,6 +1181,19 @@ const Wysiwyg = Widget.extend({
                     restoreSelection();
                 }
             });
+        }
+    },
+    /**
+     * Removes the current Link.
+     */
+    removeLink() {
+        if (this.snippetsMenu && wysiwygUtils.isImg(this.lastElement)) {
+            this.snippetsMenu._mutex.exec(() => {
+                // Wait for the editor panel to be fully updated.
+                core.bus.trigger('deactivate_image_link_tool');
+            });
+        } else {
+            this.odooEditor.execCommand('unlink');
         }
     },
     /**
