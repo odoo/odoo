@@ -98,7 +98,8 @@ var RunningTourActionHelper = core.Class.extend({
             values.$element.focusInEnd();
             values.$element.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         }
-        values.$element[0].dispatchEvent(new Event("change"));
+//        values.$element[0].dispatchEvent(new Event("change"));
+        values.$element.trigger("change");
     },
     _drag_and_drop: function (values, to) {
         var $to;
