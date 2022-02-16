@@ -4,7 +4,8 @@
 from collections import defaultdict
 
 from odoo import fields, models
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, float_compare
+from odoo.tools.misc import formatLang
 
 
 class AccountMove(models.Model):
@@ -25,86 +26,62 @@ class AccountMove(models.Model):
     def _get_invoiced_lot_values(self):
         """ Get and prepare data to show a table of invoiced lot on the invoice's report. """
         self.ensure_one()
-
-        if self.state == 'draft':
+        if self.state == 'draft' or not self.invoice_date or self.move_type not in ('out_invoice', 'out_refund'):
             return []
 
-        sale_lines = self.invoice_line_ids.sale_line_ids
-        sale_orders = sale_lines.order_id
-        stock_move_lines = sale_lines.move_ids.filtered(lambda r: r.state == 'done').move_line_ids
+        current_invoice_amls = self.invoice_line_ids.filtered(lambda aml: not aml.display_type and aml.product_id and aml.quantity)
+        all_invoices_amls = current_invoice_amls.sale_line_ids.invoice_lines.filtered(lambda aml: aml.move_id.state == 'posted').sorted(lambda aml: (aml.date, aml.move_name, aml.id))
+        index = all_invoices_amls.ids.index(current_invoice_amls[:1].id) if current_invoice_amls[:1] in all_invoices_amls else 0
+        previous_amls = all_invoices_amls[:index]
 
-        # Get the other customer invoices and refunds.
-        ordered_invoice_ids = sale_orders.mapped('invoice_ids')\
-            .filtered(lambda i: i.state not in ['draft', 'cancel'])\
-            .sorted(lambda i: (i.invoice_date, i.id))
+        previous_qties_invoiced = previous_amls._get_invoiced_qty_per_product()
+        invoiced_qties = current_invoice_amls._get_invoiced_qty_per_product()
+        invoiced_products = invoiced_qties.keys()
 
-        # Get the position of self in other customer invoices and refunds.
-        self_index = None
-        i = 0
-        for invoice in ordered_invoice_ids:
-            if invoice.id == self.id:
-                self_index = i
-                break
-            i += 1
-
-        # Get the previous invoices if any.
-        previous_invoices = ordered_invoice_ids[:self_index]
-
-        # Get the incoming and outgoing sml between self.invoice_date and the previous invoice (if any) of the related product.
-        write_dates = [wd for wd in self.invoice_line_ids.mapped('write_date') if wd]
-        self_datetime = max(write_dates) if write_dates else None
-        last_invoice_datetime = dict()
-        for product in self.invoice_line_ids.product_id:
-            last_invoice = previous_invoices.filtered(lambda inv: product in inv.invoice_line_ids.product_id)
-            last_invoice = last_invoice[-1] if len(last_invoice) else None
-            last_write_dates = last_invoice and [wd for wd in last_invoice.invoice_line_ids.mapped('write_date') if wd]
-            last_invoice_datetime[product] = max(last_write_dates) if last_write_dates else None
-
-        def _filter_incoming_sml(ml):
-            if ml.state == 'done' and ml.location_id.usage == 'customer' and ml.lot_id:
-                last_date = last_invoice_datetime.get(ml.product_id)
-                if last_date:
-                    return last_date <= ml.date <= self_datetime
-                else:
-                    return ml.date <= self_datetime
-            return False
-
-        def _filter_outgoing_sml(ml):
-            if ml.state == 'done' and ml.location_dest_id.usage == 'customer' and ml.lot_id:
-                last_date = last_invoice_datetime.get(ml.product_id)
-                if last_date:
-                    return last_date <= ml.date <= self_datetime
-                else:
-                    return ml.date <= self_datetime
-            return False
-
-        incoming_sml = stock_move_lines.filtered(_filter_incoming_sml)
-        outgoing_sml = stock_move_lines.filtered(_filter_outgoing_sml)
-
-        # Prepare and return lot_values
-        qties_per_lot = defaultdict(lambda: 0)
-        if self.move_type == 'out_refund':
-            for ml in outgoing_sml:
-                qties_per_lot[ml.lot_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
-            for ml in incoming_sml:
-                qties_per_lot[ml.lot_id] += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
-        else:
-            for ml in outgoing_sml:
-                qties_per_lot[ml.lot_id] += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
-            for ml in incoming_sml:
-                qties_per_lot[ml.lot_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
-        lot_values = []
-        for lot_id, qty in qties_per_lot.items():
-            if float_is_zero(qty, precision_rounding=lot_id.product_id.uom_id.rounding):
+        qties_per_lot = defaultdict(float)
+        previous_qties_delivered = defaultdict(float)
+        stock_move_lines = current_invoice_amls.sale_line_ids.move_ids.move_line_ids.filtered(lambda sml: sml.state == 'done' and sml.lot_id).sorted(lambda sml: (sml.date, sml.id))
+        for sml in stock_move_lines:
+            if sml.product_id not in invoiced_products:
                 continue
+            product = sml.product_id
+            product_uom = product.uom_id
+            qty_done = sml.product_uom_id._compute_quantity(sml.qty_done, product_uom)
+
+            if sml.location_id.usage == 'customer':
+                returned_qty = min(qties_per_lot[sml.lot_id], qty_done)
+                qties_per_lot[sml.lot_id] -= returned_qty
+                qty_done = returned_qty - qty_done
+
+            previous_qty_invoiced = previous_qties_invoiced[product]
+            previous_qty_delivered = previous_qties_delivered[product]
+            # If we return more than currently delivered (i.e., qty_done < 0), we remove the surplus
+            # from the previously delivered (and qty_done becomes zero). If it's a delivery, we first
+            # try to reach the previous_qty_invoiced
+            if float_compare(qty_done, 0, precision_rounding=product_uom.rounding) < 0 or \
+                    float_compare(previous_qty_delivered, previous_qty_invoiced, precision_rounding=product_uom.rounding) < 0:
+                previously_done = qty_done if sml.location_id.usage == 'customer' else min(previous_qty_invoiced - previous_qty_delivered, qty_done)
+                previous_qties_delivered[product] += previously_done
+                qty_done -= previously_done
+
+            qties_per_lot[sml.lot_id] += qty_done
+
+        lot_values = []
+        for lot, qty in qties_per_lot.items():
+            if float_is_zero(invoiced_qties[lot.product_id], precision_rounding=lot.product_uom_id.rounding) \
+                    or float_compare(qty, 0, precision_rounding=lot.product_uom_id.rounding) <= 0:
+                continue
+            invoiced_lot_qty = min(qty, invoiced_qties[lot.product_id])
+            invoiced_qties[lot.product_id] -= invoiced_lot_qty
             lot_values.append({
-                'product_name': lot_id.product_id.display_name,
-                'quantity': self.env['ir.qweb.field.float'].value_to_html(qty, {'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure')}),
-                'uom_name': lot_id.product_uom_id.name,
-                'lot_name': lot_id.name,
+                'product_name': lot.product_id.display_name,
+                'quantity': formatLang(self.env, invoiced_lot_qty, dp='Product Unit of Measure'),
+                'uom_name': lot.product_uom_id.name,
+                'lot_name': lot.name,
                 # The lot id is needed by localizations to inherit the method and add custom fields on the invoice's report.
-                'lot_id': lot_id.id
+                'lot_id': lot.id,
             })
+
         return lot_values
 
 
