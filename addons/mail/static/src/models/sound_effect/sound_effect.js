@@ -10,9 +10,10 @@ registerModel({
         /**
          * @param {Object} param0
          * @param {boolean} [param0.loop] true if we want to make the audio loop, will only stop if stop() is called
-         * @param {boolean} [param0.volume]
+         * @param {float} [param0.volume] the volume percentage in decimal to play this sound.
+         *   If not provided, uses the default volume of this sound effect.
          */
-        play({ loop = false, volume = 1 } = {}) {
+        play({ loop = false, volume } = {}) {
             if (typeof(Audio) === "undefined") {
                 return;
             }
@@ -25,7 +26,7 @@ registerModel({
             this.audio.pause();
             this.audio.currentTime = 0;
             this.audio.loop = loop;
-            this.audio.volume = volume;
+            this.audio.volume = volume !== undefined ? volume : this.defaultVolume;
             Promise.resolve(this.audio.play()).catch(()=>{});
         },
         /**
@@ -47,6 +48,12 @@ registerModel({
          * then cached.
          */
         audio: attr(),
+        /**
+         * The default volume to play this sound effect, when unspecified.
+         */
+        defaultVolume: attr({
+            default: 1,
+        }),
         /**
          * Name of the audio file.
          */
