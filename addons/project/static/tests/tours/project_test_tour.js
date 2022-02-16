@@ -24,19 +24,21 @@ tour.register('project_test_tour', {
     },
 }, {
     trigger: '.o_kanban_project_tasks .o_column_quick_create .input-group input',
-    content: "Add columns to organize your tasks into stages (e.g. New - In Progress - Done)",
+    content: "Choose a name for Column to organize your tasks into stages (e.g. New - In Progress - Done)",
     run: 'text Test',
 }, {
     trigger: '.o_kanban_project_tasks .o_column_quick_create .o_kanban_add',
-    auto: true,
+    content: "Add Column",
+    run: 'click',
 }, {
     trigger: '.o_kanban_project_tasks .o_column_quick_create .input-group input',
     extra_trigger: '.o_kanban_group',
-    content: "Add columns to organize your tasks into stages (e.g. New - In Progress - Done)",
+    content: "Choose a name for Column to to organize your tasks into stages (e.g. New - In Progress - Done)",
     run: 'text Test',
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
-    auto: true,
+    content: "Create Column",
+    run: 'click',
 }, {
     trigger: '.o-kanban-button-new',
     content: "Create the first task",
