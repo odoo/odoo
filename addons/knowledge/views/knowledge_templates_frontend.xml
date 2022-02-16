@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- Article layout -->
+    <template id="knowledge.layout" name="knowledge Layout" inherit_id="web.frontend_layout" primary="True">
+        <xpath expr="//header" position="before">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+        </xpath>
+    </template>
+
+    <template id="article_frontend_template" name="Knowledge Article Frontend Template">
+        <t t-call="knowledge.layout">
+        <div class="container-fluid h-100">
+            <div class="row h-100">
+                <div class="col-sm-3 p-0 border-right overflow-auto">
+                    <div class="o_knowledge_aside d-flex flex-column h-100">
+                        <!-- Search bar -->
+                        <div class="p-3" id="knowledge_search_bar">
+                            <input type="text" class="form-control" placeholder="Search an Article..." disabled="True"/>
+                        </div>
+                        <!-- File explorer -->
+                        <div class="flex-grow-1 position-relative">
+                            <div class="o_scroll_view px-3">
+                                <aside class="o_sidebar">
+                                    <div t-call="knowledge.knowledge_article_tree_template"/>
+                                </aside>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-9 p-0 overflow-auto">
+                    <div class="d-flex flex-column h-100">
+                        <!-- Article header -->
+                        <div class="o_knowledge_header d-sm-flex flex-row justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <!-- Title -->
+                                <span t-out="article_name" class="o_breadcrumb_article_name"/>
+                                <!--TODO DBE: Do we need to allow favourting in frontend ?-->
+                                <!--<field name="is_user_favourite" class="m-0 pr-2" widget="boolean_favorite" nolabel="1" force_save="1"/>-->
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 position-relative">
+                            <div class="o_scroll_view">
+                                <!-- Article body -->
+                                <div class="o_knowledge_editor d-flex">
+                                    <!--<field name="body" widget="html" no_label="1" attrs="{'readonly': ['|', ('is_locked', '=', True), ('user_can_write', '=', False)]}"/>-->
+                                    <div t-out="article_body"/>
+                                </div>
+                                <!-- Chatter -->
+                                <div class="o_knowledge_chatter_container">
+                                    <div class="oe_chatter">
+                                        <field name="message_follower_ids" groups="base.group_user"/>
+                                        <field name="message_ids"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </t>
+    </template>
+</data>
+</odoo>

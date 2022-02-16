@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from werkzeug.urls import url_join
 
 from odoo import fields, models, api, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools import get_lang, formataddr
 
 
 class ArticleMembers(models.Model):
@@ -122,10 +124,13 @@ class Article(models.Model):
             return
         # TODO DBE: check why it doesn't work with self.env['knowledge.article.member'].sudo()
         result = self.article_member_ids.sudo().search_read([('partner_id', '=', partner_id.id)], ['article_id', 'permission'])
-        articles_permission = {r["article_id"][0]: r["permission"] for r in result}
+        member_permissions = {r["article_id"][0]: r["permission"] for r in result}
         for article in self:
-            article.user_has_access = articles_permission[article.id] != "none" if article.id in articles_permission \
-                else article.internal_permission != 'none'
+            if self.env.user.share:
+                article.user_has_access = member_permissions.get(article.id, "none") != "none"
+            else:
+                article.user_has_access = member_permissions[article.id] != "none" if article.id in member_permissions \
+                    else article.internal_permission != 'none'
 
     @api.depends_context('uid')
     @api.depends('internal_permission', 'article_member_ids.partner_id', 'article_member_ids.permission')
@@ -140,11 +145,14 @@ class Article(models.Model):
             return
         # TODO DBE: check why it doesn't work with self.env['knowledge.article.member'].sudo()
         result = self.article_member_ids.sudo().search_read([('partner_id', '=', partner_id.id)], ['article_id', 'permission'])
-        articles_permission = {r["article_id"][0]: r["permission"] for r in result}
+        member_permissions = {r["article_id"][0]: r["permission"] for r in result}
         for article in self:
-            # You cannot have only one member per article.
-            article.user_can_write = articles_permission[article.id] == "write" if article.id in articles_permission \
-                else article.internal_permission == 'write'
+            if self.env.user.share:
+                article.user_can_write = member_permissions.get(article.id, "none") == "write"
+            else:
+                # You cannot have only one member per article.
+                article.user_can_write = member_permissions[article.id] == "write" if article.id in member_permissions \
+                    else article.internal_permission == 'write'
 
     @api.depends('internal_permission', 'article_member_ids.permission', 'article_member_ids.partner_id')
     def _compute_category(self):
@@ -184,11 +192,15 @@ class Article(models.Model):
         if (value and operator == '=') or (not value and operator == '!='):
             if self.env.user.has_group('base.group_system'):
                 return expression.TRUE_DOMAIN
+            elif self.env.user.share:
+                return [('id', 'in', articles_with_access)]
             return ['|', '&', ('internal_permission', '!=', 'none'), ('id', 'not in', articles_with_no_access),
                          ('id', 'in', articles_with_access)]
         # If searching articles for which user has NO access.
         if self.env.user.has_group('base.group_system'):
             return expression.FALSE_DOMAIN
+        elif self.env.user.share:
+            return [('id', 'not in', articles_with_access)]
         return ['|', '&', ('internal_permission', '=', 'none'), ('id', 'not in', articles_with_access),
                      ('id', 'in', articles_with_no_access)]
 
@@ -203,10 +215,18 @@ class Article(models.Model):
             lambda member: member.permission == 'write').mapped('article_id').ids
 
         # If searching articles for which user has write access.
+        if self.env.user.has_group('base.group_system'):
+            return expression.TRUE_DOMAIN
+        elif self.env.user.share:
+            return [('id', 'in', articles_with_access)]
         if (value and operator == '=') or (not value and operator == '!='):
             return ['|', '&', ('internal_permission', '=', 'write'), ('id', 'not in', articles_with_no_access),
                          ('id', 'in', articles_with_access)]
         # If searching articles for which user has NO write access.
+        if self.env.user.has_group('base.group_system'):
+            return expression.FALSE_DOMAIN
+        elif self.env.user.share:
+            return [('id', 'not in', articles_with_access)]
         return ['|', '&', ('internal_permission', '!=', 'write'), ('id', 'not in', articles_with_access),
                      ('id', 'in', articles_with_no_access)]
 
@@ -445,9 +465,9 @@ class Article(models.Model):
         for article in self:
             article.is_locked = False
 
-    ############################
-    # Tools and business methods
-    ############################
+    #####################
+    #  Business methods
+    #####################
 
     def move_to(self, parent_id=False, before_article_id=False, private=False):
         self.ensure_one()
@@ -520,6 +540,90 @@ class Article(models.Model):
 
         return article.id
 
+    def set_member_permission(self, member_id, permission):
+        self.ensure_one()
+        if self.user_can_write:
+            member = self.sudo().article_member_ids.filtered(lambda member: member.id == member_id)
+            member.write({'permission': permission})
+
+    def remove_member(self, member_id):
+        # TODO: Maybe remove member should take partner_id and simply remove it from article.partner_ids
+        self.ensure_one()
+        if self.user_can_write:
+            member = self.sudo().article_member_ids.filtered(lambda member: member.id == member_id)
+            member.unlink()
+
+    def invite_member(self, access_rule, partner_id=False, email=False):
+        self.ensure_one()
+        if self.user_can_write:
+            # A priori no reason to give a wrong partner_id at this stage as user must be logged in and have access.
+            partner = self.env['res.partner'].browse(partner_id)
+            self.sudo()._invite_member(access_rule, partner=partner, email=email)
+        else:
+            raise UserError(_("You cannot give access to this article as you are not editor."))
+
+    def _invite_member(self, access_rule, partner=False, email=False):
+        self.ensure_one()
+        if not email and not partner:
+            raise UserError(_('You need to provide an email address or a partner to invite a member.'))
+        if email and not partner:
+            try:
+                partner = self.env["res.partner"].find_or_create(email, assert_valid_email=True)
+            except ValueError:
+                raise ValueError(_('The given email address is incorrect.'))
+
+        # add member
+        self.write({
+            'article_member_ids': [(0, 0, {
+                'partner_id': partner.id,
+                'permission': access_rule
+            })]
+        })
+        self._send_invite_mail(partner)
+
+    def _send_invite_mail(self, partner):
+        self.ensure_one()
+        subject = _("Invitation to access %s", self.name)
+        partner_lang = get_lang(self.env, lang_code=partner.lang).code
+        tpl = self.env.ref('knowledge.knowledge_article_mail_invite')
+        body = tpl.with_context(lang=partner_lang)._render({
+            'record': self,
+            'user': self.env.user,
+            'recipient': partner,
+            'link': self._get_invite_url(partner),
+        }, engine='ir.qweb', minimal_qcontext=True)
+
+        self._send_mail(
+            body, {'record_name': self.name},
+            {'model_description': 'Article', 'company': self.create_uid.company_id},
+            {'email_from': self.env.user.email_formatted,
+             'author_id': self.env.user.partner_id.id,
+             'email_to': formataddr((partner.name, partner.email_formatted)),
+             'subject': subject},
+            partner_lang)
+
+    def _send_mail(self, body, message_values, notif_values, mail_values, partner_lang):
+        article = self.with_context(lang=partner_lang)
+        msg = article.env['mail.message'].sudo().new(dict(body=body, **message_values))
+        email_layout = article.env.ref('mail.mail_notification_light')
+        body_html = email_layout._render(dict(message=msg, **notif_values), engine='ir.qweb', minimal_qcontext=True)
+        body_html = article.env['mail.render.mixin']._replace_local_links(body_html)
+
+        mail = article.env['mail.mail'].sudo().create(dict(body_html=body_html, **mail_values))
+        mail.send()
+
+    def _get_invite_url(self, partner):
+        self.ensure_one()
+        return url_join(self.get_base_url(), "/article/%s/invite/%s" % (self.id, partner.id))
+
+    # TODO: remove me - for test purpose only
+    def invite_test(self):
+        self.invite_member(access_rule='write', email="dbe@odoo.com") # partner=self.env.ref('base.partner_demo'),
+
+    ###########
+    #  Tools
+    ###########
+
     def _get_max_sequence_inside_parent(self, parent_id):
         # TODO DBE: maybe order the childs_ids in desc on parent should be enough
         max_sequence_article = self.search(
@@ -575,31 +679,3 @@ class Article(models.Model):
                 write_vals_by_sequence[i + start_sequence] = child
             else:
                 write_vals_by_sequence[i + start_sequence] |= child
-
-    # TODO: Check if still needed or if we will use it later.
-    def _set_private(self, parent_id=False):
-        self.ensure_one()
-        self.internal_permission = 'none'
-        self.parent_id = parent_id
-
-        self.article_member_ids.filtered(lambda member: member.partner_id != self.env.user.partner_id).unlink()
-
-        # update the member or add it to member with write access.
-        if self.article_member_ids:
-            self.article_member_ids.permission = 'write'
-        else:
-            self.article_member_ids = [(0, 0, {
-                'article_id': self.id,
-                'partner_id': self.env.user.partner_id,
-                'permission': 'write'
-            })]
-
-    def _invite_partners(self, partner_ids, access_rule):
-        self.ensure_one()
-        # add member
-        self.article_member_ids.write([(0, 0, {
-            'article_id': self.id,
-            'partner_id': partner.id,
-            'permission': access_rule
-        }) for partner in partner_ids])
-        # TODO: send mail
