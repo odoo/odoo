@@ -1047,3 +1047,41 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         picking.move_lines.write({'quantity_done': 3.66})
         picking.button_validate()
         self.assertEqual(so.order_line.mapped('qty_delivered'), [4.0], 'Sale: no conversion error on delivery in different uom"')
+
+
+class TestSaleStockOnly(TestSaleCommon):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
+    def test_no_automatic_assign(self):
+        """
+        This test ensures that when a picking is generated from a SO, the quantities are not
+        automatically reserved (the automatic reservation should only happen when `procurement_jit`
+        is installed)
+        """
+        product = self.env['product.product'].create({'name': 'Super Product', 'type': 'product'})
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 3)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = product
+            line.product_uom_qty = 3
+        so = so_form.save()
+        so.action_confirm()
+
+        picking = so.picking_ids
+        self.assertEqual(picking.state, 'confirmed')
+        self.assertEqual(picking.move_lines.reserved_availability, 0.0)
+
+        picking.move_lines.quantity_done = 1
+        action = picking.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+
+        backorder = picking.backorder_ids
+        self.assertEqual(backorder.state, 'confirmed')
+        self.assertEqual(backorder.move_lines.reserved_availability, 0.0)
