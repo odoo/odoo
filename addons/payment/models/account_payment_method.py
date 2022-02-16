@@ -38,14 +38,15 @@ class AccountPaymentMethodLine(models.Model):
             company = line.journal_id.company_id
             line.payment_acquirer_id = acquirers_map.get((code, company), False)
 
-    def _get_payment_method_domain(self):
+    @api.model
+    def _get_payment_method_domain(self, code):
         # OVERRIDE
-        domain = super()._get_payment_method_domain()
-        information = self._get_payment_method_information().get(self.code)
+        domain = super()._get_payment_method_domain(code)
+        information = self._get_payment_method_information().get(code)
 
         unique = information.get('mode') == 'unique'
         if unique:
-            company_ids = self.env['payment.acquirer'].sudo().search([('provider', '=', self.code)]).mapped('company_id')
+            company_ids = self.env['payment.acquirer'].sudo().search([('provider', '=', code)]).mapped('company_id')
             if company_ids:
                 domain = expression.AND([domain, [('company_id', 'in', company_ids.ids)]])
 
