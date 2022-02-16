@@ -293,6 +293,80 @@ class TestCalendar(TestResourceCommon):
         )
         self.assertEqual(hours, 32)
 
+        # 2 weeks calendar with date_from and date_to to check work_hours
+        self.calendar_jules.write({
+            "attendance_ids": [
+                (5, 0, 0),
+                (0, 0, {
+                    "name": "Monday (morning)",
+                    "day_period": "morning",
+                    "dayofweek": "0",
+                    "week_type": "0",
+                    "hour_from": 8.0,
+                    "hour_to": 12.0,
+                    "date_from": "2022-01-01",
+                    "date_to": "2022-01-16"}),
+                (0, 0, {
+                    "name": "Monday (morning)",
+                    "day_period": "morning",
+                    "dayofweek": "0",
+                    "week_type": "0",
+                    "hour_from": 8.0,
+                    "hour_to": 12.0,
+                    "date_from": "2022-01-17"}),
+                (0, 0, {
+                    "name": "Monday (afternoon)",
+                    "day_period": "afternoon",
+                    "dayofweek": "0",
+                    "week_type": "0",
+                    "hour_from": 16.0,
+                    "hour_to": 20.0,
+                    "date_from": "2022-01-17"}),
+                (0, 0, {
+                    "name": "Monday (morning)",
+                    "day_period": "morning",
+                    "dayofweek": "0",
+                    "week_type": "1",
+                    "hour_from": 8.0,
+                    "hour_to": 12.0,
+                    "date_from": "2022-01-01",
+                    "date_to": "2022-01-16"}),
+                (0, 0, {
+                    "name": "Monday (afternoon)",
+                    "day_period": "afternoon",
+                    "dayofweek": "0",
+                    "week_type": "1",
+                    "hour_from": 16.0,
+                    "hour_to": 20.0,
+                    "date_from": "2022-01-01",
+                    "date_to": "2022-01-16"}),
+                (0, 0, {
+                    "name": "Monday (morning)",
+                    "day_period": "morning",
+                    "dayofweek": "0",
+                    "week_type": "1",
+                    "hour_from": 8.0,
+                    "hour_to": 12.0,
+                    "date_from": "2022-01-17"}),
+                (0, 0, {
+                    "name": "Monday (afternoon)",
+                    "day_period": "afternoon",
+                    "dayofweek": "0",
+                    "week_type": "1",
+                    "hour_from": 16.0,
+                    "hour_to": 20.0,
+                    "date_from": "2022-01-17"})]})
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2022, 1, 10, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2022, 1, 10, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 4)
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2022, 1, 17, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2022, 1, 17, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 8)
+
     def test_calendar_working_hours_count(self):
         calendar = self.env.ref('resource.resource_calendar_std_35h')
         calendar.tz = 'UTC'
