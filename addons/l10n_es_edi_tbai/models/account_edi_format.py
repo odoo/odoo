@@ -199,7 +199,7 @@ class AccountEdiFormat(models.Model):
         values.update(self._l10n_es_tbai_get_trail_values(invoice, cancel))
         template_name = 'l10n_es_edi_tbai.template_invoice_main' + ('_cancel' if cancel else '_post')
         xml_str = self.env.ref(template_name)._render(values)
-        xml_doc = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_str, is_string=True)
+        xml_doc = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_str)
         xml_doc = self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
 
         # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
@@ -376,10 +376,9 @@ class AccountEdiFormat(models.Model):
             }
         }
         xml_sig_str = self.env.ref('l10n_es_edi_tbai.template_digital_signature')._render(values)
-        xml_sig = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_sig_str, is_string=True, indent_level=1)
+        xml_sig = L10nEsTbaiXmlUtils._cleanup_xml_signature(xml_sig_str)
 
         # Complete document with signature template
-        xml_root[-1].tail = "\n  "
         xml_root.append(xml_sig)
 
         # Compute digest values for references

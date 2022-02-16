@@ -22,17 +22,46 @@ class L10nEsTbaiXmlUtils():
 
     @staticmethod
     def _canonicalize_node(node, is_string=False):
+        """
+        Returns the canonical (C14N 1.1) representation of node, as a string
+        Required for computing digests and signatures
+        """
         node = etree.fromstring(node) if is_string else node
         return etree.tostring(node, method="c14n", with_comments=False, exclusive=False)
 
     @staticmethod
-    def _cleanup_xml_content(xml_content, is_string=False, indent_level=0):
+    def _cleanup_xml_content(xml_str, indent_level=0, indent=True):
+        """
+        Cleanups the content of the provided string representation of an XML:
+        - Removes comments
+        - Fixes indentation (using two spaces)
+        - Adds a newline as tail for proper concatenation of elements
+        Returns an etree.ElementTree
+        """
         parser = etree.XMLParser(compact=True, remove_blank_text=True, remove_comments=True)
-        xml_str = xml_content.encode("utf-8") if is_string else etree.tostring(xml_content).decode("utf-8")
-        tree = etree.fromstring(xml_str, parser=parser)
-        etree.indent(tree, level=indent_level)
-        tree.tail = "\n"
+        xml_bytes = xml_str.encode("utf-8")
+        tree = etree.fromstring(xml_bytes, parser=parser)
+        if indent:
+            etree.indent(tree, level=indent_level)
+            tree.tail = "\n"
+
         return tree
+
+    @staticmethod
+    def _cleanup_xml_signature(xml_sig):
+        """
+        Cleanups the content of the provided string representation of an XML signature
+        In addition, removes all line feeds for the ds:Object element
+        Returns an etree.ElementTree
+        """
+        sig_tree = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_sig, indent=False)
+        etree.indent(sig_tree, space="")
+        # Iterate over entire ds:Object sub-tree
+        for elem in sig_tree.find("ds:Object", namespaces=L10nEsTbaiXmlUtils.NS_MAP).iter():
+            if elem.text == "\n":
+                elem.text = ""  # optional but keeps the signature object in one line
+            elem.tail = ""  # necessary for some reason
+        return sig_tree
 
     @staticmethod
     def _get_uri(uri, reference):
@@ -40,7 +69,7 @@ class L10nEsTbaiXmlUtils():
         if uri == "":
             # Empty URI points to whole document (without signature)
             return L10nEsTbaiXmlUtils._canonicalize_node(
-                re.sub(r"^[^\n]*<ds:Signature.*<\/ds:Signature>\n", r"",
+                re.sub(r"^[^\n]*<ds:Signature.*<\/ds:Signature>", r"",
                        etree.tostring(node).decode("utf-8"),
                        flags=re.DOTALL | re.MULTILINE),
                 is_string=True)
