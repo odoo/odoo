@@ -76,5 +76,44 @@ wTourUtils.registerEditionTour('link_tools', {
         content: "The link should have the secondary button style.",
         trigger: 'iframe .s_text_image a.btn.btn-secondary[href="http://odoo.be"]:contains("odoo website")',
         run: () => {}, // It's a check.
-    }
+    },
+    // 4. Add link on image.
+    wTourUtils.clickOnEdit(),
+    {
+        content: "Click on image.",
+        trigger: 'iframe .s_text_image img',
+        extra_trigger: '#oe_snippets.o_loaded',
+    },
+    {
+        content: "Activate link.",
+        trigger: '.o_we_customize_panel we-row:contains("Media") we-button.fa-link',
+    },
+    {
+        content: "Set URL.",
+        trigger: '.o_we_customize_panel we-input:contains("Your URL") input',
+        run: 'text odoo.com',
+    },
+    {
+        content: "Deselect image.",
+        trigger: 'iframe .s_text_image p',
+    },
+    {
+        content: "Re-select image.",
+        trigger: 'iframe .s_text_image img',
+    },
+    {
+        content: "Check that link tools appear.",
+        trigger: '.popover div a:contains("http://odoo.com")',
+        run: () => {}, // It's a check.
+    },
+    // 5. Remove link from image.
+    {
+        content: "Remove link.",
+        trigger: '.popover:contains("http://odoo.com") a .fa-chain-broken',
+    },
+    {
+        content: "Check that image is not within a link anymore.",
+        trigger: 'iframe .s_text_image div > img',
+        run: () => {}, // It's a check.
+    },
 ]);
