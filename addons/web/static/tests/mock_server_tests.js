@@ -6,69 +6,88 @@ QUnit.module("Mock Server", {
     beforeEach() {
         this.data = {
             models: {
-                "res.partner": {
+                partner: {
                     fields: {
-                        name: {
-                            string: "Name",
-                            type: "string",
-                        },
-                        email: {
-                            string: "Email",
-                            type: "string",
-                        },
-                        active: {
-                            string: "Active",
-                            type: "bool",
-                            default: true,
-                        },
+                        active: { string: "Active", type: "bool", default: true },
                     },
                     records: [
-                        { id: 1, name: "Jean-Michel", email: "jean.michel@example.com" },
-                        { id: 2, name: "Raoul", email: "raoul@example.com", active: false },
+                        { id: 1, name: "Jean-Michel" },
+                        { id: 2, name: "Raoul", active: false },
                     ],
                 },
                 bar: {
                     fields: {
-                        foo: {
-                            string: "Foo",
-                            type: "integer",
-                            searchable: true,
-                            group_operator: "sum",
+                        bool: { string: "Boolean", type: "boolean" },
+                        date: { string: "Date", type: "date" },
+                        datetime: { string: "DateTime", type: "datetime" },
+                        foo: { string: "Foo", type: "integer" },
+                        partner_id: { string: "Main buddy", type: "many2one", relation: "partner" },
+                        partner_ids: { string: "Buddies", type: "many2many", relation: "partner" },
+                        select: {
+                            string: "Stage",
+                            type: "selection",
+                            selection: [
+                                ["new", "New"],
+                                ["dev", "Ongoing"],
+                                ["done", "Done"],
+                            ],
                         },
-                        date: { string: "Date", type: "date", store: true, sortable: true },
-                        datetime: {
-                            string: "DateTime",
-                            type: "datetime",
-                            store: true,
-                            sortable: true,
-                        },
-                        partners: { string: "Buddies", type: "many2many", relation: "res.partner" },
                     },
                     records: [
                         {
-                            id: 1,
                             foo: 12,
+                            bool: true,
                             date: "2016-12-14",
                             datetime: "2016-12-14 12:34:56",
-                            partners: [1, 2],
+                            name: "zzz",
+                            partner_ids: [1, 2],
+                            select: "dev",
                         },
                         {
-                            id: 2,
                             foo: 1,
+                            bool: true,
                             date: "2016-10-26",
                             datetime: "2016-10-26 12:34:56",
-                            partners: [1],
+                            name: "ddd",
+                            partner_id: 2,
+                            partner_ids: [1],
+                            select: "new",
                         },
                         {
-                            id: 3,
                             foo: 17,
+                            bool: false,
                             date: "2016-12-15",
                             datetime: "2016-12-15 12:34:56",
-                            partners: [2],
+                            name: "xxx",
+                            partner_ids: [2],
+                            select: "done",
                         },
-                        { id: 4, foo: 2, date: "2016-04-11", datetime: "2016-04-11 12:34:56" },
-                        { id: 5, foo: 0, date: "2016-12-15", datetime: "2016-12-15 12:34:56" },
-                        { id: 6, foo: 42, date: "2019-12-30", datetime: "2019-12-30 12:34:56" },
+                        {
+                            foo: 2,
+                            bool: true,
+                            date: "2016-04-11",
+                            datetime: "2016-04-11 12:34:56",
+                            name: "zzz",
+                            partner_id: 1,
+                            select: "new",
+                        },
+                        {
+                            foo: 0,
+                            bool: false,
+                            date: "2016-12-15",
+                            datetime: "2016-12-15 12:34:56",
+                            name: "aaa",
+                            select: "done",
+                        },
+                        {
+                            foo: 42,
+                            bool: true,
+                            date: "2019-12-30",
+                            datetime: "2019-12-30 12:34:56",
+                            name: "mmm",
+                            partner_id: 1,
+                            select: "new",
+                        },
                     ],
                 },
             },
@@ -80,7 +99,7 @@ QUnit.test("performRPC: search with active_test=false", async function (assert) 
     assert.expect(1);
     const server = new MockServer(this.data, {});
     const result = await server.performRPC("", {
-        model: "res.partner",
+        model: "partner",
         method: "search",
         args: [[]],
         kwargs: {
@@ -94,7 +113,7 @@ QUnit.test("performRPC: search with active_test=true", async function (assert) {
     assert.expect(1);
     const server = new MockServer(this.data, {});
     const result = await server.performRPC("", {
-        model: "res.partner",
+        model: "partner",
         method: "search",
         args: [[]],
         kwargs: {
@@ -108,7 +127,7 @@ QUnit.test("performRPC: search_read with active_test=false", async function (ass
     assert.expect(1);
     const server = new MockServer(this.data, {});
     const result = await server.performRPC("", {
-        model: "res.partner",
+        model: "partner",
         method: "search_read",
         args: [[]],
         kwargs: {
@@ -126,7 +145,7 @@ QUnit.test("performRPC: search_read with active_test=true", async function (asse
     assert.expect(1);
     const server = new MockServer(this.data, {});
     const result = await server.performRPC("", {
-        model: "res.partner",
+        model: "partner",
         method: "search_read",
         args: [[]],
         kwargs: {
@@ -135,6 +154,45 @@ QUnit.test("performRPC: search_read with active_test=true", async function (asse
         },
     });
     assert.deepEqual(result, [{ id: 1, name: "Jean-Michel" }]);
+});
+
+QUnit.test("performRPC: read_group, group by char", async function (assert) {
+    const server = new MockServer(this.data, {});
+    const result = await server.performRPC("", {
+        model: "bar",
+        method: "read_group",
+        args: [[]],
+        kwargs: {
+            fields: ["name"],
+            domain: [],
+            groupby: ["name"],
+        },
+    });
+    assert.deepEqual(result, [
+        { name: "aaa", __domain: [["name", "=", "aaa"]], name_count: 1 },
+        { name: "ddd", __domain: [["name", "=", "ddd"]], name_count: 1 },
+        { name: "mmm", __domain: [["name", "=", "mmm"]], name_count: 1 },
+        { name: "xxx", __domain: [["name", "=", "xxx"]], name_count: 1 },
+        { name: "zzz", __domain: [["name", "=", "zzz"]], name_count: 2 },
+    ]);
+});
+
+QUnit.test("performRPC: read_group, group by boolean", async function (assert) {
+    const server = new MockServer(this.data, {});
+    const result = await server.performRPC("", {
+        model: "bar",
+        method: "read_group",
+        args: [[]],
+        kwargs: {
+            fields: ["bool"],
+            domain: [],
+            groupby: ["bool"],
+        },
+    });
+    assert.deepEqual(result, [
+        { bool: false, __domain: [["bool", "=", false]], bool_count: 2 },
+        { bool: true, __domain: [["bool", "=", true]], bool_count: 4 },
+    ]);
 });
 
 QUnit.test("performRPC: read_group, group by date", async function (assert) {
@@ -152,11 +210,11 @@ QUnit.test("performRPC: read_group, group by date", async function (assert) {
     });
     assert.deepEqual(
         result.map((x) => x.date),
-        ["December 2016", "October 2016", "April 2016", "December 2019"]
+        ["April 2016", "October 2016", "December 2016", "December 2019"]
     );
     assert.deepEqual(
         result.map((x) => x.date_count),
-        [3, 1, 1, 1]
+        [1, 1, 3, 1]
     );
 
     result = await server.performRPC("", {
@@ -171,11 +229,11 @@ QUnit.test("performRPC: read_group, group by date", async function (assert) {
     });
     assert.deepEqual(
         result.map((x) => x["date:day"]),
-        ["2016-12-14", "2016-10-26", "2016-12-15", "2016-04-11", "2019-12-30"]
+        ["2016-04-11", "2016-10-26", "2016-12-14", "2016-12-15", "2019-12-30"]
     );
     assert.deepEqual(
         result.map((x) => x.date_count),
-        [1, 1, 2, 1, 1]
+        [1, 1, 1, 2, 1]
     );
 
     result = await server.performRPC("", {
@@ -190,11 +248,11 @@ QUnit.test("performRPC: read_group, group by date", async function (assert) {
     });
     assert.deepEqual(
         result.map((x) => x["date:week"]),
-        ["W50 2016", "W43 2016", "W15 2016", "W01 2020"]
+        ["W15 2016", "W43 2016", "W50 2016", "W01 2020"]
     );
     assert.deepEqual(
         result.map((x) => x.date_count),
-        [3, 1, 1, 1]
+        [1, 1, 3, 1]
     );
 
     result = await server.performRPC("", {
@@ -209,11 +267,11 @@ QUnit.test("performRPC: read_group, group by date", async function (assert) {
     });
     assert.deepEqual(
         result.map((x) => x["date:quarter"]),
-        ["Q4 2016", "Q2 2016", "Q4 2019"]
+        ["Q2 2016", "Q4 2016", "Q4 2019"]
     );
     assert.deepEqual(
         result.map((x) => x.date_count),
-        [4, 1, 1]
+        [1, 4, 1]
     );
 
     result = await server.performRPC("", {
@@ -250,11 +308,11 @@ QUnit.test("performRPC: read_group, group by datetime", async function (assert) 
     });
     assert.deepEqual(
         result.map((x) => x.datetime),
-        ["December 2016", "October 2016", "April 2016", "December 2019"]
+        ["April 2016", "October 2016", "December 2016", "December 2019"]
     );
     assert.deepEqual(
         result.map((x) => x.datetime_count),
-        [3, 1, 1, 1]
+        [1, 1, 3, 1]
     );
 
     result = await server.performRPC("", {
@@ -269,11 +327,11 @@ QUnit.test("performRPC: read_group, group by datetime", async function (assert) 
     });
     assert.deepEqual(
         result.map((x) => x["datetime:hour"]),
-        ["12:00 14 Dec", "12:00 26 Oct", "12:00 15 Dec", "12:00 11 Apr", "12:00 30 Dec"]
+        ["12:00 11 Apr", "12:00 26 Oct", "12:00 14 Dec", "12:00 15 Dec", "12:00 30 Dec"]
     );
     assert.deepEqual(
         result.map((x) => x.datetime_count),
-        [1, 1, 2, 1, 1]
+        [1, 1, 1, 2, 1]
     );
 
     result = await server.performRPC("", {
@@ -288,11 +346,11 @@ QUnit.test("performRPC: read_group, group by datetime", async function (assert) 
     });
     assert.deepEqual(
         result.map((x) => x["datetime:day"]),
-        ["2016-12-14", "2016-10-26", "2016-12-15", "2016-04-11", "2019-12-30"]
+        ["2016-04-11", "2016-10-26", "2016-12-14", "2016-12-15", "2019-12-30"]
     );
     assert.deepEqual(
         result.map((x) => x.datetime_count),
-        [1, 1, 2, 1, 1]
+        [1, 1, 1, 2, 1]
     );
 
     result = await server.performRPC("", {
@@ -307,11 +365,11 @@ QUnit.test("performRPC: read_group, group by datetime", async function (assert) 
     });
     assert.deepEqual(
         result.map((x) => x["datetime:week"]),
-        ["W50 2016", "W43 2016", "W15 2016", "W01 2020"]
+        ["W15 2016", "W43 2016", "W50 2016", "W01 2020"]
     );
     assert.deepEqual(
         result.map((x) => x.datetime_count),
-        [3, 1, 1, 1]
+        [1, 1, 3, 1]
     );
 
     result = await server.performRPC("", {
@@ -326,11 +384,11 @@ QUnit.test("performRPC: read_group, group by datetime", async function (assert) 
     });
     assert.deepEqual(
         result.map((x) => x["datetime:quarter"]),
-        ["Q4 2016", "Q2 2016", "Q4 2019"]
+        ["Q2 2016", "Q4 2016", "Q4 2019"]
     );
     assert.deepEqual(
         result.map((x) => x.datetime_count),
-        [4, 1, 1]
+        [1, 4, 1]
     );
 
     result = await server.performRPC("", {
@@ -360,32 +418,43 @@ QUnit.test("performRPC: read_group, group by m2m", async function (assert) {
         method: "read_group",
         args: [[]],
         kwargs: {
-            fields: ["partners"],
+            fields: ["partner_ids"],
             domain: [],
-            groupby: ["partners"],
+            groupby: ["partner_ids"],
         },
     });
-    assert.deepEqual(
-        result,
+    assert.deepEqual(result, [
+        { partner_ids: false, __domain: [["partner_ids", "=", false]], partner_ids_count: 3 },
+        {
+            partner_ids: [1, "Jean-Michel"],
+            __domain: [["partner_ids", "=", 1]],
+            partner_ids_count: 2,
+        },
+        { partner_ids: [2, "Raoul"], __domain: [["partner_ids", "=", 2]], partner_ids_count: 2 },
+    ]);
+});
 
-        [
-            {
-                __domain: [["partners", "=", 1]],
-                partners: [1, "Jean-Michel"],
-                partners_count: 2,
-            },
-            {
-                __domain: [["partners", "=", 2]],
-                partners: [2, "Raoul"],
-                partners_count: 2,
-            },
-            {
-                __domain: [["partners", "=", false]],
-                partners: false,
-                partners_count: 3,
-            },
-        ]
-    );
+QUnit.test("performRPC: read_group, group by m2o", async function (assert) {
+    this.data.models.partner.fields.sequence = { type: "integer" };
+    this.data.models.partner.records[0].sequence = 1;
+    this.data.models.partner.records[1].sequence = 0;
+
+    const server = new MockServer(this.data, {});
+    const result = await server.performRPC("", {
+        model: "bar",
+        method: "read_group",
+        args: [[]],
+        kwargs: {
+            fields: ["partner_id"],
+            domain: [],
+            groupby: ["partner_id"],
+        },
+    });
+    assert.deepEqual(result, [
+        { partner_id: false, __domain: [["partner_id", "=", false]], partner_id_count: 3 },
+        { partner_id: [2, "Raoul"], __domain: [["partner_id", "=", 2]], partner_id_count: 1 },
+        { partner_id: [1, "Jean-Michel"], __domain: [["partner_id", "=", 1]], partner_id_count: 2 },
+    ]);
 });
 
 QUnit.test("performRPC: read_group, group by integer", async function (assert) {
@@ -402,8 +471,8 @@ QUnit.test("performRPC: read_group, group by integer", async function (assert) {
     });
     assert.deepEqual(result, [
         {
-            __domain: [["foo", "=", 12]],
-            foo: 12,
+            __domain: [["foo", "=", 0]],
+            foo: 0,
             foo_count: 1,
         },
         {
@@ -412,24 +481,105 @@ QUnit.test("performRPC: read_group, group by integer", async function (assert) {
             foo_count: 1,
         },
         {
-            __domain: [["foo", "=", 17]],
-            foo: 17,
-            foo_count: 1,
-        },
-        {
             __domain: [["foo", "=", 2]],
             foo: 2,
             foo_count: 1,
         },
         {
-            __domain: [["foo", "=", 0]],
-            foo: 0,
+            __domain: [["foo", "=", 12]],
+            foo: 12,
+            foo_count: 1,
+        },
+        {
+            __domain: [["foo", "=", 17]],
+            foo: 17,
             foo_count: 1,
         },
         {
             __domain: [["foo", "=", 42]],
             foo: 42,
             foo_count: 1,
+        },
+    ]);
+});
+
+QUnit.test("performRPC: read_group, group by selection", async function (assert) {
+    const server = new MockServer(this.data, {});
+    const result = await server.performRPC("", {
+        model: "bar",
+        method: "read_group",
+        args: [[]],
+        kwargs: {
+            fields: ["select"],
+            domain: [],
+            groupby: ["select"],
+        },
+    });
+    assert.deepEqual(result, [
+        { select: "new", __domain: [["select", "=", "new"]], select_count: 3 },
+        { select: "dev", __domain: [["select", "=", "dev"]], select_count: 1 },
+        { select: "done", __domain: [["select", "=", "done"]], select_count: 2 },
+    ]);
+});
+
+QUnit.test("performRPC: read_group, group by two levels", async function (assert) {
+    const server = new MockServer(this.data, {});
+    const result = await server.performRPC("", {
+        model: "bar",
+        method: "read_group",
+        args: [[]],
+        kwargs: {
+            fields: ["bool", "partner_ids"],
+            domain: [],
+            groupby: ["bool", "partner_ids"],
+            lazy: false,
+        },
+    });
+    assert.deepEqual(result, [
+        {
+            __domain: [
+                ["partner_ids", "=", false],
+                ["bool", "=", false],
+            ],
+            __count: 1,
+            bool: false,
+            partner_ids: false,
+        },
+        {
+            __domain: [
+                ["partner_ids", "=", 2],
+                ["bool", "=", false],
+            ],
+            __count: 1,
+            bool: false,
+            partner_ids: [2, "Raoul"],
+        },
+        {
+            __domain: [
+                ["partner_ids", "=", false],
+                ["bool", "=", true],
+            ],
+            __count: 2,
+            bool: true,
+            partner_ids: false,
+        },
+        {
+            __domain: [
+                ["partner_ids", "=", 1],
+                ["bool", "=", true],
+            ],
+            __count: 2,
+            bool: true,
+            partner_ids: [1, "Jean-Michel"],
+        },
+        {
+            __domain: [
+                ["partner_ids", "=", 2],
+                ["bool", "=", true],
+            ],
+            __count: 1,
+            bool: true,
+            partner_ids: [2, "Raoul"],
         },
     ]);
 });

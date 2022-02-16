@@ -986,7 +986,7 @@ QUnit.module("Views", (hooks) => {
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed:last-child"));
         await click(pivot.el.querySelector(".dropdown-menu span:nth-child(1)"));
         assert.containsN(pivot, "thead tr", 4);
-        values = ["12", "3", "17", "32"];
+        values = ["12", "17", "3", "32"];
         assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
     });
 
@@ -1750,9 +1750,9 @@ QUnit.module("Views", (hooks) => {
             "should have 7 rows (total + 3 for December and 2 for October and April)"
         );
 
-        // collapse the last two rows
-        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_opened")[3]);
+        // collapse the first two rows
         await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_opened")[2]);
+        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_opened")[1]);
 
         assert.containsN(pivot, "tbody tr", 6, "should have 6 rows now");
 
@@ -1801,9 +1801,9 @@ QUnit.module("Views", (hooks) => {
             "should have 7 rows (total + 3 for December and 2 for October and April)"
         );
 
-        // collapse the last two rows
-        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_opened")[3]);
+        // collapse the first two rows
         await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_opened")[2]);
+        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_opened")[1]);
 
         assert.containsN(pivot, "tbody tr", 6, "should have 6 rows now");
 
@@ -2149,7 +2149,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             target.querySelector("tbody .o_pivot_header_cell_closed").textContent,
-            "December 2016"
+            "April 2016"
         );
 
         // Apply BAR groupbys
@@ -2157,14 +2157,14 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(target, "Bar");
         assert.strictEqual(
             target.querySelector("tbody .o_pivot_header_cell_closed").textContent,
-            "Yes"
+            "No"
         );
 
         // remove groupBy
         await toggleMenuItem(target, "Bar");
         assert.strictEqual(
             target.querySelector("tbody .o_pivot_header_cell_closed").textContent,
-            "December 2016"
+            "April 2016"
         );
 
         // remove all facets
@@ -2172,7 +2172,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             target.querySelector("tbody .o_pivot_header_cell_closed").textContent,
-            "December 2016"
+            "April 2016"
         );
     });
 
@@ -2268,7 +2268,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector("thead .o_pivot_header_cell_closed").textContent,
-                "December 2016"
+                "April 2016"
             );
 
             // activate the unique existing favorite
@@ -2282,7 +2282,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector("thead .o_pivot_header_cell_closed").textContent,
-                "Yes"
+                "No"
             );
 
             // desactivate the unique existing favorite
@@ -2295,7 +2295,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector("thead .o_pivot_header_cell_closed").textContent,
-                "Yes"
+                "No"
             );
 
             // Let's get rid of the rows and columns groupBy
@@ -2323,7 +2323,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector("thead .o_pivot_header_cell_closed").textContent,
-                "Yes"
+                "No"
             );
         }
     );
@@ -2570,14 +2570,14 @@ QUnit.module("Views", (hooks) => {
         await click(pivot.el.querySelectorAll("thead .o_pivot_header_cell_closed")[1]);
         await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[1]);
 
-        values = ["29", "1", "2", "32", "12", "12", "17", "1", "2", "20"];
+        values = ["29", "2", "1", "32", "12", "12", "17", "2", "1", "20"];
         assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
 
         // expand a row group
         await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
         await click(pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-item")[3]);
 
-        values = ["29", "1", "2", "32", "12", "12", "17", "1", "2", "20", "17", "1", "2", "20"];
+        values = ["29", "2", "1", "32", "12", "12", "17", "2", "1", "20", "17", "2", "1", "20"];
         assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
 
         // reload (should keep folded groups folded as col/row groupbys didn't change)
@@ -2593,20 +2593,20 @@ QUnit.module("Views", (hooks) => {
         values = [
             "12",
             "17",
-            "1",
             "2",
+            "1",
             "32",
             "12",
             "12",
             "12",
             "12",
             "17",
-            "1",
             "2",
+            "1",
             "20",
             "17",
-            "1",
             "2",
+            "1",
             "20",
         ];
         assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
@@ -3177,7 +3177,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             pivot.el.querySelector("table tbody tr").innerText.replace(/\s/g, ""),
-            "Total2112",
+            "Total1122",
             "should display product_id count as measure"
         );
     });
@@ -3203,7 +3203,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             [...pivot.el.querySelectorAll(".o_pivot_cell_value")].map((c) => c.innerText).join(""),
-            "2211",
+            "2112",
             "should have loaded the proper data"
         );
     });
@@ -3836,16 +3836,16 @@ QUnit.module("Views", (hooks) => {
                 "19",
                 "13",
                 "-31.58%",
-                "17",
-                "0",
-                "-100%",
-                "17",
-                "0",
-                "-100%",
                 "2",
                 "0",
                 "-100%",
                 "2",
+                "0",
+                "-100%",
+                "17",
+                "0",
+                "-100%",
+                "17",
                 "0",
                 "-100%",
                 "0",
@@ -3992,16 +3992,16 @@ QUnit.module("Views", (hooks) => {
                 "19",
                 "13",
                 "-31.58%",
-                "17",
-                "0",
-                "-100%",
-                "17",
-                "0",
-                "-100%",
                 "2",
                 "0",
                 "-100%",
                 "2",
+                "0",
+                "-100%",
+                "17",
+                "0",
+                "-100%",
+                "17",
                 "0",
                 "-100%",
                 "0",
@@ -4031,16 +4031,16 @@ QUnit.module("Views", (hooks) => {
                 "19",
                 "13",
                 "-31.58%",
-                "17",
-                "0",
-                "-100%",
-                "17",
-                "0",
-                "-100%",
                 "2",
                 "0",
                 "-100%",
                 "2",
+                "0",
+                "-100%",
+                "17",
+                "0",
+                "-100%",
+                "17",
                 "0",
                 "-100%",
                 "0",
@@ -4212,16 +4212,16 @@ QUnit.module("Views", (hooks) => {
                 "19",
                 "13",
                 "-31.58%",
-                "17",
-                "0",
-                "-100%",
-                "17",
-                "0",
-                "-100%",
                 "2",
                 "0",
                 "-100%",
                 "2",
+                "0",
+                "-100%",
+                "17",
+                "0",
+                "-100%",
+                "17",
                 "0",
                 "-100%",
                 "0",
@@ -4243,10 +4243,10 @@ QUnit.module("Views", (hooks) => {
             await click(pivot.el.querySelector(".o_pivot_flip_button"));
 
             values = [
-                "17",
+                "2",
                 "0",
                 "-100%",
-                "2",
+                "17",
                 "0",
                 "-100%",
                 "0",
@@ -4314,7 +4314,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.deepEqual(
             [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
-            ["Total", "2016-12-15", "2016-12-17", "2016-11-22", "2016-11-03"],
+            ["Total", "2016-11-03", "2016-11-22", "2016-12-15", "2016-12-17"],
             "The row headers should be as expected"
         );
 
@@ -4327,10 +4327,10 @@ QUnit.module("Views", (hooks) => {
                 "",
                 "Total",
                 "",
+                "2016-11-03",
+                "2016-11-22",
                 "2016-12-15",
                 "2016-12-17",
-                "2016-11-22",
-                "2016-11-03",
                 "Foo",
                 "Foo",
                 "Foo",
@@ -4360,8 +4360,8 @@ QUnit.module("Views", (hooks) => {
                 "",
                 "Total",
                 "",
-                "2016-11-22",
                 "2016-11-03",
+                "2016-11-22",
                 "2016-12-15",
                 "2016-12-17",
                 "Foo",
@@ -4460,7 +4460,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.deepEqual(
                 [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
-                ["Total", "Dog", "false", "None", "None"],
+                ["Total", "Dog", "None", "false", "None"],
                 "The row headers should be as expected"
             );
         }
@@ -4537,7 +4537,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.deepEqual(
                 [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
-                ["Total", "Company", "Yes", "individual", "Yes", "No"],
+                ["Total", "Company", "Yes", "individual", "No", "Yes"],
                 "The row headers should be as expected"
             );
         }
@@ -5010,7 +5010,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        const values = ["29", "1", "2", "32", "12", "12", "17", "1", "2", "20"];
+        const values = ["2", "1", "29", "32", "12", "12", "2", "1", "17", "20"];
         assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
 
         // Set a domain (this reload is delayed)
@@ -5026,7 +5026,7 @@ QUnit.module("Views", (hooks) => {
         def.resolve();
         await nextTick();
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["20", "1", "17", "2"].join(","));
+        assert.strictEqual(getCurrentValues(pivot.el), ["20", "2", "1", "17"].join(","));
     });
 
     QUnit.test("sort rows while loading a filter", async function (assert) {

@@ -1964,10 +1964,10 @@ QUnit.module("Search", (hooks) => {
 
         assert.deepEqual(getCategoriesContent(comp), [
             "All",
+            "lowID",
             "asustek: 2",
             "agrolait: 2",
             "highID",
-            "lowID",
         ]);
     });
 

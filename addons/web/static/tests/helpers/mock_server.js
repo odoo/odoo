@@ -224,17 +224,15 @@ export class MockServer {
         this.archs = data.views || {};
         this.debug = options.debug || false;
         Object.entries(this.models).forEach(([modelName, model]) => {
-            if (!("id" in model.fields)) {
-                model.fields.id = { string: "ID", type: "integer" };
-            }
-            if (!("display_name" in model.fields)) {
-                model.fields.display_name = { string: "Display Name", type: "char" };
-            }
-            if (!("__last_update" in model.fields)) {
-                model.fields.__last_update = { string: "Last Modified on", type: "datetime" };
-            }
-            if (!("name" in model.fields)) {
-                model.fields.name = { string: "Name", type: "char", default: "name" };
+            model.fields = {
+                id: { string: "ID", type: "integer" },
+                display_name: { string: "Display Name", type: "char" },
+                name: { string: "Name", type: "char", default: "name" },
+                __last_update: { string: "Last Modified on", type: "datetime" },
+                ...model.fields,
+            };
+            for (const fieldName in model.fields) {
+                model.fields[fieldName].name = fieldName;
             }
             model.records = model.records || [];
             for (var i = 0; i < model.records.length; i++) {
@@ -950,17 +948,15 @@ export class MockServer {
             readGroupResult.push(group);
         }
 
-        if (kwargs.orderby) {
-            // only consider first sorting level
-            kwargs.orderby = kwargs.orderby.split(",")[0];
-            const fieldName = kwargs.orderby.split(" ")[0];
-            const order = kwargs.orderby.split(" ")[1];
-            readGroupResult = this.sortByField(readGroupResult, modelName, fieldName, order);
-        }
+        // Order by
+        this.sortByField(readGroupResult, modelName, kwargs.orderby || groupByFieldNames.join(","));
+
+        // Limit
         if (kwargs.limit) {
             const offset = kwargs.offset || 0;
             readGroupResult = readGroupResult.slice(offset, kwargs.limit + offset);
         }
+
         return readGroupResult;
     }
 
@@ -1584,13 +1580,7 @@ export class MockServer {
             params.domain || [],
             Object.assign({}, params.context, { active_test })
         );
-        if (params.sort) {
-            // warning: only consider first level of sort
-            params.sort = params.sort.split(",")[0];
-            const fieldName = params.sort.split(" ")[0];
-            const order = params.sort.split(" ")[1];
-            records = this.sortByField(records, params.model, fieldName, order);
-        }
+        this.sortByField(records, params.model, params.sort);
         const nbRecords = records.length;
         records = records.slice(offset, params.limit ? offset + params.limit : nbRecords);
         return {
@@ -1618,6 +1608,27 @@ export class MockServer {
     //////////////////////////////////////////////////////////////////////////////
     evaluateDomain(domain, record) {
         return new Domain(domain).contains(record);
+    }
+
+    /**
+     * Returns the field by which a given model must be ordered.
+     * It is either:
+     * - the field matching 'fieldNameSpec' (if any, else an error is thrown).
+     * - if no field spec is given : the 'sequence' field (if any), or the 'id' field.
+     *
+     * @param {string} modelName
+     * @param {string} [fieldNameSpec]
+     * @returns {Object}
+     */
+    getOrderByField(modelName, fieldNameSpec) {
+        const { fields } = this.models[modelName];
+        const fieldName = fieldNameSpec || ("sequence" in fields ? "sequence" : "id");
+        if (!(fieldName in fields)) {
+            throw new Error(
+                `Mock: cannot sort records of model "${modelName}" by field "${fieldName}": field not found`
+            );
+        }
+        return fields[fieldName];
     }
 
     /**
@@ -1672,32 +1683,94 @@ export class MockServer {
         return records;
     }
 
-    sortByField(records, modelName, fieldName, order) {
-        const field = this.models[modelName].fields[fieldName];
-        records.sort((r1, r2) => {
-            let v1 = r1[fieldName];
-            let v2 = r2[fieldName];
-            if (field.type === "many2one") {
-                const coRecords = this.models[field.relation].records;
-                if (this.models[field.relation].fields.sequence) {
-                    // use sequence field of comodel to sort records
-                    v1 = coRecords.find((r) => r.id === v1[0]).sequence;
-                    v2 = coRecords.find((r) => r.id === v2[0]).sequence;
-                } else {
-                    // sort by id
-                    v1 = v1[0];
-                    v2 = v2[0];
+    /**
+     * Sorts the given list of records *IN PLACE* by the given field name. The
+     * 'orderby' field name and sorting direction are determined by the optional
+     * `orderBy` param, else the default orderBy field is applied (with "ASC").
+     * @see {getOrderByField}
+     *
+     * @param {Object[]} records
+     * @param {string} modelName
+     * @param {string} [orderBy="id ASC"]
+     * @returns {Object[]}
+     */
+    sortByField(records, modelName, orderBy = "") {
+        const orderBys = orderBy.split(",");
+        const [fieldNameSpec, order] = orderBys.pop().split(" ");
+        const field = this.getOrderByField(modelName, fieldNameSpec);
+
+        // Prepares a values map if needed to easily retrieve the ordering
+        // factor associated to a certain id or value.
+        let valuesMap;
+        switch (field.type) {
+            case "many2many":
+            case "many2one": {
+                let coRecords = this.models[field.relation].records;
+                const coField = this.getOrderByField(field.relation);
+                if (field.type === "many2many") {
+                    // M2m use the joined list of comodel field values
+                    // -> they need to be sorted
+                    this.sortByField(coRecords, field.relation);
+                }
+                valuesMap = new Map(coRecords.map((r) => [r.id, r[coField.name]]));
+                break;
+            }
+            case "selection": {
+                // Selection order is determined by the index of each value
+                valuesMap = new Map(field.selection.map((v, i) => [v[0], i]));
+                break;
+            }
+        }
+
+        // Actual sorting
+        const sortedRecords = records.sort((r1, r2) => {
+            let v1 = r1[field.name];
+            let v2 = r2[field.name];
+            switch (field.type) {
+                case "many2one": {
+                    if (v1) {
+                        v1 = valuesMap.get(v1[0]);
+                    }
+                    if (v2) {
+                        v2 = valuesMap.get(v2[0]);
+                    }
+                    break;
+                }
+                case "many2many": {
+                    // Co-records have already been sorted -> comparing the joined
+                    // list of each of them will yield the proper result.
+                    if (v1) {
+                        v1 = v1.map((id) => valuesMap.get(id)).join("");
+                    }
+                    if (v2) {
+                        v2 = v2.map((id) => valuesMap.get(id)).join("");
+                    }
+                    break;
+                }
+                case "date":
+                case "datetime": {
+                    if (r1.__range && r2.__range) {
+                        v1 = r1.__range[field.name] && r1.__range[field.name].from;
+                        v2 = r2.__range[field.name] && r2.__range[field.name].from;
+                    }
+                    break;
+                }
+                case "selection": {
+                    v1 = valuesMap.get(v1);
+                    v2 = valuesMap.get(v2);
+                    break;
                 }
             }
-            if (v1 < v2) {
-                return order === "ASC" ? -1 : 1;
-            }
-            if (v1 > v2) {
-                return order === "ASC" ? 1 : -1;
-            }
-            return 0;
+            const result = v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
+            return order === "DESC" ? -result : result;
         });
-        return records;
+
+        // Goes to the next level of orderBy (if any)
+        if (orderBys.length) {
+            return this.sortByField(sortedRecords, modelName, orderBys.join(","));
+        }
+
+        return sortedRecords;
     }
 
     writeRecord(modelName, values, id, { ensureIntegrity = true } = {}) {
