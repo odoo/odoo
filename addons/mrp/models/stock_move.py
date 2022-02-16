@@ -444,11 +444,6 @@ class StockMove(models.Model):
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
         return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_production_id']
 
-    def _merge_moves_fields(self):
-        res = super()._merge_moves_fields()
-        res['cost_share'] = sum(self.mapped('cost_share'))
-        return res
-
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
         """ Computes the quantity delivered or received when a kit is sold or purchased.
         A ratio 'qty_processed/qty_needed' is computed for each component, and the lowest one is kept
