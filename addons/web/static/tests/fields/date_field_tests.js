@@ -2,6 +2,8 @@
 
 import { click, patchTimeZone, triggerEvent, triggerEvents } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
+import { registry } from "@web/core/registry";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 
 let serverData;
 
@@ -688,19 +690,23 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("DateField support internalization", async function (assert) {
         assert.expect(2);
 
-        var originalLocale = moment.locale();
-        var originalParameters = _.clone(core._t.database.parameters);
+        const originalLocale = moment.locale();
 
-        _.extend(core._t.database.parameters, {
-            date_format: "%d. %b %Y",
-            time_format: "%H:%M:%S",
-        });
+        registry.category("services").remove("localization");
+        registry
+            .category("services")
+            .add(
+                "localization",
+                makeFakeLocalizationService({ dateFormat: "%d. %b %Y", timeFormat: "%H:%M:%S" })
+            );
+
         moment.defineLocale("norvegianForTest", {
             monthsShort: "jan._feb._mars_april_mai_juni_juli_aug._sep._okt._nov._des.".split("_"),
             monthsParseExact: true,
             dayOfMonthOrdinalParse: /\d{1,2}\./,
             ordinal: "%d.",
         });
+        moment().locale("norvegianForTest");
 
         const form = await makeView({
             type: "form",
@@ -710,29 +716,27 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        var dateViewForm = form.$(".o_field_date").text();
-        await testUtils.dom.click(form.$buttons.find(".o_form_button_edit"));
-        await testUtils.dom.openDatepicker(form.$(".o_datepicker"));
+        const dateViewForm = form.el.querySelector(".o_field_date").innerText;
+        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(form.el, ".o_datepicker input");
+
         assert.strictEqual(
-            form.$(".o_datepicker_input").val(),
+            form.el.querySelector(".o_datepicker_input").value,
             dateViewForm,
             "input date field should be the same as it was in the view form"
         );
 
-        await testUtils.dom.click($(".day:contains(30)"));
-        var dateEditForm = form.$(".o_datepicker_input").val();
-        await testUtils.dom.click(form.$buttons.find(".o_form_button_save"));
+        await click(document.body.querySelector(".day[data-day*='/22/']"));
+        const dateEditForm = form.el.querySelector(".o_datepicker_input").value;
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.strictEqual(
-            form.$(".o_field_date").text(),
+            form.el.querySelector(".o_field_date").innerText,
             dateEditForm,
             "date field should be the same as the one selected in the view form"
         );
 
         moment.locale(originalLocale);
         moment.updateLocale("norvegianForTest", null);
-        core._t.database.parameters = originalParameters;
-
-        form.destroy();
     });
 
     QUnit.test("DateField: hit enter should update value", async function (assert) {
