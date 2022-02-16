@@ -108,6 +108,12 @@ const LinkPopoverWidget = Widget.extend({
                 this.$target.popover('show');
             }
         });
+        this.$target.on('href_changed.link_popover', (e) => {
+            // Do not change shown/hidden state.
+            if (popoverShown) {
+                this._loadAsyncLinkPreview();
+            }
+        });
         const onClickDocument = (e) => {
             if (popoverShown) {
                 const hierarchy = [e.target, ...ancestors(e.target)];
@@ -257,7 +263,7 @@ const LinkPopoverWidget = Widget.extend({
      */
     _onRemoveLinkClick(ev) {
         ev.preventDefault();
-        this.options.wysiwyg.odooEditor.execCommand('unlink');
+        this.options.wysiwyg.removeLink();
         ev.stopImmediatePropagation();
     },
 });
