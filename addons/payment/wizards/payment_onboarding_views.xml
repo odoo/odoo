@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- onboarding step -->
-    <template id="onboarding_payment_acquirer_step">
-        <t t-call="base.onboarding_step">
-            <t t-set="title">Online Payments</t>
-            <t t-set="description">Enable credit &amp; debit card payments supported by Stripe</t>
-            <t t-set="btn_text">Activate Stripe</t>
-            <t t-set="done_text">Online payments enabled</t>
-            <t t-set="method" t-value="'action_open_payment_onboarding_payment_acquirer'" />
-            <t t-set="model" t-value="'res.company'" />
-            <t t-set="state" t-value="state.get('payment_acquirer_onboarding_state')" />
-        </t>
-    </template>
 
     <record model="ir.ui.view" id="payment_acquirer_onboarding_wizard_form">
         <field name="name">payment.acquirer.onboarding.wizard.form</field>
@@ -42,24 +30,7 @@
                                     </a>
                                 </p>
                             </div>
-                            <div invisible="1">
-                                <group>
-                                    <field name="stripe_secret_key" password="True"/>
-                                    <field name="stripe_publishable_key" password="True"/>
-                                </group>
-                                <p>
-                                    <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">
-                                        <span><i class="fa fa-arrow-right"/> Get my Stripe keys</span>
-                                    </a>
-                                </p>
-                            </div>
 
-                            <div attrs="{'invisible': [('payment_method', '!=', 'other')]}">
-                                <button type="object" name="action_onboarding_other_payment_acquirer">
-                                    Check here
-                                </button>
-                                to choose another payment method.
-                            </div>
                             <div attrs="{'invisible': [('payment_method', '!=', 'manual')]}">
                                 <group>
                                     <field name="manual_name" attrs="{'required': [('payment_method', '=', 'manual')]}"/>
@@ -80,12 +51,4 @@
         </field>
     </record>
 
-    <record id="action_open_payment_onboarding_payment_acquirer_wizard" model="ir.actions.act_window">
-        <field name="name">Choose a payment method</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">payment.acquirer.onboarding.wizard</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="payment.payment_acquirer_onboarding_wizard_form" />
-        <field name="target">new</field>
-    </record>
 </odoo>

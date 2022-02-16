@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class PaymentWizard(models.TransientModel):
@@ -18,7 +18,6 @@ class PaymentWizard(models.TransientModel):
         ('digital_signature', "Electronic signature"),
         ('stripe', "Credit & Debit card (via Stripe)"),
         ('paypal', "PayPal"),
-        ('other', "Other payment acquirer"),
         ('manual', "Custom payment instructions"),
     ], default=_get_default_payment_method)
     #
@@ -27,14 +26,14 @@ class PaymentWizard(models.TransientModel):
         """ Override. """
         self.env.company.sudo().set_onboarding_step_done('sale_onboarding_order_confirmation_state')
 
-    def add_payment_methods(self, *args, **kwargs):
+    def add_payment_methods(self):
         self.env.company.sale_onboarding_payment_method = self.payment_method
         if self.payment_method == 'digital_signature':
             self.env.company.portal_confirmation_sign = True
         if self.payment_method in ('paypal', 'stripe', 'other', 'manual'):
             self.env.company.portal_confirmation_pay = True
 
-        return super(PaymentWizard, self).add_payment_methods(*args, **kwargs)
+        return super().add_payment_methods()
 
     def _start_stripe_onboarding(self):
         """ Override of payment to set the sale menu as start menu of the payment onboarding. """

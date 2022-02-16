@@ -19,20 +19,6 @@ class ResCompany(models.Model):
             ('other', "Other"),
         ])
 
-    @api.model
-    def action_open_payment_onboarding_payment_acquirer(self):
-        """ Called by onboarding panel above the customer invoice list. """
-        # TODO remove me in master.
-        #  This action is never used anywhere because the onboarding step's method is overridden in
-        #  website_sale to call action_open_website_sale_onboarding_payment_acquirer instead.
-        # Fail if there are no existing accounts
-        self.env.company.get_chart_of_accounts_or_fail()
-
-        action = self.env['ir.actions.actions']._for_xml_id(
-            'payment.action_open_payment_onboarding_payment_acquirer_wizard'
-        )
-        return action
-
     def _run_payment_onboarding_step(self, menu_id):
         """ Install the suggested payment modules and configure the acquirers.
 
