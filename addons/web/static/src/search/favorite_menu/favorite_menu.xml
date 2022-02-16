@@ -19,7 +19,7 @@
                         >
                         <span class="d-flex p-0 align-items-center justify-content-between">
                             <t t-esc="item.description"/>
-                            <i class="o_icon_right fa fa-trash-o"
+                            <i class="ml-1 o_icon_right fa fa-trash-o"
                                 title="Delete item"
                                 t-on-click.stop="() => this.openConfirmationDialog(item.id)"
                             />
