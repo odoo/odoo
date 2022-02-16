@@ -39,7 +39,6 @@ export const iapNotificationService = {
             const message = Markup`<a class='btn btn-link' href='${notif.url}' target='_blank' ><i class='fa fa-arrow-right'></i> ${env._t("Buy more credits")}</a>`;
             notification.add(message, {
                 type: notif.error_type,
-                messageIsHtml: true,
                 title: notif.title
             });
         }
