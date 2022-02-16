@@ -60,8 +60,8 @@ class KanbanGroup extends Group {
 }
 
 class KanbanDynamicGroupList extends DynamicGroupList {
-    setup() {
-        super.setup(...arguments);
+    constructor() {
+        super(...arguments);
 
         this.quickCreateInfo = null; // Lazy loaded;
     }
@@ -70,7 +70,52 @@ class KanbanDynamicGroupList extends DynamicGroupList {
      * @override
      */
     async load() {
-        await this._fetchProgressData(super.load());
+        const initialLoadPromise = super.load();
+
+        // No progress attributes : normal load
+        if (!this.model.progressAttributes) {
+            return initialLoadPromise;
+        }
+
+        // Progress attributes : load with progress bar data
+        const { colors, fieldName, help, sumField } = this.model.progressAttributes;
+        const progressPromise = this.model.orm.call(this.resModel, "read_progress_bar", [], {
+            domain: this.domain,
+            group_by: this.groupBy[0],
+            progress_bar: {
+                colors,
+                field: fieldName,
+                help,
+                sum_field: sumField && sumField.name,
+            },
+            context: this.context,
+        });
+
+        const [progressData] = await Promise.all([progressPromise, initialLoadPromise]);
+
+        const progressField = this.fields[fieldName];
+        /** @type {[string | false, string][]} */
+        const colorEntries = Object.entries(colors);
+        const selection = Object.fromEntries(progressField.selection || []);
+
+        if (!colorEntries.some((e) => e[1] === "muted")) {
+            colorEntries.push([false, "muted"]);
+        }
+
+        for (const group of this.groups) {
+            const groupKey = group.displayName || group.value;
+            const counts = progressData[groupKey] || { false: group.count };
+            const remaining = group.count - Object.values(counts).reduce((acc, c) => acc + c, 0);
+            for (const [key, color] of colorEntries) {
+                const count = key === false ? remaining : counts[key];
+                group.progressValues.push({
+                    count: count || 0,
+                    value: key,
+                    string: selection[String(key)] || this.model.env._t("Other"),
+                    color,
+                });
+            }
+        }
     }
 
     canQuickCreate() {
@@ -82,6 +127,44 @@ class KanbanDynamicGroupList extends DynamicGroupList {
             return activeField.attrs.allow_group_range_value;
         }
         return QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type);
+    }
+
+    async createGroup(value) {
+        return this.model.mutex.exec(async () => {
+            const [id, displayName] = await this.model.orm.call(
+                this.groupByField.relation,
+                "name_create",
+                [value],
+                { context: this.context }
+            );
+            const group = this.model.createDataPoint("group", {
+                count: 0,
+                value: id,
+                displayName,
+                aggregates: {},
+                fields: this.fields,
+                activeFields: this.activeFields,
+                resModel: this.resModel,
+                domain: this.domain,
+                groupBy: this.groupBy.slice(1),
+                context: this.context,
+                orderedBy: this.orderBy,
+            });
+            group.isFolded = false;
+            group.progressValues.push({
+                count: 0,
+                value: false,
+                string: this.model.env._t("Other"),
+                color: "muted",
+            });
+            this.groups.push(group);
+            this.model.notify();
+        });
+    }
+
+    async deleteGroup(group) {
+        await this.model.orm.unlink(this.groupByField.relation, [group.value], this.context);
+        this.groups = this.groups.filter((g) => g.id !== group.id);
     }
 
     async quickCreate(group) {
@@ -127,112 +210,14 @@ class KanbanDynamicGroupList extends DynamicGroupList {
             const value = isRelational(this.groupByField) ? [newGroup.value] : newGroup.value;
             await record.update(this.groupByField.name, value);
             await record.save();
-            await this._fetchProgressData(this._reloadGroups());
-            await Promise.all([oldGroup.list.load(), newGroup.list.load()]);
+            await this.load();
         }
         await newGroup.list.resequence();
-    }
-
-    async createGroup(value) {
-        return this.model.mutex.exec(async () => {
-            const [id, displayName] = await this.model.orm.call(
-                this.groupByField.relation,
-                "name_create",
-                [value],
-                { context: this.context }
-            );
-            const group = this.model.createDataPoint("group", {
-                count: 0,
-                value: id,
-                displayName,
-                aggregates: {},
-                fields: this.fields,
-                activeFields: this.activeFields,
-                resModel: this.resModel,
-                domain: this.domain,
-                groupBy: this.groupBy.slice(1),
-                context: this.context,
-                orderedBy: this.orderBy,
-            });
-            group.isFolded = false;
-            group.progressValues.push({
-                count: 0,
-                value: false,
-                string: this.model.env._t("Other"),
-                color: "muted",
-            });
-            this.groups.push(group);
-            this.model.notify();
-        });
-    }
-
-    async deleteGroup(group) {
-        await this.model.orm.unlink(this.groupByField.relation, [group.value], this.context);
-        this.groups = this.groups.filter((g) => g.id !== group.id);
     }
 
     // ------------------------------------------------------------------------
     // Protected
     // ------------------------------------------------------------------------
-
-    async _fetchProgressData(loadPromise) {
-        if (!this.model.progressAttributes) {
-            return loadPromise;
-        }
-        const { colors, fieldName, help, sumField } = this.model.progressAttributes;
-        const progressPromise = this.model.orm.call(this.resModel, "read_progress_bar", [], {
-            domain: this.domain,
-            group_by: this.groupBy[0],
-            progress_bar: {
-                colors,
-                field: fieldName,
-                help,
-                sum_field: sumField && sumField.name,
-            },
-            context: this.context,
-        });
-        const [progressData] = await Promise.all([progressPromise, loadPromise]);
-
-        const progressField = this.fields[fieldName];
-        /** @type {[string | false, string][]} */
-        const colorEntries = Object.entries(colors);
-        const selection = Object.fromEntries(progressField.selection || []);
-
-        if (!colorEntries.some((e) => e[1] === "muted")) {
-            colorEntries.push([false, "muted"]);
-        }
-
-        for (const group of this.groups) {
-            const groupKey = group.displayName || group.value;
-            const counts = progressData[groupKey] || { false: group.count };
-            const remaining = group.count - Object.values(counts).reduce((acc, c) => acc + c, 0);
-            for (const [key, color] of colorEntries) {
-                const count = key === false ? remaining : counts[key];
-                group.progressValues.push({
-                    count: count || 0,
-                    value: key,
-                    string: selection[String(key)] || this.model.env._t("Other"),
-                    color,
-                });
-            }
-        }
-    }
-
-    async _reloadGroups() {
-        const oldGroups = this.groups;
-        const promises = [];
-        this.groups = await this._loadGroups();
-        for (const group of this.groups) {
-            const previous = oldGroups.find((g) => g.value === group.value);
-            if (previous) {
-                group.list.count = previous.list.count;
-                group.list.records = previous.list.records;
-            } else {
-                promises.push(group.list.load());
-            }
-        }
-        await Promise.all(promises);
-    }
 
     async _loadQuickCreateView() {
         if (this.isLoadingQuickCreate) {

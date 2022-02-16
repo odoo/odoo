@@ -682,15 +682,26 @@ class DynamicList extends DataPoint {
         };
     }
 
-    async _resequence(list, targetId, insertAfter = 0) {
-        if (targetId) {
-            const target = list.find((r) => r.id === targetId);
-            const index = insertAfter ? list.findIndex((r) => r.id === insertAfter) : 0;
-            list = list.filter((r) => r.id !== targetId);
+    /**
+     * Calls the method 'resequence' on the current resModel.
+     * If 'movedId' is provided, the record matching that ID will be resequenced
+     * in the current list of IDs, at the start of the list or after the record
+     * matching 'targetId' if given as well.
+     * @param {(Group | Record)[]} list
+     * @param {string} idProperty property on the given list used to determine each ID
+     * @param {string} [movedId]
+     * @param {string} [targetId]
+     * @returns {Promise<(Group | Record)[]>}
+     */
+    async _resequence(list, idProperty, movedId, targetId) {
+        if (movedId) {
+            const target = list.find((r) => r.id === movedId);
+            const index = targetId ? list.findIndex((r) => r.id === targetId) : 0;
+            list = list.filter((r) => r.id !== movedId);
             list.splice(index, 0, target);
         }
         const model = this.resModel;
-        const ids = list.map((r) => r.resId);
+        const ids = list.map((r) => r[idProperty]);
         // FIMME: can't go though orm, so no context given
         await this.model.rpc("/web/dataset/resequence", { model, ids });
         this.model.notify();
@@ -731,7 +742,7 @@ export class DynamicRecordList extends DynamicList {
     }
 
     async resequence() {
-        this.records = await this._resequence(this.records, ...arguments);
+        this.records = await this._resequence(this.records, "resId", ...arguments);
     }
 
     async unlink({ resId }) {
@@ -883,7 +894,7 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async resequence() {
-        this.groups = await this._resequence(this.groups, ...arguments);
+        this.groups = await this._resequence(this.groups, "value", ...arguments);
     }
 
     // ------------------------------------------------------------------------

@@ -25,10 +25,66 @@ const serviceRegistry = registry.category("services");
 // Helpers
 // ----------------------------------------------------------------------------
 
+/**
+ * @param {HTMLElement} el
+ * @param {boolean} after
+ * @returns {{ clientX: number, clientY: number }}
+ */
+const getPos = (el, after = false) => {
+    const rect = el.getBoundingClientRect();
+    return {
+        clientX: rect.x + rect.width / 2,
+        clientY: rect.y + (after ? rect.height + 1 : rect.height / 2),
+    };
+};
+const makeFakeActionService = (actionService) => {
+    registry.category("services").add("action", { start: () => actionService }, { force: true });
+};
+
 // Kanban
 const reload = async (kanban, params = {}) => {
     await kanban.model.load(params);
     await nextTick();
+};
+/**
+ * @param {owl.Component} kanban
+ * @param {string} selector
+ * @param {Object} params
+ * @param {string} [params.after]
+ * @param {string} [params.before]
+ * @param {string} [params.inside]
+ * @returns {Promise<void>}
+ */
+const dragAndDrop = async (kanban, selector, { after, before, inside }) => {
+    let target;
+    if (inside) {
+        const list = kanban.el.querySelector(inside);
+        target = list.children[list.children.length - 1];
+    } else {
+        target = kanban.el.querySelector(after || before);
+    }
+
+    // Mouse down on main target then move to a far away position to initiate the drag
+    const el = kanban.el.querySelector(selector);
+    await triggerEvents(el, null, [
+        ["mousedown", getPos(el)],
+        ["mousemove", { clientX: -999, clientY: -999 }],
+    ]);
+
+    // Enter the target list (iff other list)
+    const initList = el.closest(".o_kanban_group");
+    const targetList = target.closest(".o_kanban_group");
+    if (initList !== targetList) {
+        await triggerEvent(targetList, null, "mouseenter", getPos(targetList));
+    }
+
+    // Move, enter and drop the element on the target
+    const targetPos = getPos(target, Boolean(after || inside));
+    await triggerEvents(el, null, [
+        ["mousemove", targetPos],
+        ["mouseenter", targetPos],
+        ["mouseup", targetPos],
+    ]);
 };
 
 // Record
@@ -75,10 +131,6 @@ const toggleColumnActions = async (kanban, columnIndex) => {
         const button = [...buttons].find((b) => re.test(b.innerText));
         return click(button);
     };
-};
-
-const makeFakeActionService = (actionService) => {
-    registry.category("services").add("action", { start: () => actionService }, { force: true });
 };
 
 // /!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\
@@ -3527,14 +3579,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("can drag and drop a record from one column to the next", async (assert) => {
         assert.expect(9);
 
-        // @todo: remove this resequenceDef whenever the jquery upgrade branch
-        // is merged.  This is currently necessary to simulate the reality: we
-        // need the click handlers to be executed after the end of the drag and
-        // drop operation, not before.
-        const resequenceDef = makeDeferred();
-
-        const envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
-        serverData.models.partner.fields.sequence = { type: "number", string: "Sequence" };
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -3549,34 +3593,28 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
+            async mockRPC(route) {
                 if (route === "/web/dataset/resequence") {
-                    assert.ok(true, "should call resequence");
-                    return resequenceDef.then(_.constant(true));
+                    assert.step("resequence");
                 }
-                return this._super(route, args);
             },
         });
-        assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
         assert.containsN(kanban, ".thisiseditable", 4);
-        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
-        const $record = kanban.el.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-        );
-        const $group = kanban.el.querySelector(".o_kanban_group:nth-child(2)");
-        envIDs = [3, 2, 4, 1]; // first record of first column moved to the bottom of second column
-        await testUtils.dom.dragAndDrop($record, $group, { withTrailingClick: true });
+        assert.verifySteps([]);
 
-        resequenceDef.resolve();
-        await nextTick();
-        assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        // first record of first column moved to the bottom of second column
+        await dragAndDrop(kanban, ".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:nth-child(2)",
+        });
+
+        assert.containsOnce(kanban, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
         assert.containsN(kanban, ".thisiseditable", 4);
-        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
-        resequenceDef.resolve();
+        assert.verifySteps(["resequence"]);
     });
 
     QUnit.skipWOWL("drag and drop a record, grouped by selection", async (assert) => {
@@ -6710,7 +6748,6 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skipWOWL("resequence columns in grouped by m2o", async (assert) => {
         assert.expect(6);
-        serverData.models.product.fields.sequence = { string: "Sequence", type: "integer" };
 
         const envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
         const kanban = await makeView({
@@ -8111,9 +8148,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(3);
 
             // Add a sequence number and initialize
-            serverData.models.partner.fields = Object.assign(serverData.models.partner.fields, {
-                sequence: { type: "integer" },
-            });
+            serverData.models.partner.fields.sequence = { type: "integer" };
             serverData.models.partner.records.forEach((el, i) => {
                 el.sequence = i;
             });

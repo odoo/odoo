@@ -48,20 +48,13 @@ const hasClass = (node, ...classes) => {
     return classes.some((cls) => nodeClasses.includes(cls));
 };
 
-const translateAttribute = (attrValue) => {
-    for (const { regex, value } of TRANSPILED_EXPRESSIONS) {
-        attrValue = attrValue.replace(regex, value);
-    }
-    return attrValue;
-};
-
 const applyDefaultAttributes = (kanbanBox) => {
     kanbanBox.setAttribute("tabindex", 0);
     kanbanBox.setAttribute("role", "article");
     kanbanBox.setAttribute("t-att-class", "getRecordClasses(record,groupOrRecord.group)");
     kanbanBox.setAttribute("t-att-data-id", "recordsDraggable and record.id");
     if (hasClass(kanbanBox, ...KANBAN_CLICK_CLASSES)) {
-        kanbanBox.setAttribute("t-on-click", "ev => this.onRecordClick(record, ev)");
+        kanbanBox.setAttribute("t-on-click", "(ev) => this.onRecordClick(record, ev)");
     }
     return kanbanBox;
 };
@@ -73,6 +66,12 @@ const extractAttributes = (node, attributes) => {
         node.removeAttribute(attr);
     }
     return attrs;
+};
+
+const makeEl = (string) => {
+    const parent = document.createElement("div");
+    parent.innerHTML = string;
+    return parent.children[0];
 };
 
 export class KanbanArchParser extends XMLParser {
@@ -95,7 +94,7 @@ export class KanbanArchParser extends XMLParser {
             (xmlDoc.getAttribute("on_create") || "quick_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltips = {};
-        let kanbanBoxTemplate = document.createElement("t");
+        let kanbanBoxTemplate = makeEl("<t />");
         let colorField = "color";
         const activeFields = {};
 
@@ -114,18 +113,19 @@ export class KanbanArchParser extends XMLParser {
                 if (!fieldInfo.widget) {
                     // Fields without a specified widget are rendered as simple
                     // spans in kanban records.
-                    const tesc = document.createElement("span");
                     const value = `record.data['${name}']`;
-                    tesc.setAttribute(
-                        "t-esc",
-                        `(Array.isArray(${value}) ? ${value}[1] : ${value}) or ''`
+                    const tesc = makeEl(
+                        `<span t-esc="(Array.isArray(${value}) ? ${value}[1] : ${value}) or ''"/>`
                     );
                     node.replaceWith(tesc);
                 }
             }
             // Converts server qweb attributes to Owl attributes.
-            for (const { name, value } of node.attributes) {
-                node.setAttribute(name, translateAttribute(value));
+            for (let { name, value: attrValue } of node.attributes) {
+                for (const { regex, value } of TRANSPILED_EXPRESSIONS) {
+                    attrValue = attrValue.replace(regex, value);
+                }
+                node.setAttribute(name, attrValue);
             }
         });
 
@@ -135,7 +135,7 @@ export class KanbanArchParser extends XMLParser {
             kanbanBoxTemplate;
 
         // Generates dropdown element
-        const dropdown = document.createElement("Dropdown");
+        const dropdown = makeEl(`<t t-component="'Dropdown'" />`);
         const togglerClass = [];
         const menuClass = [];
         const transfers = [];
@@ -183,8 +183,7 @@ export class KanbanArchParser extends XMLParser {
             ".dropdown-toggle,.o_kanban_manage_toggle_button"
         )) {
             togglerClass.push(el.getAttribute("class"));
-            const togglerSlot = document.createElement("t");
-            togglerSlot.setAttribute("t-set-slot", "toggler");
+            const togglerSlot = makeEl(`<t t-set-slot="toggler" />`);
             togglerSlot.append(...el.children);
             dropdown.appendChild(togglerSlot);
             if (dropdownInserted) {
@@ -203,9 +202,7 @@ export class KanbanArchParser extends XMLParser {
             if (field) {
                 colorField = field;
             }
-            const colorPickerCaller = document.createElement("t");
-            colorPickerCaller.setAttribute("t-call", "web.KanbanColorPicker");
-            el.replaceWith(colorPickerCaller);
+            el.replaceWith(makeEl(`<t t-call="web.KanbanColorPicker" />`));
         }
 
         // Special actions
@@ -260,7 +257,6 @@ export class KanbanArchParser extends XMLParser {
 class KanbanView extends Component {
     setup() {
         this.actionService = useService("action");
-        this.viewService = useService("view");
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
         const { fields: activeFields, defaultGroupBy, onCreate, quickCreateView } = this.archInfo;

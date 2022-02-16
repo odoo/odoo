@@ -3,7 +3,6 @@
 
     <t t-name="web.KanbanRenderer" owl="1">
         <div class="o_kanban_renderer" t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}">
-            <t t-log="getGroupsOrRecords()" />
             <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key or `empty_${groupOrRecord_index}`"> <!-- FIXME -->
                 <t t-if="groupOrRecord.group">
                     <t t-set="group" t-value="groupOrRecord.group" />

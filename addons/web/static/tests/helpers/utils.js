@@ -179,23 +179,23 @@ function findElement(el, selector) {
 const keyboardEventBubble = (args) =>
     Object.assign({}, args, { bubbles: true, keyCode: args.which });
 
-const mouseEventMapping = (args) =>
-    Object.assign({}, args, {
-        bubbles: true,
-        cancelable: true,
-        clientX: args ? args.pageX : undefined,
-        clientY: args ? args.pageY : undefined,
-        view: window,
-    });
+const mouseEventMapping = (args) => ({
+    clientX: args ? args.pageX : undefined,
+    clientY: args ? args.pageY : undefined,
+    ...args,
+    bubbles: true,
+    cancelable: true,
+    view: window,
+});
 
-const mouseEventNoBubble = (args) =>
-    Object.assign({}, args, {
-        bubbles: false,
-        cancelable: false,
-        clientX: args ? args.pageX : undefined,
-        clientY: args ? args.pageY : undefined,
-        view: window,
-    });
+const mouseEventNoBubble = (args) => ({
+    clientX: args ? args.pageX : undefined,
+    clientY: args ? args.pageY : undefined,
+    ...args,
+    bubbles: false,
+    cancelable: false,
+    view: window,
+});
 
 const touchEventMapping = (args) => ({
     ...args,
