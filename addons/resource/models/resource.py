@@ -460,7 +460,9 @@ class ResourceCalendar(models.Model):
                         min(cache_dates[(resource_tz, end_dt)], dt_from_cache(resource_tz, day, hour_to)),
                         attendance
                     )
-                    for day in days
+                    # We need to exclude incorrect days according to re-defined start previously
+                    # with weeks=-1 (Note: until is correctly handled)
+                    for day in days if not (self.two_weeks_calendar and attendance.date_from and attendance.date_from > day.date())
                 ]
                 if attendance.resource_id:
                     result[attendance.resource_id.id].extend(local_result)
