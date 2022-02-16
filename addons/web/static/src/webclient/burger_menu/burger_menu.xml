@@ -15,22 +15,22 @@
         <div class="o_burger_menu d-flex flex-column flex-nowrap position-fixed" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
           <div class="o_burger_menu_topbar d-flex align-items-center justify-content-between"
               t-on-click.stop='_toggleUserMenu'>
-              <span class="dropdown-toggle small d-flex align-items-center justify-content-between o-no-caret" t-att-class="{active: state.isUserMenuOpened}">
+              <span class="dropdown-toggle small d-flex align-items-center justify-content-between o-no-caret" t-att-class="{active: isUserMenuUnfolded}">
                   <img class="o_burger_menu_avatar o_image_24_cover rounded-circle" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
                   <span class="o_burger_menu_username px-2"><t t-esc="user.name"/></span>
-                  <i t-if="currentApp" class="oi" t-att-class="state.isUserMenuOpened ? 'oi-caret--down' : 'oi-caret--left'"/>
+                  <i t-if="isUserMenuTogglable" class="oi" t-att-class="state.isUserMenuOpened ? 'oi-caret--down' : 'oi-caret--left'"/>
               </span>
               <span type="button" class="o_burger_menu_close oi oi-close" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeBurger"/>
           </div>
           <div class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto"
-              t-att-class="{o_burger_menu_dark: !state.isUserMenuOpened and currentApp}">
-              <div t-if="!currentApp or state.isUserMenuOpened" class="o_burger_menu_user">
+              t-att-class="{o_burger_menu_dark: !isUserMenuUnfolded}">
+              <div t-if="isUserMenuUnfolded" class="o_burger_menu_user">
                   <MobileSwitchCompanyMenu t-if="Object.values(company.availableCompanies).length > 1" />
                   <BurgerUserMenu/>
               </div>
 
               <!-- Current App Sections -->
-              <div class="o_burger_menu_app" t-if="!state.isUserMenuOpened and currentApp">
+              <div class="o_burger_menu_app" t-if="!isUserMenuUnfolded">
                   <div class="o_menu_sections">
                       <t t-foreach="currentAppSections" t-as="subMenu" t-key="subMenu_index">
                           <t t-call="web.BurgerSection">
