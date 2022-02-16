@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
-import { computePositioning, DEFAULTS, usePosition } from "@web/core/position/position_hook";
+import { usePosition } from "@web/core/position/position_hook";
 import { registerCleanup } from "../helpers/cleanup";
 import {
     destroy,
@@ -15,47 +15,30 @@ import {
 
 const { Component, xml } = owl;
 let container;
-let reference;
 
 /**
- * @param {HTMLElement} popper
- * @param {import("@web/core/position/position_hook").Position} [position="bottom"]
- * @returns {boolean}
+ * @param {import("@web/core/position/position_hook").Options} popperOptions
+ * @returns {Component}
  */
-function isWellPositioned(popper, position = "bottom") {
-    /** @type {import("@web/core/position/position_hook").Options} */
-    const options = {
-        ...DEFAULTS,
-        container,
-        position,
-    };
-    const [direction, variant = "middle"] = position.split("-");
-    const d = /** @type {import("@web/core/position/position_hook").DirectionsDataKey} */ (direction[0]);
-    const v = /** @type {import("@web/core/position/position_hook").VariantsDataKey} */ (variant[0]);
-    const posSolution = computePositioning(reference, popper, options).get(d, v);
-    const hasCorrectClass = popper.classList.contains(posSolution.className);
-    const correctLeft = parseFloat(popper.style.left) === Math.round(posSolution.left * 10) / 10;
-    const correctTop = parseFloat(popper.style.top) === Math.round(posSolution.top * 10) / 10;
-    return hasCorrectClass && correctLeft && correctTop;
-}
+function getTestComponent(popperOptions = {}) {
+    const reference = document.createElement("div");
+    reference.id = "reference";
+    reference.style.backgroundColor = "yellow";
+    reference.style.height = "50px";
+    reference.style.width = "50px";
+    container.appendChild(reference);
 
-class TestComp extends Component {
-    setup() {
-        usePosition(reference, this.constructor.popperOptions);
+    class TestComp extends Component {
+        setup() {
+            usePosition(reference, { container, ...popperOptions });
+        }
     }
+    TestComp.template = xml`<div id="popper" t-ref="popper" />`;
+    return TestComp;
 }
-TestComp.template = xml`<div id="popper" t-ref="popper" />`;
-/** @type {import("@web/core/position/position_hook").Options} */
-TestComp.popperOptions = {};
 
 QUnit.module("usePosition Hook", {
     async beforeEach() {
-        reference = document.createElement("div");
-        reference.id = "reference";
-        reference.style.backgroundColor = "yellow";
-        reference.style.height = "50px";
-        reference.style.width = "50px";
-
         // Force container style, to make these tests independent of screen size
         container = document.createElement("div");
         container.id = "container";
@@ -65,12 +48,10 @@ QUnit.module("usePosition Hook", {
         container.style.display = "flex";
         container.style.alignItems = "center";
         container.style.justifyContent = "center";
-        container.appendChild(reference);
         getFixture().prepend(container);
         registerCleanup(() => {
             getFixture().removeChild(container);
         });
-        TestComp.popperOptions = { container };
 
         const sheet = document.createElement("style");
         sheet.textContent = `
@@ -88,71 +69,79 @@ QUnit.module("usePosition Hook", {
     },
 });
 
-QUnit.test("default position is bottom", async (assert) => {
+QUnit.test("default position is bottom-middle", async (assert) => {
+    assert.expect(1);
+    const TestComp = getTestComponent({
+        onPositioned: (el, { direction, variant }) => {
+            assert.equal(`${direction}-${variant}`, "bottom-middle");
+        },
+    });
     await mount(TestComp, container);
-    assert.ok(isWellPositioned(document.getElementById("popper"), "bottom"));
 });
 
 QUnit.test("can add margin", async (assert) => {
-    let margin = 0;
-    Object.assign(TestComp.popperOptions, { margin });
+    let TestComp = getTestComponent({ margin: 0 });
     let popper = await mount(TestComp, container);
 
     const popBox1 = document.getElementById("popper").getBoundingClientRect();
     destroy(popper);
 
-    margin = 20;
-    Object.assign(TestComp.popperOptions, { margin });
+    TestComp = getTestComponent({ margin: 20 });
     popper = await mount(TestComp, container);
     const popBox2 = document.getElementById("popper").getBoundingClientRect();
     destroy(popper);
 
-    assert.strictEqual(popBox1.top + margin, popBox2.top);
+    assert.strictEqual(popBox1.top + 20, popBox2.top);
 });
 
 QUnit.test("popper is an inner element", async (assert) => {
-    patchWithCleanup(TestComp, {
-        template: xml`
-            <div id="not-popper">
-                <div id="popper" t-ref="popper"/>
-            </div>
-        `,
+    assert.expect(2);
+    const TestComp = getTestComponent({
+        onPositioned: (el) => {
+            assert.notOk(document.getElementById("not-popper") === el);
+            assert.ok(document.getElementById("popper") === el);
+        },
     });
+    TestComp.template = xml`
+        <div id="not-popper">
+            <div id="popper" t-ref="popper"/>
+        </div>
+    `;
     await mount(TestComp, container);
-    assert.notOk(isWellPositioned(document.getElementById("not-popper")));
-    assert.ok(isWellPositioned(document.getElementById("popper")));
 });
 
 QUnit.test("can change the popper reference name", async (assert) => {
-    patchWithCleanup(TestComp, {
-        popperOptions: { ...TestComp.popperOptions, popper: "myRef" },
-        template: xml`
-            <div id="not-popper">
-                <div id="popper" t-ref="myRef"/>
-            </div>
-        `,
+    assert.expect(2);
+    const TestComp = getTestComponent({
+        popper: "myRef",
+        onPositioned: (el) => {
+            assert.notOk(document.getElementById("not-popper") === el);
+            assert.ok(document.getElementById("popper") === el);
+        },
     });
+    TestComp.template = xml`
+        <div id="not-popper">
+            <div id="popper" t-ref="myRef"/>
+        </div>
+    `;
     await mount(TestComp, container);
-    assert.notOk(isWellPositioned(document.getElementById("not-popper")));
-    assert.ok(isWellPositioned(document.getElementById("popper")));
 });
 
 QUnit.test("has no effect when component is destroyed", async (assert) => {
     const execRegisteredCallbacks = mockAnimationFrame();
-    const originalReference = reference;
-    reference = () => {
-        assert.step("reference called");
-        return originalReference;
-    };
-
+    const TestComp = getTestComponent({
+        onPositioned: () => {
+            assert.step("onPositioned called");
+        },
+    });
     const comp = await mount(TestComp, container);
-    assert.verifySteps(["reference called"], "reference called when component mounted");
+    assert.verifySteps(["onPositioned called"], "onPositioned called when component mounted");
 
     triggerEvent(document, null, "scroll");
     await nextTick();
     assert.verifySteps([]);
     execRegisteredCallbacks();
-    assert.verifySteps(["reference called"], "reference called when document scrolled");
+    assert.verifySteps(["onPositioned called"], "onPositioned called when document scrolled");
 
     triggerEvent(document, null, "scroll");
     await nextTick();
@@ -160,16 +149,23 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
     execRegisteredCallbacks();
     assert.verifySteps(
         [],
-        "reference not called even if scroll happened right before the component destroys"
+        "onPositioned not called even if scroll happened right before the component destroys"
     );
 });
 
 const getPositionTest = (position, positionToCheck) => {
     return async (assert) => {
-        Object.assign(TestComp.popperOptions, { position });
-        await mount(TestComp, container);
+        assert.expect(2);
         positionToCheck = positionToCheck || position;
-        assert.ok(isWellPositioned(document.getElementById("popper"), positionToCheck));
+        const [d, v = "middle"] = positionToCheck.split("-");
+        const TestComp = getTestComponent({
+            position,
+            onPositioned: (el, { direction, variant }) => {
+                assert.equal(d, direction);
+                assert.equal(v, variant);
+            },
+        });
+        await mount(TestComp, container);
     };
 };
 QUnit.test("position top", getPositionTest("top"));
@@ -204,12 +200,16 @@ const CONTAINER_STYLE_MAP = {
 };
 const getRepositionTest = (from, to, containerStyleChanges) => {
     return async (assert) => {
-        patchWithCleanup(TestComp.popperOptions, { position: from });
+        assert.expect(4);
+        const TestComp = getTestComponent({
+            position: from,
+            onPositioned: (el, { direction, variant }) => {
+                assert.step(`${direction}-${variant}`);
+            },
+        });
         await mount(TestComp, container);
-        assert.ok(
-            isWellPositioned(document.getElementById("popper"), from),
-            `points to ${from} direction`
-        );
+        let [d, v = "middle"] = from.split("-");
+        assert.verifySteps([`${d}-${v}`], `has ${from} position`);
 
         // Change container style and force update
         for (const styleToApply of containerStyleChanges.split(" ")) {
@@ -217,10 +217,8 @@ const getRepositionTest = (from, to, containerStyleChanges) => {
         }
         triggerEvent(document, null, "scroll");
         await nextTick();
-        assert.ok(
-            isWellPositioned(document.getElementById("popper"), to),
-            `points to ${to} direction`
-        );
+        [d, v = "middle"] = to.split("-");
+        assert.verifySteps([`${d}-${v}`], `has ${to} position`);
     };
 };
 // -----------------------------------------------------------------------------

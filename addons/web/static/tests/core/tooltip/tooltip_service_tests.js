@@ -24,6 +24,7 @@ const mainComponents = registry.category("main_components");
  *   callback directly)
  * @param {function} [options.mockClearTimeout] the mocked clearTimeout to use (by default, does nothing)
  * @param {function} [options.mockClearInterval] the mocked clearInterval to use (by default, does nothing)
+ * @param {function} [options.onPopoverAdded] use this callback to check what is being passed to the popover service
  * @param {{[templateName:string]: string}} [options.templates] additional templates
  * @returns {Promise<Component>}
  */
@@ -44,6 +45,16 @@ async function makeParent(Child, options = {}) {
     registry.category("services").add("popover", popoverService);
     registry.category("services").add("tooltip", tooltipService);
     const env = await makeTestEnv();
+
+    patchWithCleanup(env.services.popover, {
+        add(...args) {
+            const result = this._super(...args);
+            if (options.onPopoverAdded) {
+                options.onPopoverAdded(...args);
+            }
+            return result;
+        },
+    });
 
     class Parent extends Component {
         setup() {
@@ -222,7 +233,7 @@ QUnit.module("Tooltip service", (hooks) => {
         assert.strictEqual(target.querySelector(".o_popover").innerText, "tooltip 2");
     });
 
-    QUnit.test("positionning", async (assert) => {
+    QUnit.test("positioning", async (assert) => {
         class MyComponent extends Component {}
         MyComponent.template = xml`
             <div style="height: 400px; padding: 40px">
@@ -232,42 +243,51 @@ QUnit.module("Tooltip service", (hooks) => {
                 <button class="bottom" data-tooltip="bottom" data-tooltip-position="bottom">Bottom</button>
                 <button class="left" data-tooltip="left" data-tooltip-position="left">Left</button>
             </div>`;
-        await makeParent(MyComponent);
+        await makeParent(MyComponent, {
+            onPopoverAdded(...args) {
+                const { position } = args[3];
+                if (position) {
+                    assert.step(`popover added with position: ${position}`);
+                } else {
+                    assert.step(`popover added with default positioning`);
+                }
+            },
+        });
 
         // default
         target.querySelector("button.default").dispatchEvent(new Event("mouseenter"));
         await nextTick();
         assert.containsOnce(target, ".o_popover_container .o_popover");
         assert.strictEqual(target.querySelector(".o_popover").innerText, "default");
-        assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--bm");
+        assert.verifySteps(["popover added with default positioning"]);
 
         // top
         target.querySelector("button.top").dispatchEvent(new Event("mouseenter"));
         await nextTick();
         assert.containsOnce(target, ".o_popover_container .o_popover");
         assert.strictEqual(target.querySelector(".o_popover").innerText, "top");
-        assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--tm");
+        assert.verifySteps(["popover added with position: top"]);
 
         // right
         target.querySelector("button.right").dispatchEvent(new Event("mouseenter"));
         await nextTick();
         assert.containsOnce(target, ".o_popover_container .o_popover");
         assert.strictEqual(target.querySelector(".o_popover").innerText, "right");
-        assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--rm");
+        assert.verifySteps(["popover added with position: right"]);
 
         // bottom
         target.querySelector("button.bottom").dispatchEvent(new Event("mouseenter"));
         await nextTick();
         assert.containsOnce(target, ".o_popover_container .o_popover");
         assert.strictEqual(target.querySelector(".o_popover").innerText, "bottom");
-        assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--bm");
+        assert.verifySteps(["popover added with position: bottom"]);
 
         // left
         target.querySelector("button.left").dispatchEvent(new Event("mouseenter"));
         await nextTick();
         assert.containsOnce(target, ".o_popover_container .o_popover");
         assert.strictEqual(target.querySelector(".o_popover").innerText, "left");
-        assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--lm");
+        assert.verifySteps(["popover added with position: left"]);
     });
 
     QUnit.test("tooltip with a template, no info", async (assert) => {
