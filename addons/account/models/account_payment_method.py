@@ -26,7 +26,7 @@ class AccountPaymentMethod(models.Model):
             information = methods_info.get(method.code)
 
             if information.get('mode') == 'multi':
-                method_domain = method._get_payment_method_domain()
+                method_domain = method._get_payment_method_domain(method.code)
 
                 journals = self.env['account.journal'].search(method_domain)
 
@@ -37,22 +37,24 @@ class AccountPaymentMethod(models.Model):
                 } for journal in journals])
         return payment_methods
 
-    def _get_payment_method_domain(self):
+    @api.model
+    def _get_payment_method_domain(self, code):
         """
         :return: The domain specyfying which journal can accomodate this payment method.
         """
-        self.ensure_one()
-        information = self._get_payment_method_information().get(self.code)
+        if not code:
+            return []
+        information = self._get_payment_method_information().get(code)
 
-        currency_id = information.get('currency_id')
+        currency_ids = information.get('currency_ids')
         country_id = information.get('country_id')
         default_domain = [('type', 'in', ('bank', 'cash'))]
         domains = [information.get('domain', default_domain)]
 
-        if currency_id:
+        if currency_ids:
             domains += [expression.OR([
-                [('currency_id', '=', False), ('company_id.currency_id', '=', currency_id)],
-                [('currency_id', '=', currency_id)]],
+                [('currency_id', '=', False), ('company_id.currency_id', 'in', currency_ids)],
+                [('currency_id', 'in', currency_ids)]],
             )]
 
         if country_id:

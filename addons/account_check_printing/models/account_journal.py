@@ -11,7 +11,7 @@ class AccountJournal(models.Model):
 
     def _default_outbound_payment_methods(self):
         res = super()._default_outbound_payment_methods()
-        if self.type == 'bank':
+        if self._is_payment_method_available('check_printing'):
             res |= self.env.ref('account_check_printing.account_payment_method_check')
         return res
 

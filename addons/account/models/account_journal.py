@@ -249,7 +249,7 @@ class AccountJournal(models.Model):
                     continue
 
                 # Get the domain of the journals on which the current method is usable.
-                method_domain = payment_method._get_payment_method_domain()
+                method_domain = payment_method._get_payment_method_domain(payment_method.code)
 
                 for journal in self.filtered_domain(method_domain):
                     protected_pay_method_ids = pay_methods_by_company.get(journal.company_id._origin.id, set()) \
@@ -289,7 +289,7 @@ class AccountJournal(models.Model):
             else:
                 journal.default_account_type = False
 
-    @api.depends('type')
+    @api.depends('type', 'currency_id')
     def _compute_inbound_payment_method_line_ids(self):
         for journal in self:
             pay_method_line_ids_commands = [Command.clear()]
@@ -301,7 +301,7 @@ class AccountJournal(models.Model):
                 }) for pay_method in default_methods]
             journal.inbound_payment_method_line_ids = pay_method_line_ids_commands
 
-    @api.depends('type')
+    @api.depends('type', 'currency_id')
     def _compute_outbound_payment_method_line_ids(self):
         for journal in self:
             pay_method_line_ids_commands = [Command.clear()]
@@ -919,3 +919,8 @@ class AccountJournal(models.Model):
             return self.inbound_payment_method_line_ids
         else:
             return self.outbound_payment_method_line_ids
+
+    def _is_payment_method_available(self, payment_method_code):
+        """ Check if the payment method is available on this journal. """
+        self.ensure_one()
+        return self.filtered_domain(self.env['account.payment.method']._get_payment_method_domain(payment_method_code))
