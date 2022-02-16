@@ -112,3 +112,13 @@ class LeaveReport(models.Model):
                 'search_default_active_employee': True,
             }
         }
+
+    def action_open_record(self):
+        self.ensure_one()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_id': self.leave_id.id if self.leave_id else self.allocation_id.id,
+            'res_model': 'hr.leave' if self.leave_id else 'hr.leave.allocation',
+        }
