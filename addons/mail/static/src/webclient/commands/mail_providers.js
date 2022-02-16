@@ -15,10 +15,12 @@ DialogCommand.template = xml`
 
 const commandSetupRegistry = registry.category("command_setup");
 commandSetupRegistry.add("@", {
+    debounceDelay: 200,
     emptyMessage: _lt("No user found"),
     name: _lt("users"),
 });
 commandSetupRegistry.add("#", {
+    debounceDelay: 200,
     emptyMessage: _lt("No channel found"),
     name: _lt("channels"),
 });
