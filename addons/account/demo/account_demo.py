@@ -29,7 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     def _post_load_demo_data(self, company=False):
-        cid = company or self.env.company.id
+        cid = company.id or self.env.company.id
         invoices = (
             self.env.ref(f'account.{cid}_demo_invoice_1')
             + self.env.ref(f'account.{cid}_demo_invoice_2')
@@ -64,7 +64,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_move(self, company=False):
-        cid = company or self.env.company.id
+        cid = company.id or self.env.company.id
         return {
             f'{cid}_demo_invoice_1': {
                 'move_type': 'out_invoice',
@@ -137,7 +137,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_statement(self, company=False):
-        cid = company or self.env.company.id
+        cid = company.id or self.env.company.id
         return {
             f'{cid}_demo_bank_statement_1': {
                 'journal_id': self.env['account.journal'].search([
@@ -194,7 +194,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_reconcile_model(self, company=False):
-        cid = company or self.env.company.id
+        cid = company.id or self.env.company.id
         return {
             f'{cid}_reconcile_from_label': {
                 'name': 'Line with Bank Fees',
@@ -229,7 +229,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_attachment(self, company=False):
-        cid = company or self.env.company.id
+        cid = company.id or self.env.company.id
         return {
             f'{cid}_ir_attachment_bank_statement_1': {
                 'type': 'binary',
@@ -262,7 +262,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_mail_message(self, company=False):
-        cid = company or self.env.company.id
+        cid = company.id or self.env.company.id
         return {
             f'{cid}_mail_message_bank_statement_1': {
                 'model': 'account.bank.statement',
@@ -298,7 +298,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_mail_activity(self, company=False):
-        cid = company or self.env.company.id
+        cid = company.id or self.env.company.id
         return {
             f'{cid}_invoice_activity_1': {
                 'res_id': f'account.{cid}_demo_invoice_3',

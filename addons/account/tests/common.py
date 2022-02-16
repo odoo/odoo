@@ -36,7 +36,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         if not chart_template:
             cls.tearDownClass()
             # skipTest raises exception
-            cls.skipTest(cls, "Accounting Tests skipped because the user's company has no chart of accounts.")
+            cls.skipTest(cls, "User's company has no chart of accounts.")
 
         # Create user.
         user = cls.env['res.users'].create({

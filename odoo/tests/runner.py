@@ -70,14 +70,14 @@ class OdooTestResult(unittest.result.TestResult):
             record = logger.makeRecord(logger.name, level, fn, lno, msg, args, exc_info, func, extra, sinfo)
             logger.handle(record)
 
-    def getDescription(self, test):
+    def getDescription(self, test, reason=None):
         if isinstance(test, unittest.case._SubTest):
             return 'Subtest %s.%s %s' % (test.test_case.__class__.__qualname__, test.test_case._testMethodName, test._subDescription())
         if isinstance(test, unittest.TestCase):
             # since we have the module name in the logger, this will avoid to duplicate module info in log line
             # we only apply this for TestCase since we can receive error handler or other special case
             return "%s.%s" % (test.__class__.__qualname__, test._testMethodName)
-        return str(test)
+        return f"{test}{f' [{reason}]' or ''}"
 
     def startTest(self, test):
         super().startTest(test)
@@ -115,7 +115,7 @@ class OdooTestResult(unittest.result.TestResult):
 
     def addSkip(self, test, reason):
         super().addSkip(test, reason)
-        self.log(logging.INFO, 'skipped %s', self.getDescription(test), test=test)
+        self.log(logging.INFO, 'skipped %s', self.getDescription(test, reason), test=test)
 
     def addUnexpectedSuccess(self, test):
         super().addUnexpectedSuccess(test)
