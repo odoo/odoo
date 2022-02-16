@@ -4,6 +4,7 @@ import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     editInput,
+    getFixture,
     makeDeferred,
     nextTick,
     patchWithCleanup,
@@ -17,9 +18,12 @@ import {
     validateSearch,
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 
 const serviceRegistry = registry.category("services");
+
+const { markup } = owl;
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -4889,10 +4893,11 @@ QUnit.module("Views", (hooks) => {
         await click(kanban.el, ".o_kanban_group[data-id=5] .o_column_edit");
     });
 
-    QUnit.skipWOWL("quick create column should be opened if there is no column", async (assert) => {
+    QUnit.test("quick create column should be opened if there is no column", async (assert) => {
         assert.expect(3);
 
-        const kanban = await makeView({
+        const target = getFixture();
+        await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -4907,20 +4912,23 @@ QUnit.module("Views", (hooks) => {
             domain: [["foo", "=", "norecord"]],
         });
 
-        assert.containsNone(kanban, ".o_kanban_group");
-        assert.containsOnce(kanban, ".o_column_quick_create");
-        assert.ok(
-            kanban.el.querySelector(".o_column_quick_create input").is(":visible"),
+        assert.containsNone(target, ".o_kanban_group");
+        assert.containsOnce(target, ".o_column_quick_create");
+        assert.containsOnce(
+            target,
+            ".o_column_quick_create input",
             "the quick create should be opened"
         );
     });
 
-    QUnit.skipWOWL(
+    // WOWL Fix typo in test name before merge
+    QUnit.test(
         "quick create column should not be closed on widnow click if there is no column",
         async (assert) => {
             assert.expect(4);
 
-            const kanban = await makeView({
+            const target = getFixture();
+            await makeView({
                 type: "kanban",
                 resModel: "partner",
                 serverData,
@@ -4937,22 +4945,24 @@ QUnit.module("Views", (hooks) => {
                 domain: [["foo", "=", "norecord"]],
             });
 
-            assert.containsNone(kanban, ".o_kanban_group");
-            assert.containsOnce(kanban, ".o_column_quick_create");
-            assert.ok(
-                kanban.el.querySelector(".o_column_quick_create input").is(":visible"),
+            assert.containsNone(target, ".o_kanban_group");
+            assert.containsOnce(target, ".o_column_quick_create");
+            assert.containsOnce(
+                target,
+                ".o_column_quick_create input",
                 "the quick create should be opened"
             );
             // click outside should not discard quick create column
-            await click(kanban.el, ".o_kanban_example_background_container");
-            assert.ok(
-                kanban.el.querySelector(".o_column_quick_create input").is(":visible"),
+            await click(target, ".o_kanban_example_background_container");
+            assert.containsOnce(
+                target,
+                ".o_column_quick_create input",
                 "the quick create should still be opened"
             );
         }
     );
 
-    QUnit.skipWOWL("quick create several columns in a row", async (assert) => {
+    QUnit.test("quick create several columns in a row", async (assert) => {
         assert.expect(10);
 
         const kanban = await makeView({
@@ -5018,24 +5028,26 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(kanban, ".o_kanban_group", 4);
     });
 
-    QUnit.skipWOWL("quick create column and examples", async (assert) => {
+    QUnit.test("quick create column and examples", async (assert) => {
         assert.expect(12);
 
-        // kanbanExamplesRegistry.add("test", {
-        //     examples: [
-        //         {
-        //             name: "A first example",
-        //             columns: ["Column 1", "Column 2", "Column 3"],
-        //             description: "A <b>weak</b> description.",
-        //         },
-        //         {
-        //             name: "A second example",
-        //             columns: ["Col 1", "Col 2"],
-        //             description: Mar--removethis--kup`A <b>fantastic</b> description.`,
-        //         },
-        //     ],
-        // });
+        serviceRegistry.add("dialog", dialogService, { force: true });
+        registry.category("kanban_examples").add("test", {
+            examples: [
+                {
+                    name: "A first example",
+                    columns: ["Column 1", "Column 2", "Column 3"],
+                    description: "A weak description.",
+                },
+                {
+                    name: "A second example",
+                    columns: ["Col 1", "Col 2"],
+                    description: markup(`A <b>fantastic</b> description.`),
+                },
+            ],
+        });
 
+        const target = getFixture();
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -5050,11 +5062,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
         });
 
-        assert.containsOnce(
-            kanban,
-            ".o_column_quick_create",
-            "should have a ColumnQuickCreate widget"
-        );
+        assert.containsOnce(kanban, ".o_column_quick_create", "should have quick create available");
 
         // open the quick create
         await createColumn(kanban);
@@ -5079,8 +5087,8 @@ QUnit.module("Views", (hooks) => {
             "should have two examples (in the menu)"
         );
         assert.strictEqual(
-            $(".modal .o_kanban_examples_dialog_nav a").innerText,
-            " A first example  A second example ",
+            target.querySelector(".modal .o_kanban_examples_dialog_nav").innerText,
+            "A first example\nA second example",
             "example names should be correct"
         );
         assert.strictEqual(
@@ -5097,13 +5105,13 @@ QUnit.module("Views", (hooks) => {
             "there should be 3 stages in the first example"
         );
         assert.strictEqual(
-            $firstPane.find("h6").innerText,
+            $firstPane.find("h6").text(),
             "Column 1Column 2Column 3",
             "column titles should be correct"
         );
         assert.strictEqual(
             $firstPane.find(".o_kanban_examples_description").html().trim(),
-            "A &lt;b&gt;weak&lt;/b&gt; description.",
+            "A weak description.",
             "An escaped description should be displayed"
         );
 
@@ -5114,7 +5122,7 @@ QUnit.module("Views", (hooks) => {
             "there should be 2 stages in the second example"
         );
         assert.strictEqual(
-            $secondPane.find("h6").innerText,
+            $secondPane.find("h6").text(),
             "Col 1Col 2",
             "column titles should be correct"
         );
@@ -5123,14 +5131,14 @@ QUnit.module("Views", (hooks) => {
             "A <b>fantastic</b> description.",
             "A formatted description should be displayed."
         );
-        delete kanbanExamplesRegistry.map["test"];
     });
 
-    QUnit.skipWOWL("quick create column's apply button's display text", async (assert) => {
+    QUnit.test("quick create column's apply button's display text", async (assert) => {
         assert.expect(1);
 
+        serviceRegistry.add("dialog", dialogService, { force: true });
         const applyExamplesText = "Use This For My Test";
-        kanbanExamplesRegistry.add("test", {
+        registry.category("kanban_examples").add("test", {
             applyExamplesText: applyExamplesText,
             examples: [
                 {
@@ -5164,22 +5172,21 @@ QUnit.module("Views", (hooks) => {
         // click to see the examples
         await click(kanban.el, ".o_column_quick_create .o_kanban_examples");
 
-        const $primaryActionButton = $(".modal footer.modal-footer button.btn-primary > span");
+        const $primaryActionButton = $(".modal footer.modal-footer button.btn-primary");
         assert.strictEqual(
-            $primaryActionButton.innerText,
+            $primaryActionButton.text(),
             applyExamplesText,
             "the primary button should display the value of applyExamplesText"
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "quick create column and examples background with ghostColumns titles",
         async (assert) => {
             assert.expect(4);
 
             serverData.models.partner.records = [];
-
-            kanbanExamplesRegistry.add("test", {
+            registry.category("kanban_examples").add("test", {
                 ghostColumns: ["Ghost 1", "Ghost 2", "Ghost 3", "Ghost 4"],
                 examples: [
                     {
@@ -5212,9 +5219,11 @@ QUnit.module("Views", (hooks) => {
                 ".o_kanban_example_background",
                 "should have ExamplesBackground when no data"
             );
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_examples_group h6").innerText,
-                "Ghost 1Ghost 2Ghost 3Ghost 4",
+            assert.deepEqual(
+                [...kanban.el.querySelectorAll(".o_kanban_examples_group h6")].map(
+                    (el) => el.innerText
+                ),
+                ["Ghost 1", "Ghost 2", "Ghost 3", "Ghost 4"],
                 "ghost title should be correct"
             );
             assert.containsOnce(
@@ -5230,7 +5239,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "quick create column and examples background without ghostColumns titles",
         async (assert) => {
             assert.expect(4);
@@ -5256,9 +5265,11 @@ QUnit.module("Views", (hooks) => {
                 ".o_kanban_example_background",
                 "should have ExamplesBackground when no data"
             );
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_examples_group h6").innerText,
-                "Column 1Column 2Column 3Column 4",
+            assert.deepEqual(
+                [...kanban.el.querySelectorAll(".o_kanban_examples_group h6")].map(
+                    (el) => el.innerText
+                ),
+                ["Column 1", "Column 2", "Column 3", "Column 4"],
                 "ghost title should be correct"
             );
             assert.containsOnce(

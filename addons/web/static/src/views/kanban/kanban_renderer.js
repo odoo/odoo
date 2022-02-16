@@ -16,8 +16,11 @@ import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { useSortable } from "@web/views/kanban/kanban_sortable";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { registry } from "@web/core/registry";
+import { Dialog } from "@web/core/dialog/dialog";
+import { _lt } from "@web/core/l10n/translation";
 
-const { Component, useExternalListener, useState } = owl;
+const { Component, useExternalListener, useState, useRef } = owl;
 const { RECORD_COLORS } = ColorPickerField;
 
 const GLOBAL_CLICK_CANCEL_SELECTORS = ["a", ".dropdown", ".oe_kanban_action"];
@@ -25,12 +28,13 @@ const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
 
 export class KanbanRenderer extends Component {
     setup() {
-        const { arch, cards, className, fields, xmlDoc } = this.props.info;
+        const { arch, cards, className, fields, xmlDoc, examples } = this.props.info;
         this.cards = cards;
         this.className = className;
         this.cardTemplate = useViewCompiler(KanbanCompiler, arch, fields, xmlDoc);
         this.state = useState({
             quickCreateDisabled: false,
+            quickCreateGroup: this.props.list.isGrouped && this.props.list.groups.length === 0,
             newGroup: "",
         });
         this.action = useService("action");
@@ -38,6 +42,7 @@ export class KanbanRenderer extends Component {
         this.notification = useService("notification");
         this.mousedownTarget = null;
         this.colors = RECORD_COLORS;
+        this.exampleData = registry.category("kanban_examples").get(examples, null);
         useAutofocus();
         useExternalListener(window, "click", this.onWindowClick, true);
         useExternalListener(window, "keydown", this.onWindowKeydown);
@@ -108,6 +113,17 @@ export class KanbanRenderer extends Component {
 
     get groupsDraggable() {
         return this.props.list.isGrouped && this.props.list.groupByField.type === "many2one";
+    }
+
+    get ghostColumns() {
+        if (this.exampleData && this.exampleData.ghostColumns) {
+            return this.exampleData.ghostColumns;
+        }
+        return [1, 2, 3, 4].map((num) => sprintf(this.env._t("Column %s"), num));
+    }
+
+    get ghostCards() {
+        return new Array(Math.floor(Math.random() * 4) + 2);
     }
 
     /**
@@ -246,7 +262,6 @@ export class KanbanRenderer extends Component {
             this.props.list.createGroup(this.state.newGroup);
         }
         this.state.newGroup = "";
-        this.state.quickCreateGroup = false;
     }
 
     cancelQuickCreate(force = false) {
@@ -361,6 +376,19 @@ export class KanbanRenderer extends Component {
         }
     }
 
+    showExamples() {
+        this.dialog.add(KanbanExamplesDialog, {
+            examples: this.exampleData.examples,
+            applyExamplesText:
+                this.exampleData.applyExamplesText || this.env._t("Use This For My Kanban"),
+            applyExamples: (index) => {
+                for (const groupName of this.exampleData.examples[index].columns) {
+                    this.props.list.createGroup(groupName);
+                }
+            },
+        });
+    }
+
     // ------------------------------------------------------------------------
     // Handlers
     // ------------------------------------------------------------------------
@@ -375,10 +403,6 @@ export class KanbanRenderer extends Component {
         if (!ev.target.closest(".dropdown") && group.isFolded) {
             group.toggle();
         }
-    }
-
-    onNewGroupChange(ev) {
-        this.state.newGroup = ev.target.value.trim();
     }
 
     onQuickCreateKeydown(group, ev) {
@@ -402,7 +426,7 @@ export class KanbanRenderer extends Component {
         if (!target.closest(".o_kanban_quick_create")) {
             this.cancelQuickCreate();
         }
-        if (!target.closest(".o_column_quick_create")) {
+        if (!target.closest(".o_column_quick_create") && this.props.list.groups.length > 0) {
             this.state.quickCreateGroup = false;
         }
         this.mousedownTarget = null;
@@ -508,3 +532,27 @@ export class KanbanRenderer extends Component {
 
 KanbanRenderer.template = "web.KanbanRenderer";
 KanbanRenderer.components = { Field, FormRenderer, ViewButton, KanbanAnimatedNumber, Dropdown };
+
+class KanbanExamplesDialog extends Dialog {
+    setup() {
+        super.setup(...arguments);
+        this.navList = useRef("navList");
+    }
+
+    random(min, max) {
+        return new Array(Math.floor(Math.random() * (max - min) + min));
+    }
+
+    applyExamples() {
+        const ul = this.navList.el;
+        // FIXME WOWL: make an owl nav/tabs component so we don't have to do this
+        const activeNavItem = ul.querySelector(".nav-link.active").parentElement;
+        const index = [...ul.children].indexOf(activeNavItem);
+        this.props.applyExamples(index);
+        this.close();
+    }
+}
+KanbanExamplesDialog.bodyTemplate = "web.KanbanExamplesDialog";
+KanbanExamplesDialog.footerTemplate = "web.KanbanExamplesDialogFooter";
+KanbanExamplesDialog.title = _lt("Kanban Examples");
+KanbanExamplesDialog.contentClass = "o_kanban_examples_dialog";

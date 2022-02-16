@@ -248,6 +248,7 @@ export class KanbanArchParser extends XMLParser {
             xmlDoc: applyDefaultAttributes(kanbanBox),
             fields: activeFields,
             tooltips,
+            examples: xmlDoc.getAttribute("examples"),
         };
     }
 }

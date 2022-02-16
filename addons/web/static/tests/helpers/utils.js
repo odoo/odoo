@@ -337,9 +337,10 @@ export async function mouseEnter(el, selector) {
     return triggerEvent(el, selector, "mouseenter");
 }
 
-export function editInput(el, selector, value) {
+export async function editInput(el, selector, value) {
     const input = el.querySelector(selector);
     input.value = value;
+    await triggerEvent(input, null, "input");
     return triggerEvent(input, null, "change");
 }
 

@@ -1,5 +1,5 @@
 // container ghost card in modal
-.o_kanban_examples_dialog {
+.o_kanban_examples_dialog .modal-body {
     display: flex;
     padding: 0px;
     background: theme-color('light');
@@ -16,8 +16,10 @@
 
             > a {
                 padding: 12px 15px;
-                color: $o-main-text-color;
                 border-left: 3px solid transparent;
+                &:not(.active) {
+                    color: $o-main-text-color;
+                }
                 &:focus {
                     outline: none;
                 }
