@@ -23,6 +23,7 @@ export class X2ManyField extends Component {
             const subViewInfo = fieldInfo.views[fieldInfo.viewMode];
             this.Renderer = X2M_RENDERERS[fieldInfo.viewMode];
             this.viewType = fieldInfo.viewMode;
+            this.editable = subViewInfo.editable;
             this.rendererProps = {
                 info: subViewInfo,
                 fields: subViewInfo.fields, // is this necessary?
@@ -30,6 +31,13 @@ export class X2ManyField extends Component {
                 readonly: true,
                 openRecord: this.openRecord.bind(this),
             };
+            if (this.viewType === "list") {
+                this.rendererProps.leaveEdition = () => {
+                    // TODO: send changes to the model
+                    this.rendererProps.editedRecordId = null;
+                    this.render();
+                };
+            }
         }
     }
 
@@ -50,12 +58,17 @@ export class X2ManyField extends Component {
     }
 
     openRecord(record) {
-        this.dialogService.add(FormViewDialog, {
-            archInfo: this.props.value.views.form, // FIXME: might not be there
-            record,
-            readonly: this.props.readonly,
-            title: this.props.record.activeFields[this.props.name].string,
-        });
+        if (this.viewType === "list" && !this.props.readonly && this.editable) {
+            this.rendererProps.editedRecordId = record.id;
+            this.render();
+        } else {
+            this.dialogService.add(FormViewDialog, {
+                archInfo: this.props.value.views.form, // FIXME: might not be there
+                record,
+                readonly: this.props.readonly,
+                title: this.props.record.activeFields[this.props.name].string,
+            });
+        }
     }
 }
 

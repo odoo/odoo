@@ -1246,33 +1246,13 @@ export class StaticList extends DataPoint {
     // -------------------------------------------------------------------------
 
     async _applyChange(command) {
-        if (command.operation === "TRIGGER_ONCHANGE") {
-            return;
-        }
-
         switch (command.operation) {
-            case "ADD":
-                break;
-            case "ADD_M2M":
-                break;
-            case "CREATE":
-                break;
-            case "UPDATE":
-                break;
-            case "FORGET":
-                break;
-            case "DELETE":
-                break;
-            case "DELETE_ALL":
-                break;
             case "REPLACE_WITH": {
                 this.resIds = command.resIds;
                 this._changes = [[6, false, command.resIds]];
                 await this.load();
                 break;
             }
-            case "MULTI":
-                break;
         }
     }
 }
