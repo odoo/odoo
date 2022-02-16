@@ -1765,27 +1765,16 @@ class IrModelAccess(models.Model):
 
         self.flush(self._fields)
 
-        # We check if a specific rule exists
-        self._cr.execute("""SELECT MAX(CASE WHEN perm_{mode} THEN 1 ELSE 0 END)
+        # We check if a specific or generic rule exists
+        self._cr.execute("""SELECT BOOL_OR(perm_{mode})
                               FROM ir_model_access a
                               JOIN ir_model m ON (m.id = a.model_id)
-                              JOIN res_groups_users_rel gu ON (gu.gid = a.group_id)
+                         LEFT JOIN res_groups_users_rel gu ON (gu.gid = a.group_id)
                              WHERE m.model = %s
-                               AND gu.uid = %s
+                               AND (a.group_id IS NULL OR gu.uid = %s)
                                AND a.active IS TRUE""".format(mode=mode),
                          (model, self._uid,))
         r = self._cr.fetchone()[0]
-
-        if not r:
-            # there is no specific rule. We check the generic rule
-            self._cr.execute("""SELECT MAX(CASE WHEN perm_{mode} THEN 1 ELSE 0 END)
-                                  FROM ir_model_access a
-                                  JOIN ir_model m ON (m.id = a.model_id)
-                                 WHERE a.group_id IS NULL
-                                   AND m.model = %s
-                                   AND a.active IS TRUE""".format(mode=mode),
-                             (model,))
-            r = self._cr.fetchone()[0]
 
         if not r and raise_exception:
             groups = '\n'.join('\t- %s' % g for g in self.group_names_with_access(model, mode))
