@@ -391,6 +391,7 @@ var Domain = collections.Tree.extend({
                 case '(string)': return node.value;
                 case '(number)': return node.value;
                 case '(constant)': return node.value === 'None' ? null : node.value === 'True' ? true : false;
+                case '(':
                 case '[': return _.map(node.first, function (node) {return astToStackValue(node);});
             }
         }
