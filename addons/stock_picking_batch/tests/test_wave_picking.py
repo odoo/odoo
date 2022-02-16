@@ -361,4 +361,54 @@ class TestBatchPicking(TransactionCase):
             wizard = wizard_form.save()
             wizard.attach_pickings()
 
+    def test_not_assign_to_wave(self):
+        """ Picking
+        - Move line A 5 from Container to Cust -> Going to a wave picking
+        - Move line A 5 from Container to Cust -> Validate
+        ---------------------------------------------
+        Create
+        - Move A 5 from Container to Cust
+        Check it creates a new picking and it's not assign to the wave
+        """
+        location = self.env['stock.location'].create({
+            'name': 'Container',
+            'location_id': self.stock_location.id
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, location, 5.0, lot_id=self.lots_p_a[0])
+        self.env['stock.quant']._update_available_quantity(self.productA, location, 5.0, lot_id=self.lots_p_a[1])
+        picking_1 = self.env['stock.picking'].create({
+            'location_id': location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.move'].create({
+            'name': 'Test Wave',
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_1.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        picking_1.action_confirm()
+        picking_1.action_assign()
+        self.assertEqual(len(picking_1.move_line_ids), 2)
+        move_line_to_wave = picking_1.move_line_ids[0]
+        move_line_to_wave._add_to_wave()
+        picking_1.move_line_ids.qty_done = 5
+        picking_1._action_done()
 
+        new_move = self.env['stock.move'].create({
+            'name': 'Test Wave',
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        new_move._action_confirm()
+        self.assertTrue(new_move.picking_id)
+        self.assertTrue(new_move.picking_id.id not in [picking_1.id, move_line_to_wave.picking_id.id])
