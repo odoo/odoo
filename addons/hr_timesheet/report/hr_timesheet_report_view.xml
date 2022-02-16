@@ -5,7 +5,7 @@
             <field name="name">Timesheets by Employee</field>
             <field name="res_model">account.analytic.line</field>
             <field name="domain">[('project_id', '!=', False)]</field>
-            <field name="context">{'search_default_groupby_employee':1, 'grid_range': 'week'}</field>
+            <field name="context">{'grid_range': 'week'}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
@@ -27,7 +27,7 @@
         <record id="timesheet_action_view_report_by_employee_graph" model="ir.actions.act_window.view">
             <field name="sequence" eval="6"/>
             <field name="view_mode">graph</field>
-            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph"/>
+            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph_all"/>
             <field name="act_window_id" ref="act_hr_timesheet_report"/>
         </record>
 
@@ -52,11 +52,33 @@
             <field name="act_window_id" ref="act_hr_timesheet_report"/>
         </record>
 
+        <record id="view_hr_timesheet_line_pivot_groupby_project" model="ir.ui.view">
+            <field name="name">account.analytic.line.pivot</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="replace">
+                    <field name="project_id" type="row"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_hr_timesheet_line_graph_groupby_project" model="ir.ui.view">
+            <field name="name">account.analytic.line.graph</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_line_graph"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="task_id" position="replace"/>
+            </field>
+        </record>
+
         <record id="timesheet_action_report_by_project" model="ir.actions.act_window">
             <field name="name">Timesheets by Project</field>
             <field name="res_model">account.analytic.line</field>
             <field name="domain">[('project_id', '!=', False)]</field>
-            <field name="context">{'search_default_groupby_project': 1, 'grid_range': 'week'}</field>
+            <field name="context">{'grid_range': 'week'}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
@@ -71,14 +93,14 @@
         <record id="timesheet_action_view_report_by_project_pivot" model="ir.actions.act_window.view">
             <field name="sequence" eval="5"/>
             <field name="view_mode">pivot</field>
-            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
+            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_pivot_groupby_project"/>
             <field name="act_window_id" ref="timesheet_action_report_by_project"/>
         </record>
 
         <record id="timesheet_action_view_report_by_project_graph" model="ir.actions.act_window.view">
             <field name="sequence" eval="6"/>
             <field name="view_mode">graph</field>
-            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph"/>
+            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph_groupby_project"/>
             <field name="act_window_id" ref="timesheet_action_report_by_project"/>
         </record>
 
@@ -103,11 +125,35 @@
             <field name="act_window_id" ref="timesheet_action_report_by_project"/>
         </record>
 
+        <record id="view_hr_timesheet_line_pivot_groupby_task" model="ir.ui.view">
+            <field name="name">account.analytic.line.pivot</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="view_hr_timesheet_line_pivot_groupby_project"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <field name="task_id" type="row"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_hr_timesheet_line_graph_groupby_task" model="ir.ui.view">
+            <field name="name">account.analytic.line.graph</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_line_graph"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="after">
+                    <field name="task_id" position="move"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="timesheet_action_report_by_task" model="ir.actions.act_window">
             <field name="name">Timesheets by Task</field>
             <field name="res_model">account.analytic.line</field>
             <field name="domain">[('project_id', '!=', False)]</field>
-            <field name="context">{'search_default_groupby_project':1,'search_default_groupby_task':1, 'grid_range': 'week'}</field>
+            <field name="context">{'grid_range': 'week'}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
@@ -122,14 +168,14 @@
         <record id="timesheet_action_view_report_by_task_pivot" model="ir.actions.act_window.view">
             <field name="sequence" eval="5"/>
             <field name="view_mode">pivot</field>
-            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
+            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_pivot_groupby_task"/>
             <field name="act_window_id" ref="timesheet_action_report_by_task"/>
         </record>
 
         <record id="timesheet_action_view_report_by_task_graph" model="ir.actions.act_window.view">
             <field name="sequence" eval="6"/>
             <field name="view_mode">graph</field>
-            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph"/>
+            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph_groupby_task"/>
             <field name="act_window_id" ref="timesheet_action_report_by_task"/>
         </record>
 
