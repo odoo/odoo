@@ -200,7 +200,7 @@ class AccountMove(models.Model):
         ar_invoices._check_argentinian_invoice_taxes()
         res = super().post()
         ar_invoices._set_afip_rate()
-        self._set_afip_service_dates()
+        ar_invoices._set_afip_service_dates()
         return res
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
