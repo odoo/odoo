@@ -314,3 +314,85 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_07_editor_shop(self):
         self.start_tour("/", 'shop_editor', login="admin")
+
+    def test_08_portal_tour_archived_variant_multiple_attributes(self):
+        """The goal of this test is to make sure that an archived variant with multiple
+        attributes only disabled other options if only one is missing or all are selected.
+
+        Using "portal" to have various users in the tests.
+        """
+
+        attribute_1, attribute_2, attribute_3 = self.env['product.attribute'].create([
+            {
+                'name': 'Size',
+                'create_variant': 'always',
+            },
+            {
+                'name': 'Color',
+                'create_variant': 'always',
+            },
+            {
+                'name': 'Brand',
+                'create_variant': 'always',
+            },
+        ])
+
+        attribute_values = self.env['product.attribute.value'].create([
+            {
+                'name': 'Large',
+                'attribute_id': attribute_1.id,
+                'sequence': 1,
+            },
+            {
+                'name': 'Small',
+                'attribute_id': attribute_1.id,
+                'sequence': 2,
+            },
+            {
+                'name': 'White',
+                'attribute_id': attribute_2.id,
+                'sequence': 1,
+            },
+            {
+                'name': 'Black',
+                'attribute_id': attribute_2.id,
+                'sequence': 2,
+            },
+            {
+                'name': 'Brand A',
+                'attribute_id': attribute_3.id,
+                'sequence': 1,
+            },
+            {
+                'name': 'Brand B',
+                'attribute_id': attribute_3.id,
+                'sequence': 2,
+            },
+        ])
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product 2',
+            'is_published': True,
+        })
+
+        self.env['product.template.attribute.line'].create([
+            {
+                'attribute_id': attribute_1.id,
+                'product_tmpl_id': product_template.id,
+                'value_ids': [(6, 0, attribute_values.filtered(lambda v: v.attribute_id == attribute_1).ids)],
+            },
+            {
+                'attribute_id': attribute_2.id,
+                'product_tmpl_id': product_template.id,
+                'value_ids': [(6, 0, attribute_values.filtered(lambda v: v.attribute_id == attribute_2).ids)],
+            },
+            {
+                'attribute_id': attribute_3.id,
+                'product_tmpl_id': product_template.id,
+                'value_ids': [(6, 0, attribute_values.filtered(lambda v: v.attribute_id == attribute_3).ids)],
+            },
+        ])
+
+        product_template.product_variant_ids[-1].active = False
+
+        self.start_tour("/", 'tour_shop_archived_variant_multi', login="portal")
