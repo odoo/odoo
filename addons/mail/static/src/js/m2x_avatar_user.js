@@ -101,10 +101,14 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
                 },
                 async action() {
                     return env.services.command.openPalette({
-                        emptyMessageByNamespace: { "default": env._t("No users found") },
+                        configByNamespace: {
+                            default: {
+                                emptyMessage: env._t("No users found"),
+                            },
+                        },
                         placeholder: env._t("Select a user..."),
                         providers: [{ provide }],
-                    })
+                    });
                 },
             });
             core.bus.trigger("set_legacy_command", "web.Many2OneAvatar.assignTo", getCommandDefinition, self.el);
@@ -278,10 +282,14 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixi
                 },
                 action() {
                     return env.services.command.openPalette({
-                        emptyMessageByNamespace: { "default": env._t("No users found") },
+                        configByNamespace: {
+                            default: {
+                                emptyMessage: env._t("No users found"),
+                            },
+                        },
                         placeholder: env._t("Select a user..."),
                         providers: [{ provide }],
-                    })
+                    });
                 },
             })
             core.bus.trigger("set_legacy_command", "web.FieldMany2ManyTagsAvatar.assignTo", getCommandDefinition)

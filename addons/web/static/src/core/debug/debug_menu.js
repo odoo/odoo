@@ -37,13 +37,16 @@ export class DebugMenu extends DebugMenuBasic {
                         return result;
                     },
                 };
-                const commandPaletteConfig = {
-                    categoriesByNamespace: {
-                        default: defaultCategories,
+                const configByNamespace = {
+                    default: {
+                        categories: defaultCategories,
+                        emptyMessage: this.env._t("No command found"),
+                        providers: [provider],
                     },
-                    emptyMessageByNamespace: { default: this.env._t("No command found") },
+                };
+                const commandPaletteConfig = {
                     placeholder: this.env._t("Choose a debug command..."),
-                    providers: [provider],
+                    configByNamespace,
                 };
                 return this.command.openPalette(commandPaletteConfig);
             },

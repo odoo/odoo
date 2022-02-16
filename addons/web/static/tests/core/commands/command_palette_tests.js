@@ -49,7 +49,7 @@ QUnit.module("Command Palette Dialog", {
 
         patchWithCleanup(browser, {
             clearTimeout: () => {},
-            setTimeout: (later, wait) => {
+            setTimeout: (later) => {
                 later();
             },
         });
@@ -89,10 +89,16 @@ QUnit.test("empty providers", async (assert) => {
 
 QUnit.test("custom empty message", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
-    const emptyMessageByNamespace = {
-        default: "Empty Default",
-        "@": "Empty @",
-        "#": "Empty #",
+    const configByNamespace = {
+        default: {
+            emptyMessage: "Empty Default",
+        },
+        "@": {
+            emptyMessage: "Empty @",
+        },
+        "#": {
+            emptyMessage: "Empty #",
+        },
     };
     const provide = () => [];
     const providers = [
@@ -100,7 +106,7 @@ QUnit.test("custom empty message", async (assert) => {
         { namespace: "#", provide },
     ];
     const config = {
-        emptyMessageByNamespace,
+        configByNamespace,
         providers,
     };
     env.services.dialog.add(CommandPaletteDialog, {
@@ -112,22 +118,72 @@ QUnit.test("custom empty message", async (assert) => {
     assert.containsOnce(target, ".o_command_palette_listbox_empty");
     assert.strictEqual(
         target.querySelector(".o_command_palette_listbox_empty").textContent,
-        emptyMessageByNamespace["default"]
+        configByNamespace["default"].emptyMessage
     );
 
     await editSearchBar("@");
     assert.containsOnce(target, ".o_command_palette_listbox_empty");
     assert.strictEqual(
         target.querySelector(".o_command_palette_listbox_empty").textContent,
-        emptyMessageByNamespace["@"]
+        configByNamespace["@"].emptyMessage
     );
 
     await editSearchBar("#");
     assert.containsOnce(target, ".o_command_palette_listbox_empty");
     assert.strictEqual(
         target.querySelector(".o_command_palette_listbox_empty").textContent,
-        emptyMessageByNamespace["#"]
+        configByNamespace["#"].emptyMessage
     );
+});
+
+QUnit.test("custom debounce delay", async (assert) => {
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: (later, delay) => {
+            assert.step(delay.toString());
+            later();
+        },
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+    const configByNamespace = {
+        "@": {
+            debounceDelay: 200,
+        },
+        "#": {
+            debounceDelay: 100,
+        },
+    };
+    const action = () => {};
+    const provide = () => [
+        {
+            name: "Command1",
+            action,
+        },
+        {
+            name: "Command2",
+            action,
+        },
+    ];
+    const providers = [
+        { namespace: "@", provide },
+        { namespace: "#", provide },
+    ];
+    const config = {
+        configByNamespace,
+        providers,
+    };
+    env.services.dialog.add(CommandPaletteDialog, {
+        config,
+    });
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsNone(target, ".o_command");
+    await editSearchBar("com");
+    await editSearchBar("@");
+    await editSearchBar("#");
+    await editSearchBar("");
+    assert.verifySteps(["0", "200", "100", "0"]);
 });
 
 QUnit.test("custom placeholder", async (assert) => {
@@ -515,10 +571,6 @@ QUnit.test("open the command palette with a namespace already in the searchbar",
 
 QUnit.test("multi provider with categories", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
-    const categoriesByNamespace = {
-        default: ["cat1", "cat2"],
-        "@": ["@cat1", "@cat2"],
-    };
     const action = () => {};
     const providers = [
         {
@@ -564,8 +616,16 @@ QUnit.test("multi provider with categories", async (assert) => {
             ],
         },
     ];
+    const configByNamespace = {
+        default: {
+            categories: ["cat1", "cat2"],
+        },
+        "@": {
+            categories: ["@cat1", "@cat2"],
+        },
+    };
     const config = {
-        categoriesByNamespace,
+        configByNamespace,
         providers,
     };
     env.services.dialog.add(CommandPaletteDialog, {
@@ -640,9 +700,6 @@ QUnit.test("multi provider with categories", async (assert) => {
 
 QUnit.test("don't display by categories if there is a search value", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
-    const categoriesByNamespace = {
-        default: ["cat1", "cat2"],
-    };
     const action = () => {};
     const providers = [
         {
@@ -664,8 +721,13 @@ QUnit.test("don't display by categories if there is a search value", async (asse
             ],
         },
     ];
+    const configByNamespace = {
+        default: {
+            categories: ["cat1", "cat2"],
+        },
+    };
     const config = {
-        categoriesByNamespace,
+        configByNamespace,
         providers,
     };
     env.services.dialog.add(CommandPaletteDialog, {
@@ -714,6 +776,7 @@ QUnit.test("click on command", async (assert) => {
             },
         },
     ];
+
     const providers = [
         {
             provide: () => commands,
@@ -942,8 +1005,10 @@ QUnit.test("keyboard navigation scroll", async (assert) => {
 
 QUnit.test("multi level command", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
-    const emptyMessageByNamespace = {
-        default: "Empty Default",
+    const configByNamespace = {
+        default: {
+            emptyMessage: "Empty Default",
+        },
     };
     const commands = [
         {
@@ -961,7 +1026,7 @@ QUnit.test("multi level command", async (assert) => {
         },
     ];
     const config = {
-        emptyMessageByNamespace,
+        configByNamespace,
         FooterComponent,
         placeholder: "placeholder test",
         providers,
