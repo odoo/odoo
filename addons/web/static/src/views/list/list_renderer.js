@@ -10,7 +10,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
-const { Component, useExternalListener, useRef, useState } = owl;
+const { Component, onPatched, onWillUpdateProps, useExternalListener, useRef, useState } = owl;
 
 const formatterRegistry = registry.category("formatters");
 
@@ -41,6 +41,52 @@ export class ListRenderer extends Component {
         });
         useExternalListener(document, "click", this.onGlobalClick.bind(this));
         this.tableRef = useRef("table");
+
+        this.cellToFocus = null;
+        this.focusOnPatched = false;
+        onWillUpdateProps((nextProps) => {
+            const { editedRecordId } = nextProps;
+            this.focusOnPatched = editedRecordId && editedRecordId !== this.props.editedRecordId;
+        });
+        onPatched(() => {
+            if (this.focusOnPatched) {
+                let columnId = this.state.columns[0].id;
+                if (this.cellToFocus && this.cellToFocus.recordId === this.props.editedRecordId) {
+                    columnId = this.cellToFocus.columnId;
+                }
+                this.focusCell(columnId);
+                this.focusOnPatched = false;
+                this.cellToFocus = null;
+            }
+        });
+    }
+
+    focusCell(columnId) {
+        const index = this.state.columns.findIndex((c) => c.id === columnId);
+        const columns = [
+            ...this.state.columns.slice(index, this.state.columns.length),
+            ...this.state.columns.slice(0, index),
+        ];
+        const record = this.props.list.records.find((r) => r.id === this.props.editedRecordId);
+        for (const column of columns) {
+            if (column.type !== "field") {
+                continue;
+            }
+            const fieldName = column.name;
+            if (!record.isReadonly(fieldName)) {
+                const fieldEl = this.tableRef.el.querySelector(
+                    `.o_selected_row .o_field_widget[name=${fieldName}]`
+                );
+                if (fieldEl) {
+                    const focusableEl = fieldEl.querySelector("input, textarea"); // .o_focusable?
+                    if (focusableEl) {
+                        focusableEl.focus();
+                        focusableEl.select();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     getColumnKey(column, columnIndex) {
@@ -217,7 +263,7 @@ export class ListRenderer extends Component {
     }
 
     getCellClass(column) {
-        if (!this.cellClassByColumn[column.name]) {
+        if (!this.cellClassByColumn[column.id]) {
             const classNames = ["o_data_cell"];
             if (column.type === "button_group") {
                 classNames.push("o_list_button");
@@ -231,9 +277,9 @@ export class ListRenderer extends Component {
                     classNames.push("o_" + column.widget + "_cell");
                 }
             }
-            this.cellClassByColumn[column.name] = classNames;
+            this.cellClassByColumn[column.id] = classNames;
         }
-        return this.cellClassByColumn[column.name].join(" ");
+        return this.cellClassByColumn[column.id].join(" ");
     }
 
     getCellTitle(column, record) {
@@ -341,10 +387,20 @@ export class ListRenderer extends Component {
         }
     }
 
-    onRowClicked(record, ev) {
-        if (!ev.target.closest("button") && this.props.editedRecordId !== record.id) {
-            this.props.openRecord(record);
+    onButtonCellClicked(record, column, ev) {
+        if (!ev.target.closest("button")) {
+            this.onCellClicked(record, column);
         }
+    }
+
+    onCellClicked(record, column) {
+        if (this.props.editedRecordId === record.id) {
+            this.focusCell(column.id);
+            this.cellToFocus = null;
+        } else {
+            this.cellToFocus = { columnId: column.id, recordId: record.id };
+        }
+        this.props.openRecord(record);
     }
 
     saveOptionalActiveFields() {

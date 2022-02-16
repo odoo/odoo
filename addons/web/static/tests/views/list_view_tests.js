@@ -6019,7 +6019,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_list_button_add"));
         await editInput(target, ".o_field_widget[name=foo] input", "new value");
-        await click(target.querySelectorAll("tbody tr")[2]);
+        await click(target.querySelectorAll("tbody tr")[2].querySelector(".o_data_cell"));
         assert.verifySteps(["create"]);
     });
 
@@ -9936,26 +9936,27 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("editable list view: many2one with readonly modifier", async function (assert) {
+    QUnit.test("editable list view: many2one with readonly modifier", async function (assert) {
         assert.expect(2);
 
         await makeView({
-            arch: `<tree editable="top">
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
                     <field name="m2o" readonly="1"/>
                     <field name="foo"/>
                 </tree>`,
-            serverData,
-            resModel: "foo",
-            serverData,
         });
 
         // edit a field
-        await click($(target).find(".o_data_row:eq(0) .o_data_cell:eq(0)"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
 
-        assert.containsOnce(target, '.o_data_row:eq(0) .o_data_cell:eq(0) a[name="m2o"]');
+        assert.containsOnce(target, '.o_data_row:eq(0) .o_data_cell:eq(0) div[name="m2o"] a');
         assert.strictEqual(
             document.activeElement,
-            $(target).find(".o_data_row:eq(0) .o_data_cell:eq(1) input")[0],
+            target.querySelectorAll(".o_data_row .o_data_cell")[1].querySelector("input"),
             "focus should go to the char input"
         );
     });

@@ -206,13 +206,15 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         // open first record in form view. this will crash and will not
         // display a form view
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+        await testUtils.dom.click($(target).find(".o_list_view .o_data_cell:first"));
         await legacyExtraNextTick();
         readOnFirstRecordDef.reject("not working as intended");
         await nextTick();
         assert.containsOnce(target, ".o_list_view", "there should still be a list view in dom");
         // open another record, the read will not crash
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:eq(2)"));
+        await testUtils.dom.click(
+            $(target).find(".o_list_view .o_data_row:eq(2) .o_data_cell:first")
+        );
         await legacyExtraNextTick();
         assert.containsNone(target, ".o_list_view", "there should not be a list view in dom");
         assert.containsOnce(target, ".o_form_view", "there should be a form view in dom");

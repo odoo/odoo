@@ -478,7 +478,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         // execute action 3 and open the first record in a form view
         await doAction(webClient, 3);
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+        await testUtils.dom.click($(target).find(".o_list_view .o_data_cell:first"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.strictEqual(
@@ -542,7 +542,7 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "list",
         });
         assert.verifySteps(["push_state"], "should have pushed the final state");
-        await testUtils.dom.click($(target).find("tr.o_data_row:first"));
+        await testUtils.dom.click($(target).find("tr .o_data_cell:first"));
         await legacyExtraNextTick();
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, {

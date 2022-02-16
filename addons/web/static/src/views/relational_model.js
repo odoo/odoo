@@ -53,6 +53,13 @@ function stringToOrderBy(string) {
     });
 }
 
+function evalModifier(modifier, evalContext) {
+    if (Array.isArray(modifier)) {
+        modifier = new Domain(modifier).contains(evalContext);
+    }
+    return !!modifier;
+}
+
 /**
  * FIXME: don't know where this function should be:
  *   - on a dataPoint: don't want to make it accessible everywhere (e.g. in Fields)
@@ -264,6 +271,26 @@ export class Record extends DataPoint {
 
     get isNew() {
         return !this.resId;
+    }
+
+    /**
+     * FIXME: memoize this at some point?
+     * @param {string} fieldName
+     * @returns {boolean}
+     */
+    isReadonly(fieldName) {
+        const { readonly } = this.activeFields[fieldName].modifiers;
+        return evalModifier(readonly, this.evalContext);
+    }
+
+    /**
+     * FIXME: memoize this at some point?
+     * @param {string} fieldName
+     * @returns {boolean}
+     */
+    isRequired(fieldName) {
+        const { required } = this.activeFields[fieldName].modifiers;
+        return evalModifier(required, this.evalContext);
     }
 
     setInvalidField(fieldName) {

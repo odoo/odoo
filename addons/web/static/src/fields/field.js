@@ -20,29 +20,12 @@ export class Field extends Component {
             this.FieldComponent = Field.getFieldComponent(null, this.type, this.props.name);
         }
     }
-    /**
-     * FIXME: no need to pre-optimize anything, but as it stands, this method is called
-     * twice at each patch for "required" and twice for "readonly"
-     * FIXME2: maybe move this function on the RecordDatapoint (maybe 2 methods "isReadonly" and
-     * "isRequired" that take a fieldName in argument)
-     *
-     * @param {"readonly"|"required"} modifier
-     * @returns {boolean}
-     */
-    evalModifier(modifier) {
-        const activeField = this.props.record.activeFields[this.props.name];
-        let modifierValue = activeField.modifiers[modifier];
-        if (Array.isArray(modifierValue)) {
-            modifierValue = new Domain(modifierValue).contains(this.props.record.evalContext);
-        }
-        return !!modifierValue;
-    }
 
     get classNames() {
         const classNames = {
             o_field_widget: true,
-            o_readonly_modifier: this.evalModifier("readonly"),
-            o_required_modifier: this.evalModifier("required"),
+            o_readonly_modifier: this.props.record.isReadonly(this.props.name),
+            o_required_modifier: this.props.record.isRequired(this.props.name),
             o_field_invalid: this.props.record.isInvalid(this.props.name),
             o_field_empty:
                 this.props.record.resId && Field.isEmpty(this.props.record, this.props.name),
@@ -73,7 +56,7 @@ export class Field extends Component {
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];
 
-        const readonlyFromModifiers = this.evalModifier("readonly");
+        const readonlyFromModifiers = this.props.record.isReadonly(this.props.name);
         const readonlyFromViewMode = this.props.readonly;
 
         // Decoration props
@@ -91,7 +74,7 @@ export class Field extends Component {
 
         return {
             ...activeField.props,
-            required: this.evalModifier("required"), // AAB: does the field really need this?
+            required: this.props.record.isRequired(this.props.name), // AAB: does the field really need this?
             update: async (value) => {
                 await record.update(this.props.name, value);
                 // We save only if we're on view mode readonly and no readonly field modifier

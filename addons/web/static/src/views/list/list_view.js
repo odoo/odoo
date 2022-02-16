@@ -81,6 +81,7 @@ export class ListArchParser extends XMLParser {
         const groupListArchParser = new GroupListArchParser();
         let buttonGroup;
         let limit;
+        let nextId = 0;
         this.visitXML(arch, (node) => {
             if (node.tagName !== "button") {
                 buttonGroup = undefined;
@@ -96,6 +97,7 @@ export class ListArchParser extends XMLParser {
                     buttonGroup.buttons.push(button);
                 } else {
                     buttonGroup = {
+                        id: `column_${nextId++}`,
                         type: "button_group",
                         buttons: [button],
                         hasLabel: false,
@@ -109,6 +111,7 @@ export class ListArchParser extends XMLParser {
                     const displayName = fieldInfo.FieldComponent.displayName;
                     columns.push({
                         ...fieldInfo,
+                        id: `column_${nextId++}`,
                         optional: node.getAttribute("optional") || false,
                         type: "field",
                         hasLabel: !(fieldInfo.attrs.nolabel || fieldInfo.FieldComponent.noLabel),

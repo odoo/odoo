@@ -6,6 +6,10 @@ import { standardFieldProps } from "./standard_field_props";
 
 const { Component, useState } = owl;
 
+// WOWL FIXME: in master, if a priority field is readonly, there is no feedback when hovering it,
+// which is correct, but if we click on it, there's a crash. It would be nice if we don't have the
+// crash in master-wowl, and if we add a test to assert this behavior
+
 export class PriorityField extends Component {
     setup() {
         this.state = useState({

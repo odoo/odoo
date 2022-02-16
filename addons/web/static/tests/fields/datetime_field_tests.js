@@ -658,7 +658,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // switch to form view
-            await click(form.el, ".o_field_widget[name='p'] .o_data_row");
+            await click(form.el, ".o_field_widget[name='p'] .o_data_cell");
             assert.strictEqual(
                 document.body.querySelector(".modal .o_field_date[name='datetime']").textContent,
                 "02/07/2017",
@@ -705,7 +705,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // switch to form view
-            await click(form.el, ".o_field_widget[name='p'] .o_data_row");
+            await click(form.el, ".o_field_widget[name='p'] .o_data_cell");
             assert.strictEqual(
                 document.body.querySelector(".modal .o_field_date[name='datetime']").textContent,
                 "02/08/2017",

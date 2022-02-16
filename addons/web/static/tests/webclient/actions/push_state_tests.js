@@ -191,7 +191,7 @@ QUnit.module("ActionManager", (hooks) => {
             model: "pony",
             view_type: "list",
         });
-        await testUtils.dom.click($(target).find("tr.o_data_row:first"));
+        await testUtils.dom.click($(target).find("tr .o_data_cell:first"));
         await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 8,

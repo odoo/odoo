@@ -106,7 +106,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view", "should display the list view");
         assert.containsNone(target, ".o_kanban_view", "should no longer display the kanban view");
         // open a record in form view
-        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
+        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         assert.containsNone(target, ".o_list_view", "should no longer display the list view");
         assert.containsOnce(target, ".o_form_view", "should display the form view");
@@ -310,7 +310,7 @@ QUnit.module("ActionManager", (hooks) => {
             "breadcrumbs should still display the display_name of the action"
         );
         // open a record in form view
-        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
+        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         assert.containsN(
             target,
@@ -402,7 +402,7 @@ QUnit.module("ActionManager", (hooks) => {
             "list should now be the active view"
         );
         // open a record in form view
-        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
+        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         assert.containsNone(
             target,
@@ -453,7 +453,7 @@ QUnit.module("ActionManager", (hooks) => {
             "limit should be correct for list"
         );
         // open a record in form view
-        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
+        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_control_panel .o_pager_value").text(),
@@ -550,7 +550,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view", "should now display the list view");
         // open a record in form view
         def = testUtils.makeTestPromise();
-        await click(target.querySelector(".o_list_view .o_data_row"));
+        await click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should still display the list view");
         assert.containsNone(target, ".o_form_view", "shouldn't display the form view yet");
@@ -599,7 +599,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
-        await click(target.querySelector(".o_list_view .o_data_row"));
+        await click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         assert.containsN(
             target,
@@ -634,7 +634,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
-        await click(target.querySelector(".o_list_view .o_data_row"));
+        await click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         await testUtils.dom.click($(target).find(".o_form_view button:contains(Execute action)"));
         assert.containsN(target, ".o_control_panel .breadcrumb li", 3);
@@ -716,7 +716,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open a record in form view
-        await click(target.querySelector(".o_list_view .o_data_row"));
+        await click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_field_widget[name=foo]").text(),
@@ -770,7 +770,7 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 3);
             assert.containsOnce(target, ".o_list_view");
             // open first record in form view
-            await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
+            await testUtils.dom.click(target.querySelector(".o_list_view .o_data_cell"));
             await legacyExtraNextTick();
             assert.containsOnce(target, ".o_form_view");
             // click on 'Execute action', to execute action 4 in a dialog
@@ -856,7 +856,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open a record in form view
-        await click(target.querySelector(".o_list_view .o_data_row"));
+        await click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         // click on 'Execute action' button (should execute an action)
         assert.containsN(
@@ -956,7 +956,7 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 3);
             // open a record in form view
-            await click(target.querySelector(".o_list_view .o_data_row"));
+            await click(target.querySelector(".o_list_view .o_data_cell"));
             await legacyExtraNextTick();
             // click on 'Call method' button (should call an Object method)
             def = testUtils.makeTestPromise();
@@ -1017,7 +1017,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open the first record in form view
-        await click(target.querySelector(".o_list_view .o_data_row"));
+        await click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_control_panel .breadcrumb-item:last").text(),
@@ -1033,7 +1033,9 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a"));
         await legacyExtraNextTick();
         // open the second record in form view
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:nth(1)"));
+        await testUtils.dom.click(
+            $(target).find(".o_list_view .o_data_row:nth(1) .o_data_cell:first")
+        );
         await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_control_panel .breadcrumb-item:last").text(),
@@ -1236,7 +1238,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
-        await click(target.querySelector(".o_list_view .o_data_row"));
+        await click(target.querySelector(".o_list_view .o_data_cell"));
         await legacyExtraNextTick();
         assert.containsN(
             target,
@@ -1312,7 +1314,7 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             // open a record in form view
-            await click(target.querySelector(".o_list_view .o_data_row"));
+            await click(target.querySelector(".o_list_view .o_data_cell"));
             await legacyExtraNextTick();
             // switch to edit mode
             await click(target.querySelector(".o_control_panel .o_form_button_edit"));
@@ -1791,7 +1793,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         assert.containsOnce(target, ".o_list_view");
         assert.containsN(target, ".o_list_view .o_data_row", 5);
-        await click(target.querySelector(".o_list_view .o_data_row"));
+        await click(target.querySelector(".o_list_view .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
         assert.containsOnce(target, ".o_form_view .o_form_readonly");
         // go back using the breadcrumbs
@@ -1812,7 +1814,7 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 3);
             assert.containsOnce(target, ".o_list_view");
             assert.containsN(target, ".o_list_view .o_data_row", 5);
-            await click(target.querySelector(".o_list_view .o_data_row"));
+            await click(target.querySelector(".o_list_view .o_data_cell"));
             assert.containsOnce(target, ".o_form_view");
             assert.strictEqual(
                 $(target).find(".o_field_widget[name=display_name]").text(),
@@ -1960,7 +1962,7 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData, mockRPC });
             // execute an action and edit existing record
             await doAction(webClient, 3);
-            await click(target.querySelector(".o_list_view .o_data_row"));
+            await click(target.querySelector(".o_list_view .o_data_cell"));
             assert.containsOnce(target, ".o_form_view .o_form_readonly");
             await click(target.querySelector(".o_control_panel .o_form_button_edit"));
             assert.containsOnce(target, ".o_form_view .o_form_editable");
