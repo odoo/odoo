@@ -4086,6 +4086,16 @@ class AccountMoveLine(models.Model):
 
         return self.move_id.move_type in ('in_refund', 'out_refund')
 
+    def _get_invoiced_qty_per_product(self):
+        qties = defaultdict(float)
+        for aml in self:
+            qty = aml.product_uom_id._compute_quantity(aml.quantity, aml.product_id.uom_id)
+            if aml.move_id.move_type == 'out_invoice':
+                qties[aml.product_id] += qty
+            elif aml.move_id.move_type == 'out_refund':
+                qties[aml.product_id] -= qty
+        return qties
+
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
