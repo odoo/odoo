@@ -11,7 +11,7 @@ const QRModalAction = AbstractAction.extend({
 
     init: function(parent, action){
         this._super.apply(this, arguments);
-        this.url = _.str.sprintf("/report/barcode/?type=QR&value=%s&width=256&height=256&humanreadable=1", action.params.url);
+        this.url = _.str.sprintf("/report/barcode/?barcode_type=QR&value=%s&width=256&height=256&humanreadable=1", action.params.url);
     },
 });
 
