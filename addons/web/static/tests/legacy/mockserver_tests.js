@@ -3,7 +3,7 @@ odoo.define('web.mockserver_tests', function (require) {
 
 const MockServer = require("web.MockServer");
 
-QUnit.module("MockServer", {
+QUnit.module("Legacy MockServer", {
     beforeEach() {
         this.data = {
             "res.partner": {

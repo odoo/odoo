@@ -52,6 +52,7 @@ QUnit.module("Views", (hooks) => {
                     },
                     records: [],
                 },
+                partner: {},
             },
             views: {
                 "foo,false,legacy_toy": `<legacy_toy/>`,
