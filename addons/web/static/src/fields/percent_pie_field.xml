@@ -7,10 +7,7 @@
                 <div class="o_mask" t-attf-class="{{transform.value >= 360 ? 'o_full' : ''}}" t-attf-style="transform: rotate({{transform.left}}deg)"/>
                 <div class="o_mask" t-attf-class="{{transform.value >= 180 ? 'o_full' : ''}}" t-attf-style="transform: rotate({{transform.right}}deg)"/>
                 <div class="o_pie_value">
-                    <PercentageViewer
-                        value="props.value"
-                        isPercentage="true"
-                    />
+                    <span t-esc="props.value + '%'"/>
                 </div>
             </div>
             <span t-esc="props.string"/>

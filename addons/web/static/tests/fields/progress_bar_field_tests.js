@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import {
+    makeFakeNotificationService,
+    makeFakeLocalizationService,
+} from "@web/../tests/helpers/mock_services";
 import { registry } from "@web/core/registry";
 import { click, editInput } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
@@ -351,7 +354,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["/web/dataset/call_kw/partner/read"]);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "ProgressBarField: write float instead of int works, in locale",
         async function (assert) {
             assert.expect(5);
@@ -366,10 +369,6 @@ QUnit.module("Fields", (hooks) => {
                     '<field name="int_field" widget="progressbar" options="{\'editable\': true}" />' +
                     "</form>",
                 resId: 1,
-                translateParameters: {
-                    thousands_sep: "#",
-                    decimal_point: ":",
-                },
                 mockRPC: function (route, { method, args }) {
                     if (method === "write") {
                         assert.strictEqual(
@@ -381,10 +380,13 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            // The view should be in edit mode by default
-            await click(form.el.querySelector(".o_form_button_edit"));
-
-            assert.ok(form.el.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
+            registry.category("services").remove("localization");
+            registry
+                .category("services")
+                .add(
+                    "localization",
+                    makeFakeLocalizationService({ thousandsSep: "#", decimalPoint: ":" })
+                );
 
             assert.strictEqual(
                 form.el.querySelector(".o_progressbar_value").innerText,
@@ -392,18 +394,21 @@ QUnit.module("Fields", (hooks) => {
                 "Initial value should be correct"
             );
 
+            await click(form.el.querySelector(".o_form_button_edit"));
+            assert.ok(form.el.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
+
             await click(form.el.querySelector(".o_progress"));
 
             const input = form.el.querySelector(".o_progressbar_value.o_input");
             assert.strictEqual(input.value, "99", "Initial value in input is correct");
 
-            await testUtils.fields.editAndTrigger(input, "1#037:9", ["input", "blur"]);
+            await editInput(form.el, "input", "1#037:9");
 
             await click(form.el.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
                 form.el.querySelector(".o_progressbar_value").innerText,
-                "1k%",
+                "1037%",
                 "New value should be different than initial after click"
             );
         }

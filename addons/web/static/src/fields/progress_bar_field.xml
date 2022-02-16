@@ -11,11 +11,7 @@
                     <div class="o_progressbar_value" t-esc="state.currentValue + ' / ' + state.maxValue"/>
                 </t>
                 <t t-else="">
-                    <PercentageViewer
-                        fieldClass="'o_progressbar_value'"
-                        isPercentage="true"
-                        value="state.currentValue"
-                    />
+                    <span class="o_progressbar_value" t-esc="state.currentValue + '%'"/>
                 </t>
             </div>
         </t>
@@ -30,9 +26,9 @@
                             class="o_progressbar_value o_input"
                             type="text"
                             inputmode="numeric"
-                            t-att-value="state.currentValue"
-                            t-on-change="onChangeCurrentValue"
-                            t-on-keydown="onKeyDownCurrentValue"
+                            t-att-value="getFieldValue('currentValue')"
+                            t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
+                            t-on-keydown="(ev) => this.onKeyDownValue(ev, 'currentValue')"
                         />
                     </t>
                     <t t-else="">
@@ -44,9 +40,9 @@
                             class="o_progressbar_value o_input"
                             type="text"
                             inputmode="numeric"
-                            t-att-value="state.maxValue"
-                            t-on-change="onChangeMaxValue"
-                            t-on-keydown="onKeyDownMaxValue"
+                            t-att-value="getFieldValue('maxValue')"
+                            t-on-change="(ev) => this.onChangeValue(ev.target.value, 'maxValue')"
+                            t-on-keydown="(ev) => this.onKeyDownValue(ev, 'maxValue')"
                         />
                     </t>
                     <t t-else="">
@@ -54,13 +50,18 @@
                     </t>
                 </t>
                 <t t-else="">
-                    <PercentageEditor
-                        fieldClass="'o_progressbar_value'"
-                        isPercentage="true"
-                        onChange.bind="onChangeCurrentValue"
-                        onKeydown.bind="onKeyDownCurrentValue"
-                        value="state.currentValue"
-                    />
+                    <div class="d-flex">
+                        <input
+                            class="o_input o_progressbar_value"
+                            type="text"
+                            inputmode="numeric"
+                            t-att-value="getFieldValue('currentValue') or ''"
+                            t-att-required="props.required"
+                            t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
+                            t-on-keydown="(ev) => this.onKeyDownValue(ev, 'currentValue')"
+                        />
+                        <span>%</span>
+                    </div>
                 </t>
             </div>
         </t>

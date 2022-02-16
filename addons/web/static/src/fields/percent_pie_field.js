@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
-import { PercentageViewer } from "./percentage";
 
 const { Component } = owl;
 
@@ -18,14 +17,11 @@ export class PercentPieField extends Component {
     }
 }
 
-PercentPieField.components = {
-    PercentageViewer,
+PercentPieField.template = "web.PercentPieField";
+PercentPieField.props = {
+    ...standardFieldProps,
+    string: { type: String, optional: true },
 };
-(PercentPieField.template = "web.PercentPieField"),
-    (PercentPieField.props = {
-        ...standardFieldProps,
-        string: { type: String, optional: true },
-    });
 PercentPieField.displayName = _lt("PercentPie");
 PercentPieField.convertAttrsToProps = (attrs) => {
     return {
