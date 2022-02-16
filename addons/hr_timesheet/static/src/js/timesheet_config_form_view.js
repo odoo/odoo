@@ -15,7 +15,7 @@ odoo.define('hr_timesheet.res.config.form', function (require) {
          * @override
          */
         init: function (parent, url) {
-            this.url = _.str.sprintf("/report/barcode/?type=QR&value=%s&width=256&height=256&humanreadable=1", url);
+            this.url = _.str.sprintf("/report/barcode/?barcode_type=QR&value=%s&width=256&height=256&humanreadable=1", url);
             this._super(parent, {
                 title: _t('Download our App'),
                 buttons: [{
