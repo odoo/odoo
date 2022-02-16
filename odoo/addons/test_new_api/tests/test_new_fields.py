@@ -3029,6 +3029,24 @@ class TestParentStore(common.TransactionCase):
         with self.assertRaises(UserError):
             self.cats(1, 3).write({'parent': self.cats(9).id})
 
+    def test_compute_depend_parent_path(self):
+        self.assertEqual(self.cats(7).depth, 3)
+        self.assertEqual(self.cats(8).depth, 3)
+        self.assertEqual(self.cats(9).depth, 3)
+
+        # change parent of node to have 2 parents
+        self.cats(7).parent = self.cats(2)
+        self.assertEqual(self.cats(7).depth, 2)
+
+        # change parent of node to root
+        self.cats(7).parent = False
+        self.assertEqual(self.cats(7).depth, 0)
+
+        # change grand-parent of nodes
+        self.cats(6).parent = self.cats(0)
+        self.assertEqual(self.cats(8).depth, 2)
+        self.assertEqual(self.cats(9).depth, 2)
+
 
 class TestRequiredMany2one(common.TransactionCase):
 
