@@ -229,6 +229,7 @@ class AccountEdiFormat(models.Model):
             elif state == 'notificaScarto':
                 errors = [element.find('Descrizione').text for element in response_tree.xpath('//Errore')]
                 to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
+                invoice.l10n_it_edi_transaction = False
             elif state == 'notificaMancataConsegna':
                 to_return[invoice] = {
                     'error': _('The E-invoice is not delivered to the addressee. The Exchange System is\
