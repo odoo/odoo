@@ -38,27 +38,30 @@ class Crawler(odoo.tests.HttpCase):
         _logger.info("%s %s", msg, url)
         r = self.url_open(url)
         code = r.status_code
-        self.assertIn(code, range(200, 300), "%s Fetching %s returned error response (%d)" % (msg, url, code))
 
-        if r.headers['Content-Type'].startswith('text/html'):
-            doc = lxml.html.fromstring(r.content)
-            for link in doc.xpath('//a[@href]'):
-                href = link.get('href')
+        # Only Exist 
+        if code != 403:
+            self.assertIn(code, range(200, 300), "%s Fetching %s returned error response (%d)" % (msg, url, code))
 
-                parts = urls.url_parse(href)
-                # href with any fragment removed
-                href = parts.replace(fragment='').to_url()
+            if r.headers['Content-Type'].startswith('text/html'):
+                doc = lxml.html.fromstring(r.content)
+                for link in doc.xpath('//a[@href]'):
+                    href = link.get('href')
 
-                # FIXME: handle relative link (not parts.path.startswith /)
-                if parts.netloc or \
-                    not parts.path.startswith('/') or \
-                    parts.path == '/web' or\
-                    parts.path.startswith('/web/') or \
-                    parts.path.startswith('/en_US/') or \
-                    (parts.scheme and parts.scheme not in ('http', 'https')):
-                    continue
+                    parts = urls.url_parse(href)
+                    # href with any fragment removed
+                    href = parts.replace(fragment='').to_url()
 
-                self.crawl(href, seen, msg)
+                    # FIXME: handle relative link (not parts.path.startswith /)
+                    if parts.netloc or \
+                        not parts.path.startswith('/') or \
+                        parts.path == '/web' or\
+                        parts.path.startswith('/web/') or \
+                        parts.path.startswith('/en_US/') or \
+                        (parts.scheme and parts.scheme not in ('http', 'https')):
+                        continue
+
+                    self.crawl(href, seen, msg)
         return seen
 
     def test_10_crawl_public(self):
