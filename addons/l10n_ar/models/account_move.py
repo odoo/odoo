@@ -188,7 +188,7 @@ class AccountMove(models.Model):
             rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
 
         posted_ar_invoices._set_afip_rate()
-        posted._set_afip_service_dates()
+        posted_ar_invoices._set_afip_service_dates()
         return posted
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
