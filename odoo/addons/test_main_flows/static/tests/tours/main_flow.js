@@ -913,9 +913,9 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t('Remove group by employee'),
     position: 'bottom',
 }, {
-    trigger: '.dropdown-item.selected:contains(Billable Type)',
+    trigger: '.dropdown-item.selected:contains(Billing Type)',
     extra_trigger: '.dropdown.show',
-    content: _t('Remove group by billable type'),
+    content: _t('Remove group by Billing type'),
     position: 'bottom',
 }, {
     mobile: true,
