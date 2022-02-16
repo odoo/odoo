@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
+import math
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -31,8 +32,9 @@ class SaleOrderLine(models.Model):
           is removed from the list.
         - invoiced: the quantity invoiced is larger or equal to the quantity ordered.
         """
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        global_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
+            precision = min(math.ceil(abs(math.log10(line.product_uom.rounding or 1))), global_precision)
             if line.state not in ('sale', 'done'):
                 line.invoice_status = 'no'
             elif line.is_downpayment and line.untaxed_amount_to_invoice == 0:

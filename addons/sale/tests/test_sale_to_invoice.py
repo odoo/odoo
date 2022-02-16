@@ -389,6 +389,14 @@ class TestSaleToInvoice(TestSaleCommon):
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
         self.assertEqual(sol_prod_deliver.qty_invoiced, expected_qty)
 
+        # Now record a quantity with a higher precision
+        sol_prod_deliver.product_uom_qty = 5.47
+        sol_prod_deliver.qty_delivered = 5.47
+        # Without proper rounding, we would get in an invoice/refund loop
+        self.assertEqual(sol_prod_deliver.invoice_status, 'to invoice')
+        invoicing_wizard.create_invoices()
+        self.assertEqual(sol_prod_deliver.invoice_status, 'invoiced')
+
     def test_invoice_analytic_account_default(self):
         """ Tests whether, when an analytic account rule is set and the so has no analytic account,
         the default analytic acount is correctly computed in the invoice.
