@@ -216,17 +216,6 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
 
         self.assertEqual(first_task.rating_count, 0, "Task should have no rating associated with it")
 
-        rating_good = self.env['rating.rating'].create({
-            'res_model_id': self.env['ir.model']._get('project.task').id,
-            'res_id': first_task.id,
-            'parent_res_model_id': self.env['ir.model']._get('project.project').id,
-            'parent_res_id': self.project_pigs.id,
-            'rated_partner_id': self.partner_2.id,
-            'partner_id': self.partner_2.id,
-            'rating': 5,
-            'consumed': False,
-        })
-
         rating_bad = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('project.task').id,
             'res_id': first_task.id,
@@ -236,6 +225,17 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
             'partner_id': self.partner_2.id,
             'rating': 3,
             'consumed': True,
+        })
+
+        rating_good = self.env['rating.rating'].create({
+            'res_model_id': self.env['ir.model']._get('project.task').id,
+            'res_id': first_task.id,
+            'parent_res_model_id': self.env['ir.model']._get('project.project').id,
+            'parent_res_id': self.project_pigs.id,
+            'rated_partner_id': self.partner_2.id,
+            'partner_id': self.partner_2.id,
+            'rating': 5,
+            'consumed': False,
         })
 
         # We need to invalidate cache since it is not done automatically by the ORM
@@ -251,6 +251,9 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
         self.assertEqual(self.project_goats.rating_avg, 0, 'Since there is no rating in this project, the Average Rating should be equal to 0.')
         self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 0)  # There is a rating but not a "great" on, just an "okay".
         self.assertEqual(self.project_pigs.rating_avg, rating_bad.rating, 'Since there is only one rating the Average Rating should be equal to the rating value of this one.')
+
+        self.assertEqual(first_task.rating_last_value, 3.0, "Only consumed rating are taken into account in task's rating_last_value.")
+        self.assertEqual(first_task.project_id.rating_last_value, 3.0, "Only consumed rating are taken into account in project's tasks' rating_last_value.")
 
         # Consuming rating_good
         first_task.rating_apply(5, rating_good.access_token)
