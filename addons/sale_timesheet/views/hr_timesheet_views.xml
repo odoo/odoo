@@ -20,7 +20,7 @@
                     <filter string="Sales Order" name="groupby_sale_order" domain="[]" context="{'group_by': 'order_id'}" groups="sales_team.group_sale_salesman"/>
                     <filter string="Sales Order Item" name="groupby_sale_order_item" domain="[]" context="{'group_by': 'so_line'}" groups="sales_team.group_sale_salesman"/>
                     <filter string="Invoice" name="groupby_invoice" domain="[]" context="{'group_by': 'timesheet_invoice_id'}"/>
-                    <filter string="Billable Type" name="groupby_timesheet_invoice_type" domain="[]" context="{'group_by': 'timesheet_invoice_type'}"/>
+                    <filter string="Billing Type" name="groupby_timesheet_invoice_type" domain="[]" context="{'group_by': 'timesheet_invoice_type'}"/>
                 </xpath>
             </field>
     </record>
@@ -181,7 +181,6 @@
         <field name="view_mode">tree,form,pivot,graph,kanban</field>
         <field name="domain">[('project_id', '!=', False)]</field>
         <field name="context">{
-            'search_default_groupby_timesheet_invoice_type': 1,
             'pivot_row_groupby': ['date:month'],
         }</field>
         <field name="help" type="html">
@@ -193,6 +192,19 @@
             </p>
         </field>
         <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+    </record>
+
+    <record id="view_hr_timesheet_line_graph_groupby_invoice_type" model="ir.ui.view">
+        <field name="name">account.analytic.line.graph</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_line_graph"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="task_id" position="replace"/>
+            <field name="project_id" position="replace">
+                <field name="timesheet_invoice_type"/>
+            </field>
+        </field>
     </record>
 
     <record id="timesheet_action_view_report_by_billing_rate_form" model="ir.actions.act_window.view">
@@ -219,7 +231,7 @@
     <record id="timesheet_action_view_report_by_billing_rate_graph" model="ir.actions.act_window.view">
         <field name="sequence" eval="6"/>
         <field name="view_mode">graph</field>
-        <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph"/>
+        <field name="view_id" ref="sale_timesheet.view_hr_timesheet_line_graph_groupby_invoice_type"/>
         <field name="act_window_id" ref="timesheet_action_billing_report"/>
     </record>
 
