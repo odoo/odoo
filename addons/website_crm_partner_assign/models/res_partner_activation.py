@@ -11,3 +11,4 @@ class ResPartnerActivation(models.Model):
 
     sequence = fields.Integer('Sequence')
     name = fields.Char('Name', required=True)
+    active = fields.Boolean(default=True)

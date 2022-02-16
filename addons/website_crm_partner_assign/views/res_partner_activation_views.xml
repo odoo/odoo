@@ -21,7 +21,19 @@
             <tree string="Activation" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="res_partner_activation_view_search" model="ir.ui.view">
+        <field name="name">res.partner.activation.view.search</field>
+        <field name="model">res.partner.activation</field>
+        <field name="arch" type="xml">
+            <search string="Activation">
+                <field name="name" string="Partner Activation"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
         </field>
     </record>
 
