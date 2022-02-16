@@ -94,7 +94,7 @@ class PosConfig(models.Model):
                 "payload": {"error_message": error_message},
             }
 
-        coupon_to_check.write({"state": "used"})
+        coupon_to_check.sudo().write({"state": "used"})
         return {
             "successful": True,
             "payload": {
