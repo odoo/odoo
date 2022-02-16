@@ -12,6 +12,7 @@ QUnit.module("Fields", (hooks) => {
                 partner: {
                     fields: {
                         float_field: { string: "Float field", type: "float" },
+                        int_field: { string: "Int field", type: "integer" },
                     },
                     records: [
                         { id: 1, float_field: 0.36 },
@@ -220,10 +221,10 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("use incorrect formula", async function (assert) {
+    QUnit.test("use incorrect formula", async function (assert) {
         assert.expect(4);
 
-        var form = await makeView({
+        const form = await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -236,26 +237,18 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_save");
 
         assert.hasClass(
-            form.el.querySelector(".o_field_widget[name=float_field] input"),
+            form.el.querySelector(".o_field_widget[name=float_field]"),
             "o_field_invalid",
             "fload field should be displayed as invalid"
         );
-        assert.hasClass(
-            form.el.querySelector(".o_form_view"),
-            "o_form_editable",
-            "form view should still be editable"
-        );
+        assert.containsOnce(form.el, ".o_form_editable", "form view should still be editable");
 
         await editInput(form.el, ".o_field_widget[name=float_field] input", "=3:2?+4");
         await click(form.el, ".o_form_button_save");
 
+        assert.containsOnce(form.el, ".o_form_editable", "form view should still be editable");
         assert.hasClass(
-            form.el.querySelector(".o_form_view"),
-            "o_form_editable",
-            "form view should still be editable"
-        );
-        assert.hasClass(
-            form.el.querySelector(".o_field_widget[name=float_field] input"),
+            form.el.querySelector(".o_field_widget[name=float_field]"),
             "o_field_invalid",
             "float field should be displayed as invalid"
         );
@@ -264,19 +257,19 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("float field in editable list view", async function (assert) {
         assert.expect(4);
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        const list = await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
             arch:
                 '<tree editable="bottom">' +
                 '<field name="float_field" widget="float" digits="[5,3]"/>' +
                 "</tree>",
         });
 
-        var zeroValues = list.el.querySelector("td.o_data_cell").filter(function () {
-            return $(this).text() === "";
-        });
+        var zeroValues = Array.from(list.el.querySelectorAll("td.o_field_cell")).filter(
+            (el) => el.innerText === ""
+        );
         assert.strictEqual(
             zeroValues.length,
             1,
@@ -284,72 +277,58 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // switch to edit mode
-        var $cell = list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)").first();
-        await testUtils.dom.click($cell);
+        var cell = list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
+        await click(cell);
 
         assert.containsOnce(
             list,
-            'input[name="float_field"]',
+            'div[name="float_field"] input',
             "The view should have 1 input for editable float."
         );
 
-        await testUtils.fields.editInput(
-            list.el.querySelector('input[name="float_field"]'),
-            "108.2458938598598"
-        );
+        await editInput(list.el, 'div[name="float_field"] input', "108.2458938598598");
         assert.strictEqual(
-            list.el.querySelector('input[name="float_field"]').value,
+            list.el.querySelector('div[name="float_field"] input').value,
             "108.2458938598598",
             "The value should not be formated yet."
         );
 
-        await testUtils.fields.editInput(
-            list.el.querySelector('input[name="float_field"]'),
-            "18.8958938598598"
-        );
-        await testUtils.dom.click(list.el.querySelectorbuttons.find(".o_list_button_save"));
+        await editInput(list.el, 'div[name="float_field"] input', "18.8958938598598");
+        await click(list.el.querySelector(".o_list_button_save"));
         assert.strictEqual(
             list.el.querySelector(".o_field_widget").textContent,
             "18.896",
             "The new value should be rounded properly."
         );
-
-        list.destroy();
     });
 
-    QUnit.skipWOWL(
-        "do not trigger a field_changed if they have not changed",
-        async function (assert) {
-            assert.expect(2);
+    QUnit.test("do not trigger a field_changed if they have not changed", async function (assert) {
+        assert.expect(2);
 
-            this.data.partner.records[1].float_field = false;
-            this.data.partner.records[1].int_field = false;
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    '<field name="float_field" widget="float" digits="[5,3]"/>' +
-                    '<field name="int_field"/>' +
-                    "</sheet>" +
-                    "</form>",
-                res_id: 2,
-                mockRPC: function (route, args) {
-                    assert.step(args.method);
-                    return this._super.apply(this, arguments);
-                },
-            });
+        serverData.models.partner.records[0].float_field = false;
+        serverData.models.partner.records[0].int_field = false;
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch:
+                '<form string="Partners">' +
+                "<sheet>" +
+                '<field name="float_field" widget="float" digits="[5,3]"/>' +
+                '<field name="int_field"/>' +
+                "</sheet>" +
+                "</form>",
+            mockRPC(route, { method }) {
+                assert.step(method);
+            },
+            resId: 1,
+        });
 
-            await testUtils.form.clickEdit(form);
-            await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(form.el.querySelector(".o_form_button_save"));
 
-            assert.verifySteps(["read"]); // should not have save as nothing changed
-
-            form.destroy();
-        }
-    );
+        assert.verifySteps(["read"]); // should not have save as nothing changed
+    });
 
     QUnit.skipWOWL("float widget on monetary field", async function (assert) {
         assert.expect(1);
