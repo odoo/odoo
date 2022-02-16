@@ -72,26 +72,40 @@ export const commandService = {
          * @returns the actual command palette config if the command palette is already open
          */
         function openMainPalette(config = {}) {
-            const categoriesByNamespace = {};
-            commandCategoryRegistry.getEntries().forEach(([category, el]) => {
-                const namespace = el.namespace ? el.namespace : "default";
-                if (namespace in categoriesByNamespace) {
-                    categoriesByNamespace[namespace].push(category);
-                } else {
-                    categoriesByNamespace[namespace] = [category];
+            const configByNamespace = {};
+            for (const provider of commandProviderRegistry.getAll()) {
+                const namespace = provider.namespace || "default";
+                if (!configByNamespace[namespace]) {
+                    configByNamespace[namespace] = {
+                        categories: [],
+                    };
                 }
-            });
+            }
 
-            const emptyMessageByNamespace = {};
-            commandSetupRegistry.getEntries().forEach(([key, { emptyMessage }]) => {
-                if (emptyMessage) {
-                    emptyMessageByNamespace[key] = emptyMessage.toString();
+            for (const [category, el] of commandCategoryRegistry.getEntries()) {
+                const namespace = el.namespace || "default";
+                if (namespace in configByNamespace) {
+                    configByNamespace[namespace].categories.push(category);
                 }
-            });
+            }
+
+            for (const [
+                namespace,
+                { emptyMessage, debounceDelay },
+            ] of commandSetupRegistry.getEntries()) {
+                if (namespace in configByNamespace) {
+                    if (emptyMessage) {
+                        configByNamespace[namespace].emptyMessage = emptyMessage;
+                    }
+                    if (debounceDelay !== undefined) {
+                        configByNamespace[namespace].debounceDelay = debounceDelay;
+                    }
+                }
+            }
+
             config = Object.assign(
                 {
-                    categoriesByNamespace,
-                    emptyMessageByNamespace,
+                    configByNamespace,
                     FooterComponent: DefaultFooter,
                     placeholder: env._t("Search for a command..."),
                     providers: commandProviderRegistry.getAll(),

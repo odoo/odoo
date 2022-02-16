@@ -46,7 +46,7 @@ commandProviderRegistry.add("menu", {
         apps.forEach((menu) => {
             const props = {};
             if (menu.webIconData) {
-                const prefix = menu.webIconData.startsWith('P')
+                const prefix = menu.webIconData.startsWith("P")
                     ? "data:image/svg+xml;base64,"
                     : "data:image/png;base64,";
                 props.webIconData = menu.webIconData.startsWith("data:image")
