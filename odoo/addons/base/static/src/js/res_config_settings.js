@@ -390,16 +390,16 @@ var BaseSettingController = FormController.extend({
                         }
                     },
                 }, {
+                    text: _t('Stay Here'),
+                    close: true,
+                    click: cancel,
+                }, {
                     text: _t('Discard'),
                     close: true,
                     click: () => {
                         resolve(true);
                         reset();
                     },
-                }, {
-                    text: _t('Stay Here'),
-                    close: true,
-                    click: cancel,
                 }],
             });
             dialog.on('closed', this.discardingDef, cancel);
