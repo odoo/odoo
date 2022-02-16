@@ -40,6 +40,7 @@
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
             <tree create="0" edit="0" delete="0">
+                <button name="action_open_record" type="object" icon="fa-external-link" title="Open" />
                 <field name="employee_id" decoration-muted="not active_employee"/>
                 <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                 <field name="leave_type"/>
@@ -106,7 +107,7 @@
         <field name="model_id" ref="hr_holidays.model_hr_leave_report"/>
         <field name="binding_model_id" ref="hr.model_hr_employee"/>
         <field name="state">code</field>
-        <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+        <field name="groups_id" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
         <field name="code">
         action = model.action_time_off_analysis()
         </field>
