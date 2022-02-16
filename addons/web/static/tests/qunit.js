@@ -309,6 +309,7 @@
     });
 
     QUnit.debug = (name, cb) => {
+        document.body.classList.add("debug");
         QUnit.config.debug = true;
         QUnit.only(name, cb);
     };
