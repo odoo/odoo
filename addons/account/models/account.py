@@ -730,6 +730,7 @@ class AccountJournal(models.Model):
     default_debit_account_id = fields.Many2one('account.account', string='Default Debit Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]", help="It acts as a default account for debit amount", ondelete='restrict')
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
+        compute="_compute_restrict_mode_hash_table",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
     sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
@@ -806,6 +807,10 @@ class AccountJournal(models.Model):
             record.alias_name = record.alias_id.alias_name
             
     _inverse_alias_name = _inverse_type
+
+    def _compute_restrict_mode_hash_table(self):
+        for move in self:
+            move.restrict_mode_hash_table = False
 
     # do not depend on 'sequence_id.date_range_ids', because
     # sequence_id._get_current_sequence() may invalidate it!
