@@ -520,7 +520,7 @@
                     <separator/>
                     <filter name="rating_satisfied" string="Satisfied" domain="[('rating_active', '=', True), ('rating_avg', '&gt;=', 3.66)]" groups="project.group_project_rating"/>
                     <filter name="rating_okay" string="Okay" domain="[('rating_active', '=', True), ('rating_avg', '&lt;', 3.66), ('rating_avg', '&gt;=', 2.33)]" groups="project.group_project_rating"/>
-                    <filter name="dissatisfied" string="Dissatisfied" domain="[('rating_active', '=', True), ('rating_avg', '&lt;', 2.33), ('rating_last_value', '!=', 0)]" groups="project.group_project_rating"/>
+                    <filter name="dissatisfied" string="Dissatisfied" domain="[('rating_active', '=', True), ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;', 0)]" groups="project.group_project_rating"/>
                     <filter name="no_rating" string="No Rating" domain="['|', ('rating_active', '=', False), ('rating_avg', '=', 0)]" groups="project.group_project_rating"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
