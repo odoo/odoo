@@ -6,3 +6,4 @@ from . import test_anglosaxon_account
 from . import test_sale_stock
 from . import test_sale_stock_lead_time
 from . import test_sale_order_dates
+from . import test_report
