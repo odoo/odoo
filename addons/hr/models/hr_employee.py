@@ -230,6 +230,7 @@ class HrEmployeePrivate(models.Model):
             vals.update(self._sync_user(user, vals.get('image_1920') == self._default_image()))
             vals['name'] = vals.get('name', user.name)
         employee = super(HrEmployeePrivate, self).create(vals)
+        employee.message_subscribe(employee.address_home_id.ids)
         url = '/web#%s' % url_encode({
             'action': 'hr.plan_wizard_action',
             'active_id': employee.id,
@@ -248,6 +249,8 @@ class HrEmployeePrivate(models.Model):
             account_id = vals.get('bank_account_id') or self.bank_account_id.id
             if account_id:
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
+            self.message_unsubscribe(self.address_home_id.ids)
+            self.message_subscribe([vals['address_home_id']])
         if vals.get('user_id'):
             # Update the profile pictures with user, except if provided 
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']), bool(vals.get('image_1920'))))
