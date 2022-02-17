@@ -72,6 +72,26 @@ class account_journal(models.Model):
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True)
     color = fields.Integer("Color Index", default=0)
     entries_count = fields.Integer(compute='_compute_entries_count')
+    has_sequence_holes = fields.Boolean(compute='_compute_has_sequence_holes')
+
+    def _query_has_sequence_holes(self):
+        self.env.cr.execute("""
+            SELECT move.journal_id,
+                   move.sequence_prefix
+              FROM account_move move
+             WHERE move.journal_id = ANY(%(journal_ids)s)
+               AND move.state = 'posted'
+          GROUP BY move.journal_id, move.sequence_prefix
+            HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
+        """, {
+            'journal_ids': self.ids,
+        })
+        return self.env.cr.fetchall()
+
+    def _compute_has_sequence_holes(self):
+        has_sequence_holes = set(journal_id for journal_id, _prefix in self._query_has_sequence_holes())
+        for journal in self:
+            journal.has_sequence_holes = journal.id in has_sequence_holes
 
     def _compute_entries_count(self):
         res = {
@@ -566,6 +586,23 @@ class account_journal(models.Model):
                 journal=self.name,
             )
         return action
+
+    def show_sequence_holes(self):
+        has_sequence_holes = self._query_has_sequence_holes()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Journal Entries"),
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': expression.OR(
+                [('journal_id', '=', journal_id), ('sequence_prefix', '=', prefix)]
+                for journal_id, prefix in has_sequence_holes
+            ),
+            'context': {
+                'search_default_group_by_sequence_prefix': 1,
+                'expand': 1,
+            }
+        }
 
     def create_bank_statement(self):
         """return action to create a bank statements. This button should be called only on journals with type =='bank'"""
