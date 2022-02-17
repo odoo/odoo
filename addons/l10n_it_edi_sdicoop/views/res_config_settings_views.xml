@@ -37,9 +37,6 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="l10n_it_edi_sdicoop_demo_mode"/>
-                            </div>
                             <div class="o_setting_right_pane">
                                 <div class="content-group">
                                     <span class="o_form_label">
@@ -48,6 +45,9 @@
                                     <div class="text-muted">
                                         Odoo will send the e-invoices to a non-production service, so that the feature can be freely tested by the user.
                                     </div>
+                                    <field name="l10n_it_edi_sdicoop_demo_mode"
+                                           widget="radio"
+                                           options="{'horizontal': true}"/>
                                 </div>
                             </div>
                         </div>

@@ -8,19 +8,21 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     is_edi_proxy_active = fields.Boolean(compute='_compute_is_edi_proxy_active')
-    l10n_it_edi_sdicoop_demo_mode = fields.Boolean(compute='_compute_l10n_it_edi_sdicoop_demo_mode',
-                                           inverse='_set_l10n_it_edi_sdicoop_demo_mode',
-                                           readonly=False)
+    l10n_it_edi_sdicoop_demo_mode = fields.Selection(
+        [('demo', 'Demo'), ('official', 'Official')],
+        compute='_compute_l10n_it_edi_sdicoop_demo_mode',
+        inverse='_set_l10n_it_edi_sdicoop_demo_mode',
+        readonly=False)
 
     @api.depends("is_edi_proxy_active")
     def _compute_l10n_it_edi_sdicoop_demo_mode(self):
         server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
         for config in self:
-            config.l10n_it_edi_sdicoop_demo_mode = (server_url == TEST_SERVER_URL)
+            config.l10n_it_edi_sdicoop_demo_mode = ('demo' if server_url == TEST_SERVER_URL else 'official')
 
     def _set_l10n_it_edi_sdicoop_demo_mode(self):
         for config in self:
-            url = TEST_SERVER_URL if config.l10n_it_edi_sdicoop_demo_mode else DEFAULT_SERVER_URL
+            url = TEST_SERVER_URL if config.l10n_it_edi_sdicoop_demo_mode == 'demo' else DEFAULT_SERVER_URL
             self.env['ir.config_parameter'].set_param('account_edi_proxy_client.edi_server_url', url)
 
     @api.depends('company_id.account_edi_proxy_client_ids', 'company_id.account_edi_proxy_client_ids.active')
