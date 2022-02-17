@@ -24,7 +24,7 @@ class ResConfigSettings(models.TransientModel):
             if self.company_so_template_id:
                 self.company_so_template_id = False
             companies = self.env['res.company'].sudo().search([
-                'sale_order_template_id', '!=', False
+                ('sale_order_template_id', '!=', False)
             ])
             if companies:
                 companies.sale_order_template_id = False
