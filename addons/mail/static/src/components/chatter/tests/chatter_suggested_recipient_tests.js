@@ -6,8 +6,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('chatter', {}, function () {
 QUnit.module('chatter_suggested_recipients_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             const res = await start(Object.assign({}, params, {

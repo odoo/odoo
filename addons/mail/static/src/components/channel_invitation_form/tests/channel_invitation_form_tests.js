@@ -11,8 +11,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('channel_invitation_form', {}, function () {
 QUnit.module('channel_invitation_form_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             const { env, widget } = await start(Object.assign({}, params, {
