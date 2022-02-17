@@ -216,7 +216,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="foo" />' +
                     '<field name="p">' +
                     '<tree editable="bottom" default_order="int_field">' +
@@ -267,7 +267,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="p">' +
                     '<tree editable="bottom" limit="1" decoration-muted="foo != False" default_order="display_name">' +
                     '<field name="foo" invisible="1"/>' +
@@ -321,7 +321,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 "<tree>" +
                 '<field name="parent_id" />' +
@@ -376,7 +376,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="bottom">' +
                 '<field name="turtles" invisible="1"/>' +
@@ -446,7 +446,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<notebook>" +
                 '<page string="Partner page">' +
@@ -510,7 +510,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
                 '<field name="turtle_foo" class="hey"/>' +
@@ -546,7 +546,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<notebook>" +
                 '<page string="Partner page">' +
@@ -589,7 +589,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<notebook>" +
                 '<page string="P page">' +
@@ -630,7 +630,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree limit="2">' +
                     '<field name="turtle_foo"/>' +
@@ -661,7 +661,7 @@ QUnit.module("Fields", (hooks) => {
                 type: "form",
                 model: "partner",
                 serverData,
-                arch: '<form string="Partners">' + '<field name="turtles"/>' + "</form>",
+                arch: "<form>" + '<field name="turtles"/>' + "</form>",
                 archs: {
                     "turtle,false,list": '<tree limit="2"><field name="turtle_foo"/></tree>',
                 },
@@ -688,7 +688,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<notebook>" +
                 '<page string="Turtles">' +
@@ -723,7 +723,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<notebook>" +
                 '<page string="P page">' +
@@ -762,7 +762,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<notebook>" +
                 '<page string="P page">' +
@@ -886,7 +886,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom" limit="1">' +
                     '<field name="turtle_foo"/>' +
@@ -970,7 +970,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom">' +
                     '<field name="turtle_foo"/>' +
@@ -1048,7 +1048,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<notebook>" +
                 '<page string="P page">' +
@@ -1101,7 +1101,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     "<notebook>" +
                     '<page string="P page">' +
@@ -1187,7 +1187,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     "<group>" +
                     '<field name="turtles">' +
@@ -1290,7 +1290,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 data: data,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     "<group>" +
                     '<field name="turtles">' +
@@ -1414,7 +1414,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<group>" +
                 '<field name="turtles">' +
@@ -1534,7 +1534,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     "<group>" +
                     '<field name="turtles">' +
@@ -2083,7 +2083,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree default_order="turtle_int">' +
                     '<field name="turtle_int" widget="handle"/>' +
@@ -2151,7 +2151,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<notebook>" +
                 '<page string="P page">' +
@@ -2247,7 +2247,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<kanban>" +
                 '<field name="display_name"/>' +
@@ -2356,7 +2356,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<kanban>" +
                 '<field name="display_name"/>' +
@@ -2601,7 +2601,7 @@ QUnit.module("Fields", (hooks) => {
                 type: "form",
                 model: "partner",
                 serverData,
-                arch: '<form string="Partners">' + '<field name="turtles"/>' + "</form>",
+                arch: "<form>" + '<field name="turtles"/>' + "</form>",
                 archs: {
                     "turtle,false,list": '<tree><field name="turtle_foo"/></tree>',
                     "turtle,false,form":
@@ -2649,7 +2649,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<tree>" +
                 '<field name="foo"/>' +
@@ -2706,7 +2706,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="top">' +
                 '<field name="display_name"/>' +
@@ -2780,7 +2780,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree create="0">' +
                 '<field name="display_name"/>' +
@@ -2864,7 +2864,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p" widget="many2many">' +
                 "<tree>" +
                 '<field name="display_name"/>' +
@@ -2933,7 +2933,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<tree>" +
                 '<field name="display_name"/>' +
@@ -2996,7 +2996,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<kanban>" +
                 // color will be in the kanban but not in the form
@@ -3012,7 +3012,7 @@ QUnit.module("Fields", (hooks) => {
                 "</t>" +
                 "</templates>" +
                 "</kanban>" +
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="display_name"/>' +
                 // foo will be in the form but not in the kanban
                 '<field name="foo"/>' +
@@ -3170,7 +3170,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles" add-label="Add turtle" mode="kanban">' +
                     "<kanban>" +
                     "<templates>" +
@@ -3207,7 +3207,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<kanban create="0">' +
                 '<field name="display_name"/>' +
@@ -3322,7 +3322,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom" limit="3">' +
                 '<field name="turtle_foo"/>' +
@@ -3356,12 +3356,12 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<tree>" +
                 '<field name="display_name"/><field name="qux"/>' +
                 "</tree>" +
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="display_name"/>' +
                 "</form>" +
                 "</field>" +
@@ -3447,12 +3447,12 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="top">' +
                 '<field name="display_name"/><field name="qux"/>' +
                 "</tree>" +
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="display_name"/>' +
                 "</form>" +
                 "</field>" +
@@ -3512,7 +3512,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="top">' +
                 '<field name="foo"/>' +
@@ -3578,7 +3578,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
@@ -3624,7 +3624,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
@@ -3671,7 +3671,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<group>" +
                     '<field name="turtles">' +
                     '<tree editable="top">' +
@@ -3717,7 +3717,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom" limit="3">' +
                     '<field name="turtle_foo"/>' +
@@ -3758,7 +3758,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom" limit="3">' +
                 '<field name="turtle_foo"/>' +
@@ -3797,7 +3797,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom" limit="3">' +
                 '<field name="turtle_foo"/>' +
@@ -3832,7 +3832,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom" limit="3">' +
                     '<field name="turtle_foo"/>' +
@@ -3884,7 +3884,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom" limit="3">' +
                     '<field name="turtle_foo"/>' +
@@ -3929,7 +3929,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
@@ -3985,7 +3985,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
@@ -4030,7 +4030,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
@@ -4087,7 +4087,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
                 '<field name="turtle_foo"/>' +
@@ -4123,7 +4123,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="top">' +
                     '<field name="turtle_foo"/>' +
@@ -4156,7 +4156,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="p">' +
                 "<tree>" +
@@ -4214,7 +4214,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="top">' +
                     '<field name="product_id"/>' +
@@ -4256,7 +4256,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="top">' +
                 '<field name="foo"/>' +
@@ -4308,7 +4308,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<tree>" +
                 '<field name="foo"/>' +
@@ -4347,7 +4347,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<tree>" +
                 '<field name="date"/>' +
@@ -4377,7 +4377,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
                 '<field name="turtle_int"/>' +
@@ -4418,7 +4418,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="bottom">' +
                 '<field name="date"/>' +
@@ -4463,7 +4463,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="foo"/>' +
                 '<field name="p">' +
                 '<tree editable="bottom">' +
@@ -4553,7 +4553,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="foo"/>' +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
@@ -4680,7 +4680,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="foo"/>' +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
@@ -4759,7 +4759,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom">' +
                     "<field name=\"turtle_foo\" widget=\"char\" attrs=\"{'readonly': [('turtle_int', '==', 11111)]}\"/>" +
@@ -4796,7 +4796,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="bottom">' +
                 '<field name="display_name"/>' +
@@ -4845,7 +4845,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="p">' +
                     '<tree editable="top">' +
                     '<field name="display_name" attrs=\'{"readonly": [["product_id", "=", false]]}\'/>' +
@@ -4883,7 +4883,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="top">' +
                 '<field name="foo"/>' +
@@ -4922,7 +4922,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<tree>" +
                 '<field name="product_id"/>' +
@@ -4992,7 +4992,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<form string="Partner">' +
                 '<field name="product_id"/>' +
@@ -5101,7 +5101,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="foo"/>' +
                     '<field name="product_id"/>' +
                     '<field name="p">' +
@@ -5155,7 +5155,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<field name=\"product_id\" context=\"{'p': p, 'timmy': timmy}\"/>" +
                     '<field name="p" invisible="1"/>' +
                     '<field name="timmy" invisible="1"/>' +
@@ -5199,7 +5199,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="foo"/>' +
                     '<field name="p">' +
                     '<tree editable="bottom">' +
@@ -5242,7 +5242,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="date"/>' +
                 '<field name="p" context="{\'date\':date}">' +
@@ -5281,7 +5281,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="turtles" context="{\'turtles\':turtles}">' +
                 '<tree editable="bottom">' +
@@ -5328,7 +5328,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="top">' +
                 '<field name="foo"/>' +
@@ -5376,7 +5376,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="int_field"/>' +
                     "<field name=\"p\" context=\"{'hello': 'world', 'abc': int_field}\">" +
                     '<tree editable="top">' +
@@ -5409,7 +5409,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles" widget="many2many">' +
                 "<tree>" +
                 '<field name="turtle_foo"/>' +
@@ -5505,7 +5505,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles" widget="many2many">' +
                 "<tree>" +
                 '<field name="turtle_foo"/>' +
@@ -5600,7 +5600,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="int_field"/>' +
                     "<field name=\"p\" context=\"{'hello': 'world', 'abc': int_field}\">" +
                     '<tree editable="top">' +
@@ -5635,7 +5635,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="foo"/>' +
                 '<field name="p">' +
                 '<tree editable="top">' +
@@ -5734,7 +5734,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="foo"/>' +
                     '<field name="turtles">' +
                     '<tree editable="top">' +
@@ -5778,7 +5778,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 "<tree>" +
                 '<field name="id"/>' +
@@ -5804,7 +5804,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
                 '<field name="id" invisible="1"/>' +
@@ -5841,7 +5841,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<form string="Partner">' +
                 '<group><field name="foo"/></group>' +
@@ -5877,7 +5877,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="int_field"/>' +
                 '<field name="p">' +
                 "<tree>" +
@@ -5924,7 +5924,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<kanban>" +
                 '<field name="foo"/>' +
@@ -5989,7 +5989,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<group>" +
                     '<field name="turtles" mode="kanban">' +
                     "<kanban>" +
@@ -6066,7 +6066,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<group>" +
                     '<field name="turtles" mode="tree">' +
                     "<tree>" +
@@ -6121,7 +6121,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="p" widget="many2many_tags"/>' + // check if the view don not call load view (widget without useSubview)
                 '<field name="turtles"/>' +
@@ -6157,7 +6157,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="int_field"/>' +
                 '<field name="turtles">' +
@@ -6273,7 +6273,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="top" limit="2">' +
                     '<field name="turtle_foo"/>' +
@@ -6359,7 +6359,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="int_field"/>' +
                 '<field name="turtles">' +
@@ -6503,7 +6503,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="int_field"/>' +
                 '<field name="turtles">' +
@@ -6551,7 +6551,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<group>" +
                     '<field name="turtles">' +
                     "<tree>" +
@@ -6594,7 +6594,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<group>" +
                     '<field name="turtles">' +
                     "<tree>" +
@@ -6654,7 +6654,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
                 '<field name="turtle_trululu"/>' +
@@ -6717,7 +6717,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
                 '<field name="partner_ids" widget="many2many_tags"/>' +
@@ -6919,7 +6919,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<group>" +
                     '<field name="turtles">' +
                     "<tree>" +
@@ -6954,7 +6954,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<group>" +
                 "<notebook>" +
@@ -7261,7 +7261,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
@@ -7301,7 +7301,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
@@ -7351,7 +7351,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
@@ -7402,12 +7402,12 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<tree>" +
                 '<field name="foo"/>' +
                 "</tree>" +
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="display_name"/>' +
                 "</form>" +
                 "</field>" +
@@ -7438,7 +7438,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<group>" +
                 '<field mode="kanban" name="turtles">' +
                 "<tree>" +
@@ -7485,7 +7485,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="int_field"/>' +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
@@ -7555,10 +7555,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
-                    '<field name="int_field"/>' +
-                    '<field name="turtles"/>' +
-                    "</form>",
+                    "<form>" + '<field name="int_field"/>' + '<field name="turtles"/>' + "</form>",
                 mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
@@ -7637,7 +7634,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="int_field"/>' +
                     '<field name="turtles">' +
                     '<tree editable="top">' +
@@ -7697,7 +7694,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="int_field"/>' +
                     '<field name="turtles">' +
                     '<tree editable="top">' +
@@ -7832,7 +7829,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom">' +
                     '<field name="turtle_trululu" required="1"/>' +
@@ -7893,7 +7890,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="datetime"/>' +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
@@ -7944,7 +7941,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
                 '<field name="display_name"/>' +
@@ -8103,13 +8100,13 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="name"/>' +
                     '<field name="p">' +
                     "<tree>" +
                     '<field name="display_name"/>' +
                     "</tree>" +
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="display_name"/>' +
                     '<field name="timmy" widget="many2many_tags"/>' +
                     "</form>" +
@@ -8257,7 +8254,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
                 '<field name="turtle_int"/>' +
@@ -8294,7 +8291,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree><field name="display_name"/></tree>' +
                 "<form>" +
@@ -8341,7 +8338,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom">' +
@@ -8398,7 +8395,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom" limit="3">' +
                 '<field name="turtle_foo"/>' +
@@ -8438,7 +8435,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 '<field name="turtles">' +
                 '<tree editable="top">' +
@@ -8504,7 +8501,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="p">' +
                     '<tree editable="bottom">' +
                     '<field name="int_field"/>' +
@@ -8566,7 +8563,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="p">' +
                     '<tree editable="bottom">' +
                     '<field name="int_field"/>' +
@@ -8625,7 +8622,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="bottom">' +
                 '<field name="bar"/>' +
@@ -8663,7 +8660,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="p">' +
                     '<tree editable="bottom">' +
                     '<field name="foo"/>' +
@@ -9026,7 +9023,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree limit="2">' +
                 '<field name="turtle_int" widget="handle"/>' +
@@ -9075,7 +9072,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree limit="2">' +
                     '<field name="turtle_int" widget="handle"/>' +
@@ -9127,7 +9124,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom">' +
                     '<field name="turtle_int" widget="handle"/>' +
@@ -9172,7 +9169,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="top">' +
                     '<field name="turtle_int" widget="handle"/>' +
@@ -9217,7 +9214,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     "<tree>" +
                     '<field name="turtle_int" widget="handle"/>' +
@@ -9270,7 +9267,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree limit="2">' +
                     '<field name="turtle_int" widget="handle"/>' +
@@ -9308,7 +9305,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree limit="4">' +
                     '<field name="turtle_int" widget="handle"/>' +
@@ -9364,7 +9361,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom">' +
                     '<field name="turtle_int" widget="handle"/>' +
@@ -9440,7 +9437,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             data: data,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="top" limit="2" default_order="turtle_foo">' +
                 '<field name="turtle_int"/>' +
@@ -9506,7 +9503,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree limit="2">' +
                     '<field name="turtle_foo"/>' +
@@ -9558,7 +9555,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree limit="3" editable="bottom">' +
                     '<field name="turtle_foo" required="1"/>' +
@@ -9696,7 +9693,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree><field name="display_name"/></tree>' +
                 '<form><field name="display_name"/></form>' +
@@ -9747,7 +9744,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree editable="bottom">' +
                 "<control>" +
@@ -9801,7 +9798,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 "<tree>" +
                 "<control>" +
@@ -9859,7 +9856,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="p">' +
                     "<tree>" +
                     '<field name="int_field" widget="handle"/>' +
@@ -9895,7 +9892,7 @@ QUnit.module("Fields", (hooks) => {
             data: data,
             res_id: 1,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p">' +
                 '<tree><field name="display_name"/></tree>' +
                 "<form>" +
@@ -10073,7 +10070,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 "<tree>" +
                 '<field name="display_name" widget="email"/>' +
@@ -10151,7 +10148,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<header>" +
                     '<button name="post" type="object" string="Validate" class="oe_highlight"/>' +
                     "</header>" +
@@ -10188,7 +10185,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom">' +
                     '<field name="turtle_foo" widget="text"/>' +
@@ -10232,7 +10229,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom">' +
                     '<field name="turtle_foo" required="1"/>' +
@@ -10348,7 +10345,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p" >' +
                 "<tree>" +
                 '<field name="datetime"/>' +
@@ -10439,7 +10436,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<group>" +
                 '<field name="product_id"/>' +
@@ -10655,7 +10652,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<group>" +
                 '<field name="product_id"/>' +
@@ -11925,7 +11922,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch: `
-                <form string="Partners">
+                <form>
                     <sheet>
                         <notebook>
                             <page string="P page">
@@ -12040,7 +12037,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<group>" +
                 '<field name="trululu"/>' +
@@ -12156,7 +12153,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             model: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<field name="trululu"/>' + "</form>",
+            arch: "<form>" + '<field name="trululu"/>' + "</form>",
             res_id: 2,
             archs: {
                 "partner,false,form": '<form><field name="trululu"/></form>',
@@ -12223,7 +12220,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 "<tree>" +
                 '<field name="turtle_foo"/>' +
@@ -12258,7 +12255,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<notebook>" +
                 '<page string="Turtles">' +
@@ -12302,7 +12299,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 '<field name="turtles" readonly="1">' +
                 '<tree editable="top">' +
@@ -12347,7 +12344,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     '<field name="turtles">' +
                     '<tree editable="bottom" no_open="True">' +
@@ -12391,7 +12388,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     "<group>" +
                     '<field name="turtles">' +
@@ -12442,7 +12439,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree editable="bottom" limit="2">' +
                 '<field name="turtle_foo"/>' +
@@ -12608,7 +12605,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 '<tree limit="1">' +
                 '<field name="display_name"/>' +
@@ -12654,10 +12651,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             model: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="timmy" widget="many2many_tags"/>' +
-                "</form>",
+            arch: "<form>" + '<field name="timmy" widget="many2many_tags"/>' + "</form>",
             res_id: 1,
             mockRPC(route, args) {
                 if (args.method === "read" && args.model === "partner_type") {
@@ -12688,7 +12682,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="p" >' +
                 "<tree>" +
                 '<field name="datetime"/>' +
@@ -12779,7 +12773,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<group>" +
                 '<field name="product_id"/>' +
@@ -12904,7 +12898,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<group>" +
                 '<field name="product_id"/>' +
@@ -12977,7 +12971,7 @@ QUnit.module("Fields", (hooks) => {
                 type: "form",
                 model: "partner",
                 serverData,
-                arch: '<form string="Partners">' + '<field name="p"/>' + "</form>",
+                arch: "<form>" + '<field name="p"/>' + "</form>",
                 res_id: 1,
                 archs: {
                     "partner,false,list":
@@ -13121,7 +13115,7 @@ QUnit.module("Fields", (hooks) => {
                 },
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     "<group>" +
                     '<field name="qux"/>' +
@@ -13171,7 +13165,7 @@ QUnit.module("Fields", (hooks) => {
                 },
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     "<group>" +
                     '<field name="qux"/>' +
@@ -13232,7 +13226,7 @@ QUnit.module("Fields", (hooks) => {
                 },
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     "<group>" +
                     '<field name="qux"/>' +
@@ -13295,7 +13289,7 @@ QUnit.module("Fields", (hooks) => {
                 },
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     "<group>" +
                     '<field name="qux"/>' +
@@ -13360,7 +13354,7 @@ QUnit.module("Fields", (hooks) => {
                 },
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<sheet>" +
                     '<field name="turtles">' +
                     '<tree editable="top">' +
