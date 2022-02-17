@@ -46,8 +46,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'web.qunit_suite_tests': [
             'website_livechat/static/src/components/*/tests/*.js',
             'website_livechat/static/src/models/*/tests/*.js',
-            'website_livechat/static/tests/helpers/mock_models.js',
-            'website_livechat/static/tests/helpers/mock_server.js',
+            'website_livechat/static/tests/helpers/*.js',
         ],
         'web.assets_qweb': [
             'website_livechat/static/src/components/*/*.xml',
