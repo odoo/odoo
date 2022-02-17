@@ -58,7 +58,7 @@ var RunningTourActionHelper = core.Class.extend({
 //        values.$element.trigger("mouseenter");
         let element = values.$element;
         while (element && element.prop("tagName")) {
-            element.trigger("mouseenter");
+            trigger_mouse_event(element, "mouseenter");
             element = element.parent();
         }
         trigger_mouse_event(values.$element, "mouseover");
@@ -75,7 +75,7 @@ var RunningTourActionHelper = core.Class.extend({
 //            values.$element.trigger("mouseleave");
             let element = values.$element;
             while (element && element.prop("tagName")) {
-                element.trigger("mouseleave");
+                trigger_mouse_event(element, "mouseleave");
                 element = element.parent();
             }
         }
