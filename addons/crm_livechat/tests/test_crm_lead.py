@@ -33,7 +33,9 @@ class TestLivechatLead(TestCrmCommon):
         # public: should not be set as customer
         channel = self.env['mail.channel'].create({
             'name': 'Chat with Visitor',
-            'channel_partner_ids': [(4, self.user_anonymous.partner_id.id)]
+            'channel_type': 'livechat',
+            'channel_partner_ids': [(4, self.user_anonymous.partner_id.id)],
+            'livechat_operator_id': self.env.user.partner_id.id
         })
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
@@ -50,7 +52,9 @@ class TestLivechatLead(TestCrmCommon):
 
         channel = self.env['mail.channel'].create({
             'name': 'Chat with Visitor',
-            'channel_partner_ids': [(4, self.env.ref('base.public_partner').id)]
+            'channel_type': 'livechat',
+            'channel_partner_ids': [(4, self.env.ref('base.public_partner').id)],
+            'livechat_operator_id': self.env.user.partner_id.id
         })
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
@@ -71,7 +75,9 @@ class TestLivechatLead(TestCrmCommon):
         # portal: should be set as customer
         channel = self.env['mail.channel'].create({
             'name': 'Chat with Visitor',
-            'channel_partner_ids': [(4, self.user_portal.partner_id.id)]
+            'channel_type': 'livechat',
+            'channel_partner_ids': [(4, self.user_portal.partner_id.id)],
+            'livechat_operator_id': self.env.user.partner_id.id
         })
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
