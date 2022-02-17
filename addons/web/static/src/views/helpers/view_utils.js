@@ -27,18 +27,6 @@ export function isNumeric(field) {
 }
 
 /**
- * @param {string | string[]} [mode]
- * @returns {string[]}
- */
-export const getX2MViewModes = (mode) => {
-    if (!mode) {
-        return ["list"];
-    }
-    const modes = Array.isArray(mode) ? mode : mode.split(",");
-    return modes.map((m) => (m === "tree" ? "list" : m));
-};
-
-/**
  * @param {number | number[]} idsList
  * @returns {number[]}
  */

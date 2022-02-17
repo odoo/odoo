@@ -269,6 +269,9 @@ export class ListRenderer extends Component {
                 classNames.push("o_list_button");
             } else if (column.type === "field") {
                 classNames.push("o_field_cell");
+                if (column.attrs && column.attrs.class) {
+                    classNames.push(column.attrs.class);
+                }
                 const typeClass = FIELD_CLASSES[this.fields[column.name].type];
                 if (typeClass) {
                     classNames.push(typeClass);
@@ -461,11 +464,21 @@ export class ListRenderer extends Component {
         }
         this.unselectRow();
     }
+
+    delete(record) {
+        throw new Error("To implement");
+    }
 }
 
 ListRenderer.template = "web.ListRenderer";
 ListRenderer.components = { CheckBoxDropdownItem, Field, ViewButton, CheckBox, Dropdown };
-ListRenderer.props = ["list", "fields", "info", "openRecord", "hasSelectors?"];
-ListRenderer.defaultProps = {
-    hasSelectors: false,
-};
+ListRenderer.props = [
+    "list",
+    "fields",
+    "info",
+    "openRecord",
+    "creates?",
+    "hasSelectors?",
+    "hasTrashIcon?",
+];
+ListRenderer.defaultProps = { hasSelectors: false, };

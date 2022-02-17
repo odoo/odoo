@@ -279,7 +279,7 @@ export const formatX2many = (value) => {
     } else if (count === 1) {
         return _lt("1 record");
     } else {
-        return count + _lt(" records");
+        return count + _lt(" records"); // WOWL might not be good (RTL,...)
     }
 };
 

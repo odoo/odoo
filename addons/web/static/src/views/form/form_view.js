@@ -165,7 +165,7 @@ export class FormView extends Component {
             const viewType = fieldInfo.viewMode;
             const views = await this.viewService.loadViews({
                 resModel: field.relation,
-                views: [[null, viewType]],
+                views: [[false, viewType]],
                 context: makeContext([fieldContext, this.user.context, refinedContext]),
             });
             const subView = views[viewType];

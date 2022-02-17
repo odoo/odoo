@@ -28,13 +28,15 @@ export class X2ManyField extends Component {
     get rendererProps() {
         const subViewInfo = this.fieldInfo.views[this.fieldInfo.viewMode];
         return {
+            creates: this.viewType === "list" && subViewInfo.creates,
             info: {
                 ...subViewInfo,
                 editable: this.props.record.isInEdition && subViewInfo.editable,
             },
-            fields: subViewInfo.fields, // is this necessary?
+            fields: Object.assign({}, this.props.fields, subViewInfo.fields), // is this necessary?
             list: this.props.value,
             openRecord: this.openRecord.bind(this),
+            hasTrashIcon: this.viewType === "list",
         };
     }
 

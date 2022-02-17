@@ -207,9 +207,6 @@ Field.parseFieldNode = function (node, fields, viewType) {
     if (fieldInfo.FieldComponent.convertAttrsToProps) {
         fieldInfo.props = fieldInfo.FieldComponent.convertAttrsToProps(attrs);
     }
-    if (X2M_TYPES.includes(field.type)) {
-        fieldInfo.viewMode = getX2MViewModes(node.getAttribute("mode"))[0];
-    }
 
     if (!fieldInfo.invisible && X2M_TYPES.includes(field.type)) {
         if (field.views) {
@@ -225,6 +222,23 @@ Field.parseFieldNode = function (node, fields, viewType) {
                     fields: subView.fields,
                 };
             }
+            let viewMode = attrs.mode;
+            if (!viewMode) {
+                if (fieldInfo.views.list && !fieldInfo.views.kanban) {
+                    viewMode = "list";
+                } else if (!fieldInfo.views.list && fieldInfo.views.kanban) {
+                    viewMode = "kanban";
+                } else {
+                    viewMode = "list,kanban";
+                }
+            } else if (viewMode === "tree") {
+                viewMode = "list";
+            }
+            if (viewMode.indexOf(",") !== -1) {
+                // WOWL do this elsewhere or get env here?
+                viewMode = /** env.isSmall  ? "kanban" : */ "list";
+            }
+            fieldInfo.viewMode = viewMode;
         }
 
         fieldInfo.relation = field.relation; // not really necessary

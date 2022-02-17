@@ -33,7 +33,11 @@ function orderByToString(orderBy) {
     return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
 }
 
-function stringToOrderBy(string) {
+/**
+ * @param {any} string
+ * @return {Object[]}
+ */
+export function stringToOrderBy(string) {
     if (!string) {
         return [];
     }
@@ -414,10 +418,15 @@ export class Record extends DataPoint {
                     activeFields[fieldName] = relatedFields[fieldName];
                 }
             }
+            const limit = views[viewMode] && views[viewMode].limit;
+            const orderBy = views[viewMode] && views[viewMode].defaultOrder;
+
             const list = this.model.createDataPoint("list", {
                 resModel: this.fields[fieldName].relation,
                 fields,
                 activeFields,
+                limit,
+                orderBy,
                 resIds: this.data[fieldName] || [],
                 views,
                 viewMode,
@@ -535,7 +544,8 @@ export class Record extends DataPoint {
     }
 
     discard() {
-        for (const fieldName in this._changes) {
+        for (const fieldName in this.activeFields) {
+            // activeFields should be changes
             if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
                 this.data[fieldName].discard();
             }
@@ -1177,7 +1187,9 @@ export class StaticList extends DataPoint {
         this.offset = 0;
         this.views = params.views || {};
         this.viewMode = params.viewMode;
-        this.orderBy = params.orderBy || {}; // rename orderBy + get back from state
+        this.orderBy = (params.orderBy && params.orderBy[0]) || {}; // rename orderBy + get back from state
+        // to fix! use all objects?!
+
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.offset = 0;
 
@@ -1299,6 +1311,9 @@ export class StaticList extends DataPoint {
         await this._applyChange(command);
     }
     discard() {
+        for (const record of this.records) {
+            record.discard();
+        }
         this._changes = [];
     }
 
@@ -1337,7 +1352,7 @@ export class RelationalModel extends Model {
             viewMode: params.viewMode || null,
             resModel: params.resModel,
             groupByInfo: params.groupByInfo,
-            defaultOrder: stringToOrderBy(params.defaultOrder),
+            defaultOrder: params.defaultOrder,
         };
         if (this.rootType === "record") {
             this.rootParams.resId = params.resId;

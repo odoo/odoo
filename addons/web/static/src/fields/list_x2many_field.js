@@ -11,6 +11,7 @@ export class ListX2ManyField extends Component {
     }
 }
 
+// ListX2ManyField.useSubView = false; ?? WOWL
 ListX2ManyField.props = {
     ...standardFieldProps,
 };

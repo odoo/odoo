@@ -10327,6 +10327,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.skipWOWL("editable list view: m2m tags in grouped list", async function (assert) {
+        // need better many2many tags implementation
         assert.expect(2);
 
         await makeView({
@@ -10335,83 +10336,89 @@ QUnit.module("Views", (hooks) => {
                     <field name="bar"/>
                     <field name="m2m" widget="many2many_tags"/>
                 </tree>`,
-            serverData,
             groupBy: ["bar"],
             resModel: "foo",
             serverData,
+            type: "list",
         });
 
         // Opens first group
-        await click($(target).find(".o_group_header:first"));
+        await click(target.querySelector(".o_group_header"));
 
         assert.notEqual(
-            $(target).find(".o_data_row:first").text(),
-            $(target).find(".o_data_row:last").text(),
+            target.querySelector(".o_data_row").innerText,
+            target.querySelectorAll(".o_data_row")[1].innerText,
             "First row and last row should have different values"
         );
 
-        await click($(target).find("thead .o_list_record_selector:first input"));
-        await click($(target).find(".o_data_row:first .o_data_cell:eq(1)"));
-        await click($(target).find(".o_selected_row .o_field_many2manytags .o_delete:first"));
-        await click($(".modal .btn-primary"));
+        await click(target.querySelector("thead .o_list_record_selector input"));
+        await click(target.querySelector(".o_data_row .o_field_many2manytags"));
+        await click(target.querySelector(".o_selected_row .o_field_many2manytags .o_delete"));
+        await click(target.querySelector(".modal .btn-primary"));
 
         assert.strictEqual(
-            $(target).find(".o_data_row:first").text(),
-            $(target).find(".o_data_row:last").text(),
+            target.querySelector(".o_data_row").innerText,
+            target.querySelectorAll(".o_data_row")[0].innerText,
             "All rows should have been correctly updated"
         );
     });
 
     QUnit.skipWOWL("editable list: edit many2one from external link", async function (assert) {
+        // need to implement save,... in FormViewDialog
         assert.expect(7);
+
+        serverData.views = {
+            "bar,false,form": `
+                <form string="Bar">
+                    <field name="display_name"/>
+                </form>
+            `,
+        };
 
         await makeView({
             arch: `
                 <tree editable="top" multi_edit="1">
                     <field name="m2o"/>
-                </tree>`,
-            archs: {
-                "bar,false,form": '<form string="Bar"><field name="display_name"/></form>',
-            },
+                </tree>
+            `,
             serverData,
-            mockRPC: function (route, args) {
+            mockRPC: async function (route, args) {
                 if (args.method === "get_formview_id") {
-                    return Promise.resolve(false);
+                    return false;
                 }
-                return this._super(route, args);
             },
             resModel: "foo",
-            serverData,
+            type: "list",
         });
 
-        assert.strictEqual(list.mode, "readonly", "is in readonly mode");
-        await click($(target).find("thead .o_list_record_selector:first input"));
-        await click($(target).find(".o_data_row:first .o_data_cell:eq(0)"));
-        assert.strictEqual(list.mode, "edit", "is in edit mode");
-        await click($(target).find(".o_external_button:first"));
+        assert.containsNone(target, ".o_selected_row", "not in edit mode");
+        await click(target.querySelector("thead .o_list_record_selector input"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".o_selected_row", "in edit mode");
+        await click(target.querySelector(".o_external_button"));
 
         // Clicking somewhere on the form dialog should not close it
         // and should not leave edit mode
-        assert.containsOnce(document.body, ".modal[role='dialog']");
-        await click(document.body.querySelector(".modal[role='dialog']"));
-        assert.containsOnce(document.body, ".modal[role='dialog']");
-        assert.strictEqual(list.mode, "edit", "is still in edit mode");
+        assert.containsOnce(target, ".modal[role='dialog']");
+        await click(target.querySelector(".modal[role='dialog']"));
+        assert.containsOnce(target, ".modal[role='dialog']");
+        assert.containsOnce(target, ".o_selected_row", "in edit mode");
 
         // Change the M2O value in the Form dialog
-        await editInput($(".modal input:first"), "OOF");
-        await click($(".modal .btn-primary"));
+        await editInput(target, ".modal input", "OOF");
+        await click(target.querySelector(".modal .btn-primary"));
 
         assert.strictEqual(
-            $(".modal .o_field_widget[name=m2o]").text(),
+            target.querySelector(".modal .o_field_widget[name=m2o]").innerText,
             "OOF",
             "Value of the m2o should be updated in the confirmation dialog"
         );
 
         // Close the confirmation dialog
-        await click($(".modal .btn-primary"));
+        await click(target.querySelector(".modal .btn-primary"));
 
         assert.strictEqual(
-            $(target).find(".o_data_cell:first").text(),
+            target.querySelector(".o_data_cell").innerText,
             "OOF",
             "Value of the m2o should be updated in the list"
         );
@@ -10428,39 +10435,48 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo" attrs="{'readonly': [['bar','=',True]]}"/>
                     <field name="m2o" attrs="{'readonly': [['bar','=',False]]}"/>
                     <field name="int_field"/>
-                </tree>`,
+                </tree>
+            `,
         });
 
         await click(target.querySelector(".o_list_button_add"));
 
         assert.containsOnce(target, ".o_selected_row");
-        assert.notOk($(target).find(".o_selected_row .o_field_boolean input").is(":checked"));
+        assert.notOk(target.querySelector(".o_selected_row .o_field_boolean input").checked);
         assert.doesNotHaveClass(
-            $(target).find(".o_selected_row .o_list_char"),
+            target.querySelector(".o_selected_row .o_field_char"),
             "o_readonly_modifier"
         );
-        assert.hasClass($(target).find(".o_selected_row .o_list_many2one"), "o_readonly_modifier");
-
-        await click($(target).find(".o_selected_row .o_field_boolean input"));
-
-        assert.ok($(target).find(".o_selected_row .o_field_boolean input").is(":checked"));
-        assert.hasClass($(target).find(".o_selected_row .o_list_char"), "o_readonly_modifier");
-        assert.doesNotHaveClass(
-            $(target).find(".o_selected_row .o_list_many2one"),
+        assert.hasClass(
+            target.querySelector(".o_selected_row .o_field_many2one"),
             "o_readonly_modifier"
         );
 
-        await click($(target).find(".o_selected_row .o_field_many2one input"));
+        await click(target.querySelector(".o_selected_row .o_field_boolean input"));
+
+        assert.ok(target.querySelector(".o_selected_row .o_field_boolean input").checked);
+        assert.hasClass(
+            target.querySelector(".o_selected_row .o_field_char"),
+            "o_readonly_modifier"
+        );
+        assert.doesNotHaveClass(
+            target.querySelector(".o_selected_row .o_field_many2one"),
+            "o_readonly_modifier"
+        );
+
+        await click(target.querySelector(".o_selected_row .o_field_many2one input"));
 
         assert.strictEqual(
             document.activeElement,
-            $(target).find(".o_selected_row .o_field_many2one input")[0]
+            target.querySelector(".o_selected_row .o_field_many2one input")
         );
     });
 
     QUnit.skipWOWL(
-        "editable list with many2one: click out does not discard the row",
+        "editable form with many2one: click out does not discard the row",
         async function (assert) {
+            // WOWL Should be moved to form view tests!
+
             // In this test, we simulate a long click by manually triggering a mousedown and later on
             // mouseup and click events
             assert.expect(5);
@@ -10471,57 +10487,58 @@ QUnit.module("Views", (hooks) => {
                 relation: "foo",
             };
 
-            const form = await makeView({
-                View: FormView,
+            await makeView({
+                type: "form",
                 resModel: "foo",
                 serverData,
                 arch: `
-                <form>
-                    <field name="display_name"/>
-                    <field name="o2m">
-                        <tree editable="bottom">
-                            <field name="m2o" required="1"/>
-                        </tree>
-                    </field>
-                </form>`,
+                    <form>
+                        <field name="display_name"/>
+                        <field name="o2m">
+                            <tree editable="bottom">
+                                <field name="m2o" required="1"/>
+                            </tree>
+                        </field>
+                    </form>
+                `,
             });
 
-            assert.containsNone(form, ".o_data_row");
+            assert.containsNone(target, ".o_data_row");
 
-            await click(form.$(".o_field_x2many_list_row_add > a"));
-            assert.containsOnce(form, ".o_data_row");
+            await click(target.querySelector(".o_field_x2many_list_row_add > a"));
+            assert.containsOnce(target, ".o_data_row");
 
             // focus and write something in the m2o
-            form.$(".o_field_many2one input").focus().val("abcdef").trigger("keyup");
+            await editInput(target, ".o_field_many2one input", "abcdef");
+            await triggerEvent(target, "input.o_searchview_input", "keydown", { key: "ArrowUp" });
+
             await testUtils.nextTick();
 
             // then simulate a mousedown outside
-            form.$('.o_field_widget[name="display_name"]').focus().trigger("mousedown");
+            target.querySelector('.o_field_widget[name="display_name"]').focus();
+            await triggerEvent(target, '.o_field_widget[name="display_name"]', "mousedown");
             await testUtils.nextTick();
-            assert.containsOnce(
-                document.body,
-                ".modal",
-                "should ask confirmation to create a record"
-            );
+            assert.containsOnce(target, ".modal", "should ask confirmation to create a record");
 
             // trigger the mouseup and the click
-            form.$('.o_field_widget[name="display_name"]').trigger("mouseup").trigger("click");
+            target
+                .querySelector('.o_field_widget[name="display_name"]')
+                .trigger("mouseup")
+                .trigger("click");
             await testUtils.nextTick();
 
-            assert.containsOnce(document.body, ".modal", "modal should still be displayed");
-            assert.containsOnce(form, ".o_data_row", "the row should still be there");
-
-            form.destroy();
+            assert.containsOnce(target, ".modal", "modal should still be displayed");
+            assert.containsOnce(target, ".o_data_row", "the row should still be there");
         }
     );
 
     QUnit.skipWOWL(
-        "editable list alongside html field: click out to unselect the row",
+        "editable form alongside html field: click out to unselect the row",
         async function (assert) {
             assert.expect(5);
 
             const form = await makeView({
-                View: FormView,
+                type: "form",
                 resModel: "foo",
                 serverData,
                 arch: `
@@ -10549,8 +10566,6 @@ QUnit.module("Views", (hooks) => {
             await click(document.body);
             assert.containsOnce(form, ".o_data_row");
             assert.doesNotHaveClass(form.$(".o_data_row"), "o_selected_row");
-
-            form.destroy();
         }
     );
 
