@@ -15,6 +15,7 @@ import re
 import sys
 import tempfile
 import unicodedata
+import warnings
 from collections import OrderedDict, defaultdict
 
 import babel.messages.pofile
@@ -1267,37 +1268,16 @@ class DataSet(http.Controller):
 
     @http.route('/web/dataset/search_read', type='json', auth="user")
     def search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
-        return self.do_search_read(model, fields, offset, limit, domain, sort)
-
-    def do_search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
-        """ Performs a search() followed by a read() (if needed) using the
-        provided search criteria
-
-        :param str model: the name of the model to search on
-        :param fields: a list of the fields to return in the result records
-        :type fields: [str]
-        :param int offset: from which index should the results start being returned
-        :param int limit: the maximum number of records to return
-        :param list domain: the search domain for the query
-        :param list sort: sorting directives
-        :returns: A structure (dict) with two keys: ids (all the ids matching
-                  the (domain, context) pair) and records (paginated records
-                  matching fields selection set)
-        :rtype: list
-        """
-        Model = request.env[model]
-        return Model.web_search_read(domain, fields, offset=offset, limit=limit, order=sort)
+        return request.env[model].web_search_read(domain, fields, offset=offset, limit=limit, order=sort)
 
     @http.route('/web/dataset/load', type='json', auth="user")
     def load(self, model, id, fields):
+        warnings.warn("the route /web/dataset/load is deprecated and will be removed in Odoo 17. Use /web/dataset/call_kw with method 'read' and a list containing the id as args instead", DeprecationWarning)
         value = {}
         r = request.env[model].browse([id]).read()
         if r:
             value = r[0]
         return {'value': value}
-
-    def call_common(self, model, method, args, domain_id=None, context_id=None):
-        return self._call_kw(model, method, args, {})
 
     def _call_kw(self, model, method, args, kwargs):
         check_method_name(method)
@@ -1305,6 +1285,7 @@ class DataSet(http.Controller):
 
     @http.route('/web/dataset/call', type='json', auth="user")
     def call(self, model, method, args, domain_id=None, context_id=None):
+        warnings.warn("the route /web/dataset/call is deprecated and will be removed in Odoo 17. Use /web/dataset/call_kw with empty kwargs instead", DeprecationWarning)
         return self._call_kw(model, method, args, {})
 
     @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', auth="user")
