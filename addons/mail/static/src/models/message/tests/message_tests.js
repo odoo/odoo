@@ -9,8 +9,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
 QUnit.module('message', {}, function () {
 QUnit.module('message_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             const { env, widget } = await start(Object.assign({}, params, {

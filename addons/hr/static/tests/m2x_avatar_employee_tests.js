@@ -15,8 +15,8 @@ import { dom, mock } from 'web.test_utils';
 
 QUnit.module('hr', {}, function () {
     QUnit.module('M2XAvatarEmployee', {
-        beforeEach() {
-            beforeEach(this);
+        async beforeEach() {
+            await beforeEach(this);
 
             // reset the cache before each test
             Many2OneAvatarEmployee.prototype.partnerIds = {};

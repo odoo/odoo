@@ -9,8 +9,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('utils', {}, function () {
 QUnit.module('timer', {}, function () {
 QUnit.module('timer_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
         this.timers = [];
 
         this.start = async (params) => {

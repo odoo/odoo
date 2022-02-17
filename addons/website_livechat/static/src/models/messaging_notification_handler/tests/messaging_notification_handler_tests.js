@@ -14,8 +14,8 @@ QUnit.module('website_livechat', {}, function () {
 QUnit.module('models', {}, function () {
 QUnit.module('messaging_notification_handler', {}, function () {
 QUnit.module('messaging_notification_handler_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             const { env, widget } = await start(Object.assign({}, {

@@ -13,8 +13,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('follower_subtype', {}, function () {
 QUnit.module('follower_subtype_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.createFollowerSubtypeComponent = async ({ follower, followerSubtype }) => {
             const props = {
