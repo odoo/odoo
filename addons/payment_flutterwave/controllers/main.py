@@ -40,7 +40,7 @@ class FlutterwaveController(http.Controller):
         :rtype: str
         """
         data = request.jsonrequest
-        _logger.info("notification received from Flutterwave with data:\n%s", pprint.pformat(event))
+        _logger.info("notification received from Flutterwave with data:\n%s", pprint.pformat(data))
         try:
             # Handle the notification data
             request.env['payment.acquirer'].sudo()._handle_notification_data('flutterwave', data)
