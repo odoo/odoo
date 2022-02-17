@@ -4,7 +4,7 @@
     'name': 'Stripe Payment Acquirer',
     'version': '2.0',
     'category': 'Accounting/Payment Acquirers',
-    'sequence': 380,
+    'sequence': 395,
     'summary': 'Payment Acquirer: Stripe Implementation',
     'description': """Stripe Payment Acquirer""",
     'depends': ['payment'],
