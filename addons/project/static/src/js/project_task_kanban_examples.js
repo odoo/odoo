@@ -10,13 +10,13 @@ const redBullet = Markup`<span class="o_status d-inline-block o_status_red"></sp
 const star = Markup`<a style="color: gold;" class="fa fa-star"/>`;
 const clock = Markup`<a class="fa fa-clock-o"/>`;
 
+const _Markup = owl.markup('').constructor.prototype;
 const descriptionActivities = escFormat(_lt('%s Use the %s icon to organize your daily activities.'), '<br/>', clock);
 const description = escFormat(_lt('Prioritize Tasks by using the %s icon.' +
             '%s Use the %s button to signalize to your colleagues that a task is ready for the next stage.' +
             '%s Use the %s to signalize a problem or a need for discussion on a task.' +
             '%s'), star, '<br/>', greenBullet, '<br/>', redBullet, descriptionActivities);
 
-const _Markup = owl.markup('').constructor.prototype;
 /**
  * Helper function to escape the format string, but not the values formatted in,
  * rougly equivalent to `_.str.sprintf(_.escape(fmt), ...)`.

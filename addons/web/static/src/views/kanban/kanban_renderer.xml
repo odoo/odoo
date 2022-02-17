@@ -175,8 +175,8 @@
                     <div class="o_kanban_example_background">
                         <div class="o_kanban_examples">
                             <div t-foreach="ghostColumns" t-as="column" t-key="column" class="o_kanban_examples_group">
-                                <h6><b t-esc="column"/></h6>
-                                <div t-foreach="ghostCards" t-as="num" t-key="num_index" class="o_kanban_examples_ghost">
+                                <h6><b t-esc="column.name"/></h6>
+                                <div t-foreach="column.cards" t-as="card" t-key="card_index" class="o_kanban_examples_ghost">
                                     <div class="o_ghost_content"/>
                                     <div class="o_ghost_content o_ghost_tag"/>
                                     <!-- FIXME WOWL example avatar is white on white (also in legacy) -->
@@ -190,6 +190,12 @@
             <t t-else="">
                 <!-- kanban ghost cards are used to properly space last elements. -->
                 <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost" />
+            </t>
+            <t t-if="showNoContentHelper">
+                <t t-if="props.noContentHelp" t-call="web.ActionHelper">
+                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                </t>
+                <t t-else="" t-call="web.NoContentHelper"/>
             </t>
         </div>
     </t>

@@ -468,12 +468,13 @@ export class SampleServer {
      * @private
      * @param {Object} params
      * @param {string} params.model
-     * @param {Object} params.kwargs
+     * @param {string} params.group_by
+     * @param {Object} params.progress_bar
      * @return {Object}
      */
     _mockReadProgressBar(params) {
-        const groupBy = params.kwargs.group_by;
-        const progress_bar = params.kwargs.progress_bar;
+        const groupBy = params.group_by;
+        const progress_bar = params.progress_bar;
         const groupByField = this.data[params.model].fields[groupBy];
         const data = {};
         for (const record of this.data[params.model].records) {

@@ -5285,7 +5285,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "nocontent helper after adding a record (kanban with progressbar)",
         async (assert) => {
             assert.expect(3);
@@ -5318,11 +5318,7 @@ QUnit.module("Views", (hooks) => {
                         };
                     }
                 },
-                viewOptions: {
-                    action: {
-                        help: "No content helper",
-                    },
-                },
+                noContentHelp: "No content helper",
             });
 
             assert.containsOnce(kanban, ".o_view_nocontent", "the nocontent helper is displayed");
@@ -5348,7 +5344,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "if view was not grouped at start, it can be grouped and ungrouped",
         async (assert) => {
             assert.expect(3);
@@ -5366,15 +5362,21 @@ QUnit.module("Views", (hooks) => {
                     "</kanban>",
             });
 
-            assert.doesNotHaveClass(kanban.el.querySelector(".o_kanban_view"), "o_kanban_grouped");
+            assert.doesNotHaveClass(
+                kanban.el.querySelector(".o_kanban_renderer"),
+                "o_kanban_grouped"
+            );
             await reload(kanban, { groupBy: ["product_id"] });
-            assert.hasClass(kanban.el.querySelector(".o_kanban_view"), "o_kanban_grouped");
+            assert.hasClass(kanban.el.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
             await reload(kanban, { groupBy: [] });
-            assert.doesNotHaveClass(kanban.el.querySelector(".o_kanban_view"), "o_kanban_grouped");
+            assert.doesNotHaveClass(
+                kanban.el.querySelector(".o_kanban_renderer"),
+                "o_kanban_grouped"
+            );
         }
     );
 
-    QUnit.skipWOWL("no content helper when archive all records in kanban group", async (assert) => {
+    QUnit.test("no content helper when archive all records in kanban group", async (assert) => {
         assert.expect(3);
 
         // add active field on partner model to have archive option
@@ -5385,7 +5387,8 @@ QUnit.module("Views", (hooks) => {
         };
         // remove last records to have only one column
         serverData.models.partner.records = serverData.models.partner.records.slice(0, 3);
-
+        serviceRegistry.add("dialog", dialogService, { force: true });
+        const target = getFixture();
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -5399,11 +5402,7 @@ QUnit.module("Views", (hooks) => {
                             </t>
                         </templates>
                     </kanban>`,
-            viewOptions: {
-                action: {
-                    help: '<p class="hello">click to add a partner</p>',
-                },
-            },
+            noContentHelp: '<p class="hello">click to add a partner</p>',
             groupBy: ["bar"],
             async mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/action_archive") {
@@ -5421,15 +5420,15 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(kanban, ".o_kanban_group:last .o_kanban_record", 3);
 
         // archive the records of the last column
-        await toggleColumnActions(kanban, 1);
+        await toggleColumnActions(kanban, 0);
         await click(kanban.el, ".o_kanban_group .o_column_archive_records");
         assert.containsOnce(document.body, ".modal");
-        await modalOk();
+        await click(target, ".modal .btn-primary");
         // check no content helper is exist
         assert.containsOnce(kanban, ".o_view_nocontent");
     });
 
-    QUnit.skipWOWL("no content helper when no data", async (assert) => {
+    QUnit.test("no content helper when no data", async (assert) => {
         assert.expect(3);
 
         const records = serverData.models.partner.records;
@@ -5447,18 +5446,14 @@ QUnit.module("Views", (hooks) => {
                 '<field name="foo"/>' +
                 "</div>" +
                 "</t></templates></kanban>",
-            viewOptions: {
-                action: {
-                    help: '<p class="hello">click to add a partner</p>',
-                },
-            },
+            noContentHelp: markup('<p class="hello">click to add a partner</p>'),
         });
 
         assert.containsOnce(kanban, ".o_view_nocontent", "should display the no content helper");
 
         assert.strictEqual(
-            kanban.el.querySelector(".o_view_nocontent p.hello:contains(add a partner)").length,
-            1,
+            kanban.el.querySelector(".o_view_nocontent p.hello").innerText,
+            "click to add a partner",
             "should have rendered no content helper from action"
         );
 
@@ -5472,7 +5467,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("no nocontent helper for grouped kanban with empty groups", async (assert) => {
+    QUnit.test("no nocontent helper for grouped kanban with empty groups", async (assert) => {
         assert.expect(2);
 
         const kanban = await makeView({
@@ -5487,31 +5482,26 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
+            async mockRPC(route, args, performRpc) {
                 if (args.method === "web_read_group") {
                     // override read_group to return empty groups, as this is
                     // the case for several models (e.g. project.task grouped
                     // by stage_id)
-                    return this._super.apply(this, arguments).then(function (result) {
-                        _.each(result.groups, function (group) {
-                            group[args.kwargs.groupby[0] + "_count"] = 0;
-                        });
-                        return result;
-                    });
+                    const result = await performRpc(...arguments);
+                    for (const group of result.groups) {
+                        group[args.kwargs.groupby[0] + "_count"] = 0;
+                    }
+                    return result;
                 }
             },
-            viewOptions: {
-                action: {
-                    help: "No content helper",
-                },
-            },
+            noContentHelp: "No content helper",
         });
 
         assert.containsN(kanban, ".o_kanban_group", 2, "there should be two columns");
         assert.containsNone(kanban, ".o_kanban_record", "there should be no records");
     });
 
-    QUnit.skipWOWL("no nocontent helper for grouped kanban with no records", async (assert) => {
+    QUnit.test("no nocontent helper for grouped kanban with no records", async (assert) => {
         assert.expect(4);
 
         serverData.models.partner.records = [];
@@ -5527,11 +5517,7 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            viewOptions: {
-                action: {
-                    help: "No content helper",
-                },
-            },
+            noContentHelp: "No content helper",
         });
 
         assert.containsNone(kanban, ".o_kanban_group", "there should be no columns");
@@ -5548,61 +5534,50 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "no nocontent helper is shown when no longer creating column",
-        async (assert) => {
-            assert.expect(3);
+    QUnit.test("no nocontent helper is shown when no longer creating column", async (assert) => {
+        assert.expect(3);
 
-            serverData.models.partner.records = [];
+        serverData.models.partner.records = [];
 
-            const kanban = await makeView({
-                type: "kanban",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<kanban>" +
-                    '<templates><t t-name="kanban-box">' +
-                    '<div><field name="foo"/></div>' +
-                    "</t></templates>" +
-                    "</kanban>",
-                groupBy: ["product_id"],
-                viewOptions: {
-                    action: {
-                        help: "No content helper",
-                    },
-                },
-            });
+        const kanban = await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                "<kanban>" +
+                '<templates><t t-name="kanban-box">' +
+                '<div><field name="foo"/></div>' +
+                "</t></templates>" +
+                "</kanban>",
+            groupBy: ["product_id"],
+            noContentHelp: "No content helper",
+        });
 
-            assert.containsNone(
-                kanban,
-                ".o_view_nocontent",
-                "there should be no nocontent helper (we are in 'column creation mode')"
-            );
+        assert.containsNone(
+            kanban,
+            ".o_view_nocontent",
+            "there should be no nocontent helper (we are in 'column creation mode')"
+        );
 
-            // creating a new column
-            await createColumn(kanban);
-            await editColumnName(kanban, "applejack");
-            await validateColumn(kanban);
+        // creating a new column
+        await editColumnName(kanban, "applejack");
+        await validateColumn(kanban);
 
-            assert.containsNone(
-                kanban,
-                ".o_view_nocontent",
-                "there should be no nocontent helper (still in 'column creation mode')"
-            );
+        assert.containsNone(
+            kanban,
+            ".o_view_nocontent",
+            "there should be no nocontent helper (still in 'column creation mode')"
+        );
 
-            // leaving column creation mode
-            kanban.el.querySelector(".o_column_quick_create .o_input").trigger(
-                $.Event("keydown", {
-                    keyCode: $.ui.keyCode.ESCAPE,
-                    which: $.ui.keyCode.ESCAPE,
-                })
-            );
+        // leaving column creation mode
+        await triggerEvent(kanban.el, ".o_column_quick_create .o_input", "keydown", {
+            key: "Escape",
+        });
 
-            assert.containsOnce(kanban, ".o_view_nocontent", "there should be a nocontent helper");
-        }
-    );
+        assert.containsOnce(kanban, ".o_view_nocontent", "there should be a nocontent helper");
+    });
 
-    QUnit.skipWOWL("no nocontent helper is hidden when quick creating a column", async (assert) => {
+    QUnit.test("no nocontent helper is hidden when quick creating a column", async (assert) => {
         assert.expect(2);
 
         serverData.models.partner.records = [];
@@ -5620,7 +5595,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
             async mockRPC(route, args) {
                 if (args.method === "web_read_group") {
-                    const result = {
+                    return {
                         groups: [
                             {
                                 __domain: [["product_id", "=", 3]],
@@ -5632,11 +5607,7 @@ QUnit.module("Views", (hooks) => {
                     };
                 }
             },
-            viewOptions: {
-                action: {
-                    help: "No content helper",
-                },
-            },
+            noContentHelp: "No content helper",
         });
 
         assert.containsOnce(kanban, ".o_view_nocontent", "there should be a nocontent helper");
@@ -5650,7 +5621,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("remove nocontent helper after adding a record", async (assert) => {
+    QUnit.test("remove nocontent helper after adding a record", async (assert) => {
         assert.expect(2);
 
         serverData.models.partner.records = [];
@@ -5680,11 +5651,7 @@ QUnit.module("Views", (hooks) => {
                     };
                 }
             },
-            viewOptions: {
-                action: {
-                    help: "No content helper",
-                },
-            },
+            noContentHelp: "No content helper",
         });
 
         assert.containsOnce(kanban, ".o_view_nocontent", "there should be a nocontent helper");
@@ -5701,7 +5668,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("remove nocontent helper when adding a record", async (assert) => {
+    QUnit.test("remove nocontent helper when adding a record", async (assert) => {
         assert.expect(2);
 
         serverData.models.partner.records = [];
@@ -5731,11 +5698,7 @@ QUnit.module("Views", (hooks) => {
                     };
                 }
             },
-            viewOptions: {
-                action: {
-                    help: "No content helper",
-                },
-            },
+            noContentHelp: "No content helper",
         });
 
         assert.containsOnce(kanban, ".o_view_nocontent", "there should be a nocontent helper");
@@ -5751,7 +5714,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "nocontent helper is displayed again after canceling quick create",
         async (assert) => {
             assert.expect(1);
@@ -5783,17 +5746,13 @@ QUnit.module("Views", (hooks) => {
                         };
                     }
                 },
-                viewOptions: {
-                    action: {
-                        help: "No content helper",
-                    },
-                },
+                noContentHelp: "No content helper",
             });
 
             // add a record
             await quickCreateRecord(kanban);
 
-            await click(kanban.el, ".o_kanban_view");
+            await click(kanban.el);
 
             assert.containsOnce(
                 kanban,
@@ -5803,7 +5762,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "nocontent helper for grouped kanban with no records with no group_create",
         async (assert) => {
             assert.expect(4);
@@ -5821,11 +5780,7 @@ QUnit.module("Views", (hooks) => {
                     "</t></templates>" +
                     "</kanban>",
                 groupBy: ["product_id"],
-                viewOptions: {
-                    action: {
-                        help: "No content helper",
-                    },
-                },
+                noContentHelp: "No content helper",
             });
 
             assert.containsNone(kanban, ".o_kanban_group", "there should be no columns");
@@ -5843,7 +5798,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("empty grouped kanban with sample data and no columns", async (assert) => {
+    QUnit.test("empty grouped kanban with sample data and no columns", async (assert) => {
         assert.expect(3);
 
         serverData.models.partner.records = [];
@@ -5862,11 +5817,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
             resModel: "partner",
             type: "kanban",
-            viewOptions: {
-                action: {
-                    help: "No content helper",
-                },
-            },
+            noContentHelp: "No content helper",
         });
 
         assert.containsNone(kanban, ".o_view_nocontent");
@@ -5893,8 +5844,8 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>`,
                 groupBy: ["product_id"],
-                async mockRPC(route, { kwargs, method }) {
-                    const result = await this._super(...arguments);
+                async mockRPC(route, { kwargs, method }, performRpc) {
+                    const result = await performRpc(...arguments);
                     if (method === "web_read_group") {
                         // override read_group to return empty groups, as this is
                         // the case for several models (e.g. project.task grouped
@@ -5905,15 +5856,11 @@ QUnit.module("Views", (hooks) => {
                     }
                     return result;
                 },
-                viewOptions: {
-                    action: {
-                        help: "No content helper",
-                    },
-                },
+                noContentHelp: "No content helper",
             });
 
             assert.containsN(kanban, ".o_kanban_group", 2, "there should be two columns");
-            assert.hasClass(kanban.el.querySelectorel, "o_view_sample_data");
+            assert.hasClass(kanban.el, "o_view_sample_data");
             assert.containsOnce(kanban, ".o_view_nocontent");
             assert.containsN(
                 kanban,
@@ -5923,7 +5870,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             await quickCreateRecord(kanban);
-            assert.doesNotHaveClass(kanban.el.querySelectorel, "o_view_sample_data");
+            assert.doesNotHaveClass(kanban.el, "o_view_sample_data");
             assert.containsNone(kanban, ".o_kanban_record");
             assert.containsNone(kanban, ".o_view_nocontent");
             assert.containsOnce(
@@ -5934,7 +5881,7 @@ QUnit.module("Views", (hooks) => {
             await editQuickCreateInput(kanban, "display_name", "twilight sparkle");
             await validateRecord(kanban);
 
-            assert.doesNotHaveClass(kanban.el.querySelectorel, "o_view_sample_data");
+            assert.doesNotHaveClass(kanban.el, "o_view_sample_data");
             assert.containsOnce(
                 kanban.el.querySelector(".o_kanban_group:first-child"),
                 ".o_kanban_record"

@@ -147,6 +147,9 @@ class KanbanDynamicGroupList extends DynamicGroupList {
                 resModel: this.resModel,
                 domain: this.domain,
                 groupBy: this.groupBy.slice(1),
+                groupByField: this.groupByField,
+                groupByInfo: this.groupByInfo,
+                groupDomain: this.groupDomain,
                 context: this.context,
                 orderedBy: this.orderBy,
             });
@@ -310,6 +313,16 @@ export class KanbanModel extends RelationalModel {
             actualParams.groupBy = groupBy.slice(0, 1);
         }
         await super.load(actualParams);
+    }
+
+    /**
+     * @override
+     */
+    hasData() {
+        if (this.root.groups) {
+            return this.root.groups.some((group) => group.list.records.length > 0);
+        }
+        return this.root.records.length > 0;
     }
 }
 

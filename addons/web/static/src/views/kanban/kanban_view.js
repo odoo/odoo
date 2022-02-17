@@ -257,6 +257,8 @@ export class KanbanArchParser extends XMLParser {
 
 class KanbanView extends Component {
     setup() {
+        // FIXME WOWL: sample server not yet implemented for kanban
+        this.props.useSampleModel = false;
         this.actionService = useService("action");
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;

@@ -43,6 +43,7 @@ export class KanbanRenderer extends Component {
         this.mousedownTarget = null;
         this.colors = RECORD_COLORS;
         this.exampleData = registry.category("kanban_examples").get(examples, null);
+        this.ghostColumns = this.generateGhostColumns();
         useAutofocus();
         useExternalListener(window, "click", this.onWindowClick, true);
         useExternalListener(window, "keydown", this.onWindowKeydown);
@@ -115,15 +116,23 @@ export class KanbanRenderer extends Component {
         return this.props.list.isGrouped && this.props.list.groupByField.type === "many2one";
     }
 
-    get ghostColumns() {
-        if (this.exampleData && this.exampleData.ghostColumns) {
-            return this.exampleData.ghostColumns;
+    get showNoContentHelper() {
+        const { model, isGrouped, groups } = this.props.list;
+        if (model.hasData() || model.useSampleModel) {
+            return false;
         }
-        return [1, 2, 3, 4].map((num) => sprintf(this.env._t("Column %s"), num));
-    }
-
-    get ghostCards() {
-        return new Array(Math.floor(Math.random() * 4) + 2);
+        if (isGrouped) {
+            if (this.state.quickCreateGroup) {
+                // Example background shown
+                return false;
+            }
+            if (
+                groups.some(({ list: { records } }) => records.length && records[0].isQuickCreate)
+            ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -217,6 +226,19 @@ export class KanbanRenderer extends Component {
         return { value: value || 0, currency, title };
     }
 
+    generateGhostColumns() {
+        let colNames;
+        if (this.exampleData && this.exampleData.ghostColumns) {
+            colNames = this.exampleData.ghostColumns;
+        } else {
+            colNames = [1, 2, 3, 4].map((num) => sprintf(this.env._t("Column %s"), num));
+        }
+        return colNames.map((colName) => ({
+            name: colName,
+            cards: new Array(Math.floor(Math.random() * 4) + 2),
+        }));
+    }
+
     // ------------------------------------------------------------------------
     // Permissions
     // ------------------------------------------------------------------------
@@ -257,9 +279,9 @@ export class KanbanRenderer extends Component {
     // Edition methods
     // ------------------------------------------------------------------------
 
-    createGroup() {
+    async createGroup() {
         if (this.state.newGroup.length) {
-            this.props.list.createGroup(this.state.newGroup);
+            await this.props.list.createGroup(this.state.newGroup);
         }
         this.state.newGroup = "";
     }
@@ -309,8 +331,11 @@ export class KanbanRenderer extends Component {
         group.list.unarchive();
     }
 
-    deleteGroup(group) {
-        this.props.list.deleteGroup(group);
+    async deleteGroup(group) {
+        await this.props.list.deleteGroup(group);
+        if (this.props.list.groups.length === 0) {
+            this.state.quickCreateGroup = true;
+        }
     }
 
     deleteRecord(record, group) {
@@ -436,7 +461,7 @@ export class KanbanRenderer extends Component {
         if (!this.props.list.isGrouped) {
             return;
         }
-        if (ev.key === "Escape") {
+        if (ev.key === "Escape" && this.props.list.groups.length > 0) {
             this.state.quickCreateGroup = false;
             this.cancelQuickCreate(true);
         }
