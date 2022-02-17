@@ -311,3 +311,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         config.execute()
 
         self.start_tour("/", 'shop_list_view_b2c', login="admin")
+
+    def test_07_editor_shop(self):
+        self.start_tour("/", 'shop_editor', login="admin")
