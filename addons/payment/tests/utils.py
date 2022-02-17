@@ -40,10 +40,13 @@ class PaymentTestUtils(AccountTestInvoicingCommon):
         :rtype: dict[str:str]
         """
         html_tree = objectify.fromstring(html_form)
-        action = html_tree.get('action')
-        inputs = {form_input.get('name'): form_input.get('value') for form_input in html_tree.input}
+        if hasattr(html_tree, 'input'):
+            inputs = {input_.get('name'): input_.get('value') for input_ in html_tree.input}
+        else:
+            inputs = {}
         return {
-            'action': action,
+            'action': html_tree.get('action'),
+            'method': html_tree.get('method'),
             'inputs': inputs,
         }
 

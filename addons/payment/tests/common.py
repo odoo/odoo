@@ -96,6 +96,7 @@ class PaymentCommon(PaymentTestUtils):
         cls.acquirer = cls.dummy_acquirer
         cls.amount = 1111.11
         cls.company = cls.env.company
+        cls.company_id = cls.company.id
         cls.currency = cls.currency_euro
         cls.partner = cls.default_partner
         cls.reference = "Test Transaction"
