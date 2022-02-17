@@ -56,7 +56,7 @@ var RunningTourActionHelper = core.Class.extend({
     },
     _click: function (values, nb, leave) {
 //        values.$element.trigger("mouseenter");
-        trigger_mouse_event(values.$element, "mouseenter");
+        trigger_mouse_event(values.$element, "mouseenter", 0, true);
         trigger_mouse_event(values.$element, "mouseover");
         for (var i = 1 ; i <= (nb || 1) ; i++) {
             trigger_mouse_event(values.$element, "mousedown");
@@ -68,13 +68,13 @@ var RunningTourActionHelper = core.Class.extend({
         }
         if (leave !== false) {
             trigger_mouse_event(values.$element, "mouseout");
-            values.$element.trigger("mouseleave");
-//            trigger_mouse_event(values.$element, "mouseleave");
+//            values.$element.trigger("mouseleave");
+            trigger_mouse_event(values.$element, "mouseleave", 0, true);
         }
 
-        function trigger_mouse_event($element, type, count) {
+        function trigger_mouse_event($element, type, count, no_bubble) {
             var e = document.createEvent("MouseEvents");
-            e.initMouseEvent(type, true, true, window, count || 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
+            e.initMouseEvent(type, !no_bubble, true, window, count || 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
             $element[0].dispatchEvent(e);
         }
     },
