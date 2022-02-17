@@ -178,11 +178,11 @@ export class Many2OneField extends Component {
             resId,
             resModel: this.relation,
             context: this.props.record.getFieldContext(this.props.name),
+            mode: this.props.readonly ? "readonly" : "edit",
             viewId,
         });
         this.dialog.add(FormViewDialog, {
             record,
-            readonly: this.props.readonly,
             title: this.props.record.activeFields[this.props.name].string,
         });
     }

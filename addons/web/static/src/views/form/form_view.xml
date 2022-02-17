@@ -15,13 +15,13 @@
                 </t>
             </t>
             <t t-set-slot="control-panel-bottom-right"></t>
-            <FormRenderer record="model.root" fields="props.fields" info="archInfo" readonly="!state.inEditMode" />
+            <FormRenderer record="model.root" fields="props.fields" info="archInfo"/>
         </Layout>
     </t>
 
     <t t-name="web.FormView.Buttons" owl="1">
         <div class="o_cp_buttons" role="toolbar" aria-label="Main actions" t-ref="cpButtons">
-            <div t-if="state.inEditMode" class="o_form_buttons_edit">
+            <div t-if="model.root.isInEdition" class="o_form_buttons_edit">
                 <button type="button" class="btn btn-primary o_form_button_save" data-tooltip="Save record" data-hotkey="s" t-on-click="save">
                     Save
                 </button>

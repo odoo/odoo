@@ -7,7 +7,7 @@
                 <thead>
                     <tr>
                         <th t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleSelection">
-                            <CheckBox disabled="!!props.editedRecordId" value="selectAll" />
+                            <CheckBox disabled="!!props.list.editedRecord" value="selectAll" />
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
                             <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="() => this.onClickSortColumn(column)">
@@ -22,7 +22,7 @@
                         <t t-set="list" t-value="props.list"/>
                     </t>
                 </tbody>
-                <tfoot t-on-click="onFooterClick">
+                <tfoot t-on-click="unselectRow">
                     <tr>
                         <td t-if="props.hasSelectors"/>
                         <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
@@ -109,14 +109,14 @@
     </t>
 
     <t t-name="web.ListRenderer.RecordRow" owl="1">
-        <tr class="o_data_row" t-att-class="getRowClass(record)">
+        <tr class="o_data_row" t-att-class="getRowClass(record)" t-att-data-id="record.id">
             <td t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="() => this.toggleRecordSelection(record)">
-                <CheckBox disabled="!!props.editedRecordId" value="record.selected" />
+                <CheckBox disabled="!!props.list.editedRecord" value="record.selected" />
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
                 <t t-if="column.type === 'field'">
                     <td class="o_data_cell" t-att-class="getCellClass(column)" t-att-title="getCellTitle(column, record)" t-on-click="() => this.onCellClicked(record, column)">
-                        <Field t-if="!evalModifier(column.modifiers.invisible, record)" name="column.name" record="record" readonly="props.editedRecordId !== record.id" type="column.widget" />
+                        <Field t-if="!evalModifier(column.modifiers.invisible, record)" name="column.name" record="record" type="column.widget" />
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">

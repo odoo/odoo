@@ -10,7 +10,15 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
-const { Component, onPatched, onWillUpdateProps, useExternalListener, useRef, useState } = owl;
+const {
+    Component,
+    onPatched,
+    onWillPatch,
+    onWillUpdateProps,
+    useExternalListener,
+    useRef,
+    useState,
+} = owl;
 
 const formatterRegistry = registry.category("formatters");
 
@@ -39,41 +47,41 @@ export class ListRenderer extends Component {
                 (col) => !col.optional || this.optionalActiveFields[col.name]
             ),
         });
-        useExternalListener(document, "click", this.onGlobalClick.bind(this));
+        useExternalListener(document, "click", this.onGlobalClick.bind(this)); // capture ?
         this.tableRef = useRef("table");
 
         this.cellToFocus = null;
-        this.focusOnPatched = false;
-        onWillUpdateProps((nextProps) => {
-            const { editedRecordId } = nextProps;
-            this.focusOnPatched = editedRecordId && editedRecordId !== this.props.editedRecordId;
+        this.activeRowId = null;
+        onWillPatch(() => {
+            const activeRow = document.activeElement.closest(".o_data_row.o_selected_row");
+            this.activeRowId = activeRow ? activeRow.dataset.id : null;
         });
         onPatched(() => {
-            if (this.focusOnPatched) {
-                let columnId = this.state.columns[0].id;
-                if (this.cellToFocus && this.cellToFocus.recordId === this.props.editedRecordId) {
-                    columnId = this.cellToFocus.columnId;
+            const editedRecord = this.props.list.editedRecord;
+            if (editedRecord && this.activeRowId !== editedRecord.id) {
+                let column = this.state.columns[0];
+                if (this.cellToFocus && this.cellToFocus.record === editedRecord) {
+                    column = this.cellToFocus.column;
                 }
-                this.focusCell(columnId);
-                this.focusOnPatched = false;
-                this.cellToFocus = null;
+                this.focusCell(column);
             }
+            this.cellToFocus = null;
         });
     }
 
-    focusCell(columnId) {
-        const index = this.state.columns.findIndex((c) => c.id === columnId);
+    focusCell(column) {
+        const index = this.state.columns.indexOf(column);
         const columns = [
             ...this.state.columns.slice(index, this.state.columns.length),
             ...this.state.columns.slice(0, index),
         ];
-        const record = this.props.list.records.find((r) => r.id === this.props.editedRecordId);
+        const editedRecord = this.props.list.editedRecord;
         for (const column of columns) {
             if (column.type !== "field") {
                 continue;
             }
             const fieldName = column.name;
-            if (!record.isReadonly(fieldName)) {
+            if (!editedRecord.isReadonly(fieldName)) {
                 const fieldEl = this.tableRef.el.querySelector(
                     `.o_selected_row .o_field_widget[name=${fieldName}]`
                 );
@@ -256,7 +264,7 @@ export class ListRenderer extends Component {
             .filter((decoration) => evaluateExpr(decoration.condition, record.evalContext))
             .map((decoration) => decoration.class);
         // "o_selected_row" classname for the potential row in edition
-        if (this.props.editedRecordId === record.id) {
+        if (record.isInEdition) {
             classNames.push("o_selected_row");
         }
         return classNames.join(" ");
@@ -369,7 +377,7 @@ export class ListRenderer extends Component {
     }
 
     onClickSortColumn(column) {
-        if (this.props.editedRecordId) {
+        if (this.props.list.editedRecord) {
             return;
         }
         const fieldName = column.name;
@@ -393,14 +401,21 @@ export class ListRenderer extends Component {
         }
     }
 
-    onCellClicked(record, column) {
-        if (this.props.editedRecordId === record.id) {
-            this.focusCell(column.id);
-            this.cellToFocus = null;
+    async onCellClicked(record, column) {
+        if (this.props.info.editable) {
+            if (record.isInEdition) {
+                this.focusCell(column);
+                this.cellToFocus = null;
+            } else {
+                if (this.props.list.editedRecord) {
+                    await this.props.leaveEdition(); // try to remove this props
+                }
+                this.cellToFocus = { column, record };
+                record.switchMode("edit");
+            }
         } else {
-            this.cellToFocus = { columnId: column.id, recordId: record.id };
+            this.props.openRecord(record);
         }
-        this.props.openRecord(record);
     }
 
     saveOptionalActiveFields() {
@@ -442,20 +457,28 @@ export class ListRenderer extends Component {
         );
     }
 
-    onFooterClick() {
-        this.props.leaveEdition();
+    async unselectRow() {
+        await this.props.leaveEdition();
+        if (this.props.list.editedRecord) {
+            this.props.list.editedRecord.switchMode("readonly");
+        }
     }
 
     onGlobalClick(ev) {
-        if (!this.props.editedRecordId) {
+        if (!this.props.list.editedRecord) {
             return; // there's no row in edition
         }
         if (this.tableRef.el.contains(ev.target)) {
             return; // ignore clicks inside the table, they are handled directly by the renderer
         }
-        this.props.leaveEdition();
+        this.unselectRow();
     }
 }
 
 ListRenderer.template = "web.ListRenderer";
 ListRenderer.components = { CheckBoxDropdownItem, Field, ViewButton, CheckBox, Dropdown };
+ListRenderer.props = ["list", "fields", "info", "openRecord", "hasSelectors?", "leaveEdition?"];
+ListRenderer.defaultProps = {
+    hasSelectors: false,
+    leaveEdition: () => this.props.list.editedRecord.switchMode("readonly"),
+};

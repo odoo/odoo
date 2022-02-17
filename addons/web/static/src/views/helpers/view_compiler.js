@@ -241,7 +241,7 @@ export class ViewCompiler {
         const form = this.document.createElement("div");
         form.setAttribute(
             `t-attf-class`,
-            "{{props.readonly ? 'o_form_readonly' : 'o_form_editable'}}"
+            "{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}"
         );
         let hasSheet = false;
         for (let child of node.childNodes) {
@@ -526,7 +526,6 @@ export class ViewCompiler {
         }
 
         // this.handleReadonly(node, field); // AAB: done by the Field itself (s.t. it works in all views)
-        field.setAttribute("readonly", "props.readonly"); // handled by form renderer
         // this.handleRequired(node, field); // AAB: done by the Field itself (s.t. it works in all views)
         this.handleEmpty(field, { fieldName, widgetName });
 

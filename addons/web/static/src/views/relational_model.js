@@ -226,6 +226,9 @@ export class Record extends DataPoint {
         this.selected = false;
         this._onChangePromise = Promise.resolve({});
         this._domains = {};
+
+        this._onSwitchMode = params.onRecordSwitchMode || (() => {});
+        this.mode = params.mode || (this.resId ? state.mode || "readonly" : "edit");
     }
 
     get evalContext() {
@@ -271,6 +274,29 @@ export class Record extends DataPoint {
 
     get isNew() {
         return !this.resId;
+    }
+
+    get isInEdition() {
+        return this.mode === "edit";
+    }
+
+    switchMode(mode) {
+        if (this.mode === mode) {
+            return;
+        }
+        if (mode === "readonly") {
+            for (const fieldName in this.activeFields) {
+                if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                    const editedRecord = this.data[fieldName] && this.data[fieldName].editedRecord;
+                    if (editedRecord) {
+                        editedRecord.switchMode("readonly");
+                    }
+                }
+            }
+        }
+        this.mode = mode;
+        this._onSwitchMode(this);
+        this.model.notify();
     }
 
     /**
@@ -328,6 +354,7 @@ export class Record extends DataPoint {
 
     exportState() {
         return {
+            mode: this.mode,
             resId: this.resId,
             resIds: this.resIds,
         };
@@ -415,14 +442,14 @@ export class Record extends DataPoint {
         this.model.notify();
     }
 
-    async save() {
+    async save(options = { stayInEdition: false }) {
         return this.model.mutex.exec(async () => {
             if (this._invalidFields.size > 0) {
                 this.model.notificationService.add(
                     this.model.env._t("Invalid fields: ") +
                         Array.from(this._invalidFields).join(", ")
                 );
-                return false;
+                return;
             }
             const changes = this._getChanges();
             const keys = Object.keys(changes);
@@ -451,7 +478,9 @@ export class Record extends DataPoint {
                 await this.load();
                 this.model.notify();
             }
-            return true;
+            if (!options.stayInEdition) {
+                this.switchMode("readonly");
+            }
         });
     }
 
@@ -476,6 +505,7 @@ export class Record extends DataPoint {
         this.resId = await this.model.orm.call(this.resModel, "copy", [this.resId], kwargs);
         this.resIds.splice(index + 1, 0, this.resId);
         await this.load();
+        this.switchMode("edit");
         this.model.notify();
     }
 
@@ -513,6 +543,9 @@ export class Record extends DataPoint {
         this.data = { ...this._values };
         this._changes = {};
         this._domains = {};
+        if (this.resId) {
+            this.switchMode("readonly");
+        }
         this.model.notify();
     }
 
@@ -654,6 +687,14 @@ class DynamicList extends DataPoint {
         this.count = 0;
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.isDomainSelected = false;
+
+        this.editedRecord = null;
+        this.onRecordSwitchMode = (record) => {
+            this.editedRecord = record.isInEdition ? record : null;
+            if (params.onRecordSwitchMode) {
+                params.onRecordSwitchMode(record);
+            }
+        };
     }
 
     get selection() {
@@ -788,14 +829,16 @@ export class DynamicRecordList extends DynamicList {
             resModel: this.resModel,
             fields: this.fields,
             activeFields: this.activeFields,
+            onRecordSwitchMode: this.onRecordSwitchMode,
         });
+        await newRecord.load();
         if (position === "top") {
             this.records.unshift(newRecord);
         } else {
             this.records.push(newRecord);
         }
         this.count++;
-        await newRecord.load();
+        this.editedRecord = newRecord;
         return newRecord;
     }
 
@@ -803,6 +846,7 @@ export class DynamicRecordList extends DynamicList {
         const index = this.records.indexOf(record);
         this.records.splice(index, 1);
         this.count--;
+        this.editedRecord = this.editedRecord === record ? null : record;
         this.model.notify();
     }
 
@@ -837,6 +881,7 @@ export class DynamicRecordList extends DynamicList {
                     values: data,
                     fields: this.fields,
                     activeFields: this.activeFields,
+                    onRecordSwitchMode: this.onRecordSwitchMode,
                 });
                 await record.loadRelationalData();
                 await record.loadPreloadedData();
@@ -952,6 +997,7 @@ export class DynamicGroupList extends DynamicList {
             context: this.context,
             orderBy: this.orderBy,
             groupByInfo: this.groupByInfo,
+            onRecordSwitchMode: this.onRecordSwitchMode,
         };
         return groups.map((data) => {
             const groupParams = {
@@ -1048,6 +1094,7 @@ export class Group extends DataPoint {
             activeFields: params.activeFields,
             fields: params.fields,
             groupByInfo: params.groupByInfo,
+            onRecordSwitchMode: params.onRecordSwitchMode,
         };
         this.list = this.model.createDataPoint("list", listParams, state.listState);
     }
@@ -1126,9 +1173,12 @@ export class StaticList extends DataPoint {
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.offset = 0;
 
-        this._initialResIds = [...params.resIds];
-        this._initialRecords = [];
         this._changes = [];
+
+        this.editedRecord = null;
+        this.onRecordSwitchMode = (record) => {
+            this.editedRecord = record.isInEdition ? record : null;
+        };
     }
 
     exportState() {
@@ -1191,6 +1241,7 @@ export class StaticList extends DataPoint {
                         activeFields: this.activeFields,
                         viewMode: this.viewMode,
                         views: this.views,
+                        onRecordSwitchMode: this.onRecordSwitchMode,
                     });
                     this._cache[resId] = record;
                     await record.load();
@@ -1213,9 +1264,6 @@ export class StaticList extends DataPoint {
                 }
             });
         }
-        if (!this._initialRecords) {
-            this._initialRecords = [...this.records];
-        }
     }
 
     async sortBy(fieldName) {
@@ -1236,8 +1284,6 @@ export class StaticList extends DataPoint {
         await this._applyChange(command);
     }
     discard() {
-        this.resIds = this._initialResIds;
-        this.records = this._initialRecords;
         this._changes = [];
     }
 
@@ -1313,8 +1359,9 @@ export class RelationalModel extends Model {
             rootParams.orderBy = this.rootParams.defaultOrder;
         }
         const state = this.root ? this.root.exportState() : {};
-        this.root = this.createDataPoint(this.rootType, rootParams, state);
-        await this.keepLast.add(this.root.load());
+        const newRoot = this.createDataPoint(this.rootType, rootParams, state);
+        await this.keepLast.add(newRoot.load());
+        this.root = newRoot;
         this.rootParams = rootParams;
         this.notify();
     }

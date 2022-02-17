@@ -69,7 +69,7 @@ export class ListArchParser extends XMLParser {
         };
         const decorations = getDecoration(xmlDoc);
         const defaultOrder = xmlDoc.getAttribute("default_order");
-        const editable = xmlDoc.getAttribute("editable") || false;
+        const editable = activeActions.edit ? xmlDoc.getAttribute("editable") : false;
         const activeFields = {};
         const columns = [];
         let buttonId = 0;
@@ -192,7 +192,6 @@ export class ListView extends Component {
 
         this.archInfo = new ListArchParser().parse(this.props.arch, this.props.fields);
         this.activeActions = this.archInfo.activeActions;
-        this.editable = this.activeActions.edit ? this.archInfo.editable : false;
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             fields: this.props.fields,
@@ -236,43 +235,31 @@ export class ListView extends Component {
     }
 
     async openRecord(record) {
-        if (this.editable) {
-            // edit record
-            if (this.editedRecord) {
-                await this.editedRecord.save();
+        const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
+        try {
+            await this.actionService.switchView("form", { resId: record.resId, resIds });
+        } catch (e) {
+            if (e instanceof ViewNotFoundError) {
+                // there's no form view in the current action
+                return;
             }
-            this.editedRecord = record;
-            this.render();
-        } else {
-            // switch to form view
-            const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
-            try {
-                await this.actionService.switchView("form", { resId: record.resId, resIds });
-            } catch (e) {
-                if (e instanceof ViewNotFoundError) {
-                    // there's no form view in the current action
-                    return;
-                }
-                throw e;
-            }
+            throw e;
         }
     }
 
     async leaveEdition() {
-        if (this.editedRecord) {
-            await this.editedRecord.save();
-            this.editedRecord = null;
-            this.render();
+        if (this.model.root.editedRecord) {
+            await this.model.root.editedRecord.save();
         }
     }
 
     async onClickCreate() {
-        if (this.editable) {
+        if (this.archInfo.editable) {
             // add a new row
-            if (this.editedRecord) {
-                await this.editedRecord.save();
+            if (this.model.root.editedRecord) {
+                await this.model.root.editedRecord.save();
             }
-            this.editedRecord = await this.model.root.addNewRecord(this.editable);
+            await this.model.root.addNewRecord(this.archInfo.editable);
             this.render();
         } else {
             // switch to form view to create a new record
@@ -289,12 +276,11 @@ export class ListView extends Component {
     }
 
     onClickDiscard() {
-        if (this.editedRecord.isNew) {
-            this.model.root.abandonRecord(this.editedRecord);
+        if (this.model.root.editedRecord.isNew) {
+            this.model.root.abandonRecord(this.model.root.editedRecord);
         } else {
-            this.editedRecord.discard();
+            this.model.root.editedRecord.discard();
         }
-        this.editedRecord = null;
     }
 
     async onClickSave() {

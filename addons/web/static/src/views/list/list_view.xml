@@ -17,13 +17,13 @@
                         resModel="model.root.resModel"/>
                 </t>
             </t>
-            <ListRenderer list="model.root" fields="props.fields" info="archInfo" editedRecordId="editedRecord and editedRecord.id" hasSelectors="props.hasSelectors" openRecord.bind="openRecord" leaveEdition.bind="leaveEdition"/>
+            <ListRenderer list="model.root" fields="props.fields" info="archInfo" hasSelectors="props.hasSelectors" openRecord.bind="openRecord" leaveEdition.bind="leaveEdition"/>
         </Layout>
     </t>
 
     <t t-name="web.ListView.Buttons" owl="1">
         <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
-            <t t-if="editedRecord">
+            <t t-if="model.root.editedRecord">
                 <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" data-hotkey="s" t-on-click="onClickSave">
                     Save
                 </button>

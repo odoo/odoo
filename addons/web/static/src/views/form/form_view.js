@@ -17,7 +17,7 @@ import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";
 
-const { Component, onWillStart, useEffect, useRef, useState, onRendered } = owl;
+const { Component, onWillStart, useEffect, useRef, onRendered } = owl;
 
 const viewRegistry = registry.category("views");
 
@@ -75,10 +75,6 @@ export class FormView extends Component {
 
         this.cpButtonsRef = useRef("cpButtons");
 
-        this.state = useState({
-            inEditMode: !resId,
-        });
-
         useEffect(() => {
             this.router.pushState({ id: this.model.root.resId || undefined });
         });
@@ -88,7 +84,7 @@ export class FormView extends Component {
 
         useViewButtons(this.model, (clickParams) => {
             if (clickParams.special !== "cancel") {
-                return this.model.root.save();
+                return this.model.root.save({ stayInEdition: true });
             }
         });
         useSetupView({
@@ -112,7 +108,7 @@ export class FormView extends Component {
                     total: resIds.length,
                     onUpdate: async ({ offset }) => {
                         if (this.model.root.isDirty) {
-                            await this.model.root.save();
+                            await this.model.root.save({ stayInEdition: true });
                         }
                         this.model.load({ resId: resIds[offset] });
                     },
@@ -130,9 +126,9 @@ export class FormView extends Component {
     }
 
     async loadSubViews() {
-        const activeFields = this.model.root.activeFields;
+        const activeFields = this.archInfo.fields;
         for (const fieldName in activeFields) {
-            const field = this.model.root.fields[fieldName];
+            const field = this.props.fields[fieldName];
             if (!isX2Many(field)) {
                 continue; // what follows only concerns x2many fields
             }
@@ -225,7 +221,6 @@ export class FormView extends Component {
 
     async duplicateRecord() {
         await this.model.root.duplicate();
-        this.state.inEditMode = true;
     }
 
     async deleteRecord() {
@@ -256,27 +251,20 @@ export class FormView extends Component {
     }
 
     edit() {
-        this.state.inEditMode = true;
+        this.model.root.switchMode("edit");
     }
     async create() {
         this.disableButtons();
         await this.model.load({ resId: null });
-        this.state.inEditMode = true;
     }
     async save() {
         const disabledButtons = this.disableButtons();
-        const saved = await this.model.root.save();
-        if (saved) {
-            this.state.inEditMode = false;
-        } else {
-            this.enableButtons(disabledButtons);
-        }
+        await this.model.root.save();
+        this.enableButtons(disabledButtons);
     }
     discard() {
         this.model.root.discard();
-        if (this.model.root.resId) {
-            this.state.inEditMode = false;
-        } else {
+        if (!this.model.root.resId) {
             this.env.config.historyBack();
         }
     }

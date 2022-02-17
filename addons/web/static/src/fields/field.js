@@ -57,7 +57,7 @@ export class Field extends Component {
         const activeField = record.activeFields[this.props.name];
 
         const readonlyFromModifiers = this.props.record.isReadonly(this.props.name);
-        const readonlyFromViewMode = this.props.readonly;
+        const readonlyFromViewMode = !this.props.record.isInEdition;
 
         // Decoration props
         const decorationMap = {};
