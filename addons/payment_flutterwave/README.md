@@ -29,3 +29,4 @@ odoo/odoo#84820 in `saas-15.4`.
 
 ## Testing instructions
 
+https://developer.flutterwave.com/docs/integration-guides/testing-helpers

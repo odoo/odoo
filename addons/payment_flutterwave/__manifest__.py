@@ -2,7 +2,7 @@
 
 {
     'name': "Payment Acquirer: Flutterwave",
-    'version': '2.0',
+    'version': '1.0',
     'category': 'Accounting/Payment Acquirers',
     'sequence': 360,
     'summary': "A Nigerian online payments provider covering several African countries and payment "
