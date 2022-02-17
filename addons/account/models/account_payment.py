@@ -893,9 +893,15 @@ class AccountPayment(models.Model):
             paired_payment.move_id._post(soft=False)
             payment.paired_internal_transfer_payment_id = paired_payment
 
-            body = _('This payment has been created from <a href=# data-oe-model=account.payment data-oe-id=%d>%s</a>') % (payment.id, payment.name)
+            body = _(
+                "This payment has been created from %s",
+                payment._get_html_link(),
+            )
             paired_payment.message_post(body=body)
-            body = _('A second payment has been created: <a href=# data-oe-model=account.payment data-oe-id=%d>%s</a>') % (paired_payment.id, paired_payment.name)
+            body = _(
+                "A second payment has been created: %s",
+                paired_payment._get_html_link(),
+            )
             payment.message_post(body=body)
 
             lines = (payment.move_id.line_ids + paired_payment.move_id.line_ids).filtered(

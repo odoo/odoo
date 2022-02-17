@@ -423,8 +423,7 @@ class AutomaticEntryWizard(models.TransientModel):
         return content and '<ul>' + content + '</ul>' or None
 
     def _format_move_link(self, move):
-        move_link_format = "<a href=# data-oe-model=account.move data-oe-id={move_id}>{move_name}</a>"
-        return move_link_format.format(move_id=move.id, move_name=move.name)
+        return move._get_html_link()
 
     def _format_strings(self, string, move, amount):
         return string.format(

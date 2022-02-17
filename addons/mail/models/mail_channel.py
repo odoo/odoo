@@ -345,9 +345,8 @@ class Channel(models.Model):
                     notification = _('<div class="o_mail_notification">joined the channel</div>')
                 else:
                     notification = _(
-                        '<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="%(new_partner_id)d">%(new_partner_name)s</a> to the channel</div>',
-                        new_partner_id=channel_partner.partner_id.id,
-                        new_partner_name=channel_partner.partner_id.name,
+                        '<div class="o_mail_notification">invited %s to the channel</div>',
+                        channel_partner.partner_id._get_html_link(),
                     )
                 channel_partner.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
                 members_data.append({
@@ -1216,7 +1215,7 @@ class Channel(models.Model):
     def execute_command_who(self, **kwargs):
         partner = self.env.user.partner_id
         members = [
-            f'<a href="#" data-oe-id={str(p.id)} data-oe-model="res.partner">@{html_escape(p.name)}</a>'
+            p._get_html_link(title=f"@{p.name}")
             for p in self.channel_partner_ids[:30] if p != partner
         ]
         if len(members) == 0:

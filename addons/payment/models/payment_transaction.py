@@ -1055,7 +1055,7 @@ class PaymentTransaction(models.Model):
             if self.payment_id:
                 message += "<br />" + _(
                     "The related payment is posted: %s",
-                    self.payment_id._get_payment_chatter_link()
+                    self.payment_id._get_html_link(),
                 )
         elif self.state == 'error':
             message = _(

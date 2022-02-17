@@ -68,8 +68,9 @@ class AccountDebitNote(models.TransientModel):
             default_values = self._prepare_default_values(move)
             new_move = move.copy(default=default_values)
             move_msg = _(
-                "This debit note was created from:") + " <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>" % (
-                       move.id, move.name)
+                "This debit note was created from: %s",
+                move._get_html_link(),
+            )
             new_move.message_post(body=move_msg)
             new_moves |= new_move
 

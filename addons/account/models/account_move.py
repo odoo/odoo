@@ -2314,8 +2314,8 @@ class AccountMove(models.Model):
             )._get_default_journal().id
         copied_am = super().copy(default)
         copied_am._message_log(body=_(
-            'This entry has been duplicated from <a href=# data-oe-model=account.move data-oe-id=%(id)d>%(title)s</a>',
-            id=self.id, title=html_escape(self.display_name)
+            'This entry has been duplicated from %s',
+            self._get_html_link()
         ))
 
         if copied_am.is_invoice(include_receipts=True):
@@ -4779,7 +4779,10 @@ class AccountMoveLine(models.Model):
                 for line in self.filtered(lambda l: l.move_id.id == move_id):
                     tracking_value_ids = line._mail_track(ref_fields, modified_lines)[1]
                     if tracking_value_ids:
-                        msg = f"{html_escape(_('Journal Item'))} <a href=# data-oe-model=account.move.line data-oe-id={line.id}>#{line.id}</a> {html_escape(_('updated'))}"
+                        msg = _(
+                            "Journal Item %s updated",
+                            line._get_html_link(title=f"#{line.id}")
+                        )
                         line.move_id._message_log(
                             body=msg,
                             tracking_value_ids=tracking_value_ids

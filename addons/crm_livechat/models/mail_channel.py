@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
-from odoo.tools import html2plaintext, html_escape
+from odoo.tools import html2plaintext
 
 
 class MailChannel(models.Model):
@@ -15,7 +15,10 @@ class MailChannel(models.Model):
             msg = _('Create a new lead (/lead lead title)')
         else:
             lead = self._convert_visitor_to_lead(partner, key)
-            msg = _('Created a new lead: <a href="#" data-oe-id="%s" data-oe-model="crm.lead">%s</a>') % (lead.id, html_escape(lead.name))
+            msg = _(
+                'Created a new lead: %s',
+                lead._get_html_link(),
+            )
         self._send_transient_message(partner, msg)
 
     def _convert_visitor_to_lead(self, partner, key):
