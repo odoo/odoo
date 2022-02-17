@@ -275,7 +275,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -385,7 +385,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     assert.deepEqual(
@@ -459,7 +459,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             intercepts: {
                 load_filters: function (event) {
                     throw new Error("Should not load filters");
@@ -517,7 +517,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.containsOnce(form, "td.hey", "should have a td with the desired class");
@@ -560,7 +560,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             session: {
                 getTZOffset: function () {
                     return 120;
@@ -603,7 +603,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.strictEqual(
@@ -637,7 +637,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (args.model === "turtle") {
                         assert.deepEqual(args.args[0], [1, 2], "should only load first 2 records");
@@ -665,7 +665,7 @@ QUnit.module("Fields", (hooks) => {
                 archs: {
                     "turtle,false,list": '<tree limit="2"><field name="turtle_foo"/></tree>',
                 },
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (args.model === "turtle" && args.method === "read") {
                         assert.deepEqual(args.args[0], [1, 2], "should only load first 2 records");
@@ -704,7 +704,7 @@ QUnit.module("Fields", (hooks) => {
                     '<field name="turtle_foo"/>' +
                     "</tree>",
             },
-            res_id: 1,
+            resId: 1,
         });
         assert.strictEqual(
             form.$(".o_field_one2many .o_list_view .o_data_row").text(),
@@ -737,7 +737,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.containsOnce(form, "span.o_row_handle", "should have 1 handles");
@@ -776,7 +776,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         testUtils.mock.intercept(
@@ -894,7 +894,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "write") {
                         var expectedResultTurtles = [
@@ -978,7 +978,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (route === "/web/dataset/call_kw/partner/write") {
                         var expectedResultTurtles = [
@@ -1062,7 +1062,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         await testUtils.form.clickEdit(form);
@@ -1115,7 +1115,7 @@ QUnit.module("Fields", (hooks) => {
                     "</notebook>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "write") {
                         assert.deepEqual(
@@ -1199,7 +1199,7 @@ QUnit.module("Fields", (hooks) => {
                     "</group>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             await testUtils.dom.click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
@@ -1303,7 +1303,7 @@ QUnit.module("Fields", (hooks) => {
                     "</group>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
             await testUtils.form.clickEdit(form);
 
@@ -1426,7 +1426,7 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         await testUtils.form.clickEdit(form);
@@ -1546,7 +1546,7 @@ QUnit.module("Fields", (hooks) => {
                     "</group>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             await testUtils.form.clickEdit(form);
@@ -1639,7 +1639,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             viewOptions: {
                 mode: "edit",
             },
@@ -1701,7 +1701,7 @@ QUnit.module("Fields", (hooks) => {
                     }
                     return this._super.apply(this, arguments);
                 },
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -1775,7 +1775,7 @@ QUnit.module("Fields", (hooks) => {
                     }
                     return this._super.apply(this, arguments);
                 },
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -2091,7 +2091,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             testUtils.mock.intercept(
@@ -2165,7 +2165,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         testUtils.mock.intercept(
@@ -2267,7 +2267,7 @@ QUnit.module("Fields", (hooks) => {
                 count++;
                 return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
         });
 
         // we are on record 1, which has 90 related record (first 40 should be
@@ -2454,7 +2454,7 @@ QUnit.module("Fields", (hooks) => {
                 }
                 return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
         });
 
         assert.strictEqual(
@@ -2610,7 +2610,7 @@ QUnit.module("Fields", (hooks) => {
                 mockRPC: function () {
                     return this._super.apply(this, arguments);
                 },
-                res_id: 1,
+                resId: 1,
             });
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
@@ -2656,7 +2656,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC: function () {
                 rpcCount++;
                 return this._super.apply(this, arguments);
@@ -2713,7 +2713,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 2,
+            resId: 2,
         });
 
         // edit the first line of the o2m
@@ -2787,7 +2787,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.ok(
@@ -2821,7 +2821,7 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-            res_id: 1,
+            resId: 1,
             viewOptions: {
                 mode: "edit",
             },
@@ -2871,7 +2871,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     var commands = args.args[1].p;
@@ -2940,7 +2940,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     var commands = args.args[1].p;
@@ -3019,7 +3019,7 @@ QUnit.module("Fields", (hooks) => {
                 "</form>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     var commands = args.args[1].p;
@@ -3183,7 +3183,7 @@ QUnit.module("Fields", (hooks) => {
                     "</kanban>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             await testUtils.form.clickEdit(form);
@@ -3222,7 +3222,7 @@ QUnit.module("Fields", (hooks) => {
                 "</kanban>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.ok(
@@ -3272,7 +3272,7 @@ QUnit.module("Fields", (hooks) => {
                         </form>
                     </field>
                 </form>`,
-            res_id: 1,
+            resId: 1,
             viewOptions: {
                 mode: "edit",
             },
@@ -3329,7 +3329,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         // add a record, add value to turtle_foo then click in form view to confirm it
@@ -3366,7 +3366,7 @@ QUnit.module("Fields", (hooks) => {
                 "</form>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
                     nbWrite++;
@@ -3457,7 +3457,7 @@ QUnit.module("Fields", (hooks) => {
                 "</form>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.ok(
@@ -3519,7 +3519,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.strictEqual(
@@ -3587,7 +3587,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         // edit mode, then click on Add an item, enter value in turtle_foo and Add an item again
@@ -3634,7 +3634,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 2,
+            resId: 2,
         });
 
         // edit mode, then click on Add an item
@@ -3680,7 +3680,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</group>" +
                     "</form>",
-                res_id: 2,
+                resId: 2,
                 mockRPC(route, args) {
                     if (args.method) {
                         assert.step(args.method);
@@ -3724,7 +3724,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             // add a record, to reach the page size limit
@@ -3765,7 +3765,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         // add a record, then discard
@@ -3804,7 +3804,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         // add a (empty) record
@@ -3840,7 +3840,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             // add a record with a dirty state, but not valid
@@ -3891,7 +3891,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             // add 4 records (to have more records than the limit)
@@ -3939,7 +3939,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 2,
+            resId: 2,
         });
 
         // edit mode, then click on Add an item, then click elsewhere
@@ -3994,7 +3994,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 2,
+            resId: 2,
             mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
@@ -4040,7 +4040,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 2,
+            resId: 2,
             mockRPC(route, args) {
                 if (args.method) {
                     assert.step(args.method);
@@ -4094,7 +4094,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 2,
+            resId: 2,
             mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
@@ -4130,7 +4130,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 2,
+                resId: 2,
                 mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
@@ -4165,7 +4165,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             archs: {
                 "partner,false,form":
                     "<form>" +
@@ -4221,7 +4221,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
@@ -4263,7 +4263,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 2,
+            resId: 2,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
@@ -4384,7 +4384,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
@@ -4425,7 +4425,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
@@ -4484,7 +4484,7 @@ QUnit.module("Fields", (hooks) => {
                 }
                 return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
             viewOptions: {
                 mode: "edit",
             },
@@ -4587,7 +4587,7 @@ QUnit.module("Fields", (hooks) => {
                 }
                 return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
             viewOptions: {
                 mode: "edit",
             },
@@ -4689,7 +4689,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             viewOptions: {
                 mode: "edit",
             },
@@ -4767,7 +4767,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -4803,7 +4803,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             viewOptions: {
                 mode: "edit",
             },
@@ -4853,7 +4853,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             await testUtils.form.clickEdit(form);
@@ -4929,7 +4929,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             archs: {
                 "partner,false,form": '<form string="Partner"><field name="product_id"/></form>',
             },
@@ -5007,7 +5007,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.deepEqual(args.args[1].p, [
@@ -5113,7 +5113,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "name_search") {
                         assert.strictEqual(
@@ -5160,7 +5160,7 @@ QUnit.module("Fields", (hooks) => {
                     '<field name="p" invisible="1"/>' +
                     '<field name="timmy" invisible="1"/>' +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "name_search") {
                         assert.deepEqual(
@@ -5207,7 +5207,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "name_search") {
                         assert.strictEqual(
@@ -5252,7 +5252,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 2,
+            resId: 2,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.strictEqual(
@@ -5290,7 +5290,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
                     var expected =
@@ -5335,7 +5335,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
         await testUtils.form.clickEdit(form);
 
@@ -5384,7 +5384,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "onchange") {
                         var context = args.kwargs.context;
@@ -5434,7 +5434,7 @@ QUnit.module("Fields", (hooks) => {
                     '<search><field name="turtle_foo"/><field name="turtle_bar"/><field name="product_id"/></search>',
             },
             session: {},
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/turtle/create") {
                     assert.ok(args.args, "should write on the turtle record");
@@ -5531,7 +5531,7 @@ QUnit.module("Fields", (hooks) => {
                     '<search><field name="turtle_foo"/><field name="turtle_bar"/><field name="product_id"/></search>',
             },
             session: {},
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/turtle/write") {
                     assert.strictEqual(args.args[0].length, 1, "should write on the turtle record");
@@ -5643,7 +5643,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
                     var fieldValues = args.args[1];
@@ -5692,7 +5692,7 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "onchange") {
                         const fieldValues = args.args[1];
@@ -5851,7 +5851,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         await testUtils.form.clickEdit(form);
@@ -5886,7 +5886,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             intercepts: {
                 execute_action: function (event) {
                     assert.deepEqual(event.data.env.currentID, 2, "should call with correct id");
@@ -5939,7 +5939,7 @@ QUnit.module("Fields", (hooks) => {
                 "</kanban>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             intercepts: {
                 execute_action: function (event) {
                     assert.deepEqual(event.data.env.currentID, 2, "should call with correct id");
@@ -6011,7 +6011,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</group>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             await testUtils.dom.click(form.$(".oe_kanban_action:eq(0)"));
@@ -6082,7 +6082,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</group>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -6128,7 +6128,7 @@ QUnit.module("Fields", (hooks) => {
                 '<field name="timmy" invisible="1"/>' + // check if the view don not call load view in invisible
                 "</group>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             archs: {
                 "turtle,false,list":
                     '<tree string="Turtles"><field name="turtle_bar"/><field name="display_name"/><field name="partner_ids"/></tree>',
@@ -6174,7 +6174,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
                     var commands = args.args[1].turtles;
@@ -6281,7 +6281,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: { mode: "edit" },
                 mockRPC(route, args) {
                     assert.step(args.method);
@@ -6519,7 +6519,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             archs: {
                 "partner,false,list": '<tree string="Partners"><field name="display_name"/></tree>',
             },
@@ -6560,7 +6560,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</group>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 archs: {
                     "turtle,false,form": '<form string="Turtles"><field name="turtle_foo"/></form>',
                 },
@@ -6603,7 +6603,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</group>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 archs: {
                     "turtle,false,form":
                         '<form string="Turtles">' +
@@ -6661,7 +6661,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             archs: {
                 "partner,false,form": '<form string="P">' + '<field name="timmy"/>' + "</form>",
                 "partner_type,false,list":
@@ -6891,7 +6891,7 @@ QUnit.module("Fields", (hooks) => {
                     "partner,false,form":
                         '<form><field name="turtles" widget="many2many_tags"/></form>',
                 },
-                res_id: 1,
+                resId: 1,
             });
 
             assert.containsOnce(form, ".o_data_row");
@@ -6928,7 +6928,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</group>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 archs: {
                     "turtle,false,form": '<form string="Turtles"><field name="turtle_foo"/></form>',
                 },
@@ -6984,7 +6984,7 @@ QUnit.module("Fields", (hooks) => {
                 "partner,false,form":
                     '<form string="Associated partners">' + '<field name="foo"/>' + "</form>",
             },
-            res_id: 4,
+            resId: 4,
         });
 
         assert.containsOnce(
@@ -7109,7 +7109,7 @@ QUnit.module("Fields", (hooks) => {
             archs: {
                 "partner,false,form": '<form><field name="foo"/></form>',
             },
-            res_id: 1,
+            resId: 1,
             services: {
                 notification: {
                     notify: function (params) {
@@ -7272,7 +7272,7 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 '<field name="foo"/>' +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
         await testUtils.form.clickEdit(form);
 
@@ -7310,7 +7310,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
                     var commands = args.args[1].turtles;
@@ -7360,7 +7360,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
                     var commands = args.args[1].turtles;
@@ -7412,7 +7412,7 @@ QUnit.module("Fields", (hooks) => {
                 "</form>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
         await testUtils.form.clickEdit(form);
 
@@ -7456,7 +7456,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.containsOnce(
@@ -7498,7 +7498,7 @@ QUnit.module("Fields", (hooks) => {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
         });
         await testUtils.form.clickEdit(form);
 
@@ -7570,7 +7570,7 @@ QUnit.module("Fields", (hooks) => {
                         '<field name="partner_ids" widget="many2many_tags"/>' +
                         "</tree>",
                 },
-                res_id: 1,
+                resId: 1,
             });
             await testUtils.form.clickEdit(form);
 
@@ -7642,7 +7642,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
             await testUtils.form.clickEdit(form);
 
@@ -7703,7 +7703,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
             await testUtils.form.clickEdit(form);
 
@@ -7948,7 +7948,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.step(args.method);
@@ -8043,7 +8043,7 @@ QUnit.module("Fields", (hooks) => {
                 mode: "edit",
                 context: { active_field: 2 },
             },
-            res_id: 1,
+            resId: 1,
         });
 
         await testUtils.dom.click(form.$(".o_data_cell:first"));
@@ -8073,7 +8073,7 @@ QUnit.module("Fields", (hooks) => {
             viewOptions: {
                 mode: "edit",
             },
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
@@ -8189,7 +8189,7 @@ QUnit.module("Fields", (hooks) => {
                     }
                     return this._super(...arguments);
                 },
-                res_id: 1,
+                resId: 1,
             });
 
             await testUtils.dom.click(form.$('.o_field_widget[name="name"]'));
@@ -8262,7 +8262,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
@@ -8347,7 +8347,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "write") {
@@ -8402,7 +8402,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         await testUtils.form.clickEdit(form);
@@ -8444,7 +8444,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "write") {
@@ -8787,7 +8787,7 @@ QUnit.module("Fields", (hooks) => {
                 return this._super.apply(this, arguments);
             },
             viewOptions: { mode: "edit" },
-            res_id: 1,
+            resId: 1,
         });
 
         assert.strictEqual(
@@ -8898,7 +8898,7 @@ QUnit.module("Fields", (hooks) => {
                         <form><field name="turtles" invisible="1"/></form>
                     </field>
                 </form>`,
-                res_id: 1,
+                resId: 1,
             });
 
             assert.containsOnce(form, ".o_data_row");
@@ -9032,7 +9032,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
@@ -9081,7 +9081,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "onchange") {
                         return Promise.resolve({
@@ -9132,7 +9132,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -9177,7 +9177,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -9227,7 +9227,7 @@ QUnit.module("Fields", (hooks) => {
                     "</form>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -9277,7 +9277,7 @@ QUnit.module("Fields", (hooks) => {
                     "</form>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -9315,7 +9315,7 @@ QUnit.module("Fields", (hooks) => {
                     "</form>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -9451,7 +9451,7 @@ QUnit.module("Fields", (hooks) => {
                 assert.step(args.method + ids);
                 return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
             viewOptions: {
                 mode: "edit",
             },
@@ -9562,7 +9562,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -9611,7 +9611,7 @@ QUnit.module("Fields", (hooks) => {
                         '<field name="display_name"/>' +
                         "</tree>",
                 },
-                res_id: 12,
+                resId: 12,
                 mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
@@ -9890,7 +9890,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             model: "partner",
             data: data,
-            res_id: 1,
+            resId: 1,
             arch:
                 "<form>" +
                 '<field name="p">' +
@@ -10018,7 +10018,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</group></sheet></form>",
-            res_id: 17,
+            resId: 17,
         });
 
         // add a turtle on second partner
@@ -10079,7 +10079,7 @@ QUnit.module("Fields", (hooks) => {
                 "<form></form>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         await testUtils.dom.click(form.$(".o_email_cell a"));
@@ -10192,7 +10192,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -10353,7 +10353,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             archs: {
                 "partner,false,form": "<form>" + '<field name="display_name"/>' + "</form>",
             },
@@ -10454,7 +10454,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
         assert.containsN(
             form,
@@ -10513,7 +10513,7 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -10556,7 +10556,7 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-            res_id: 1,
+            resId: 1,
             viewOptions: {
                 mode: "edit",
             },
@@ -10613,7 +10613,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             // bar is false so there should be 1 column
@@ -10665,7 +10665,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             archs: {
                 "partner,false,list":
                     "<tree>" +
@@ -10734,7 +10734,7 @@ QUnit.module("Fields", (hooks) => {
                 "</kanban>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.strictEqual(
@@ -10784,7 +10784,7 @@ QUnit.module("Fields", (hooks) => {
                 }
                 return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
         });
 
         assert.strictEqual(form.$(".o_kanban_record:not(.o_kanban_ghost)").text(), "yopblipkawa");
@@ -10826,7 +10826,7 @@ QUnit.module("Fields", (hooks) => {
                 '<tree editable="bottom"><field name="turtle_int"/></tree>' +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.step("onchange");
@@ -11084,7 +11084,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             viewOptions: {
                 mode: "edit",
             },
@@ -11127,7 +11127,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -11207,7 +11207,7 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-            res_id: 1,
+            resId: 1,
         });
 
         // should have three visible columns in readonly: foo + readonly button + trash
@@ -11319,7 +11319,7 @@ QUnit.module("Fields", (hooks) => {
                         </form>
                     </field>
                 </form>`,
-                res_id: 1,
+                resId: 1,
             });
 
             assert.containsOnce(form, ".o_field_widget[name=p] .o_data_row");
@@ -11787,7 +11787,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="p" widget="my_relational_field"/>
                 </form>`,
-            res_id: 1,
+            resId: 1,
         });
 
         assert.strictEqual(
@@ -11831,7 +11831,7 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-                res_id: 1,
+                resId: 1,
             });
 
             assert.containsN(form, ".o_data_row", 2);
@@ -11880,7 +11880,7 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-                res_id: 1,
+                resId: 1,
             });
 
             assert.containsN(form, ".o_data_row", 2);
@@ -11936,7 +11936,7 @@ QUnit.module("Fields", (hooks) => {
                         </notebook>
                     </sheet>
                 </form>`,
-                res_id: 1,
+                resId: 1,
             });
 
             await testUtils.form.clickEdit(form);
@@ -12049,7 +12049,7 @@ QUnit.module("Fields", (hooks) => {
                 "partner,false,search":
                     '<search><field name="datetime"/><field name="display_name"/></search>',
             },
-            res_id: 1,
+            resId: 1,
         });
 
         await testUtils.form.clickEdit(form);
@@ -12128,7 +12128,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         var $recordList = form.$(".o_field_x2many_list .o_data_row");
@@ -12154,7 +12154,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch: "<form>" + '<field name="trululu"/>' + "</form>",
-            res_id: 2,
+            resId: 2,
             archs: {
                 "partner,false,form": '<form><field name="trululu"/></form>',
             },
@@ -12227,7 +12227,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             context: {
                 orderedBy: [
                     {
@@ -12274,7 +12274,7 @@ QUnit.module("Fields", (hooks) => {
                     '<field name="partner_ids" widget="many2many_checkboxes"/>' +
                     "</form>",
             },
-            res_id: 1,
+            resId: 1,
         });
 
         await testUtils.form.clickEdit(form);
@@ -12309,7 +12309,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.strictEqual(
@@ -12353,7 +12353,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
             assert.containsOnce(
                 form,
@@ -12400,7 +12400,7 @@ QUnit.module("Fields", (hooks) => {
                     "</group>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             await testUtils.form.clickEdit(form);
@@ -12446,7 +12446,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method + " " + args.model);
                 return this._super(route, args);
@@ -12529,7 +12529,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</group></sheet></form>",
-                res_id: 17,
+                resId: 17,
             });
 
             // open first partner and change turtle name
@@ -12620,7 +12620,7 @@ QUnit.module("Fields", (hooks) => {
                 }
                 return result;
             },
-            res_id: 1,
+            resId: 1,
         });
 
         await testUtils.dom.click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
@@ -12652,7 +12652,7 @@ QUnit.module("Fields", (hooks) => {
             model: "partner",
             serverData,
             arch: "<form>" + '<field name="timmy" widget="many2many_tags"/>' + "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC(route, args) {
                 if (args.method === "read" && args.model === "partner_type") {
                     assert.step(args.kwargs.context.hello);
@@ -12690,7 +12690,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             archs: {
                 "partner,false,form": "<form>" + '<field name="display_name"/>' + "</form>",
             },
@@ -12791,7 +12791,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
         assert.containsN(
             form,
@@ -12859,7 +12859,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             // bar is false so there should be 1 column
@@ -12911,7 +12911,7 @@ QUnit.module("Fields", (hooks) => {
                 "</notebook>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             archs: {
                 "partner,false,list":
                     "<tree>" +
@@ -12972,7 +12972,7 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 serverData,
                 arch: "<form>" + '<field name="p"/>' + "</form>",
-                res_id: 1,
+                resId: 1,
                 archs: {
                     "partner,false,list":
                         '<tree editable="top">' +
@@ -13131,7 +13131,7 @@ QUnit.module("Fields", (hooks) => {
                     "</notebook>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             assert.strictEqual(
@@ -13182,7 +13182,7 @@ QUnit.module("Fields", (hooks) => {
                     "</notebook>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             assert.strictEqual(
@@ -13246,7 +13246,7 @@ QUnit.module("Fields", (hooks) => {
                     "</group>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             assert.strictEqual(
@@ -13309,7 +13309,7 @@ QUnit.module("Fields", (hooks) => {
                     "</group>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 archs: {
                     "turtle,false,form":
                         '<form><group><field name="turtle_foo"/><field name="turtle_int"/></group></form>',
@@ -13364,7 +13364,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 archs: {
                     "partner,false,form":
                         '<form><group><field name="foo"/><field name="bar"/></group></form>',
