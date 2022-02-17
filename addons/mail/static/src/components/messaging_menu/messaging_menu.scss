@@ -20,6 +20,8 @@
      */
     margin-top: map-get($spacers, 0);
 
+    z-index: 1100; // on top of chat windows and leafset internal z-index
+
     &.o-messaging-not-initialized {
         align-items: center;
         justify-content: center;
@@ -30,7 +32,6 @@
         width: 350px;
         min-height: 50px;
         max-height: 400px;
-        z-index: 1100; // on top of chat windows
     }
 
     &.o-mobile {
