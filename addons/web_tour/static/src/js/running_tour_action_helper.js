@@ -57,7 +57,7 @@ var RunningTourActionHelper = core.Class.extend({
     _click: function (values, nb, leave) {
 //        values.$element.trigger("mouseenter");
         let element = values.$element;
-        while (element && element.prop("tagName").toLowerCase() != 'body') {
+        while (element && element.prop("tagName")) {
             element.trigger("mouseenter");
             element = element.parent();
         }
@@ -74,7 +74,7 @@ var RunningTourActionHelper = core.Class.extend({
             trigger_mouse_event(values.$element, "mouseout");
 //            values.$element.trigger("mouseleave");
             let element = values.$element;
-            while (element && element.prop("tagName").toLowerCase() != 'body') {
+            while (element && element.prop("tagName")) {
                 element.trigger("mouseleave");
                 element = element.parent();
             }
