@@ -2249,6 +2249,9 @@ const ListUserValueWidget = UserValueWidget.extend({
         }
         this._addItemToTable(undefined, this.el.dataset.defaultValue, recordData);
         this._notifyCurrentState();
+        // Scroll to the new list element.
+        this.el.querySelector('tr:last-child')
+            .scrollIntoView({behavior: 'smooth', block: 'nearest'});
     },
     /**
      * @private
