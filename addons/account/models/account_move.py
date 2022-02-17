@@ -143,6 +143,7 @@ class AccountMove(models.Model):
     # ==== Business fields ====
     name = fields.Char(string='Number', copy=False, compute='_compute_name', readonly=False, store=True, index='btree', tracking=True)
     highest_name = fields.Char(compute='_compute_highest_name')
+    made_sequence_hole = fields.Boolean(compute='_compute_made_sequence_hole')
     show_name_warning = fields.Boolean(store=False)
     date = fields.Date(
         string='Date',
@@ -1189,6 +1190,25 @@ class AccountMove(models.Model):
         for record in self:
             record.highest_name = record._get_last_sequence()
 
+    @api.depends('name', 'journal_id')
+    def _compute_made_sequence_hole(self):
+        self.env.cr.execute("""
+            SELECT this.id
+              FROM account_move this
+         LEFT JOIN account_move other ON this.journal_id = other.journal_id
+                                     AND this.sequence_prefix = other.sequence_prefix
+                                     AND this.sequence_number = other.sequence_number + 1
+             WHERE other.id IS NULL
+               AND this.sequence_number != 1
+               AND this.name != '/'
+               AND this.id = ANY(%(move_ids)s)
+        """, {
+            'move_ids': self.ids,
+        })
+        made_sequence_hole = set(r[0] for r in self.env.cr.fetchall())
+        for move in self:
+            move.made_sequence_hole = move.id in made_sequence_hole
+
     @api.onchange('name', 'highest_name')
     def _onchange_name_warning(self):
         if self.name and self.name != '/' and self.name <= (self.highest_name or ''):
@@ -1786,10 +1806,10 @@ class AccountMove(models.Model):
                  WHERE line.move_id IN %s
               GROUP BY line.move_id, currency.decimal_places
             )
-            SELECT * 
+            SELECT *
               FROM error_moves
-             WHERE balance !=0 
-                OR negative_normal 
+             WHERE balance !=0
+                OR negative_normal
                 OR positive_storno
         ''', [tuple(self.ids)])
 
