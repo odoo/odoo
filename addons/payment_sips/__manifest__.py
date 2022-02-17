@@ -5,7 +5,7 @@
     'name': 'Worldline SIPS',
     'version': '2.0',
     'category': 'Accounting/Payment Acquirers',
-    'sequence': 385,
+    'sequence': 390,
     'description': """
 Worldline SIPS Payment Acquirer for online payments
 
