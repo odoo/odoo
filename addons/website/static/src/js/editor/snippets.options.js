@@ -1226,6 +1226,17 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
 
 options.registry.menu_data = options.Class.extend({
     /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this.isWebsiteDesigner = await this._rpc({
+            'model': 'res.users',
+            'method': 'has_group',
+            'args': ['website.group_website_designer'],
+        });
+    },
+    /**
      * When the users selects a menu, a dialog is opened to ask him if he wants
      * to follow the link (and leave editor), edit the menu or do nothing.
      *
@@ -1233,19 +1244,21 @@ options.registry.menu_data = options.Class.extend({
      */
     onFocus: function () {
         var self = this;
-        (new Dialog(this, {
-            title: _t("Confirmation"),
-            $content: $(core.qweb.render('website.leaving_current_page_edition')),
-            buttons: [
-                {text: _t("Go to Link"), classes: 'btn-primary', click: function () {
+        const buttons = [
+            {
+                text: _t("Go to Link"), classes: 'btn-primary', click: function () {
                     self.trigger_up('request_save', {
                         reload: false,
                         onSuccess: function () {
                             window.location.href = self.$target.attr('href');
                         },
                     });
-                }},
-                {text: _t("Edit the menu"), classes: 'btn-primary', click: function () {
+                },
+            },
+        ];
+        if (this.isWebsiteDesigner) {
+            buttons.push({
+                text: _t("Edit the menu"), classes: 'btn-primary', click: function () {
                     this.trigger_up('action_demand', {
                         actionName: 'edit_menu',
                         params: [
@@ -1260,9 +1273,15 @@ options.registry.menu_data = options.Class.extend({
                             },
                         ],
                     });
-                }},
-                {text: _t("Stay on this page"), close: true}
-            ]
+                },
+            });
+        }
+        buttons.push({text: _t("Stay on this page"), close: true});
+
+        (new Dialog(this, {
+            title: _t("Confirmation"),
+            $content: $(core.qweb.render('website.leaving_current_page_edition')),
+            buttons: buttons,
         })).open();
     },
 });
