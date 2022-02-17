@@ -55,7 +55,8 @@ var RunningTourActionHelper = core.Class.extend({
         };
     },
     _click: function (values, nb, leave) {
-        trigger_mouse_event(values.$element, "mouseenter");
+       values.$element.trigger("mouseenter");
+//        trigger_mouse_event(values.$element, "mouseenter");
         trigger_mouse_event(values.$element, "mouseover");
         for (var i = 1 ; i <= (nb || 1) ; i++) {
             trigger_mouse_event(values.$element, "mousedown");
@@ -67,7 +68,8 @@ var RunningTourActionHelper = core.Class.extend({
         }
         if (leave !== false) {
             trigger_mouse_event(values.$element, "mouseout");
-            trigger_mouse_event(values.$element, "mouseleave");
+            values.$element.trigger("mouseleave");
+//            trigger_mouse_event(values.$element, "mouseleave");
         }
 
         function trigger_mouse_event($element, type, count) {
@@ -98,8 +100,8 @@ var RunningTourActionHelper = core.Class.extend({
             values.$element.focusInEnd();
             values.$element.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         }
-//        values.$element[0].dispatchEvent(new Event("change"));
-        values.$element.trigger("change");
+        values.$element[0].dispatchEvent(new Event("change"));
+//        values.$element.trigger("change");
     },
     _drag_and_drop: function (values, to) {
         var $to;
