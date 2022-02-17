@@ -23,4 +23,17 @@
 
     <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_sup_refund_invoice_4')]"/>
 
+    <!-- Liquido Producto document vendor bill refund -->
+    <record id="demo_sup_refund_invoice_5" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="reason">demo_sup_refund_invoice_5: liquido producto bill refund (credit note)</field>
+        <field name="refund_method">cancel</field>
+        <field name="move_ids" eval="[(4, ref('demo_sup_invoice_8'), 0)]"/>
+        <field name="l10n_latam_document_type_id" ref="l10n_ar.dc_liq_cd_sp_a"/>
+        <field name="l10n_latam_document_number">00011-00000012</field>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="journal_id" model="account.journal" eval="obj().env.ref('l10n_ar.demo_sup_invoice_8').journal_id"/>
+    </record>
+
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_sup_refund_invoice_5')]"/>
+
 </odoo>
