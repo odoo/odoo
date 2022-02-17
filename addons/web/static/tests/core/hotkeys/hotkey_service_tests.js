@@ -414,102 +414,88 @@ QUnit.test("hotkeys evil 👹", async (assert) => {
 });
 
 QUnit.test("component can register many hotkeys", async (assert) => {
-    assert.expect(8);
+    assert.expect(4);
 
     class MyComponent extends Component {
         setup() {
-            for (const hotkey of ["a", "b", "c"]) {
-                useHotkey(`alt+${hotkey}`, () => assert.step(`callback:${hotkey}`));
-            }
-            for (const hotkey of ["d", "e", "f"]) {
-                useHotkey(hotkey, () => assert.step(`callback2:${hotkey}`));
-            }
+            useHotkey("a", () => assert.step("callback:a"));
+            useHotkey("b", () => assert.step("callback:b"));
         }
         onClick() {
             assert.step("click");
         }
     }
-    MyComponent.template = xml`
-    <div>
-      <button t-on-click="onClick" data-hotkey="b" />
-    </div>
-  `;
+    MyComponent.template = xml`<div><button t-on-click="onClick" data-hotkey="c"/></div>`;
 
-    const comp = await mount(MyComponent, target, { env });
-    triggerHotkey("a", true);
-    triggerHotkey("b", true);
+    await mount(MyComponent, target, { env });
+    triggerHotkey("a");
+    triggerHotkey("b");
     triggerHotkey("c", true);
-    triggerHotkey("d");
-    triggerHotkey("e");
-    triggerHotkey("f");
     await nextTick();
 
-    assert.verifySteps([
-        "callback:a",
-        "callback:b",
-        "click",
-        "callback:c",
-        "callback2:d",
-        "callback2:e",
-        "callback2:f",
-    ]);
+    assert.verifySteps(["callback:a", "callback:b", "click"]);
 });
 
-QUnit.test("many components can register same hotkeys", async (assert) => {
-    assert.expect(1);
-
-    const result = [];
-    const hotkeys = ["a", "b", "c"];
-
-    class MyComponent1 extends Component {
-        setup() {
-            for (const hotkey of hotkeys) {
-                useHotkey(`alt+${hotkey}`, () => result.push(`comp1:${hotkey}`));
+QUnit.test("many components can register same hotkeys (call order matters)", async (assert) => {
+    assert.expect(13);
+    const getComp = (name) => {
+        const Comp = class extends Component {
+            setup() {
+                useHotkey("a", () => assert.step(`${name}:a`));
+                useHotkey("b", () => assert.step(`${name}:b`));
+                useHotkey("alt+z", () => assert.step(`${name}:z`));
             }
-        }
-        onClick() {
-            result.push("comp1:click");
-        }
-    }
-    MyComponent1.template = xml`
-    <div>
-      <button t-on-click="onClick" data-hotkey="b" />
-    </div>
-  `;
-
-    class MyComponent2 extends Component {
-        setup() {
-            for (const hotkey of hotkeys) {
-                useHotkey(`alt+${hotkey}`, () => result.push(`comp2:${hotkey}`));
+            onClick(ev) {
+                assert.step(`${name}:${ev.target.dataset.hotkey}:button`);
             }
-        }
-        onClick() {
-            result.push("comp2:click");
-        }
-    }
-    MyComponent2.template = xml`
-    <div>
-      <button t-on-click="onClick" data-hotkey="b" />
-    </div>
-  `;
-
-    await mount(MyComponent1, target, { env });
-    await mount(MyComponent2, target, { env });
-    triggerHotkey("a", true);
-    triggerHotkey("b", true);
+        };
+        Comp.template = xml`
+            <div>
+                <button t-on-click="onClick" data-hotkey="c"/>
+                <button t-on-click="onClick" data-hotkey="z"/>
+            </div>
+        `;
+        return Comp;
+    };
+    await mount(getComp("comp1"), target, { env });
+    triggerHotkey("a");
+    triggerHotkey("b");
     triggerHotkey("c", true);
     await nextTick();
+    assert.verifySteps(
+        ["comp1:a", "comp1:b", "comp1:c:button"],
+        "the callbacks of comp1 are called"
+    );
 
-    assert.deepEqual(result.sort(), [
-        "comp1:a",
-        "comp1:b",
-        "comp1:c",
-        "comp1:click",
-        "comp2:a",
-        "comp2:b",
-        "comp2:c",
-        "comp2:click",
-    ]);
+    triggerHotkey("z", true);
+    await nextTick();
+    assert.verifySteps(
+        ["comp1:z"],
+        "calls only the callback from the useHotkey registration and the button is not clicked"
+    );
+
+    await mount(getComp("comp2"), target, { env });
+    triggerHotkey("a");
+    triggerHotkey("b");
+    await nextTick();
+    assert.verifySteps(
+        ["comp2:a", "comp2:b"],
+        "calls only the callbacks from last useHotkey registrations"
+    );
+
+    triggerHotkey("c", true);
+    await nextTick();
+    assert.verifySteps(
+        ["comp1:c:button"],
+        "calls only the callback of the first encountered button with proper [data-hotkey]"
+    );
+
+    triggerHotkey("z", true);
+    await nextTick();
+    assert.verifySteps(
+        ["comp2:z"],
+        "calls only the callbacks from last useHotkey registrations and no button is clicked"
+    );
 });
 
 QUnit.test("registrations and elements belong to the correct UI owner", async (assert) => {
