@@ -422,7 +422,12 @@ class PosSession(models.Model):
                 invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order._get_amount_receivable()}, order.date_order)
                 # side loop to gather receivable lines by account for reconciliation
                 for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable' and not aml.reconciled):
-                    order_account_move_receivable_lines[move_line.account_id.id] |= move_line
+                    # NOTE: Negative (Positive) amount in the order's invoice's receivable line, will be paired to
+                    # the respective positive (negative) balance in session's invoice receivable lines. That's why the comparator to
+                    # calculate `key`s for `invoice_receivable_lines` in `_create_invoice_receivable_lines` is inverted.
+                    # The key ensures we don't reconcile invoice receivable lines with opposite sign together
+                    key = (order.partner_id.commercial_partner_id.id, order._get_amount_receivable() < 0, move_line.account_id.id)
+                    order_account_move_receivable_lines[key] |= move_line
             else:
                 order_taxes = defaultdict(tax_amounts)
                 for order_line in order.lines:
@@ -591,10 +596,11 @@ class PosSession(models.Model):
             receivable_lines = MoveLine.create(vals)
             for receivable_line in receivable_lines:
                 if (not receivable_line.reconciled):
-                    if account_id not in invoice_receivable_lines:
-                        invoice_receivable_lines[account_id] = receivable_line
+                    key = (commercial_partner.id, receivable_line.balance > 0, account_id)
+                    if key not in invoice_receivable_lines:
+                        invoice_receivable_lines[key] = receivable_line
                     else:
-                        invoice_receivable_lines[account_id] |= receivable_line
+                        invoice_receivable_lines[key] |= receivable_line
 
         data.update({'invoice_receivable_lines': invoice_receivable_lines})
         return data
@@ -649,9 +655,9 @@ class PosSession(models.Model):
                 lines.reconcile()
 
         # reconcile invoice receivable lines
-        for account_id in order_account_move_receivable_lines:
-            ( order_account_move_receivable_lines[account_id]
-            | invoice_receivable_lines.get(account_id, self.env['account.move.line'])
+        for key in order_account_move_receivable_lines:
+            ( order_account_move_receivable_lines[key]
+            | invoice_receivable_lines.get(key, self.env['account.move.line'])
             ).reconcile()
 
         # reconcile stock output lines
