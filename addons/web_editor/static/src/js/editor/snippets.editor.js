@@ -153,7 +153,15 @@ var SnippetEditor = Widget.extend({
     init: function (parent, target, templateOptions, $editable, options) {
         this._super.apply(this, arguments);
         this.options = options;
-        this.$editable = $editable;
+        // This is possible to have a snippet editor not inside an editable area
+        // (data-no-check="true") and it is possible to not have editable areas
+        // at all (restricted editor), in that case we just suppose this is the
+        // body so related code can still be executed without crash (as we still
+        // need to instantiate instances of editors even if nothing is really
+        // editable (data-no-check="true" / navigation options / ...)).
+        // TODO this should probably be reviewed in master: do we need a
+        // reference to the editable area? There should be workarounds.
+        this.$editable = $editable && $editable.length ? $editable : $(document.body);
         this.ownerDocument = this.$editable[0].ownerDocument;
         this.$body = $(this.ownerDocument.body);
         this.$target = $(target);
@@ -2612,6 +2620,7 @@ var SnippetsMenu = Widget.extend({
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
                 handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
+                cancel: '.oe_snippet.o_disabled',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
                     dragSnip.querySelectorAll('.o_delete_btn, .o_rename_btn').forEach(
