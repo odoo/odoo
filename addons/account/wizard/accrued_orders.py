@@ -214,12 +214,12 @@ class AccruedExpenseRevenue(models.TransientModel):
         }])
         reverse_move._post()
         for order in orders_with_entries:
-            body = _('Accrual entry created on %s: <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>.\
-                    And its <a href=# data-oe-model=account.move data-oe-id=%d>reverse entry</a>.') % (
-                self.date,
-                move.id,
-                move.name,
-                reverse_move.id,
+            body = _(
+                'Accrual entry created on %(date)s: %(accrual_entry)s.\
+                    And its reverse entry: %(reverse_entry)s.',
+                date=self.date,
+                accrual_entry=move._get_html_link(),
+                reverse_entry=reverse_move._get_html_link(),
             )
             order.message_post(body=body)
         return {

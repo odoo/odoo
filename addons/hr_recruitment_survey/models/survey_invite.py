@@ -20,8 +20,8 @@ class SurveyInvite(models.TransientModel):
                 })
 
             partner = self.applicant_id.partner_id
-            survey_link = '<a href="#" data-oe-model="%s" data-oe-id="%s">%s</a>' % (survey._name, survey.id, survey.title)
-            partner_link = '<a href="#" data-oe-model="%s" data-oe-id="%s">%s</a>' % (partner._name, partner.id, partner.name)
+            survey_link = survey._get_html_link(title=survey.title)
+            partner_link = partner._get_html_link()
             content = _('The survey %(survey_link)s has been sent to %(partner_link)s', survey_link=survey_link, partner_link=partner_link)
             body = '<p>%s</p>' % content
             self.applicant_id.message_post(body=body)

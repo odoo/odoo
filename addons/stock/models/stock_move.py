@@ -629,7 +629,7 @@ class StockMove(models.Model):
         if not documents or not doc_orig:
             return
 
-        msg = _("The deadline has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
+        msg = _("The deadline has been automatically updated due to a delay on %s.", doc_orig[0]._get_html_link())
         msg_subject = _("Deadline updated due to delay on %s", doc_orig[0].name)
         # write the message on each document
         for doc in documents:

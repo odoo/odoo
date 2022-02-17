@@ -807,7 +807,10 @@ class SaleOrder(models.Model):
         lines_to_recompute.discount = 0.0
         lines_to_recompute._compute_discount()
         self.show_update_pricelist = False
-        self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
+        self.message_post(body=_(
+            "Product prices have been recomputed according to pricelist %s.",
+            self.pricelist_id._get_html_link(),
+        ))
 
     # INVOICING #
 
@@ -1225,9 +1228,8 @@ class SaleOrder(models.Model):
         if self:
             self.activity_unlink(['sale.mail_act_sale_upsell'])
         for order in self:
-            ref = "<a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a>"
-            order_ref = ref % (order._name, order.id, order.name)
-            customer_ref = ref % (order.partner_id._name, order.partner_id.id, order.partner_id.display_name)
+            order_ref = order._get_html_link()
+            customer_ref = order.partner_id._get_html_link()
             order.activity_schedule(
                 'sale.mail_act_sale_upsell',
                 user_id=order.user_id.id or order.partner_id.user_id.id,
