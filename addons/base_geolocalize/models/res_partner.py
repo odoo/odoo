@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import api, fields, models
+from odoo.tools import config
 
 
 class ResPartner(models.Model):
@@ -29,6 +33,10 @@ class ResPartner(models.Model):
 
     def geo_localize(self):
         # We need country names in English below
+        if not self._context.get('force_geo_localize') \
+                and (self._context.get('import_file') \
+                     or any(config[key] for key in ['test_enable', 'test_file', 'init', 'update'])):
+            return False
         for partner in self.with_context(lang='en_US'):
             result = self._geo_localize(partner.street,
                                         partner.zip,
