@@ -87,7 +87,7 @@ class ResUsers(models.Model):
                     if other_user_visitor_sudo:
                         visitor_main = other_user_visitor_sudo[0]
                         other_visitors = other_user_visitor_sudo[1:]  # normally void
-                        (visitor_sudo + other_visitors)._link_to_visitor(visitor_main, keep_unique=True)
+                        (visitor_sudo + other_visitors)._link_to_visitor(visitor_main)
                         visitor_main.name = user_partner.name
                         visitor_main.active = True
                         visitor_main._update_visitor_last_visit()
