@@ -20,7 +20,8 @@
             <field name="arch" type="xml">
                 <tree string="Planning">
                     <field name="name"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="steps_count"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -38,19 +39,20 @@
                                 <field name="name" placeholder="e.g. Onboarding"/>
                             </h1>
                         </div>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <group string="Activities">
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <field name="active" invisible="1"/>
-                            <field name="plan_activity_type_ids" nolabel="1">
-                                <tree editable="bottom">
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="activity_type_id"/>
-                                    <field name="summary"/>
-                                    <field name="responsible"/>
-                                    <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}"/>
-                                </tree>
-                            </field>
                         </group>
+                        <label string="Activities" for="plan_activity_type_ids"/>
+                        <field name="plan_activity_type_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="company_id" invisible="1"/>
+                                <field name="activity_type_id"/>
+                                <field name="summary"/>
+                                <field name="responsible"/>
+                                <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>
