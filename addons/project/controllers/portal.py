@@ -327,11 +327,11 @@ class ProjectCustomerPortal(CustomerPortal):
         searchbar_groupby = self._task_get_searchbar_groupby()
 
         Task = request.env['project.task']
-        if su:
-            Task = Task.sudo()
-
         if not domain:
             domain = []
+        if not su and Task.check_access_rights('read'):
+            domain = AND([domain, request.env['ir.rule']._compute_domain(Task._name, 'read')])
+        Task = Task.sudo()
 
         # default sort by value
         if not sortby:
