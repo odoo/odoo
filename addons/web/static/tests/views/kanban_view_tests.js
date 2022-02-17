@@ -836,7 +836,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(kanban, ".o_kanban_group.o_group_draggable");
         assert.containsN(kanban, ".o_kanban_group", 3);
-        assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "yop");
+        assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "blip");
         assert.containsNone(kanban, ".o_kanban_group:first-child > .o_kanban_quick_create");
     });
 
@@ -2797,33 +2797,19 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["foo"],
             async mockRPC(route, { method, kwargs }) {
                 if (method === "name_create") {
-                    assert.strictEqual(kwargs.context.default_foo, "yop");
+                    assert.strictEqual(kwargs.context.default_foo, "blip");
                 }
             },
         });
 
-        assert.containsN(
-            kanban,
-            ".o_kanban_header .o_kanban_quick_add i",
-            3,
-            "quick create should be enabled when grouped on a char field"
-        );
-        assert.containsOnce(
-            kanban,
-            ".o_kanban_group:first-child .o_kanban_record",
-            "first column should contain 1 record"
-        );
+        assert.containsN(kanban, ".o_kanban_header .o_kanban_quick_add i", 3);
+        assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 2);
 
         await quickCreateRecord(kanban);
         await editQuickCreateInput(kanban, "display_name", "new record");
         await validateRecord(kanban);
 
-        assert.containsN(
-            kanban,
-            ".o_kanban_group:first-child .o_kanban_record",
-            2,
-            "first column should now contain 2 records"
-        );
+        assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 3);
     });
 
     QUnit.test("quick create record in grouped by boolean field", async (assert) => {
@@ -2924,38 +2910,24 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["foo"],
                 async mockRPC(route, { method, args, kwargs }) {
                     if (method === "create") {
-                        assert.deepEqual(args[0], { foo: "yop" });
-                        assert.strictEqual(kwargs.context.default_foo, "yop");
+                        assert.deepEqual(args[0], { foo: "blip" });
+                        assert.strictEqual(kwargs.context.default_foo, "blip");
                     }
                 },
             });
 
-            assert.containsN(
-                kanban,
-                ".o_kanban_header .o_kanban_quick_add i",
-                3,
-                "quick create should be enabled when grouped on a char field"
-            );
-            assert.containsOnce(
-                kanban,
-                ".o_kanban_group:first-child .o_kanban_record",
-                "first column should contain 1 record"
-            );
+            assert.containsN(kanban, ".o_kanban_header .o_kanban_quick_add i", 3);
+            assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 2);
 
             await quickCreateRecord(kanban);
             assert.strictEqual(
                 kanban.el.querySelector(".o_kanban_quick_create input").value,
-                "yop",
+                "blip",
                 "should have set the correct foo value by default"
             );
             await validateRecord(kanban);
 
-            assert.containsN(
-                kanban,
-                ".o_kanban_group:first-child .o_kanban_record",
-                2,
-                "first column should now contain 2 records"
-            );
+            assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 3);
         }
     );
 
@@ -3579,7 +3551,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("can drag and drop a record from one column to the next", async (assert) => {
+    QUnit.test("can drag and drop a record from one column to the next", async (assert) => {
         assert.expect(9);
 
         const kanban = await makeView({

@@ -1725,7 +1725,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tr.o_group_header", 3);
         assert.containsNone(target, "tr.o_data_row");
 
-        await click(target.querySelectorAll("th.o_group_name")[1]);
+        await click(target.querySelector("th.o_group_name"));
         await nextTick();
         assert.containsN(target, "tr.o_group_header", 3);
         assert.containsN(target, "tr.o_data_row", 2);
@@ -1746,7 +1746,7 @@ QUnit.module("Views", (hooks) => {
         class ListViewCustom extends ListView {
             openRecord(record) {
                 assert.step("openRecord");
-                assert.strictEqual(record.data.id, 1);
+                assert.strictEqual(record.data.id, 2);
             }
         }
         registry.category("views").add("list", ListViewCustom, { force: true });
@@ -1760,7 +1760,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree><field name="foo"/></tree>',
         });
 
-        await click(target.querySelector("tr td:not(.o_list_record_selector)"));
+        await click(target.querySelector("tr:nth-child(2) td:not(.o_list_record_selector)"));
         await groupByMenu(target, "foo");
 
         assert.containsN(target, "tr.o_group_header", 3, "list should be grouped");
@@ -2304,7 +2304,7 @@ QUnit.module("Views", (hooks) => {
             "Head selector should be unchecked"
         );
 
-        await click(target.querySelector(".o_group_header"));
+        await click(target.querySelector(".o_group_header:nth-child(2)"));
         await click(target.querySelector("thead .o_list_record_selector input"));
         assert.containsN(
             target,
@@ -2313,13 +2313,13 @@ QUnit.module("Views", (hooks) => {
             "All visible checkboxes should be checked"
         );
 
-        await click([...target.querySelectorAll(".o_group_header")].pop());
+        await click(target.querySelector(".o_group_header:first-child"));
         assert.notOk(
             target.querySelector("thead .o_list_record_selector input").checked,
             "Head selector should be unchecked"
         );
 
-        await click([...target.querySelectorAll("tbody .o_list_record_selector input")].pop());
+        await click(target.querySelector("tbody:nth-child(2) .o_list_record_selector input"));
         assert.ok(
             target.querySelector("thead .o_list_record_selector input").checked,
             "Head selector should be checked"
@@ -2791,8 +2791,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             $(target).find("tbody .o_list_number").text(),
-            "10517",
-            "initial order should be 10, 5, 17"
+            "51710",
+            "initial order should be 5, 17, 17"
         );
         assert.strictEqual($(target).find("tfoot td:last()").text(), "32", "total should be 32");
 
@@ -5508,7 +5508,7 @@ QUnit.module("Views", (hooks) => {
         patchWithCleanup(list.env.services.action, {
             doActionButton: (params) => {
                 assert.step(params.name);
-                assert.deepEqual(params.resId, 2, "should call with correct id");
+                assert.deepEqual(params.resId, 1, "should call with correct id");
                 assert.strictEqual(
                     params.resModel,
                     "res_currency",
@@ -11715,22 +11715,22 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
 
-        await click(target.querySelector(".o_group_header"));
-        await click(target.querySelectorAll(".o_data_row")[2].querySelector(".o_data_cell"));
+        await click(target, ".o_group_header:nth-child(2)");
+        await click(target, ".o_data_row:nth-child(5) .o_data_cell:nth-child(2)");
         assert.containsOnce(target, ".o_selected_row");
-        assert.hasClass(target.querySelectorAll(".o_data_row")[2], "o_selected_row");
+        assert.hasClass(target.querySelector(".o_data_row:nth-child(5)"), "o_selected_row");
 
-        await click(target.querySelector(".o_list_button_discard"));
-        await click(target.querySelectorAll(".o_data_row")[0].querySelector(".o_data_cell"));
+        await click(target, ".o_list_button_discard");
+        await click(target, ".o_data_row:nth-child(3) .o_data_cell:nth-child(2)");
         assert.containsOnce(target, ".o_selected_row");
-        assert.hasClass(target.querySelectorAll(".o_data_row")[0], "o_selected_row");
+        assert.hasClass(target.querySelector(".o_data_row:nth-child(3)"), "o_selected_row");
 
-        await click(target.querySelector(".o_list_button_discard"));
+        await click(target, ".o_list_button_discard");
         assert.containsNone(target, ".o_selected_row");
 
-        await click(target.querySelectorAll(".o_data_row")[2].querySelector(".o_data_cell"));
+        await click(target, ".o_data_row:nth-child(5) .o_data_cell:nth-child(2)");
         assert.containsOnce(target, ".o_selected_row");
-        assert.hasClass(target.querySelectorAll(".o_data_row")[2], "o_selected_row");
+        assert.hasClass(target.querySelector(".o_data_row:nth-child(5)"), "o_selected_row");
     });
 
     QUnit.skipWOWL(
