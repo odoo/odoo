@@ -63,7 +63,7 @@
             'hr/static/src/models/*/*.js',
         ],
         'web.qunit_suite_tests': [
-            'hr/static/tests/helpers/mock_models.js',
+            'hr/static/tests/helpers/*.js',
             'hr/static/tests/m2x_avatar_employee_tests.js',
             'hr/static/tests/standalone_m2o_avatar_employee_tests.js',
         ],

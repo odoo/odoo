@@ -57,8 +57,7 @@ Help your customers with this chat, and analyse their feedback.
         'web.qunit_suite_tests': [
             'im_livechat/static/src/components/*/tests/*.js',
             'im_livechat/static/src/legacy/public_livechat.js',
-            'im_livechat/static/tests/helpers/mock_models.js',
-            'im_livechat/static/tests/helpers/mock_server.js',
+            'im_livechat/static/tests/helpers/*.js',
         ],
         'web.assets_qweb': [
             'im_livechat/static/src/components/*/*.xml',
