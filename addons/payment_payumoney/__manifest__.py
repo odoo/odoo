@@ -4,7 +4,7 @@
     'name': 'PayuMoney Payment Acquirer',
     'version': '2.0',
     'category': 'Accounting/Payment Acquirers',
-    'sequence': 375,
+    'sequence': 385,
     'summary': 'Payment Acquirer: PayuMoney Implementation',
     'description': """
 PayuMoney Payment Acquirer for India.

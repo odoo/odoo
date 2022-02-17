@@ -4,7 +4,7 @@
     'name': 'Paypal Payment Acquirer',
     'version': '2.0',
     'category': 'Accounting/Payment Acquirers',
-    'sequence': 365,
+    'sequence': 375,
     'summary': 'Payment Acquirer: Paypal Implementation',
     'description': """Paypal Payment Acquirer""",
     'depends': ['payment'],
