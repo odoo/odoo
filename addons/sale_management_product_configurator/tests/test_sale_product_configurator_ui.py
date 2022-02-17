@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
+from odoo.tests import tagged, HttpCase
 from .common import TestProductConfiguratorCommon
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'kzh')
-class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
+@tagged('post_install', '-at_install', 'kzh')
+class TestUi(HttpCase, TestProductConfiguratorCommon):
 
     def setUp(self):
         super(TestUi, self).setUp()

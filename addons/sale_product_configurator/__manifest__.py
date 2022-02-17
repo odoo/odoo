@@ -32,9 +32,6 @@ It also enables the "optional products" feature.
             'sale_product_configurator/static/src/js/product_configurator_widget.js',
             'sale_product_configurator/static/src/js/product_configurator_modal.js',
         ],
-        'web.assets_tests': [
-            'sale_product_configurator/static/tests/tours/**/*',
-        ],
         'web.qunit_suite_tests': [
             'sale_product_configurator/static/tests/product_configurator.test.js',
         ],
