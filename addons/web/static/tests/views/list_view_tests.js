@@ -13917,34 +13917,42 @@ QUnit.module("Views", (hooks) => {
         delete widgetRegistry.map.test;
     });
 
-    QUnit.skipWOWL("enter edition in editable list with multi_edit = 0", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("enter edition in editable list with multi_edit = 0", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top" multi_edit="0">' + '<field name="int_field"/>' + "</tree>",
+            arch: `
+                <tree editable="top" multi_edit="0">
+                    <field name="int_field"/>
+                </tree>`,
         });
 
         // click on int_field cell of first row
-        await click($(target).find(".o_data_row:first .o_data_cell:nth(0)"));
-        assert.strictEqual(document.activeElement.name, "int_field");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        const intFieldInput = target.querySelector(
+            ".o_selected_row .o_field_widget[name=int_field] input"
+        );
+        assert.strictEqual(document.activeElement, intFieldInput);
     });
 
-    QUnit.skipWOWL("enter edition in editable list with multi_edit = 1", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("enter edition in editable list with multi_edit = 1", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top" multi_edit="1">' + '<field name="int_field"/>' + "</tree>",
+            arch: `
+                <tree editable="top" multi_edit="1">
+                    <field name="int_field"/>
+                </tree>`,
         });
 
         // click on int_field cell of first row
-        await click($(target).find(".o_data_row:first .o_data_cell:nth(0)"));
-        assert.strictEqual(document.activeElement.name, "int_field");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        const intFieldInput = target.querySelector(
+            ".o_selected_row .o_field_widget[name=int_field] input"
+        );
+        assert.strictEqual(document.activeElement, intFieldInput);
     });
 
     QUnit.skipWOWL("Date in evaluation context works with date field", async function (assert) {
