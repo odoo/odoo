@@ -80,7 +80,9 @@ const BaseAnimatedHeader = animations.Animation.extend({
      */
     _adaptToHeaderChange: function () {
         this._updateMainPaddingTop();
-        this.el.classList.toggle('o_top_fixed_element', this.fixedHeader && this._isShown());
+        // Take menu into account when `dom.scrollTo()` is used whenever it is
+        // visible - be it floating, fully displayed or partially hidden.
+        this.el.classList.toggle('o_top_fixed_element', this._isShown());
 
         for (const callback of extraMenuUpdateCallbacks) {
             callback();
