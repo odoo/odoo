@@ -74,7 +74,11 @@ const Wysiwyg = Widget.extend({
         this.colorpickers = {};
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
         this._onBlur = this._onBlur.bind(this);
-        this.customizableLinksSelector = 'a:not([data-toggle="tab"]):not([data-toggle="collapse"])';
+        this.customizableLinksSelector = 'a'
+            + ':not([data-toggle="tab"])'
+            + ':not([data-toggle="collapse"])'
+            + ':not([data-toggle="dropdown"])'
+            + ':not(.dropdown-item)';
         // navigator.onLine is sometimes a false positive, this._isOnline use
         // more heuristics to bypass the limitation.
         this._isOnline = true;
@@ -285,7 +289,8 @@ const Wysiwyg = Widget.extend({
                     && $target[0].isContentEditable
                     && !$target.attr('data-oe-model')
                     && !$target.find('> [data-oe-model]').length
-                    && !$target[0].closest('.o_extra_menu_items')) {
+                    && !$target[0].closest('.o_extra_menu_items')
+                    && $target[0].isContentEditable) {
                 this.linkPopover = $target.data('popover-widget-initialized');
                 if (!this.linkPopover) {
                     // TODO this code is ugly maybe the mutex should be in the
@@ -1021,7 +1026,7 @@ const Wysiwyg = Widget.extend({
      */
     toggleLinkTools(options = {}) {
         const linkEl = getInSelection(this.odooEditor.document, 'a');
-        if (linkEl && !linkEl.matches(this.customizableLinksSelector)) {
+        if (linkEl && (!linkEl.matches(this.customizableLinksSelector) || !linkEl.isContentEditable)) {
             return;
         }
         if (this.snippetsMenu && !options.forceDialog) {
@@ -1582,7 +1587,7 @@ const Wysiwyg = Widget.extend({
             this._updateFaResizeButtons();
         }
         const link = getInSelection(this.odooEditor.document, this.customizableLinksSelector);
-        if (isInMedia || link) {
+        if (isInMedia || (link && link.isContentEditable)) {
             // Handle the media/link's tooltip.
             this.showTooltip = true;
             setTimeout(() => {
