@@ -23,8 +23,10 @@ class L10nEsTbaiXmlUtils():
     @staticmethod
     def _canonicalize_node(node, is_string=False):
         """
-        Returns the canonical (C14N 1.1) representation of node, as a string
-        Required for computing digests and signatures
+        Returns the canonical (C14N 1.0, without comments, non exclusive) representation of node.
+        Speficied in: https://www.w3.org/TR/2001/REC-xml-c14n-20010315
+        Required for computing digests and signatures.
+        Returns an UTF-8 encoded bytes string.
         """
         node = etree.fromstring(node) if is_string else node
         return etree.tostring(node, method="c14n", with_comments=False, exclusive=False)
@@ -33,41 +35,52 @@ class L10nEsTbaiXmlUtils():
     def _cleanup_xml_content(xml_str, indent_level=0, indent=True):
         """
         Cleanups the content of the provided string representation of an XML:
-        - Removes comments
-        - Fixes indentation (using two spaces)
-        - Adds a newline as tail for proper concatenation of elements
-        Returns an etree.ElementTree
+        - Removes all blank text and all comments
+        If indent == True, also
+        - Indents all content using two spaces
+        - Adds a newline as tail for proper concatenation of further elements
+        Returns an etree._Element
         """
         parser = etree.XMLParser(compact=True, remove_blank_text=True, remove_comments=True)
         xml_bytes = xml_str.encode("utf-8")
-        tree = etree.fromstring(xml_bytes, parser=parser)
+        elem = etree.fromstring(xml_bytes, parser=parser)
         if indent:
-            etree.indent(tree, level=indent_level)
-            tree.tail = "\n"
+            etree.indent(elem, level=indent_level)
+            elem.tail = "\n"
 
-        return tree
+        return elem
 
     @staticmethod
     def _cleanup_xml_signature(xml_sig):
         """
         Cleanups the content of the provided string representation of an XML signature
         In addition, removes all line feeds for the ds:Object element
-        Returns an etree.ElementTree
+        Returns an etree._Element
         """
-        sig_tree = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_sig, indent=False)
-        etree.indent(sig_tree, space="")
+        sig_elem = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_sig, indent=False)
+        etree.indent(sig_elem, space="")
         # Iterate over entire ds:Object sub-tree
-        for elem in sig_tree.find("ds:Object", namespaces=L10nEsTbaiXmlUtils.NS_MAP).iter():
+        for elem in sig_elem.find("ds:Object", namespaces=L10nEsTbaiXmlUtils.NS_MAP).iter():
             if elem.text == "\n":
                 elem.text = ""  # optional but keeps the signature object in one line
             elem.tail = ""  # necessary for some reason
-        return sig_tree
+        return sig_elem
 
     @staticmethod
     def _get_uri(uri, reference):
+        """
+        Returns the content within `reference` that is identified by `uri`.
+        Canonicalization is used to convert node reference to an octet stream.
+        - URIs starting with # are same-document references
+        https://www.w3.org/TR/xmldsig-core/#sec-URI
+
+        - Empty URIs point to the whole document tree, without the signature
+        https://www.w3.org/TR/xmldsig-core/#sec-EnvelopedSignature
+        Returns an UTF-8 encoded bytes string.
+        """
         node = reference.getroottree()
         if uri == "":
-            # Empty URI points to whole document (without signature)
+            # Empty URI: whole document, without signature
             return L10nEsTbaiXmlUtils._canonicalize_node(
                 re.sub(r"^[^\n]*<ds:Signature.*<\/ds:Signature>", r"",
                        etree.tostring(node).decode("utf-8"),
@@ -87,6 +100,11 @@ class L10nEsTbaiXmlUtils():
 
     @staticmethod
     def _reference_digests(node):
+        """
+        Processes the references from node and computes their digest values as specified in
+        https://www.w3.org/TR/xmldsig-core/#sec-DigestMethod
+        https://www.w3.org/TR/xmldsig-core/#sec-DigestValue
+        """
         for reference in node.findall("ds:Reference", namespaces=L10nEsTbaiXmlUtils.NS_MAP):
             ref_node = L10nEsTbaiXmlUtils._get_uri(reference.get("URI", ""), reference)
             lib = hashlib.new("sha256")
@@ -95,19 +113,26 @@ class L10nEsTbaiXmlUtils():
 
     @staticmethod
     def _fill_signature(node, private_key):
+        """
+        Uses private_key to sign the SignedInfo sub-node of `node`, as specified in:
+        https://www.w3.org/TR/xmldsig-core/#sec-SignatureValue
+        https://www.w3.org/TR/xmldsig-core/#sec-SignedInfo
+        """
         signed_info_xml = node.find("ds:SignedInfo", namespaces=L10nEsTbaiXmlUtils.NS_MAP)
 
+        # During signature generation, the digest is computed over the canonical form of the document
         signature = private_key.sign(
             L10nEsTbaiXmlUtils._canonicalize_node(signed_info_xml),
             padding.PKCS1v15(),
             hashes.SHA256()
         )
-        node.find("ds:SignatureValue", namespaces=L10nEsTbaiXmlUtils.NS_MAP).text = L10nEsTbaiXmlUtils._base64_print(b64encode(signature))
+        node.find("ds:SignatureValue", namespaces=L10nEsTbaiXmlUtils.NS_MAP).text =\
+            L10nEsTbaiXmlUtils._base64_print(b64encode(signature))
 
     @staticmethod
     def _long_to_bytes(number):
         """
-        Converts a long integer to a byte string.
+        Converts a long integer to an ASCII/UTF-8 byte string with no leading zeroes.
         """
         # convert to byte string
         num_bytes = b""
@@ -118,7 +143,7 @@ class L10nEsTbaiXmlUtils():
         for i in range(len(num_bytes)):
             if num_bytes[i] != b"\000"[0]:
                 break
-        # special case: n == 0
+        # special case: num_bytes == 0
         else:
             num_bytes = b"\000"
             i = 0
@@ -128,7 +153,10 @@ class L10nEsTbaiXmlUtils():
     @staticmethod
     def _base64_print(string):
         """
-        Prints a string with line feeds every 64 characters.
+        Returns the passed string modified to include a line feed every 64 characters.
+        Not sure why it is done, might be conservative take of:
+        https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/#rf-maxLength
+        https://www.ietf.org/rfc/rfc2045.txt
         """
         string = str(string, "utf8")
         return "\n".join(
