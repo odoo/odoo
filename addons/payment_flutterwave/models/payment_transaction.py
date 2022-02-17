@@ -45,7 +45,7 @@ class PaymentTransaction(models.Model):
             },
             'customizations': {
                 'title': self.company_id.name,
-                'logo': urls.url_join(base_url, f'web/image/res_company/{self.company_id.id}/logo'),  # TODO make it work
+                'logo': urls.url_join(base_url, f'web/image/res.company/{self.company_id.id}/logo'),
             },
         }
         # payload['integrity_hash'] = None  # TODO
