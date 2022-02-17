@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-import { standardFieldProps } from "./standard_field_props";
-import { useService } from "@web/core/utils/hooks";
+import { Domain } from "@web/core/domain";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { Pager } from "@web/core/pager/pager";
+import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/fields/standard_field_props";
+import { useService } from "@web/core/utils/hooks";
 
 const { Component } = owl;
 
@@ -19,25 +20,43 @@ export class X2ManyField extends Component {
     setup() {
         this.dialogService = useService("dialog");
         this.fieldInfo = this.props.record.activeFields[this.props.name];
-        if (this.fieldInfo.views && this.fieldInfo.viewMode in this.fieldInfo.views) {
-            this.Renderer = X2M_RENDERERS[this.fieldInfo.viewMode];
-            this.viewType = this.fieldInfo.viewMode;
-        }
+        // should we readd protection on this.fieldInfo.views?
+        // in rendererProps also then?
+        this.Renderer = X2M_RENDERERS[this.fieldInfo.viewMode];
+        this.viewMode = this.fieldInfo.viewMode;
     }
 
     get rendererProps() {
-        const subViewInfo = this.fieldInfo.views[this.fieldInfo.viewMode];
+        const subViewInfo = this.fieldInfo.views[this.viewMode];
         return {
-            creates: this.viewType === "list" && subViewInfo.creates,
+            creates: this.creates,
             info: {
                 ...subViewInfo,
                 editable: this.props.record.isInEdition && subViewInfo.editable,
             },
-            fields: Object.assign({}, this.props.fields, subViewInfo.fields), // is this necessary?
+            fields: Object.assign({}, this.props.fields, subViewInfo.fields), // WOWL is this necessary?
             list: this.props.value,
             openRecord: this.openRecord.bind(this),
-            hasTrashIcon: this.viewType === "list",
+            hasTrashIcon: this.viewMode === "list",
         };
+    }
+
+    get creates() {
+        if (this.viewMode !== "list") {
+            return null;
+        }
+        const { data } = this.props.record;
+        const { options } = this.fieldInfo;
+        const subViewInfo = this.fieldInfo.views[this.viewMode];
+        // WOWL something of that taste?
+        const canCreate = "create" in options ? new Domain(options.create).contains(data) : true;
+        const canDelete = "delete" in options ? new Domain(options.delete).contains(data) : true;
+        const canLink = "link" in options ? new Domain(options.link).contains(data) : true;
+        const canUnlink = "unlink" in options ? new Domain(options.unlink).contains(data) : true;
+
+        const create = canCreate && subViewInfo.creates.create;
+        const unlink = canUnlink;
+        return { create, canDelete, canLink, unlink };
     }
 
     get pagerProps() {
@@ -68,10 +87,7 @@ export class X2ManyField extends Component {
 
 X2ManyField.useSubView = true;
 X2ManyField.components = { Pager };
-X2ManyField.props = {
-    ...standardFieldProps,
-    viewMode: { type: Array, optional: true }, // check this
-};
+X2ManyField.props = { ...standardFieldProps };
 X2ManyField.template = "web.X2ManyField";
 
 registry.category("fields").add("one2many", X2ManyField);

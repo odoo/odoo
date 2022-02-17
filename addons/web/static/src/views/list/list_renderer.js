@@ -481,4 +481,4 @@ ListRenderer.props = [
     "hasSelectors?",
     "hasTrashIcon?",
 ];
-ListRenderer.defaultProps = { hasSelectors: false, };
+ListRenderer.defaultProps = { hasSelectors: false };

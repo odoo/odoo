@@ -2680,11 +2680,11 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_field_x2many_list_row_add");
     });
 
-    QUnit.skipWOWL("one2many list: conditional create/delete actions", async function (assert) {
+    QUnit.test("one2many list: conditional create/delete actions", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner.records[0].p = [2, 4];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -2698,42 +2698,31 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
 
+        await clickEdit(target);
         // bar is true -> create and delete action are available
-        assert.containsOnce(
-            form,
-            ".o_field_x2many_list_row_add",
-            '"Add an item" link should be available'
-        );
-        assert.hasClass(
-            form.$("td.o_list_record_remove button").first(),
-            "fa fa-trash-o",
-            "should have trash bin icons"
-        );
+        assert.containsOnce(target, ".o_field_x2many_list_row_add");
+        assert.containsN(target, "td.o_list_record_remove button", 2);
 
         // set bar to false -> create and delete action are no longer available
-        await click(form.$('.o_field_widget[name="bar"] input').first());
+        await click(target, '.o_field_widget[name="bar"] input');
 
-        assert.containsNone(
-            form,
-            ".o_field_x2many_list_row_add",
-            '"Add an item" link should not be available if bar field is False'
-        );
-        assert.containsNone(
-            form,
-            "td.o_list_record_remove button",
-            "should not have trash bin icons if bar field is False"
-        );
+        assert.containsNone(target, ".o_field_x2many_list_row_add");
+        assert.containsNone(target, "td.o_list_record_remove button");
     });
 
     QUnit.skipWOWL("one2many list: unlink two records", async function (assert) {
         assert.expect(8);
         serverData.models.partner.records[0].p = [1, 2, 4];
-        const form = await makeView({
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="display_name"/>
+                </form>
+            `,
+        };
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -2748,7 +2737,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
-                    var commands = args.args[1].p;
+                    const commands = args.args[1].p;
                     assert.strictEqual(commands.length, 3, "should have generated three commands");
                     assert.ok(
                         commands[0][0] === 4 && commands[0][1] === 2,
@@ -2763,38 +2752,19 @@ QUnit.module("Fields", (hooks) => {
                         "should have generated the command 3 (UNLINK) with id 1"
                     );
                 }
-                return this._super.apply(this, arguments);
-            },
-            archs: {
-                "partner,false,form": '<form><field name="display_name"/></form>',
             },
         });
         await clickEdit(target);
+        assert.containsN(target, "td.o_list_record_remove button", 3);
+        assert.hasClass(target.querySelector("td.o_list_record_remove button"), "fa fa-trash-o");
 
-        assert.containsN(form, "td.o_list_record_remove button", 3, "should have 3 remove buttons");
+        await click(target.querySelector("td.o_list_record_remove button"));
+        assert.containsN(target, "td.o_list_record_remove button", 2);
 
-        assert.hasClass(
-            form.$("td.o_list_record_remove button").first(),
-            "fa fa-times",
-            "should have X icons to remove (unlink) records"
-        );
+        await click(target.querySelector("tr.o_data_row"));
+        assert.containsNone(target, ".modal .modal-footer .o_btn_remove");
 
-        await click(form.$("td.o_list_record_remove button").first());
-
-        assert.containsN(
-            form,
-            "td.o_list_record_remove button",
-            2,
-            "should have 2 remove buttons (a record is supposed to have been unlinked)"
-        );
-
-        await click(form.$("tr.o_data_row").first());
-        assert.containsNone(
-            $(".modal .modal-footer .o_btn_remove"),
-            "there should not be a modal having Remove Button"
-        );
-
-        await click($(".modal .btn-secondary"));
+        await click(target.querySelector(".modal .btn-secondary"));
         await clickSave(target);
     });
 
