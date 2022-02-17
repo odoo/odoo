@@ -482,7 +482,7 @@ class AccountEdiFormat(models.Model):
                                 if not invoice_line_form.product_id:
                                     for element_code in elements_code:
                                         code = element_code.xpath('.//CodiceValore')[0]
-                                        product = self.env['product.product'].search([('default_code', '=', code.text)])
+                                        product = self.env['product.product'].search([('default_code', '=', code.text)], limit=1)
                                         if product:
                                             invoice_line_form.product_id = product
                                             break

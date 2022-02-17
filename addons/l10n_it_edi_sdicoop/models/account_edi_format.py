@@ -3,7 +3,7 @@
 
 from odoo import models, _, _lt
 from odoo.exceptions import UserError
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError, DEFAULT_SERVER_URL, DEFAULT_TEST_SERVER_URL
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 from lxml import etree
 import base64
