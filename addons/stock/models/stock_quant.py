@@ -309,10 +309,6 @@ class StockQuant(models.Model):
             if any(field for field in vals.keys() if field not in allowed_fields):
                 raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
-            res = super(StockQuant, self).write(vals)
-            if res and self.env.context.get('inventory_report_mode'):
-                self.action_apply_inventory()
-            return res
         return super(StockQuant, self).write(vals)
 
     def action_view_stock_moves(self):
