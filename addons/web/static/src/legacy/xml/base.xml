@@ -1069,11 +1069,11 @@
             </t>
             <t t-if="hasDropdown">
                 <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
-                    <span t-out="_badge_text"/>
+                    <t t-out="_badge_text"/>
                 </a>
             </t>
             <t t-else="">
-                <span t-out="_badge_text"/>
+                <t t-out="_badge_text"/>
             </t>
             <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
         </div>
