@@ -959,11 +959,10 @@ class HolidaysRequest(models.Model):
     # Business methods
     ####################################################
 
-    def _create_resource_leave(self):
-        """ This method will create entry in resource calendar time off object at the time of holidays validated
-        :returns: created `resource.calendar.leaves`
+    def _prepare_resource_leave_vals_list(self):
+        """Hook method for others to inject data
         """
-        vals_list = [{
+        return [{
             'name': _("%s: Time Off", leave.employee_id.name),
             'date_from': leave.date_from,
             'holiday_id': leave.id,
@@ -972,6 +971,12 @@ class HolidaysRequest(models.Model):
             'calendar_id': leave.employee_id.resource_calendar_id.id,
             'time_type': leave.holiday_status_id.time_type,
         } for leave in self]
+
+    def _create_resource_leave(self):
+        """ This method will create entry in resource calendar time off object at the time of holidays validated
+        :returns: created `resource.calendar.leaves`
+        """
+        vals_list = self._prepare_resource_leave_vals_list()
         return self.env['resource.calendar.leaves'].sudo().create(vals_list)
 
     def _remove_resource_leave(self):
