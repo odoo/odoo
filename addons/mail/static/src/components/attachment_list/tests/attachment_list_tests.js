@@ -13,8 +13,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('attachment_list', {}, function () {
 QUnit.module('attachment_list_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });

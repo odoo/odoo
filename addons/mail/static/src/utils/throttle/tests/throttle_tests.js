@@ -10,8 +10,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('utils', {}, function () {
 QUnit.module('throttle', {}, function () {
 QUnit.module('throttle_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
         this.throttles = [];
 
         this.start = async params => {

@@ -8,8 +8,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('widgets', {}, function () {
 QUnit.module('notification_alert', {}, function () {
 QUnit.module('notification_alert_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             let { widget } = await start(Object.assign({

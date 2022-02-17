@@ -9,8 +9,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('file_uploader', {}, function () {
 QUnit.module('file_uploader_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
         this.apps = [];
 
         this.start = async params => {

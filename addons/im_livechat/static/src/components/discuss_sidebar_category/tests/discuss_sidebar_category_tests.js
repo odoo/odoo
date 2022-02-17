@@ -11,8 +11,8 @@ QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_sidebar_category', {}, function () {
 QUnit.module('discuss_sidebar_category_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             const { env, widget } = await start(Object.assign({}, params, {

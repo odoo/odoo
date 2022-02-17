@@ -6,8 +6,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
 QUnit.module('messaging_menu', {}, function () {
 QUnit.module('messaging_menu_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             const { env } = await start({ data: this.data, ...params });

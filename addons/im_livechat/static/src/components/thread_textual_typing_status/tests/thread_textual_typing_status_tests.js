@@ -12,8 +12,8 @@ QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_textual_typing_status', {}, function () {
 QUnit.module('thread_textual_typing_status_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.createThreadTextualTypingStatusComponent = async thread => {
             await createRootMessagingComponent(this, "ThreadTextualTypingStatus", {

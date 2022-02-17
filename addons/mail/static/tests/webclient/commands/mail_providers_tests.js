@@ -11,9 +11,9 @@ const serviceRegistry = registry.category("services");
 
 QUnit.module('mail', {}, function () {
     QUnit.module('Command Palette', {
-        beforeEach() {
+        async beforeEach() {
             serviceRegistry.add("command", commandService);
-            beforeEach(this);
+            await beforeEach(this);
             patchWithCleanup(browser, {
                 clearTimeout() {},
                 setTimeout(later, wait) {

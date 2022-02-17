@@ -8,8 +8,8 @@ import testUtils from 'web.test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('Chatter', {
-    beforeEach: function () {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.data['res.partner'].records.push({ id: 11, im_status: 'online' });
         this.data['mail.activity.type'].records.push(
@@ -372,8 +372,8 @@ QUnit.test('list activity exception widget with activity', async function (asser
 });
 
 QUnit.module('FieldMany2ManyTagsEmail', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         Object.assign(this.data['res.users'].fields, {
             timmy: { string: "pokemon", type: "many2many", relation: 'partner_type' },

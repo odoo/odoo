@@ -18,8 +18,8 @@ let target;
 
 QUnit.module('mail', {}, function () {
     QUnit.module('M2XAvatarUser', {
-        beforeEach() {
-            beforeEach(this);
+        async beforeEach() {
+            await beforeEach(this);
 
             // reset the cache before each test
             Many2OneAvatarUser.prototype.partnerIds = {};

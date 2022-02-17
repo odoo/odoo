@@ -11,8 +11,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_icon', {}, function () {
 QUnit.module('thread_icon_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.createThreadIcon = async thread => {
             await createRootMessagingComponent(this, "ThreadIcon", {

@@ -12,8 +12,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('message_seen_indicator', {}, function () {
 QUnit.module('message_seen_indicator_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.createMessageSeenIndicatorComponent = async ({ message, thread }, otherProps) => {
             const props = Object.assign(

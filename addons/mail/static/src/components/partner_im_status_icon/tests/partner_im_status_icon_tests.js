@@ -12,8 +12,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('partner_im_status_icon', {}, function () {
 QUnit.module('partner_im_status_icon_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.createPartnerImStatusIcon = async partner => {
             await createRootMessagingComponent(this, "PartnerImStatusIcon", {
