@@ -96,8 +96,11 @@ export const hotkeyService = {
         }
 
         /**
-         * Dispatches an hotkey to all matching registrations and
-         * clicks on all elements having a data-hotkey attribute matching the hotkey.
+         * Dispatches an hotkey to first matching registration.
+         * Registrations are iterated in following order:
+         * - priority to all registrations done through the hotkeyService.add()
+         *   method (NB: in descending order of insertion = newer first)
+         * - then all registrations done through the DOM [data-hotkey] attribute
          *
          * @param {{
          *  hotkey: string,
@@ -110,7 +113,7 @@ export const hotkeyService = {
             const activeElement = ui.activeElement;
 
             // Dispatch actual hotkey to all matching registrations
-            for (const [_, reg] of registrations) {
+            for (const reg of Array.from(registrations.values()).reverse()) {
                 if (!reg.global && reg.activeElement !== activeElement) {
                     continue;
                 }
@@ -125,9 +128,14 @@ export const hotkeyService = {
 
                 reg.callback();
                 dispatched = true;
+                break;
             }
             const overlayModParts = hotkeyService.overlayModifier.split("+");
-            if (!event.repeat && overlayModParts.every((el) => hotkey.includes(el))) {
+            if (
+                !dispatched &&
+                !event.repeat &&
+                overlayModParts.every((el) => hotkey.includes(el))
+            ) {
                 // Click on all elements having a data-hotkey attribute matching the actual hotkey without the overlayModifier.
                 const cleanHotkey = hotkey
                     .split("+")
@@ -142,6 +150,7 @@ export const hotkeyService = {
                     el.focus();
                     el.click();
                     dispatched = true;
+                    break;
                 }
             }
 
