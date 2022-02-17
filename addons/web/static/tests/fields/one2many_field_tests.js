@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { setupViewRegistries } from "../views/helpers";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 
@@ -211,10 +211,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="foo" />' +
@@ -228,7 +228,7 @@ QUnit.module("Fields", (hooks) => {
                 viewOptions: {
                     mode: "create",
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method + " " + args.model);
                     return this._super(route, args);
                 },
@@ -262,10 +262,10 @@ QUnit.module("Fields", (hooks) => {
             // and evaluation of the decoration against *visible records*
 
             this.data.partner.records[0].p = [2, 4];
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="p">' +
@@ -316,10 +316,10 @@ QUnit.module("Fields", (hooks) => {
             type: "many2one",
             relation: "turtle",
         };
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -332,7 +332,7 @@ QUnit.module("Fields", (hooks) => {
                 "turtle,false,form":
                     "<form><field name=\"parent_id\" domain=\"[('id', 'in', parent.turtles)]\"/></form>",
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/turtle/name_search") {
                     // We are going to pass twice here
                     // First time, we really have nothing
@@ -371,10 +371,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [2];
         this.data.partner.records[1].turtles = [1, 2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -386,7 +386,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     assert.deepEqual(
                         args.args[1].p[1][2],
@@ -441,10 +441,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(6);
 
         this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -505,10 +505,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("transferring class attributes in one2many sub fields", async function (assert) {
         assert.expect(3);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -541,10 +541,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(2);
 
         this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -584,10 +584,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(2);
 
         this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -625,10 +625,10 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(2);
 
             this.data.partner.records[0].turtles = [1, 2, 3];
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -638,7 +638,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</form>",
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.model === "turtle") {
                         assert.deepEqual(args.args[0], [1, 2], "should only load first 2 records");
                     }
@@ -657,16 +657,16 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(2);
 
             this.data.partner.records[0].turtles = [1, 2, 3];
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: '<form string="Partners">' + '<field name="turtles"/>' + "</form>",
                 archs: {
                     "turtle,false,list": '<tree limit="2"><field name="turtle_foo"/></tree>',
                 },
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.model === "turtle" && args.method === "read") {
                         assert.deepEqual(args.args[0], [1, 2], "should only load first 2 records");
                     }
@@ -683,10 +683,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(1);
 
         this.data.partner.records[0].turtles = [1, 2, 3];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -718,10 +718,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(1);
 
         this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -757,10 +757,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].turtles = [1, 2, 3];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -881,10 +881,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -895,7 +895,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</form>",
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "write") {
                         var expectedResultTurtles = [
                             [
@@ -965,10 +965,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -979,7 +979,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</form>",
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (route === "/web/dataset/call_kw/partner/write") {
                         var expectedResultTurtles = [
                             [
@@ -1043,10 +1043,10 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -1096,10 +1096,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -1116,7 +1116,7 @@ QUnit.module("Fields", (hooks) => {
                     "</sheet>" +
                     "</form>",
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "write") {
                         assert.deepEqual(
                             args.args[1].turtles,
@@ -1182,10 +1182,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -1285,8 +1285,8 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
                 data: data,
                 arch:
@@ -1409,10 +1409,10 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -1529,10 +1529,10 @@ QUnit.module("Fields", (hooks) => {
 
             // bottom order
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -1626,10 +1626,10 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="foo"/>' +
@@ -1668,10 +1668,10 @@ QUnit.module("Fields", (hooks) => {
             };
 
             var checkRPC = false;
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     "<sheet>" +
@@ -1686,7 +1686,7 @@ QUnit.module("Fields", (hooks) => {
                     "</group>" +
                     "</sheet>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (checkRPC && args.method === "read" && args.model === "partner") {
                         assert.deepEqual(
                             args.args[1],
@@ -1747,10 +1747,10 @@ QUnit.module("Fields", (hooks) => {
             };
 
             var checkRPC = false;
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     "<sheet>" +
@@ -1765,7 +1765,7 @@ QUnit.module("Fields", (hooks) => {
                     "</group>" +
                     "</sheet>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (checkRPC && args.method === "name_get") {
                         assert.deepEqual(
                             args.args[0],
@@ -1817,10 +1817,10 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="foo"/>' +
@@ -1940,10 +1940,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="foo"/>' +
@@ -2000,10 +2000,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="foo"/>' +
@@ -2078,10 +2078,10 @@ QUnit.module("Fields", (hooks) => {
             );
             this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6, 7];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -2146,10 +2146,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(8);
 
         this.data.partner.records[0].p = [1, 2, 4];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -2242,10 +2242,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.records[1].p = ids.slice(42);
 
         var count = 0;
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -2351,10 +2351,10 @@ QUnit.module("Fields", (hooks) => {
         var saveCount = 0;
         var checkRead = false;
         var readIDs;
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -2374,7 +2374,7 @@ QUnit.module("Fields", (hooks) => {
             archs: {
                 "partner,false,form": '<form><field name="display_name"/></form>',
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "read" && checkRead) {
                     readIDs = args.args[0];
                     checkRead = false;
@@ -2597,10 +2597,10 @@ QUnit.module("Fields", (hooks) => {
             };
             this.data.partner.onchanges.turtles = function () {};
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: '<form string="Partners">' + '<field name="turtles"/>' + "</form>",
                 archs: {
                     "turtle,false,list": '<tree><field name="turtle_foo"/></tree>',
@@ -2644,10 +2644,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.records[0].p = [23, 24, 25];
 
         var rpcCount = 0;
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -2701,10 +2701,10 @@ QUnit.module("Fields", (hooks) => {
         });
         this.data.partner.records[1].p = [3];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -2775,10 +2775,10 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skipWOWL("one2many list: create action disabled", async function (assert) {
         assert.expect(2);
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -2809,9 +2809,9 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [2, 4];
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `
                 <form>
                     <field name="bar"/>
@@ -2859,10 +2859,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list: unlink two records", async function (assert) {
         assert.expect(8);
         this.data.partner.records[0].p = [1, 2, 4];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p" widget="many2many">' +
@@ -2872,7 +2872,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     var commands = args.args[1].p;
                     assert.strictEqual(commands.length, 3, "should have generated three commands");
@@ -2928,10 +2928,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list: deleting one records", async function (assert) {
         assert.expect(7);
         this.data.partner.records[0].p = [1, 2, 4];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -2941,7 +2941,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     var commands = args.args[1].p;
                     assert.strictEqual(commands.length, 3, "should have generated three commands");
@@ -2991,10 +2991,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(23);
 
         this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -3020,7 +3020,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     var commands = args.args[1].p;
                     assert.strictEqual(commands.length, 2, "should have generated two commands");
@@ -3165,10 +3165,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles" add-label="Add turtle" mode="kanban">' +
@@ -3202,10 +3202,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [4];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -3249,9 +3249,9 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.records[0].p = [2, 4];
 
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `
                 <form>
                     <field name="bar"/>
@@ -3317,10 +3317,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
         this.data.partner.records[0].turtles = [1, 2, 3, 4];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -3351,10 +3351,10 @@ QUnit.module("Fields", (hooks) => {
 
         var nbWrite = 0;
         this.data.partner.records[0].p = [2, 4];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -3367,7 +3367,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     nbWrite++;
                     assert.deepEqual(
@@ -3442,10 +3442,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(7);
 
         this.data.partner.records[0].p = [2, 4];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -3507,10 +3507,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list (editable): edition, part 2", async function (assert) {
         assert.expect(8);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -3520,7 +3520,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.strictEqual(
                         args.args[1].p[0][0],
@@ -3573,10 +3573,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list (editable): edition, part 3", async function (assert) {
         assert.expect(4);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -3619,10 +3619,10 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -3666,10 +3666,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.turtle.fields.turtle_foo.required = true;
             delete this.data.turtle.fields.turtle_foo.default;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<group>" +
@@ -3681,7 +3681,7 @@ QUnit.module("Fields", (hooks) => {
                     "</group>" +
                     "</form>",
                 res_id: 2,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method) {
                         assert.step(args.method);
                     }
@@ -3712,10 +3712,10 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(5);
 
             this.data.partner.records[0].turtles = [1, 2, 3];
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -3753,10 +3753,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
         this.data.partner.records[0].turtles = [1, 2, 3, 4];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -3792,10 +3792,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.turtle.fields.turtle_foo.required = true;
         this.data.partner.records[0].turtles = [1, 2, 3, 4];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -3827,10 +3827,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.turtle.fields.turtle_foo.required = true;
             this.data.partner.records[0].turtles = [1, 2, 3, 4];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -3879,10 +3879,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].turtles = [1];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -3924,10 +3924,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.turtle.fields.turtle_foo.required = true;
         delete this.data.turtle.fields.turtle_foo.default;
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -3980,10 +3980,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.turtle.fields.turtle_foo.required = true;
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -3995,7 +3995,7 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</form>",
             res_id: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -4025,10 +4025,10 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -4041,7 +4041,7 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</form>",
             res_id: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method) {
                     assert.step(args.method);
                 }
@@ -4082,10 +4082,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("editable o2m, pressing ESC discard current changes", async function (assert) {
         assert.expect(5);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -4095,7 +4095,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -4118,10 +4118,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.turtle.fields.turtle_foo.required = true;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -4131,7 +4131,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</form>",
                 res_id: 2,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -4151,10 +4151,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("pressing escape in editable o2m list in dialog", async function (assert) {
         assert.expect(3);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -4209,10 +4209,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].turtles = [1];
             this.data.turtle.records[0].product_id = 37;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -4222,7 +4222,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</form>",
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -4251,10 +4251,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.records[1].p = [3];
         this.data.partner.onchanges = { p: true };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -4264,7 +4264,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
                         value: {
@@ -4303,10 +4303,10 @@ QUnit.module("Fields", (hooks) => {
         ];
         this.data.partner.onchanges = { p: true };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -4315,7 +4315,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
                         value: {
@@ -4342,10 +4342,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.fields.p.default = [[0, false, { date: "2017-10-08", p: [] }]];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -4372,10 +4372,10 @@ QUnit.module("Fields", (hooks) => {
             turtle_int: function () {},
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -4385,7 +4385,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -4413,10 +4413,10 @@ QUnit.module("Fields", (hooks) => {
         };
         this.data.partner.records[0].p = [2];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -4426,7 +4426,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -4458,10 +4458,10 @@ QUnit.module("Fields", (hooks) => {
         };
         this.data.partner.records[0].p = [2];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="foo"/>' +
@@ -4548,10 +4548,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].turtles = [3];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="foo"/>' +
@@ -4675,10 +4675,10 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="foo"/>' +
@@ -4754,10 +4754,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -4791,10 +4791,10 @@ QUnit.module("Fields", (hooks) => {
             p: function () {},
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -4840,10 +4840,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[1].product_id = false;
             this.data.partner.records[2].product_id = 37;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="p">' +
@@ -4878,10 +4878,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -4917,10 +4917,10 @@ QUnit.module("Fields", (hooks) => {
             //
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -4933,7 +4933,7 @@ QUnit.module("Fields", (hooks) => {
             archs: {
                 "partner,false,form": '<form string="Partner"><field name="product_id"/></form>',
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange" && checkOnchange) {
                     assert.deepEqual(
                         args.args[1].p,
@@ -4987,10 +4987,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -5008,7 +5008,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.deepEqual(args.args[1].p, [
                         [
@@ -5096,10 +5096,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].product_id = 41;
             this.data.partner.records[1].product_id = 37;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="foo"/>' +
@@ -5114,7 +5114,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</form>",
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "name_search") {
                         assert.strictEqual(
                             args.kwargs.context.partner_foo,
@@ -5150,10 +5150,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].timmy = [12];
             this.data.partner.records[0].p = [2, 3];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<field name=\"product_id\" context=\"{'p': p, 'timmy': timmy}\"/>" +
@@ -5161,7 +5161,7 @@ QUnit.module("Fields", (hooks) => {
                     '<field name="timmy" invisible="1"/>' +
                     "</form>",
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "name_search") {
                         assert.deepEqual(
                             args.kwargs.context,
@@ -5194,10 +5194,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].p = [2];
             this.data.partner.records[1].product_id = 37;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="foo"/>' +
@@ -5208,7 +5208,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</form>",
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "name_search") {
                         assert.strictEqual(
                             args.kwargs.context.partner_foo,
@@ -5237,10 +5237,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.records[0].p = [2];
         this.data.partner.records[1].product_id = 37;
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -5253,7 +5253,7 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</form>",
             res_id: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.strictEqual(
                         args.kwargs.context.date,
@@ -5276,10 +5276,10 @@ QUnit.module("Fields", (hooks) => {
 
         var counter = 0;
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -5291,7 +5291,7 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     var expected =
                         counter === 0
@@ -5323,10 +5323,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.fields.foo.default = false;
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -5371,10 +5371,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="int_field"/>' +
@@ -5385,7 +5385,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</form>",
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "onchange") {
                         var context = args.kwargs.context;
                         assert.strictEqual(context.hello, "world");
@@ -5404,10 +5404,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many with many2many widget: create", async function (assert) {
         assert.expect(10);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles" widget="many2many">' +
@@ -5435,7 +5435,7 @@ QUnit.module("Fields", (hooks) => {
             },
             session: {},
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/turtle/create") {
                     assert.ok(args.args, "should write on the turtle record");
                 }
@@ -5500,10 +5500,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many with many2many widget: edition", async function (assert) {
         assert.expect(7);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles" widget="many2many">' +
@@ -5532,7 +5532,7 @@ QUnit.module("Fields", (hooks) => {
             },
             session: {},
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/turtle/write") {
                     assert.strictEqual(args.args[0].length, 1, "should write on the turtle record");
                     assert.deepEqual(
@@ -5595,10 +5595,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.fields.int_field.default = 17;
             var n = 0;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="int_field"/>' +
@@ -5608,7 +5608,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "onchange") {
                         n++;
                         if (n === 2) {
@@ -5630,10 +5630,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(1);
 
         this.data.partner.onchanges = { bar: function () {} };
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="foo"/>' +
@@ -5644,7 +5644,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     var fieldValues = args.args[1];
                     assert.strictEqual(
@@ -5679,9 +5679,9 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].p = [1];
             this.data.partner.records[0].turtles = [2];
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="foo"/>
@@ -5729,10 +5729,10 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(4);
 
             this.data.turtle.onchanges = { turtle_bar: function () {} };
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="foo"/>' +
@@ -5742,7 +5742,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     if (args.method === "onchange" && args.model === "turtle") {
                         var fieldValues = args.args[1];
@@ -5773,10 +5773,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.onchanges.turtles = function (obj) {
             obj.turtles = [[5], [1, 3, { turtle_foo: "kawa" }]];
         };
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -5799,10 +5799,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("id field in one2many in a new record", async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -5812,7 +5812,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "create") {
                     var virtualID = args.args[0].turtles[0][1];
                     assert.deepEqual(
@@ -5836,10 +5836,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.fields.foo.required = true;
         this.data.partner.fields.foo.default = null;
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -5872,10 +5872,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [2];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="int_field"/>' +
@@ -5919,10 +5919,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [2];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -5984,10 +5984,10 @@ QUnit.module("Fields", (hooks) => {
             });
             fieldRegistry.add("specialWidget", MyWidget);
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<group>" +
@@ -6061,10 +6061,10 @@ QUnit.module("Fields", (hooks) => {
                     ];
                 },
             };
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<group>" +
@@ -6116,10 +6116,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].turtles = [2, 3];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -6152,10 +6152,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.turtle.records[1].product_id = 37;
         this.data.partner.records[0].turtles = [2, 3];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -6175,7 +6175,7 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     var commands = args.args[1].turtles;
                     assert.strictEqual(commands.length, 2, "should have generated 2 commands");
@@ -6268,10 +6268,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.onchanges.turtles = function () {};
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -6283,7 +6283,7 @@ QUnit.module("Fields", (hooks) => {
                     "</form>",
                 res_id: 1,
                 viewOptions: { mode: "edit" },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -6354,10 +6354,10 @@ QUnit.module("Fields", (hooks) => {
             turtles: partnerOnchange,
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -6498,10 +6498,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.records[0].turtles = [2, 3];
         this.data.partner.records[2].turtles = [1, 3];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -6546,10 +6546,10 @@ QUnit.module("Fields", (hooks) => {
 
             // avoid error in _postprocess
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<group>" +
@@ -6589,10 +6589,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.turtle.fields.o2m = { string: "o2m", type: "one2many", relation: "user" };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<group>" +
@@ -6613,7 +6613,7 @@ QUnit.module("Fields", (hooks) => {
                 viewOptions: {
                     mode: "edit",
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "write") {
                         assert.deepEqual(args.args[1].turtles, [
                             [
@@ -6649,10 +6649,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(1);
 
         this.data.turtle.records[1].turtle_trululu = 2;
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -6671,7 +6671,7 @@ QUnit.module("Fields", (hooks) => {
             viewOptions: {
                 mode: "edit",
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/get_formview_id") {
                     return Promise.resolve(false);
                 }
@@ -6712,10 +6712,10 @@ QUnit.module("Fields", (hooks) => {
             [0, 0, { partner_ids: [[6, 0, [1]]] }],
         ];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -6774,9 +6774,9 @@ QUnit.module("Fields", (hooks) => {
         };
 
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `<form>
                     <field name="bar"/>
                     <field name="p">
@@ -6836,9 +6836,9 @@ QUnit.module("Fields", (hooks) => {
         };
 
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `
                 <form>
                     <field name="bar"/>
@@ -6882,9 +6882,9 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].p = [1];
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: '<form><field name="p"/></form>',
                 archs: {
                     "partner,false,list": '<tree><field name="turtles"/></tree>',
@@ -6914,10 +6914,10 @@ QUnit.module("Fields", (hooks) => {
 
             // avoid error in _fetchX2Manys
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<group>" +
@@ -6949,10 +6949,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many field with virtual ids", async function (assert) {
         assert.expect(11);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -7085,10 +7085,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [4];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="p" mode="kanban">' +
@@ -7256,10 +7256,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("focusing fields in one2many list", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -7296,10 +7296,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(6);
 
         this.data.turtle.fields.turtle_foo.default = "default foo turtle";
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -7311,7 +7311,7 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     var commands = args.args[1].turtles;
                     assert.strictEqual(commands[0][0], 0, "first command is a create");
@@ -7346,10 +7346,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(6);
         this.data.turtle.fields.turtle_foo.default = "default foo turtle";
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -7361,7 +7361,7 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     var commands = args.args[1].turtles;
                     assert.strictEqual(commands[0][0], 4, "first command is a link to");
@@ -7397,10 +7397,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.fields.foo.default = false;
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -7433,10 +7433,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL('x2many fields use their "mode" attribute', async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<group>" +
@@ -7480,10 +7480,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.records[0].int_field = 0;
         this.data.partner.records[0].turtles = [];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="int_field"/>' +
@@ -7494,7 +7494,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -7550,16 +7550,16 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].int_field = 0;
             this.data.partner.records[0].turtles = [];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="int_field"/>' +
                     '<field name="turtles"/>' +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -7632,10 +7632,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].turtles = [];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="int_field"/>' +
@@ -7692,10 +7692,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].turtles = [];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="int_field"/>' +
@@ -7751,10 +7751,10 @@ QUnit.module("Fields", (hooks) => {
             };
 
             var prom;
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="turtles">' +
@@ -7763,7 +7763,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     var result = this._super.apply(this, arguments);
                     if (args.method === "onchange") {
                         return Promise.resolve(prom).then(_.constant(result));
@@ -7827,10 +7827,10 @@ QUnit.module("Fields", (hooks) => {
             };
 
             var prom;
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -7839,7 +7839,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     var result = this._super.apply(this, arguments);
                     if (args.method === "onchange") {
                         return Promise.resolve(prom).then(_.constant(result));
@@ -7888,10 +7888,10 @@ QUnit.module("Fields", (hooks) => {
         };
 
         var prom;
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="datetime"/>' +
@@ -7901,7 +7901,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === "onchange") {
                     return Promise.resolve(prom).then(_.constant(result));
@@ -7939,10 +7939,10 @@ QUnit.module("Fields", (hooks) => {
             display_name: function () {},
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -7952,7 +7952,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.step(args.method);
                     return Promise.resolve({
@@ -7991,10 +7991,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(5);
 
         this.data.partner.records[0].timmy = [12];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="foo"/>' +
@@ -8004,7 +8004,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "read" && args.model === "partner") {
                     assert.deepEqual(
                         args.kwargs.context,
@@ -8064,10 +8064,10 @@ QUnit.module("Fields", (hooks) => {
             obj.turtles = [[5], [4, 1]];
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="foo"/>' +
@@ -8077,7 +8077,7 @@ QUnit.module("Fields", (hooks) => {
                 mode: "edit",
             },
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -8098,10 +8098,10 @@ QUnit.module("Fields", (hooks) => {
                 name: function () {},
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="name"/>' +
@@ -8115,7 +8115,7 @@ QUnit.module("Fields", (hooks) => {
                     "</form>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "onchange") {
                         return Promise.resolve({
                             value: {
@@ -8166,10 +8166,10 @@ QUnit.module("Fields", (hooks) => {
                 name: function () {},
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="name"/>
@@ -8252,10 +8252,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.turtle.fields.turtle_foo.required = true;
         this.data.partner.records[0].turtles = [];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -8266,7 +8266,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -8289,10 +8289,10 @@ QUnit.module("Fields", (hooks) => {
             p: function () {},
         };
         var checkOnchange = false;
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -8305,7 +8305,7 @@ QUnit.module("Fields", (hooks) => {
                 "</form>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange" && checkOnchange) {
                     assert.strictEqual(
                         args.args[3]["p.p.display_name"],
@@ -8336,10 +8336,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].turtles.push(id);
         }
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -8351,7 +8351,7 @@ QUnit.module("Fields", (hooks) => {
                 "</sheet>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "write") {
                     assert.strictEqual(
@@ -8393,10 +8393,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].turtles.push(id);
         }
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -8433,10 +8433,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].turtles.push(id);
         }
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -8448,7 +8448,7 @@ QUnit.module("Fields", (hooks) => {
                 "</sheet>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "write") {
                     assert.strictEqual(args.args[1].turtles[40][0], 0);
@@ -8499,10 +8499,10 @@ QUnit.module("Fields", (hooks) => {
                 int_field: function () {},
             };
             var prom;
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="p">' +
@@ -8512,7 +8512,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     var result = this._super.apply(this, arguments);
                     if (args.method === "onchange") {
                         // delay the onchange RPC
@@ -8561,10 +8561,10 @@ QUnit.module("Fields", (hooks) => {
                 int_field: function () {},
             };
             var prom;
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="p">' +
@@ -8576,7 +8576,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     var result = this._super.apply(this, arguments);
                     if (args.method === "onchange") {
                         // delay the onchange RPC
@@ -8620,10 +8620,10 @@ QUnit.module("Fields", (hooks) => {
             bar: function () {},
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -8658,10 +8658,10 @@ QUnit.module("Fields", (hooks) => {
                 [0, false, { foo: "coucou", int_field: 5, p: [] }],
             ];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="p">' +
@@ -8710,10 +8710,10 @@ QUnit.module("Fields", (hooks) => {
                 ];
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     "<sheet>" +
@@ -8722,7 +8722,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</sheet>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "create") {
                         assert.strictEqual(
                             args.args[0].p[0][0],
@@ -8756,10 +8756,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.onchanges.turtles = function () {};
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 "<sheet>" +
@@ -8770,7 +8770,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</sheet>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     if (args.args[1].turtles[0][2].turtle_foo === "pinky") {
                         // we simulate a validation error.  In the 'real' web client,
@@ -8832,10 +8832,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(7);
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     "<sheet>" +
@@ -8846,7 +8846,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</sheet>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.strictEqual(
                         args.kwargs.context.flutter,
                         "shy",
@@ -8891,9 +8891,9 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].p = [1];
 
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="p">
@@ -8942,10 +8942,10 @@ QUnit.module("Fields", (hooks) => {
             }
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 "<sheet>" +
@@ -8962,7 +8962,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</sheet>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "create") {
                     assert.strictEqual(
                         args.args[0].p[0][0],
@@ -9021,10 +9021,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.records[0].turtles = [3, 2, 1];
         this.data.partner.onchanges.turtles = function () {};
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -9036,7 +9036,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
                         value: {
@@ -9070,10 +9070,10 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].turtles = [3, 2, 1];
             this.data.partner.onchanges.turtles = function () {};
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -9085,7 +9085,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</form>",
                 res_id: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "onchange") {
                         return Promise.resolve({
                             value: {
@@ -9122,10 +9122,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.turtle.fields.turtle_int.default = 10;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -9167,10 +9167,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.turtle.fields.turtle_int.default = 10;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -9212,10 +9212,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.turtle.fields.turtle_int.default = 10;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -9265,10 +9265,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.turtle.fields.turtle_int.default = 10;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -9303,10 +9303,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.turtle.fields.turtle_int.default = 10;
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -9359,10 +9359,10 @@ QUnit.module("Fields", (hooks) => {
                 relation: "product",
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -9435,8 +9435,8 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
             data: data,
             arch:
@@ -9449,7 +9449,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 var ids = args.method === "read" ? " [" + args.args[0] + "]" : "";
                 assert.step(args.method + ids);
                 return this._super.apply(this, arguments);
@@ -9501,10 +9501,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -9553,10 +9553,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -9602,10 +9602,10 @@ QUnit.module("Fields", (hooks) => {
             };
             this.data.partner_type.records[0].partner_ids = [1, 2];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner_type",
-                data: this.data,
+                serverData,
                 arch: '<form><field name="partner_ids"/></form>',
                 archs: {
                     "partner,false,list":
@@ -9615,7 +9615,7 @@ QUnit.module("Fields", (hooks) => {
                         "</tree>",
                 },
                 res_id: 12,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -9646,10 +9646,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: '<form><field name="turtles"/></form>',
                 archs: {
                     "turtle,false,list":
@@ -9658,7 +9658,7 @@ QUnit.module("Fields", (hooks) => {
                         '<field name="turtle_int"/>' +
                         "</tree>",
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method || route);
                     return this._super.apply(this, arguments);
                 },
@@ -9691,10 +9691,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL('add a line, edit it and "Save & New"', async function (assert) {
         assert.expect(5);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -9742,10 +9742,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("o2m add a line custom control create editable", async function (assert) {
         assert.expect(5);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -9796,10 +9796,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("o2m add a line custom control create non-editable", async function (assert) {
         assert.expect(6);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p">' +
@@ -9854,10 +9854,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="p">' +
@@ -9889,8 +9889,8 @@ QUnit.module("Fields", (hooks) => {
         var data = this.data;
         data.partner.records[0].p = [2];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
             data: data,
             res_id: 1,
@@ -10002,10 +10002,10 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "user",
-            data: this.data,
+            serverData,
             arch:
                 "<form><sheet><group>" +
                 '<field name="partner_ids">' +
@@ -10068,10 +10068,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].turtles = [1];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -10098,10 +10098,10 @@ QUnit.module("Fields", (hooks) => {
 
         await makeLegacyDialogMappingTestEnv();
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="turtles">' +
@@ -10146,10 +10146,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].turtles = [];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<header>" +
@@ -10183,10 +10183,10 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(2);
 
             // create a one2many view which has no input (only 1 textarea in this case)
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -10227,10 +10227,10 @@ QUnit.module("Fields", (hooks) => {
             };
 
             var prom;
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="turtles">' +
@@ -10239,7 +10239,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     var result = this._super.apply(this, arguments);
                     if (args.method === "onchange") {
                         return Promise.resolve(prom).then(_.constant(result));
@@ -10289,10 +10289,10 @@ QUnit.module("Fields", (hooks) => {
             // ensuring that we don't end up in a deadlock when a widget actually has some changes to
             // commit at that moment.
             assert.expect(9);
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="turtles">' +
@@ -10301,7 +10301,7 @@ QUnit.module("Fields", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -10343,10 +10343,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many with extra field from server not in form", async function (assert) {
         assert.expect(6);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p" >' +
@@ -10360,7 +10360,7 @@ QUnit.module("Fields", (hooks) => {
             archs: {
                 "partner,false,form": "<form>" + '<field name="display_name"/>' + "</form>",
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     args.args[1].p[0][2].datetime = "2018-04-05 12:00:00";
                 }
@@ -10434,10 +10434,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -10503,9 +10503,9 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].p = [2];
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="product_id"/>
@@ -10542,9 +10542,9 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [2];
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `
                 <form>
                     <field name="product_id"/>
@@ -10602,10 +10602,10 @@ QUnit.module("Fields", (hooks) => {
                 }
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="bar"/>' +
@@ -10650,10 +10650,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -10717,10 +10717,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("field context is correctly passed to x2m subviews", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="turtles" context="{\'some_key\': 1}">' +
@@ -10758,10 +10758,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(5);
 
         this.data.partner.records[0].turtles = [1, 2, 3];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="turtles">' +
@@ -10775,7 +10775,7 @@ QUnit.module("Fields", (hooks) => {
                 "</kanban>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.deepEqual(args.args[1], {
                         turtles: [
@@ -10819,10 +10819,10 @@ QUnit.module("Fields", (hooks) => {
             turtle_int: function () {},
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="turtles">' +
@@ -10830,7 +10830,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.step("onchange");
                 }
@@ -10904,10 +10904,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="turtles">' +
@@ -10918,7 +10918,7 @@ QUnit.module("Fields", (hooks) => {
                     "</field>" +
                     "</form>",
                 enableBasicModelBachedRPCs: true,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method || route);
                     if (args.method === "read") {
                         assert.deepEqual(
@@ -10970,10 +10970,10 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="turtles">' +
@@ -11043,10 +11043,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="p">' +
@@ -11074,10 +11074,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [2];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="p">' +
@@ -11117,10 +11117,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].p = [2];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="p">' +
@@ -11157,10 +11157,10 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].p = [2];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="p">' +
@@ -11199,9 +11199,9 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(9);
 
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `<form>
                     <field name="turtles">
                         <tree editable="bottom">
@@ -11249,9 +11249,9 @@ QUnit.module("Fields", (hooks) => {
             };
 
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="trululu"/>
@@ -11259,7 +11259,7 @@ QUnit.module("Fields", (hooks) => {
                         <tree editable="top"><field name="product_id" required="1"/></tree>
                     </field>
                 </form>`,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     const result = this._super.apply(this, arguments);
                     if (args.method === "name_create") {
                         return prom.then(() => result);
@@ -11305,9 +11305,9 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].turtles = [1, 2, 3];
 
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="bar"/>
@@ -11369,9 +11369,9 @@ QUnit.module("Fields", (hooks) => {
             };
 
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="bar"/>
@@ -11450,9 +11450,9 @@ QUnit.module("Fields", (hooks) => {
             };
 
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="bar"/>
@@ -11520,9 +11520,9 @@ QUnit.module("Fields", (hooks) => {
             };
 
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="bar"/>
@@ -11588,9 +11588,9 @@ QUnit.module("Fields", (hooks) => {
         });
 
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `
                 <form>
                     <field name="foo" widget="pad_like"/>
@@ -11634,9 +11634,9 @@ QUnit.module("Fields", (hooks) => {
             });
 
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="display_name"/>
@@ -11685,9 +11685,9 @@ QUnit.module("Fields", (hooks) => {
 
         let step = 1;
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `<form>
                     <field name="turtles">
                         <tree editable="bottom">
@@ -11783,9 +11783,9 @@ QUnit.module("Fields", (hooks) => {
         fieldRegistry.add("my_relational_field", MyRelationalField);
 
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `
                 <form>
                     <field name="p" widget="my_relational_field"/>
@@ -11822,9 +11822,9 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].p = [1, 2];
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="p">
@@ -11871,9 +11871,9 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].p = [1, 2];
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form>
                     <field name="p">
@@ -11921,9 +11921,9 @@ QUnit.module("Fields", (hooks) => {
             this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6];
 
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
                 <form string="Partners">
                     <sheet>
@@ -11987,9 +11987,9 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(1);
 
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `
                 <form>
                     <sheet>
@@ -12003,7 +12003,7 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>
             `,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     if (args.model === "turtle") {
                         assert.deepEqual(
@@ -12035,10 +12035,10 @@ QUnit.module("Fields", (hooks) => {
             ...new Array(170).fill().map((_, i) => ({ id: i + 10, name: "Partner " + i }))
         );
         this.data.partner.fields.datetime.searchable = true;
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -12085,12 +12085,12 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: '<form><field name="trululu"/><field name="product_id"/></form>',
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method + " on " + args.model);
                 return this._super.apply(this, arguments);
             },
@@ -12118,10 +12118,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].p = [1, 7, 4, 5, 2, 6, 3];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 '<field name="p" >' +
@@ -12152,16 +12152,16 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("focus when closing many2one modal in many2one modal", async function (assert) {
         assert.expect(12);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: '<form string="Partners">' + '<field name="trululu"/>' + "</form>",
             res_id: 2,
             archs: {
                 "partner,false,form": '<form><field name="trululu"/></form>',
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "get_formview_id") {
                     return Promise.resolve(false);
                 }
@@ -12218,10 +12218,10 @@ QUnit.module("Fields", (hooks) => {
          */
 
         this.data.partner.records[0].turtles = [3, 2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -12253,10 +12253,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("widget many2many_checkboxes in a subview", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -12297,10 +12297,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].turtles = [1, 2, 3];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -12342,10 +12342,10 @@ QUnit.module("Fields", (hooks) => {
         "prevent the dialog in readonly x2many tree view with option no_open True",
         async function (assert) {
             assert.expect(2);
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -12386,10 +12386,10 @@ QUnit.module("Fields", (hooks) => {
                 obj.turtles = [[5]].concat(obj.turtles);
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -12437,10 +12437,10 @@ QUnit.module("Fields", (hooks) => {
 
         this.data.partner.records[0].turtles = [1, 2, 3];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -12450,7 +12450,7 @@ QUnit.module("Fields", (hooks) => {
                 "</field>" +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method + " " + args.model);
                 return this._super(route, args);
             },
@@ -12512,10 +12512,10 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "user",
-                data: this.data,
+                serverData,
                 arch:
                     "<form><sheet><group>" +
                     '<field name="partner_ids">' +
@@ -12603,10 +12603,10 @@ QUnit.module("Fields", (hooks) => {
             testUtils.makeTestPromise(),
             testUtils.makeTestPromise(),
         ];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -12615,7 +12615,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === "read") {
                     var recordID = args.args[0][0];
@@ -12650,16 +12650,16 @@ QUnit.module("Fields", (hooks) => {
         this.data.partner.fields.timmy.context = { hello: "world" };
         this.data.partner.records[0].timmy = [12];
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy" widget="many2many_tags"/>' +
                 "</form>",
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "read" && args.model === "partner_type") {
                     assert.step(args.kwargs.context.hello);
                 }
@@ -12683,10 +12683,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many with extra field from server not in form", async function (assert) {
         assert.expect(6);
 
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="p" >' +
@@ -12700,7 +12700,7 @@ QUnit.module("Fields", (hooks) => {
             archs: {
                 "partner,false,form": "<form>" + '<field name="display_name"/>' + "</form>",
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     args.args[1].p[0][2].datetime = "2018-04-05 12:00:00";
                 }
@@ -12774,10 +12774,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -12851,10 +12851,10 @@ QUnit.module("Fields", (hooks) => {
                 }
             };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="bar"/>' +
@@ -12899,10 +12899,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
+        const form = await makeView({
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -12973,10 +12973,10 @@ QUnit.module("Fields", (hooks) => {
             });
 
             this.data.partner.records[0].p = [2];
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: '<form string="Partners">' + '<field name="p"/>' + "</form>",
                 res_id: 1,
                 archs: {
@@ -13113,13 +13113,13 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
                 viewOptions: {
                     mode: "edit",
                 },
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -13163,13 +13163,13 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
                 viewOptions: {
                     mode: "edit",
                 },
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -13224,13 +13224,13 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].turtles = [];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
                 viewOptions: {
                     mode: "edit",
                 },
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -13287,13 +13287,13 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].turtles = [];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
                 viewOptions: {
                     mode: "edit",
                 },
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -13352,13 +13352,13 @@ QUnit.module("Fields", (hooks) => {
 
             this.data.partner.records[0].turtles = [];
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
                 viewOptions: {
                     mode: "edit",
                 },
-                data: this.data,
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -13408,10 +13408,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="display_name"/>' +
@@ -13515,10 +13515,10 @@ QUnit.module("Fields", (hooks) => {
 
             const def = testUtils.makeTestPromise();
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
                 debug: 1,
-                data: this.data,
+                serverData,
                 arch: `<form>
                     <field name="p">
                         <tree editable="bottom">
