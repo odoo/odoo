@@ -115,6 +115,36 @@
                ])]"/>
     </record>
 
+    <record id="payment_acquirer_flutterwave" model="payment.acquirer">
+        <field name="name">Flutterwave</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_flutterwave/static/src/img/flutterwave-logo.png"/>
+        <field name="module_id" ref="base.module_payment_flutterwave"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway from Flutterwave to accept online payments.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payments</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
+            </ul>
+        </field>
+
+        <!-- https://developer.flutterwave.com/docs/collecting-payments/payment-methods/ -->
+        <field name="payment_icon_ids" eval="[(6, 0, [
+                ref('payment.payment_icon_cc_visa'),
+                ref('payment.payment_icon_cc_mastercard'),
+                ref('payment.payment_icon_cc_american_express'),
+                ref('payment.payment_icon_mpesa'),
+                ref('payment.payment_icon_airtel_money'),
+                ref('payment.payment_icon_mtn_mobile_money'),
+                ref('payment.payment_icon_barter_by_flutterwave'),
+            ])]"/>
+    </record>
+
     <record id="payment_acquirer_mollie" model="payment.acquirer">
         <field name="name">Mollie</field>
         <field name="image_128" type="base64" file="payment_mollie/static/src/img/mollie_icon.png"/>
