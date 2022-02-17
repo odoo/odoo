@@ -172,10 +172,6 @@ class AccountPayment(models.Model):
             action['domain'] = [('source_payment_id', '=', self.id)]
         return action
 
-    def _get_payment_chatter_link(self):
-        self.ensure_one()
-        return f'<a href=# data-oe-model=account.payment data-oe-id={self.id}>{self.name}</a>'
-
     def _create_payment_transaction(self, **extra_create_values):
         for payment in self:
             if payment.payment_transaction_id:
