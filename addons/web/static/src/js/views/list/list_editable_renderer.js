@@ -564,7 +564,10 @@ ListRenderer.include({
      */
     _renderRow: function (record, index) {
         var $row = this._super.apply(this, arguments);
-        if (this.addTrashIcon) {
+        // Alterado pela Multidados
+        // adiciona verificação no if para caso encontre o parâmetro record.deleteBlocked
+        // o if não deve ser percorrido. caso não encontre seguirá o fluxo normalmente.
+        if (this.addTrashIcon && !record.deleteBlocked) {
             var $icon = this.isMany2Many ?
                             $('<button>', {class: 'fa fa-times', name: 'unlink', 'aria-label': _t('Unlink row ') + (index+1)}) :
                             $('<button>', {class: 'fa fa-trash-o', name: 'delete', 'aria-label': _t('Delete row ') + (index+1)});
