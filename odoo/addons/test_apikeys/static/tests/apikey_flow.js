@@ -49,9 +49,10 @@ tour.register('apikeys_tour_setup', {
     trigger: 'p:contains("Here is your new API key")',
     run: async () => {
         const key = $('code span[name=key]').text();
-        await ajax.jsonRpc('/web/dataset/call', 'call', {
+        await ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'ir.logging', method: 'send_key',
             args: [key],
+            kwargs: {},
         });
         $('button:contains("Done")').click();
     }

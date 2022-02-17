@@ -80,15 +80,16 @@ tour.register('shop_sale_coupon', {
             content: "go to shop",
             trigger: '.td-product_name:contains("10.0% discount on total amount")',
             run: function () {
-                ajax.jsonRpc('/web/dataset/call', 'call', {
+                ajax.jsonRpc('/web/dataset/call_kw', 'call', {
                     model: 'account.tax',
                     method: 'create',
                     args: [{
                       'name':'15% tax incl ' + _.now(),
                       'amount': 15,
                     }],
+                    kwargs: {},
                 }).then(function (tax_id) {
-                    ajax.jsonRpc('/web/dataset/call', 'call', {
+                    ajax.jsonRpc('/web/dataset/call_kw', 'call', {
                         model: 'product.template',
                         method: 'create',
                         args: [{
@@ -97,6 +98,7 @@ tour.register('shop_sale_coupon', {
                           'list_price': 100,
                           'website_published': true,
                         }],
+                        kwargs: {},
                     }).then(function (data) {
                         location.href = '/shop';
                     });
