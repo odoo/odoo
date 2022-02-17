@@ -1,6 +1,11 @@
 /** @odoo-module **/
 
-import { setupViewRegistries } from "../views/helpers";
+import {
+    makeFakeLocalizationService,
+} from "@web/../tests/helpers/mock_services";
+import { registry } from "@web/core/registry";
+import { click } from "../helpers/utils";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 
@@ -203,25 +208,32 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.partner.fields.float_factor_field = {
+            serverData.models.partner.fields.float_factor_field = {
                 string: "Float Factor",
                 type: "float_factor",
             };
-            this.data.partner.records[0].float_factor_field = 9.99;
+            serverData.models.partner.records[0].float_factor_field = 9.99;
 
-            this.data.partner.fields.monetary = { string: "Monetary", type: "monetary" };
-            this.data.partner.records[0].monetary = 9.99;
-            this.data.partner.records[0].currency_id = 1;
+            serverData.models.partner.fields.monetary = { string: "Monetary", type: "monetary" };
+            serverData.models.partner.records[0].monetary = 9.99;
+            serverData.models.partner.records[0].currency_id = 1;
 
-            this.data.partner.fields.percentage = { string: "Percentage", type: "percentage" };
-            this.data.partner.records[0].percentage = 0.99;
+            serverData.models.partner.fields.percentage = { string: "Percentage", type: "percentage" };
+            serverData.models.partner.records[0].percentage = 0.99;
 
-            const form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            registry.category("services").remove("localization")
+            registry
+            .category("services")
+            .add(
+                "localization",
+                makeFakeLocalizationService({ decimal_point: "🇧🇪" })
+            );
+            const form = await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
                 arch: `
-                <form string="Partners">
+                <form>
                     <field name="float_factor_field" options="{'factor': 0.5}"/>
                     <field name="qux"/>
                     <field name="int_field"/>
@@ -230,14 +242,11 @@ QUnit.module("Fields", (hooks) => {
                     <field name="percentage"/>
                 </form>
             `,
-                res_id: 1,
-                translateParameters: {
-                    decimal_point: "🇧🇪",
-                },
+                resId: 1,
             });
 
             // Record edit mode
-            await testUtilsDom.click(form.el.querySelector(".o_form_button_edit"));
+            await click(form.el.querySelector(".o_form_button_edit"));
 
             // Get all inputs
             const floatFactorField = form.el.querySelector('.o_input[name="float_factor_field"]');
@@ -254,7 +263,7 @@ QUnit.module("Fields", (hooks) => {
             floatFactorField.dispatchEvent(
                 new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
             );
-            await testUtils.nextTick();
+            await nextTick();
             assert.ok(floatFactorField.value.endsWith("🇧🇪🇧🇪"));
 
             floatInput.dispatchEvent(
@@ -263,7 +272,7 @@ QUnit.module("Fields", (hooks) => {
             floatInput.dispatchEvent(
                 new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
             );
-            await testUtils.nextTick();
+            await nextTick();
             assert.ok(floatInput.value.endsWith("🇧🇪🇧🇪"));
 
             integerInput.dispatchEvent(
@@ -272,7 +281,7 @@ QUnit.module("Fields", (hooks) => {
             integerInput.dispatchEvent(
                 new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
             );
-            await testUtils.nextTick();
+            await nextTick();
             assert.ok(integerInput.value.endsWith("🇧🇪🇧🇪"));
 
             monetaryInput.dispatchEvent(
@@ -281,7 +290,7 @@ QUnit.module("Fields", (hooks) => {
             monetaryInput.dispatchEvent(
                 new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
             );
-            await testUtils.nextTick();
+            await nextTick();
             assert.ok(monetaryInput.querySelector("input.o_input").value.endsWith("🇧🇪🇧🇪"));
 
             percentageInput.dispatchEvent(
@@ -290,10 +299,8 @@ QUnit.module("Fields", (hooks) => {
             percentageInput.dispatchEvent(
                 new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
             );
-            await testUtils.nextTick();
+            await nextTick();
             assert.ok(percentageInput.querySelector("input.o_input").value.endsWith("🇧🇪🇧🇪"));
-
-            form.destroy();
         }
     );
 });
