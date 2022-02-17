@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="payment_icon_cc_visa" model="payment.icon">
         <field name="sequence">10</field>
         <field name="name">VISA</field>
@@ -124,6 +125,30 @@
         <field name="sequence">210</field>
         <field name="name">KBC</field>
         <field name="image" type="base64" file="payment/static/img/kbc.png"/>
+    </record>
+
+    <record id="payment_icon_mpesa" model="payment.icon">
+        <field name="sequence">220</field>
+        <field name="name">M-Pesa</field>
+        <field name="image" type="base64" file="payment/static/img/m-pesa.png"/>
+    </record>
+
+    <record id="payment_icon_airtel_money" model="payment.icon">
+        <field name="sequence">230</field>
+        <field name="name">Airtel Money</field>
+        <field name="image" type="base64" file="payment/static/img/airtel-money.png"/>
+    </record>
+
+    <record id="payment_icon_mtn_mobile_money" model="payment.icon">
+        <field name="sequence">240</field>
+        <field name="name">MTN Mobile Money</field>
+        <field name="image" type="base64" file="payment/static/img/mtn-mobile-money.png"/>
+    </record>
+
+    <record id="payment_icon_barter_by_flutterwave" model="payment.icon">
+        <field name="sequence">250</field>
+        <field name="name">Barter by Flutterwave</field>
+        <field name="image" type="base64" file="payment/static/img/barter-by-flutterwave.png"/>
     </record>
 
 </odoo>
