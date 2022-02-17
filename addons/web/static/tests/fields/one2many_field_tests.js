@@ -205,7 +205,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(2);
 
             // Needed to have two new records in a single stroke
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 foo: function (obj) {
                     obj.p = [[5], [0, 0, { trululu: false }], [0, 0, { trululu: false }]];
                 },
@@ -261,7 +261,7 @@ QUnit.module("Fields", (hooks) => {
             // That implies prefetching of records for sorting
             // and evaluation of the decoration against *visible records*
 
-            this.data.partner.records[0].p = [2, 4];
+            serverData.models.partner.records[0].p = [2, 4];
             const form = await makeView({
                 type: "form",
                 model: "partner",
@@ -311,7 +311,7 @@ QUnit.module("Fields", (hooks) => {
          * shouldn't send virtual_ids to the server
          */
 
-        this.data.turtle.fields.parent_id = {
+        serverData.models.turtle.fields.parent_id = {
             string: "Parent",
             type: "many2one",
             relation: "turtle",
@@ -368,8 +368,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list editable with cell readonly modifier", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2];
-        this.data.partner.records[1].turtles = [1, 2];
+        serverData.models.partner.records[0].p = [2];
+        serverData.models.partner.records[1].turtles = [1, 2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -439,7 +439,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many basic properties", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -539,7 +539,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many with date and datetime", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -582,7 +582,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("rendering with embedded one2many", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -623,7 +623,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].turtles = [1, 2, 3];
+            serverData.models.partner.records[0].turtles = [1, 2, 3];
             const form = await makeView({
                 type: "form",
                 model: "partner",
@@ -655,7 +655,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].turtles = [1, 2, 3];
+            serverData.models.partner.records[0].turtles = [1, 2, 3];
             const form = await makeView({
                 type: "form",
                 model: "partner",
@@ -681,7 +681,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many with default_order on view not inline", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].turtles = [1, 2, 3];
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -716,7 +716,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("embedded one2many with widget", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -754,7 +754,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        this.data.partner.records[0].turtles = [1, 2, 3];
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
 
         const form = await makeView({
             type: "form",
@@ -824,7 +824,7 @@ QUnit.module("Fields", (hooks) => {
         await testUtils.form.clickSave(form);
 
         assert.deepEqual(
-            _.map(this.data.turtle.records, function (turtle) {
+            _.map(serverData.models.turtle.records, function (turtle) {
                 return _.pick(turtle, "id", "turtle_foo", "turtle_int");
             }),
             [
@@ -851,12 +851,12 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.turtle.fields.partner_ids.type = "one2many";
-            this.data.turtle.records[0].partner_ids = [1];
+            serverData.models.turtle.fields.partner_ids.type = "one2many";
+            serverData.models.turtle.records[0].partner_ids = [1];
             // we need a second page, so we set two records and only display one per page
-            this.data.partner.records[0].turtles = [1, 2];
+            serverData.models.partner.records[0].turtles = [1, 2];
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.turtles = [
                         [5],
@@ -944,11 +944,11 @@ QUnit.module("Fields", (hooks) => {
             // list should be correctly sent back at save time
             assert.expect(3);
 
-            this.data.turtle.fields.partner_ids.type = "one2many";
-            this.data.partner.records[0].turtles = [2];
-            this.data.turtle.records[1].partner_ids = [2];
+            serverData.models.turtle.fields.partner_ids.type = "one2many";
+            serverData.models.partner.records[0].turtles = [2];
+            serverData.models.turtle.records[1].partner_ids = [2];
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.turtles = [
                         [5],
@@ -1028,15 +1028,15 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("onchange for embedded one2many with handle widget", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].turtles = [1, 2, 3];
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
         var partnerOnchange = 0;
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             turtles: function () {
                 partnerOnchange++;
             },
         };
         var turtleOnchange = 0;
-        this.data.turtle.onchanges = {
+        serverData.models.turtle.onchanges = {
             turtle_int: function () {
                 turtleOnchange++;
             },
@@ -1084,12 +1084,12 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.turtle.records[0].turtle_int = 1;
-            this.data.turtle.records[1].turtle_int = 1;
-            this.data.turtle.records[2].turtle_int = 1;
-            this.data.partner.records[0].turtles = [1, 2, 3];
+            serverData.models.turtle.records[0].turtle_int = 1;
+            serverData.models.turtle.records[1].turtle_int = 1;
+            serverData.models.turtle.records[2].turtle_int = 1;
+            serverData.models.partner.records[0].turtles = [1, 2, 3];
             var turtleOnchange = 0;
-            this.data.turtle.onchanges = {
+            serverData.models.turtle.onchanges = {
                 turtle_int: function () {
                     turtleOnchange++;
                 },
@@ -1167,15 +1167,15 @@ QUnit.module("Fields", (hooks) => {
             for (var i = 10; i < 50; i++) {
                 var id = 10 + i;
                 ids.push(id);
-                this.data.turtle.records.push({
+                serverData.models.turtle.records.push({
                     id: id,
                     turtle_int: 0,
                     turtle_foo: "#" + id,
                 });
             }
             ids.push(1, 2, 3);
-            this.data.partner.records[0].turtles = ids;
-            this.data.partner.onchanges = {
+            serverData.models.partner.records[0].turtles = ids;
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.turtles = [[5]].concat(obj.turtles);
                 },
@@ -1394,15 +1394,15 @@ QUnit.module("Fields", (hooks) => {
         for (var i = 1; i < 85; i++) {
             var id = 10 + i;
             ids.push(id);
-            this.data.turtle.records.push({
+            serverData.models.turtle.records.push({
                 id: id,
                 turtle_int: (id / 3) | 0,
                 turtle_foo: "#" + i,
             });
         }
         ids.splice(41, 0, 1, 2, 3);
-        this.data.partner.records[0].turtles = ids;
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[0].turtles = ids;
+        serverData.models.partner.onchanges = {
             turtles: function (obj) {
                 obj.turtles = [[5]].concat(obj.turtles);
             },
@@ -1512,15 +1512,15 @@ QUnit.module("Fields", (hooks) => {
             for (var i = 1; i < 85; i++) {
                 var id = 10 + i;
                 ids.push(id);
-                this.data.turtle.records.push({
+                serverData.models.turtle.records.push({
                     id: id,
                     turtle_int: (id / 3) | 0,
                     turtle_foo: "#" + i,
                 });
             }
             ids.splice(41, 0, 1, 2, 3);
-            this.data.partner.records[0].turtles = ids;
-            this.data.partner.onchanges = {
+            serverData.models.partner.records[0].turtles = ids;
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.turtles = [[5]].concat(obj.turtles);
                 },
@@ -1619,7 +1619,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("onchange returning a command 6 for an x2many", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.turtles = [[6, false, [1, 2, 3]]];
             },
@@ -1659,8 +1659,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.turtle.records[0].partner_ids = [1];
-            this.data.partner.onchanges = {
+            serverData.models.turtle.records[0].partner_ids = [1];
+            serverData.models.partner.onchanges = {
                 foo: function (obj) {
                     obj.turtles = [[5], [4, 1], [4, 2], [4, 3]];
                 },
@@ -1738,8 +1738,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.turtle.records[1].turtle_ref = "product,41";
-            this.data.partner.onchanges = {
+            serverData.models.turtle.records[1].turtle_ref = "product,41";
+            serverData.models.partner.onchanges = {
                 foo: function (obj) {
                     obj.turtles = [[5], [4, 1], [4, 2], [4, 3]];
                 },
@@ -1810,7 +1810,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("onchange on one2many containing x2many in form view", async function (assert) {
         assert.expect(16);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.turtles = [[0, false, { turtle_foo: "new record" }]];
             },
@@ -1932,8 +1932,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.turtle.fields.turtle_foo.default = "a default value";
-            this.data.partner.onchanges = {
+            serverData.models.turtle.fields.turtle_foo.default = "a default value";
+            serverData.models.partner.onchanges = {
                 foo: function (obj) {
                     obj.p = [[0, false, { turtles: [[0, false, { turtle_foo: "hello" }]] }]];
                 },
@@ -1992,8 +1992,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.turtle.fields.turtle_foo.default = "a default value";
-            this.data.partner.onchanges = {
+            serverData.models.turtle.fields.turtle_foo.default = "a default value";
+            serverData.models.partner.onchanges = {
                 foo: function (obj) {
                     obj.p = [[0, false, { turtles: [[0, false, { turtle_foo: "hello" }]] }]];
                 },
@@ -2052,8 +2052,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(20);
 
-            this.data.turtle.records[0].turtle_int = 6;
-            this.data.turtle.records.push(
+            serverData.models.turtle.records[0].turtle_int = 6;
+            serverData.models.turtle.records.push(
                 {
                     id: 4,
                     turtle_int: 20,
@@ -2075,7 +2075,7 @@ QUnit.module("Fields", (hooks) => {
                     turtle_foo: "a4",
                 }
             );
-            this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6, 7];
+            serverData.models.partner.records[0].turtles = [1, 2, 3, 4, 5, 6, 7];
 
             const form = await makeView({
                 type: "form",
@@ -2144,7 +2144,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("embedded one2many (editable list) with handle widget", async function (assert) {
         assert.expect(8);
 
-        this.data.partner.records[0].p = [1, 2, 4];
+        serverData.models.partner.records[0].p = [1, 2, 4];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -2232,13 +2232,13 @@ QUnit.module("Fields", (hooks) => {
         for (var i = 0; i < 45; i++) {
             var id = 10 + i;
             ids.push(id);
-            this.data.partner.records.push({
+            serverData.models.partner.records.push({
                 id: id,
                 display_name: "relational record " + id,
             });
         }
-        this.data.partner.records[0].p = ids.slice(0, 42);
-        this.data.partner.records[1].p = ids.slice(42);
+        serverData.models.partner.records[0].p = ids.slice(0, 42);
+        serverData.models.partner.records[1].p = ids.slice(42);
 
         var count = 0;
         const form = await makeView({
@@ -2340,12 +2340,12 @@ QUnit.module("Fields", (hooks) => {
         for (var i = 0; i < 45; i++) {
             var id = 10 + i;
             ids.push(id);
-            this.data.partner.records.push({
+            serverData.models.partner.records.push({
                 id: id,
                 display_name: "relational record " + id,
             });
         }
-        this.data.partner.records[0].p = ids;
+        serverData.models.partner.records[0].p = ids;
 
         var saveCount = 0;
         var checkRead = false;
@@ -2591,10 +2591,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.turtle.onchanges.turtle_int = function (obj) {
+            serverData.models.turtle.onchanges.turtle_int = function (obj) {
                 obj.turtle_foo = String(obj.turtle_int);
             };
-            this.data.partner.onchanges.turtles = function () {};
+            serverData.models.partner.onchanges.turtles = function () {};
 
             const form = await makeView({
                 type: "form",
@@ -2636,11 +2636,11 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("sorting one2many fields", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.fields.foo.sortable = true;
-        this.data.partner.records.push({ id: 23, foo: "abc" });
-        this.data.partner.records.push({ id: 24, foo: "xyz" });
-        this.data.partner.records.push({ id: 25, foo: "def" });
-        this.data.partner.records[0].p = [23, 24, 25];
+        serverData.models.partner.fields.foo.sortable = true;
+        serverData.models.partner.records.push({ id: 23, foo: "abc" });
+        serverData.models.partner.records.push({ id: 24, foo: "xyz" });
+        serverData.models.partner.records.push({ id: 25, foo: "def" });
+        serverData.models.partner.records[0].p = [23, 24, 25];
 
         var rpcCount = 0;
         const form = await makeView({
@@ -2694,11 +2694,11 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list field edition", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.records.push({
+        serverData.models.partner.records.push({
             id: 3,
             display_name: "relational record 1",
         });
-        this.data.partner.records[1].p = [3];
+        serverData.models.partner.records[1].p = [3];
 
         const form = await makeView({
             type: "form",
@@ -2806,7 +2806,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list: conditional create/delete actions", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2, 4];
+        serverData.models.partner.records[0].p = [2, 4];
         const form = await createView({
             type: "form",
             model: "partner",
@@ -2857,7 +2857,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skipWOWL("one2many list: unlink two records", async function (assert) {
         assert.expect(8);
-        this.data.partner.records[0].p = [1, 2, 4];
+        serverData.models.partner.records[0].p = [1, 2, 4];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -2926,7 +2926,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skipWOWL("one2many list: deleting one records", async function (assert) {
         assert.expect(7);
-        this.data.partner.records[0].p = [1, 2, 4];
+        serverData.models.partner.records[0].p = [1, 2, 4];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -2989,7 +2989,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many kanban: edition", async function (assert) {
         assert.expect(23);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -3199,7 +3199,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many kanban: create action disabled", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.records[0].p = [4];
+        serverData.models.partner.records[0].p = [4];
 
         const form = await makeView({
             type: "form",
@@ -3245,7 +3245,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many kanban: conditional create/delete actions", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2, 4];
+        serverData.models.partner.records[0].p = [2, 4];
 
         const form = await createView({
             type: "form",
@@ -3313,8 +3313,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("editable one2many list, pager is updated", async function (assert) {
         assert.expect(1);
 
-        this.data.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
-        this.data.partner.records[0].turtles = [1, 2, 3, 4];
+        serverData.models.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
+        serverData.models.partner.records[0].turtles = [1, 2, 3, 4];
 
         const form = await makeView({
             type: "form",
@@ -3440,7 +3440,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list (editable): edition", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.records[0].p = [2, 4];
+        serverData.models.partner.records[0].p = [2, 4];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -3609,7 +3609,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(3);
         var i = 0;
 
-        this.data.turtle.onchanges = {
+        serverData.models.turtle.onchanges = {
             turtle_trululu: function (obj) {
                 if (i) {
                     obj.turtle_description = "Some Description";
@@ -3662,8 +3662,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(7);
 
-            this.data.turtle.fields.turtle_foo.required = true;
-            delete this.data.turtle.fields.turtle_foo.default;
+            serverData.models.turtle.fields.turtle_foo.required = true;
+            delete serverData.models.turtle.fields.turtle_foo.default;
 
             const form = await makeView({
                 type: "form",
@@ -3710,7 +3710,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.partner.records[0].turtles = [1, 2, 3];
+            serverData.models.partner.records[0].turtles = [1, 2, 3];
             const form = await makeView({
                 type: "form",
                 model: "partner",
@@ -3749,8 +3749,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("editable one2many list, adding line, then discarding", async function (assert) {
         assert.expect(3);
 
-        this.data.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
-        this.data.partner.records[0].turtles = [1, 2, 3, 4];
+        serverData.models.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
+        serverData.models.partner.records[0].turtles = [1, 2, 3, 4];
 
         const form = await makeView({
             type: "form",
@@ -3787,9 +3787,9 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("editable one2many list, required field and pager", async function (assert) {
         assert.expect(1);
 
-        this.data.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
-        this.data.turtle.fields.turtle_foo.required = true;
-        this.data.partner.records[0].turtles = [1, 2, 3, 4];
+        serverData.models.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
+        serverData.models.turtle.fields.turtle_foo.required = true;
+        serverData.models.partner.records[0].turtles = [1, 2, 3, 4];
 
         const form = await makeView({
             type: "form",
@@ -3822,9 +3822,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
-            this.data.turtle.fields.turtle_foo.required = true;
-            this.data.partner.records[0].turtles = [1, 2, 3, 4];
+            serverData.models.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
+            serverData.models.turtle.fields.turtle_foo.required = true;
+            serverData.models.partner.records[0].turtles = [1, 2, 3, 4];
 
             const form = await makeView({
                 type: "form",
@@ -3876,7 +3876,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.partner.records[0].turtles = [1];
+            serverData.models.partner.records[0].turtles = [1];
 
             const form = await makeView({
                 type: "form",
@@ -3920,8 +3920,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("unselecting a line with missing required data", async function (assert) {
         assert.expect(6);
 
-        this.data.turtle.fields.turtle_foo.required = true;
-        delete this.data.turtle.fields.turtle_foo.default;
+        serverData.models.turtle.fields.turtle_foo.required = true;
+        delete serverData.models.turtle.fields.turtle_foo.default;
 
         const form = await makeView({
             type: "form",
@@ -3977,7 +3977,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("pressing enter in a o2m with a required empty field", async function (assert) {
         assert.expect(4);
 
-        this.data.turtle.fields.turtle_foo.required = true;
+        serverData.models.turtle.fields.turtle_foo.required = true;
 
         const form = await makeView({
             type: "form",
@@ -4016,9 +4016,9 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("editing a o2m, with required field and onchange", async function (assert) {
         assert.expect(11);
 
-        this.data.turtle.fields.turtle_foo.required = true;
-        delete this.data.turtle.fields.turtle_foo.default;
-        this.data.turtle.onchanges = {
+        serverData.models.turtle.fields.turtle_foo.required = true;
+        delete serverData.models.turtle.fields.turtle_foo.default;
+        serverData.models.turtle.onchanges = {
             turtle_foo: function (obj) {
                 obj.turtle_int = obj.turtle_foo.length;
             },
@@ -4115,7 +4115,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.turtle.fields.turtle_foo.required = true;
+            serverData.models.turtle.fields.turtle_foo.required = true;
 
             const form = await makeView({
                 type: "form",
@@ -4202,11 +4202,11 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 turtles: function () {},
             };
-            this.data.partner.records[0].turtles = [1];
-            this.data.turtle.records[0].product_id = 37;
+            serverData.models.partner.records[0].turtles = [1];
+            serverData.models.turtle.records[0].product_id = 37;
 
             const form = await makeView({
                 type: "form",
@@ -4243,12 +4243,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("onchange in a one2many", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records.push({
+        serverData.models.partner.records.push({
             id: 3,
             foo: "relational record 1",
         });
-        this.data.partner.records[1].p = [3];
-        this.data.partner.onchanges = { p: true };
+        serverData.models.partner.records[1].p = [3];
+        serverData.models.partner.onchanges = { p: true };
 
         const form = await makeView({
             type: "form",
@@ -4297,10 +4297,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many, default_get and onchange (basic)", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.p.default = [
+        serverData.models.partner.fields.p.default = [
             [6, 0, []], // replace with zero ids
         ];
-        this.data.partner.onchanges = { p: true };
+        serverData.models.partner.onchanges = { p: true };
 
         const form = await makeView({
             type: "form",
@@ -4339,7 +4339,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many and default_get (with date)", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.p.default = [[0, false, { date: "2017-10-08", p: [] }]];
+        serverData.models.partner.fields.p.default = [[0, false, { date: "2017-10-08", p: [] }]];
 
         const form = await makeView({
             type: "form",
@@ -4367,7 +4367,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many and onchange (with integer)", async function (assert) {
         assert.expect(4);
 
-        this.data.turtle.onchanges = {
+        serverData.models.turtle.onchanges = {
             turtle_int: function () {},
         };
 
@@ -4407,10 +4407,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many and onchange (with date)", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             date: function () {},
         };
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
 
         const form = await makeView({
             type: "form",
@@ -4449,13 +4449,13 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many and onchange (with command DELETE_ALL)", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.p = [[5]];
             },
             p: function () {}, // dummy onchange on the o2m to execute _isX2ManyValid()
         };
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
 
         const form = await makeView({
             type: "form",
@@ -4522,7 +4522,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many and onchange only write modified field", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             turtles: function (obj) {
                 obj.turtles = [
                     [5], // delete all
@@ -4545,7 +4545,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        this.data.partner.records[0].turtles = [3];
+        serverData.models.partner.records[0].turtles = [3];
 
         const form = await makeView({
             type: "form",
@@ -4621,8 +4621,8 @@ QUnit.module("Fields", (hooks) => {
 
         var deactiveOnchange = true;
 
-        this.data.partner.records[0].turtles = [];
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[0].turtles = [];
+        serverData.models.partner.onchanges = {
             turtles: function (obj) {
                 if (deactiveOnchange) {
                     return;
@@ -4785,8 +4785,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many editable list with onchange keeps the order", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].p = [1, 2, 4];
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[0].p = [1, 2, 4];
+        serverData.models.partner.onchanges = {
             p: function () {},
         };
 
@@ -4835,9 +4835,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].p = [2, 4];
-            this.data.partner.records[1].product_id = false;
-            this.data.partner.records[2].product_id = 37;
+            serverData.models.partner.records[0].p = [2, 4];
+            serverData.models.partner.records[1].product_id = false;
+            serverData.models.partner.records[2].product_id = 37;
 
             const form = await makeView({
                 type: "form",
@@ -4875,7 +4875,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("pager of one2many field in new record", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.records[0].p = [];
+        serverData.models.partner.records[0].p = [];
 
         const form = await makeView({
             type: "form",
@@ -4905,9 +4905,9 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(5);
 
         let checkOnchange = false;
-        this.data.partner.records[0].p = [2];
-        this.data.partner.records[1].product_id = 37;
-        this.data.partner.onchanges.p = function (obj) {
+        serverData.models.partner.records[0].p = [2];
+        serverData.models.partner.records[1].product_id = 37;
+        serverData.models.partner.onchanges.p = function (obj) {
             obj.p = [
                 [5], // delete all
                 [1, 2, { product_id: [37, "xphone"] }], // update existing record
@@ -4984,7 +4984,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list with inline form view", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records[0].p = [];
+        serverData.models.partner.records[0].p = [];
 
         const form = await makeView({
             type: "form",
@@ -5090,9 +5090,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].p = [2];
-            this.data.partner.records[0].product_id = 41;
-            this.data.partner.records[1].product_id = 37;
+            serverData.models.partner.records[0].p = [2];
+            serverData.models.partner.records[0].product_id = 41;
+            serverData.models.partner.records[1].product_id = 37;
 
             const form = await makeView({
                 type: "form",
@@ -5145,8 +5145,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.records[0].timmy = [12];
-            this.data.partner.records[0].p = [2, 3];
+            serverData.models.partner.records[0].timmy = [12];
+            serverData.models.partner.records[0].p = [2, 3];
 
             const form = await makeView({
                 type: "form",
@@ -5189,8 +5189,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.records[0].p = [2];
-            this.data.partner.records[1].product_id = 37;
+            serverData.models.partner.records[0].p = [2];
+            serverData.models.partner.records[1].product_id = 37;
 
             const form = await makeView({
                 type: "form",
@@ -5232,8 +5232,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list, editable, with a date in the context", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].p = [2];
-        this.data.partner.records[1].product_id = 37;
+        serverData.models.partner.records[0].p = [2];
+        serverData.models.partner.records[1].product_id = 37;
 
         const form = await makeView({
             type: "form",
@@ -5319,7 +5319,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list edition, some basic functionality", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.fields.foo.default = false;
+        serverData.models.partner.fields.foo.default = false;
 
         const form = await makeView({
             type: "form",
@@ -5608,7 +5608,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.fields.int_field.default = 17;
+            serverData.models.partner.fields.int_field.default = 17;
             var n = 0;
 
             const form = await makeView({
@@ -5645,7 +5645,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("parent data is properly sent on an onchange rpc", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.onchanges = { bar: function () {} };
+        serverData.models.partner.onchanges = { bar: function () {} };
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -5689,11 +5689,11 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 display_name: function () {},
             };
-            this.data.partner.records[0].p = [1];
-            this.data.partner.records[0].turtles = [2];
+            serverData.models.partner.records[0].p = [1];
+            serverData.models.partner.records[0].turtles = [2];
             const form = await createView({
                 type: "form",
                 model: "partner",
@@ -5744,7 +5744,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.turtle.onchanges = { turtle_bar: function () {} };
+            serverData.models.turtle.onchanges = { turtle_bar: function () {} };
             const form = await makeView({
                 type: "form",
                 model: "partner",
@@ -5786,7 +5786,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("id in one2many obtained in onchange is properly set", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.onchanges.turtles = function (obj) {
+        serverData.models.partner.onchanges.turtles = function (obj) {
             obj.turtles = [[5], [1, 3, { turtle_foo: "kawa" }]];
         };
         const form = await makeView({
@@ -5849,8 +5849,8 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skipWOWL("sub form view with a required field", async function (assert) {
         assert.expect(2);
-        this.data.partner.fields.foo.required = true;
-        this.data.partner.fields.foo.default = null;
+        serverData.models.partner.fields.foo.required = true;
+        serverData.models.partner.fields.foo.default = null;
 
         const form = await makeView({
             type: "form",
@@ -5886,7 +5886,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list with action button", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
 
         const form = await makeView({
             type: "form",
@@ -5933,7 +5933,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many kanban with action button", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
 
         const form = await makeView({
             type: "form",
@@ -6055,7 +6055,7 @@ QUnit.module("Fields", (hooks) => {
             });
             fieldRegistry.add("specialWidget", MyWidget);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     var virtualID = obj.turtles[1][1];
                     obj.turtles = [
@@ -6130,7 +6130,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many without inline tree arch", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].turtles = [2, 3];
+        serverData.models.partner.records[0].turtles = [2, 3];
 
         const form = await makeView({
             type: "form",
@@ -6171,8 +6171,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("many2one and many2many in one2many", async function (assert) {
         assert.expect(11);
 
-        this.data.turtle.records[1].product_id = 37;
-        this.data.partner.records[0].turtles = [2, 3];
+        serverData.models.turtle.records[1].product_id = 37;
+        serverData.models.partner.records[0].turtles = [2, 3];
 
         const form = await makeView({
             type: "form",
@@ -6286,9 +6286,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(9);
 
-            this.data.partner.records[0].turtles = [1, 2, 3];
+            serverData.models.partner.records[0].turtles = [1, 2, 3];
 
-            this.data.partner.onchanges.turtles = function () {};
+            serverData.models.partner.onchanges.turtles = function () {};
 
             const form = await makeView({
                 type: "form",
@@ -6332,12 +6332,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("onchange many2many in one2many list editable", async function (assert) {
         assert.expect(14);
 
-        this.data.product.records.push({
+        serverData.models.product.records.push({
             id: 1,
             display_name: "xenomorphe",
         });
 
-        this.data.turtle.onchanges = {
+        serverData.models.turtle.onchanges = {
             product_id: function (rec) {
                 if (rec.product_id) {
                     rec.partner_ids = [[5], [4, rec.product_id === 41 ? 1 : 2]];
@@ -6371,7 +6371,7 @@ QUnit.module("Fields", (hooks) => {
             ];
         };
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             int_field: partnerOnchange,
             turtles: partnerOnchange,
         };
@@ -6516,9 +6516,9 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("load view for x2many in one2many", async function (assert) {
         assert.expect(2);
 
-        this.data.turtle.records[1].product_id = 37;
-        this.data.partner.records[0].turtles = [2, 3];
-        this.data.partner.records[2].turtles = [1, 3];
+        serverData.models.turtle.records[1].product_id = 37;
+        serverData.models.partner.records[0].turtles = [2, 3];
+        serverData.models.partner.records[2].turtles = [1, 3];
 
         const form = await makeView({
             type: "form",
@@ -6609,7 +6609,11 @@ QUnit.module("Fields", (hooks) => {
             // related x2m field is unknown in the inline list view)
             // also ensure that the changes are correctly saved
 
-            this.data.turtle.fields.o2m = { string: "o2m", type: "one2many", relation: "user" };
+            serverData.models.turtle.fields.o2m = {
+                string: "o2m",
+                type: "one2many",
+                relation: "user",
+            };
 
             const form = await makeView({
                 type: "form",
@@ -6670,7 +6674,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("many2many list in a one2many opened by a many2one", async function (assert) {
         assert.expect(1);
 
-        this.data.turtle.records[1].turtle_trululu = 2;
+        serverData.models.turtle.records[1].turtle_trululu = 2;
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -6729,7 +6733,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("nested x2many default values", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.fields.turtles.default = [
+        serverData.models.partner.fields.turtles.default = [
             [0, 0, { partner_ids: [[6, 0, [4]]] }],
             [0, 0, { partner_ids: [[6, 0, [1]]] }],
         ];
@@ -6772,7 +6776,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("nested x2many (inline form view) and onchanges", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.onchanges.bar = function (obj) {
+        serverData.models.partner.onchanges.bar = function (obj) {
             if (!obj.bar) {
                 obj.p = [
                     [5],
@@ -6834,7 +6838,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("nested x2many (non inline form view) and onchanges", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.onchanges.bar = function (obj) {
+        serverData.models.partner.onchanges.bar = function (obj) {
             if (!obj.bar) {
                 obj.p = [
                     [5],
@@ -6902,7 +6906,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.partner.records[0].p = [1];
+            serverData.models.partner.records[0].p = [1];
             const form = await createView({
                 type: "form",
                 model: "partner",
@@ -7104,7 +7108,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        this.data.partner.records[0].p = [4];
+        serverData.models.partner.records[0].p = [4];
 
         const form = await makeView({
             type: "form",
@@ -7316,7 +7320,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list editable = top", async function (assert) {
         assert.expect(6);
 
-        this.data.turtle.fields.turtle_foo.default = "default foo turtle";
+        serverData.models.turtle.fields.turtle_foo.default = "default foo turtle";
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -7365,7 +7369,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skipWOWL("one2many list editable = bottom", async function (assert) {
         assert.expect(6);
-        this.data.turtle.fields.turtle_foo.default = "default foo turtle";
+        serverData.models.turtle.fields.turtle_foo.default = "default foo turtle";
 
         const form = await makeView({
             type: "form",
@@ -7416,7 +7420,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL('one2many list edition, no "Remove" button in modal', async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields.foo.default = false;
+        serverData.models.partner.fields.foo.default = false;
 
         const form = await makeView({
             type: "form",
@@ -7492,14 +7496,14 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many list editable, onchange and required field", async function (assert) {
         assert.expect(8);
 
-        this.data.turtle.fields.turtle_foo.required = true;
-        this.data.partner.onchanges = {
+        serverData.models.turtle.fields.turtle_foo.required = true;
+        serverData.models.partner.onchanges = {
             turtles: function (obj) {
                 obj.int_field = obj.turtles.length;
             },
         };
-        this.data.partner.records[0].int_field = 0;
-        this.data.partner.records[0].turtles = [];
+        serverData.models.partner.records[0].int_field = 0;
+        serverData.models.partner.records[0].turtles = [];
 
         const form = await makeView({
             type: "form",
@@ -7556,20 +7560,20 @@ QUnit.module("Fields", (hooks) => {
             // shouldn't consider numerical fields with value 0 as unset
             assert.expect(13);
 
-            this.data.turtle.fields.turtle_foo.required = true;
-            this.data.turtle.fields.turtle_qux.required = true; // required field not in the view
-            this.data.turtle.fields.turtle_bar.required = true; // required boolean field with no default
-            delete this.data.turtle.fields.turtle_bar.default;
-            this.data.turtle.fields.turtle_int.required = true; // required int field (default 0)
-            this.data.turtle.fields.turtle_int.default = 0;
-            this.data.turtle.fields.partner_ids.required = true; // required many2many
-            this.data.partner.onchanges = {
+            serverData.models.turtle.fields.turtle_foo.required = true;
+            serverData.models.turtle.fields.turtle_qux.required = true; // required field not in the view
+            serverData.models.turtle.fields.turtle_bar.required = true; // required boolean field with no default
+            delete serverData.models.turtle.fields.turtle_bar.default;
+            serverData.models.turtle.fields.turtle_int.required = true; // required int field (default 0)
+            serverData.models.turtle.fields.turtle_int.default = 0;
+            serverData.models.turtle.fields.partner_ids.required = true; // required many2many
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.int_field = obj.turtles.length;
                 },
             };
-            this.data.partner.records[0].int_field = 0;
-            this.data.partner.records[0].turtles = [];
+            serverData.models.partner.records[0].int_field = 0;
+            serverData.models.partner.records[0].turtles = [];
 
             const form = await makeView({
                 type: "form",
@@ -7645,13 +7649,13 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.int_field = obj.turtles.length;
                 },
             };
 
-            this.data.partner.records[0].turtles = [];
+            serverData.models.partner.records[0].turtles = [];
 
             const form = await makeView({
                 type: "form",
@@ -7705,13 +7709,13 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.int_field = obj.turtles.length;
                 },
             };
 
-            this.data.partner.records[0].turtles = [];
+            serverData.models.partner.records[0].turtles = [];
 
             const form = await makeView({
                 type: "form",
@@ -7767,7 +7771,7 @@ QUnit.module("Fields", (hooks) => {
             // unselect the first row, otherwise it will be detected as invalid.
             assert.expect(7);
 
-            this.data.turtle.onchanges = {
+            serverData.models.turtle.onchanges = {
                 turtle_trululu: function () {},
             };
 
@@ -7843,7 +7847,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.turtle.onchanges = {
+            serverData.models.turtle.onchanges = {
                 turtle_trululu: function () {},
             };
 
@@ -7902,7 +7906,7 @@ QUnit.module("Fields", (hooks) => {
         // onchange), so the row that must go to readonly doesn't exist anymore.
         assert.expect(2);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             datetime: function (obj) {
                 obj.turtles = [[5], [0, 0, { display_name: "new" }]];
             },
@@ -7956,7 +7960,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("editable list: onchange that returns a warning", async function (assert) {
         assert.expect(5);
 
-        this.data.turtle.onchanges = {
+        serverData.models.turtle.onchanges = {
             display_name: function () {},
         };
 
@@ -8011,7 +8015,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("editable list: contexts are correctly sent", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records[0].timmy = [12];
+        serverData.models.partner.records[0].timmy = [12];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -8080,8 +8084,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("resetting invisible one2manys", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.records[0].turtles = [];
-        this.data.partner.onchanges.foo = function (obj) {
+        serverData.models.partner.records[0].turtles = [];
+        serverData.models.partner.onchanges.foo = function (obj) {
             obj.turtles = [[5], [4, 1]];
         };
 
@@ -8115,7 +8119,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 name: function () {},
             };
 
@@ -8182,8 +8186,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(8);
 
-            this.data.partner.records[0].p = [1];
-            this.data.partner.onchanges = {
+            serverData.models.partner.records[0].p = [1];
+            serverData.models.partner.onchanges = {
                 name: function () {},
             };
 
@@ -8267,11 +8271,11 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("onchange and required fields with override in arch", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             turtles: function () {},
         };
-        this.data.turtle.fields.turtle_foo.required = true;
-        this.data.partner.records[0].turtles = [];
+        serverData.models.turtle.fields.turtle_foo.required = true;
+        serverData.models.partner.records[0].turtles = [];
 
         const form = await makeView({
             type: "form",
@@ -8306,7 +8310,7 @@ QUnit.module("Fields", (hooks) => {
         // correctly and recursively computed
         assert.expect(1);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             p: function () {},
         };
         var checkOnchange = false;
@@ -8354,11 +8358,11 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("editing tabbed one2many (editable=bottom)", async function (assert) {
         assert.expect(12);
 
-        this.data.partner.records[0].turtles = [];
+        serverData.models.partner.records[0].turtles = [];
         for (var i = 0; i < 42; i++) {
             var id = 100 + i;
-            this.data.turtle.records.push({ id: id, turtle_foo: "turtle" + (id - 99) });
-            this.data.partner.records[0].turtles.push(id);
+            serverData.models.turtle.records.push({ id: id, turtle_foo: "turtle" + (id - 99) });
+            serverData.models.partner.records[0].turtles.push(id);
         }
 
         const form = await makeView({
@@ -8411,11 +8415,11 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("editing tabbed one2many (editable=bottom), again...", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].turtles = [];
+        serverData.models.partner.records[0].turtles = [];
         for (var i = 0; i < 9; i++) {
             var id = 100 + i;
-            this.data.turtle.records.push({ id: id, turtle_foo: "turtle" + (id - 99) });
-            this.data.partner.records[0].turtles.push(id);
+            serverData.models.turtle.records.push({ id: id, turtle_foo: "turtle" + (id - 99) });
+            serverData.models.partner.records[0].turtles.push(id);
         }
 
         const form = await makeView({
@@ -8450,12 +8454,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("editing tabbed one2many (editable=top)", async function (assert) {
         assert.expect(15);
 
-        this.data.partner.records[0].turtles = [];
-        this.data.turtle.fields.turtle_foo.default = "default foo";
+        serverData.models.partner.records[0].turtles = [];
+        serverData.models.turtle.fields.turtle_foo.default = "default foo";
         for (var i = 0; i < 42; i++) {
             var id = 100 + i;
-            this.data.turtle.records.push({ id: id, turtle_foo: "turtle" + (id - 99) });
-            this.data.partner.records[0].turtles.push(id);
+            serverData.models.turtle.records.push({ id: id, turtle_foo: "turtle" + (id - 99) });
+            serverData.models.partner.records[0].turtles.push(id);
         }
 
         const form = await makeView({
@@ -8520,7 +8524,7 @@ QUnit.module("Fields", (hooks) => {
             var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
             relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 int_field: function () {},
             };
             var prom;
@@ -8582,7 +8586,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 int_field: function () {},
             };
             var prom;
@@ -8641,7 +8645,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("checkbox in an x2many that triggers an onchange", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             bar: function () {},
         };
 
@@ -8679,7 +8683,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.fields.p.default = [
+            serverData.models.partner.fields.p.default = [
                 [0, false, { foo: "coucou", int_field: 5, p: [] }],
             ];
 
@@ -8728,7 +8732,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.onchanges.p = function (obj) {
+            serverData.models.partner.onchanges.p = function (obj) {
                 obj.p = [
                     [5],
                     [0, 0, { turtles: [[5], [4, 1]] }], // link record 1 by default
@@ -8781,7 +8785,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("display correct value after validation error", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.onchanges.turtles = function () {};
+        serverData.models.partner.onchanges.turtles = function () {};
 
         const form = await makeView({
             type: "form",
@@ -8915,7 +8919,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.records[0].p = [1];
+            serverData.models.partner.records[0].p = [1];
 
             const form = await createView({
                 type: "form",
@@ -8953,7 +8957,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("onchange on nested one2manys", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.onchanges.display_name = function (obj) {
+        serverData.models.partner.onchanges.display_name = function (obj) {
             if (obj.display_name) {
                 obj.p = [
                     [5],
@@ -9047,8 +9051,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many with multiple pages and sequence field", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].turtles = [3, 2, 1];
-        this.data.partner.onchanges.turtles = function () {};
+        serverData.models.partner.records[0].turtles = [3, 2, 1];
+        serverData.models.partner.onchanges.turtles = function () {};
 
         const form = await makeView({
             type: "form",
@@ -9096,8 +9100,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.records[0].turtles = [3, 2, 1];
-            this.data.partner.onchanges.turtles = function () {};
+            serverData.models.partner.records[0].turtles = [3, 2, 1];
+            serverData.models.partner.onchanges.turtles = function () {};
 
             const form = await makeView({
                 type: "form",
@@ -9147,9 +9151,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].turtles = [3, 2, 1];
+            serverData.models.partner.records[0].turtles = [3, 2, 1];
 
-            this.data.turtle.fields.turtle_int.default = 10;
+            serverData.models.turtle.fields.turtle_int.default = 10;
 
             const form = await makeView({
                 type: "form",
@@ -9192,9 +9196,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].turtles = [3, 2, 1];
+            serverData.models.partner.records[0].turtles = [3, 2, 1];
 
-            this.data.turtle.fields.turtle_int.default = 10;
+            serverData.models.turtle.fields.turtle_int.default = 10;
 
             const form = await makeView({
                 type: "form",
@@ -9237,9 +9241,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.records[0].turtles = [3, 2, 1];
+            serverData.models.partner.records[0].turtles = [3, 2, 1];
 
-            this.data.turtle.fields.turtle_int.default = 10;
+            serverData.models.turtle.fields.turtle_int.default = 10;
 
             const form = await makeView({
                 type: "form",
@@ -9289,9 +9293,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.records[0].turtles = [3, 2, 1];
+            serverData.models.partner.records[0].turtles = [3, 2, 1];
 
-            this.data.turtle.fields.turtle_int.default = 10;
+            serverData.models.turtle.fields.turtle_int.default = 10;
 
             const form = await makeView({
                 type: "form",
@@ -9327,9 +9331,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.records[0].turtles = [3, 2, 1];
+            serverData.models.partner.records[0].turtles = [3, 2, 1];
 
-            this.data.turtle.fields.turtle_int.default = 10;
+            serverData.models.turtle.fields.turtle_int.default = 10;
 
             const form = await makeView({
                 type: "form",
@@ -9379,9 +9383,9 @@ QUnit.module("Fields", (hooks) => {
             // while the field is not in editable mode.
             assert.expect(4);
 
-            this.data.turtle.fields.turtle_int.default = 10;
-            this.data.turtle.fields.product_id.default = 37;
-            this.data.turtle.fields.not_required_product_id = {
+            serverData.models.turtle.fields.turtle_int.default = 10;
+            serverData.models.turtle.fields.product_id.default = 37;
+            serverData.models.turtle.fields.not_required_product_id = {
                 string: "Product",
                 type: "many2one",
                 relation: "product",
@@ -9567,9 +9571,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].turtles = [1, 2, 3];
+            serverData.models.partner.records[0].turtles = [1, 2, 3];
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.turtles = [
                         [5],
@@ -9618,17 +9622,17 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.fields.sequence = { string: "Sequence", type: "integer" };
-            this.data.partner.records[0].sequence = 1;
-            this.data.partner.records[1].sequence = 2;
-            this.data.partner.onchanges = { sequence: function () {} };
+            serverData.models.partner.fields.sequence = { string: "Sequence", type: "integer" };
+            serverData.models.partner.records[0].sequence = 1;
+            serverData.models.partner.records[1].sequence = 2;
+            serverData.models.partner.onchanges = { sequence: function () {} };
 
-            this.data.partner_type.fields.partner_ids = {
+            serverData.models.partner_type.fields.partner_ids = {
                 string: "Partner",
                 type: "one2many",
                 relation: "partner",
             };
-            this.data.partner_type.records[0].partner_ids = [1, 2];
+            serverData.models.partner_type.records[0].partner_ids = [1, 2];
 
             const form = await makeView({
                 type: "form",
@@ -9666,7 +9670,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.turtle.onchanges = {
+            serverData.models.turtle.onchanges = {
                 display_name: function (obj) {
                     if (obj.display_name) {
                         obj.turtle_int = 44;
@@ -10004,7 +10008,7 @@ QUnit.module("Fields", (hooks) => {
 
         var numUserOnchange = 0;
 
-        this.data.user.onchanges = {
+        serverData.models.user.onchanges = {
             partner_ids: function (obj) {
                 if (numUserOnchange === 0) {
                     // simulate proper server onchange after save of modal with new record
@@ -10100,7 +10104,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("click on URL should not open the record", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].turtles = [1];
+        serverData.models.partner.records[0].turtles = [1];
 
         const form = await makeView({
             type: "form",
@@ -10178,7 +10182,7 @@ QUnit.module("Fields", (hooks) => {
             // There is no assertion, the code will just crash before the bugfix.
             assert.expect(0);
 
-            this.data.partner.records[0].turtles = [];
+            serverData.models.partner.records[0].turtles = [];
 
             const form = await makeView({
                 type: "form",
@@ -10256,7 +10260,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.turtle.onchanges = {
+            serverData.models.turtle.onchanges = {
                 turtle_foo: function () {},
             };
 
@@ -10467,7 +10471,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many invisible depends on parent field", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -10535,7 +10539,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.records[0].p = [2];
+            serverData.models.partner.records[0].p = [2];
             const form = await createView({
                 type: "form",
                 model: "partner",
@@ -10574,7 +10578,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("column_invisible attrs on adjacent buttons", async function (assert) {
         assert.expect(14);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await createView({
             type: "form",
             model: "partner",
@@ -10626,10 +10630,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.records[0].p = [2];
-            this.data.partner.records[0].bar = false;
+            serverData.models.partner.records[0].p = [2];
+            serverData.models.partner.records[0].bar = false;
 
-            this.data.partner.onchanges.p = function (obj) {
+            serverData.models.partner.onchanges.p = function (obj) {
                 // set bar to true when line is added
                 if (obj.p.length > 1 && obj.p[1][2].foo === "New line") {
                     obj.bar = true;
@@ -10683,7 +10687,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many column_invisible on view not inline", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -10791,7 +10795,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many kanban with widget handle", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records[0].turtles = [1, 2, 3];
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -10849,7 +10853,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many editable list: edit and click on add a line", async function (assert) {
         assert.expect(9);
 
-        this.data.turtle.onchanges = {
+        serverData.models.turtle.onchanges = {
             turtle_int: function () {},
         };
 
@@ -10911,7 +10915,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.turtles = [
                         [5],
@@ -10982,13 +10986,13 @@ QUnit.module("Fields", (hooks) => {
         // changes to the first o2m are repercuted on the second one
         assert.expect(6);
 
-        this.data.partner.fields.turtles2 = {
+        serverData.models.partner.fields.turtles2 = {
             string: "Turtles 2",
             type: "one2many",
             relation: "turtle",
             relation_field: "turtle_trululu",
         };
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             turtles: function (obj) {
                 // when we add a line to turtles, add same line to turtles2
                 if (obj.turtles.length) {
@@ -11106,7 +11110,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("column widths are kept when editing a record in o2m", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
 
         const form = await makeView({
             type: "form",
@@ -11149,7 +11153,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.records[0].p = [2];
+            serverData.models.partner.records[0].p = [2];
 
             const form = await makeView({
                 type: "form",
@@ -11189,7 +11193,7 @@ QUnit.module("Fields", (hooks) => {
                 storage: new RamStorage(),
             });
 
-            this.data.partner.records[0].p = [2];
+            serverData.models.partner.records[0].p = [2];
 
             const form = await makeView({
                 type: "form",
@@ -11277,7 +11281,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(3);
 
             const prom = testUtils.makeTestPromise();
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 trululu: (obj) => {
                     obj.p = [[5]].concat(obj.p);
                 },
@@ -11336,8 +11340,8 @@ QUnit.module("Fields", (hooks) => {
             // deal for now.
             assert.expect(6);
 
-            this.data.partner.records[0].p = [1];
-            this.data.partner.records[0].turtles = [1, 2, 3];
+            serverData.models.partner.records[0].p = [1];
+            serverData.models.partner.records[0].turtles = [1, 2, 3];
 
             const form = await createView({
                 type: "form",
@@ -11381,7 +11385,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(8);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 bar: function (obj) {
                     obj.p = [
                         [5],
@@ -11459,7 +11463,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(7);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 bar: function (obj) {
                     obj.p = [
                         [5],
@@ -11482,7 +11486,7 @@ QUnit.module("Fields", (hooks) => {
                     ];
                 },
             };
-            this.data.turtle.onchanges = {
+            serverData.models.turtle.onchanges = {
                 turtle_foo: function (obj) {
                     obj.display_name = obj.turtle_foo;
                 },
@@ -11540,7 +11544,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 bar: function (obj) {
                     obj.p = [
                         [5],
@@ -11706,15 +11710,15 @@ QUnit.module("Fields", (hooks) => {
         // must be explicit).
         assert.expect(3);
 
-        this.data.turtle.fields.o2m = {
+        serverData.models.turtle.fields.o2m = {
             string: "o2m",
             type: "one2many",
             relation: "partner",
             relation_field: "trululu",
         };
-        this.data.turtle.fields.turtle_bar.default = true;
-        this.data.partner.onchanges.turtles = function (obj) {};
-        this.data.turtle.onchanges.turtle_bar = function (obj) {
+        serverData.models.turtle.fields.turtle_bar.default = true;
+        serverData.models.partner.onchanges.turtles = function (obj) {};
+        serverData.models.turtle.onchanges.turtle_bar = function (obj) {
             if (obj.turtle_bar) {
                 obj.o2m = [[5], [0, false, { display_name: "default" }]];
             } else {
@@ -11787,7 +11791,7 @@ QUnit.module("Fields", (hooks) => {
         // versions).
         assert.expect(3);
 
-        this.data.partner.records[0].p = [1, 2];
+        serverData.models.partner.records[0].p = [1, 2];
         const MyRelationalField = AbstractField.extend({
             events: {
                 "click .update": "_onUpdate",
@@ -11860,7 +11864,7 @@ QUnit.module("Fields", (hooks) => {
             // is properly managed in this scenario.
             assert.expect(3);
 
-            this.data.partner.records[0].p = [1, 2];
+            serverData.models.partner.records[0].p = [1, 2];
             const form = await createView({
                 type: "form",
                 model: "partner",
@@ -11909,7 +11913,7 @@ QUnit.module("Fields", (hooks) => {
             });
             fieldRegistry.add("myfield", MyField);
 
-            this.data.partner.records[0].p = [1, 2];
+            serverData.models.partner.records[0].p = [1, 2];
             const form = await createView({
                 type: "form",
                 model: "partner",
@@ -11947,7 +11951,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.turtle = {
+            serverData.models.turtle = {
                 fields: { turtle_int: { string: "int", type: "integer", sortable: true } },
                 records: [
                     { id: 1, turtle_int: 1 },
@@ -11958,7 +11962,7 @@ QUnit.module("Fields", (hooks) => {
                     { id: 6, turtle_int: 4 },
                 ],
             };
-            this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6];
+            serverData.models.partner.records[0].turtles = [1, 2, 3, 4, 5, 6];
 
             const form = await createView({
                 type: "form",
@@ -12005,7 +12009,7 @@ QUnit.module("Fields", (hooks) => {
             await testUtils.form.clickSave(form);
 
             assert.deepEqual(
-                _.map(this.data.turtle.records, function (turtle) {
+                _.map(serverData.models.turtle.records, function (turtle) {
                     return _.pick(turtle, "id", "turtle_int");
                 }),
                 [
@@ -12070,10 +12074,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("search more pager is reset when doing a new search", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.records.push(
+        serverData.models.partner.records.push(
             ...new Array(170).fill().map((_, i) => ({ id: i + 10, name: "Partner " + i }))
         );
-        this.data.partner.fields.datetime.searchable = true;
+        serverData.models.partner.fields.datetime.searchable = true;
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -12117,8 +12121,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("do not call name_get if display_name already known", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.fields.product_id.default = 37;
-        this.data.partner.onchanges = {
+        serverData.models.partner.fields.product_id.default = 37;
+        serverData.models.partner.onchanges = {
             trululu: function (obj) {
                 obj.trululu = 1;
             },
@@ -12145,7 +12149,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("x2many default_order multiple fields", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.records = [
+        serverData.models.partner.records = [
             { int_field: 10, id: 1, display_name: "record1" },
             { int_field: 12, id: 2, display_name: "record2" },
             { int_field: 11, id: 3, display_name: "record3" },
@@ -12155,7 +12159,7 @@ QUnit.module("Fields", (hooks) => {
             { int_field: 11, id: 7, display_name: "record7" },
         ];
 
-        this.data.partner.records[0].p = [1, 7, 4, 5, 2, 6, 3];
+        serverData.models.partner.records[0].p = [1, 7, 4, 5, 2, 6, 3];
 
         const form = await makeView({
             type: "form",
@@ -12256,7 +12260,7 @@ QUnit.module("Fields", (hooks) => {
          * The x2m shouldn't take the orderedBy of the parent record (the one on the form)
          */
 
-        this.data.partner.records[0].turtles = [3, 2];
+        serverData.models.partner.records[0].turtles = [3, 2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -12334,7 +12338,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("embedded readonly one2many with handle widget", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].turtles = [1, 2, 3];
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
 
         const form = await makeView({
             type: "form",
@@ -12420,8 +12424,8 @@ QUnit.module("Fields", (hooks) => {
             // it should load the next line to display it on the page.
             assert.expect(2);
 
-            this.data.partner.records[0].turtles = [2, 3];
-            this.data.partner.onchanges.turtles = function (obj) {
+            serverData.models.partner.records[0].turtles = [2, 3];
+            serverData.models.partner.onchanges.turtles = function (obj) {
                 obj.turtles = [[5]].concat(obj.turtles);
             };
 
@@ -12468,13 +12472,13 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many, onchange, edition and multipage...", async function (assert) {
         assert.expect(8);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             turtles: function (obj) {
                 obj.turtles = [[5]].concat(obj.turtles);
             },
         };
 
-        this.data.partner.records[0].turtles = [1, 2, 3];
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
 
         const form = await makeView({
             type: "form",
@@ -12525,7 +12529,7 @@ QUnit.module("Fields", (hooks) => {
 
             var numUserOnchange = 0;
 
-            this.data.user.onchanges = {
+            serverData.models.user.onchanges = {
                 partner_ids: function (obj) {
                     // simulate actual server onchange after save of modal with new record
                     if (numUserOnchange === 0) {
@@ -12639,7 +12643,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("quickly switch between pages in one2many list", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].turtles = [1, 2, 3];
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
 
         var readDefs = [
             Promise.resolve(),
@@ -12690,8 +12694,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("many2many read, field context is properly sent", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.fields.timmy.context = { hello: "world" };
-        this.data.partner.records[0].timmy = [12];
+        serverData.models.partner.fields.timmy.context = { hello: "world" };
+        serverData.models.partner.records[0].timmy = [12];
 
         const form = await makeView({
             type: "form",
@@ -12813,7 +12817,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many invisible depends on parent field", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -12881,10 +12885,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.records[0].p = [2];
-            this.data.partner.records[0].bar = false;
+            serverData.models.partner.records[0].p = [2];
+            serverData.models.partner.records[0].bar = false;
 
-            this.data.partner.onchanges.p = function (obj) {
+            serverData.models.partner.onchanges.p = function (obj) {
                 // set bar to true when line is added
                 if (obj.p.length > 1 && obj.p[1][2].foo === "New line") {
                     obj.bar = true;
@@ -12938,7 +12942,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many column_invisible on view not inline", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await makeView({
             type: "form",
             model: "partner",
@@ -13012,7 +13016,7 @@ QUnit.module("Fields", (hooks) => {
                 storage: new RamStorage(),
             });
 
-            this.data.partner.records[0].p = [2];
+            serverData.models.partner.records[0].p = [2];
             const form = await makeView({
                 type: "form",
                 model: "partner",
@@ -13261,7 +13265,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.records[0].turtles = [];
+            serverData.models.partner.records[0].turtles = [];
 
             const form = await makeView({
                 type: "form",
@@ -13324,7 +13328,7 @@ QUnit.module("Fields", (hooks) => {
 
             await makeLegacyDialogMappingTestEnv();
 
-            this.data.partner.records[0].turtles = [];
+            serverData.models.partner.records[0].turtles = [];
 
             const form = await makeView({
                 type: "form",
@@ -13394,7 +13398,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.records[0].turtles = [];
+            serverData.models.partner.records[0].turtles = [];
 
             const form = await makeView({
                 type: "form",
