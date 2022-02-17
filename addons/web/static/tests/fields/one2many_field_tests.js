@@ -268,12 +268,12 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 arch: `
                     <form>
-                    <field name="p">
-                    <tree editable="bottom" limit="1" decoration-muted="foo != False" default_order="display_name">
-                    <field name="foo" invisible="1"/>
-                    <field name="display_name" />
-                    </tree>
-                    </field>
+                        <field name="p">
+                            <tree editable="bottom" limit="1" decoration-muted="foo != False" default_order="display_name">
+                                <field name="foo" invisible="1"/>
+                                <field name="display_name" />
+                            </tree>
+                        </field>
                     </form>`,
                 resId: 1,
                 viewOptions: {
@@ -322,11 +322,11 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                <field name="turtles">
-                <tree>
-                <field name="parent_id" />
-                </tree>
-                </field>
+                    <field name="turtles">
+                        <tree>
+                            <field name="parent_id"/>
+                        </tree>
+                    </field>
                 </form>`,
             archs: {
                 "turtle,false,form": `<form><field name=\"parent_id\" domain=\"[('id', 'in', parent.turtles)]\"/></form>`,
@@ -376,13 +376,13 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                <field name="p">
-                <tree editable="bottom">
-                <field name="turtles" invisible="1"/>
-                <field name="foo" attrs="{&quot;readonly&quot; : [(&quot;turtles&quot;, &quot;!=&quot;, [])] }"/>
-                <field name="qux" attrs="{&quot;readonly&quot; : [(&quot;turtles&quot;, &quot;!=&quot;, [])] }"/>
-                </tree>
-                </field>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="turtles" invisible="1"/>
+                            <field name="foo" attrs="{&quot;readonly&quot; : [(&quot;turtles&quot;, &quot;!=&quot;, [])] }"/>
+                            <field name="qux" attrs="{&quot;readonly&quot; : [(&quot;turtles&quot;, &quot;!=&quot;, [])] }"/>
+                        </tree>
+                    </field>
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
@@ -446,17 +446,17 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                <sheet>
-                <notebook>
-                <page string="Partner page">
-                <field name="p">
-                <tree>
-                <field name="foo"/>
-                </tree>
-                </field>
-                </page>
-                </notebook>
-                </sheet>
+                    <sheet>
+                        <notebook>
+                            <page string="Partner page">
+                                <field name="p">
+                                    <tree>
+                                        <field name="foo"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>`,
             resId: 1,
             intercepts: {
