@@ -142,8 +142,7 @@
         'web.tests_assets': [
             'mail/static/src/env/test_env.js',
             'mail/static/src/utils/test_utils.js',
-            'mail/static/tests/helpers/mock_models.js',
-            'mail/static/tests/helpers/mock_server.js',
+            'mail/static/tests/helpers/*.js',
         ],
         'web.qunit_suite_tests': [
             'mail/static/tests/*.js',
