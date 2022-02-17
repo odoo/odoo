@@ -3,7 +3,7 @@
 
 from odoo import models, _, _lt
 from odoo.exceptions import UserError
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError, DEFAULT_SERVER_URL
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError, DEFAULT_SERVER_URL, DEFAULT_TEST_SERVER_URL
 
 from lxml import etree
 import base64
@@ -22,15 +22,15 @@ class AccountEdiFormat(models.Model):
     def _cron_receive_fattura_pa(self):
         ''' Check the proxy for incoming invoices.
         '''
-        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+        proxy_users = self.env['account_edi_proxy_client.user'].search([('edi_format_id', '=', self.env.ref('l10n_it_edi.edi_fatturaPA').id)])
+
+        if proxy_users._get_demo_state() == 'demo':
             return
 
-        server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
-        proxy_users = self.env['account_edi_proxy_client.user'].search([('edi_format_id', '=', self.env.ref('l10n_it_edi.edi_fatturaPA').id)])
         for proxy_user in proxy_users:
             company = proxy_user.company_id
             try:
-                res = proxy_user._make_request(server_url + '/api/l10n_it_edi/1/in/RicezioneInvoice',
+                res = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice',
                                                params={'recipient_codice_fiscale': company.l10n_it_codice_fiscale})
             except AccountEdiProxyError as e:
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
@@ -65,7 +65,7 @@ class AccountEdiFormat(models.Model):
 
             if proxy_acks:
                 try:
-                    proxy_user._make_request(server_url + '/api/l10n_it_edi/1/ack',
+                    proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/ack',
                                             params={'transaction_ids': proxy_acks})
                 except AccountEdiProxyError as e:
                     _logger.error('Error while receiving file from SdiCoop: %s', e)
@@ -153,7 +153,7 @@ class AccountEdiFormat(models.Model):
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
                 'blocking_level': 'error'} for invoice in invoices}
 
-        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+        if proxy_user._get_demo_state() == 'demo':
             responses = {filename: {'id_transaction': 'demo'} for invoice in invoices}
         else:
             try:
@@ -175,7 +175,6 @@ class AccountEdiFormat(models.Model):
     def _l10n_it_post_invoices_step_2(self, invoices):
         ''' Check if the sent invoices have been processed by FatturaPA.
         '''
-        server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
         to_check = {i.l10n_it_edi_transaction: i for i in invoices}
         to_return = {}
         company = invoices.company_id
@@ -185,12 +184,12 @@ class AccountEdiFormat(models.Model):
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
                 'blocking_level': 'error'} for invoice in invoices}
 
-        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+        if proxy_user._get_demo_state() == 'demo':
             # simulate success and bypass ack
             return {invoice: {'attachment': invoice.l10n_it_edi_attachment_id} for invoice in invoices}
         else:
             try:
-                responses = proxy_user._make_request(server_url + '/api/l10n_it_edi/1/in/TrasmissioneFatture',
+                responses = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/TrasmissioneFatture',
                                                     params={'ids_transaction': list(to_check.keys())})
             except AccountEdiProxyError as e:
                 return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
@@ -230,6 +229,7 @@ class AccountEdiFormat(models.Model):
             elif state == 'notificaScarto':
                 errors = [element.find('Descrizione').text for element in response_tree.xpath('//Errore')]
                 to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
+                invoice.l10n_it_edi_transaction = False
             elif state == 'notificaMancataConsegna':
                 to_return[invoice] = {
                     'error': _('The E-invoice is not delivered to the addressee. The Exchange System is\
@@ -250,7 +250,7 @@ class AccountEdiFormat(models.Model):
 
         if proxy_acks:
             try:
-                proxy_user._make_request(server_url + '/api/l10n_it_edi/1/ack',
+                proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/ack',
                                         params={'transaction_ids': proxy_acks})
             except AccountEdiProxyError as e:
                 # Will be ignored and acked again next time.
@@ -294,8 +294,7 @@ class AccountEdiFormat(models.Model):
             'EI03': {'error': _lt('Unauthorized user'), 'blocking_level': 'error'},
         }
 
-        server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
-        result = proxy_user._make_request(server_url + '/api/l10n_it_edi/1/out/SdiRiceviFile', params={'files': files})
+        result = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/out/SdiRiceviFile', params={'files': files})
 
         # Translate the errors.
         for filename in result.keys():
