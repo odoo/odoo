@@ -1316,6 +1316,7 @@ class GroupsView(models.Model):
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
                     attrs['attrs'] = user_type_readonly
+                    attrs['on_change'] = '1'
                     attrs['widget'] = 'res_groups_selection'
                     if category_name not in xml_by_category:
                         xml_by_category[category_name] = []
@@ -1521,16 +1522,25 @@ class UsersView(models.Model):
                 + [field for field in names if not is_reified_group(field)]
             )
             values.pop('groups_id', None)
+            self._on_change_field_group()
             values.update(self._remove_reified_groups(values))
 
         field_onchange['groups_id'] = ''
         result = super().onchange(values, field_name, field_onchange)
+        print(">>>>>>>>>>>>", field_name)
         if not field_name: # merged default_get
             self._add_reified_groups(
                 filter(is_reified_group, field_onchange),
                 result.setdefault('value', {})
             )
         return result
+
+
+    @api.onchange('groups_id')
+    def _on_change_field_group(self):
+        import pdb
+        pdb.set_trace()
+        print
 
     def read(self, fields=None, load='_classic_read'):
         # determine whether reified groups fields are required, and which ones

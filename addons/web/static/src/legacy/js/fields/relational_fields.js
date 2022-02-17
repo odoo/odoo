@@ -3424,27 +3424,27 @@ const FieldResGroupsSelection = FieldSelection.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Check the Group Inheritance on change of selection
-     * @override
-     * @private
-     */
-    _onChange: async function () {
-        await this._super(...arguments);
-        const groups_id = [];
-        for (const [key, value] of Object.entries(this.recordData)) {
-            if (key.includes('sel_groups_') && value) {
-                groups_id.push(value);
-            }
-        }
-        this._rpc({
-            model: 'res.groups',
-            method: 'check_group_inheritance',
-            args: [groups_id],
-        }).then((result) => {
-            core.bus.trigger('show_res_groups_inheritance_warning', {warnings: result});
-        });
-    },
+    // /**
+    //  * Check the Group Inheritance on change of selection
+    //  * @override
+    //  * @private
+    //  */
+    // _onChange: async function () {
+    //     await this._super(...arguments);
+    //     const groups_id = [];
+    //     for (const [key, value] of Object.entries(this.recordData)) {
+    //         if (key.includes('sel_groups_') && value) {
+    //             groups_id.push(value);
+    //         }
+    //     }
+    //     this._rpc({
+    //         model: 'res.groups',
+    //         method: 'check_group_inheritance',
+    //         args: [groups_id],
+    //     }).then((result) => {
+    //         core.bus.trigger('show_res_groups_inheritance_warning', {warnings: result});
+    //     });
+    // },
 
     /**
      * Show the Warning if the Current Widget's Previous group is
