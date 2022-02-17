@@ -639,6 +639,36 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.verifySteps(["1", "2"], "items should have been selected in this order");
     });
 
+    QUnit.test("dropdowns keynav is not impacted by bootstrap", async (assert) => {
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`
+            <Dropdown startOpen="true">
+                <select><option>foo</option></select>
+            </Dropdown>
+        `;
+        env = await makeTestEnv();
+        await mount(Parent, { env, target });
+        assert.containsOnce(target, ".dropdown-menu", "menu is opened at start");
+        const menu = target.querySelector(".dropdown-menu");
+
+        // This class presence makes bootstrap ignore the below event
+        assert.hasClass(menu, "o-dropdown--menu");
+
+        const select = menu.querySelector("select");
+        const ev = new KeyboardEvent("keydown", {
+            bubbles: true,
+            // Define the ESC key with standard API (for hotkey_service)
+            key: "Escape",
+            code: "Escape",
+            // Define the ESC key with deprecated API (for bootstrap)
+            keyCode: 27,
+            which: 27,
+        });
+        select.dispatchEvent(ev);
+        await nextTick();
+        assert.containsNone(target, ".dropdown-menu", "menu is now closed");
+    });
+
     QUnit.test("props toggler='parent'", async (assert) => {
         class Parent extends Component {}
         Parent.template = xml`
