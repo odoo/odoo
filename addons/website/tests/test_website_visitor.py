@@ -120,21 +120,16 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
         )
 
     def assertVisitorDeactivated(self, visitor, main_visitor):
-        """ Temporary method to check that a visitor has been de-activated / merged
+        """ Method that checks that a visitor has been de-activated / merged
         with other visitor, notably in case of login (see User.authenticate() as
-        well as Visitor._link_to_visitor() ).
+        well as Visitor._link_to_visitor() ). """
+        self.assertTrue(bool(visitor))
+        self.assertFalse(visitor.active)
+        self.assertTrue(main_visitor.active)
+        self.assertEqual(visitor.parent_id, main_visitor)
 
-        As final result depends on installed modules (see overrides) due to stable
-        improvements linked to EventOnline, this method contains a hack to avoid
-        doing too much overrides just for that behavior. """
-        if 'parent_id' in self.env['website.visitor']:
-            self.assertTrue(bool(visitor))
-            self.assertFalse(visitor.active)
-            self.assertTrue(main_visitor.active)
-            self.assertEqual(visitor.parent_id, main_visitor)
-        else:
-            self.assertFalse(visitor)
-            self.assertTrue(bool(main_visitor))
+        # tracks are linked
+        self.assertTrue(visitor.website_track_ids < main_visitor.website_track_ids)
 
     def test_visitor_creation_on_tracked_page(self):
         """ Test various flows involving visitor creation and update. """
@@ -287,40 +282,110 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
         # check number of visits
         self.assertEqual(visitor_portal.visit_count, 2, "There should be 2 visits for the portal user")
 
-    def test_visitor_archive(self):
-        """ Test cron archiving inactive visitors and their re-activation when
-        authenticating an user. """
-        self.env['ir.config_parameter'].sudo().set_param('website.visitor.live.days', 7)
-
-        partner_demo = self.partner_demo
-        old_visitor = self.env['website.visitor'].create({
+    def test_clean_inactive_visitors(self):
+        inactive_visitors = self.env['website.visitor'].create([{
+            'name': 'Crazy Lazy Bernie',
             'lang_id': self.env.ref('base.lang_en').id,
             'country_id': self.env.ref('base.be').id,
             'website_id': 1,
-            'partner_id': partner_demo.id,
-        })
-        self.assertTrue(old_visitor.active)
-        self.assertEqual(partner_demo.visitor_ids, old_visitor, "Visitor and its partner should be synchronized")
+            'last_connection_datetime': datetime.now() - timedelta(days=8)
+        }, {
+            'name': 'Sleeping Joe',
+            'lang_id': self.env.ref('base.lang_en').id,
+            'country_id': self.env.ref('base.be').id,
+            'website_id': 1,
+            'last_connection_datetime': datetime.now() - timedelta(days=15)
+        }])
 
-        # archive old visitor
-        old_visitor.last_connection_datetime = datetime.now() - timedelta(days=8)
-        self.env['website.visitor']._cron_archive_visitors()
-        self.assertEqual(old_visitor.active, False, "Visitor should be archived after inactivity")
+        active_visitors = self.env['website.visitor'].create([{
+            'name': 'Active Donald',
+            'lang_id': self.env.ref('base.lang_en').id,
+            'country_id': self.env.ref('base.be').id,
+            'website_id': 1,
+            'last_connection_datetime': datetime.now() - timedelta(days=1)
+        }, {
+            'name': 'Vladimir Customer',
+            'lang_id': self.env.ref('base.lang_en').id,
+            'country_id': self.env.ref('base.be').id,
+            'website_id': 1,
+            'partner_id': self.partner_demo.id,
+            'last_connection_datetime': datetime.now() - timedelta(days=15)
+        }])
 
-        # reconnect with new visitor.
-        self.url_open(self.tracked_page.url)
-        new_visitor = self._get_last_visitor()
-        self.assertFalse(new_visitor.partner_id)
-        self.assertTrue(new_visitor.id > old_visitor.id, "A new visitor should have been created.")
-        self.assertVisitorTracking(new_visitor, self.tracked_page)
+        self._test_unlink_old_visitors(inactive_visitors, active_visitors)
 
-        with self.mock_visitor_from_request(force_visitor=new_visitor):
-            self.authenticate('demo', 'demo')
-        (new_visitor | old_visitor).flush()
-        partner_demo.flush()
-        partner_demo.invalidate_cache(fnames=['visitor_ids'])
-        self.assertEqual(partner_demo.visitor_ids, old_visitor, "The partner visitor should be back to the 'old' visitor.")
+    def _test_unlink_old_visitors(self, inactive_visitors, active_visitors):
+        """ This method will test that the visitors are correctly deleted when inactive.
 
-        new_visitor = self.env['website.visitor'].search([('id', '=', new_visitor.id)])
-        self.assertEqual(len(new_visitor), 0, "The new visitor should be deleted when visitor authenticate once again.")
-        self.assertEqual(old_visitor.active, True, "The old visitor should be reactivated when visitor authenticates once again.")
+        - inactive_visitors: all visitors that should be unlinked by the CRON
+          '_cron_unlink_old_visitors'
+        - active_visitors: all visitors that should NOT be cleaned because they are either active
+          or have some important data linked to them (partner, ...) and we want to keep them.
+
+        We use this method as a private tool so that sub-module can also test the cleaning of visitors
+        based on their own sets of conditions. """
+
+        WebsiteVisitor = self.env['website.visitor'].with_context(active_test=False)
+
+        self.env['ir.config_parameter'].sudo().set_param('website.visitor.live.days', 7)
+
+        # ensure we keep a single query by correct usage of "not inselect"
+        # (+1 query to fetch the 'ir.config_parameter')
+        with self.assertQueryCount(2):
+            WebsiteVisitor.search(WebsiteVisitor._inactive_visitors_domain())
+
+        inactive_visitor_ids = inactive_visitors.ids
+        active_visitor_ids = active_visitors.ids
+
+        WebsiteVisitor._cron_unlink_old_visitors()
+        if inactive_visitor_ids:
+            # all inactive visitors should be deleted
+            self.assertFalse(bool(WebsiteVisitor.search([('id', 'in', inactive_visitor_ids)])))
+        if active_visitor_ids:
+            # all active visitors should be kept
+            self.assertEqual(active_visitors, WebsiteVisitor.search([('id', 'in', active_visitor_ids)]))
+
+    def test_link_to_visitor(self):
+        """ Visitors are 'linked' together when the user, previously not connected, authenticates
+        and the system detects it already had a website.visitor for that partner_id.
+        This can happen quite often if the user switches browsers / hardwares.
+
+        When 'linking' visitors together, the new visitor is archived and all its relevant data is
+        merged within the main visitor. See 'website.visitor#_link_to_visitor' for more details.
+
+        This test ensures that all the relevant data are properly merged.
+
+        We build this logic with sub-methods so that sub-modules can easily add their own data and
+        test that they are correctly merged."""
+
+        [main_visitor, linked_visitor] = self.env['website.visitor'].create([
+            self._prepare_main_visitor_data(),
+            self._prepare_linked_visitor_data()
+        ])
+        linked_visitor._link_to_visitor(main_visitor)
+
+        self.assertVisitorDeactivated(linked_visitor, main_visitor)
+
+    def _prepare_main_visitor_data(self):
+        return {
+            'name': "Mitchell Main",
+            'lang_id': self.env.ref('base.lang_en').id,
+            'country_id': self.env.ref('base.be').id,
+            'website_id': 1,
+            'website_track_ids': [(0, 0, {
+                'page_id': self.tracked_page.id,
+                'url': self.tracked_page.url
+            })]
+        }
+
+    def _prepare_linked_visitor_data(self):
+        return {
+            'name': "Mitchell Main's Phone",
+            'lang_id': self.env.ref('base.lang_en').id,
+            'country_id': self.env.ref('base.be').id,
+            'website_id': 1,
+            'website_track_ids': [(0, 0, {
+                'page_id': self.tracked_page_2.id,
+                'url': self.tracked_page_2.url
+            })]
+        }

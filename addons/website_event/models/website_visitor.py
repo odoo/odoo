@@ -2,15 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class WebsiteVisitor(models.Model):
     _name = 'website.visitor'
     _inherit = ['website.visitor']
 
-    parent_id = fields.Many2one(
-        'website.visitor', string="Parent", ondelete='set null', index='btree_not_null',
-        help="Main identity")
     event_registration_ids = fields.One2many(
         'event.registration', 'visitor_id', string='Event Registrations',
         groups="event.group_event_registration_desk")
@@ -79,6 +77,11 @@ class WebsiteVisitor(models.Model):
 
         return [('id', 'in', visitor_ids)]
 
+    def _inactive_visitors_domain(self):
+        """ Visitors registered to events are considered always active and should not be deleted. """
+        domain = super()._inactive_visitors_domain()
+        return expression.AND([domain, [('event_registration_ids', '=', False)]])
+
     def _link_to_partner(self, partner, update_values=None):
         """ Propagate partner update to registration records """
         if partner:
@@ -87,40 +90,8 @@ class WebsiteVisitor(models.Model):
                 registration_wo_partner.partner_id = partner
         super(WebsiteVisitor, self)._link_to_partner(partner, update_values=update_values)
 
-    def _link_to_visitor(self, target, keep_unique=True):
+    def _link_to_visitor(self, target):
         """ Override linking process to link registrations to the final visitor. """
         self.event_registration_ids.write({'visitor_id': target.id})
 
-        res = super(WebsiteVisitor, self)._link_to_visitor(target, keep_unique=False)
-
-        if keep_unique:
-            self.partner_id = False
-            self.parent_id = target.id
-            self.active = False
-
-        return res
-
-    def _get_visitor_from_request(self, force_create=False):
-        """ When fetching visitor, now that duplicates are linked to a main visitor
-        instead of unlinked, you may have more collisions issues with cookie being
-        set after a de-connection for example.
-
-        In base method, visitor associated to a partner in case of public user is
-        not taken into account. It is considered as desynchronized cookie. Here
-        we also discard if the visitor has a main visitor whose partner is set
-        (aka wrong after logout partner). """
-        visitor = super(WebsiteVisitor, self)._get_visitor_from_request(force_create=force_create)
-
-        # also check that visitor parent partner is not different from user's one (indicates duplicate due to invalid or wrong cookie)
-        if visitor and visitor.parent_id.partner_id:
-            if self.env.user._is_public():
-                visitor = self.env['website.visitor'].sudo()
-            elif not visitor.partner_id:
-                visitor = self.env['website.visitor'].sudo().with_context(active_test=False).search(
-                    [('partner_id', '=', self.env.user.partner_id.id)]
-                )
-
-        if not visitor and force_create:
-            visitor = self._create_visitor()
-
-        return visitor
+        return super(WebsiteVisitor, self)._link_to_visitor(target)

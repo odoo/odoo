@@ -35,6 +35,7 @@ class WebsiteVisitor(models.Model):
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
     partner_id = fields.Many2one('res.partner', string="Contact", help="Partner of the last logged in user.", index='btree_not_null')
+    parent_id = fields.Many2one('website.visitor', string="Parent", ondelete='set null', index='btree_not_null', help="Main identity")
     partner_image = fields.Binary(related='partner_id.image_1920')
 
     # localisation and info
@@ -161,10 +162,17 @@ class WebsiteVisitor(models.Model):
         }
 
     def _get_visitor_from_request(self, force_create=False):
-        """ Return the visitor as sudo from the request if there is a visitor_uuid cookie.
-            It is possible that the partner has changed or has disconnected.
-            In that case the cookie is still referencing the old visitor and need to be replaced
-            with the one of the visitor returned !!!. """
+        """ Return the visitor as sudo from the request if there is a
+        visitor_uuid cookie.
+
+        When fetching visitor, now that duplicates are linked to a main visitor
+        instead of unlinked, you may have more collisions issues with cookie
+        being set (after a de-connection for example).
+
+        The visitor associated to a partner in case of public user is not taken
+        into account, it is considered as desynchronized cookie.
+        In addition, we also discard if the visitor has a main visitor whose
+        partner is set (aka wrong after logout partner). """
 
         # This function can be called in json with mobile app.
         # In case of mobile app, no uid is set on the jsonRequest env.
@@ -189,10 +197,21 @@ class WebsiteVisitor(models.Model):
             # Cookie associated to a Partner
             visitor = Visitor
 
+        # also check that visitor parent partner is not different from user's one
+        # (indicates duplicate due to invalid or wrong cookie)
+        if visitor and visitor.parent_id.partner_id:
+            if self.env.user._is_public():
+                visitor = self.env['website.visitor'].sudo()
+            elif not visitor.partner_id:
+                visitor = self.env['website.visitor'].sudo().with_context(active_test=False).search(
+                    [('partner_id', '=', self.env.user.partner_id.id)]
+                )
+
         if visitor and not visitor.timezone:
             tz = self._get_visitor_timezone()
             if tz:
                 visitor._update_visitor_timezone(tz)
+
         if not visitor and force_create:
             visitor = self._create_visitor()
 
@@ -265,15 +284,14 @@ class WebsiteVisitor(models.Model):
             vals.update(update_values)
         self.write(vals)
 
-    def _link_to_visitor(self, target, keep_unique=True):
+    def _link_to_visitor(self, target):
         """ Link visitors to target visitors, because they are linked to the
         same identity. Purpose is mainly to propagate partner identity to sub
         records to ease database update and decide what to do with "duplicated".
-        THis method is meant to be overridden in order to implement some specific
+        This method is meant to be overridden in order to implement some specific
         behavior linked to sub records of duplicate management.
 
         :param target: main visitor, target of link process;
-        :param keep_unique: if True, find a way to make target unique;
         """
         # Link sub records of self to target partner
         if target.partner_id:
@@ -281,16 +299,34 @@ class WebsiteVisitor(models.Model):
         # Link sub records of self to target visitor
         self.website_track_ids.write({'visitor_id': target.id})
 
-        if keep_unique:
-            self.unlink()
+        # Archive current record and set its parent visitor
+        self.partner_id = False
+        self.parent_id = target.id
+        self.active = False
 
         return target
 
-    def _cron_archive_visitors(self):
-        delay_days = int(self.env['ir.config_parameter'].sudo().get_param('website.visitor.live.days', 30))
+    def _cron_unlink_old_visitors(self):
+        """ Unlink inactive visitors (see '_inactive_visitors_domain' for details).
+
+        Visitors were previously archived but we came to the conclusion that archived visitors
+        have very little value and bloat the database for no reason. """
+
+        inactive_visitors = self.env['website.visitor'].sudo() \
+            .with_context(active_test=False) \
+            .search(self._inactive_visitors_domain())
+        inactive_visitors.unlink()
+
+    def _inactive_visitors_domain(self):
+        """ This method defines the domain of visitors that can be cleaned. By default visitors
+        not linked to any partner and not active for 'website.visitor.live.days' days (default being 60)
+        are considered as inactive.
+
+        This method is meant to be overridden by sub-modules to further refine inactivity conditions. """
+
+        delay_days = int(self.env['ir.config_parameter'].sudo().get_param('website.visitor.live.days', 60))
         deadline = datetime.now() - timedelta(days=delay_days)
-        visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', deadline)])
-        visitors_to_archive.write({'active': False})
+        return [('last_connection_datetime', '<', deadline), ('partner_id', '=', False)]
 
     def _update_visitor_timezone(self, timezone):
         """ We need to do this part here to avoid concurrent updates error. """

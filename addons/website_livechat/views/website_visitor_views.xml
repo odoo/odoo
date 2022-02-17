@@ -34,9 +34,10 @@
         <field name="arch" type="xml">
             <field name="page_ids" position="after">
                 <field name="livechat_operator_id"/>
+                <field name="session_count"/>
             </field>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="before">
-                <div>Chats<span class="float-right font-weight-bold"><field name="session_count"/></span></div>
+                <div t-if="record.session_count.raw_value">Chats<span class="float-right font-weight-bold"><field name="session_count"/></span></div>
                 <div t-if="record.livechat_operator_id.raw_value">
                     Speaking With
                     <div name="livechat_operator_id"
@@ -53,8 +54,10 @@
             </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="before">
                 <div class="col-lg col-sm-4 col-6 py-0 my-2">
-                    <b><field name="session_count"/></b>
-                    <div>Chats</div>
+                    <span t-att-class="record.session_count.raw_value ? 'font-weight-bold' : 'text-muted'">
+                        <field name="session_count"/>
+                    </span>
+                    <div t-att-class="record.session_count.raw_value ? '' : 'text-muted'">Chats</div>
                 </div>
                 <div t-if="record.livechat_operator_id.raw_value" class="col-lg col-sm-4 col-6 py-0 my-2">
                     <div>

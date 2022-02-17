@@ -113,6 +113,7 @@
         ],
     'demo': [
         'data/website_demo.xml',
+        'data/website_visitor_demo.xml',
     ],
     'application': True,
     'post_init_hook': 'post_init_hook',
