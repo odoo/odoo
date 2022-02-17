@@ -15,7 +15,7 @@ import { session } from "@web/session";
  * Inserts "thousands" separators in the provided number.
  *
  * @private
- * @param {number} number integer number
+ * @param {string} string representing integer number
  * @param {string} [thousandsSep=","] the separator to insert
  * @param {number[]} [grouping=[3,0]]
  *   array of relative offsets at which to insert `thousandsSep`.
@@ -23,10 +23,9 @@ import { session } from "@web/session";
  * @returns {string}
  */
 function insertThousandsSep(number, thousandsSep = ",", grouping = [3, 0]) {
-    let numStr = `${number}`;
-    const negative = numStr[0] === "-";
-    numStr = negative ? numStr.slice(1) : numStr;
-    return (negative ? "-" : "") + intersperse(numStr, grouping, thousandsSep);
+    const negative = number[0] === "-";
+    number = negative ? number.slice(1) : number;
+    return (negative ? "-" : "") + intersperse(number, grouping, thousandsSep);
 }
 
 /**
@@ -77,8 +76,9 @@ function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
 
     // determine if we should keep the decimals (we don't want to display 1,020.02k for 1020020)
     const decimalsToKeep = number >= 1000 ? 0 : decimals;
+    number = sign * number;
     const [integerPart, decimalPart] = number.toFixed(decimalsToKeep).split(".");
-    const int = insertThousandsSep(sign * Number(integerPart), thousandsSep, grouping);
+    const int = insertThousandsSep(integerPart, thousandsSep, grouping);
     if (!decimalPart) {
         return int + symbol;
     }
@@ -129,7 +129,7 @@ export function formatFloat(value, options = {}) {
         precision = 2;
     }
     const formatted = (value || 0).toFixed(precision || 2).split(".");
-    formatted[0] = insertThousandsSep(+formatted[0], thousandsSep, grouping);
+    formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (options.noTrailingZeros) {
         formatted[1] = formatted[1].replace(/0+$/, "");
     }
