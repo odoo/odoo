@@ -1073,6 +1073,7 @@ class Channel(models.Model):
         """
         # create the channel
         new_channel = self.create({
+            'channel_type': 'channel',
             'name': name,
             'public': privacy,
         })
