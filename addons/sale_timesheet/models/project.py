@@ -37,7 +37,6 @@ class Project(models.Model):
     sale_line_employee_ids = fields.One2many('project.sale.line.employee.map', 'project_id', "Sale line/Employee map", copy=False,
         help="Employee/Sale Order Item Mapping:\n Defines to which sales order item an employee's timesheet entry will be linked."
         "By extension, it defines the rate at which an employee's time on the project is billed.")
-    allow_billable = fields.Boolean("Billable", help="Invoice your time and material from tasks.")
     billable_percentage = fields.Integer(
         compute='_compute_billable_percentage',
         help="% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit.")
