@@ -1208,6 +1208,6 @@ class MassMailing(models.Model):
                 modified = True
 
         if modified:
-            return lxml.html.tostring(root)
+            return lxml.html.tostring(root, encoding='unicode')
 
         return body_html
