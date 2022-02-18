@@ -5,6 +5,7 @@ from odoo import models, fields, api
 from odoo.tools.pdf import OdooPdfFileReader
 from odoo.osv import expression
 from odoo.tools import html_escape
+from odoo.exceptions import RedirectWarning
 
 from lxml import etree
 import base64
@@ -410,6 +411,8 @@ class AccountEdiFormat(models.Model):
                         file_data['pdf_reader'].stream.close()
                     else:
                         res = edi_format._create_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'])
+                except RedirectWarning as rw:
+                    raise rw
                 except Exception as e:
                     _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
@@ -584,7 +587,7 @@ class AccountEdiFormat(models.Model):
         :param code: The code of the currency.
         :returns:    A currency or an empty recordset if not found.
         '''
-        return self.env['res.currency'].search([('name', '=', code.upper())], limit=1)
+        return self.env['res.currency'].with_context(active_test=False).search([('name', '=', code.upper())], limit=1)
 
     ####################################################
     # Other helpers
