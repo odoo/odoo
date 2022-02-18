@@ -3,7 +3,7 @@
 from odoo import api, models, fields, tools, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, str2bool
 from odoo.tests.common import Form
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 
 from datetime import datetime
 from lxml import etree
@@ -244,6 +244,18 @@ class AccountEdiFormat(models.Model):
                 if elements[0].attrib.get('currencyID'):
                     currency_str = elements[0].attrib['currencyID']
                     currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
+                    if currency and not currency.active:
+                        error_msg = _('The currency (%s) of the document you are uploading is not active in this database.\n'
+                                      'Please activate it before trying again to import.', currency.name)
+                        error_action = {
+                            'view_mode': 'form',
+                            'res_model': 'res.currency',
+                            'type': 'ir.actions.act_window',
+                            'target': 'new',
+                            'res_id': currency.id,
+                            'views': [[False, 'form']]
+                        }
+                        raise RedirectWarning(error_msg, error_action, _('Display the currency'))
                     if currency != self.env.company.currency_id and currency.active:
                         invoice_form.currency_id = currency
 
