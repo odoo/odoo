@@ -63,13 +63,13 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (this.wysiwyg.snippetsMenu) {
             await this.wysiwyg.snippetsMenu.cleanForSave();
         }
-        return this.wysiwyg.saveModifiedImages(this.$content).then(function () {
+        return this.wysiwyg.saveModifiedImages(this.$content).then(async function () {
             self._isDirty = self.wysiwyg.isDirty();
             self._doAction();
 
             const $editorEnable = $editable.closest('.editor_enable');
             $editorEnable.removeClass('editor_enable');
-            convertInline.toInline($editable, self.cssRules, self.wysiwyg.$iframe);
+            await convertInline.toInline($editable, self.cssRules, self.wysiwyg.$iframe);
             $editorEnable.addClass('editor_enable');
 
             self.trigger_up('field_changed', {
