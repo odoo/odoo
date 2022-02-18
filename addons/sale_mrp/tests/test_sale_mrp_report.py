@@ -64,7 +64,7 @@ class TestSaleMrpInvoices(common.TransactionCase):
         invoice = so._create_invoices()
         invoice.action_post()
 
-        report = self.env['ir.actions.report']._get_report_from_name('account.report_invoice_with_payments')
-        html = report._render_qweb_html(invoice.ids)[0]
+        html = self.env['ir.actions.report']._render_qweb_html(
+            'account.report_invoice_with_payments', invoice.ids)[0]
         text = html2plaintext(html)
         self.assertRegex(text, r'Product By Lot\n1.00Units\nLOT0001', "There should be a line that specifies 1 x LOT0001")

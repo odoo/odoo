@@ -58,7 +58,7 @@ class TestMailComposer(TestMailCommon, TestRecipients):
             'report_type': 'qweb-pdf',
             'report_name': 'test_mail.mail_test_ticket_test_template',
         })
-        cls.test_record_report = cls.test_report._render_qweb_pdf(cls.test_report.ids)
+        cls.test_record_report = cls.env['ir.actions.report']._render_qweb_pdf(cls.test_report, cls.test_record.ids)
 
         cls.test_from = '"John Doe" <john@example.com>'
 

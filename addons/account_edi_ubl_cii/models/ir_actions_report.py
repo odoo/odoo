@@ -50,14 +50,14 @@ class IrActionsReport(models.Model):
                     'mimetype': 'application/xml',
                 })
 
-    def _render_qweb_pdf_prepare_streams(self, data, res_ids=None):
+    def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # EXTENDS base
         # Add the pdf report in the XML as base64 string.
-        collected_streams = super()._render_qweb_pdf_prepare_streams(data, res_ids=res_ids)
+        collected_streams = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
 
         if collected_streams \
                 and res_ids \
-                and self.report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
+                and self._get_report(report_ref).report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
             for res_id, stream_data in collected_streams.items():
                 invoice = self.env['account.move'].browse(res_id)
                 self._add_pdf_into_invoice_xml(invoice, stream_data)

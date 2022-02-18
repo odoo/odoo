@@ -1348,7 +1348,7 @@ class WebsiteSale(http.Controller):
     def print_saleorder(self, **kwargs):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
-            pdf, _ = request.env.ref('sale.action_report_saleorder').with_user(SUPERUSER_ID)._render_qweb_pdf([sale_order_id])
+            pdf, _ = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [sale_order_id])
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         else:

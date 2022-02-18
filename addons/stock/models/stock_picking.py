@@ -1544,7 +1544,7 @@ class Picking(models.Model):
     def _attach_sign(self):
         """ Render the delivery report in pdf and attach it to the picking in `self`. """
         self.ensure_one()
-        report = self.env.ref('stock.action_report_delivery')._render_qweb_pdf(self.id)
+        report = self.env['ir.actions.report']._render_qweb_pdf("stock.action_report_delivery", self.id)
         filename = "%s_signed_delivery_slip" % self.name
         if self.partner_id:
             message = _('Order signed by %s') % (self.partner_id.name)

@@ -27,11 +27,14 @@ class IrActionsReport(models.Model):
         qr_cross = ReportLabImage((width/2 - cross_width/2) / mm, (height/2 - cross_height/2) / mm, cross_width / mm, cross_height / mm, cross_path.as_posix())
         barcode_drawing.add(qr_cross)
 
-    def _render_qweb_pdf_prepare_streams(self, data, res_ids=None):
+    def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # OVERRIDE
-        res = super()._render_qweb_pdf_prepare_streams(data, res_ids)
-        if res_ids and self.report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
-            invoices = self.env[self.model].browse(res_ids)
+        res = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids)
+        if not res_ids:
+            return res
+        report = self._get_report(report_ref)
+        if report.report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
+            invoices = self.env[report.model].browse(res_ids)
             # Determine which invoices need a QR/ISR.
             qr_inv_ids = []
             isr_inv_ids = []
@@ -45,11 +48,11 @@ class IrActionsReport(models.Model):
             # Render the additional reports.
             streams_to_append = {}
             if qr_inv_ids:
-                qr_res = self.env.ref('l10n_ch.l10n_ch_qr_report')._render_qweb_pdf_prepare_streams(data, res_ids=qr_inv_ids)
+                qr_res = self._render_qweb_pdf_prepare_streams('l10n_ch.l10n_ch_qr_report', data, res_ids=qr_inv_ids)
                 for invoice_id, stream in qr_res.items():
                     streams_to_append[invoice_id] = stream
             if isr_inv_ids:
-                isr_res = self.env.ref('l10n_ch.l10n_ch_isr_report')._render_qweb_pdf_prepare_streams(data, res_ids=isr_inv_ids)
+                isr_res = self._render_qweb_pdf_prepare_streams('l10n_ch.l10n_ch_isr_report', data, res_ids=isr_inv_ids)
                 for invoice_id, stream in isr_res.items():
                     streams_to_append[invoice_id] = stream
             # Add to results
