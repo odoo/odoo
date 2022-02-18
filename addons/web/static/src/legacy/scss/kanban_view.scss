@@ -236,24 +236,23 @@
         // Kanban Record - Dropdown
         .o_dropdown_kanban {
             @include o-position-absolute($o-kanban-inside-vgutter, $o-kanban-inside-hgutter);
-            visibility: hidden;
             margin: (-$o-kanban-inside-vgutter) (-$o-kanban-inside-hgutter) 0 0;
-            @include media-breakpoint-down(sm) {
-                visibility: visible;
-            }
-
             .dropdown-toggle {
+                visibility: hidden;
+                @include media-breakpoint-down(sm) {
+                    visibility: visible;
+                }
                 @include o-kanban-dropdown;
-            }
-            &.show .dropdown-toggle {
-                @include o-kanban-dropdown-open;
+                &.show {
+                    @include o-kanban-dropdown-open;
+                }
             }
             .dropdown-menu {
                 min-width: 11rem;
             }
         }
 
-        &:hover .o_dropdown_kanban, .o_dropdown_kanban.show {
+        &:hover .dropdown-toggle, .dropdown-toggle.show {
             visibility: visible;
         }
 
@@ -470,12 +469,14 @@
                 margin-left: $o-kanban-inside-hgutter*2;
             }
 
-            &:hover .o_kanban_config, .o_kanban_config.show {
+            .o_kanban_config .dropdown-toggle {
+                visibility: hidden;
+            }
+            &:hover .dropdown-toggle, .o_kanban_config .dropdown-toggle.show {
                 visibility: visible;
             }
 
             .o_kanban_config {
-                visibility: hidden;
 
                 @include media-breakpoint-down(sm) {
                     visibility: visible;

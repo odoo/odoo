@@ -4040,7 +4040,7 @@ QUnit.module('LegacyViews', {
         assert.containsOnce(target, '.o_cp_action_menus', 'sidebar should be visible');
 
         await click(target.querySelector('.o_cp_action_menus .dropdown-toggle'));
-        const archiveItem = [...target.querySelectorAll('.o_cp_action_menus .dropdown-menu li > a')]
+        const archiveItem = [...target.querySelectorAll('.o_cp_action_menus .o-dropdown-menu li > a')]
             .filter((elem) => elem.textContent === 'Archive');
         await click(archiveItem[0]);
         assert.strictEqual(document.querySelectorAll('.modal').length, 1,

@@ -46,7 +46,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             });
 
             assert.strictEqual(dropdown.el.querySelector('button').innerText.trim(), "Dropdown");
-            assert.containsNone(dropdown, '.dropdown-menu');
+            assert.containsNone(dropdown, '.o-dropdown-menu');
 
             await testUtils.dom.click(dropdown.el.querySelector('button'));
 
@@ -61,12 +61,12 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             for (const dropdownEl of dropdownElements) {
                 await testUtils.dom.click(dropdownEl);
             }
-            assert.containsOnce(dropdown, '.dropdown-menu',
+            assert.containsOnce(dropdown, '.o-dropdown-menu',
                 "Clicking on any item of the dropdown should not close it");
 
             await testUtils.dom.click(document.body);
 
-            assert.containsNone(dropdown, '.dropdown-menu',
+            assert.containsNone(dropdown, '.o-dropdown-menu',
                 "Clicking outside of the dropdown should close it");
         });
 
@@ -94,10 +94,10 @@ odoo.define('web.dropdown_menu_tests', function (require) {
 
             await testUtils.dom.click(dropdown.el.querySelector('button'));
 
-            assert.hasClass(dropdown.el.querySelector('.dropdown-menu'), 'show');
+            assert.hasClass(dropdown.el.querySelector('.o-dropdown-menu'), 'show');
             assert.doesNotHaveClass(bsDropdown.querySelector('.dropdown-menu'), 'show');
 
-            assert.isVisible(dropdown.el.querySelector('.dropdown-menu'),
+            assert.isVisible(dropdown.el.querySelector('.o-dropdown-menu'),
                 "owl dropdown menu should be visible");
             assert.isNotVisible(bsDropdown.querySelector('.dropdown-menu'),
                 "bs dropdown menu should not be visible");
@@ -105,7 +105,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             await testUtils.dom.click(bsDropdown.querySelector('.btn.dropdown-toggle'));
 
             assert.doesNotHaveClass(dropdown.el, 'show');
-            assert.containsNone(dropdown.el, '.dropdown-menu',
+            assert.containsNone(dropdown.el, '.o-dropdown-menu',
                 "owl dropdown menu should not be set inside the dom");
 
             assert.hasClass(bsDropdown.querySelector('.dropdown-menu'), 'show');
@@ -115,7 +115,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             await testUtils.dom.click(document.body);
 
             assert.doesNotHaveClass(dropdown.el, 'show');
-            assert.containsNone(dropdown.el, '.dropdown-menu',
+            assert.containsNone(dropdown.el, '.o-dropdown-menu',
                 "owl dropdown menu should not be set inside the dom");
 
             assert.doesNotHaveClass(bsDropdown.querySelector('.dropdown-menu'), 'show');
@@ -340,7 +340,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
 
             await navigate('Escape', true); // Close the dropdown
 
-            assert.containsNone(dropdown, '.dropdown-menu', "Dropdown should be folded");
+            assert.containsNone(dropdown, '.o-dropdown-menu', "Dropdown should be folded");
         });
 
         QUnit.test('interactions between multiple dropdowns', async function (assert) {
@@ -365,24 +365,24 @@ odoo.define('web.dropdown_menu_tests', function (require) {
 
             const [menu1, menu2] = parent.el.querySelectorAll('.dropdown');
 
-            assert.containsNone(parent, '.dropdown-menu');
+            assert.containsNone(parent, '.o-dropdown-menu');
 
             await testUtils.dom.click(menu1.querySelector('button'));
 
-            assert.containsOnce(parent, '.dropdown-menu');
+            assert.containsOnce(parent, '.o-dropdown-menu');
             const [first, second] = parent.el.querySelectorAll(".dropdown");
-            assert.containsOnce(first, '.dropdown-menu');
+            assert.containsOnce(first, '.o-dropdown-menu');
 
             await testUtils.dom.click(menu2.querySelector('button'));
 
-            assert.containsOnce(parent, '.dropdown-menu');
-            assert.containsOnce(second, '.dropdown-menu');
+            assert.containsOnce(parent, '.o-dropdown-menu');
+            assert.containsOnce(second, '.o-dropdown-menu');
 
             await testUtils.dom.click(menu2.querySelector('.o_menu_item a'));
             await testUtils.dom.click(menu1.querySelector('button'));
 
-            assert.containsOnce(parent, '.dropdown-menu');
-            assert.containsOnce(first, '.dropdown-menu');
+            assert.containsOnce(parent, '.o-dropdown-menu');
+            assert.containsOnce(first, '.o-dropdown-menu');
         });
 
         QUnit.test("dropdown doesn't get close on mousedown inside and mouseup outside dropdown", async function (assert) {

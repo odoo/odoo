@@ -2936,13 +2936,18 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var tagColor = $(ev.currentTarget).parent().data('color');
         var tag = _.findWhere(this.value.data, { res_id: tagID });
         if (tag && this.colorField in tag.data) { // if there is a color field on the related model
-            this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
-                'widget': this,
-                'tag_id': tagID,
-            }));
+            // Manual initialize dropdown and show (once)
+            if (ev.currentTarget.dataset.bsToggle !== 'dropdown') {
+                this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
+                    'widget': this,
+                    'tag_id': tagID,
+                }));
 
-            $(ev.currentTarget).after(this.$color_picker);
-            this.$color_picker.dropdown();
+                $(ev.currentTarget).after(this.$color_picker);
+                ev.currentTarget.setAttribute('data-bs-toggle', 'dropdown');
+                const dropdownToggle = new Dropdown(ev.currentTarget);
+                dropdownToggle.show();
+            }
             this.$color_picker.attr("tabindex", 1).focus();
             if (!tagColor) {
                 this.$('.custom-checkbox input').prop('checked', true);
