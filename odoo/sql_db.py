@@ -539,6 +539,8 @@ class Cursor(BaseCursor):
         return result
 
     def __getattr__(self, name):
+        if self._closed and name == '_obj':
+            raise psycopg2.InterfaceError("Cursor already closed")
         return getattr(self._obj, name)
 
     @property
