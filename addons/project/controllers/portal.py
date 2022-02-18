@@ -46,16 +46,22 @@ class ProjectCustomerPortal(CustomerPortal):
         )
         return self._get_page_view_values(project, access_token, values, 'my_projects_history', False, **kwargs)
 
+    def _prepare_project_domain(self):
+        return []
+
+    def _prepare_searchbar_sortings(self):
+        return {
+            'date': {'label': _('Newest'), 'order': 'create_date desc'},
+            'name': {'label': _('Name'), 'order': 'name'},
+        }
+
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
-        domain = []
+        domain = self._prepare_project_domain()
 
-        searchbar_sortings = {
-            'date': {'label': _('Newest'), 'order': 'create_date desc'},
-            'name': {'label': _('Name'), 'order': 'name'},
-        }
+        searchbar_sortings = self._prepare_searchbar_sortings()
         if not sortby:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
