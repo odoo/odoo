@@ -21,6 +21,13 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
     init: function () {
         this._super.apply(this, arguments);
         this._popoverRPC = null;
+        this._onVisibilityChange = this._onVisibilityChange.bind(this);
+    },
+    /**
+     * @override
+     */
+    willStart() {
+        return Promise.all([this._super.apply(this, arguments), this._updateCartQuantityValue()]);
     },
     /**
      * @override
@@ -37,7 +44,16 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
             placement: 'auto',
             template: '<div class="popover mycart-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
         });
+        window.addEventListener('visibilitychange', this._onVisibilityChange);
+        this._updateCartQuantityText();
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        window.removeEventListener('visibilitychange', this._onVisibilityChange);
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -101,6 +117,31 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
             });
         }
     },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onVisibilityChange(ev) {
+        if (ev.target.visibilityState === 'visible'){
+            this._updateCartQuantityValue().then(this._updateCartQuantityText.bind(this));
+        }
+    },
+    /**
+     * @private
+     */
+    _updateCartQuantityValue() {
+        return this._rpc({route: "/shop/cart/quantity"}).then((cartQty) => {
+            this.cartQty = cartQty;
+        });
+    },
+    /**
+     * @private
+     */
+    _updateCartQuantityText() {
+        if (this.cartQty !== undefined) {
+            this.el.querySelector('.my_cart_quantity').innerText = this.cartQty;
+        }
+    }
 });
 });
 
