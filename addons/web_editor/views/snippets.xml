@@ -444,7 +444,7 @@
         <div class="o_we_image_shape">
             <we-row string="Shape" class="o_we_full_row">
                 <we-select-pager data-name="shape_img_opt" class="o_we_select_grid o_we_fake_transparent_background">
-                    <we-select-page string="Basics">
+                    <we-select-page string="Basics" t-if="not no_animations">
                         <we-button data-set-img-shape="web_editor/basic/bsc_square_1" data-select-label="Square 1" data-animated="true"/>
                         <we-button data-set-img-shape="web_editor/basic/bsc_square_2" data-select-label="Square 2" data-animated="true"/>
                         <we-button data-set-img-shape="web_editor/basic/bsc_square_3" data-select-label="Square 3" data-animated="true"/>
@@ -462,37 +462,37 @@
                         <we-button data-set-img-shape="web_editor/solid/blob_2_solid_str" data-select-label="Blob Solid 2" />
                         <we-button data-set-img-shape="web_editor/solid/blob_3_solid_rd" data-select-label="Blob Solid 3" />
                         <we-button data-set-img-shape="web_editor/solid/oval_1_solid_rd" data-select-label="Oval Solid"/>
-                        <we-button data-set-img-shape="web_editor/solid/sld_blob_4" data-select-label="Blob Solid 4" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/solid/sld_blob_shadow_1" data-select-label="Blob Shadow 1" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/solid/sld_blob_shadow_2" data-select-label="Blob Shadow 2" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/solid/sld_square_1" data-select-label="Square 1" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/solid/sld_square_2" data-select-label="Square 2" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/solid/sld_square_organic_1" data-select-label="Square - Organic" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_blob_4" data-select-label="Blob Solid 4" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_blob_shadow_1" data-select-label="Blob Shadow 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_blob_shadow_2" data-select-label="Blob Shadow 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_square_1" data-select-label="Square 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_square_2" data-select-label="Square 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/solid/sld_square_organic_1" data-select-label="Square - Organic" data-animated="true"/>
                     </we-select-page>
                     <we-select-page string="Patterns">
-                        <we-button data-set-img-shape="web_editor/pattern/organic_2_pattern_dot" data-select-label="Organic Dot" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/organic_2_pattern_dot" data-select-label="Organic Dot" data-animated="true"/>
                         <we-button data-set-img-shape="web_editor/pattern/organic_3_pattern_cross" data-select-label="Organic Cross" />
                         <we-button data-set-img-shape="web_editor/pattern/organic_4_pattern_caps" data-select-label="Organic Caps" />
-                        <we-button data-set-img-shape="web_editor/pattern/pattern_labyrinth" data-select-label="Labyrinth" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/pattern/pattern_points_1" data-select-label="Points" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/pattern/pattern_waves_1" data-select-label="Waves 1" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/pattern/pattern_waves_2" data-select-label="Waves 2" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/pattern/pattern_waves_3" data-select-label="Waves 3" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/pattern/pattern_waves_4" data-select-label="Waves 4" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_labyrinth" data-select-label="Labyrinth" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_points_1" data-select-label="Points" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_waves_1" data-select-label="Waves 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_waves_2" data-select-label="Waves 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_waves_3" data-select-label="Waves 3" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/pattern/pattern_waves_4" data-select-label="Waves 4" data-animated="true"/>
                     </we-select-page>
                     <we-select-page string="Lines">
                         <we-button data-set-img-shape="web_editor/line/oval_3_pattern_line" data-select-label="Oval Line" />
                         <we-button data-set-img-shape="web_editor/line/organic_1_line" data-select-label="Organic Line" />
                         <we-button data-set-img-shape="web_editor/line/oval_2_line" data-select-label="Oval Line 2" />
-                        <we-button data-set-img-shape="web_editor/line/little_lines_1" data-select-label="Little lines 1" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/line/little_lines_2" data-select-label="Little lines 2" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/line/little_lines_3" data-select-label="Little lines 2" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/line/line_square_1" data-select-label="Square" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/line/line_triangle" data-select-label="Triangles" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/line/line_star" data-select-label="Star" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/line/line_sun" data-select-label="Sun" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/little_lines_1" data-select-label="Little lines 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/little_lines_2" data-select-label="Little lines 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/little_lines_3" data-select-label="Little lines 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/line_square_1" data-select-label="Square" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/line_triangle" data-select-label="Triangles" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/line_star" data-select-label="Star" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/line/line_sun" data-select-label="Sun" data-animated="true"/>
                     </we-select-page>
-                    <we-select-page string="Floats">
+                    <we-select-page string="Floats" t-if="not no_animations">
                         <we-button data-set-img-shape="web_editor/float/flt_primary_1" data-select-label="Primary shapes 1" data-animated="true"/>
                         <we-button data-set-img-shape="web_editor/float/flt_primary_2" data-select-label="Primary shapes 2" data-animated="true"/>
                         <we-button data-set-img-shape="web_editor/float/flt_primary_3" data-select-label="Primary shapes 3" data-animated="true"/>
@@ -503,7 +503,7 @@
                         <we-button data-set-img-shape="web_editor/float/flt_square_3" data-select-label="Square 3" data-animated="true"/>
                         <we-button data-set-img-shape="web_editor/float/flt_square_4" data-select-label="Square 4" data-animated="true"/>
                     </we-select-page>
-                    <we-select-page string="Specials">
+                    <we-select-page string="Specials" t-if="not no_animations">
                         <we-button data-set-img-shape="web_editor/special/spl_speed_1" data-select-label="Speed" data-animated="true"/>
                         <we-button data-set-img-shape="web_editor/special/spl_rain_1" data-select-label="Rain" data-animated="true"/>
                         <we-button data-set-img-shape="web_editor/special/spl_snow_1" data-select-label="Snow" data-animated="true"/>
