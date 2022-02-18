@@ -983,6 +983,34 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test("action with html help returned by a call_button", async function (assert) {
+        assert.expect(1);
+        const mockRPC = async (route, args) => {
+            if (route === "/web/dataset/call_button") {
+                return Promise.resolve({
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "list"]],
+                    help: "<p>I am not a helper</p>",
+                    domain: [[0, "=", 1]],
+                });
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+
+        // open a record in form view
+        await click(target.querySelector(".o_list_view .o_data_row"));
+        await legacyExtraNextTick();
+
+        await click(target.querySelector(".o_statusbar_buttons button"));
+        await legacyExtraNextTick();
+        assert.strictEqual(
+            target.querySelector(".o_list_view .o_nocontent_help p").innerText,
+            "I am not a helper"
+        );
+    });
+
     QUnit.test("can open different records from a multi record view", async function (assert) {
         assert.expect(12);
         const mockRPC = async (route, args) => {
