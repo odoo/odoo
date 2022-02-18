@@ -3289,6 +3289,7 @@ var BasicModel = AbstractModel.extend({
     _generateX2ManyCommands: function (record, options) {
         var self = this;
         options = options || {};
+        const changesOnly = options.changesOnly;
         var fields = record.fields;
         if (options.fieldNames) {
             fields = _.pick(fields, options.fieldNames);
@@ -3381,7 +3382,7 @@ var BasicModel = AbstractModel.extend({
                             if (!this.isNew(relRecord.id)) {
                                 // the subrecord already exists in db
                                 commands[fieldName].push(x2ManyCommands.link_to(relRecord.res_id));
-                                if (this.isDirty(relRecord.id)) {
+                                if (changesOnly ? Object.keys(changes).length : this.isDirty(relRecord.id)) {
                                     delete changes.id;
                                     commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
                                 }
