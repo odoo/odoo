@@ -478,6 +478,22 @@ class ir_cron(models.Model):
             )
         """)
 
+        # Modifying records like `fetchmail.server`, `calendar.alarm` and
+        # `base.automation` will re-enable their cron jobs as a side-effect. To
+        # prevent this from causing cron jobs to execute unexpectedly on neutralized
+        # duplicates, comment out the code of the cron jobs. This means that if you
+        # really want to execute a cron job on a duplicate, you'll need to uncomment
+        # the code of its server action in addition to re-activating it."
+        self.env.cr.execute("""
+            UPDATE ir_act_server
+            SET code = '#' || REPLACE(code, E'\n', E'\n#')
+            FROM ir_cron
+            WHERE ir_act_server.usage = 'ir_cron'
+                AND ir_act_server.state = 'code'
+                AND ir_cron.active = FALSE
+                AND ir_cron.ir_actions_server_id = ir_act_server.id
+        """)
+
 
 class ir_cron_trigger(models.Model):
     _name = 'ir.cron.trigger'
