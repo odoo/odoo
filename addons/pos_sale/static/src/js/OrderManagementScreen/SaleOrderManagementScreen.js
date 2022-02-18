@@ -77,7 +77,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             const { confirmed, payload: selectedOption } = await this.showPopup('SelectionPopup',
                 {
                     title: this.env._t('What do you want to do?'),
-                    list: [{id:"0", label: "Apply a down payment", item: false}, {id:"1", label: "Settle the order", item: true}],
+                    list: [{id:"0", label: this.env._t("Apply a down payment"), item: false}, {id:"1", label: this.env._t("Settle the order"), item: true}],
                 });
 
             if(confirmed){
