@@ -73,9 +73,10 @@
                                 <group class="o_label_nowrap">
                                     <field name="public" widget="radio" string="Who can follow the group's activities?"/>
                                     <field name="group_public_id"
-                                        attrs="{'invisible': [('public','!=','groups')], 'required': [('public','=','groups')]}"
+                                        attrs="{'invisible': ['|', ('channel_type', '!=', 'channel'), ('public','!=','groups')], 'required': [('public','=','groups')]}"
                                         />
                                     <field name="group_ids" widget="many2many_tags"
+                                        attrs="{'invisible': [('channel_type', '!=', 'channel')]}"
                                         string="Auto Subscribe Groups"/>
                                 </group>
                             </page>

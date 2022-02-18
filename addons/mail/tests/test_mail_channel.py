@@ -237,20 +237,18 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(new_msg.partner_ids, self.env['res.partner'])
         self.assertEqual(new_msg.notified_partner_ids, self.env['res.partner'])
 
+    @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_chat(self):
         """ Posting a message on a chat should not send emails """
-        self.test_channel.write({
-            'channel_type': 'chat',
-        })
-        self.test_channel.add_members((self.partner_employee | self.partner_admin | self.test_partner).ids)
+        channel_info = self.env['mail.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
+        chat = self.env['mail.channel'].with_user(self.user_admin).browse(channel_info['id'])
         with self.mock_mail_gateway():
             with self.with_user('employee'):
-                channel = self.env['mail.channel'].browse(self.test_channel.ids)
-                new_msg = channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
+                new_msg = chat.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertNotSentEmail()
-        self.assertEqual(new_msg.model, self.test_channel._name)
-        self.assertEqual(new_msg.res_id, self.test_channel.id)
+        self.assertEqual(new_msg.model, chat._name)
+        self.assertEqual(new_msg.res_id, chat.id)
         self.assertEqual(new_msg.partner_ids, self.env['res.partner'])
         self.assertEqual(new_msg.notified_partner_ids, self.env['res.partner'])
 
