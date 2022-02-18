@@ -3,7 +3,6 @@
 
 import hashlib
 import re
-import struct
 from base64 import b64decode, b64encode
 from io import BytesIO
 from random import randint
@@ -130,38 +129,24 @@ class L10nEsTbaiXmlUtils():
             L10nEsTbaiXmlUtils._base64_print(b64encode(signature))
 
     @staticmethod
-    def _long_to_bytes(number):
+    def _int_to_bytes(number):
         """
-        Converts a long integer to an ASCII/UTF-8 byte string with no leading zeroes.
+        Converts an integer to an ASCII/UTF-8 byte string (with no leading zeroes).
         """
-        # convert to byte string
-        num_bytes = b""
-        while number > 0:
-            num_bytes = struct.pack(b">I", number & 0xFFFFFFFF) + num_bytes
-            number = number >> 32
-        # strip off leading zeros
-        for i in range(len(num_bytes)):
-            if num_bytes[i] != b"\000"[0]:
-                break
-        # special case: num_bytes == 0
-        else:
-            num_bytes = b"\000"
-            i = 0
-        num_bytes = num_bytes[i:]
-        return num_bytes
+        return number.to_bytes((number.bit_length() + 7) // 8, byteorder='big')
 
     @staticmethod
-    def _base64_print(string):
+    def _base64_print(string, length=64):
         """
-        Returns the passed string modified to include a line feed every 64 characters.
-        Not sure why it is done, might be conservative take of:
+        Returns the passed string modified to include a line feed every `length` characters.
+        It may be recommended to keep length under 76:
         https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/#rf-maxLength
         https://www.ietf.org/rfc/rfc2045.txt
         """
         string = str(string, "utf8")
         return "\n".join(
-            string[pos: pos + 64]
-            for pos in range(0, len(string), 64)
+            string[pos: pos + length]
+            for pos in range(0, len(string), length)
         )
 
     @staticmethod

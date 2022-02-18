@@ -363,8 +363,8 @@ class AccountEdiFormat(models.Model):
             'dsig': {
                 'document_id': doc_id,
                 'x509_certificate': L10nEsTbaiXmlUtils._base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
-                'public_modulus': L10nEsTbaiXmlUtils._base64_print(b64encode(L10nEsTbaiXmlUtils._long_to_bytes(public_key.public_numbers().n))),
-                'public_exponent': L10nEsTbaiXmlUtils._base64_print(b64encode(L10nEsTbaiXmlUtils._long_to_bytes(public_key.public_numbers().e))),
+                'public_modulus': L10nEsTbaiXmlUtils._base64_print(b64encode(L10nEsTbaiXmlUtils._int_to_bytes(public_key.public_numbers().n))),
+                'public_exponent': L10nEsTbaiXmlUtils._base64_print(b64encode(L10nEsTbaiXmlUtils._int_to_bytes(public_key.public_numbers().e))),
                 'iso_now': datetime.now().isoformat(),
                 'keyinfo_id': kinfo_id,
                 'signature_id': signature_id,
