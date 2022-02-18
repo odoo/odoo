@@ -30,6 +30,8 @@ import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 
+const { onWillStart } = owl;
+
 const serviceRegistry = registry.category("services");
 
 let serverData;
@@ -13283,12 +13285,6 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.skipWOWL("selection is kept when optional fields are toggled", async function (assert) {
-        assert.expect(7);
-
-        var RamStorageService = AbstractStorageService.extend({
-            storage: new RamStorage(),
-        });
-
         await makeView({
             type: "list",
             resModel: "foo",
@@ -13298,61 +13294,48 @@ QUnit.module("Views", (hooks) => {
                 '<field name="foo"/>' +
                 '<field name="m2o" optional="hide"/>' +
                 "</tree>",
-            services: {
-                local_storage: RamStorageService,
-            },
         });
 
         assert.containsN(target, "th", 2);
 
         // select a record
-        await click($(target).find(".o_data_row .o_list_record_selector input:first"));
-
+        await click(target.querySelector(".o_data_row .o_list_record_selector input"));
         assert.containsOnce(target, ".o_list_record_selector input:checked");
 
         // add an optional field
-        await click($(target).find("table .o_optional_columns_dropdown"));
-        await click(
-            $(target).find("div.o_optional_columns_dropdown span.dropdown-item:first input")
-        );
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        await click(target, ".o_optional_columns_dropdown span.dropdown-item:first-child label");
         assert.containsN(target, "th", 3);
-
         assert.containsOnce(target, ".o_list_record_selector input:checked");
 
         // select all records
-        await click($(target).find("thead .o_list_record_selector input"));
-
+        await click(target, "thead .o_list_record_selector input");
         assert.containsN(target, ".o_list_record_selector input:checked", 5);
 
         // remove an optional field
-        await click($(target).find("table .o_optional_columns_dropdown"));
-        await click(
-            $(target).find("div.o_optional_columns_dropdown span.dropdown-item:first input")
-        );
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        await click(target, ".o_optional_columns_dropdown span.dropdown-item:first-child label");
         assert.containsN(target, "th", 2);
-
         assert.containsN(target, ".o_list_record_selector input:checked", 5);
     });
 
-    QUnit.skipWOWL("list view with optional fields and async rendering", async function (assert) {
+    QUnit.test("list view with optional fields and async rendering", async function (assert) {
         assert.expect(14);
 
-        const prom = testUtils.makeTestPromise();
-        const FieldChar = fieldRegistry.get("char");
-        fieldRegistry.add(
-            "asyncwidget",
-            FieldChar.extend({
-                async _render() {
-                    assert.ok(true, "the rendering must be async");
-                    this._super(...arguments);
-                    await prom;
-                },
-            })
-        );
+        const def = makeDeferred();
+        const fieldRegistry = registry.category("fields");
+        const CharField = fieldRegistry.get("char");
 
-        const RamStorageService = AbstractStorageService.extend({
-            storage: new RamStorage(),
-        });
+        class AsyncCharField extends CharField {
+            setup() {
+                super.setup();
+                onWillStart(async () => {
+                    assert.ok(true, "the rendering must be async");
+                    await def;
+                });
+            }
+        }
+        fieldRegistry.add("asyncwidget", AsyncCharField);
 
         await makeView({
             type: "list",
@@ -13363,35 +13346,27 @@ QUnit.module("Views", (hooks) => {
                     <field name="m2o"/>
                     <field name="foo" widget="asyncwidget" optional="hide"/>
                 </tree>`,
-            services: {
-                local_storage: RamStorageService,
-            },
         });
 
         assert.containsN(target, "th", 2);
-        assert.isNotVisible($(target).find(".o_optional_columns_dropdown"));
+        assert.containsNone(target, ".o_optional_columns_dropdown.show");
 
         // add an optional field (we click on the label on purpose, as it will trigger
         // a second event on the input)
-        await click($(target).find("table .o_optional_columns_dropdown"));
-        assert.isVisible($(target).find(".o_optional_columns_dropdown"));
-        assert.containsNone($(target).find(".o_optional_columns_dropdown"), "input:checked");
-        await click(
-            $(target).find("div.o_optional_columns_dropdown span.dropdown-item:first label")
-        );
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        assert.containsOnce(target, ".o_optional_columns_dropdown.show");
+        assert.containsNone(target, ".o_optional_columns_dropdown input:checked");
 
+        await click(target, ".o_optional_columns_dropdown span.dropdown-item:first-child label");
         assert.containsN(target, "th", 2);
-        assert.isVisible($(target).find(".o_optional_columns_dropdown"));
-        assert.containsNone($(target).find(".o_optional_columns_dropdown"), "input:checked");
+        assert.containsOnce(target, ".o_optional_columns_dropdown.show");
+        assert.containsOnce(target, ".o_optional_columns_dropdown input:checked");
 
-        prom.resolve();
-        await testUtils.nextTick();
-
+        def.resolve();
+        await nextTick();
         assert.containsN(target, "th", 3);
-        assert.isVisible($(target).find(".o_optional_columns_dropdown"));
-        assert.containsOnce($(target).find(".o_optional_columns_dropdown"), "input:checked");
-
-        delete fieldRegistry.map.asyncwidget;
+        assert.containsOnce(target, ".o_optional_columns_dropdown.show");
+        assert.containsOnce(target, ".o_optional_columns_dropdown input:checked");
     });
 
     QUnit.skipWOWL(
