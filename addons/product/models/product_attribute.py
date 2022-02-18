@@ -447,7 +447,10 @@ class ProductTemplateAttributeValue(models.Model):
                         _("You cannot change the product of the value %s set on product %s.") %
                         (ptav.display_name, ptav.product_tmpl_id.display_name)
                     )
-        return super(ProductTemplateAttributeValue, self).write(values)
+        res = super(ProductTemplateAttributeValue, self).write(values)
+        if 'exclude_for' in values:
+            self.product_tmpl_id._create_variant_ids()
+        return res
 
     def unlink(self):
         """Override to:
