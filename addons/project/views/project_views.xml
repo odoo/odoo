@@ -833,6 +833,30 @@
             </field>
         </record>
 
+        <record id="view_project_calendar" model="ir.ui.view">
+            <field name="name">project.project.calendar</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <calendar
+                    date_start="date_start"
+                    date_stop="date"
+                    string="Projects"
+                    mode="month"
+                    scales="month,year"
+                    event_open_popup="true"
+                    quick_add="false"
+                    color="color">
+                    <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                    <field name="user_id" widget="many2one_avatar_user" attrs="{'invisible': [('user_id', '=', False)]}"/>
+                    <field name="is_favorite" widget="boolean_favorite" nolabel="1" string="Favorite"/>
+                    <field name="stage_id" groups="project.group_project_stages"/>
+                    <field name="last_update_color" invisible="1"/>
+                    <field name="last_update_status" string="Status" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
+                </calendar>
+            </field>
+        </record>
+
         <record id="view_project_kanban_inherit" model="ir.ui.view">
             <field name="name">project.kanban.inherit.project</field>
             <field name="model">project.project</field>
@@ -845,6 +869,7 @@
             </field>
         </record>
 
+        <!-- Please update both act_window when modifying one (open_view_project_all or open_view_project_all_group_stage) as one or the other is used in the menu menu_project -->
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
@@ -863,6 +888,26 @@
             </field>
         </record>
 
+        <!-- Please update both act_window when modifying one (open_view_project_all or open_view_project_all_group_stage) as one or the other is used in the menu menu_project -->
+        <record id="open_view_project_all_group_stage" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">kanban,tree,form,calendar,activity</field>
+            <field name="view_id" ref="view_project_kanban_inherit"/>
+            <field name="search_view_id" ref="view_project_project_filter"/>
+            <field name="target">main</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No projects found. Let's create one!
+                </p>
+                <p>
+                    Projects contain tasks on the same topic, and each has its own dashboard.
+                </p>
+            </field>
+        </record>
+
+        <!-- Please update both act_window when modifying one (open_view_project_all_config or open_view_project_all_config_group_stage) as one or the other is used in the menu menu_project_config -->
         <record id="open_view_project_all_config" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
@@ -881,6 +926,37 @@
                     Projects contain tasks on the same topic, and each has its own dashboard.
                 </p>
             </field>
+        </record>
+
+        <!-- Please update both act_window when modifying one (open_view_project_all_config or open_view_project_all_config_group_stage) as one or the other is used in the menu menu_project_config -->
+        <record id="open_view_project_all_config_group_stage" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">tree,kanban,form,calendar,activity</field>
+            <field name="search_view_id" ref="view_project_project_filter"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                   No projects found. Let's create one!
+                </p>
+                <p>
+                    Projects contain tasks on the same topic, and each has its own dashboard.
+                </p>
+            </field>
+        </record>
+
+        <record id="open_view_project_all_config_group_stage_tree_action_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="project.open_view_project_all_config_group_stage"/>
+            <field name="view_id" ref="view_project"/>
+        </record>
+        <record id="open_view_project_all_config_group_stage_kanban_action_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="project.open_view_project_all_config_group_stage"/>
+            <field name="view_id" ref="view_project_kanban"/>
         </record>
 
         <!-- Task -->
@@ -1484,7 +1560,9 @@
         <menuitem action="open_task_type_form" id="menu_project_config_project" name="Task Stages" parent="menu_project_config" sequence="10" groups="base.group_no_one"/>
 
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_main_pm" sequence="1"/>
+        <menuitem action="open_view_project_all_group_stage" id="menu_projects_group_stage" name="Projects" parent="menu_main_pm" sequence="1" groups="project.group_project_stages"/>
         <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="5"/>
+        <menuitem action="open_view_project_all_config_group_stage" id="menu_projects_config_group_stage" name="Projects" parent="menu_project_config" sequence="5" groups="project.group_project_stages"/>
 
         <!-- User Form -->
         <record id="act_res_users_2_project_task_opened" model="ir.actions.act_window">
