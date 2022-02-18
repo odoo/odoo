@@ -231,13 +231,25 @@ class AccountEdiFormat(models.Model):
                 to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
                 invoice.l10n_it_edi_transaction = False
             elif state == 'notificaMancataConsegna':
-                to_return[invoice] = {
-                    'error': _('The E-invoice is not delivered to the addressee. The Exchange System is\
-                    unable to deliver the file to the Public Administration. The Exchange System will\
-                    contact the PA to report the problem and request that they provide a solution. \
-                    During the following 15 days, the Exchange System will try to forward the FatturaPA\
-                    file to the Administration in question again.'),
-                }
+                if invoice._is_commercial_partner_pa():
+                    to_return[invoice] = {'error': _(
+                        'The invoice has been issued, but the delivery to the Public Administration'
+                        ' has failed. The Exchange System will contact them to report the problem'
+                        ' and request that they provide a solution.'
+                        ' During the following 10 days, the Exchange System will try to forward the'
+                        ' FatturaPA file to the Public Administration in question again.'
+                        ' Should this also fail, the System will notify Odoo of the failed delivery,'
+                        ' and you will be required to send the invoice to the Administration'
+                        ' through another channel, outside of the Exchange System.')}
+                else:
+                    to_return[invoice] = {'success': True, 'attachment': invoice.l10n_it_edi_attachment_id}
+                    invoice._message_log(body=_(
+                        'The invoice has been issued, but the delivery to the Addressee has'
+                        ' failed. You will be required to send a courtesy copy of the invoice'
+                        ' to your customer through another channel, outside of the Exchange'
+                        ' System, and promptly notify him that the original is deposited'
+                        ' in his personal area on the portal "Invoices and Fees" of the'
+                        ' Revenue Agency.'))
             elif state == 'notificaEsito':
                 outcome = response_tree.find('Esito').text
                 if outcome == 'EC01':
