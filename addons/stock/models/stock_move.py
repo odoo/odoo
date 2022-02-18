@@ -1580,6 +1580,7 @@ class StockMove(models.Model):
             'product_uom_qty': qty,
             'picking_id': self.picking_id.id,
             'price_unit': self.price_unit,
+            'date_deadline': self.date_deadline,
         }
         return vals
 
