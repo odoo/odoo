@@ -577,7 +577,6 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             unit_amount = expense.unit_amount if expense.product_has_cost else expense.total_amount
             quantity = expense.quantity if expense.unit_amount else 1
 
-            # sgv todo - chage so that we do not recompute again. We have all the info from expense
             taxes = expense.tax_ids.with_context(round=True).compute_all(unit_amount, expense.currency_id, quantity, expense.product_id)
             total_amount = 0.0
             total_amount_currency = 0.0
@@ -912,6 +911,7 @@ class HrExpenseSheet(models.Model):
 
     name = fields.Char('Expense Report Summary', required=True, tracking=True)
     expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', copy=False)
+    is_editable = fields.Boolean("Expense Lines Are Editable By Current User", compute='_compute_is_editable')
     expense_number = fields.Integer(compute='_compute_expense_number', string='Number of Expenses')
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -1002,6 +1002,20 @@ class HrExpenseSheet(models.Model):
             sheet.address_id = sheet.employee_id.sudo().address_home_id
             sheet.department_id = sheet.employee_id.department_id
             sheet.user_id = sheet.employee_id.expense_manager_id or sheet.employee_id.parent_id.user_id
+
+    @api.depends_context('uid')
+    @api.depends('employee_id', 'user_id', 'state')
+    def _compute_is_editable(self):
+        is_manager = self.user_has_groups('hr_expense.group_hr_expense_manager')
+        is_approver = self.user_has_groups('hr_expense.group_hr_expense_user')
+        for report in self:
+            # Employee can edit his own expense in draft only
+            is_editable = (report.employee_id.user_id == self.env.user and report.state == 'draft') or (is_manager and report.state in ['draft', 'submit', 'approve'])
+            if not is_editable and report.state in ['draft', 'submit', 'approve']:
+                # expense manager can edit, unless it's own expense
+                current_managers = report.employee_id.expense_manager_id | report.employee_id.parent_id.user_id | report.employee_id.department_id.manager_id.user_id | report.user_id
+                is_editable = (is_approver or self.env.user in current_managers) and report.employee_id.user_id != self.env.user
+            report.is_editable = is_editable
 
     @api.constrains('expense_line_ids')
     def _check_payment_mode(self):
@@ -1095,7 +1109,10 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             move = sheet.account_move_id
             sheet.account_move_id = False
-            move._reverse_moves(cancel=True)
+            if move.state == 'draft':
+                move.unlink()
+            else:
+                move._reverse_moves(cancel=True)
             sheet.write({'state': 'draft'})
 
     def action_get_attachment_view(self):
@@ -1139,13 +1156,13 @@ class HrExpenseSheet(models.Model):
 
     def action_submit_sheet(self):
         self.write({'state': 'submit'})
-        self.activity_update()
+        self.sudo().activity_update()
 
     def _check_can_approve(self):
         if not self.user_has_groups('hr_expense.group_hr_expense_team_approver'):
             raise UserError(_("Only Managers and HR Officers can approve expenses"))
         elif not self.user_has_groups('hr_expense.group_hr_expense_manager'):
-            current_managers = self.employee_id.expense_manager_id | self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id
+            current_managers = self.employee_id.expense_manager_id | self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id | self.user_id
 
             if self.employee_id.user_id == self.env.user:
                 raise UserError(_("You cannot approve your own expenses"))
@@ -1197,7 +1214,7 @@ class HrExpenseSheet(models.Model):
         if not self.user_has_groups('hr_expense.group_hr_expense_team_approver'):
             raise UserError(_("Only Managers and HR Officers can approve expenses"))
         elif not self.user_has_groups('hr_expense.group_hr_expense_manager'):
-            current_managers = self.employee_id.expense_manager_id | self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id
+            current_managers = self.employee_id.expense_manager_id | self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id | self.user_id
 
             if self.employee_id.user_id == self.env.user:
                 raise UserError(_("You cannot refuse your own expenses"))
@@ -1214,7 +1231,7 @@ class HrExpenseSheet(models.Model):
         if not self.can_reset:
             raise UserError(_("Only HR Officers or the concerned employee can reset to draft."))
         self.mapped('expense_line_ids').write({'is_refused': False})
-        self.write({'state': 'draft', 'approval_date': False})
+        self.sudo().write({'state': 'draft', 'approval_date': False})
         self.activity_update()
         return True
 
