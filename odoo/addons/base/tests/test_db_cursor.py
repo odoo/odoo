@@ -3,11 +3,12 @@
 import logging
 from functools import partial
 
+import psycopg2
+
 import odoo
 from odoo.sql_db import TestCursor
 from odoo.tests import common
 from odoo.tests.common import BaseCase
-from odoo.tools.misc import mute_logger
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
@@ -15,10 +16,8 @@ def registry():
     return odoo.registry(common.get_db_name())
 
 
-class TestExecute(BaseCase):
-    """ Try cr.execute with wrong parameters """
+class TestRealCursor(BaseCase):
 
-    @mute_logger('odoo.sql_db')
     def test_execute_bad_params(self):
         """
         Try to use iterable but non-list or int params in query parameters.
@@ -31,6 +30,16 @@ class TestExecute(BaseCase):
             with self.assertRaises(ValueError):
                 cr.execute("SELECT id FROM res_users WHERE id=%s", '1')
 
+    def test_using_closed_cursor(self):
+        with registry().cursor() as cr:
+            cr.close()
+            with self.assertRaises(psycopg2.InterfaceError):
+                cr.execute("SELECT 1")
+
+    def test_multiple_close_call_cursor(self):
+        cr = registry().cursor()
+        cr.close()
+        cr.close()
 
 class TestTestCursor(common.TransactionCase):
     def setUp(self):
