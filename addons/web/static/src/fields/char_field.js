@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
+import { TranslationButton } from "./translation_button";
 
 const { Component } = owl;
 
@@ -19,6 +20,9 @@ export class CharField extends Component {
     }
     get maxLength() {
         return this.props.record.fields[this.props.name].size;
+    }
+    get isTranslatable() {
+        return this.props.record.fields[this.props.name].translate;
     }
 
     /**
@@ -39,6 +43,9 @@ CharField.props = {
     autocomplete: { type: String, optional: true },
     isPassword: { type: Boolean, optional: true },
     placeholder: { type: String, optional: true },
+};
+CharField.components = {
+    TranslationButton,
 };
 CharField.displayName = _lt("Text");
 CharField.supportedTypes = ["char"];

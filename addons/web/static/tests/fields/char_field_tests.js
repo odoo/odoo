@@ -1,12 +1,20 @@
 /** @odoo-module **/
 
-import { click, triggerEvent } from "../helpers/utils";
+import { click, editInput, getFixture, patchWithCleanup, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
+import { registry } from "@web/core/registry";
+import { makeFakeLocalizationService } from "../helpers/mock_services";
+import { session } from "@web/session";
+
+const serviceRegistry = registry.category("services");
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
+
         serverData = {
             models: {
                 partner: {
@@ -324,170 +332,265 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("char field translatable", async function (assert) {
-        // assert.expect(12);
-        // serverData.models.partner.fields.foo.translate = true;
-        // serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), { force: true });
-        // const form = await makeView({
-        //     type: "form",
-        //     resModel: 'partner',
-        //     serverData,
-        //     arch: '<form string="Partners">' +
-        //             '<sheet>' +
-        //                 '<group>' +
-        //                     '<field name="foo"/>' +
-        //                 '</group>' +
-        //             '</sheet>' +
-        //         '</form>',
-        //     resId: 1,
-        //     session: {
-        //         user_context: {lang: 'en_US'},
-        //     },
-        //     mockRPC: function (route, args) {
-        //         if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-        //             assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
-        //             return Promise.resolve({
-        //                 domain: [],
-        //                 context: {search_default_name: 'partnes,foo'},
-        //             });
-        //         }
-        //         if (route === "/web/dataset/call_kw/res.lang/get_installed") {
-        //             return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
-        //         }
-        //         if (args.method === "search_read" && args.model == "ir.translation") {
-        //             return Promise.resolve([
-        //                 {lang: 'en_US', src: 'yop', value: 'yop', id: 42},
-        //                 {lang: 'fr_BE', src: 'yop', value: 'valeur français', id: 43}
-        //             ]);
-        //         }
-        //         if (args.method === "write" && args.model == "ir.translation") {
-        //             assert.deepEqual(args.args[1], {value: "english value"},
-        //                 "the new translation value should be written");
-        //             return Promise.resolve();
-        //         }
-        //         return this._super.apply(this, arguments);
-        //     },
-        // });
-        // await click(form.el, ".o_form_button_edit");
-        // const $button = form.$('input[type="text"].o_field_char + .o_field_translate');
-        // assert.strictEqual($button.length, 1, "should have a translate button");
-        // assert.strictEqual($button.text(), 'EN', 'the button should have as test the current language');
-        // await click($button);
-        // await nextTick();
-        // assert.containsOnce($(document), '.modal', 'a translate modal should be visible');
-        // assert.containsN($('.modal .o_translation_dialog'), '.translation', 2,
-        //     'two rows should be visible');
-        // const $enField = $('.modal .o_translation_dialog .translation:first() input');
-        // assert.strictEqual($enField.val(), 'yop',
-        //     'English translation should be filled');
-        // assert.strictEqual($('.modal .o_translation_dialog .translation:last() input').val(), 'valeur français',
-        //     'French translation should be filled');
-        // $enField.value = "english value";
-        // await nextTick();
-        // await click($('.modal button.btn-primary'));  // save
-        // await nextTick();
-        // const $foo = form.$('input[type="text"].o_field_char');
-        // assert.strictEqual($foo.val(), "english value",
-        //     "the new translation was not transfered to modified record");
-        // $foo.value = "new english value";
-        // await nextTick();
-        // await click($button);
-        // await nextTick();
-        // assert.strictEqual($('.modal .o_translation_dialog .translation:first() input').val(), 'new english value',
-        //     'Modified value should be used instead of translation');
-        // assert.strictEqual($('.modal .o_translation_dialog .translation:last() input').val(), 'valeur français',
-        //     'French translation should be filled');
+    QUnit.test("char field translatable", async function (assert) {
+        assert.expect(12);
+
+        serverData.models.partner.fields.foo.translate = true;
+        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+            force: true,
+        });
+        patchWithCleanup(session.user_context, {
+            lang: "en_US",
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args, method, model }) {
+                if (route === "/web/dataset/call_button" && method === "translate_fields") {
+                    assert.deepEqual(
+                        args,
+                        ["partner", 1, "foo"],
+                        'should call "call_button" route'
+                    );
+                    return Promise.resolve({
+                        domain: [],
+                        context: { search_default_name: "partnes,foo" },
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([
+                        ["en_US", "English"],
+                        ["fr_BE", "French (Belgium)"],
+                    ]);
+                }
+                if (method === "search_read" && model === "ir.translation") {
+                    return Promise.resolve([
+                        { lang: "en_US", src: "yop", value: "yop", id: 42 },
+                        { lang: "fr_BE", src: "yop", value: "valeur français", id: 43 },
+                    ]);
+                }
+                if (method === "write" && model === "ir.translation") {
+                    assert.deepEqual(
+                        args[1],
+                        { value: "english value" },
+                        "the new translation value should be written"
+                    );
+                    return Promise.resolve(null);
+                }
+            },
+        });
+
+        await click(target, ".o_form_button_edit");
+
+        assert.containsOnce(
+            target,
+            ".o_field_char .o_field_translate",
+            "should have a translate button"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_char .o_field_translate").textContent,
+            "EN",
+            "the button should have as test the current language"
+        );
+        await click(target, ".o_field_char .o_field_translate");
+
+        assert.containsOnce(target, ".modal", "a translate modal should be visible");
+        assert.containsN(
+            target,
+            ".modal .o_translation_dialog .translation",
+            2,
+            "two rows should be visible"
+        );
+
+        let enFields = target.querySelectorAll(".modal .o_translation_dialog .translation input");
+        assert.strictEqual(enFields[0].value, "yop", "English translation should be filled");
+        assert.strictEqual(
+            enFields[enFields.length - 1].value,
+            "valeur français",
+            "French translation should be filled"
+        );
+
+        await editInput(enFields[0], null, "english value");
+        await click(target, ".modal button.btn-primary"); // save
+
+        assert.strictEqual(
+            target.querySelector(`.o_field_char input[type="text"]`).value,
+            "english value",
+            "the new translation was not transfered to modified record"
+        );
+
+        await editInput(target, `.o_field_char input[type="text"]`, "new english value");
+        await click(target, ".o_field_char .o_field_translate");
+
+        enFields = target.querySelectorAll(".modal .o_translation_dialog .translation input");
+        assert.strictEqual(
+            enFields[0].value,
+            "new english value",
+            "Modified value should be used instead of translation"
+        );
+        assert.strictEqual(
+            enFields[enFields.length - 1].value,
+            "valeur français",
+            "French translation should be filled"
+        );
     });
 
-    QUnit.skipWOWL("html field translatable", async function (assert) {
-        // assert.expect(6);
-        // serverData.models.partner.fields.foo.translate = true;
-        // serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), { force: true });
-        // const form = await makeView({
-        //     type: "form",
-        //     resModel: 'partner',
-        //     serverData,
-        //     arch: '<form string="Partners">' +
-        //             '<sheet>' +
-        //                 '<group>' +
-        //                     '<field name="foo"/>' +
-        //                 '</group>' +
-        //             '</sheet>' +
-        //         '</form>',
-        //     resId: 1,
-        //     session: {
-        //         user_context: {lang: 'en_US'},
-        //     },
-        //     mockRPC: function (route, args) {
-        //         if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-        //             assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
-        //             return Promise.resolve({
-        //                 domain: [],
-        //                 context: {
-        //                     search_default_name: 'partner,foo',
-        //                     translation_type: 'char',
-        //                     translation_show_src: true,
-        //                 },
-        //             });
-        //         }
-        //         if (route === "/web/dataset/call_kw/res.lang/get_installed") {
-        //             return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
-        //         }
-        //         if (args.method === "search_read" && args.model == "ir.translation") {
-        //             return Promise.resolve([
-        //                 {lang: 'en_US', src: 'first paragraph', value: 'first paragraph', id: 42},
-        //                 {lang: 'en_US', src: 'second paragraph', value: 'second paragraph', id: 43},
-        //                 {lang: 'fr_BE', src: 'first paragraph', value: 'premier paragraphe', id: 44},
-        //                 {lang: 'fr_BE', src: 'second paragraph', value: 'deuxième paragraphe', id: 45},
-        //             ]);
-        //         }
-        //         if (args.method === "write" && args.model == "ir.translation") {
-        //             assert.deepEqual(args.args[1], {value: "first paragraph modified"},
-        //                 "Wrong update on translation");
-        //             return Promise.resolve();
-        //         }
-        //         return this._super.apply(this, arguments);
-        //     },
-        // });
-        // await click(form.el, ".o_form_button_edit");
-        // const $foo = form.$('input[type="text"].o_field_char');
-        // // this will not affect the translate_fields effect until the record is
-        // // saved but is set for consistency of the test
-        // await editInput($foo, "<p>first paragraph</p><p>second paragraph</p>");
-        // const $button = form.$('input[type="text"].o_field_char + .o_field_translate');
-        // await click($button);
-        // await nextTick();
-        // assert.containsOnce($(document), '.modal', 'a translate modal should be visible');
-        // assert.containsN($('.modal .o_translation_dialog'), '.translation', 4,
-        //     'four rows should be visible');
-        // const $enField = $('.modal .o_translation_dialog .translation:first() input');
-        // assert.strictEqual($enField.val(), 'first paragraph',
-        //     'first part of english translation should be filled');
-        // await editInput($enField, "first paragraph modified");
-        // await click($('.modal button.btn-primary'));  // save
-        // await nextTick();
-        // assert.strictEqual($foo.val(), "<p>first paragraph</p><p>second paragraph</p>",
-        //     "the new partial translation should not be transfered");
+    QUnit.test("html field translatable", async function (assert) {
+        assert.expect(6);
+
+        serverData.models.partner.fields.foo.translate = true;
+        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+            force: true,
+        });
+        patchWithCleanup(session.user_context, {
+            lang: "en_US",
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args, method, model }) {
+                if (route === "/web/dataset/call_button" && method === "translate_fields") {
+                    assert.deepEqual(
+                        args,
+                        ["partner", 1, "foo"],
+                        `should call "call_button" route`
+                    );
+                    return Promise.resolve({
+                        domain: [],
+                        context: {
+                            search_default_name: "partner,foo",
+                            translation_type: "char",
+                            translation_show_src: true,
+                        },
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([
+                        ["en_US", "English"],
+                        ["fr_BE", "French (Belgium)"],
+                    ]);
+                }
+                if (method === "search_read" && model === "ir.translation") {
+                    return Promise.resolve([
+                        { lang: "en_US", src: "first paragraph", value: "first paragraph", id: 42 },
+                        {
+                            lang: "en_US",
+                            src: "second paragraph",
+                            value: "second paragraph",
+                            id: 43,
+                        },
+                        {
+                            lang: "fr_BE",
+                            src: "first paragraph",
+                            value: "premier paragraphe",
+                            id: 44,
+                        },
+                        {
+                            lang: "fr_BE",
+                            src: "second paragraph",
+                            value: "deuxième paragraphe",
+                            id: 45,
+                        },
+                    ]);
+                }
+                if (method === "write" && model === "ir.translation") {
+                    assert.deepEqual(
+                        args[1],
+                        { value: "first paragraph modified" },
+                        "Wrong update on translation"
+                    );
+                    return Promise.resolve(null);
+                }
+            },
+        });
+        await click(target, ".o_form_button_edit");
+
+        // this will not affect the translate_fields effect until the record is
+        // saved but is set for consistency of the test
+        await editInput(
+            target,
+            `.o_field_char input[type="text"]`,
+            "<p>first paragraph</p><p>second paragraph</p>"
+        );
+
+        await click(target, ".o_field_char .o_field_translate");
+        assert.containsOnce(target, ".modal", "a translate modal should be visible");
+        assert.containsN(
+            target,
+            ".modal .o_translation_dialog .translation",
+            4,
+            "four rows should be visible"
+        );
+
+        const enField = target.querySelector(".modal .o_translation_dialog .translation input");
+        assert.strictEqual(
+            enField.value,
+            "first paragraph",
+            "first part of english translation should be filled"
+        );
+
+        await editInput(enField, null, "first paragraph modified");
+        await click(target, ".modal button.btn-primary"); // save
+
+        assert.strictEqual(
+            target.querySelector(`.o_field_char input[type="text"]`).value,
+            "<p>first paragraph</p><p>second paragraph</p>",
+            "the new partial translation should not be transfered"
+        );
     });
 
-    QUnit.skipWOWL("char field translatable in create mode", async function (assert) {
-        // assert.expect(1);
-        // serverData.models.partner.fields.foo.translate = true;
-        // serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), { force: true });
-        // const form = await makeView({
-        //     type: "form",
-        //     resModel: 'partner',
-        //     serverData,
-        //     arch: '<form string="Partners">' +
-        //             '<sheet>' +
-        //                 '<group>' +
-        //                     '<field name="foo"/>' +
-        //                 '</group>' +
-        //             '</sheet>' +
-        //         '</form>',
-        // });
-        // const $button = form.$('input[type="text"].o_field_char + .o_field_translate');
-        // assert.strictEqual($button.length, 1, "should have a translate button in create mode");
+    QUnit.test("char field translatable in create mode", async function (assert) {
+        assert.expect(1);
+
+        serverData.models.partner.fields.foo.translate = true;
+        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+            force: true,
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
+        });
+
+        assert.containsOnce(
+            target,
+            `.o_field_char .o_field_translate`,
+            "should have a translate button in create mode"
+        );
     });
 
     QUnit.test("char field does not allow html injections", async function (assert) {

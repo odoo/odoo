@@ -1,12 +1,19 @@
 /** @odoo-module **/
 
-import { click, triggerEvent } from "../helpers/utils";
+import { makeFakeLocalizationService } from "../helpers/mock_services";
+import { click, getFixture, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
+import { registry } from "@web/core/registry";
+
+const serviceRegistry = registry.category("services");
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
+
         serverData = {
             models: {
                 partner: {
@@ -293,33 +300,34 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("text field translatable", async function (assert) {
+    QUnit.test("text field translatable", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.fields.txt.translate = true;
+        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+            force: true,
+        });
 
-        var multiLang = _t.database.multi_lang;
-        _t.database.multi_lang = true;
-
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
+            resId: 1,
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="txt"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (route === "/web/dataset/call_button" && args.method === "translate_fields") {
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="txt" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args, method }) {
+                if (route === "/web/dataset/call_button" && method === "translate_fields") {
                     assert.deepEqual(
-                        args.args,
+                        args,
                         ["partner", 1, "txt"],
-                        'should call "call_button" route'
+                        `should call "call_button" route`
                     );
                     return Promise.resolve({
                         domain: [],
@@ -329,41 +337,49 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                     return Promise.resolve([["en_US"], ["fr_BE"]]);
                 }
-                return this._super.apply(this, arguments);
             },
         });
-        await click(form.el, ".o_form_button_edit");
-        var $button = form.el.querySelector("textarea + .o_field_translate");
-        assert.strictEqual($button.length, 1, "should have a translate button");
-        await testUtils.dom.click($button);
-        assert.containsOnce($(document), ".modal", "there should be a translation modal");
-        _t.database.multi_lang = multiLang;
+
+        await click(target, ".o_form_button_edit");
+
+        assert.containsOnce(
+            target,
+            ".o_field_text .o_field_translate",
+            "should have a translate button"
+        );
+        await click(target, ".o_field_text .o_field_translate");
+
+        assert.containsOnce(target, ".modal", "there should be a translation modal");
     });
 
-    QUnit.skipWOWL("text field translatable in create mode", async function (assert) {
+    QUnit.test("text field translatable in create mode", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.txt.translate = true;
+        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+            force: true,
+        });
 
-        var multiLang = _t.database.multi_lang;
-        _t.database.multi_lang = true;
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="txt"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="txt" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
         });
-        var $button = form.el.querySelector("textarea + .o_field_translate");
-        assert.strictEqual($button.length, 1, "should have a translate button in create mode");
 
-        _t.database.multi_lang = multiLang;
+        assert.containsOnce(
+            target,
+            ".o_field_text .o_field_translate",
+            "should have a translate button in create mode"
+        );
     });
 
     QUnit.skipWOWL(

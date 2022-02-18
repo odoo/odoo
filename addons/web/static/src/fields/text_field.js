@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
+import { TranslationButton } from "./translation_button";
 
 const { Component, useEffect, useRef } = owl;
 
@@ -15,6 +16,10 @@ export class TextField extends Component {
                 this.resize();
             }
         });
+    }
+
+    get isTranslatable() {
+        return this.props.record.fields[this.props.name].translate;
     }
 
     resize() {
@@ -43,6 +48,9 @@ TextField.template = "web.TextField";
 TextField.props = {
     ...standardFieldProps,
     placeholder: { type: String, optional: true },
+};
+TextField.components = {
+    TranslationButton,
 };
 TextField.displayName = _lt("Multiline Text");
 TextField.supportedTypes = ["html", "text"];

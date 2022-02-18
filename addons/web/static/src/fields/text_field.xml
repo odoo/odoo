@@ -14,6 +14,15 @@
                 t-on-change="onChange"
                 t-ref="textarea"
             />
+            <t t-if="isTranslatable">
+                <TranslationButton
+                    fieldName="props.name"
+                    resId="props.record.resId"
+                    resModel="props.record.resModel"
+                    value="props.value"
+                    updateField="props.update"
+                />
+            </t>
         </t>
     </t>
 

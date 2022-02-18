@@ -15,6 +15,15 @@
                 t-att-placeholder="props.placeholder"
                 t-on-change="onChange"
             />
+            <t t-if="isTranslatable">
+                <TranslationButton
+                    fieldName="props.name"
+                    resId="props.record.resId"
+                    resModel="props.record.resModel"
+                    value="props.value"
+                    updateField="props.update"
+                />
+            </t>
         </t>
     </t>
 
