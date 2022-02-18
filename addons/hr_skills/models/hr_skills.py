@@ -12,7 +12,7 @@ class Skill(models.Model):
 
     name = fields.Char(required=True)
     sequence = fields.Integer(default=10)
-    skill_type_id = fields.Many2one('hr.skill.type', ondelete='cascade')
+    skill_type_id = fields.Many2one('hr.skill.type', required=True, ondelete='cascade')
 
     def name_get(self):
         if not self._context.get('from_skill_dropdown'):
