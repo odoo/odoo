@@ -2349,6 +2349,9 @@ class BaseModel(metaclass=MetaModel):
             if value:
                 if ftype in ['many2one', 'many2many']:
                     value = value[0]
+                elif ftype == 'reference':
+                    model, res_id = value.split(',')
+                    data[gb['field']] = self.env[model].browse(int(res_id)).display_name
                 elif ftype in ('date', 'datetime'):
                     locale = get_lang(self.env).code
                     fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
