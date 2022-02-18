@@ -9,10 +9,7 @@
                     <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
                             attrs="{'invisible': ['|', ('invoice_group', '=', False), ('state','!=','paid')]}"/>
-                    <button name="refund" string="Return Products" type="object"
-                        attrs="{'invisible':['|', ('state','=','draft'), ('has_refundable_lines', '=', False)]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
-                    <field name="has_refundable_lines" invisible="1" />
                     <field name="refunded_orders_count" invisible="1" />
                 </header>
                 <sheet>

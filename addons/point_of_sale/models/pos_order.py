@@ -291,7 +291,6 @@ class PosOrder(models.Model):
     refund_orders_count = fields.Integer('Number of Refund Orders', compute='_compute_refund_related_fields')
     is_refunded = fields.Boolean(compute='_compute_refund_related_fields')
     refunded_order_ids = fields.Many2many('pos.order', compute='_compute_refund_related_fields')
-    has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
     refunded_orders_count = fields.Integer(compute='_compute_refund_related_fields')
 
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
@@ -301,12 +300,6 @@ class PosOrder(models.Model):
             order.is_refunded = order.refund_orders_count > 0
             order.refunded_order_ids = order.mapped('lines.refunded_orderline_id.order_id')
             order.refunded_orders_count = len(order.refunded_order_ids)
-
-    @api.depends('lines.refunded_qty', 'lines.qty')
-    def _compute_has_refundable_lines(self):
-        digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        for order in self:
-            order.has_refundable_lines = any([float_compare(line.qty, line.refunded_qty, digits) > 0 for line in order.lines])
 
     @api.depends('account_move')
     def _compute_is_invoiced(self):
@@ -716,50 +709,6 @@ class PosOrder(models.Model):
         self.env['pos.payment'].create(data)
         self.amount_paid = sum(self.payment_ids.mapped('amount'))
 
-    def _prepare_refund_values(self, current_session):
-        self.ensure_one()
-        return {
-            'name': self.name + _(' REFUND'),
-            'session_id': current_session.id,
-            'date_order': fields.Datetime.now(),
-            'pos_reference': self.pos_reference,
-            'lines': False,
-            'amount_tax': -self.amount_tax,
-            'amount_total': -self.amount_total,
-            'amount_paid': 0,
-            'is_total_cost_computed': False
-        }
-
-    def refund(self):
-        """Create a copy of order  for refund order"""
-        refund_orders = self.env['pos.order']
-        for order in self:
-            # When a refund is performed, we are creating it in a session having the same config as the original
-            # order. It can be the same session, or if it has been closed the new one that has been opened.
-            current_session = order.session_id.config_id.current_session_id
-            if not current_session:
-                raise UserError(_('To return product(s), you need to open a session in the POS %s', order.session_id.config_id.display_name))
-            refund_order = order.copy(
-                order._prepare_refund_values(current_session)
-            )
-            for line in order.lines:
-                PosOrderLineLot = self.env['pos.pack.operation.lot']
-                for pack_lot in line.pack_lot_ids:
-                    PosOrderLineLot += pack_lot.copy()
-                line.copy(line._prepare_refund_data(refund_order, PosOrderLineLot))
-            refund_orders |= refund_order
-
-        return {
-            'name': _('Return Products'),
-            'view_mode': 'form',
-            'res_model': 'pos.order',
-            'res_id': refund_orders.ids[0],
-            'view_id': False,
-            'context': self.env.context,
-            'type': 'ir.actions.act_window',
-            'target': 'current',
-        }
-
     def _add_mail_attachment(self, name, ticket):
         filename = 'Receipt-' + name + '.jpg'
         receipt = self.env['ir.attachment'].create({
@@ -928,31 +877,6 @@ class PosOrderLine(models.Model):
     def _compute_refund_qty(self):
         for orderline in self:
             orderline.refunded_qty = -sum(orderline.mapped('refund_orderline_ids.qty'))
-
-    def _prepare_refund_data(self, refund_order, PosOrderLineLot):
-        """
-        This prepares data for refund order line. Inheritance may inject more data here
-
-        @param refund_order: the pre-created refund order
-        @type refund_order: pos.order
-
-        @param PosOrderLineLot: the pre-created Pack operation Lot
-        @type PosOrderLineLot: pos.pack.operation.lot
-
-        @return: dictionary of data which is for creating a refund order line from the original line
-        @rtype: dict
-        """
-        self.ensure_one()
-        return {
-            'name': self.name + _(' REFUND'),
-            'qty': -(self.qty - self.refunded_qty),
-            'order_id': refund_order.id,
-            'price_subtotal': -self.price_subtotal,
-            'price_subtotal_incl': -self.price_subtotal_incl,
-            'pack_lot_ids': PosOrderLineLot,
-            'is_total_cost_computed': False,
-            'refunded_orderline_id': self.id,
-        }
 
     @api.model_create_multi
     def create(self, vals_list):
