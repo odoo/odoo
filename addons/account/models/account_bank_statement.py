@@ -420,7 +420,7 @@ class AccountBankStatement(models.Model):
 
             # Bank statement report.
             if statement.journal_id.type == 'bank':
-                content, content_type = self.env.ref('account.action_report_account_statement')._render(statement.id)
+                content, content_type = self.env['ir.ui.view']._render('account.action_report_account_statement', statement.id)
                 self.env['ir.attachment'].create({
                     'name': statement.name and _("Bank Statement %s.pdf", statement.name) or _("Bank Statement.pdf"),
                     'type': 'binary',

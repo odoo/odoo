@@ -1970,12 +1970,9 @@ actual arch.
 
     @api.model
     def render_public_asset(self, template, values=None):
-        template = self.sudo().browse(self._get_view_id(template))
-        template._check_view_access()
-        return template.sudo()._render(values, engine="ir.qweb")
-
-    def _render_template(self, template, values=None, engine='ir.qweb'):
-        return self._get_view(template)._render(values, engine)
+        view = self._get_view(template).sudo()
+        view._check_view_access()
+        return self._render(template, values, engine="ir.qweb")
 
     @api.model
     def _render(self, view_ref, values=None, engine='ir.qweb', minimal_qcontext=False, options=None):

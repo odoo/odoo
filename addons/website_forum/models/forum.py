@@ -187,7 +187,7 @@ class Forum(models.Model):
 
     def _set_default_faq(self):
         for forum in self:
-            forum.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": forum})
+            forum.faq = self.env['ir.ui.view']._render('website_forum.faq_accordion', {"forum": forum})
 
     @api.model_create_multi
     def create(self, vals_list):

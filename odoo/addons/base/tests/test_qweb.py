@@ -94,7 +94,7 @@ class TestQWebTField(TransactionCase):
                 </t>
             """
         })
-        rendered = view._render({'malicious': '1</script><script>alert("pwned")</script><script>'})
+        rendered = self.env['ir.ui.view']._render(view.id, {'malicious': '1</script><script>alert("pwned")</script><script>'})
         self.assertIn('alert', rendered, "%r doesn't seem to be rendered" % rendered)
         doc = etree.fromstring(rendered)
         self.assertEqual(len(doc.xpath('//script')), 1)
@@ -1313,7 +1313,7 @@ class TestQWebBasic(TransactionCase):
             """
         })
 
-        result = view1._render({})
+        result = self.env['ir.ui.view']._render(view1.id, {})
         self.assertEqual(etree.fromstring(result), etree.fromstring("""
             <div>
                 <table>
@@ -1352,10 +1352,10 @@ class TestQWebBasic(TransactionCase):
         })
 
         with self.assertRaises(QWebException):
-            view1._render()
+            self.env['ir.ui.view']._render(view1.id)
 
         try:
-            view1._render()
+            self.env['ir.ui.view']._render(view1.id)
         except QWebException as e:
             error = str(e)
             self.assertIn("The varname 'a-2' can only contain alphanumeric characters and underscores", error)
@@ -1375,10 +1375,10 @@ class TestQWebBasic(TransactionCase):
         })
 
         with self.assertRaises(QWebException):
-            view1._render()
+            self.env['ir.ui.view']._render(view1.id)
 
         try:
-            view1._render()
+            self.env['ir.ui.view']._render(view1.id)
         except QWebException as e:
             error = str(e)
             self.assertIn('External ID not found in the system: base.dummy', error)
@@ -1420,7 +1420,7 @@ class TestQWebBasic(TransactionCase):
             """ % other_lang
         })
 
-        rendered = view2.with_context(lang=current_lang)._render().strip()
+        rendered = self.env['ir.ui.view'].with_context(lang=current_lang)._render(view2.id).strip()
         self.assertEqual(rendered, '9/000/000*00')
 
     def test_render_barcode(self):
@@ -1435,16 +1435,16 @@ class TestQWebBasic(TransactionCase):
         })
 
         view.arch = """<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'width': 100, 'height': 30}"/>"""
-        rendered = view._render(values={'partner': partner}).strip()
+        rendered = self.env['ir.ui.view']._render(view.id, values={'partner': partner}).strip()
         self.assertRegex(rendered, r'<div><img alt="Barcode test" src="data:image/png;base64,\S+"></div>')
 
         partner.barcode = '4012345678901'
         view.arch = """<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'symbology': 'EAN13', 'width': 100, 'height': 30, 'img_style': 'width:100%;', 'img_alt': 'Barcode'}"/>"""
-        ean_rendered = view._render(values={'partner': partner}).strip()
+        ean_rendered = self.env['ir.ui.view']._render(view.id, values={'partner': partner}).strip()
         self.assertRegex(ean_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
 
         view.arch = """<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 100, 'height': 30, 'img_style': 'width:100%;', 'img_alt': 'Barcode'}"/>"""
-        auto_rendered = view._render(values={'partner': partner}).strip()
+        auto_rendered = self.env['ir.ui.view']._render(view.id, values={'partner': partner}).strip()
         self.assertRegex(auto_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
 
     def test_render_comment_tail(self):
@@ -1467,7 +1467,7 @@ class TestQWebBasic(TransactionCase):
         })
         emptyline = '\n                '
         expected = markupsafe.Markup('Text 1' + emptyline + emptyline + 'Text 2' + emptyline + 'ok')
-        self.assertEqual(view1._render().strip(), expected)
+        self.assertEqual(self.env['ir.ui.view']._render(view1.id).strip(), expected)
 
     def test_void_element(self):
         view = self.env['ir.ui.view'].create({

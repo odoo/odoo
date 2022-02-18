@@ -224,7 +224,7 @@ class MailTemplate(models.Model):
                     report_service = report.report_name
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, format = report._render_qweb_pdf([res_id])
+                        result, format = self.env['ir.actions.report']._render_qweb_pdf(report.id, [res_id])
                     else:
                         res = report._render([res_id])
                         if not res:
@@ -284,8 +284,9 @@ class MailTemplate(models.Model):
             values.pop('email_from')
         # encapsulate body
         if email_layout_xmlid and values['body_html']:
+            View = self.env['ir.ui.view']
             try:
-                template = self.env.ref(email_layout_xmlid, raise_if_not_found=True)
+                view_id = View._get_view_id(email_layout_xmlid)
             except ValueError:
                 _logger.warning(
                     'QWeb template %s not found when sending template %s. Sending without layout.',
@@ -298,7 +299,7 @@ class MailTemplate(models.Model):
 
                 if self.lang:
                     lang = self._render_lang([res_id])[res_id]
-                    template = template.with_context(lang=lang)
+                    View = View.with_context(lang=lang)
                     model = model.with_context(lang=lang)
 
                 template_ctx = {
@@ -318,7 +319,7 @@ class MailTemplate(models.Model):
                     # tools
                     'is_html_empty': is_html_empty,
                 }
-                body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                body = View._render(view_id, template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
         mail = self.env['mail.mail'].sudo().create(values)
 

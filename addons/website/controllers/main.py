@@ -204,9 +204,9 @@ class Website(Home):
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': request.httprequest.url_root[:-1],
                 }
-                urls = View._render_template('website.sitemap_locs', values)
+                urls = View._render('website.sitemap_locs', values)
                 if urls.strip():
-                    content = View._render_template('website.sitemap_xml', {'content': urls})
+                    content = View._render('website.sitemap_xml', {'content': urls})
                     pages += 1
                     last_sitemap = create_sitemap('/sitemap-%d-%d.xml' % (current_website.id, pages), content)
                 else:
@@ -225,7 +225,7 @@ class Website(Home):
                 pages_with_website = ["%d-%d" % (current_website.id, p) for p in range(1, pages + 1)]
 
                 # Sitemaps must be split in several smaller files with a sitemap index
-                content = View._render_template('website.sitemap_index_xml', {
+                content = View._render('website.sitemap_index_xml', {
                     'pages': pages_with_website,
                     'url_root': request.httprequest.url_root,
                 })
@@ -425,7 +425,7 @@ class Website(Home):
                         if pattern:
                             parts = re.split(f'({pattern})', value, flags=re.IGNORECASE)
                             if len(parts) > 1:
-                                value = request.env['ir.ui.view'].sudo()._render_template(
+                                value = request.env['ir.ui.view']._render(
                                     "website.search_text_with_highlight",
                                     {'parts': parts}
                                 )

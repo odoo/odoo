@@ -32,7 +32,7 @@ class WebsiteSaleProductComparison(WebsiteSale):
         products = products.with_context(pricelist=pricelist.id, display_default_code=False)
         for product in products:
             ret[product.id] = {
-                'render': request.env['ir.ui.view']._render_template(
+                'render': request.env['ir.ui.view']._render(
                     "website_sale_comparison.product_product",
                     {'product': product, 'website': website}
                 ),

@@ -319,7 +319,7 @@ class MailRenderMixin(models.AbstractModel):
         if any(r is None for r in res_ids):
             raise ValueError(_('Template rendering should be called on a valid record IDs.'))
 
-        view = self.env.ref(template_src, raise_if_not_found=False) or self.env['ir.ui.view']
+        view = self.env.ref(template_src, raise_if_not_found=False)
         results = dict.fromkeys(res_ids, u"")
         if not view:
             return results
@@ -333,7 +333,7 @@ class MailRenderMixin(models.AbstractModel):
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
             try:
-                render_result = view._render(variables, engine='ir.qweb', minimal_qcontext=True, options=options)
+                render_result = self.env['ir.ui.view']._render(template_src, variables, engine='ir.qweb', minimal_qcontext=True, options=options)
             except Exception as e:
                 _logger.info("Failed to render template : %s (%d)", template_src, view.id, exc_info=True)
                 raise UserError(_("Failed to render template : %(xml_id)s (%(view_id)d)",

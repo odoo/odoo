@@ -806,7 +806,7 @@ class ResCompany(models.Model):
         # One bundle for everyone, so this method
         # necessarily updates the style for every company at once
         company_ids = self.sudo().search([])
-        company_styles = template_style._render({
+        company_styles = self.env['ir.ui.view']._render(template_style.id, {
             'company_ids': company_ids,
         })
         return base64.b64encode(company_styles.encode())

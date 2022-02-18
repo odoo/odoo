@@ -2833,8 +2833,6 @@ class MailThread(models.AbstractModel):
         if not self.env.registry.ready:  # Don't send notification during install
             return
 
-        view = self.env['ir.ui.view'].browse(self.env['ir.model.data']._xmlid_to_res_id(template))
-
         for record in self:
             model_description = self.env['ir.model']._get(record._name).display_name
             values = {
@@ -2842,7 +2840,7 @@ class MailThread(models.AbstractModel):
                 'model_description': model_description,
                 'access_link': record._notify_get_action_link('view'),
             }
-            assignation_msg = view._render(values, engine='ir.qweb', minimal_qcontext=True)
+            assignation_msg = self.env['ir.ui.view']._render(template, values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
             record.message_notify(
                 subject=_('You have been assigned to %s', record.display_name),

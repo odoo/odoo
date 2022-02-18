@@ -33,14 +33,14 @@ class MailTemplate(models.Model):
                 if record.l10n_ch_isr_valid:
                     # We add an attachment containing the ISR
                     isr_report_name = 'ISR-' + inv_print_name + '.pdf'
-                    isr_pdf = self.env.ref('l10n_ch.l10n_ch_isr_report')._render_qweb_pdf(record.ids)[0]
+                    isr_pdf = self.env['ir.actions.report']._render_qweb_pdf('l10n_ch.l10n_ch_isr_report', record.ids)[0]
                     isr_pdf = base64.b64encode(isr_pdf)
                     new_attachments.append((isr_report_name, isr_pdf))
 
                 if record.partner_bank_id._eligible_for_qr_code('ch_qr', record.partner_id, record.currency_id):
                     # We add an attachment containing the QR-bill
                     qr_report_name = 'QR-bill-' + inv_print_name + '.pdf'
-                    qr_pdf = self.env.ref('l10n_ch.l10n_ch_qr_report')._render_qweb_pdf(record.ids)[0]
+                    qr_pdf = self.env['ir.actions.report']._render_qweb_pdf('l10n_ch.l10n_ch_qr_report', record.ids)[0]
                     qr_pdf = base64.b64encode(qr_pdf)
                     new_attachments.append((qr_report_name, qr_pdf))
 

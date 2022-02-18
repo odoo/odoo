@@ -71,8 +71,8 @@ class WebsiteSnippetFilter(models.Model):
         is_sample = with_sample and not records
         if is_sample:
             records = self._prepare_sample(limit)
-        View = self.env['ir.ui.view'].sudo().with_context(inherit_branding=False)
-        content = View._render_template(template_key, dict(
+        View = self.env['ir.ui.view'].with_context(inherit_branding=False)
+        content = View._render(template_key, dict(
             records=records,
             is_sample=is_sample,
         ))

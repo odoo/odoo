@@ -642,7 +642,7 @@ class IrActionsReport(models.Model):
                 website = request.website
                 context = dict(context, translatable=context.get('lang') != request.env['ir.http']._get_default_lang().code)
 
-        view_obj = self.env['ir.ui.view'].sudo().with_context(context)
+        view_obj = self.env['ir.ui.view'].with_context(context)
         values.update(
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
@@ -651,7 +651,7 @@ class IrActionsReport(models.Model):
             website=website,
             web_base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
         )
-        return view_obj._render_template(template, values).encode()
+        return view_obj._render(template, values).encode()
 
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
         '''Merge the existing attachments by adding one by one the content of the attachments

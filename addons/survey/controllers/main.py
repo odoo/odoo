@@ -342,9 +342,9 @@ class Survey(http.Controller):
         survey_data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
 
         if answer_sudo.state == 'done':
-            survey_content = request.env.ref('survey.survey_fill_form_done')._render(survey_data)
+            survey_content = request.env['ir.ui.view']._render('survey.survey_fill_form_done', survey_data)
         else:
-            survey_content = request.env.ref('survey.survey_fill_form_in_progress')._render(survey_data)
+            survey_content = request.env['ir.ui.view']._render('survey.survey_fill_form_in_progress', survey_data)
 
         survey_progress = False
         if answer_sudo.state == 'in_progress' and not survey_data.get('question', request.env['survey.question']).is_page:
@@ -372,7 +372,7 @@ class Survey(http.Controller):
         return {
             'survey_content': survey_content,
             'survey_progress': survey_progress,
-            'survey_navigation': request.env.ref('survey.survey_navigation')._render(survey_data),
+            'survey_navigation': request.env['ir.ui.view']._render('survey.survey_navigation', survey_data),
             'background_image_url': background_image_url
         }
 

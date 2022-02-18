@@ -216,7 +216,7 @@ class MrpStockReport(models.TransientModel):
         if context.get('active_id') and context.get('active_model'):
             rcontext['reference'] = self.env[context.get('active_model')].browse(int(context.get('active_id'))).display_name
 
-        body = self.env['ir.ui.view'].with_context(context)._render_template(
+        body = self.env['ir.ui.view'].with_context(context)._render(
             "stock.report_stock_inventory_print",
             values=dict(rcontext, lines=lines, report=self, context=self),
         )
@@ -236,7 +236,7 @@ class MrpStockReport(models.TransientModel):
         rcontext = {}
         context = dict(self.env.context)
         rcontext['lines'] = self.with_context(context).get_lines()
-        result['html'] = self.env.ref('stock.report_stock_inventory')._render(rcontext)
+        result['html'] = self.env['ir.ui.view']._render('stock.report_stock_inventory', rcontext)
         return result
 
     @api.model

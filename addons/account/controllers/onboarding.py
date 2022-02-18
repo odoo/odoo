@@ -16,9 +16,10 @@ class OnboardingController(http.Controller):
             return {}
 
         return {
-            'html': request.env.ref('account.account_invoice_onboarding_panel')._render({
-                'company': company,
-                'state': company.get_and_update_account_invoice_onboarding_state()
+            'html': request.env['ir.ui.view']._render(
+                'account.account_invoice_onboarding_panel', {
+                    'company': company,
+                    'state': company.get_and_update_account_invoice_onboarding_state()
             })
         }
 
@@ -34,8 +35,9 @@ class OnboardingController(http.Controller):
             return {}
 
         return {
-            'html': request.env.ref('account.account_dashboard_onboarding_panel')._render({
-                'company': company,
-                'state': company.get_and_update_account_dashboard_onboarding_state()
+            'html': request.env['ir.ui.view']._render(
+                'account.account_dashboard_onboarding_panel', {
+                    'company': company,
+                    'state': company.get_and_update_account_dashboard_onboarding_state()
             })
         }

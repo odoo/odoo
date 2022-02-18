@@ -243,7 +243,7 @@ class WebsiteEventController(http.Controller):
                     "email": visitor.email,
                     "phone": visitor.mobile,
                 }
-        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
+        return request.env['ir.ui.view']._render("website_event.registration_attendee_details", {
             'tickets': tickets,
             'event': event,
             'availability_check': availability_check,

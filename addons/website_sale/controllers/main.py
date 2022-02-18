@@ -584,14 +584,14 @@ class WebsiteSale(http.Controller):
         if not display:
             return values
 
-        values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
+        values['website_sale.cart_lines'] = request.env['ir.ui.view']._render(
             "website_sale.cart_lines", {
                 'website_sale_order': order,
                 'date': fields.Date.today(),
                 'suggested_products': order._cart_accessories()
             }
         )
-        values['website_sale.short_cart_summary'] = request.env['ir.ui.view']._render_template(
+        values['website_sale.short_cart_summary'] = request.env['ir.ui.view']._render(
             "website_sale.short_cart_summary", {
                 'website_sale_order': order,
             }
@@ -1035,7 +1035,7 @@ class WebsiteSale(http.Controller):
 
         return {
             'recall': order.get_portal_last_transaction().state == 'pending',
-            'message': request.env['ir.ui.view']._render_template("website_sale.payment_confirmation_status", {
+            'message': request.env['ir.ui.view']._render("website_sale.payment_confirmation_status", {
                 'order': order
             })
         }

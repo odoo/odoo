@@ -153,7 +153,7 @@ class AccountMove(models.Model):
 
         # b64encode returns a bytestring, the template tries to turn it to string,
         # but only gets the repr(pdf) --> "b'<base64_data>'"
-        pdf = self.env.ref('account.account_invoices')._render_qweb_pdf(self.id)[0]
+        pdf = self.env['ir.actions.report']._render_qweb_pdf('account.account_invoices', self.ids)[0]
         pdf = base64.b64encode(pdf).decode()
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
@@ -191,7 +191,7 @@ class AccountMove(models.Model):
         :return: The XML content as str.
         '''
         template_values = self._prepare_fatturapa_export_values()
-        content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
+        content = self.env['ir.ui.view']._render('l10n_it_edi.account_invoice_it_FatturaPA_export', template_values)
         return content
 
     def _post(self, soft=True):

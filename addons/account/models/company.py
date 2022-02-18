@@ -205,7 +205,8 @@ class ResCompany(models.Model):
             return
 
         for company in self.filtered(lambda company: is_html_empty(company.invoice_terms_html) and company.terms_type == 'html'):
-            company.invoice_terms_html = term_template._render({'company_name': company.name, 'company_country': company.country_id.name}, engine='ir.qweb')
+            company.invoice_terms_html = self.env['ir.ui.view']._render("account.account_default_terms_and_conditions",
+                {'company_name': company.name, 'company_country': company.country_id.name}, engine='ir.qweb')
 
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations

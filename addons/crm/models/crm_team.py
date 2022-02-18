@@ -634,7 +634,7 @@ class Team(models.Model):
             rcontext = {
                 'team': self,
             }
-            action['help'] = self.env['ir.ui.view']._render_template('crm.crm_action_helper', values=rcontext)
+            action['help'] = self.env['ir.ui.view']._render('crm.crm_action_helper', values=rcontext)
             return action
         return super(Team,self).action_primary_channel_button()
 
