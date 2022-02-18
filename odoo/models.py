@@ -2168,6 +2168,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if value:
                 if ftype == 'many2one':
                     value = value[0]
+                elif ftype == 'reference':
+                    model, res_id = value.split(',')
+                    data[gb['field']] = self.env[model].browse(int(res_id)).display_name
                 elif ftype in ('date', 'datetime'):
                     locale = get_lang(self.env).code
                     fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
@@ -2681,7 +2684,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # determine which fields can be inherited
         to_inherit = {
             name: (parent_fname, field)
-            for parent_model_name, parent_fname in self._inherits.items()
+            for parent_model_name, parent_fname in self._inherits.items()]
             for name, field in self.env[parent_model_name]._fields.items()
         }
 
