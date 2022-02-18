@@ -188,7 +188,7 @@ class StockPackageLevel(models.Model):
         for pl in self:
             if pl.state == 'new' or pl.is_fresh_package:
                 pl.location_id = False
-            elif pl.package_id:
+            elif pl.state != 'done' and pl.package_id:
                 pl.location_id = pl.package_id.location_id
             elif pl.state == 'confirmed' and pl.move_ids:
                 pl.location_id = pl.move_ids[0].location_id
