@@ -7,6 +7,11 @@
         <field name="value" ref="sale.mail_template_sale_confirmation"/>
     </record>
 
+    <record id="default_invoice_email_template" model="ir.config_parameter">
+        <field name="key">sale.default_invoice_email_template</field>
+        <field name="value" ref="account.email_template_edi_invoice"/>
+    </record>
+
     <record id="send_invoice_cron" model="ir.cron">
         <field name="name">automatic invoicing: send ready invoice</field>
         <field name="model_id" ref="payment.model_payment_transaction" />

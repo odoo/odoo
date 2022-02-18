@@ -55,7 +55,7 @@ class ResConfigSettings(models.TransientModel):
         string='Invoice Email Template',
         domain="[('model', '=', 'account.move')]",
         config_parameter='sale.default_invoice_email_template',
-        default=lambda self: self.env.ref('account.email_template_edi_invoice', False)
+        help="Email sent to the customer once the invoice is available.",
     )
     confirmation_mail_template_id = fields.Many2one(
         comodel_name='mail.template',
