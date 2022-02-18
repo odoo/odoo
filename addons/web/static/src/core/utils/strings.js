@@ -36,7 +36,7 @@ export function escapeRegExp(str) {
  * @param {string} str
  * @returns {string} escaped string
  */
- export function escape(str) {
+export function escape(str) {
     return _.escape(str);
 }
 
@@ -324,12 +324,4 @@ export function unaccent(str, caseSensitive) {
         return diacriticsMap[accented] || accented;
     });
     return caseSensitive ? str : str.toLowerCase();
-}
-
-/**
- * @param {string} str
- * @returns {string}
- */
-export function snakeToCamel(str) {
-    return str.replace(/_([a-z])/gi, ([, c]) => c.toUpperCase());
 }

@@ -4,7 +4,6 @@ import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { isBroadlyFalsy } from "@web/core/utils/misc";
-import { snakeToCamel } from "@web/core/utils/strings";
 import { isAttr } from "@web/core/utils/xml";
 import { getX2MViewModes, X2M_TYPES } from "@web/views/helpers/view_utils";
 import { getFieldClassFromRegistry } from "./utils";
