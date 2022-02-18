@@ -12595,4 +12595,51 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test('nested one2manys, multi page, onchange', async function (assert) {
+        serverData.models.partner.records[2].int_field = 5;
+        serverData.models.partner.records[0].p = [2, 4]; // limit 1 -> record 4 will be on second page
+        serverData.models.partner.records[1].turtles = [1];
+        serverData.models.partner.records[2].turtles = [2];
+        serverData.models.turtle.records[0].turtle_int = 1;
+        serverData.models.turtle.records[1].turtle_int = 2;
+
+        serverData.models.partner.onchanges.int_field = function (obj) {
+           assert.step('onchange')
+           obj.p = [[5]]
+           obj.p.push([1, 2, { turtles: [[5], [1, 1, { turtle_int: obj.int_field }]] }]);
+           obj.p.push([1, 4, { turtles: [[5], [1, 2, { turtle_int: obj.int_field }]] }]);
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="p">
+                        <tree editable="bottom" limit="1" default_order="display_name">
+                            <field name="display_name" />
+                            <field name="int_field" />
+                            <field name="turtles">
+                                <tree editable="bottom">
+                                    <field name="turtle_int"/>
+                                </tree>
+                            </field>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            mode: 'edit',
+        });
+
+        await editInput(target, ".o_field_widget[name=int_field] input", "5");
+        assert.verifySteps(['onchange'])
+
+        await clickSave(target);
+        assert.strictEqual(serverData.models.partner.records[0].int_field, 5)
+        assert.strictEqual(serverData.models.turtle.records[1].turtle_int, 5);
+        assert.strictEqual(serverData.models.turtle.records[0].turtle_int, 5);
+    });
 });
