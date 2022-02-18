@@ -17,6 +17,7 @@ export const StatusWithColor = FieldSelection.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.color = this.recordData[this.nodeOptions.color_field];
+        this.hideLabel = this.nodeOptions.hide_label;
         if (this.nodeOptions.no_quick_edit) {
             this._canQuickEdit = false;
         }
@@ -29,6 +30,10 @@ export const StatusWithColor = FieldSelection.extend({
         this._super.apply(this, arguments);
         if (this.value) {
             this.$el.addClass('o_status_with_color');
+            if (this.hideLabel) {
+                this.$el.attr('title', this.$el.text());
+                this.$el.empty();
+            }
             this.$el.prepend(qweb.render(this._template, {
                 color: this.color,
             }));
