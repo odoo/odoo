@@ -110,7 +110,6 @@
                 <form action="/shop/cart/update" method="POST">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" class="product_id" name="product_id" t-att-value="channel.product_id.id"/>
-                    <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="channel.product_id.id"/>
                     <a id="add_to_cart" role="button" href="#"
                        class="btn btn-primary btn-block js_check_product o_js_add_to_cart a-submit"
                        data-animation-selector=".o_wslides_course_pict">
@@ -131,6 +130,7 @@
 <template name="Display 'Buy Now'" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False" customize_show="True">
     <xpath expr="//div[hasclass('add_to_cart_button')]" position="before">
         <div class="mb-1">
+          <!-- FIXME TDE seems strange to redirect to /cart/update with get params when it only supports POST requests -->
             <a role="button" class="btn btn-primary btn-block post_link" t-attf-href="/shop/cart/update?product_id={{channel.product_id.id}}&amp;express=1">
                 <i class="fa fa-bolt"></i> Buy Now
             </a>
