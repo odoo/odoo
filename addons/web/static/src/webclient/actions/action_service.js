@@ -1184,6 +1184,9 @@ function makeActionManager(env) {
                 action && typeof action === "object"
                     ? action
                     : { type: "ir.actions.act_window_close" };
+            if (action.help) {
+                action.help = markup(action.help);
+            }
         } else if (params.type === "action") {
             // execute a given action, so load it first
             context.active_id = params.resId || null;
