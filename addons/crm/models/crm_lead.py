@@ -1806,12 +1806,14 @@ class Lead(models.Model):
         recipients = super(Lead, self)._message_get_suggested_recipients()
         try:
             for lead in self:
+                # check if that language is correctly installed (and active) before using it
+                lang_code = lead.lang_code if lead.lang_code and self.env['res.lang']._lang_get(lead.lang_code) else None
                 if lead.partner_id:
                     lead._message_add_suggested_recipient(
-                        recipients, partner=lead.partner_id, lang=lead.lang_code, reason=_('Customer'))
+                        recipients, partner=lead.partner_id, lang=lang_code, reason=_('Customer'))
                 elif lead.email_from:
                     lead._message_add_suggested_recipient(
-                        recipients, email=lead.email_from, lang=lead.lang_code, reason=_('Customer Email'))
+                        recipients, email=lead.email_from, lang=lang_code, reason=_('Customer Email'))
         except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
