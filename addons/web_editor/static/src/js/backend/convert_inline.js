@@ -386,7 +386,7 @@ function classToStyle($editable, cssRules) {
  *                                   specificity: number;}>
  * @param {JQuery} [$iframe] the iframe containing the editable, if any
  */
-function toInline($editable, cssRules, $iframe) {
+async function toInline($editable, cssRules, $iframe) {
     const editable = $editable.get(0);
     const iframe = $iframe && $iframe.get(0);
     const doc = editable.ownerDocument;
@@ -430,6 +430,7 @@ function toInline($editable, cssRules, $iframe) {
 
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
+    await svgToPng($editable);
     classToStyle($editable, cssRules);
     bootstrapToTable($editable);
     cardToTable($editable);
@@ -777,6 +778,42 @@ function normalizeRem($editable, rootFontSize=16) {
     }
 }
 
+/**
+ * Convert images of type svg to png.
+ *
+ * @param {JQuery} $editable
+ */
+async function svgToPng($editable) {
+    for (const svg of $editable.find('img[src$=".svg"]')) {
+        // Make sure the svg is loaded before we convert it.
+        await new Promise(resolve => {
+            svg.onload = () => resolve();
+            if (svg.complete) {
+                resolve();
+            }
+        });
+        const image = document.createElement('img');
+        const canvas = document.createElement('CANVAS');
+        const width = _getWidth(svg);
+        const height = _getHeight(svg);
+
+        canvas.setAttribute('width', width);
+        canvas.setAttribute('height', height);
+        canvas.getContext('2d').drawImage(svg, 0, 0, width, height);
+
+        for (const attribute of svg.attributes) {
+            image.setAttribute(attribute.name, attribute.value);
+        }
+
+        image.setAttribute('src', canvas.toDataURL('png'));
+        image.setAttribute('width', width);
+        image.setAttribute('height', height);
+
+        svg.before(image);
+        svg.remove();
+    }
+}
+
 //--------------------------------------------------------------------------
 // Private
 //--------------------------------------------------------------------------
@@ -1097,11 +1134,12 @@ FieldHtml.include({
     /**
      * @override
      */
-    commitChanges: function () {
+    commitChanges: async function () {
+        const _super = this._super.bind(this);
         if (this.nodeOptions['style-inline'] && this.mode === "edit") {
-            this._toInline();
+            await this._toInline();
         }
-        return this._super();
+        return _super();
     },
 
     //--------------------------------------------------------------------------
@@ -1116,7 +1154,7 @@ FieldHtml.include({
      *
      * @private
      */
-    _toInline: function () {
+    _toInline: async function () {
         var $editable = this.wysiwyg.getEditable();
         var html = this.wysiwyg.getValue();
         const $odooEditor = $editable.closest('.odoo-editor');
@@ -1124,7 +1162,7 @@ FieldHtml.include({
         $odooEditor.removeClass('odoo-editor');
         $editable.html(html);
 
-        toInline($editable, this.cssRules, this.wysiwyg.$iframe);
+        await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
         $odooEditor.addClass('odoo-editor');
 
         this.wysiwyg.setValue($editable.html(), {
