@@ -162,7 +162,7 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
         """Test that with automatic invoice and invoicing policy based on delivered quantity, a transaction for the partial
         amount does not validate the SO."""
         # set automatic invoice
-        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+        self.company.automatic_invoice = True
         # invoicing policy is based on delivered quantity
         self.sale_product.invoice_policy = 'delivery'
 

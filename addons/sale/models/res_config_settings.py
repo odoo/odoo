@@ -41,38 +41,14 @@ class ResConfigSettings(models.TransientModel):
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
     module_sale_amazon = fields.Boolean("Amazon Sync")
 
-    automatic_invoice = fields.Boolean(
-        string="Automatic Invoice",
-        help="The invoice is generated automatically and available in the customer portal when the "
-             "transaction is confirmed by the payment acquirer.\nThe invoice is marked as paid and "
-             "the payment is registered in the payment journal defined in the configuration of the "
-             "payment acquirer.\nThis mode is advised if you issue the final invoice at the order "
-             "and not after the delivery.",
-        config_parameter='sale.automatic_invoice',
-    )
-    invoice_mail_template_id = fields.Many2one(
-        comodel_name='mail.template',
-        string='Invoice Email Template',
-        domain="[('model', '=', 'account.move')]",
-        config_parameter='sale.default_invoice_email_template',
-        help="Email sent to the customer once the invoice is available.",
-    )
-    confirmation_mail_template_id = fields.Many2one(
-        comodel_name='mail.template',
-        string='Confirmation Email Template',
-        domain="[('model', '=', 'sale.order')]",
-        config_parameter='sale.default_confirmation_template',
-        help="Email sent to the customer once the order is paid."
-    )
+    automatic_invoice = fields.Boolean(related="company_id.automatic_invoice", readonly=False)
+    invoice_mail_template_id = fields.Many2one(related="company_id.invoice_mail_template_id", readonly=False)
+    confirmation_mail_template_id = fields.Many2one(related="company_id.confirmation_mail_template_id", readonly=False)
 
     def set_values(self):
         super().set_values()
-        if self.default_invoice_policy != 'order':
-            self.env['ir.config_parameter'].set_param('sale.automatic_invoice', False)
-
-        send_invoice_cron = self.env.ref('sale.send_invoice_cron', raise_if_not_found=False)
-        if send_invoice_cron and send_invoice_cron.active != self.automatic_invoice:
-            send_invoice_cron.active = self.automatic_invoice
+        if self.default_invoice_policy != "order":
+            self.automatic_invoice = False
 
     @api.onchange('use_quotation_validity_days')
     def _onchange_use_quotation_validity_days(self):

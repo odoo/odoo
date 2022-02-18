@@ -83,6 +83,5 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/src/scss/sale_report.scss',
         ],
     },
-    'post_init_hook': '_synchronize_cron',
     'license': 'LGPL-3',
 }

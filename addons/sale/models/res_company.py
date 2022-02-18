@@ -13,6 +13,29 @@ class ResCompany(models.Model):
     portal_confirmation_pay = fields.Boolean(string='Online Payment')
     quotation_validity_days = fields.Integer(default=30, string="Default Quotation Validity (Days)")
 
+    automatic_invoice = fields.Boolean(
+        string="Automatic Invoice",
+        help="The invoice is generated automatically and available in the customer portal when the "
+             "transaction is confirmed by the payment acquirer.\nThe invoice is marked as paid and "
+             "the payment is registered in the payment journal defined in the configuration of the "
+             "payment acquirer.\nThis mode is advised if you issue the final invoice at the order "
+             "and not after the delivery.",
+    )
+    invoice_mail_template_id = fields.Many2one(
+        comodel_name="mail.template",
+        string="Invoice Email Template",
+        domain=[("model", "=", "account.move")],
+        default=lambda self: self.env.ref("account.email_template_edi_invoice", False),
+        help="Email sent to the customer once the invoice is created.",
+    )
+    confirmation_mail_template_id = fields.Many2one(
+        comodel_name="mail.template",
+        string="Confirmation Email Template",
+        domain=[("model", "=", "sale.order")],
+        default=lambda self: self.env.ref("sale.mail_template_sale_confirmation", False),
+        help="Email sent to the customer once the order is paid.",
+    )
+
     # sale quotation onboarding
     sale_quotation_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the sale onboarding panel", default='not_done')
     sale_onboarding_order_confirmation_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding confirmation order step", default='not_done')
@@ -131,5 +154,20 @@ class ResCompany(models.Model):
             'sale_onboarding_sample_quotation_state',
         ]
         return self.get_and_update_onbarding_state('sale_quotation_onboarding_state', steps)
+
+    @api.model
+    def _recompute_send_invoice_cron_active(self):
+        send_invoice_cron = self.env.ref("sale.send_invoice_cron", raise_if_not_found=False)
+        if not send_invoice_cron:
+            return
+        automatic_invoice = bool(self.sudo().search_count([("automatic_invoice", "=", True)]))
+        if send_invoice_cron.active != automatic_invoice:
+            send_invoice_cron.active = automatic_invoice
+
+    def write(self, vals):
+        res = super().write(vals)
+        if "automatic_invoice" in vals:
+            self._recompute_send_invoice_cron_active()
+        return res
 
     _sql_constraints = [('check_quotation_validity_days', 'CHECK(quotation_validity_days > 0)', 'Quotation Validity is required and must be greater than 0.')]
