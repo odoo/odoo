@@ -442,7 +442,8 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
-                        <h1>
+                        <h1 class="d-flex flex-row">
+                            <field name="is_favorite" nolabel="1" widget="boolean_favorite" class="mr-3"/>
                             <field name="name" class="o_text_overflow" placeholder="Project Name"/>
                         </h1>
                     </div>
@@ -612,6 +613,7 @@
                     <field name="sequence" optional="show" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
+                    <field name="is_favorite" nolabel="1" width="1" widget="boolean_favorite"/>
                     <field name="display_name" string="Name" class="font-weight-bold"/>
                     <field name="partner_id" optional="show" string="Customer"/>
                     <field name="privacy_visibility" optional="hide"/>
