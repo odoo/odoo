@@ -37,7 +37,7 @@
             <xpath expr="//button[@name='%(project.project_update_all_action)d']" position="after">
                 <button class="d-none d-md-inline oe_stat_button"
                         type="object" name="action_view_sos" icon="fa-dollar"
-                        attrs="{'invisible': [('sale_order_count', '=', 0)]}"
+                        attrs="{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_count', '=', 0)]}"
                         groups="sales_team.group_sale_salesman_all_leads">
                     <field name="sale_order_count" widget="statinfo" string="Sales Orders"/>
                 </button>
@@ -45,6 +45,19 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'always_reload': True}</attribute>
                 <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
+            <xpath expr="//div[@id='rating_settings']" position="before">
+                <div class="col-lg-6 o_setting_box" id="allow_billable_container">
+                    <div class="o_setting_left_pane">
+                        <field name="allow_billable"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="allow_billable"/>
+                        <div class="text-muted" id="allow_billable_setting">
+                            Invoice your time and material to customers
+                        </div>
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>
