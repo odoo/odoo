@@ -232,6 +232,7 @@
         <field name="arch" type="xml">
             <tree string="Skill Levels">
                 <field name="name"/>
+                <field name="skill_type_id"/>
             </tree>
         </field>
     </record>
@@ -293,9 +294,27 @@
         <field name="arch" type="xml">
             <form string="Skills">
                 <sheet>
-                    <field name="name"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="skill_type_id"/>
+                    </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="hr_skill_view_search" model="ir.ui.view">
+        <field name="name">hr.skill.view.search</field>
+        <field name="model">hr.skill</field>
+        <field name="arch" type="xml">
+            <search string="Search Skill">
+                <field name="name" string="Skill"/>
+                <field name="skill_type_id" string="Skill Type"/>
+                <separator/>
+                <group expand="0" string="Group By...">
+                        <filter string="Skill Type" name="group_skill_type_id" domain="[]" context="{'group_by':'skill_type_id'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
