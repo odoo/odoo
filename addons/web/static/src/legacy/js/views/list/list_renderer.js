@@ -1014,7 +1014,7 @@ var ListRenderer = BasicRenderer.extend({
             'href': "#",
             'role': "button",
             'data-toggle': "dropdown",
-            'data-display': "static",
+            'data-bs-offset': "0,30",
             'aria-expanded': false,
             'aria-label': _t('Optional columns'),
         });

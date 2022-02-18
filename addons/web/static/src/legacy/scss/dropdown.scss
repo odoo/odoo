@@ -48,12 +48,16 @@
     }
 }
 
+.o-dropdown-menu {
+    @extend .dropdown-menu;
+}
+
 // = Legacy submenus
 // Workaround appling owl 'vertical nested menu' design.
 // Should be removed once we'll support the 'horizontal' design.
 // ----------------------------------------------------------------------------
 .o_inline_dropdown {
-    .dropdown-menu {
+    .dropdown-menu, .o-dropdown-menu {
         position: relative;
         border: 0;
         padding-top: 0;

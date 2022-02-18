@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { qweb as QWeb } from 'web.core';
+import config from "web.config";
 import session  from 'web.session';
 import SystrayMenu from 'web.SystrayMenu';
 import Widget from 'web.Widget';
@@ -22,6 +23,9 @@ var ActivityMenu = Widget.extend({
         'hide.bs.dropdown': '_onActivityMenuHide',
     },
     start: function () {
+        if (config.device.isMobile) {
+            this.el.querySelector('.dropdown-toggle').dataset.bsDisplay = "static";
+        }
         this._$activitiesPreview = this.$('.o_mail_systray_dropdown_items');
         Component.env.bus.on('activity_updated', this, this._updateCounter);
         this._updateCounter();

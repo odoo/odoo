@@ -165,7 +165,7 @@
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-fw fa-caret-{{ state.open ? 'down' : 'right' }}"/>
             <i t-elif="displayChevron" t-attf-class="o_dropdown_chevron fa fa-fw ml-auto fa-chevron-{{ state.open ? 'down' : 'right' }}"/>
         </button>
-        <ul t-if="state.open" t-attf-class="dropdown-menu {{ dropdownMenuAlignClass }} show" role="menu"
+        <ul t-if="state.open" t-attf-class="o-dropdown-menu {{ dropdownMenuAlignClass }} show" role="menu"
             t-on-item-selected="_onItemSelected"
             >
             <t t-set="currentGroup" t-value="null"/>
@@ -1069,7 +1069,7 @@
                 <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><span class="o_tag_badge_text" t-esc="el.display_name"/></span>
             </t>
             <t t-if="hasDropdown">
-                <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
+                <a role="button" href="#" class="dropdown-toggle o-no-caret" aria-expanded="false">
                     <t t-out="_badge_text"/>
                 </a>
             </t>
