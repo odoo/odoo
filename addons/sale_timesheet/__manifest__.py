@@ -53,4 +53,5 @@ have real delivered quantities in sales orders.
         ],
     },
     'license': 'LGPL-3',
+    'post_init_hook': '_sale_timesheet_post_init',
 }

@@ -6,14 +6,8 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_view_sos']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_id', '=', False)]}</attribute>
-            </xpath>
             <xpath expr="//button[@name='%(project.action_project_task_burndown_chart_report)d']" position="after">
                 <button string="Costs / Revenues" class="oe_stat_button" type="object" name="action_view_timesheet" icon="fa-puzzle-piece" attrs="{'invisible': [('allow_billable', '=', False)]}" groups="project.group_project_manager"/>
-            </xpath>
-            <xpath expr="//button[@name='action_view_sos']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_count', '=', 0)]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_show_timesheets_by_employee_invoice_type']" position="after">
                 <button name="action_billable_time_button" type="object" class="oe_stat_button" icon="fa-clock-o" attrs="{'invisible': ['|', ('allow_timesheets', '=', False), ('analytic_account_id', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_approver">
@@ -53,19 +47,6 @@
                         </tree>
                     </field>
                 </page>
-            </xpath>
-            <xpath expr="//div[@id='timesheet_settings']" position="after">
-                <div class="col-lg-6 o_setting_box" id="allow_billable_container">
-                    <div class="o_setting_left_pane">
-                        <field name="allow_billable"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="allow_billable"/>
-                        <div class="text-muted" id="allow_billable_setting">
-                            Invoice your time and material to customers
-                        </div>
-                    </div>
-                </div>
             </xpath>
         </field>
     </record>
