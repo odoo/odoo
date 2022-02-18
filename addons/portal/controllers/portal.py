@@ -473,18 +473,15 @@ class CustomerPortal(Controller):
         if report_type not in ('html', 'pdf', 'text'):
             raise UserError(_("Invalid report type: %s", report_type))
 
-        report_sudo = request.env.ref(report_ref).with_user(SUPERUSER_ID)
-
-        if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
-            raise UserError(_("%s is not the reference of a report", report_ref))
+        ReportAction = request.env['ir.actions.report'].sudo()
 
         if hasattr(model, 'company_id'):
             if len(model.company_id) > 1:
                 raise UserError(_('Multi company reports are not supported.'))
-            report_sudo = report_sudo.with_company(model.company_id)
+            ReportAction = ReportAction.with_company(model.company_id)
 
         method_name = '_render_qweb_%s' % (report_type)
-        report = getattr(report_sudo, method_name)(list(model.ids), data={'report_type': report_type})[0]
+        report = getattr(ReportAction, method_name)(report_ref, list(model.ids), data={'report_type': report_type})[0]
         reporthttpheaders = [
             ('Content-Type', 'application/pdf' if report_type == 'pdf' else 'text/html'),
             ('Content-Length', len(report)),

@@ -18,7 +18,8 @@ class TestReports(odoo.tests.TransactionCase):
             'account.report_invoice_with_payments': invoice_domain,
             'account.report_invoice': invoice_domain,
         }
-        for report in self.env['ir.actions.report'].search([('report_type', 'like', 'qweb')]):
+        Report = self.env['ir.actions.report']
+        for report in Report.search([('report_type', 'like', 'qweb')]):
             report_model = 'report.%s' % report.report_name
             try:
                 self.env[report_model]
@@ -33,8 +34,8 @@ class TestReports(odoo.tests.TransactionCase):
                 # Test report generation
                 if not report.multi:
                     for record in report_records:
-                        report._render_qweb_html(record.ids)
+                        Report._render_qweb_html(report.id, record.ids)
                 else:
-                    report._render_qweb_html(report_records.ids)
+                    Report._render_qweb_html(report.id, report_records.ids)
             else:
                 continue

@@ -241,8 +241,8 @@ class TestMrpStockReports(TestReportsCommon):
         move.move_line_ids.result_package_id = self.env['stock.quant.package'].create({'name': 'Package0001'})
         picking.button_validate()
 
-        report = self.env['ir.actions.report']._get_report_from_name('stock.report_deliveryslip')
-        html_report = report._render_qweb_html(picking.ids)[0].decode('utf-8').split('\n')
+        html_report = self.env['ir.actions.report']._render_qweb_html(
+            'stock.report_deliveryslip', picking.ids)[0].decode('utf-8').split('\n')
         keys = [
             "Package0001", "Compo 03",
             "Products with no package assigned", "Compo 01", "Compo 02",

@@ -28,14 +28,14 @@ class TestMultiCompany(TestHrCommon):
         cls.env.invalidate_all()
 
     def test_multi_company_report(self):
-        content, content_type = self.env.ref('hr.hr_employee_print_badge').with_user(self.res_users_hr_officer).with_context(
+        content, _ = self.env['ir.actions.report'].with_user(self.res_users_hr_officer).with_context(
             allowed_company_ids=[self.company_1.id, self.company_2.id]
-        )._render_qweb_pdf(res_ids=self.employees.ids)
+        )._render_qweb_pdf('hr.hr_employee_print_badge', res_ids=self.employees.ids)
         self.assertIn(b'Bidule', content)
         self.assertIn(b'Machin', content)
 
     def test_single_company_report(self):
         with self.assertRaises(QWebException):  # CacheMiss followed by AccessError
-            content, content_type = self.env.ref('hr.hr_employee_print_badge').with_user(self.res_users_hr_officer).with_company(
+            self.env['ir.actions.report'].with_user(self.res_users_hr_officer).with_company(
                 self.company_1
-            )._render_qweb_pdf(res_ids=self.employees.ids)
+            )._render_qweb_pdf('hr.hr_employee_print_badge', res_ids=self.employees.ids)

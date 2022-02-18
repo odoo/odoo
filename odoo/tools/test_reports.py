@@ -32,11 +32,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
 
     env = api.Environment(cr, uid, context)
 
-    report_id = env['ir.actions.report'].search([('report_name', '=', rname)], limit=1)
-    if not report_id:
-        raise Exception("Required report does not exist: %s" % rname)
-
-    res_data, res_format = report_id._render(ids, data=data)
+    res_data, res_format = env['ir.actions.report']._render(rname, ids, data=data)
 
     if not res_data:
         raise ValueError("Report %s produced an empty result!" % rname)

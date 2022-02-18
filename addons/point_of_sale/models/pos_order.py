@@ -786,7 +786,7 @@ class PosOrder(models.Model):
         attachment = [(4, receipt.id)]
 
         if self.mapped('account_move'):
-            report = self.env.ref('account.account_invoices')._render_qweb_pdf(self.account_move.ids[0])
+            report = self.env['ir.actions.report']._render_qweb_pdf("account.account_invoices", self.account_move.ids[0])
             filename = name + '.pdf'
             invoice = self.env['ir.attachment'].create({
                 'name': filename,

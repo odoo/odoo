@@ -234,7 +234,7 @@ class CustomerPortal(portal.CustomerPortal):
             order_sudo.action_confirm()
             order_sudo._send_order_confirmation_mail()
 
-        pdf = request.env.ref('sale.action_report_saleorder').with_user(SUPERUSER_ID)._render_qweb_pdf([order_sudo.id])[0]
+        pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
 
         _message_post_helper(
             'sale.order',
