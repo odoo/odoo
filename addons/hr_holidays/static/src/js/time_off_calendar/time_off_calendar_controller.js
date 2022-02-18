@@ -200,8 +200,8 @@ export const TimeOffCalendarController = CalendarController.extend({
 
     _getTimeOffContext() {
         return {
-            'default_date_from': moment().format('YYYY-MM-DD'),
-            'default_date_to': moment().add(1, 'days').format('YYYY-MM-DD'),
+            'default_date_from': moment().locale('en').format('YYYY-MM-DD'),
+            'default_date_to': moment().add(1, 'days').locale('en').format('YYYY-MM-DD'),
             'lang': this.context.lang,
         };
     },
