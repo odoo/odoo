@@ -173,8 +173,8 @@ msgstr ""
 "            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
-"                        Congratulations ${object.user_id.name} !<br/>\n"
-"                        You just received badge <strong>${object.badge_id.name}</strong> !<br/>\n"
+"                        Chúc mừng ${object.user_id.name} !<br/>\n"
+"                        Bạn vừa nhận được huy hiệu <strong>${object.badge_id.name}</strong> !<br/>\n"
 "                        % if object.badge_id.description\n"
 "                            <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 560px; margin-top: 5px;\">\n"
 "                            <tbody><tr>\n"
@@ -189,14 +189,14 @@ msgstr ""
 "                        % endif\n"
 "                        <br/>\n"
 "                        % if object.sender_id\n"
-"                            This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
+"                            Huy hiệu này được trao bởi <strong>${object.sender_id.name}</strong>.\n"
 "                        % endif\n"
 "                        <br/>\n"
 "                        % if object.comment\n"
 "                            ${object.comment}\n"
 "                        % endif\n"
 "                        <br/><br/>\n"
-"                        Thank you,\n"
+"                        Cám ơn bạn,\n"
 "                        % if object.sender_id.signature:\n"
 "                            <br/>\n"
 "                            ${object.sender_id.signature | safe}\n"
@@ -256,8 +256,8 @@ msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
 msgstr ""
-"<br/>Không ai thành công trong việc đạt được mọi Tiêu chí đề ra, không có "
-"huy chương nào được trao tặng cho thử thách này."
+"<br/>Không ai thành công trong việc đạt được mọi mục tiêu đề ra, không có "
+"huy hiệu nào được trao tặng cho thử thách này."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -266,7 +266,7 @@ msgid ""
 "<br/>Reward (badge %(badge_name)s) for every succeeding user was sent to "
 "%(users)s."
 msgstr ""
-"<br/>Reward (badge %(badge_name)s) for every succeeding user was sent to "
+"<br/>Phần thưởng (huy hiệu %(badge_name)s) dành cho tất cả những người đạt được mục tiêu đã được gửi đến "
 "%(users)s."
 
 #. module: gamification
@@ -329,14 +329,14 @@ msgstr ""
 "        <tr>\n"
 "            <td style=\"padding:15px 20px 10px 20px;\">\n"
 "                <p>\n"
-"                    Congratulations\n"
+"                    Chúc mừng\n"
 "                    <span>${object.name or ''}</span>!\n"
 "                </p>\n"
 "                <p>\n"
-"                    You just reached a new rank : <strong>${object.rank_id.name}</strong>\n"
+"                    Bạn đã đạt được một cấp độ mới: <strong>${object.rank_id.name}</strong>\n"
 "                </p>\n"
 "                % if object.next_rank_id.name\n"
-"                    <p>Continue your work to become a <strong>${object.next_rank_id.name}</strong> !</p>\n"
+"                    <p>Hãy tiếp tục làm việc để đạt đến <strong>${object.next_rank_id.name}</strong> !</p>\n"
 "                % endif\n"
 "                <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                    % set gamification_redirection_data = object.get_gamification_redirection_data()\n"
@@ -380,9 +380,9 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    <strong>Reminder ${object.name}</strong><br/>\n"
-"    You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.\n"
+"    Bạn vẫn chưa cập nhật tiến trình cho mục tiêu ${object.definition_id.name} (hiện đạt được ${object.completeness}%) trong ít nhất ${object.remind_update_delay} ngày. Đừng quên thực hiện nhé.\n"
 "    <br/><br/>\n"
-"    Thank you,\n"
+"    Xin cảm ơn,\n"
 "    % if object.challenge_id.manager_id.signature:\n"
 "        <br/>\n"
 "        ${object.challenge_id.manager_id.signature | safe}\n"
@@ -395,8 +395,8 @@ msgid ""
 "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
 "aria-label=\"Goal in Progress\"/>"
 msgstr ""
-"<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
-"aria-label=\"Goal in Progress\"/>"
+"<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Mục tiêu đang thực hiện\" "
+"aria-label=\"Mục tiêu đang thực hiện\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -404,8 +404,8 @@ msgid ""
 "<i role=\"img\" class=\"o_green fa fa-check fa-3x\" title=\"Goal Reached\" "
 "aria-label=\"Goal Reached\"/>"
 msgstr ""
-"<i role=\"img\" class=\"o_green fa fa-check fa-3x\" title=\"Goal Reached\" "
-"aria-label=\"Goal Reached\"/>"
+"<i role=\"img\" class=\"o_green fa fa-check fa-3x\" title=\"Mục tiêu đã đạt được\" "
+"aria-label=\"Mục tiêu đã đạt được\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -413,8 +413,8 @@ msgid ""
 "<i role=\"img\" class=\"o_red fa fa-times fa-3x\" title=\"Goal Failed\" "
 "aria-label=\"Goal Failed\"/>"
 msgstr ""
-"<i role=\"img\" class=\"o_red fa fa-times fa-3x\" title=\"Goal Failed\" "
-"aria-label=\"Goal Failed\"/>"
+"<i role=\"img\" class=\"o_red fa fa-times fa-3x\" title=\"Mục tiêu thất bại\" "
+"aria-label=\"Mục tiêu thất bại\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -428,7 +428,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "<span class=\"o_stat_text\">Users</span>"
-msgstr "<span class=\"o_stat_text\">Users</span>"
+msgstr "<span class=\"o_stat_text\">Người dùng</span>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -643,7 +643,7 @@ msgstr ""
 "                        <div>\n"
 "                            % if object.visibility_mode == 'ranking':\n"
 "                                <td style=\"padding:15px;\">\n"
-"                                    <p style=\"font-size:20px;color:#666666;\" align=\"center\">Leaderboard</p>\n"
+"                                    <p style=\"font-size:20px;color:#666666;\" align=\"center\">Bảng thành tích</p>\n"
 "                                </td>\n"
 "                            % endif\n"
 "                        </div>\n"
@@ -652,21 +652,21 @@ msgstr ""
 "                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
 "                    <tr><td style=\"padding: 15px;\">\n"
 "                        % if object.visibility_mode == 'personal':\n"
-"                            <span style=\"color:#666666;font-size:13px;\">Here is your current progress in the challenge <strong>${object.name}</strong>.</span>\n"
+"                            <span style=\"color:#666666;font-size:13px;\">Đây là tiến trình hiện tại của bạn cho thử thách <strong>${object.name}</strong>.</span>\n"
 "                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n"
 "                                <tr>\n"
 "                                    <td align=\"center\">\n"
-"                                        <div>Personal Performance</div>\n"
+"                                        <div>Hiệu quả công việc cá nhân của bạn</div>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
 "                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;color:#666666;\">\n"
 "                                <thead>\n"
 "                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
-"                                        <th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\">Goals</th>\n"
-"                                        <th style=\"width:20%;text-align:right;\" align=\"left\">Target</th>\n"
-"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Current</th>\n"
-"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Completeness</th>\n"
+"                                        <th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\">Mục tiêu</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"left\">Mục tiêu</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Hiện tại</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Mức độ hoàn thành</th>\n"
 "                                    </tr>\n"
 "                                    <tr>\n"
 "                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"/>\n"
@@ -708,7 +708,7 @@ msgstr ""
 "                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:35px;\">\n"
 "                                    <tr>\n"
 "                                        <td width=\"50%\">\n"
-"                                            <div>Top Achievers for goal <strong>${line['name']}</strong></div>\n"
+"                                            <div>Top những người đạt mục tiêu <strong>${line['name']}</strong></div>\n"
 "                                        </td>\n"
 "                                    </tr>\n"
 "                                </table>\n"
@@ -844,6 +844,8 @@ msgid ""
 "A goal definition is a technical specification of a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
+"Một tiêu chí là một tập thông số kỹ thuật của một điều kiện cần phải đạt được.\n"
+"                Ngày, giá trị đạt được hoặc người dùng được thiết lập ở các mục tiêu."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
@@ -853,8 +855,8 @@ msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
 msgstr ""
-"Một tiêu chí được coi là hoàn thành khi giá trị hiện tại của tiêu chí bằng "
-"giá trị cần phải đạt được (value to reach)"
+"Một mục tiêu được coi là hoàn thành khi giá trị hiện tại của mục tiêu bằng "
+"giá trị cần phải đạt được"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
@@ -862,8 +864,8 @@ msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                Goals can be created automatically by using challenges."
 msgstr ""
-"Một mục tiêu được xác định bởi người dùng và định nghĩa mục tiêu.\n"
-"                 Mục tiêu có thể được tạo ra tự động bằng cách sử dụng các thách thức."
+"Một mục tiêu được xác định bởi người dùng và tiêu chí.\n"
+"                 Mục tiêu có thể được tạo ra tự động bằng cách sử dụng các thử thách."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_ranks_action
@@ -871,8 +873,8 @@ msgid ""
 "A rank correspond to a fixed karma level. The more you have karma, the more your rank is high.\n"
 "                    This is used to quickly know which user is new or old or highly or not active."
 msgstr ""
-"A rank correspond to a fixed karma level. The more you have karma, the more your rank is high.\n"
-"                    This is used to quickly know which user is new or old or highly or not active."
+"Một cấp độ thì tương ứng với cấp karma cố định. Bạn có càng nhiều karma thì cấp độ của bạn càng cao.\n"
+"                    Thông tin này được sử dụng để nhanh chóng xác định người dùng nào thì mới hoặc cũ hoặc năng động hay không."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__users
@@ -974,35 +976,35 @@ msgstr "Cử nhân"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__badge_id
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge"
-msgstr "Huy chương"
+msgstr "Huy hiệu"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Description"
-msgstr "Mô tả Huy chương"
+msgstr "Mô tả Huy hiệu"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__level
 msgid "Badge Level"
-msgstr "Badge Level"
+msgstr "Cấp độ huy hiệu"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_list_view
 msgid "Badge List"
-msgstr "Danh mục huy chương"
+msgstr "Danh mục huy hiệu"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__badge_name
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Name"
-msgstr "Tên huy chương"
+msgstr "Tên huy hiệu"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
 #: model:ir.model.fields,field_description:gamification.field_res_users__badge_ids
 #: model:ir.ui.menu,name:gamification.gamification_badge_menu
 msgid "Badges"
-msgstr "Huy chương"
+msgstr "Huy hiệu"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1012,7 +1014,7 @@ msgid ""
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
 msgstr ""
-"Các huy chương được trao khi một thử thách được kết thúc. Đây hoặc là kết "
+"Các huy hiệu được trao khi một thử thách được kết thúc. Đây hoặc là kết "
 "thúc một chu kỳ thực thi (vd: cuối tháng của một thử thách hàng tháng), vào "
 "ngày cuối của một thử thách (nếu không thiết lập định kỳ) hoặc khi thử thách"
 " được đóng lại một cách thủ công."
@@ -1097,7 +1099,7 @@ msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
 msgstr ""
-"Thử thách mà sinh ra các chỉ tiêu, gán thử thách cho các người dùng (users) "
+"Thử thách mà sinh ra các mục tiêu, gán thử thách cho các người dùng (users) "
 "để sinh ra các chỉ tiêu với một giá trị in trường này."
 
 #. module: gamification
@@ -1111,18 +1113,18 @@ msgstr "Thử thách"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
 msgstr ""
-"Đanh dấu để thiết lập giới hạn theo tháng mà mỗi người có thể gửi huy chương"
+"Đanh dấu để thiết lập giới hạn theo tháng mà mỗi người có thể gửi huy hiệu"
 " này"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Clickable Goals"
-msgstr "Các chỉ tiêu bấm được"
+msgstr "Các mục tiêu bấm được"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__closed
 msgid "Closed goal"
-msgstr "Chỉ tiêu đã đóng"
+msgstr "Mục tiêu đã đóng"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__comment
@@ -1186,7 +1188,7 @@ msgstr "Tạo mới một chỉ tiêu"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_ranks_action
 msgid "Create a new rank"
-msgstr "Create a new rank"
+msgstr "Tạo mới một cấp độ"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.action_new_simplified_res_users
@@ -1262,21 +1264,23 @@ msgid ""
 "Define how the goals will be computed. The result of the operation will be "
 "stored in the field 'Current'."
 msgstr ""
+"Xác định cách mà các mục tiêu được tính toán. Kết quả sẽ được lưu ở trường "
+"'Hiện tại'."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
-msgstr "Xác định sự xuất hiện của thử thách thông qua các trình đơn (menu)"
+msgstr "Xác định khả năng hiển thị của thử thách thông qua các menu"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_condition
 msgid "Definition Condition"
-msgstr "Definition Condition"
+msgstr "Điều kiện Tiêu chí"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_description
 msgid "Definition Description"
-msgstr "Mô tả Định nghĩa"
+msgstr "Mô tả Tiêu chí"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1367,7 +1371,7 @@ msgstr "Dự thảo"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_newbie
 msgid "Earn your first points and join the adventure !"
-msgstr "Earn your first points and join the adventure !"
+msgstr "Kiếm các điểm số đầu tiên và gia nhập cuộc hành trình!"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__end_date
@@ -1452,7 +1456,7 @@ msgstr "Đối với Những người Thành công"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Formatting Options"
-msgstr ""
+msgstr "Tùy chọn Định dạng"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__level
@@ -1507,7 +1511,7 @@ msgstr "Huy  hiệu người dùng Gamification"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr "Cửa sổ huy hiệu người dùng gamifitaion"
+msgstr "Đồ thuật Huy hiệu người dùng gamification"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
@@ -1526,7 +1530,7 @@ msgstr "Gamification: Kiểm tra thử thách mục tiêu."
 #: model:ir.cron,cron_name:gamification.ir_cron_consolidate_last_month
 #: model:ir.cron,name:gamification.ir_cron_consolidate_last_month
 msgid "Gamification: Karma tracking consolidation"
-msgstr "Gamification: Karma tracking consolidation"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
@@ -1553,7 +1557,7 @@ msgstr "Tiêu chí"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__description
 msgid "Goal Description"
-msgstr "Mô tả Mục tiêu"
+msgstr "Tiêu chí"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1568,7 +1572,7 @@ msgstr "Danh mục Mục tiêu"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__condition
 msgid "Goal Performance"
-msgstr "Năng suất"
+msgstr "Năng suất mục tiêu"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1614,18 +1618,18 @@ msgstr "Trao"
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
-msgstr "Trao Huy chương"
+msgstr "Trao Huy hiệu"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr "Trao Huy chương cho"
+msgstr "Trao Huy hiệu cho"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr "Trao Huy chương này"
+msgstr "Trao Huy hiệu này"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
@@ -1663,7 +1667,7 @@ msgstr "Ẩn"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "How is the goal computed?"
-msgstr ""
+msgstr "Mục tiêu được tính toán thế nào?"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
@@ -1683,7 +1687,7 @@ msgstr "Nhân sự / Gắn kết"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__id
 #: model:ir.model.fields,field_description:gamification.field_res_users__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__res_id_field
@@ -1712,7 +1716,7 @@ msgstr "Nếu có đánh dấu, một số thông điệp đã có lỗi gửi �
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__challenge_id
 msgid "If this badge was rewarded through a challenge"
-msgstr "Nếu huy chương này được trao tặng thông qua một thử thách"
+msgstr "Nếu huy hiệu này được trao tặng thông qua một thử thách"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1920
@@ -1807,12 +1811,12 @@ msgstr "Là người theo dõi"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma
 msgid "Karma"
-msgstr "Karma"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma_tracking_ids
 msgid "Karma Changes"
-msgstr "Karma Changes"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge____last_update
@@ -1928,13 +1932,13 @@ msgstr "Thông điệp"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__karma_min
 msgid "Minimum karma needed to reach this rank"
-msgstr "Minimum karma needed to reach this rank"
+msgstr "Karma tối thiếu phải có để đạt đến cấp độ này"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_id
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Model"
-msgstr "Mô hình"
+msgstr "Model"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_monetary
@@ -1966,17 +1970,17 @@ msgstr "Tổng hàng tháng"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__description_motivational
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "Motivational"
-msgstr "Motivational"
+msgstr "Truyền lửa"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__description_motivational
 msgid "Motivational phrase to reach this rank"
-msgstr "Motivational phrase to reach this rank"
+msgstr "Một cụm từ hoặc một câu ngắn để truyền lửa, tạo động lực, thúc đẩy mọi người đạt đến cấp độ này"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "My Goals"
-msgstr "Chỉ tiêu của tôi"
+msgstr "Mục tiêu của tôi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_monthly_sending
@@ -2012,7 +2016,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__new_value
 msgid "New Karma Value"
-msgstr "New Karma Value"
+msgstr "Giá trị Karma mới"
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
@@ -2022,17 +2026,17 @@ msgstr "Huy hiệu mới $ {object.badge_id.name} được cấp"
 #. module: gamification
 #: model:mail.template,subject:gamification.mail_template_data_new_rank_reached
 msgid "New rank: ${object.rank_id.name}"
-msgstr "New rank: ${object.rank_id.name}"
+msgstr "Cấp độ mới: ${object.rank_id.name}"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_newbie
 msgid "Newbie"
-msgstr "Newbie"
+msgstr "Thành viên mới"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__next_rank_id
 msgid "Next Rank"
-msgstr "Next Rank"
+msgstr "Cấp độ kế tiếp"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__next_report_date
@@ -2063,7 +2067,7 @@ msgstr "Không ai, phải được cấu hình thông qua form thử thách"
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr "Không ai đáp ứng được các điều kiện để nhận các huy chương đặc biệt."
+msgstr "Không ai đáp ứng được các điều kiện để nhận các huy hiệu đặc biệt."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__once
@@ -2118,7 +2122,7 @@ msgstr "Số người dùng"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__old_value
 msgid "Old Karma Value"
-msgstr "Old Karma Value"
+msgstr "Giá trị Karma cũ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__onchange
@@ -2129,12 +2133,12 @@ msgstr "Khi thay đổi"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
 msgstr ""
-"Chỉ những người có các huy chương này mới có quyền cho/tặng huy chương này"
+"Chỉ những người có các huy hiệu này mới có quyền cho/tặng huy hiệu này"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Only these people can give this badge"
-msgstr "Chỉ những người này mới có quyền cho/tặng huy chương này"
+msgstr "Chỉ những người này mới có quyền cho/tặng huy hiệu này"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -2154,7 +2158,7 @@ msgstr "Chủ sở hữu"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__having
 msgid "People having some badges"
-msgstr "Người đã có Huy chương"
+msgstr "Người đã có Huy hiệu"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -2166,7 +2170,8 @@ msgstr "Chu kỳ"
 msgid ""
 "Period of automatic goal assigment. If none is selected, should be launched "
 "manually."
-msgstr "Kỳ gán tiêu chi tự động. Nếu không chọn, sẽ được launched thủ công."
+msgstr "Chu kỳ phân công mục tiêu tự động. Nếu không chọn, nên được khởi chạy "
+"thủ công."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__period
@@ -2201,7 +2206,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_res_users__rank_id
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "Rank"
-msgstr "Rank"
+msgstr "Cấp độ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__name
@@ -2238,6 +2243,11 @@ msgstr "Đạt đến cấp độ tiếp theo để có một chiếc mũ dễ t
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
 msgid "Reach the next rank and gain a very nice mug !"
 msgstr "Đạt đến cấp độ tiếp theo để có một chiếc chén xinh xắn!"
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
+msgid "Reach the next rank to show the rest of the world you exist."
+msgstr "Đạt đến cấp độ tiếp theo để cho phần còn lại của thế giới biết bạn tồn tại."
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
@@ -2307,12 +2317,12 @@ msgstr "Mẫu báo cáo"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Required Badges"
-msgstr "Huy chương bắt buộc"
+msgstr "Huy hiệu bắt buộc"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__karma_min
 msgid "Required Karma"
-msgstr "Required Karma"
+msgstr "Karma tối thiểu"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -2343,7 +2353,7 @@ msgstr "Trao cho những người giỏi nhất nếu không đạt?"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_realtime
 msgid "Reward as soon as every goal is reached"
-msgstr "Tặng thưởng ngay khi tất cả các chỉ tiêu đều đạt"
+msgstr "Tặng thưởng ngay khi tất cả các mục tiêu đều đạt"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__challenge_ids
@@ -2378,7 +2388,7 @@ msgstr "Ấn định"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Search Badge"
-msgstr "Search Badge"
+msgstr "Tìm kiếm Huy hiệu"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -2388,7 +2398,7 @@ msgstr "Tìm các thử thách"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Search Goal Definitions"
-msgstr "Tìm các định nghĩa Mục tiêu"
+msgstr "Tìm các tiêu chí"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
@@ -2398,12 +2408,12 @@ msgstr "Tìm các Mục tiêu"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_ranks_view_search
 msgid "Search Ranks"
-msgstr "Search Ranks"
+msgstr "Tìm các cấp độ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Search Trackings"
-msgstr "Search Trackings"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -2411,7 +2421,7 @@ msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
 "enforced for administrator."
 msgstr ""
-"Các quy tắc an ninh để định nghĩa ai thì được phép trao huy chương một cách "
+"Các quy tắc an ninh để định nghĩa ai thì được phép trao huy hiệu một cách "
 "thủ công. Thiết lập này không ảnh hưởng tới tài khoản quản trị."
 
 #. module: gamification
@@ -2442,7 +2452,7 @@ msgstr "Số thứ tự cho việc sắp xếp"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
-msgstr "Thiết lập giá trị hiện hành mà bạn đã đạt được cho chỉ tiêu này"
+msgstr "Thiết lập giá trị hiện hành mà bạn đã đạt được cho mục tiêu này"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin1
@@ -2552,7 +2562,7 @@ msgstr "Mục tiêu: ít hơn"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
 msgid "The action that will be called to update the goal value."
-msgstr "Hành động mà sẽ được gọi để cập nhật giá trị của chỉ tiêu."
+msgstr "Hành động mà sẽ được gọi để cập nhật giá trị của mục tiêu."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -2579,7 +2589,7 @@ msgid ""
 "set, will use this date as the goal end date."
 msgstr ""
 "Ngày mà một thử thách mới sẽ được tự động đóng lại. Nếu không có chu kỳ được"
-" thiết lập, sẽ sử dụng ngày này làm ngày kết thúc."
+" thiết lập, sẽ sử dụng ngày này làm ngày kết thúc mục tiêu."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
@@ -2588,7 +2598,7 @@ msgid ""
 "set, will use this date as the goal start date."
 msgstr ""
 "Ngày mà một thử thách mới sẽ được khởi động một cách tự động. Nếu không có "
-"chu kỳ được thiết lập, sẽ sử dụng ngày này làm ngày khởi động."
+"chu kỳ được thiết lập, sẽ sử dụng ngày này làm ngày khởi động mục tiêu."
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
@@ -2624,7 +2634,7 @@ msgstr "Càng cao càng tốt"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__owner_ids
 msgid "The list of instances of this badge granted to users"
-msgstr "Danh mục các phiên bản của huy chương này mà được trao cho người dùng"
+msgstr "Danh mục các phiên bản của huy hiệu này mà được trao cho người dùng"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_inherited_ids
@@ -2634,7 +2644,7 @@ msgstr "Danh sách các model mà mở rộng model hiện hành."
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__unique_owner_ids
 msgid "The list of unique users having received this badge."
-msgstr "Danh mục người dùng riêng biệt nhận được huy chương này."
+msgstr "Danh mục người dùng riêng biệt nhận được huy hiệu này."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__lower
@@ -2646,7 +2656,7 @@ msgstr "Càng thấp càng tốt"
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
 msgstr ""
-"Số lần tối đã huy chương này có thể được gửi mỗi tháng cho cùng một người."
+"Số lần tối đã huy hiệu này có thể được gửi mỗi tháng cho cùng một người."
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
@@ -2656,9 +2666,8 @@ msgid ""
 "\n"
 "%(error)s not found"
 msgstr ""
-"The model configuration for the definition %(name)s seems incorrect, please check it.\n"
+"Cấu hình cho model liên quan đến tiêu chí %(name)s dường như không hợp lệ. Vui lòng kiểm tra lại.\n"
 "\n"
-"%(error)s not found"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
@@ -2668,9 +2677,9 @@ msgid ""
 "\n"
 "%(field_name)s not stored"
 msgstr ""
-"The model configuration for the definition %(name)s seems incorrect, please check it.\n"
+"Cấu hình cho model liên quan đến tiêu chí %(name)s dường như không hợp lệ. Vui lòng kiểm tra lại.\n"
 "\n"
-"%(field_name)s not stored"
+"%(field_name)s không phải là trường được lưu trữ trong cơ sở dữ liệu"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_id
@@ -2684,7 +2693,7 @@ msgid ""
 "The number of days after which the user assigned to a manual goal will be "
 "reminded. Never reminded if no value is specified."
 msgstr ""
-"Số ngày mà người dùng được gán đến một chỉ tiêu thủ công sẽ được nhắc nhở "
+"Số ngày mà người dùng được gán đến một mục tiêu thủ công sẽ được nhắc nhở "
 "sau đó. Không bao giờ nhắc nếu không có giá trị được xác định."
 
 #. module: gamification
@@ -2692,38 +2701,38 @@ msgstr ""
 msgid ""
 "The number of time the current user has received this badge this month."
 msgstr ""
-"Số lần người dùng hiện hành đã nhận được (được trao tặng) huy chương này "
+"Số lần người dùng hiện hành đã nhận được (được trao tặng) huy hiệu này "
 "trong tháng."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my
 msgid "The number of time the current user has received this badge."
-msgstr "Số lần người dùng hiện hành đã nhận được huy chương này."
+msgstr "Số lần người dùng hiện hành đã nhận được huy hiệu này."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
-msgstr "Số lần người dùng gửi huy chương này trong tháng."
+msgstr "Số lần người dùng gửi huy hiệu này trong tháng."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_users_count
 msgid "The number of time this badge has been received by unique users."
-msgstr "Số lần nhận huy chương này được nhận bởi những người dùng riêng biệt."
+msgstr "Số lần nhận huy hiệu này được nhận bởi những người dùng riêng biệt."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_this_month
 msgid "The number of time this badge has been received this month."
-msgstr "Số lần nhận huy chương này được nhận trong tháng."
+msgstr "Số lần nhận huy hiệu này được nhận trong tháng."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_count
 msgid "The number of time this badge has been received."
-msgstr "Số lần nhận huy chương này được nhận."
+msgstr "Số lần nhận huy hiệu này được nhận."
 
 #. module: gamification
 #: model:ir.model.constraint,message:gamification.constraint_gamification_karma_rank_karma_min_check
 msgid "The required karma has to be above 0."
-msgstr "The required karma has to be above 0."
+msgstr "Karma tối thiểu phải lớn hơn 0."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_monetary
@@ -2747,7 +2756,7 @@ msgstr "Người dùng chịu trách nhiệm cho thử thách."
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__sender_id
 msgid "The user who has send the badge"
-msgstr "Người dùng mà đã gửi huy chương"
+msgstr "Người dùng mà đã gửi huy hiệu"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
@@ -2787,7 +2796,7 @@ msgstr "Những chỉ tiêu này sẽ không được tính toán lại."
 #: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "This badge can not be sent by users."
-msgstr "Huy chương này không thể được gửi bởi người dùng."
+msgstr "Huy hiệu này không thể được gửi bởi người dùng."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -2812,7 +2821,7 @@ msgstr "Tổng"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr "Track Karma Changes"
+msgstr "Theo dõi thay đổi karma"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
@@ -2822,14 +2831,14 @@ msgstr "Theo vết"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__tracking_date
 msgid "Tracking Date"
-msgstr "Tracking Date"
+msgstr "Ngày theo vết"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Trackings"
-msgstr "Trackings"
+msgstr "Theo vết"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__unique_owner_ids
@@ -2890,7 +2899,7 @@ msgstr "Người dùng"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__user_ids
 msgid "Users having this rank"
-msgstr "Users having this rank"
+msgstr "Người dùng mà có cấp độ này"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__weekly
@@ -2901,7 +2910,7 @@ msgstr "Hàng tuần"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth
 msgid "Who can grant this badge"
-msgstr "Người có thể trao huy chương này"
+msgstr "Người có thể trao huy hiệu này"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -2914,8 +2923,8 @@ msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
 msgstr ""
-"Với tùy chọn này được kích hoạt, một người dùng chỉ có thể nhận huy chương "
-"một lần. Ba huy chương đầu tiên vẫn được trao chỉ khi vào cuối thử thách (at"
+"Với tùy chọn này được kích hoạt, một người dùng chỉ có thể nhận huy hiệu "
+"một lần. Ba huy hiệu đầu tiên vẫn được trao chỉ khi vào cuối thử thách (at"
 " the end of the challenge)."
 
 #. module: gamification
@@ -2963,48 +2972,48 @@ msgstr "Bạn làm rất tốt công việc của bạn."
 #: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "You do not have the required badges."
-msgstr "Bạn không có các huy chương bắt buộc."
+msgstr "Bạn không có các huy hiệu bắt buộc."
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "You have already sent this badge too many time this month."
-msgstr "Bạn đang trao huy chương này quá nhiều lần trong tháng."
+msgstr "Bạn đang trao huy hiệu này quá nhiều lần trong tháng."
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_hidden
 msgid "You have found the hidden badge"
-msgstr "Bạn đã tìm thấy một huy chương bị ẩn"
+msgstr "Bạn đã tìm thấy một huy hiệu bị ẩn"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_doctor
 msgid "You have reached the last rank. Congratulations!"
-msgstr "You have reached the last rank. Congratulations!"
+msgstr "Bạn đã đạt đến cấp độ cuối cùng. Chúc mừng!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_newbie
 msgid "You just began the adventure! Welcome!"
-msgstr "You just began the adventure! Welcome!"
+msgstr "Bạn chỉ vừa mới bắt đầu hành trình! Xin chào mừng!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_master
 msgid "You know what you are talking about. People learn from you."
-msgstr "You know what you are talking about. People learn from you."
+msgstr "Bạn biết bạn đang nói về điều gì. Mọi người sẽ học từ bạn."
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_bachelor
 msgid "You love learning things. Curiosity is a good way to progress."
-msgstr "You love learning things. Curiosity is a good way to progress."
+msgstr "Bạn yêu thích việc học tập. Ham học hỏi là một cách tốt để phát triển bản thân."
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_student
 msgid "You're a young padawan now. May the force be with you!"
-msgstr "You're a young padawan now. May the force be with you!"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "badges this month"
-msgstr "Huy chương trong tháng"
+msgstr "huy hiệu trong tháng này"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -3018,13 +3027,13 @@ msgid ""
 "e.g. A Master Chief knows quite everything on the forum! You cannot beat "
 "him!"
 msgstr ""
-"e.g. A Master Chief knows quite everything on the forum! You cannot beat "
-"him!"
+"Vd: Một Siêu đầu bếp biết khá rõ về mọi thứ ở diễn đàn này! Bạn không thể đánh bại "
+"người đó!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Master Chief"
-msgstr "e.g. Master Chief"
+msgstr "Vd: Siêu đầu bếp"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -3034,7 +3043,7 @@ msgstr "ví dụ: Các mục tiêu doanh số hàng tháng"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Reach this rank to gain a free mug !"
-msgstr "e.g. Reach this rank to gain a free mug !"
+msgstr "vd. Đạt đến cấp độ này để có được một chiếc chén miễn phí!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
