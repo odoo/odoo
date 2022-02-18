@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.tools.pdf import OdooPdfFileReader
 from odoo.osv import expression
 from odoo.tools import html_escape
+from odoo.exceptions import RedirectWarning
 
 from lxml import etree
 import base64
@@ -410,6 +411,8 @@ class AccountEdiFormat(models.Model):
                         file_data['pdf_reader'].stream.close()
                     else:
                         res = edi_format._create_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'])
+                except RedirectWarning as rw:
+                    raise rw
                 except Exception as e:
                     _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
@@ -584,7 +587,21 @@ class AccountEdiFormat(models.Model):
         :param code: The code of the currency.
         :returns:    A currency or an empty recordset if not found.
         '''
-        return self.env['res.currency'].search([('name', '=', code.upper())], limit=1)
+        currency = self.env['res.currency'].with_context(active_test=False).search([('name', '=', code.upper())], limit=1)
+        if currency and not currency.active:
+            error_msg = _('The currency (%s) of the document you are uploading is not active in this database.\n'
+                          'Please activate it and update the currency rate if needed before trying again to import.',
+                          currency.name)
+            error_action = {
+                'view_mode': 'form',
+                'res_model': 'res.currency',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'res_id': currency.id,
+                'views': [[False, 'form']]
+            }
+            raise RedirectWarning(error_msg, error_action, _('Display the currency'))
+        return currency
 
     ####################################################
     # Other helpers
