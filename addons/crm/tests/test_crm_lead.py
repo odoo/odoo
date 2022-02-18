@@ -544,6 +544,42 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(new_lead.partner_id.team_id, self.sales_team_1)
 
     @users('user_sales_manager')
+    def test_message_get_suggested_recipients(self):
+        """This test checks that creating a contact from a lead with an inactive language will ignore the language
+            while creating a contact from a lead with an active language will take it into account """
+        ResLang = self.env['res.lang'].sudo().with_context(active_test=False)
+
+        # Create a lead with an inactive language -> should ignore the preset language
+        lang_fr = ResLang.search([('code', '=', 'fr_FR')])
+        if not lang_fr:
+            lang_fr = ResLang._create_lang('fr_FR')
+        # set French language as inactive then try to call "_message_get_suggested_recipients"
+        # -> lang code should be ignored
+        lang_fr.active = False
+        lead1 = self.env['crm.lead'].create({
+            'name': 'TestLead',
+            'email_from': self.test_email,
+            'lang_id': lang_fr.id,
+        })
+        data = lead1._message_get_suggested_recipients()[lead1.id]
+        self.assertEqual(data, [(False, self.test_email, None, 'Customer Email')])
+
+        # Create a lead with an active language -> should keep the preset language for recipients
+        lang_en = ResLang.search([('code', '=', 'en_US')])
+        if not lang_en:
+            lang_en = ResLang._create_lang('en_US')
+        # set American English language as active then try to call "_message_get_suggested_recipients"
+        # -> lang code should be kept
+        lang_en.active = True
+        lead2 = self.env['crm.lead'].create({
+            'name': 'TestLead',
+            'email_from': self.test_email,
+            'lang_id': lang_en.id,
+        })
+        data = lead2._message_get_suggested_recipients()[lead2.id]
+        self.assertEqual(data, [(False, self.test_email, "en_US", 'Customer Email')])
+
+    @users('user_sales_manager')
     def test_phone_mobile_search(self):
         lead_1 = self.env['crm.lead'].create({
             'name': 'Lead 1',
