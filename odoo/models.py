@@ -6525,15 +6525,15 @@ Fields:
                     record._onchange_eval(name, field_onchange[name], result)
                 done.add(name)
 
+            if not env.context.get('recursive_onchanges', True):
+                break
+
             # determine which fields to process for the next pass
             todo = [
                 name
                 for name in nametree
                 if name not in done and snapshot0.has_changed(name)
             ]
-
-            if not env.context.get('recursive_onchanges', True):
-                todo = []
 
         # make the snapshot with the final values of record
         snapshot1 = Snapshot(record, nametree)
