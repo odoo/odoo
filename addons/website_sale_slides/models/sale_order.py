@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
+from odoo import models, _
 
 
 class SaleOrder(models.Model):
@@ -32,3 +32,10 @@ class SaleOrder(models.Model):
             channels.sudo()._action_add_members(sale_order.partner_id)
 
         return result
+
+    def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
+        """Forbid quantity updates on event booth lines."""
+        product = self.env['product.product'].browse(product_id)
+        if product.detailed_type == 'course' and new_qty > 1:
+            return 1, _('You can only add a course once in your cart.')
+        return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
