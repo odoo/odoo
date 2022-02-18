@@ -71,42 +71,6 @@ class TestIrAttachment(TransactionCase):
         a2_fn = os.path.join(self.filestore, a2_store_fname2)
         self.assertTrue(os.path.isfile(a2_fn))
 
-    def test_06_linked_record_permission(self):
-        model_ir_attachment = self.env.ref('base.model_ir_attachment')
-        Attachment = self.Attachment.with_user(self.env.ref('base.user_demo').id)
-        a1 = self.Attachment.create({'name': 'a1'})
-        vals = {'name': 'attach', 'res_id': a1.id, 'res_model': 'ir.attachment'}
-        a2 = Attachment.create(vals)
-
-        # remove access to linked record a1
-        rule = self.env['ir.rule'].create({
-            'name': 'test_rule', 'domain_force': "[('id', '!=', %s)]" % a1.id,
-            'model_id': self.env.ref('base.model_ir_attachment').id,
-        })
-        a2.invalidate_cache(ids=a2.ids)
-
-        # no read permission on linked record
-        with self.assertRaises(AccessError):
-            a2.datas
-
-        # read permission on linked record
-        rule.perm_read = False
-        a2.datas
-
-        # no write permission on linked record
-        with self.assertRaises(AccessError):
-            a3 = Attachment.create(vals)
-        with self.assertRaises(AccessError):
-            a2.write({'datas': self.blob2_b64})
-        with self.assertRaises(AccessError):
-            a2.unlink()
-
-        # write permission on linked record
-        rule.perm_write = False
-        a4 = Attachment.create(vals)
-        a4.write({'datas': self.blob2_b64})
-        a4.unlink()
-
     def test_07_write_mimetype(self):
         """
         Tests the consistency of documents' mimetypes
@@ -158,3 +122,89 @@ class TestIrAttachment(TransactionCase):
         self.assertEqual(document3.db_datas, False)
         self.assertEqual(document3.store_fname, self.blob1_fname)
         self.assertEqual(document3.checksum, self.blob1_hash)
+
+
+class TestPermissions(TransactionCase):
+    def setUp(self):
+        super().setUp()
+        # replace self.env(uid=1) with an actual user environment so rules apply
+        self.env = self.env(user=self.env.ref('base.user_demo'))
+        self.Attachments = self.env['ir.attachment']
+
+        # create a record with an attachment and a rule allowing Read access
+        # but preventing Create, Update, or Delete
+        record = self.Attachments.create({'name': 'record1'})
+        self.vals = {'name': 'attach', 'res_id': record.id, 'res_model': record._name}
+        a = self.attachment = self.Attachments.create(self.vals)
+
+        # prevent create, write and unlink accesses on record
+        self.rule = self.env['ir.rule'].sudo().create({
+            'name': 'remove access to record %d' % record.id,
+            'model_id': self.env['ir.model']._get_id(record._name),
+            'domain_force': "[('id', '!=', %s)]" % record.id,
+            'perm_read': False
+        })
+        a.flush()
+        a.invalidate_cache(ids=a.ids)
+
+    def test_no_read_permission(self):
+        """If the record can't be read, the attachment can't be read either
+        """
+        # check that the information can be read out of the box
+        self.attachment.datas
+        # prevent read access on record
+        self.rule.perm_read = True
+        self.attachment.invalidate_cache(ids=self.attachment.ids)
+        with self.assertRaises(AccessError):
+            self.attachment.datas
+
+    def test_with_write_permissions(self):
+        """With write permissions to the linked record, attachment can be
+        created, updated, or deleted (or copied).
+        """
+        # enable write permission on linked record
+        self.rule.perm_write = False
+        attachment = self.Attachments.create(self.vals)
+        attachment.copy()
+        attachment.write({'datas': b'NDIw'})
+        attachment.unlink()
+
+    def test_basic_modifications(self):
+        """Lacking write access to the linked record means create, update, and
+        delete on the attachment are forbidden
+        """
+        with self.assertRaises(AccessError):
+            self.Attachments.create(self.vals)
+        with self.assertRaises(AccessError):
+            self.attachment.write({'datas': b'NDIw'})
+        with self.assertRaises(AccessError):
+            self.attachment.unlink()
+        with self.assertRaises(AccessError):
+            self.attachment.copy()
+
+    def test_cross_record_copies(self):
+        """Copying attachments between records (in the same model or not) adds
+        wrinkles as the ACLs may diverge a lot more
+        """
+        # create an other unwritable record in a different model
+        unwritable = self.env['res.users.log'].create({})
+        with self.assertRaises(AccessError):
+            unwritable.write({})  # checks unwritability
+        # create a writable record in the same model
+        writable = self.Attachments.create({'name': 'yes'})
+        writable.name = 'canwrite'  # checks for writeability
+
+        # can copy from a record with read permissions to one with write permissions
+        copied = self.attachment.copy({'res_model': writable._name, 'res_id': writable.id})
+        # can copy to self given write permission
+        copied.copy()
+        # can not copy back to record without write permission
+        with self.assertRaises(AccessError):
+            copied.copy({'res_id': self.vals['res_id']})
+
+        # can not copy to a record without write permission
+        with self.assertRaises(AccessError):
+            self.attachment.copy({'res_model': unwritable._name, 'res_id': unwritable.id})
+        # even from a record with write permissions
+        with self.assertRaises(AccessError):
+            copied.copy({'res_model': unwritable._name, 'res_id': unwritable.id})
