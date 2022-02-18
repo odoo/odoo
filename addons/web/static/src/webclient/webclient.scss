@@ -114,6 +114,19 @@ kbd {
   }
 }
 
+// Set position of our custom o-dropdown-menu (not bootstrap)
+.o-dropdown-menu {
+  top: 100%;
+  &.dropdown-menu-start {
+    left: 0;
+    right: auto;
+  }
+  &.dropdown-menu-end {
+    left: auto;
+    right: 0;
+  }
+}
+
 // == Boostrap Dropdown
 // ----------------------------------------------------------------------------
 .dropdown-menu {

@@ -289,7 +289,7 @@ QUnit.module('web_editor', {}, function () {
 
             await new Promise((resolve)=>setTimeout(resolve, 50));
             await openColorpicker('#toolbar .note-back-color-preview');
-            assert.ok($('.note-back-color-preview').hasClass('show'),
+            assert.ok($('.note-back-color-preview .dropdown-menu').hasClass('show'),
                 "should display the color picker");
 
             await testUtils.dom.click($('#toolbar .note-back-color-preview .o_we_color_btn[style="background-color:#00FFFF;"]'));

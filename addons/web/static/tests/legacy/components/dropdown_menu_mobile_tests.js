@@ -49,15 +49,15 @@ odoo.define('web.dropdown_menu_mobile_tests', function (require) {
             });
 
             await testUtils.dom.click(dropdown.el.querySelector('button'));
-            assert.containsOnce(dropdown.el, '.dropdown-menu-left',
+            assert.containsOnce(dropdown.el, '.dropdown-menu-start',
                 "should display the dropdown menu at the right screen");
             await testUtils.dom.click(dropdown.el.querySelector('button'));
 
             // position the dropdown to the right
             dropdown.el.parentNode.classList.add('clearfix');
-            dropdown.el.classList.add('float-right');
+            dropdown.el.classList.add('float-end');
             await testUtils.dom.click(dropdown.el.querySelector('button'));
-            assert.containsOnce(dropdown.el, '.dropdown-menu-right',
+            assert.containsOnce(dropdown.el, '.dropdown-menu-end',
                 "should display the dropdown menu at the left screen");
 
             dropdown.el.parentNode.classList.remove('clearfix');
