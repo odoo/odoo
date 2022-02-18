@@ -179,7 +179,7 @@ class FleetVehicle(models.Model):
             ('expiration_date', '>', today),
             ('expiration_date', '<', limit_date),
             ('state', 'in', ['open', 'expired'])
-        ]).mapped('id')
+        ]).mapped('vehicle_id').ids
         res.append(('id', search_operator, res_ids))
         return res
 
@@ -195,7 +195,7 @@ class FleetVehicle(models.Model):
             ('expiration_date', '!=', False),
             ('expiration_date', '<', today),
             ('state', 'in', ['open', 'expired'])
-        ]).mapped('id')
+        ]).mapped('vehicle_id').ids
         res.append(('id', search_operator, res_ids))
         return res
 
