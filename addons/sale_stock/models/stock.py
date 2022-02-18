@@ -110,7 +110,7 @@ class StockPicking(models.Model):
             sale_order_lines_vals.append(so_line_vals)
 
         if sale_order_lines_vals:
-            self.env['sale.order.line'].create(sale_order_lines_vals)
+            self.env['sale.order.line'].with_context(skip_procurement=True).create(sale_order_lines_vals)
         return res
 
     def _log_less_quantities_than_expected(self, moves):
