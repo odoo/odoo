@@ -1,4 +1,7 @@
 .o_knowledge_form_view {
+    --default-sidebar-size: 300px;
+    --sidebar-size: clamp(300px, var(--default-sidebar-size), 50vw);
+
     .o_knowledge_header,
     .o_knowledge_aside,
     .o_knowledge_editor {
@@ -32,7 +35,9 @@
         }
     }
 
-    aside {
+    .o_knowledge_aside {
+        width: var(--sidebar-size);
+        transition: width 0.15s linear;
         ul {
             padding-left: 15px; /* indentation space */
         }
@@ -53,6 +58,29 @@
         }
         .o_placeholder {
             background-color: #eee;
+        }
+    }
+
+    .o_knowledge_resizer {
+        position: absolute;
+        top: 0;
+        left: -10px;
+        width: 20px;
+        height: 100%;
+        cursor: ew-resize;
+        touch-action: none;
+        z-index: 1;
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 9px;
+            width: 3px;
+            height: 100%;
+            background: $o-gray-100;
+        }
+        &:hover::after {
+            background: $o-gray-300;
         }
     }
 
@@ -80,6 +108,12 @@
     }
 }
 
+.o_knowledge_kanban_view {
+    .o_knowledge_kanban_card {
+        min-height: 10rem;
+    }
+}
+
 // Media queries:
 
 @include media-breakpoint-up(sm) {
@@ -92,6 +126,14 @@
             bottom: 0;
             overflow-y: auto;
             overflow-x: hidden;
+        }
+    }
+}
+
+@include media-breakpoint-down(xs) {
+    .o_knowledge_form_view {
+        .o_knowledge_aside {
+            width: 100%;
         }
     }
 }

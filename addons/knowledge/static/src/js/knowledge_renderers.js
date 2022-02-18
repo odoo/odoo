@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import core from 'web.core';
 import FormRenderer from 'web.FormRenderer';
 
 const KnowledgeFormRenderer = FormRenderer.extend({
@@ -24,25 +23,22 @@ const KnowledgeFormRenderer = FormRenderer.extend({
      * @returns {Promise}
      */
     start: function () {
-        core.bus.on('DOM_updated', this, () => {
-            console.log('dom update');
-        });
         return this._super.apply(this, arguments).then(() => {
             return this.initTree();
         });
     },
 
     initTree: function () {
-        const aside = this.$el.find('.o_sidebar');
+        const $container = this.$el.find('.o_knowledge_tree');
         return this._rpc({
             route: '/knowledge/get_tree',
             params: {}
         }).then(res => {
-            aside.empty();
-            aside.append(res);
+            $container.empty();
+            $container.append(res);
             this.createTree();
         }).catch(error => {
-            aside.empty();
+            $container.empty();
         });
     },
 
@@ -209,6 +205,7 @@ const KnowledgeFormRenderer = FormRenderer.extend({
     _renderView: async function () {
         const result = await this._super.apply(this, arguments);
         this._renderBreadcrumb();
+        this._setResizeListener();
         return result;
     },
 
@@ -225,6 +222,34 @@ const KnowledgeFormRenderer = FormRenderer.extend({
         });
         const $container = this.$el.find('.breadcrumb');
         $container.prepend(items);
+    },
+
+    /**
+     * Enables the user to resize the aside block.
+     * Note: When the user grabs the resizer, a new listener will be attached
+     * to the document. The listener will be removed as soon as the user releases
+     * the resizer to free some resources.
+     */
+    _setResizeListener: function () {
+        /**
+         * @param {PointerEvent} event
+         */
+        const onPointerMove = _.throttle(event => {
+            event.preventDefault();
+            this.el.style.setProperty('--default-sidebar-size', `${event.pageX}px`);
+        }, 100);
+        /**
+         * @param {PointerEvent} event
+         */
+        const onPointerUp = event => {
+            $(document).off('pointermove', onPointerMove);
+        };
+        const $resizer = this.$el.find('.o_knowledge_resizer');
+        $resizer.on('pointerdown', event => {
+            event.preventDefault();
+            $(document).on('pointermove', onPointerMove);
+            $(document).one('pointerup', onPointerUp);
+        });
     },
 
     /**

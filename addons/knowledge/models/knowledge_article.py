@@ -51,7 +51,7 @@ class ArticleMembers(models.Model):
 class Article(models.Model):
     _name = "knowledge.article"
     _description = "Knowledge Articles"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "favourite_count, create_date desc"
 
     name = fields.Char(string="Title", default="New Article")
