@@ -48,6 +48,16 @@ export class Model extends EventBus {
         return true;
     }
 
+    /**
+     * This function is meant to be overriden by models that want to combine
+     * sample data with real groups that exist on the server.
+     *
+     * @returns {boolean}
+     */
+    getGroups() {
+        return null;
+    }
+
     notify() {
         this.trigger("update");
     }
@@ -100,14 +110,16 @@ export function useModel(ModelClass, params, options = {}) {
     const user = useService("user");
     let started = false;
     async function load(props) {
-        model.orm = orm;
         const searchParams = getSearchParams(props);
         await model.load(searchParams);
         if (useSampleModel && !model.hasData()) {
             sampleORM =
                 sampleORM || buildSampleORM(component.props.resModel, component.props.fields, user);
+            sampleORM.setGroups(model.getGroups());
+            // Load data with sampleORM then restore real ORM.
             model.orm = sampleORM;
             await model.load(searchParams);
+            model.orm = orm;
         } else {
             useSampleModel = false;
         }

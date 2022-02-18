@@ -107,6 +107,8 @@ export class SampleServer {
         switch (params.method || params.route) {
             case "/web/dataset/search_read":
                 return this._mockSearchReadController(params);
+            case "web_search_read":
+                return this._mockWebSearchRead(params);
             case "web_read_group":
                 return this._mockWebReadGroup(params);
             case "read_group":
@@ -501,13 +503,25 @@ export class SampleServer {
     /**
      * Mocks calls to the /web/dataset/search_read route to return sample
      * records.
+     * @deprecated
+     * @see _mockWebSearchRead
+     */
+    _mockSearchReadController(params) {
+        console.warn(
+            "Using deprecated route /web/dataset/search_read (call method web_search read on the model instead)"
+        );
+        return this._mockWebSearchRead(params);
+    }
+
+    /**
+     * Mocks calls to the web_search_read method to return sample records.
      * @private
      * @param {Object} params
      * @param {string} params.model
      * @param {string[]} params.fields
      * @returns {{ records: Object[], length: number }}
      */
-    _mockSearchReadController(params) {
+    _mockWebSearchRead(params) {
         const model = this.data[params.model];
         const rawRecords = model.records.slice(0, SampleServer.SEARCH_READ_LIMIT);
         const records = this._mockRead({
@@ -555,20 +569,18 @@ export class SampleServer {
     _populateExistingGroups(params) {
         if (!this.existingGroupsPopulated) {
             const groups = this.existingGroups;
-            this.groupsInfo = groups;
             const groupBy = params.groupBy[0];
-            const values = groups.map((g) => g[groupBy]);
             const groupByField = this.data[params.model].fields[groupBy];
             const groupedByM2O = groupByField.type === "many2one";
             if (groupedByM2O) {
                 // re-populate co model with relevant records
-                this.data[groupByField.relation].records = values.map((v) => {
-                    return { id: v[0], display_name: v[1] };
+                this.data[groupByField.relation].records = groups.map((g) => {
+                    return { id: g.value, display_name: g.displayName };
                 });
             }
             for (const r of this.data[params.model].records) {
-                const value = getSampleFromId(r.id, values);
-                r[groupBy] = groupedByM2O ? value[0] : value;
+                const group = getSampleFromId(r.id, groups);
+                r[groupBy] = group.value;
             }
             this.existingGroupsPopulated = true;
         }
@@ -630,13 +642,11 @@ export class SampleServer {
 
         // update count and aggregates for each group
         const groupBy = params.groupBy[0].split(":")[0];
-        const groupByField = this.data[params.model].fields[groupBy];
-        const groupedByM2O = groupByField.type === "many2one";
         const records = this.data[params.model].records;
         for (const g of groups) {
-            const groupValue = groupedByM2O ? g[groupBy][0] : g[groupBy];
-            const recordsInGroup = records.filter((r) => r[groupBy] === groupValue);
+            const recordsInGroup = records.filter((r) => r[groupBy] === g.value);
             g[`${groupBy}_count`] = recordsInGroup.length;
+            g[groupBy] = [g.value, g.displayName];
             for (const field of params.fields) {
                 const fieldType = this.data[params.model].fields[field].type;
                 if (["integer, float", "monetary"].includes(fieldType)) {
@@ -702,9 +712,11 @@ SampleServer.UnimplementedRouteError = UnimplementedRouteError;
 export function buildSampleORM(resModel, fields, user) {
     const sampleServer = new SampleServer(resModel, fields);
     const fakeRPC = async (_, params) => {
-        const { kwargs, method, model } = params;
+        const { args, kwargs, method, model } = params;
         const { groupby: groupBy } = kwargs;
-        return sampleServer.mockRpc({ method, model, ...kwargs, groupBy });
+        return sampleServer.mockRpc({ method, model, args, ...kwargs, groupBy });
     };
-    return new ORM(fakeRPC, user);
+    const sampleORM = new ORM(fakeRPC, user);
+    sampleORM.setGroups = (groups) => sampleServer.setExistingGroups(groups);
+    return sampleORM;
 }

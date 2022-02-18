@@ -5235,7 +5235,7 @@ QUnit.module('Views', {
                         return {
                             product_id: [r.id, r.display_name],
                             product_id_count: 0,
-                            __domain: ['product_id', '=', r.id],
+                            __domain: ['product_id', '=', r.id], // This domain shouldn't be valid.
                         };
                     });
                     result.length = result.groups.length;
@@ -5429,7 +5429,7 @@ QUnit.module('Views', {
                         return {
                             product_id: [r.id, r.display_name],
                             product_id_count: 0,
-                            __domain: ['product_id', '=', r.id],
+                            __domain: ['product_id', '=', r.id], // This domain shouldn't be valid.
                         };
                     });
                     result.length = result.groups.length;

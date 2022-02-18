@@ -824,10 +824,11 @@ class DynamicList extends DataPoint {
 }
 
 export class DynamicRecordList extends DynamicList {
-    constructor() {
+    constructor(model, params) {
         super(...arguments);
 
         this.records = [];
+        this.data = params.data;
         this.type = "record-list";
     }
 
@@ -882,21 +883,24 @@ export class DynamicRecordList extends DynamicList {
 
     async _loadRecords() {
         const order = orderByToString(this.orderBy);
-        const { records, length } = await this.model.orm.webSearchRead(
-            this.resModel,
-            this.domain,
-            this.fieldNames,
-            {
-                limit: this.limit,
-                order,
-                offset: this.offset,
-            },
-            {
-                bin_size: true,
-                ...this.context,
-            }
-        );
+        const { records, length } =
+            this.data ||
+            (await this.model.orm.webSearchRead(
+                this.resModel,
+                this.domain,
+                this.fieldNames,
+                {
+                    limit: this.limit,
+                    order,
+                    offset: this.offset,
+                },
+                {
+                    bin_size: true,
+                    ...this.context,
+                }
+            ));
         this.count = length;
+        delete this.data;
 
         return Promise.all(
             records.map(async (data) => {
@@ -1096,6 +1100,9 @@ export class DynamicGroupList extends DynamicList {
                         groupParams.range = value;
                         break;
                     }
+                    case "__data": {
+                        groupParams.data = value;
+                    }
                     default: {
                         // other optional aggregated fields
                         if (key in this.fields) {
@@ -1136,6 +1143,7 @@ export class Group extends DataPoint {
         }
 
         const listParams = {
+            data: params.data,
             domain: Domain.and([params.domain, this.groupDomain]).toList(),
             groupBy: params.groupBy,
             context: params.context,
@@ -1457,6 +1465,13 @@ export class RelationalModel extends Model {
             }
         }
         return new DpClass(this, params, state);
+    }
+
+    /**
+     * @override
+     */
+    getGroups() {
+        return this.root.groups && this.root.groups.length ? this.root.groups : null;
     }
 
     // /**

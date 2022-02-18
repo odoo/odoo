@@ -19,7 +19,10 @@
                                         <t t-set-slot="toggler">
                                             <i class="fa fa-gear" role="img" aria-label="Settings" title="Settings" />
                                         </t>
-                                        <DropdownItem class="'o_kanban_toggle_fold'" onSelected="() => this.toggleGroup(group)">
+                                        <DropdownItem class="{
+                                                'o_kanban_toggle_fold': true,
+                                                'o_sample_data_disabled disabled': props.list.model.useSampleModel,
+                                            }" onSelected="() => this.toggleGroup(group)">
                                             Fold
                                         </DropdownItem>
                                         <t t-if="canEditGroup(group)">
@@ -97,7 +100,9 @@
                                         </button>
                                     </div>
                                 </div>
-                                <t t-else="" t-call="{{ cardTemplate }}" />
+                                <t t-else="" t-call="{{ cardTemplate }}">
+                                    <t t-set="isSample" t-value="props.list.model.useSampleModel"/>
+                                </t>
                             </t>
                             <t t-set="unloadedCount" t-value="!group.isDirty and getGroupUnloadedCount(group)" />
                             <div t-if="unloadedCount > 0" class="o_kanban_load_more">
@@ -111,6 +116,7 @@
                 <t t-else="">
                     <t t-call="{{ cardTemplate }}">
                         <t t-set="record" t-value="groupOrRecord.record" />
+                        <t t-set="isSample" t-value="props.list.model.useSampleModel"/>
                     </t>
                 </t>
             </t>

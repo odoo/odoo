@@ -150,21 +150,18 @@ export class KanbanRenderer extends Component {
 
     get showNoContentHelper() {
         const { model, isGrouped, groups } = this.props.list;
-        if (model.hasData() || model.useSampleModel) {
-            return false;
+        if (model.useSampleModel) {
+            return true;
         }
         if (isGrouped) {
             if (this.state.quickCreateGroup) {
-                // Example background shown
                 return false;
             }
-            if (
-                groups.some(({ list: { records } }) => records.length && records[0].isQuickCreate)
-            ) {
-                return false;
+            if (groups.length === 0) {
+                return true;
             }
         }
-        return true;
+        return !model.hasData();
     }
 
     /**
@@ -234,6 +231,9 @@ export class KanbanRenderer extends Component {
         }
         if (this.canResequenceRecords) {
             classes.push("o_record_draggable");
+        }
+        if (this.props.list.model.useSampleModel) {
+            classes.push("o_sample_data_disabled");
         }
         return classes.join(" ");
     }
@@ -363,11 +363,17 @@ export class KanbanRenderer extends Component {
         group.list.unarchive();
     }
 
-    async deleteGroup(group) {
-        await this.props.list.deleteGroup(group);
-        if (this.props.list.groups.length === 0) {
-            this.state.quickCreateGroup = true;
-        }
+    deleteGroup(group) {
+        this.dialog.add(ConfirmationDialog, {
+            body: this.env._t("Are you sure you want to delete this column?"),
+            confirm: async () => {
+                await this.props.list.deleteGroup(group);
+                if (this.props.list.groups.length === 0) {
+                    this.state.quickCreateGroup = true;
+                }
+            },
+            cancel: () => {},
+        });
     }
 
     deleteRecord(record, group) {

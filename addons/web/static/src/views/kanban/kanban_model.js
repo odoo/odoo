@@ -64,6 +64,13 @@ class KanbanGroup extends Group {
         await this.list.load();
         this.model.notify();
     }
+
+    empty() {
+        this.count = 0;
+        this.activeProgressValue = null;
+        this.progressValues = [];
+        this.list.empty();
+    }
 }
 
 class KanbanDynamicGroupList extends DynamicGroupList {
@@ -128,9 +135,15 @@ class KanbanDynamicGroupList extends DynamicGroupList {
     async deleteGroup(group) {
         await this.model.orm.unlink(this.groupByField.relation, [group.value], this.context);
         this.groups = this.groups.filter((g) => g.id !== group.id);
+        this.model.notify();
     }
 
     async quickCreate(group) {
+        if (this.model.useSampleModel) {
+            // Empty the groups because they contain sample data
+            await Promise.all(this.groups.map((group) => group.empty()));
+        }
+        this.model.useSampleModel = false;
         if (!this.quickCreateInfo) {
             this.quickCreateInfo = await this._loadQuickCreateView();
         }
@@ -293,6 +306,11 @@ class KanbanDynamicRecordList extends DynamicRecordList {
         await this.quickCreate(record.activeFields);
         return record;
     }
+
+    empty() {
+        this.records = [];
+        this.count = 0;
+    }
 }
 
 KanbanDynamicRecordList.DEFAULT_LIMIT = 40;
@@ -328,6 +346,11 @@ export class KanbanModel extends RelationalModel {
      */
     hasData() {
         if (this.root.groups) {
+            if (!this.root.groups.length) {
+                // While we don't have any data, we want to display the column quick create and
+                // example background. Return true so that we don't get sample data instead
+                return true;
+            }
             return this.root.groups.some((group) => group.list.records.length > 0);
         }
         return this.root.records.length > 0;

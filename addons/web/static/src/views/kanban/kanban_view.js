@@ -49,7 +49,7 @@ const hasClass = (node, ...classes) => {
 };
 
 const applyDefaultAttributes = (kanbanBox) => {
-    kanbanBox.setAttribute("tabindex", 0);
+    kanbanBox.setAttribute("t-att-tabindex", "isSample ? -1 : 0");
     kanbanBox.setAttribute("role", "article");
     kanbanBox.setAttribute("t-att-class", "getRecordClasses(record,groupOrRecord.group)");
     kanbanBox.setAttribute("t-att-data-id", "canResequenceRecords and record.id");
@@ -257,8 +257,6 @@ export class KanbanArchParser extends XMLParser {
 
 class KanbanView extends Component {
     setup() {
-        // FIXME WOWL: sample server not yet implemented for kanban
-        this.props.useSampleModel = false;
         this.actionService = useService("action");
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
