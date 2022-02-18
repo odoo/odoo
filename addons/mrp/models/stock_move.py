@@ -520,8 +520,3 @@ class StockMove(models.Model):
             self.move_line_ids = self._set_quantity_done_prepare_vals(quantity_done)
         else:
             super()._multi_line_quantity_done_set(quantity_done)
-
-    def _prepare_extra_move_vals(self, qty):
-        vals = super()._prepare_extra_move_vals(qty)
-        vals['date_deadline'] = self.date_deadline
-        return vals
