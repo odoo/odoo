@@ -603,6 +603,11 @@ class WebsiteSale(http.Controller):
         assert layout_mode in ('grid', 'list'), "Invalid shop layout mode"
         request.session['website_sale_shop_layout_mode'] = layout_mode
 
+    @http.route(['/shop/cart/quantity'], type='json', auth="public", methods=['POST'], website=True, csrf=False)
+    def cart_quantity(self):
+        cart = request.website.sale_get_order()
+        return cart and cart.cart_quantity or 0
+
     # ------------------------------------------------------
     # Checkout
     # ------------------------------------------------------
