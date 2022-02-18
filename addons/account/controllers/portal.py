@@ -33,6 +33,21 @@ class PortalAccount(CustomerPortal):
     def _get_invoices_domain(self):
         return [('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
 
+    def _get_account_searchbar_sortings(self):
+        return {
+            'date': {'label': _('Date'), 'order': 'invoice_date desc'},
+            'duedate': {'label': _('Due Date'), 'order': 'invoice_date_due desc'},
+            'name': {'label': _('Reference'), 'order': 'name desc'},
+            'state': {'label': _('Status'), 'order': 'state'},
+        }
+
+    def _get_account_searchbar_filters(self):
+        return {
+            'all': {'label': _('All'), 'domain': []},
+            'invoices': {'label': _('Invoices'), 'domain': [('move_type', '=', ('out_invoice', 'out_refund'))]},
+            'bills': {'label': _('Bills'), 'domain': [('move_type', '=', ('in_invoice', 'in_refund'))]},
+        }
+
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         values = self._prepare_my_invoices_values(page, date_begin, date_end, sortby, filterby)
@@ -59,22 +74,13 @@ class PortalAccount(CustomerPortal):
             self._get_invoices_domain(),
         ])
 
-        searchbar_sortings = {
-            'date': {'label': _('Date'), 'order': 'invoice_date desc'},
-            'duedate': {'label': _('Due Date'), 'order': 'invoice_date_due desc'},
-            'name': {'label': _('Reference'), 'order': 'name desc'},
-            'state': {'label': _('Status'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_account_searchbar_sortings()
         # default sort by order
         if not sortby:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
-        searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
-            'invoices': {'label': _('Invoices'), 'domain': [('move_type', '=', ('out_invoice', 'out_refund'))]},
-            'bills': {'label': _('Bills'), 'domain': [('move_type', '=', ('in_invoice', 'in_refund'))]},
-        }
+        searchbar_filters = self._get_account_searchbar_filters()
         # default filter by value
         if not filterby:
             filterby = 'all'
