@@ -794,6 +794,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         picking = sale_order.picking_ids
+        initial_product = sale_order.order_line.product_id
 
         picking_form = Form(picking)
         with picking_form.move_line_ids_without_package.edit(0) as move:
@@ -818,6 +819,12 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(
             so_line_2.price_unit, 0,
             "Shouldn't get the product price as the invoice policy is on qty. ordered")
+
+        # Check the picking didn't change
+        self.assertRecordValues(sale_order.picking_ids.move_lines, [
+            {'product_id': initial_product.id, 'quantity_done': 5},
+            {'product_id': product_inv_on_order.id, 'quantity_done': 5},
+        ])
 
         # Creates a second sale order for 3 product invoiced on qty. ordered.
         sale_order = self._get_new_sale_order(product=product_inv_on_order, amount=3)
