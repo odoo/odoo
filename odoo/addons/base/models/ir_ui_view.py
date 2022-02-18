@@ -1864,8 +1864,9 @@ actual arch.
         view = self.sudo().search([('key', '=', template)], limit=1)
         if view:
             return view.id
-        res_id, res_model = self.env['ir.model.data']._xmlid_to_res_model_res_id(template, raise_if_not_found=True)
-        assert res_model == self._name
+        res_model, res_id = self.env['ir.model.data']._xmlid_to_res_model_res_id(template, raise_if_not_found=True)
+        if res_model != self._name:
+            raise ValueError('Invalid template %r model: %r, expected: %r' % (template, res_model, self._name))
         return res_id
 
     @api.model
@@ -1974,15 +1975,15 @@ actual arch.
         return template.sudo()._render(values, engine="ir.qweb")
 
     def _render_template(self, template, values=None, engine='ir.qweb'):
-        return self.browse(self._get_view_id(template))._render(values, engine)
+        return self._get_view(template)._render(values, engine)
 
-    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False, options=None):
-        assert isinstance(self.id, int)
-
-        qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
+    @api.model
+    def _render(self, view_ref, values=None, engine='ir.qweb', minimal_qcontext=False, options=None):
+        view = self._get_view(view_ref)
+        qcontext = dict() if minimal_qcontext else view._prepare_qcontext()
         qcontext.update(values or {})
 
-        return self.env[engine]._render(self.id, qcontext, **(options or {}))
+        return self.env[engine]._render(view, qcontext, **(options or {}))
 
     @api.model
     def _prepare_qcontext(self):

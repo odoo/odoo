@@ -533,6 +533,27 @@ class IrActionsReport(models.Model):
         return report_obj.with_context(context).sudo().search(conditions, limit=1)
 
     @api.model
+    def _get_report(self, report_ref):
+        """Get the report (with sudo) from an id or xmlid
+        report_ref: can be one of
+            - ir.actions.report id
+            - ir.actions.report report_name
+            - ir.model.data reference
+        """
+        ReportSudo = self.env['ir.actions.report'].sudo()
+        if isinstance(report_ref, int):
+            return ReportSudo.browse(report_ref)
+        report = ReportSudo.search([('report_name', '=', report_ref)], limit=1)
+        if report:
+            return report
+        report = self.env.ref(report_ref)
+        if report:
+            if report._name != "ir.actions.report":
+                raise ValueError("Fetching report %r: type %s, expected ir.actions.report" % (report_ref, report._name))
+            return report.sudo()
+        raise ValueError("Fetching report %r: report not found" % report_ref)
+
+    @api.model
     def barcode(self, barcode_type, value, **kwargs):
         defaults = {
             'width': (600, int),
@@ -776,7 +797,7 @@ class IrActionsReport(models.Model):
         writer.write(result_stream)
         return result_stream.getvalue()
 
-    def _render_qweb_pdf(self, res_ids=None, data=None):
+    def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
         """
         :rtype: bytes
         """
@@ -784,13 +805,10 @@ class IrActionsReport(models.Model):
             data = {}
         data.setdefault('report_type', 'pdf')
 
-        # access the report details with sudo() but evaluation context as sudo(False)
-        self_sudo = self.sudo()
-
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
         if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_report_rendering'):
-            return self_sudo._render_qweb_html(res_ids, data=data)
+            return self._render_qweb_html(report_ref, res_ids, data=data)
 
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
@@ -812,23 +830,26 @@ class IrActionsReport(models.Model):
         # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
         context['debug'] = False
 
+        # access the report details with sudo() but keep evaluation context as current user
+        report_sudo = self._get_report(report_ref)
+
         save_in_attachment = OrderedDict()
         # Maps the streams in `save_in_attachment` back to the records they came from
         stream_record = dict()
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.
-            Model = self.env[self_sudo.model]
+            Model = self.env[report_sudo.model]
             record_ids = Model.browse(res_ids)
             wk_record_ids = Model
-            if self_sudo.attachment:
+            if report_sudo.attachment:
                 for record_id in record_ids:
-                    attachment = self_sudo.retrieve_attachment(record_id)
+                    attachment = report_sudo.retrieve_attachment(record_id)
                     if attachment:
-                        stream = self_sudo._retrieve_stream_from_attachment(attachment)
+                        stream = report_sudo._retrieve_stream_from_attachment(attachment)
                         save_in_attachment[record_id.id] = stream
                         stream_record[stream] = record_id
-                    if not self_sudo.attachment_use or not attachment:
+                    if not report_sudo.attachment_use or not attachment:
                         wk_record_ids += record_id
             else:
                 wk_record_ids = record_ids
@@ -840,7 +861,7 @@ class IrActionsReport(models.Model):
         if save_in_attachment and not res_ids:
             _logger.info('The PDF report has been generated from attachments.')
             self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
-            return self_sudo._post_pdf(save_in_attachment), 'pdf'
+            return report_sudo._post_pdf(save_in_attachment), 'pdf'
 
         if self.get_wkhtmltopdf_state() == 'install':
             # wkhtmltopdf is not installed
@@ -849,11 +870,11 @@ class IrActionsReport(models.Model):
             # bypassed
             raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
 
-        html = self_sudo.with_context(context)._render_qweb_html(res_ids, data=data)[0]
+        html = self.with_context(context)._render_qweb_html(report_ref, res_ids, data=data)[0]
 
-        bodies, html_ids, header, footer, specific_paperformat_args = self_sudo.with_context(context)._prepare_html(html)
+        bodies, html_ids, header, footer, specific_paperformat_args = report_sudo.with_context(context)._prepare_html(html)
 
-        if self_sudo.attachment and set(res_ids) != set(html_ids):
+        if report_sudo.attachment and set(res_ids) != set(html_ids):
             raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
                 "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.") %  self.name)
 
@@ -867,65 +888,55 @@ class IrActionsReport(models.Model):
         )
         if res_ids:
             self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
-            _logger.info('The PDF report has been generated for model: %s, records %s.' % (self_sudo.model, str(res_ids)))
-            return self_sudo._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
+            _logger.info('The PDF report has been generated for model: %s, records %s.' % (report_sudo.model, str(res_ids)))
+            return report_sudo._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
 
     @api.model
-    def _render_qweb_text(self, docids, data=None):
-        """
-        :rtype: bytes
-        """
-        if not data:
-            data = {}
+    def _render_qweb_text(self, report_ref, docids, data):
         data.setdefault('report_type', 'text')
-        data = self._get_rendering_context(docids, data)
-        return self._render_template(self.report_name, data), 'text'
+        report = self._get_report(report_ref)
+        data = report._get_rendering_context(docids, data)
+        return self._render_template(report_ref, data), 'text'
 
     @api.model
-    def _render_qweb_html(self, docids, data=None):
-        """This method generates and returns html version of a report.
-
-        :rtype: bytes
-        """
-        if not data:
-            data = {}
+    def _render_qweb_html(self, report_ref, docids, data):
         data.setdefault('report_type', 'html')
-        data = self._get_rendering_context(docids, data)
-        return self._render_template(self.report_name, data), 'html'
+        report = self._get_report(report_ref)
+        data = self._get_rendering_context(report, docids, data)
+        return self._render_template(report.report_name, data), 'html'
 
-    def _get_rendering_context_model(self):
-        report_model_name = 'report.%s' % self.report_name
+    def _get_rendering_context_model(self, report):
+        report_model_name = 'report.%s' % report.report_name
         return self.env.get(report_model_name)
 
-    def _get_rendering_context(self, docids, data):
+    def _get_rendering_context(self, report, docids, data):
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        report_model = self._get_rendering_context_model()
+        report_model = self._get_rendering_context_model(report)
 
         data = data and dict(data) or {}
 
         if report_model is not None:
-            # _render_ may be executed in sudo but evaluation context as real user
-            report_model = report_model.sudo(False)
             data.update(report_model._get_report_values(docids, data=data))
         else:
-            # _render_ may be executed in sudo but evaluation context as real user
-            docs = self.env[self.model].sudo(False).browse(docids)
+            docs = self.env[report.model].browse(docids)
             data.update({
                 'doc_ids': docids,
-                'doc_model': self.model,
+                'doc_model': report.model,
                 'docs': docs,
             })
         data['is_html_empty'] = is_html_empty
         return data
 
-    def _render(self, res_ids, data=None):
-        report_type = self.report_type.lower().replace('-', '_')
+    @api.model
+    def _render(self, report_ref, res_ids, data):
+        report = self._get_report(report_ref)
+        report_type = report.report_type.lower().replace('-', '_')
         render_func = getattr(self, '_render_' + report_type, None)
         if not render_func:
             return None
-        return render_func(res_ids, data=data)
+        return render_func(report_ref, res_ids, data=data)
 
     def report_action(self, docids, data=None, config=True):
         """Return an action of type ir.actions.report.

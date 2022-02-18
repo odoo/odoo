@@ -937,7 +937,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'target': 'test_assetsbundle/static/src/js/test_jsfile1.js',
             'path': 'http://external.link/external.js',
         })
-        rendered = view._render()
+        rendered = self.env['ir.ui.view']._render(view.id)
         html_tree = lxml.etree.fromstring(rendered)
         scripts = html_tree.findall('script')
         self.assertEqual(len(scripts), 2)
