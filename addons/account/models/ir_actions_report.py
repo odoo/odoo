@@ -11,10 +11,10 @@ from odoo.tools import pdf
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
-    def _render_qweb_pdf_prepare_streams(self, data, res_ids=None):
+    def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # Custom behavior for 'account.report_original_vendor_bill'.
-        if self.report_name != 'account.report_original_vendor_bill':
-            return super()._render_qweb_pdf_prepare_streams(data, res_ids=res_ids)
+        if self._get_report(report_ref).report_name != 'account.report_original_vendor_bill':
+            return super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
 
         invoices = self.env['account.move'].browse(res_ids)
         if any(x.move_type not in ('in_invoice', 'in_receipt') for x in invoices):
@@ -44,11 +44,11 @@ class IrActionsReport(models.Model):
                 }
         return collected_streams
 
-    def _render_qweb_pdf(self, res_ids=None, data=None):
+    def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
         # Check for reports only available for invoices.
-        if self.report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
+        if self._get_report(report_ref).report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
             invoices = self.env['account.move'].browse(res_ids)
             if any(x.move_type == 'entry' for x in invoices):
                 raise UserError(_("Only invoices could be printed."))
 
-        return super()._render_qweb_pdf(res_ids=res_ids, data=data)
+        return super()._render_qweb_pdf(report_ref, res_ids=res_ids, data=data)

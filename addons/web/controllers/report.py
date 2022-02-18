@@ -29,7 +29,7 @@ class ReportController(http.Controller):
         '/report/<converter>/<reportname>/<docids>',
     ], type='http', auth='user', website=True)
     def report_routes(self, reportname, docids=None, converter=None, **data):
-        report = request.env['ir.actions.report']._get_report_from_name(reportname)
+        report = request.env['ir.actions.report']
         context = dict(request.env.context)
 
         if docids:
@@ -40,14 +40,14 @@ class ReportController(http.Controller):
             data['context'] = json.loads(data['context'])
             context.update(data['context'])
         if converter == 'html':
-            html = report.with_context(context)._render_qweb_html(docids, data=data)[0]
+            html = report.with_context(context)._render_qweb_html(reportname, docids, data=data)[0]
             return request.make_response(html)
         elif converter == 'pdf':
-            pdf = report.with_context(context)._render_qweb_pdf(docids, data=data)[0]
+            pdf = report.with_context(context)._render_qweb_pdf(reportname, docids, data=data)[0]
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         elif converter == 'text':
-            text = report.with_context(context)._render_qweb_text(docids, data=data)[0]
+            text = report.with_context(context)._render_qweb_text(reportname, docids, data=data)[0]
             texthttpheaders = [('Content-Type', 'text/plain'), ('Content-Length', len(text))]
             return request.make_response(text, headers=texthttpheaders)
         else:
