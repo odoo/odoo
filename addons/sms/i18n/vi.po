@@ -32,12 +32,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr "# Invalid recipients"
+msgstr "SL Người nhận không hợp lệ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_valid_count
 msgid "# Valid recipients"
-msgstr "# Valid recipients"
+msgstr "SL Người nhận hợp lệ"
 
 #. module: sms
 #: code:addons/sms/models/sms_template.py:0
@@ -51,13 +51,13 @@ msgstr "%s (bản sao)"
 #: code:addons/sms/static/src/js/fields_sms_widget.js:0
 #, python-format
 msgid "%s characters, fits in %s SMS (%s) "
-msgstr "%s characters, fits in %s SMS (%s) "
+msgstr "%s ký tự, vừa với %s SMS (%s) "
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "%s invalid recipients"
-msgstr "%s invalid recipients"
+msgstr "%s người nhận không hợp lệ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -65,8 +65,8 @@ msgid ""
 "<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
 "this SMS again to the recipients you did not select."
 msgstr ""
-"<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
-"this SMS again to the recipients you did not select."
+"<span class=\"fa fa-info-circle\"/> Cảnh báo: Không thể gửi lại tin nhắn "
+"SMS này lần nữa cho người nhận mà bạn không chọn."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -74,8 +74,8 @@ msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Add</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"<span class=\"o_stat_text\">Thêm</span>\n"
+"                                <span class=\"o_stat_text\">Hành động Ngữ cảnh</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -83,8 +83,8 @@ msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Remove</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"<span class=\"o_stat_text\">Gỡ bỏ</span>\n"
+"                                <span class=\"o_stat_text\">Hành động Ngữ cảnh</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -93,7 +93,7 @@ msgid ""
 "False)]}\">No records</span>"
 msgstr ""
 "<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
-"False)]}\">No records</span>"
+"False)]}\">Không có bản ghi nào</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -115,7 +115,7 @@ msgstr "Miền hiệu lực"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__active_domain_count
 msgid "Active records count"
-msgstr "Active records count"
+msgstr "SL bản ghi có hiệu lực"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -131,7 +131,7 @@ msgstr ""
 #: code:addons/sms/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending an SMS."
-msgstr ""
+msgstr "Có lỗi xảy ra khi gửi tin nhắn SMS."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -155,7 +155,7 @@ msgstr "Số lượng tập tin đính kèm"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_blacklist
 msgid "Blacklisted"
-msgstr "Blacklisted"
+msgstr "Bị vào sổ đen"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
@@ -177,7 +177,7 @@ msgstr "Thân"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Buy credits"
-msgstr "Buy credits"
+msgstr "Mua tín dụng"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -267,7 +267,7 @@ msgstr ""
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
 msgid "Dear ${object.display_name} this is an automated SMS."
-msgstr ""
+msgstr "Dear ${object.display_name}, đây là SMS tự động."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
@@ -362,13 +362,13 @@ msgstr "Lỗi"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__error_code
 msgid "Error Code"
-msgstr "Error Code"
+msgstr "Mã lỗi"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
 msgid "Failure type"
-msgstr "Loại thất bại"
+msgstr "Kiểu thất bại"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_object_field
@@ -1011,25 +1011,25 @@ msgstr "SMS Template Preview"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_tree
 msgid "SMS Templates"
-msgstr "SMS Templates"
+msgstr "Mẫu SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS content"
-msgstr "SMS content"
+msgstr "Nội dung SMS"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:sms.ir_cron_sms_scheduler_action
 #: model:ir.cron,name:sms.ir_cron_sms_scheduler_action
 msgid "SMS: SMS Queue Manager"
-msgstr "SMS: SMS Queue Manager"
+msgstr "SMS: Quản lý hàng đợi SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr "Số đã xử lý"
+msgstr "Số đã xử lý / làm sạch"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
