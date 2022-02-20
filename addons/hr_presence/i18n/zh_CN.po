@@ -3,18 +3,18 @@
 # 	* hr_presence
 # 
 # Translators:
-# Martin Trigaux, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # 厦门-许舟 <windedge99@gmail.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2019-03-20 14:57+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,25 +25,20 @@ msgstr ""
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
-"<?xml version=\"1.0\"?>\n"
 "<div>\n"
-"                    Dear ${object.name},<br/><br/>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.<br/>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
+"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br/>\n"
 "                    Please, take appropriate measures in order to carry out this work absence.<br/>\n"
 "                    Do not hesitate to contact your manager or the human resource department.\n"
 "                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<div>\n"
-"                    致${object.name},<br/><br/>\n"
-"                    除非我们出现错误了，那么您似乎不在办公室并且没有作出休假申请。<br/>\n"
-"                   请采取适当措施，以便记录缺席。<br/>\n"
-"                    请联系您的经理或人力资源部门。\n"
-"                    <br/>顺祝　商旗<br/><br/>\n"
-"                </div>\n"
-"            "
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
+msgid "Absence/Presence"
+msgstr "答应/拒绝"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -71,7 +66,7 @@ msgstr "撰写邮件"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_actions_server_action_open_presence_view
 msgid "Compute presence and open presence view"
-msgstr "计算出席状态和打开出席状态视图"
+msgstr "计算在线状态和打开在线状态视图"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
@@ -86,9 +81,9 @@ msgid "Email Sent"
 msgstr "已发送邮件"
 
 #. module: hr_presence
-#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
-msgid "Employee Presence"
-msgstr "员工出席"
+#: model:mail.template,name:hr_presence.mail_template_presence
+msgid "Employee: Absence email"
+msgstr ""
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -96,22 +91,34 @@ msgid "Employee: Presence Reminder"
 msgstr "员工：出席提醒"
 
 #. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
+msgid "Employees"
+msgstr "员工"
+
+#. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
 #, python-format
 msgid ""
-"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.\n"
+"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.\n"
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
-"除非我们出现错误了，那么您似乎不在办公室并且没有作出休假申请。\n"
-"请采取适当措施，以便记录缺席。\n"
+"如果不是我们造成的错误的话，那么您似乎不在办公室并且没有要求您离开。\n"
+"请采取适当措施，以便开展这项工作。\n"
 "请联系您的经理或人力资源部门。"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
+#: model:ir.cron,cron_name:hr_presence.ir_cron_presence_control
+#: model:ir.cron,name:hr_presence.ir_cron_presence_control
+msgid "HR Presence: cron"
+msgstr ""
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
-msgstr "人力资源出席上次计算日期"
+msgstr "人力资源存在上次计算日期"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
@@ -134,8 +141,8 @@ msgstr "IP连接"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "Mail"
-msgstr "邮件"
+msgid "Log"
+msgstr "记录"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
@@ -145,6 +152,8 @@ msgid "Manually Set Present"
 msgstr "手动设置出席"
 
 #. module: hr_presence
+#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence"
 msgstr "出席"
@@ -163,6 +172,11 @@ msgstr "短信"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Set as absent"
+msgstr ""
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Set as present"
 msgstr "设置出席"
 
@@ -170,7 +184,7 @@ msgstr "设置出席"
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional email address for this employee."
-msgstr "此员工没有工作电子邮件地址。"
+msgstr "此员工没有专业的电子邮件地址。"
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
@@ -206,4 +220,6 @@ msgstr "用户日志"
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
-msgstr "您无权执行此操作。请联系管理员。"
+msgstr ""
+"You don't have the right to do this. Please contact an Administrator.\n"
+" "

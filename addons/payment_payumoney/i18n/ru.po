@@ -3,16 +3,18 @@
 # 	* payment_payumoney
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Collex100, 2018
+# Sergey Vilizhanin, 2018
+# ILMIR <karamov@it-projects.info>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2019\n"
+"POT-Creation-Date: 2022-02-11 14:33+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,43 +33,26 @@ msgid "Merchant Salt"
 msgstr "Мерчант Салт"
 
 #. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s"
+
+#. module: payment_payumoney
+#: model:account.payment.method,name:payment_payumoney.payment_method_payumoney
 #: model:ir.model.fields.selection,name:payment_payumoney.selection__payment_acquirer__provider__payumoney
 msgid "PayUmoney"
 msgstr "PayUmoney"
 
 #. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:0
-#, python-format
-msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
-"PayUmoney: недопустимый shasign, получил %s, вычисленный %s, для данных %s"
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:0
-#, python-format
-msgid "PayUmoney: received data for reference %s; multiple orders found"
-msgstr "PayUmoney: получил данные для справки %s; найдено несколько заказов"
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:0
-#, python-format
-msgid "PayUmoney: received data for reference %s; no order found"
-msgstr "PayUmoney: получил данные для справки %s; заказы не найдены"
-
-#. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:0
-#, python-format
-msgid ""
-"PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
-"shashign (%s)"
-msgstr ""
-"PayUmoney: получил данные с отсутствующей ссылки (%s) или pay_id (%s) или "
-"shashign (%s)"
-
-#. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Платежная система"
+msgstr "Платежи клиентов"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Методы Оплаты"
 
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_transaction
@@ -78,3 +63,26 @@ msgstr "Операция Оплаты"
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Провайдер"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference (%s)"
+msgstr ""
+
+#. module: payment_payumoney
+#: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+"Поставщик платежных услуг для использования с этой платежной системой "
+
+#. module: payment_payumoney
+#: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
+msgid "The key solely used to identify the account with PayU money"
+msgstr ""
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "The payment encountered an error with code %s"
+msgstr ""

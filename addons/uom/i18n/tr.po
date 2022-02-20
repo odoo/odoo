@@ -3,20 +3,22 @@
 # 	* uom
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Levent Karakaş <levent@mektup.at>, 2018
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2019
-# Umur Akın <umura@projetgrup.com>, 2019
-# Ediz Duman <neps1192@gmail.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2020
+# Tugay Hatıl <tugayh@projetgrup.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Ediz Duman <neps1192@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2018-06-25 08:30+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +29,7 @@ msgstr ""
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid ""
-"<span class=\"oe_grey\">\n"
+"<span class=\"oe_grey oe_inline\">\n"
 "                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
 "                                </span>"
 msgstr ""
@@ -35,7 +37,7 @@ msgstr ""
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid ""
-"<span class=\"oe_grey\">\n"
+"<span class=\"oe_grey oe_inline\">\n"
 "                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
 "                                </span>"
 msgstr ""
@@ -72,8 +74,19 @@ msgstr "Referans Ölçü Biriminden daha büyük"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Category"
 msgstr "Kategori"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__color
+msgid "Color"
+msgstr "Renk"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
+msgid "Combined Ratio"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
@@ -102,31 +115,6 @@ msgid "Days"
 msgstr "Gün"
 
 #. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__length
-msgid "Default Length"
-msgstr "Öntanımlı Uzunluk"
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__unit
-msgid "Default Units"
-msgstr "Öntanımlı Adet"
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__volume
-msgid "Default Volume"
-msgstr "Öntanımlı Hacim"
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__weight
-msgid "Default Weight"
-msgstr "Öntanımlı Ağırlık"
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__working_time
-msgid "Default Working Time"
-msgstr "Öntanımlı Çalışma Süresi"
-
-#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
@@ -136,6 +124,16 @@ msgstr "Görünüm Adı"
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozens"
 msgstr "Düzine"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_category__reference_uom_id
+msgid "Dummy field to keep track of reference uom change"
+msgstr "Referans ölçü birimi değişikliğini takip etmek için boş alan"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Group By"
+msgstr "Grupla"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
@@ -190,11 +188,6 @@ msgid "Length / Distance"
 msgstr "Uzunluk / Mesafe"
 
 #. module: uom
-#: model:uom.uom,name:uom.product_uom_litre
-msgid "Liters"
-msgstr "Litre"
-
-#. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "Çoklu Ölçü Birim Yönetimi"
@@ -211,6 +204,7 @@ msgstr "Ürün Ölçü Birimi Kategorileri"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 msgid "Ratio"
 msgstr "Oran"
 
@@ -220,6 +214,11 @@ msgid "Reference Unit of Measure for this category"
 msgstr "Bu kategori için Ölçü referans Birimi"
 
 #. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
+msgid "Reference UoM"
+msgstr "Referans Ölçü Birimi"
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
 msgid "Rounding Precision"
 msgstr "Yuvarlama Hassasiyeti"
@@ -227,12 +226,42 @@ msgstr "Yuvarlama Hassasiyeti"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Search UOM"
-msgstr ""
+msgstr "Ölçü Birimi Ara"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
+msgid "Search UoM Category"
+msgstr "Kategori Ölçü Birimi Ara"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
 msgstr "Ölçü referans Biriminden daha küçük"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"E.g. modifying the rounding could disturb your inventory balance.\n"
+"\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+msgstr ""
+"Bazı kritik alanlar değiştirildi %s.\n"
+"Mevcut verilerin bu değişiklikle güncelleştirilmeyeceğini unutmayın.\n"
+"\n"
+"Ölçü birimleri tüm sistemi etkilediğinden, bu kritik sorunlara neden olabilir.\n"
+"Örneğin. yuvarlamayı değiştirmek envanter bakiyenizi bozabilir.\n"
+"\n"
+"Bu nedenle, çalışan bir veritabanında temel ölçü birimlerinin değiştirilmesi önerilmez."
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_surface
+msgid "Surface"
+msgstr "Yüzey"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -249,6 +278,16 @@ msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "Ölçü birimi çevrimi için çevrim oranı 0 olamaz !"
 
 #. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
+msgstr ""
+" Aşağıdaki ölçü birimleri sistem tarafından kullanılır ve silinemez: %s\n"
+"Bunun yerine onları arşivleyebilirsiniz."
+
+#. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
 msgid "The reference unit must have a conversion factor equal to 1."
 msgstr "Referans birim 1 eşit bir dönüşüm faktörüne sahip olmalıdır."
@@ -263,25 +302,19 @@ msgstr "Yuvarlama hassasiyeti kesinlikle pozitif olmalıdır."
 #, python-format
 msgid ""
 "The unit of measure %s defined on the order line doesn't belong to the same "
-"category than the unit of measure %s defined on the product. Please correct "
+"category as the unit of measure %s defined on the product. Please correct "
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"Sipariş satırında tanımlanan %s ölçü birimi, ürün üzerinde tanımlanan ölçü "
+"birimi ile aynı kategoriye ait değildir. Lütfen sipariş satırında veya "
+"üründe tanımlanan %s ölçü birimini düzeltiniz, bunlar aynı kategoriye ait "
+"olmalıdır."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
 msgid "Type"
 msgstr "Tür"
-
-#. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
-msgid "Type of Measure"
-msgstr "Ölçü Türü"
-
-#. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
-msgid "Type of measurement category"
-msgstr "Ölçü türü kategorisi"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -294,7 +327,7 @@ msgstr ""
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
 msgid "Unit"
-msgstr "Adet"
+msgstr "Birim"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
@@ -309,10 +342,11 @@ msgstr "Kategori Ölçü Birimi"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "Adet"
+msgstr "Birim"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
@@ -337,28 +371,43 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
-"Aynı kategoriye ait ölçü birimleri birbirleri arasında dönüştürülebilir. Örneğin,  bu kategoride\n"
+"Ölçü birimleri, birbirine çevrilebilen aynı kategorilere aittir. Örneğin,  bu kategoride\n"
 "            <i>'Zaman'</i>, bu ölçü birimlerini elde edeceksiniz:\n"
 "            Saat. Gün."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
-msgid ""
-"UoM category %s should have a reference unit of measure. If you just created"
-" a new category, please record the 'reference' unit first."
+msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
+msgid "UoM category %s should have a reference unit of measure."
+msgstr " %s Ölçü birimi kategorisinin bir referans ölçü birimi olmalıdır."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr ""
+msgstr "%s UoM kategorisinde sadece bir referans ölçü birimi olmalıdır."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
+msgid "Uom"
+msgstr "Ölçü Birimi"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
 msgid "Volume"
 msgstr "Hacim"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr "%s için uyarı"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_kgm
@@ -369,25 +418,6 @@ msgstr "Ağırlık"
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
 msgstr "Çalışma Süresi"
-
-#. module: uom
-#: model:ir.model.constraint,message:uom.constraint_uom_category_uom_category_unique_type
-msgid "You can have only one category per measurement type."
-msgstr ""
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:0
-#, python-format
-msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr ""
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:0
-#, python-format
-msgid ""
-"You cannot delete this UoM as it is used by the system. You should rather "
-"archive it."
-msgstr ""
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -405,23 +435,38 @@ msgstr "cm"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
-msgid "fl oz"
-msgstr "sıvı ons"
+msgid "fl oz (US)"
+msgstr "sıvı ons (amerikan)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
-msgid "foot(ft)"
+msgid "ft"
 msgstr "ayak"
 
 #. module: uom
-#: model:uom.uom,name:uom.product_uom_gal
-msgid "gals"
+#: model:uom.uom,name:uom.uom_square_foot
+msgid "ft²"
 msgstr ""
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_foot
+msgid "ft³"
+msgstr "ayak³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_gal
+msgid "gal (US)"
+msgstr "galon (Amerikan)"
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
-msgid "inches"
-msgstr ""
+msgid "in"
+msgstr "içinde"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_inch
+msgid "in³"
+msgstr "inç³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -435,20 +480,40 @@ msgstr "km"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
-msgid "lbs"
-msgstr ""
+msgid "lb"
+msgstr "pound(ölçü)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
-msgid "miles"
+msgid "mi"
+msgstr "mil"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_millimeter
+msgid "mm"
 msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_meter
+msgid "m²"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_meter
+msgid "m³"
+msgstr "m³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
-msgid "ozs"
-msgstr ""
+msgid "oz"
+msgstr "ons"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
-msgid "qt"
-msgstr "mik"
+msgid "qt (US)"
+msgstr "çeyrek"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_yard
+msgid "yd"
+msgstr ""

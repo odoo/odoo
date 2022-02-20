@@ -3,17 +3,15 @@
 # 	* google_account
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2017
 # Umur Akın <umura@projetgrup.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -23,19 +21,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__create_uid
-msgid "Created by"
-msgstr "Oluşturan"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__create_date
-msgid "Created on"
-msgstr "Oluşturulma"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__display_name
-msgid "Display Name"
-msgstr "Görünüm Adı"
+#: code:addons/google_account/models/google_service.py:0
+#, python-format
+msgid "Google %s is not yet configured."
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
@@ -43,34 +32,23 @@ msgid "Google Service"
 msgstr "Google Hizmeti"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__id
-msgid "ID"
-msgstr "ID"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service____last_update
-msgid "Last Modified on"
-msgstr "Son Güncelleme"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__write_uid
-msgid "Last Updated by"
-msgstr "Son Güncelleyen"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__write_date
-msgid "Last Updated on"
-msgstr "Son Güncelleme"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:172
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
 msgstr ""
-"Yöntem desteklenmiyor [%s] [GET, POST, PUT, PATCH veya DELETE] içinde değil!"
+"Yöntem desteklenmiyor [% s] [GET, POST, PUT, PATCH veya DELETE] içinde "
+"değil!"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:120
+#: code:addons/google_account/models/google_service.py:0
+#, python-format
+msgid ""
+"Something went wrong during the token generation. Please request again an "
+"authorization code."
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -80,7 +58,7 @@ msgstr ""
 "olabilir"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:56
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -90,23 +68,7 @@ msgstr ""
 "geçersiz veya süresi dolmuş"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:150
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
-msgid ""
-"Something went wrong during your token generation. Maybe your Authorization "
-"Code is invalid or already expired [%s]"
+msgid "The refresh token for authentication is not set."
 msgstr ""
-"Kimliğinizi üretirken bir şeyler ters gitti. Belki Yetkilendirme Kodunuz "
-"geçti veya süresi dolmuş [1%s]"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:193
-#, python-format
-msgid "Something went wrong with your request to google"
-msgstr "Google da yaptığınız isteğinizle ilgili bir şeyler yanlış gitti"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:131
-#, python-format
-msgid "The account for the Google service '%s' is not configured."
-msgstr "Google hizmetleri için olan hesap '%s' yapılandırılmamış."

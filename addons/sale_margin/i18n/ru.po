@@ -3,17 +3,17 @@
 # 	* sale_margin
 # 
 # Translators:
+# Максим Дронь <dronmax@gmail.com>, 2017
 # Martin Trigaux, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
-# Konstantin Korovin <korovin74@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Konstantin Korovin <korovin74@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,20 +27,17 @@ msgid "Cost"
 msgstr "Стоимость"
 
 #. module: sale_margin
-#: model:ir.model.fields,help:sale_margin.field_sale_order__margin
-msgid ""
-"It gives profitability by calculating the difference between the Unit Price "
-"and the cost."
-msgstr ""
-"Это дает рентабельность как разницу между Стоимостью Единицы и "
-"себестоимостью."
-
-#. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_report__margin
 msgid "Margin"
 msgstr "Наценка"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin_percent
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__margin_percent
+msgid "Margin (%)"
+msgstr ""
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_report
@@ -50,7 +47,7 @@ msgstr "Отчет по анализу продаж"
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order
 msgid "Sales Order"
-msgstr "Заказ на продажу"
+msgstr "Заказ продаж"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order_line

@@ -3,15 +3,20 @@
 # 	* account_tax_python
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Алексей Билькевич (belskiy) <mmmbrsk@gmail.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Collex100, 2017
+# Sergey Vilizhanin, 2018
+# ILMIR <karamov@it-projects.info>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: ILMIR <karamov@it-projects.info>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,13 +31,22 @@ msgid ""
 "    - Group of Taxes: The tax is a set of sub taxes.\n"
 "    - Fixed: The tax amount stays the same whatever the price.\n"
 "    - Percentage of Price: The tax amount is a % of the price:\n"
-"        e.g 100 * 10% = 110 (not price included)\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
 "        e.g 110 / (1 + 10%) = 100 (price included)\n"
 "    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Группа налогов: налог представляет собой вложенный набор налогов.\n"
+"- Фиксированный: сумма налога остается неизменной независимо от цены.\n"
+"- Процент от цены: сумма налога составляет % от цены:\n"
+"например, 100 * (1 + 10%) = 110 (не включая цену)\n"
+"например, 110 / (1 + 10%) = 100 (включая цену)\n"
+"- Процент от включенной суммы налога: Сумма налога представляет собой деление цены:\n"
+"например, 180 / (1-10%) = 200 (не включая цену)\n"
+"например, 200 * (1-10%) = 180 (включая цену)"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable

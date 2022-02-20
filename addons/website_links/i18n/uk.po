@@ -3,18 +3,18 @@
 # 	* website_links
 # 
 # Translators:
+# ТАрас <tratatuta@i.ua>, 2018
 # Martin Trigaux, 2019
 # Bohdan Lisnenko, 2019
-# ТАрас <tratatuta@i.ua>, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:12+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,10 +45,9 @@ msgstr "к-сть натискань"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
+msgid "<span title=\"Track this page to count clicks\">Link Tracker</span>"
 msgstr ""
-"<span title=\"Track this page to count clicks\">Відстежуйте цю "
-"сторінку</span>"
+"<span title=\"Track this page to count clicks\">Посилання відстеження</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -116,6 +115,7 @@ msgstr "Копія"
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "Edit code"
@@ -155,7 +155,7 @@ msgstr "Останній тиждень"
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
-msgstr "Відстежувач посилань"
+msgstr "Відстеження посилань"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -181,9 +181,16 @@ msgid "Newest"
 msgstr "Найновіші"
 
 #. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#, python-format
+msgid "No data"
+msgstr "Немає даних"
+
+#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Recently Used"
-msgstr "Нещодавно використані"
+msgstr "Недавно використані"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -252,8 +259,8 @@ msgid ""
 " or in Odoo reports to track opportunities and related revenues."
 msgstr ""
 "Ці відстеження можна використовувати в Google Analytics для відстеження "
-"кліків і відвідувачів, а також у звітах Odoo, щоби відстежувати нагоди та "
-"пов'язані з ними доходи."
+"кліків і відвідувачів, а також у звітах Odoo, щоб відстежувати можливості та"
+" пов'язані з ними доходи."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -278,7 +285,7 @@ msgstr "Невизначений"
 #: code:addons/website_links/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage Statistics"
-msgstr ""
+msgstr "Статистика відвідування веб-сторінок"
 
 #. module: website_links
 #. openerp-web
@@ -324,7 +331,7 @@ msgstr "напр. Розсилка, Соціальна мережа, .."
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
-msgstr "напр. Реклама за червень, Зимова розсилка, .."
+msgstr "напр. Реклама за липень, Зимова розсилка, .."
 
 #. module: website_links
 #. openerp-web
@@ -335,8 +342,8 @@ msgstr "наприклад, пошукова система, веб-сайт, ..
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "e.g. https://www.odoo.com/page/contactus"
-msgstr "напр. https://www.odoo.com/page/contactus"
+msgid "e.g. https://www.odoo.com/contactus"
+msgstr "напр., https://www.odoo.com/contactus"
 
 #. module: website_links
 #. openerp-web

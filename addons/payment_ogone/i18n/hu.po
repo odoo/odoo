@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_ingenico
+# 	* payment_ogone
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
+# Martin Trigaux, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# krnkris, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: krnkris, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-05-11 12:35+0000\n"
+"Last-Translator: krnkris, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,123 +21,135 @@ msgstr ""
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: payment_ingenico
-#: code:addons/payment_ingenico/models/payment.py:0
-#, python-format
-msgid "; multiple order found"
-msgstr "; többszörös rendelést talált"
-
-#. module: payment_ingenico
-#: code:addons/payment_ingenico/models/payment.py:0
-#, python-format
-msgid "; no order found"
-msgstr "; nem talált rendelést"
-
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_userid
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "API User ID"
 msgstr "API felhasználó azonosító ID"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_password
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
 msgid "API User Password"
 msgstr "API felhasználó jelszó"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_alias_usage
-msgid "Alias Usage"
-msgstr "Álnév használat"
-
-#. module: payment_ingenico
-#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
-msgid "CVC"
-msgstr "CVC"
-
-#. module: payment_ingenico
-#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
-msgid "Card number"
-msgstr "Kártya szám"
-
-#. module: payment_ingenico
-#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
-msgid "Cardholder name"
-msgstr ""
-
-#. module: payment_ingenico
-#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
-msgid "Expires (MM / YY)"
-msgstr ""
-
-#. module: payment_ingenico
-#: model:ir.model.fields,help:payment_ingenico.field_payment_acquirer__ogone_alias_usage
-msgid ""
-"If you want to use Ogone Aliases, this default Alias Usage will be presented"
-" to the customer as the reason you want to keep his payment data"
-msgstr ""
-"Ha használni akarja az Ogone álneveket, ez az alapértelmezett álnév "
-"használat jelenik meg a vásárlónak azért, hogy meg szeretné tartani a "
-"fizetési adatait"
-
-#. module: payment_ingenico
-#: model:ir.model.fields.selection,name:payment_ingenico.selection__payment_acquirer__provider__ogone
-msgid "Ingenico"
-msgstr ""
-
-#. module: payment_ingenico
-#: code:addons/payment_ingenico/models/payment.py:0
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_acquirer.py:0
 #, python-format
-msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
+msgid "Could not establish the connection to the API."
 msgstr ""
-"Ogone: érvénytelen shasign ellenörzőkód, fogadott %s, kiszámított %s, erre "
-"az adatra %s"
 
-#. module: payment_ingenico
-#: code:addons/payment_ingenico/models/payment.py:0
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
-msgid "Ogone: received data for reference %s"
-msgstr "Ogone:fogadott adat ehhez a referenciához %s"
-
-#. module: payment_ingenico
-#: code:addons/payment_ingenico/models/payment.py:0
-#, python-format
-msgid ""
-"Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
-"(%s)"
+msgid "No transaction found matching reference %s."
 msgstr ""
-"Ogone: fogadott adat elveszett hivatkozással (%s) vagy pay_id (%s) vagy "
-"shasign ellenőrző kód (%s)"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_pspid
+#. module: payment_ogone
+#: model:account.payment.method,name:payment_ogone.payment_method_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_acquirer__provider__ogone
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "PSPID"
 msgstr "PSPID"
 
-#. module: payment_ingenico
-#: model:ir.model,name:payment_ingenico.model_payment_acquirer
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Fizetést lebonyolító"
+msgstr "Fizetési szolgáltató"
 
-#. module: payment_ingenico
-#: model:ir.model,name:payment_ingenico.model_payment_token
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Fizetési módok"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
 msgid "Payment Token"
 msgstr ""
 
-#. module: payment_ingenico
-#: model:ir.model,name:payment_ingenico.model_payment_transaction
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Fizetési tranzakció"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__provider
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Szolgáltató"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_shakey_in
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/controllers/main.py:0
+#, python-format
+msgid ""
+"Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
+"%(data)s"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Received feedback data with unknown type: %s"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
 msgid "SHA Key IN"
 msgstr "SHA kulcs Be (IN)"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_shakey_out
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
 msgid "SHA Key OUT"
 msgstr "SHA kulcs Ki (OUT)"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_token.py:0
+#, python-format
+msgid "Saved payment methods cannot be restored once they have been archived."
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Storing your payment details is necessary for future use."
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
+msgid "The ID solely used to identify the API user with Ogone"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
+msgid "The ID solely used to identify the account with Ogone"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#, python-format
+msgid "The communication with the API failed."
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The payment has been declined: %s"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr ""

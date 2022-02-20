@@ -3,16 +3,20 @@
 # 	* payment_adyen
 # 
 # Translators:
-# Martin Trigaux, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2018
+# Gary Wei <Gary.wei@elico-corp.com>, 2018
+# Martin Trigaux, 2021
+# inspur qiuguodong <qiuguodong@inspur.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,52 +25,57 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:0
-#, python-format
-msgid "; multiple order found"
-msgstr "; 找到多个订单"
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_api_key
+msgid "API Key"
+msgstr "API密钥"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:0
-#, python-format
-msgid "; no order found"
-msgstr "; 没有订单"
-
-#. module: payment_adyen
+#: model:account.payment.method,name:payment_adyen.payment_method_adyen
 #: model:ir.model.fields.selection,name:payment_adyen.selection__payment_acquirer__provider__adyen
 msgid "Adyen"
 msgstr "Adyen"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:0
-#, python-format
-msgid "Adyen: feedback error"
-msgstr "Adyen: 反馈出错"
-
-#. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:0
-#, python-format
-msgid "Adyen: invalid merchantSig, received %s, computed %s"
-msgstr "Adyen: 无效的 merchantSig，已接收 %s, 已计算 %s"
-
-#. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:0
-#, python-format
-msgid "Adyen: received data for reference %s"
-msgstr "Adyen: 接收数据供参考%s"
-
-#. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:0
+#: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid ""
-"Adyen: received data with missing reference (%s) or missing pspReference "
-"(%s)"
-msgstr "Adyen：已接收缺少参考 (%s) 或缺少 PSP 参考 (%s) 的数据"
+"An error occurred during the processing of your payment. Please try again."
+msgstr "在处理您的付款过程中发生了一个错误。请再试一次。"
 
 #. module: payment_adyen
-#: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
-msgid "How to configure your Adyen account?"
-msgstr "如何设置您的Adyen账户？"
+#. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#, python-format
+msgid "An error occurred when displayed this payment form."
+msgstr "显示此付款表单时发生了一个错误。"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_checkout_api_url
+msgid "Checkout API URL"
+msgstr "结账的API网址"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_client_key
+msgid "Client Key"
+msgstr "客户端密钥"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_acquirer.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "无法建立与API的连接。"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_hmac_key
+msgid "HMAC Key"
+msgstr "HMAC密钥"
+
+#. module: payment_adyen
+#. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#, python-format
+msgid "Incorrect Payment Details"
+msgstr "不正确的付款细节"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
@@ -74,9 +83,25 @@ msgid "Merchant Account"
 msgstr "商业帐户"
 
 #. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "没有发现与参考文献%s相匹配的交易。"
+
+#. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "付款收单单位"
+msgstr "付款收单方"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_account_payment_method
+msgid "Payment Methods"
+msgstr "付款方式"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_token
+msgid "Payment Token"
+msgstr "付款令牌"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction
@@ -84,16 +109,136 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_adyen
+#. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#, python-format
+msgid "Please verify your payment details."
+msgstr "请核实您的付款细节。"
+
+#. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__provider
 msgid "Provider"
-msgstr "供应商"
+msgstr "服务商"
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_code
-msgid "Skin Code"
-msgstr "皮肤代码"
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment state: %s"
+msgstr "收到的数据为无效的支付状态:%s"
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_hmac_key
-msgid "Skin HMAC Key"
-msgstr "皮肤HMAC密钥"
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing merchant reference"
+msgstr "收到的数据中缺少商户参考信息"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing payment state."
+msgstr "收到的数据中缺少支付状态。"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Received refund data with missing transaction values"
+msgstr "收到的退款数据中缺少交易值"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/controllers/main.py:0
+#, python-format
+msgid "Received tampered payment request data."
+msgstr "收到了被篡改的付款请求数据。"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_recurring_api_url
+msgid "Recurring API URL"
+msgstr "经常性的API网址"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_token.py:0
+#, python-format
+msgid "Saved payment methods cannot be restored once they have been deleted."
+msgstr "已保存的付款方式一旦被删除就无法恢复。"
+
+#. module: payment_adyen
+#. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#, python-format
+msgid "Server Error"
+msgstr "服务器错误"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
+msgid "Shopper Reference"
+msgstr "购物者参考"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_api_key
+msgid "The API key of the webservice user"
+msgstr "网络服务用户的API密钥"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_hmac_key
+msgid "The HMAC key of the webhook"
+msgstr "Webhook的HMAC密钥"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "与该收单机构一起使用的支付服务提供商"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_checkout_api_url
+msgid "The base URL for the Checkout API endpoints"
+msgstr "Checkout API端点的基本URL"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_recurring_api_url
+msgid "The base URL for the Recurring API endpoints"
+msgstr "Recurring API端点的基本URL"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_client_key
+msgid "The client key of the webservice user"
+msgstr "网络服务用户的客户密钥"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_merchant_account
+msgid "The code of the merchant account to use with this acquirer"
+msgstr "在该收单机构中使用的商户账户的代码"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_acquirer.py:0
+#, python-format
+msgid "The communication with the API failed."
+msgstr "与API的通信失败。"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "该交易没有与令牌挂钩。"
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
+msgid "The unique reference of the partner owning this token"
+msgstr "拥有此令牌的伙伴的唯一参考。"
+
+#. module: payment_adyen
+#. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#, python-format
+msgid "We are not able to process your payment."
+msgstr "我们无法处理您的付款。"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Your payment was refused. Please try again."
+msgstr "您的付款被拒绝。请再试一次。"

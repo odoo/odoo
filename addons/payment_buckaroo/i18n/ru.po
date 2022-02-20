@@ -3,16 +3,19 @@
 # 	* payment_buckaroo
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Collex100, 2018
+# Sergey Vilizhanin, 2018
+# Irina Fedulova <istartlin@gmail.com>, 2021
+# ILMIR <karamov@it-projects.info>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2019\n"
+"POT-Creation-Date: 2022-01-17 16:38+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,49 +24,45 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:0
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
-msgid "; multiple order found"
-msgstr "; найден многократный заказ"
+msgid ""
+"An error occurred during processing of your payment (code %s). Please try "
+"again."
+msgstr ""
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:0
-#, python-format
-msgid "; no order found"
-msgstr "; заказ не найден"
-
-#. module: payment_buckaroo
+#: model:account.payment.method,name:payment_buckaroo.payment_method_buckaroo
 #: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
 msgid "Buckaroo"
 msgstr "Buckaroo"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:0
-#, python-format
-msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_secret_key
+msgid "Buckaroo Secret Key"
 msgstr ""
-"Buckaroo: недопустимый shasign, получил %s, вычисленный %s, для данных %s"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:0
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
-msgid "Buckaroo: received data for reference %s"
-msgstr "Buckaroo: полученные данные для ссылки %s"
+msgid "Invalid shasign: received %(sign)s, computed %(check)s"
+msgstr ""
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:0
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
-msgid ""
-"Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
-"shasign (%s)"
-msgstr ""
-"Buckaroo: полученные данные с отсутствующей ссылки (%s) или pay_id (%s) или "
-"shasign (%s)"
+msgid "No transaction found matching reference %s."
+msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Платежная система"
+msgstr "Платежи клиентов"
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Методы Оплаты"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
@@ -76,11 +75,46 @@ msgid "Provider"
 msgstr "Провайдер"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
-msgid "SecretKey"
-msgstr "SecretKey"
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference (%(ref)s) or shasign (%(sign)s)"
+msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
-msgid "WebsiteKey"
-msgstr "WebsiteKey"
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing transaction keys"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_acquirer_form
+msgid "Secret Key"
+msgstr "Секретный ключ"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+"Поставщик платежных услуг для использования с этой платежной системой "
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
+msgid "The key solely used to identify the website with Buckaroo"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Unknown status code: %s"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
+msgid "Website Key"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Your payment was refused (code %s). Please try again."
+msgstr ""
