@@ -258,20 +258,19 @@ class BaseAutomation(models.Model):
         # execute server actions
         action_server = self.action_server_id
         if action_server:
-            for record in records:
-                # we process the action if any watched field has been modified
-                if self._check_trigger_fields(record):
-                    ctx = {
-                        'active_model': record._name,
-                        'active_ids': record.ids,
-                        'active_id': record.id,
-                        'domain_post': domain_post,
-                    }
-                    try:
-                        action_server.sudo().with_context(**ctx).run()
-                    except Exception as e:
-                        self._add_postmortem_action(e)
-                        raise e
+            # we process the action if any watched field has been modified
+            records = records.filtered(lambda record: self._check_trigger_fields(record))
+            if records:
+                ctx = {
+                    'active_model': records._name,
+                    'active_ids': records.ids,
+                    'domain_post': domain_post,
+                }
+                try:
+                    action_server.sudo().with_context(**ctx).run()
+                except Exception as e:
+                    self._add_postmortem_action(e)
+                    raise e
 
     def _check_trigger_fields(self, record):
         """ Return whether any of the trigger fields has been modified on ``record``. """

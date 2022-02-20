@@ -55,9 +55,9 @@ class BaseAutomationTest(TransactionCaseWithUserDemo):
                 'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'state': 'code',
                 'code': """
-record = model.browse(env.context['active_id'])
-if 'partner_id' in env.context['old_values'][record.id]:
-    record.write({'state': 'draft'})""",
+for record in model.browse(env.context['active_ids']):
+    if 'partner_id' in env.context['old_values'][record.id]:
+        record.write({'state': 'draft'})""",
                 'trigger': 'on_write',
                 'active': True,
             }, {
@@ -72,9 +72,9 @@ if 'partner_id' in env.context['old_values'][record.id]:
                 'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'state': 'code',
                 'code': """
-record = model.browse(env.context['active_id'])
-if 'user_id' in env.context['old_values'][record.id]:
-    record.write({'is_assigned_to_admin': (record.user_id.id == 1)})""",
+for record in model.browse(env.context['active_ids']):
+    if 'user_id' in env.context['old_values'][record.id]:
+        record.write({'is_assigned_to_admin': (record.user_id.id == 1)})""",
                 'trigger': 'on_write',
                 'active': True,
             }, {
@@ -83,8 +83,8 @@ if 'user_id' in env.context['old_values'][record.id]:
                 'trigger_field_ids': [(4, self.env.ref('test_base_automation.field_base_automation_lead_test__state').id)],
                 'state': 'code',
                 'code': """
-record = model.browse(env.context['active_id'])
-record['name'] = record.name + 'X'""",
+for record in model.browse(env.context['active_ids']):
+    record['name'] = record.name + 'X'""",
                 'trigger': 'on_write',
                 'active': True,
             }, {
@@ -94,8 +94,8 @@ record['name'] = record.name + 'X'""",
                 'trigger_field_ids': [(4, self.env.ref('test_base_automation.field_base_automation_lead_test__deadline').id)],
                 'state': 'email',
                 'code': """
-record = model.browse(env.context['active_id'])
-record['name'] = record.name + 'X'""",
+for record in model.browse(env.context['active_ids']):
+    record['name'] = record.name + 'X'""",
                 'trigger': 'on_write',
                 'active': True,
                 'filter_domain': "[('deadline', '!=', False)]",
