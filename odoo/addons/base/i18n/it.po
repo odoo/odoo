@@ -884,6 +884,9 @@ msgid ""
 "        Enterprise digest data\n"
 "    "
 msgstr ""
+"\n"
+"        Dati di riepilogo per Enterprise\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -1918,6 +1921,8 @@ msgid ""
 "\n"
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
+"\n"
+"Aggiunge informazioni sul rapporto tra ordini di vendita e di acquisto quando, in uno dei prodotti venduti, viene attivato \"Su ordine (MTO)\".\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -3830,10 +3835,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"In molti paesi, una nota di debito viene usata come aumento degli importi di una fattura preesistente\n"
-"o, in alcuni casi, per annullarne una di credito.\n"
-"È come una normale fattura, ma è necessario tenere traccia del collegamento con la normale fattura.\n"
-"Il wizard impiegato è simile a quello delle note di credito."
+"In molte nazioni la nota di debito viene utilizzata come incremento degli importi di una fattura esistente \n"
+"o, in alcuni casi specifici, per annullare una nota di credito. \n"
+"È come una normale fattura, ma è necessario tenere traccia del collegamento con la fattura originale.  \n"
+"Utilizza una procedura guidata simile a quella della nota di credito.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -8033,12 +8039,16 @@ msgid ""
 "<code>model</code>: Odoo Model of the record on which the action is "
 "triggered; is a void recordset"
 msgstr ""
+"<code>model</code>: modello Odoo del record sul quale viene attivata "
+"l'azione; è un insieme di record vuoto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
 msgstr ""
+"<code>record</code>: record sul quale viene attivata l'azione; può essere "
+"vuoto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -8046,6 +8056,8 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
 msgstr ""
+"<code>records</code>: insieme contenente tutti i record sui quali viene "
+"attivata l'azione in modalità multi; può essere vuoto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -8629,6 +8641,8 @@ msgstr "Utente associato al contatto"
 #, python-format
 msgid "A valid email is required for find_or_create to work properly."
 msgstr ""
+"Per far funzionare correttamente find_or_create è richiesta una e-mail "
+"valida."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__a0
@@ -13559,7 +13573,7 @@ msgstr "Mostra icone telefono"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display the country image if the field is present on the record"
-msgstr "Visualizza l'immagine del paese se il campo è presente sul record"
+msgstr "Visualizza immagine della nazione se il campo è presente nel record"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -16796,7 +16810,7 @@ msgstr "Importa traduzione"
 #. module: base
 #: model:ir.module.module,description:base.module_currency_rate_live
 msgid "Import exchange rates from the Internet.\n"
-msgstr "Importa tassi di cambio da Internet.\n"
+msgstr "Importazione tassi di cambio da Internet.\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi
@@ -18925,7 +18939,7 @@ msgstr "Automazione marketing"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_marketing_automation
 msgid "Marketing Automation Tests"
-msgstr "Test automazione marketing"
+msgstr "Test di automazione marketing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma
@@ -22625,7 +22639,7 @@ msgstr "Localizzazione libro paga"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_edit_lines
 msgid "Payroll: Edit lines - Recompute work entries"
-msgstr ""
+msgstr "Libro paga: modifica righe - Ricalcolo voci lavorative"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payulatam
@@ -23495,7 +23509,7 @@ msgstr "Campo QWeb monetario"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_relative
 msgid "Qweb Field Relative"
-msgstr ""
+msgstr "Campo QWeb relativo"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_selection
@@ -26850,9 +26864,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
-"Questo modulo contiene test relativi alla vista griglia web. Questi sono\n"
-"presenti in un modulo separato poiché contiene modelli usati solo per eseguire\n"
-"test indipendentemente dagli aspetti funzionali degli altri modelli. "
+"Questo modulo contiene test relativi alla vista griglia web. Si\n"
+"trovano in un modulo separato in quanto include modelli utilizzati solo per\n"
+"eseguire test indipendenti da aspetti funzionali di altri modelli."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_timer
@@ -28336,7 +28350,7 @@ msgstr "Vista \"%(name)s\" accessibile solo ai gruppi %(groups)s "
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "View '%(name)s' is private"
-msgstr ""
+msgstr "La vista \"%(name)s\" è privata"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch
@@ -28345,7 +28359,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View Architecture"
-msgstr "Visualizza architettura"
+msgstr "Architettura vista"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
@@ -28417,9 +28431,9 @@ msgid ""
 "Views allows you to personalize each view of Odoo. You can add new fields, "
 "move fields, rename them or delete the ones that you do not need."
 msgstr ""
-"Questo menu ti consente di personalizzare i modi di visualizzazione. Puoi "
-"aggiungere nuovi campi, spostare dei campi, rinominarli o eliminare quelli "
-"che non sono necessari."
+"Viste consente di personalizzare tutte le viste di Odoo. È possibile "
+"aggiungere nuovi campi, spostarli, rinominarli o eliminare quelli non "
+"necessari."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_children_ids
@@ -28531,12 +28545,13 @@ msgstr "Gantt web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_grid
 msgid "Web Grid Tests"
-msgstr "Test Web Grid"
+msgstr "Test per griglia web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_grid
 msgid "Web Grid Tests: performances and tests specific to the grid view"
 msgstr ""
+"Test per griglia web: prestazioni e test specifici per la vista griglia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__web_icon
@@ -28733,8 +28748,8 @@ msgid ""
 "When no specific mail server is requested for a mail, the highest priority "
 "one is used. Default priority is 10 (smaller number = higher priority)"
 msgstr ""
-"Quando nessun server mail è richiesto dalla email, quello a priorità più "
-"alta viene utilizzato. La priorità predefinita è 10 (numero piccolo = alta "
+"Quando per una e-mail non è richiesto uno specifico server, viene utilizzato"
+" quello con priorità più alta. La predefinita è 10 (numero basso = alta "
 "priorità)"
 
 #. module: base
