@@ -759,6 +759,9 @@ var SnippetEditor = Widget.extend({
             if (!val.selector.is(this.$target)) {
                 return;
             }
+            if (val.data.string) {
+                $optionsSection[0].querySelector('we-title > span').textContent = val.data.string;
+            }
             if (val['drop-near']) {
                 this.selectorSiblings.push(val['drop-near']);
             }
