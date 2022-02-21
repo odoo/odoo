@@ -555,3 +555,41 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2022-01-01'):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 25, 'The maximum number of days should be reached and kept.')
+
+    def test_accrual_skipped_period(self):
+        # Test that when an allocation is made in the past and the second level is technically reached
+        #  that the first level is not skipped completely.
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': 15,
+                'added_value_type': 'days',
+                'frequency': 'biyearly',
+                'maximum_leave': 100,
+                'action_with_unused_accruals': 'postponed',
+            }), (0, 0, {
+                'start_count': 4,
+                'start_type': 'month',
+                'added_value': 10,
+                'added_value_type': 'days',
+                'frequency': 'biyearly',
+                'maximum_leave': 500,
+                'action_with_unused_accruals': 'postponed',
+            })],
+        })
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual Allocation - Test',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+            'date_from': datetime.date(2020, 8, 16),
+        })
+        allocation.action_confirm()
+        allocation.action_validate()
+        with freeze_time('2022-1-10'):
+            allocation._update_accrual()
+        self.assertAlmostEqual(allocation.number_of_days, 30.79, 2, "Invalid number of days")
