@@ -70,10 +70,8 @@ const dragAndDrop = async (kanban, selector, { after, before, inside }) => {
 
     // Mouse down on main target then move to a far away position to initiate the drag
     const el = kanban.el.querySelector(selector);
-    await triggerEvents(el, null, [
-        ["mousedown", getPos(el)],
-        ["mousemove", { clientX: -999, clientY: -999 }],
-    ]);
+    await triggerEvent(el, null, "mousedown", getPos(el));
+    await triggerEvent(window, null, "mousemove", { clientX: -999, clientY: -999 });
 
     // Enter the target list (iff other list)
     const initList = el.closest(".o_kanban_group");
@@ -84,11 +82,9 @@ const dragAndDrop = async (kanban, selector, { after, before, inside }) => {
 
     // Move, enter and drop the element on the target
     const targetPos = getPos(target, Boolean(after || inside));
-    await triggerEvents(el, null, [
-        ["mousemove", targetPos],
-        ["mouseenter", targetPos],
-        ["mouseup", targetPos],
-    ]);
+    await triggerEvent(window, null, "mousemove", targetPos);
+    await triggerEvent(target, null, "mouseenter", targetPos);
+    await triggerEvent(el, null, "mouseup", targetPos);
 };
 
 // Record
@@ -3592,7 +3588,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["resequence"]);
     });
 
-    QUnit.skipWOWL("drag and drop a record, grouped by selection", async (assert) => {
+    QUnit.test("drag and drop a record, grouped by selection", async (assert) => {
         assert.expect(6);
 
         const kanban = await makeView({
@@ -3614,26 +3610,24 @@ QUnit.module("Views", (hooks) => {
                     return true;
                 }
                 if (args.model === "partner" && args.method === "write") {
-                    assert.deepEqual(args.args[1], { state: "def" });
+                    assert.deepEqual(args.args[1], { state: "abc" });
                 }
             },
         });
-        assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        assert.containsOnce(kanban, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
 
-        const $record = kanban.el.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-        );
-        const $group = kanban.el.querySelector(".o_kanban_group:nth-child(2)");
-        await testUtils.dom.dragAndDrop($record, $group);
-        await nextTick(); // wait for resequence after drag and drop
+        // first record of second column moved to the bottom of first column
+        await dragAndDrop(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", {
+            inside: ".o_kanban_group:first-child",
+        });
 
+        assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.containsNone(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
-        assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
     });
 
-    QUnit.skipWOWL("prevent drag and drop of record if grouped by readonly", async (assert) => {
-        assert.expect(12);
+    QUnit.test("prevent drag and drop of record if grouped by readonly", async (assert) => {
+        assert.expect(14);
 
         serverData.models.partner.fields.foo.readonly = true;
         const kanban = await makeView({
@@ -3649,6 +3643,7 @@ QUnit.module("Views", (hooks) => {
                 "</div></t>" +
                 "</templates>" +
                 "</kanban>",
+            groupBy: ["state"],
             async mockRPC(route, args) {
                 if (route === "/web/dataset/resequence") {
                     return true;
@@ -3658,64 +3653,56 @@ QUnit.module("Views", (hooks) => {
                 }
             },
         });
-        // simulate an update coming from the searchview, with another groupby given
-        await reload(kanban, { groupBy: ["state"] });
-        assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
-        assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
 
-        // drag&drop a record in another column
-        const $record = kanban.el.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-        );
-        const $group = kanban.el.querySelector(".o_kanban_group:nth-child(2)");
-        await testUtils.dom.dragAndDrop($record, $group);
-        await nextTick(); // wait for resequence after drag and drop
+        assert.containsOnce(kanban, ".o_kanban_group:first-child .o_kanban_record");
+        assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        assert.containsN(kanban, ".o_kanban_group:nth-child(3) .o_kanban_record", 2);
+
+        // first record of first column moved to the bottom of second column
+        await dragAndDrop(kanban, ".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:nth-child(2)",
+        });
+
         // should not be draggable
+        assert.containsOnce(kanban, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
-        assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        assert.containsN(kanban, ".o_kanban_group:nth-child(3) .o_kanban_record", 2);
 
-        // simulate an update coming from the searchview, with another groupby given
         await reload(kanban, { groupBy: ["foo"] });
-        assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
-        assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
 
-        // drag&drop a record in another column
-        $record = kanban.el.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-        );
-        $group = kanban.el.querySelector(".o_kanban_group:nth-child(2)");
-        await testUtils.dom.dragAndDrop($record, $group);
-        await nextTick(); // wait for resequence after drag and drop
+        assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        assert.containsOnce(kanban, ".o_kanban_group:nth-child(3) .o_kanban_record");
+
+        // first record of first column moved to the bottom of second column
+        await dragAndDrop(kanban, ".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:nth-child(2)",
+        });
+
         // should not be draggable
+        assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
-        assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        assert.containsOnce(kanban, ".o_kanban_group:nth-child(3) .o_kanban_record");
 
-        // drag&drop a record in the same column
-        const $record1 = kanban.el.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
+        const firstGroup = kanban.el.querySelector(".o_kanban_group:first-child");
+        assert.deepEqual(
+            [...firstGroup.children].map((c) => c.innerText),
+            ["blip", "blipdef", "blipghi"]
         );
-        const $record2 = kanban.el.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:nth-child(2)"
-        );
-        assert.strictEqual($record1.innerText, "blipDEF", "first record should be DEF");
-        assert.strictEqual($record2.innerText, "blipGHI", "second record should be GHI");
-        await testUtils.dom.dragAndDrop($record2, $record1, { position: "top" });
+
+        // second record of first column moved at first place
+        await dragAndDrop(kanban, ".o_kanban_group:first-child .o_kanban_record:last-child", {
+            before: ".o_kanban_group:first-child .o_kanban_record",
+        });
+
         // should still be able to resequence
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record:first-child")
-                .innerText,
-            "blipGHI",
-            "records should have been resequenced"
-        );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record:nth-child(2)")
-                .innerText,
-            "blipDEF",
-            "records should have been resequenced"
+        assert.deepEqual(
+            [...firstGroup.children].map((c) => c.innerText),
+            ["blip", "blipghi", "blipdef"]
         );
     });
 
-    QUnit.skipWOWL("prevent drag and drop if grouped by date/datetime field", async (assert) => {
+    QUnit.test("prevent drag and drop if grouped by date/datetime field", async (assert) => {
         assert.expect(10);
 
         serverData.models.partner.records[0].date = "2017-01-08";
@@ -3741,80 +3728,76 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["date:month"],
         });
 
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group").length,
-            2,
-            "should have 2 columns"
-        );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(kanban, ".o_kanban_group", 2);
+        assert.containsN(
+            kanban,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
             2,
             "1st column should contain 2 records of January month"
         );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(
+            kanban,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
             2,
             "2nd column should contain 2 records of February month"
         );
 
         // drag&drop a record in another column
-        const $record = kanban.el.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-        );
-        const $group = kanban.el.querySelector(".o_kanban_group:nth-child(2)");
-        await testUtils.dom.dragAndDrop($record, $group);
+        await dragAndDrop(kanban, ".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:nth-child(2)",
+        });
 
         // should not drag&drop record
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(
+            kanban,
+            ".o_kanban_group:first-child .o_kanban_record",
             2,
-            "Should remain same records in first column(2 records)"
+            "Should remain same records in first column (2 records)"
         );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(
+            kanban,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
             2,
-            "Should remain same records in 2nd column(2 record)"
+            "Should remain same records in 2nd column (2 record)"
         );
 
         await reload(kanban, { groupBy: ["datetime:month"] });
 
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group").length,
-            2,
-            "should have 2 columns"
-        );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(kanban, ".o_kanban_group", 2);
+        assert.containsN(
+            kanban,
+            ".o_kanban_group:first-child .o_kanban_record",
             2,
             "1st column should contain 2 records of January month"
         );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(
+            kanban,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
             2,
             "2nd column should contain 2 records of February month"
         );
 
         // drag&drop a record in another column
-        $record = kanban.el.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-        );
-        $group = kanban.el.querySelector(".o_kanban_group:nth-child(2)");
-        await testUtils.dom.dragAndDrop($record, $group);
+        await dragAndDrop(kanban, ".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:nth-child(2)",
+        });
 
         // should not drag&drop record
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(
+            kanban,
+            ".o_kanban_group:first-child .o_kanban_record",
             2,
             "Should remain same records in first column(2 records)"
         );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(
+            kanban,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
             2,
             "Should remain same records in 2nd column(2 record)"
         );
     });
 
-    QUnit.skipWOWL("prevent drag and drop if grouped by many2many field", async (assert) => {
+    QUnit.test("prevent drag and drop if grouped by many2many field", async (assert) => {
         assert.expect(13);
 
         serverData.models.partner.records[0].category_ids = [6, 7];
@@ -3836,56 +3819,32 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["category_ids"],
         });
 
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group").length,
-            2,
-            "should have 2 columns"
-        );
+        assert.containsN(kanban, ".o_kanban_group", 2);
         assert.strictEqual(
             kanban.el.querySelector(".o_kanban_group:first-child .o_column_title").innerText,
             "gold",
             "first column should have correct title"
         );
         assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:last .o_column_title").innerText,
+            kanban.el.querySelector(".o_kanban_group:last-child .o_column_title").innerText,
             "silver",
             "second column should have correct title"
         );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:first-child .o_kanban_record").innerText,
-            "yopblip",
-            "first column should have 2 records"
-        );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:last .o_kanban_record").innerText,
-            "yopgnapblip",
-            "second column should have 3 records"
-        );
+        assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(kanban, ".o_kanban_group:last-child .o_kanban_record", 3);
 
         // drag&drop a record in another column
-        let $record = kanban.el.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-        );
-        let $group = kanban.el.querySelector(".o_kanban_group:nth-child(2)");
-        await testUtils.dom.dragAndDrop($record, $group);
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
-            2,
-            "1st column should contain 2 records"
-        );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
-            3,
-            "2nd column should contain 3 records"
-        );
+        await dragAndDrop(kanban, ".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:nth-child(2)",
+        });
+
+        assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(kanban, ".o_kanban_group:last-child .o_kanban_record", 3);
 
         // Sanity check: groupby a non m2m field and check dragdrop is working
         await reload(kanban, { groupBy: ["state"] });
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group").length,
-            3,
-            "should have 3 columns"
-        );
+
+        assert.containsN(kanban, ".o_kanban_group", 3);
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group .o_column_title")].map(
                 (el) => el.innerText
@@ -3904,11 +3863,11 @@ QUnit.module("Views", (hooks) => {
             2,
             "last column should have 2 records"
         );
-        $record = kanban.el.querySelector(
-            ".o_kanban_group:first-child .o_kanban_record:first-child"
-        );
-        $group = kanban.el.querySelector(".o_kanban_group:last-child");
-        await testUtils.dom.dragAndDrop($record, $group);
+
+        await dragAndDrop(kanban, ".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:last-child",
+        });
+
         assert.containsNone(
             kanban,
             ".o_kanban_group:first-child .o_kanban_record",
@@ -3922,7 +3881,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "drag and drop record if grouped by date/time field with attribute allow_group_range_value: true",
         async (assert) => {
             assert.expect(14);
@@ -3951,85 +3910,79 @@ QUnit.module("Views", (hooks) => {
                     "</templates>" +
                     "</kanban>",
                 groupBy: ["date:month"],
-                async mockRPC(route, args) {
+                async mockRPC(route, { model, method, args }) {
                     if (route === "/web/dataset/resequence") {
                         assert.ok(true, "should call resequence");
                         return true;
                     }
-                    if (args.model === "partner" && args.method === "write") {
-                        if ("date" in args.args[1]) {
-                            assert.deepEqual(args.args[1], { date: "2017-02-28" });
-                        } else if ("datetime" in args.args[1]) {
-                            assert.deepEqual(args.args[1], { datetime: "2017-02-28 23:59:59" });
+                    if (model === "partner" && method === "write") {
+                        if ("date" in args[1]) {
+                            assert.deepEqual(args[1], { date: "2017-02-28" });
+                        } else if ("datetime" in args[1]) {
+                            assert.deepEqual(args[1], { datetime: "2017-02-28 23:59:59" });
                         }
                     }
-                    return this._super(route, args);
                 },
             });
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group").length,
-                2,
-                "should have 2 columns"
-            );
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+
+            assert.containsN(kanban, ".o_kanban_group", 2);
+            assert.containsN(
+                kanban,
+                ".o_kanban_group:first-child .o_kanban_record",
                 2,
                 "1st column should contain 2 records of January month"
             );
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+            assert.containsN(
+                kanban,
+                ".o_kanban_group:nth-child(2) .o_kanban_record",
                 2,
                 "2nd column should contain 2 records of February month"
             );
 
-            const $record = kanban.el.querySelector(
-                ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-            );
-            const $group = kanban.el.querySelector(".o_kanban_group:nth-child(2)");
-            await testUtils.dom.dragAndDrop($record, $group);
+            await dragAndDrop(kanban, ".o_kanban_group:first-child .o_kanban_record", {
+                inside: ".o_kanban_group:nth-child(2)",
+            });
 
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
-                1,
+            assert.containsOnce(
+                kanban,
+                ".o_kanban_group:first-child .o_kanban_record",
                 "Should only have one record remaining"
             );
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+            assert.containsN(
+                kanban,
+                ".o_kanban_group:nth-child(2) .o_kanban_record",
                 3,
                 "Should now have 3 records"
             );
 
             await reload(kanban, { groupBy: ["datetime:month"] });
 
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group").length,
-                2,
-                "should have 2 columns"
-            );
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+            assert.containsN(kanban, ".o_kanban_group", 2);
+            assert.containsN(
+                kanban,
+                ".o_kanban_group:first-child .o_kanban_record",
                 2,
                 "1st column should contain 2 records of January month"
             );
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+            assert.containsN(
+                kanban,
+                ".o_kanban_group:nth-child(2) .o_kanban_record",
                 2,
                 "2nd column should contain 2 records of February month"
             );
 
-            $record = kanban.el.querySelector(
-                ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-            );
-            $group = kanban.el.querySelector(".o_kanban_group:nth-child(2)");
-            await testUtils.dom.dragAndDrop($record, $group);
+            await dragAndDrop(kanban, ".o_kanban_group:first-child .o_kanban_record", {
+                inside: ".o_kanban_group:nth-child(2)",
+            });
 
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
-                1,
+            assert.containsOnce(
+                kanban,
+                ".o_kanban_group:first-child .o_kanban_record",
                 "Should only have one record remaining"
             );
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+            assert.containsN(
+                kanban,
+                ".o_kanban_group:nth-child(2) .o_kanban_record",
                 3,
                 "Should now have 3 records"
             );

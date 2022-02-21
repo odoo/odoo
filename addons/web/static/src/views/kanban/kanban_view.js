@@ -2,7 +2,8 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { combineAttributes, isAttr, XMLParser } from "@web/core/utils/xml";
+import { combineAttributes, isTruthy, XMLParser } from "@web/core/utils/xml";
+import { Field } from "@web/fields/field";
 import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
@@ -11,9 +12,8 @@ import { getActiveActions } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { Layout } from "@web/views/layout";
-import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewNotFoundError } from "@web/views/view";
-import { Field } from "@web/fields/field";
+import { useViewButtons } from "@web/views/view_button/hook";
 
 const { Component } = owl;
 
@@ -52,7 +52,7 @@ const applyDefaultAttributes = (kanbanBox) => {
     kanbanBox.setAttribute("tabindex", 0);
     kanbanBox.setAttribute("role", "article");
     kanbanBox.setAttribute("t-att-class", "getRecordClasses(record,groupOrRecord.group)");
-    kanbanBox.setAttribute("t-att-data-id", "recordsDraggable and record.id");
+    kanbanBox.setAttribute("t-att-data-id", "canResequenceRecords and record.id");
     if (hasClass(kanbanBox, ...KANBAN_CLICK_CLASSES)) {
         kanbanBox.setAttribute("t-on-click", "(ev) => this.onRecordClick(record, ev)");
     }
@@ -80,17 +80,17 @@ export class KanbanArchParser extends XMLParser {
         const className = xmlDoc.getAttribute("class") || null;
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
-        const recordsDraggable = isAttr(xmlDoc, "records_draggable").truthy(true);
+        const recordsDraggable = isTruthy(xmlDoc.getAttribute("records_draggable"), true);
         const activeActions = {
             ...getActiveActions(xmlDoc),
-            groupArchive: isAttr(xmlDoc, "archivable").truthy(true),
-            groupCreate: isAttr(xmlDoc, "group_create").truthy(true),
-            groupDelete: isAttr(xmlDoc, "group_delete").truthy(true),
-            groupEdit: isAttr(xmlDoc, "group_edit").truthy(true),
+            groupArchive: isTruthy(xmlDoc.getAttribute("archivable"), true),
+            groupCreate: isTruthy(xmlDoc.getAttribute("group_create"), true),
+            groupDelete: isTruthy(xmlDoc.getAttribute("group_delete"), true),
+            groupEdit: isTruthy(xmlDoc.getAttribute("group_edit"), true),
         };
         const onCreate =
             activeActions.create &&
-            isAttr(xmlDoc, "quick_create").truthy(true) &&
+            isTruthy(xmlDoc.getAttribute("quick_create"), true) &&
             (xmlDoc.getAttribute("on_create") || "quick_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltips = {};

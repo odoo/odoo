@@ -4,10 +4,10 @@ import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { isBroadlyFalsy } from "@web/core/utils/misc";
-import { isAttr } from "@web/core/utils/xml";
-import { getX2MViewModes, X2M_TYPES } from "@web/views/helpers/view_utils";
-import { getFieldClassFromRegistry } from "./utils";
+import { isTruthy } from "@web/core/utils/xml";
+import { X2M_TYPES } from "@web/views/helpers/view_utils";
 import { DefaultField } from "./default";
+import { getFieldClassFromRegistry } from "./utils";
 
 const { Component, xml } = owl;
 
@@ -175,10 +175,10 @@ Field.parseFieldNode = function (node, fields, viewType) {
         string: node.getAttribute("string") || field.string,
         widget,
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
-        onChange: isAttr(node, "on_change").truthy(),
+        onChange: isTruthy(node.getAttribute("on_change")),
         FieldComponent: Field.getFieldComponent(viewType, fields[name].type, widget),
         decorations: {}, // populated below
-        noLabel: isAttr(node, "nolabel").truthy(true),
+        noLabel: isTruthy(node.getAttribute("nolabel"), true),
         props: {},
         attrs: {},
         options: evaluateExpr(node.getAttribute("options") || "{}"),

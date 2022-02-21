@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { isAttr } from "../../core/utils/xml";
+import { isTruthy } from "@web/core/utils/xml";
 
 export const X2M_TYPES = ["one2many", "many2many"];
 const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
@@ -62,10 +62,10 @@ export function processButton(node) {
 
 export function getActiveActions(rootNode) {
     return {
-        edit: isAttr(rootNode, "edit").truthy(true),
-        create: isAttr(rootNode, "create").truthy(true),
-        delete: isAttr(rootNode, "delete").truthy(true),
-        duplicate: isAttr(rootNode, "duplicate").truthy(true),
+        edit: isTruthy(rootNode.getAttribute("edit"), true),
+        create: isTruthy(rootNode.getAttribute("create"), true),
+        delete: isTruthy(rootNode.getAttribute("delete"), true),
+        duplicate: isTruthy(rootNode.getAttribute("duplicate"), true),
     };
 }
 

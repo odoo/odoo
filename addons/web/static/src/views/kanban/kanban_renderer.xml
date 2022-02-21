@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanRenderer" owl="1">
-        <div class="o_kanban_renderer" t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}">
+        <div class="o_kanban_renderer" t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}" t-ref="root">
             <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key or `empty_${groupOrRecord_index}`"> <!-- FIXME -->
                 <t t-if="groupOrRecord.group">
                     <t t-set="group" t-value="groupOrRecord.group" />
                     <div class="o_kanban_group"
                         t-att-class="getGroupClasses(group)"
-                        t-att-data-id="(recordsDraggable or groupsDraggable) and group.id"
+                        t-att-data-id="(canResequenceRecords or canResequenceGroups) and group.id"
                         t-on-click="(ev) => this.onGroupClick(group, ev)"
                     >
                         <div class="o_kanban_header">

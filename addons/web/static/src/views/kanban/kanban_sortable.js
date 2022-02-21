@@ -1,8 +1,11 @@
 /** @odoo-module **/
 
 import { useListener } from "@web/core/utils/hooks";
+import { clamp } from "@web/core/utils/numbers";
 
-const { onWillUnmount, useComponent, useEffect, useExternalListener } = owl;
+const { useEffect, useExternalListener, onWillUnmount } = owl;
+
+const DRAG_START_THRESHOLD = 5 ** 2;
 
 const cancelEvent = (ev) => {
     ev.stopPropagation();
@@ -10,16 +13,18 @@ const cancelEvent = (ev) => {
     ev.preventDefault();
 };
 
+const sortableError = (reason) => new Error(`Unable to use sortable feature: ${reason}.`);
+
+const toDependencies = (object) => (object ? Object.entries(object) : [false]);
+
+const fromDependencies = (deps) => deps[0] && Object.fromEntries(deps);
+
+const squareDistance = (x1, y1, x2, y2) => (x2 - x1) ** 2 + (y2 - y1) ** 2;
+
 export const useSortable = (params) => {
     const {
-        activate,
-        listSelector,
-        itemSelector,
-        containment,
-        cursor,
-        handle,
-        axis,
-        // Events
+        ref,
+        setup,
         onItemEnter,
         onItemLeave,
         onListEnter,
@@ -28,22 +33,23 @@ export const useSortable = (params) => {
         onStop,
         onDrop,
     } = params;
-    const selectors = [itemSelector];
-    if (listSelector) {
-        selectors.unshift(listSelector);
-    }
-    if (handle) {
-        selectors.push(handle);
-    }
-    const fullSelector = selectors.join(" ");
     const lockedAxis = { x: false, y: false };
-    if (axis === "x") {
-        lockedAxis.y = true;
-    } else if (axis === "y" || containment === "parent") {
-        lockedAxis.x = true;
+    const cleanups = [];
+
+    if (typeof setup !== "function") {
+        throw sortableError(`missing required function "setup" in parameters`);
     }
 
+    let listSelector = false;
+    let itemSelector = false;
+    let fullSelector = "";
+
+    let cursor;
+    let confinedToParent;
+    let currentContainerRect = null;
+
     let currentItem = null;
+    let currentItemRect = null;
     let currentList = null;
     let ghost = null;
 
@@ -54,8 +60,20 @@ export const useSortable = (params) => {
     let offsetX = 0;
     let offsetY = 0;
 
-    const component = useComponent();
-    const cleanups = [];
+    if (!Object.getOwnPropertyDescriptor(window, "draggable")) {
+        Object.defineProperty(window, "draggable", {
+            get: () => ({
+                confinedToParent,
+                currentContainerRect,
+                currentItem,
+                currentItemRect,
+                currentList,
+                ghost,
+                offsetX,
+                offsetY,
+            }),
+        });
+    }
 
     const addListener = (el, event, callback, options, timeout) => {
         el.addEventListener(event, callback, options);
@@ -75,7 +93,7 @@ export const useSortable = (params) => {
 
     const onItemMouseenter = (ev) => {
         const item = ev.currentTarget;
-        if (containment !== "parent" || item.closest(listSelector) === currentList) {
+        if (!confinedToParent || item.parentElement === currentItem.parentElement) {
             const pos = ghost.compareDocumentPosition(item);
             if (pos === 2 /* BEFORE */) {
                 item.before(ghost);
@@ -94,9 +112,7 @@ export const useSortable = (params) => {
 
     const onListMouseenter = (ev) => {
         const list = ev.currentTarget;
-        if (containment !== "parent") {
-            list.appendChild(ghost);
-        }
+        list.appendChild(ghost);
         if (onListEnter) {
             onListEnter(list);
         }
@@ -107,33 +123,45 @@ export const useSortable = (params) => {
     };
 
     const dragStart = () => {
-        if (started) {
-            return;
+        // Calculates the bounding rectangles of the current item, and of the
+        // parent element if items are confined to their parents.
+        currentItemRect = currentItem.getBoundingClientRect();
+        if (confinedToParent && currentItem.parentElement) {
+            currentContainerRect = currentItem.parentElement.getBoundingClientRect();
+        } else {
+            currentContainerRect = ref.el.getBoundingClientRect();
         }
-        started = true;
-        const { x, y, width, height } = currentItem.getBoundingClientRect();
+        const { x, y, width, height } = currentItemRect;
+
+        // Adjusts the offset
         offsetX -= x;
         offsetY -= y;
 
+        // Prepares the ghost item
         ghost = currentItem.cloneNode(true);
-        ghost.style.opacity = 0;
+        ghost.style.visibility = "hidden";
         cleanups.push(() => ghost.remove());
+
+        // Cancels all click events targetting the current item
         addListener(currentItem, "click", cancelEvent, true, true);
 
-        const lists = listSelector ? component.el.querySelectorAll(listSelector) : [component.el];
-
-        for (const siblingList of lists) {
-            addListener(siblingList, "mouseenter", onListMouseenter);
-            if (onListLeave) {
-                addListener(siblingList, "mouseleave", onListMouseleave);
+        // Binds handlers on eligible lists, if the items are not confined to
+        // their parents and a 'listSelector' has been provided.
+        if (listSelector && !confinedToParent) {
+            for (const siblingList of ref.el.querySelectorAll(listSelector)) {
+                addListener(siblingList, "mouseenter", onListMouseenter);
+                if (onListLeave) {
+                    addListener(siblingList, "mouseleave", onListMouseleave);
+                }
             }
+        }
 
-            for (const siblingItem of component.el.querySelectorAll(itemSelector)) {
-                if (siblingItem !== currentItem && siblingItem !== ghost) {
-                    addListener(siblingItem, "mouseenter", onItemMouseenter);
-                    if (onItemLeave) {
-                        addListener(siblingItem, "mouseleave", onItemMouseleave);
-                    }
+        // Binds handlers on eligible items
+        for (const siblingItem of ref.el.querySelectorAll(itemSelector)) {
+            if (siblingItem !== currentItem && siblingItem !== ghost) {
+                addListener(siblingItem, "mouseenter", onItemMouseenter);
+                if (onItemLeave) {
+                    addListener(siblingItem, "mouseleave", onItemMouseleave);
                 }
             }
         }
@@ -147,57 +175,90 @@ export const useSortable = (params) => {
         addStyle(currentItem, {
             position: "fixed",
             "pointer-events": "none",
+            "z-index": 1000,
             width: `${width}px`,
             height: `${height}px`,
+            left: `${x}px`,
+            top: `${y}px`,
         });
 
+        addStyle(document.body, { "user-select": "none" });
         if (cursor) {
             addStyle(document.body, { cursor });
         }
     };
 
     const dragStop = (cancelled = false) => {
-        if (!started) {
-            return;
+        if (started) {
+            if (onStop) {
+                onStop(currentList, currentItem);
+            }
+            if (
+                onDrop &&
+                !cancelled &&
+                ghost.previousElementSibling !== currentItem &&
+                ghost.nextElementSibling !== currentItem
+            ) {
+                const previous = ghost.previousElementSibling;
+                const parent = ghost.parentNode;
+                onDrop({ list: currentList, item: currentItem, previous, parent });
+            }
+            for (const cleanup of cleanups.reverse()) {
+                cleanup();
+            }
         }
-        if (onStop) {
-            onStop(currentList, currentItem);
-        }
-        if (
-            onDrop &&
-            !cancelled &&
-            ghost.previousElementSibling !== currentItem &&
-            ghost.nextElementSibling !== currentItem
-        ) {
-            const previous = ghost.previousElementSibling;
-            const parent = ghost.parentNode;
-            onDrop({ list: currentList, item: currentItem, previous, parent });
-        }
-        for (const cleanup of cleanups) {
-            cleanup();
-        }
+
+        currentContainerRect = null;
+
         currentItem = null;
+        currentItemRect = null;
+        currentList = null;
         ghost = null;
+
         started = false;
     };
 
-    if (activate) {
-        useEffect(
-            (enable) => {
-                enabled = enable;
-                return () => {};
-            },
-            () => [activate()]
-        );
-    } else {
-        enabled = true;
-    }
-    useListener("mousedown", fullSelector, (ev) => {
-        if (!enabled) {
+    useEffect(
+        (...deps) => {
+            const params = fromDependencies(deps);
+            enabled = Boolean(ref.el && params);
+            if (!enabled) {
+                return;
+            }
+
+            // Selectors
+            itemSelector = params.itemSelector;
+            listSelector = params.listSelector;
+            if (!itemSelector) {
+                throw sortableError(`missing required property "itemSelector" in setup`);
+            }
+            const allSelectors = [itemSelector];
+            cursor = params.cursor;
+            if (listSelector) {
+                allSelectors.unshift(listSelector);
+            }
+            if (params.handle) {
+                allSelectors.push(params.handle);
+            }
+            fullSelector = allSelectors.join(" ");
+
+            // Containment
+            confinedToParent = params.containment === "parent";
+
+            // Axes
+            if (params.axis) {
+                lockedAxis.x = params.axis === "y";
+                lockedAxis.y = params.axis === "x";
+            }
+        },
+        () => toDependencies(setup())
+    );
+    useListener("mousedown", (ev) => {
+        if (!enabled || !ev.target.closest(fullSelector)) {
             return;
         }
         currentItem = ev.target.closest(itemSelector);
-        currentList = listSelector ? ev.target.closest(listSelector) : component.el;
+        currentList = listSelector && ev.target.closest(listSelector);
         offsetX = ev.clientX;
         offsetY = ev.clientY;
     });
@@ -205,29 +266,31 @@ export const useSortable = (params) => {
         if (!enabled || !currentItem || updatingDrag) {
             return;
         }
-        dragStart();
         updatingDrag = true;
-        if (!lockedAxis.x) {
-            currentItem.style.left = `${ev.clientX - offsetX}px`;
-        }
-        if (!lockedAxis.y) {
-            currentItem.style.top = `${ev.clientY - offsetY}px`;
+        if (started) {
+            if (!lockedAxis.x) {
+                currentItem.style.left = `${clamp(
+                    ev.clientX - offsetX,
+                    currentContainerRect.x,
+                    currentContainerRect.x + currentContainerRect.width - currentItemRect.width
+                )}px`;
+            }
+            if (!lockedAxis.y) {
+                currentItem.style.top = `${clamp(
+                    ev.clientY - offsetY,
+                    currentContainerRect.y,
+                    currentContainerRect.y + currentContainerRect.height - currentItemRect.height
+                )}px`;
+            }
+        } else if (
+            squareDistance(offsetX, offsetY, ev.clientX, ev.clientY) >= DRAG_START_THRESHOLD
+        ) {
+            started = true;
+            dragStart();
         }
         requestAnimationFrame(() => (updatingDrag = false));
     });
-    useExternalListener(
-        window,
-        "mouseup",
-        () => {
-            if (currentItem && !started) {
-                currentItem = null;
-                currentList = null;
-            } else {
-                dragStop();
-            }
-        },
-        true
-    );
+    useExternalListener(window, "mouseup", () => dragStop(), true);
     useExternalListener(
         window,
         "keydown",

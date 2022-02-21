@@ -4,10 +4,10 @@ import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
 import {
+    deserializeDate,
+    deserializeDateTime,
     serializeDate,
     serializeDateTime,
-    deserializeDateTime,
-    deserializeDate,
 } from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
@@ -180,19 +180,26 @@ class DataPoint {
     }
 
     _parseServerValue(field, value) {
-        let parsedValue = value;
-        if (field.type === "char") {
-            parsedValue = value || "";
-        } else if (field.type === "date") {
-            parsedValue = value ? deserializeDate(value) : false;
-        } else if (field.type === "datetime") {
-            parsedValue = value ? deserializeDateTime(value) : false;
-        } else if (field.type === "selection" && value === false) {
-            // process selection: convert false to 0, if 0 is a valid key
-            const hasKey0 = field.selection.find((option) => option[0] === 0);
-            parsedValue = hasKey0 ? 0 : value;
+        switch (field.type) {
+            case "char": {
+                return value || "";
+            }
+            case "date": {
+                return value ? deserializeDate(value) : false;
+            }
+            case "datetime": {
+                return value ? deserializeDateTime(value) : false;
+            }
+            case "selection": {
+                if (value === false) {
+                    // process selection: convert false to 0, if 0 is a valid key
+                    const hasKey0 = field.selection.find((option) => option[0] === 0);
+                    return hasKey0 ? 0 : value;
+                }
+                break;
+            }
         }
-        return parsedValue;
+        return value;
     }
 
     _parseServerValues(values) {
@@ -367,6 +374,7 @@ export class Record extends DataPoint {
     getFieldContext(fieldName) {
         return makeContext([this.context, this.activeFields[fieldName].context], this.evalContext);
     }
+
     getFieldDomain(fieldName) {
         return Domain.and([
             this._domains[fieldName] || [],
@@ -924,8 +932,20 @@ export class DynamicGroupList extends DynamicList {
         this.isGrouped = true;
     }
 
+    get firstGroupBy() {
+        return this.groupBy[0] || false;
+    }
+
     get groupByField() {
-        return this.fields[this.groupBy[0]];
+        if (!this.firstGroupBy) {
+            return false;
+        }
+        const [groupByFieldName] = this.firstGroupBy.split(":");
+        return {
+            attrs: {},
+            ...this.fields[groupByFieldName],
+            ...this.activeFields[groupByFieldName],
+        };
     }
 
     /**
@@ -1017,37 +1037,49 @@ export class DynamicGroupList extends DynamicList {
             groupByInfo: this.groupByInfo,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
         };
+        const groupByField = this.groupByField;
         return groups.map((data) => {
             const groupParams = {
                 ...commonGroupParams,
                 aggregates: {},
                 isFolded: !this.openGroupsByDefault,
-                groupByField: this.groupByField,
+                groupByField,
             };
             for (const key in data) {
                 const value = data[key];
                 switch (key) {
-                    case this.groupByField.name: {
-                        // FIXME: not sure about this
-                        groupParams.value = Array.isArray(value) ? value[0] : value;
-                        groupParams.displayName = Array.isArray(value) ? value[1] : value;
+                    case this.firstGroupBy: {
+                        if (value && ["date", "datetime"].includes(groupByField.type)) {
+                            const dateString = data.__range[groupByField.name].to;
+                            const dateValue = this._parseServerValue(groupByField, dateString);
+                            const granularity = groupByField.type === "date" ? "day" : "second";
+                            groupParams.value = dateValue.minus({ [granularity]: 1 });
+                        } else {
+                            groupParams.value = Array.isArray(value) ? value[0] : value;
+                        }
+                        if (groupByField.type === "selection") {
+                            groupParams.displayName = Object.fromEntries(groupByField.selection)[
+                                groupParams.value
+                            ];
+                        } else {
+                            groupParams.displayName = Array.isArray(value) ? value[1] : value;
+                        }
                         if (this.groupedBy("m2x")) {
                             if (!groupParams.value) {
                                 groupParams.displayName = this.model.env._t("Undefined");
                             }
-                            if (this.groupByInfo[this.groupByField.name]) {
+                            if (this.groupByInfo[this.firstGroupBy]) {
                                 groupParams.recordParam = {
-                                    resModel: this.groupByField.relation,
+                                    resModel: groupByField.relation,
                                     resId: groupParams.value,
-                                    activeFields: this.groupByInfo[this.groupByField.name]
-                                        .activeFields,
-                                    fields: this.groupByInfo[this.groupByField.name].fields,
+                                    activeFields: this.groupByInfo[this.firstGroupBy].activeFields,
+                                    fields: this.groupByInfo[this.firstGroupBy].fields,
                                 };
                             }
                         }
                         break;
                     }
-                    case `${this.groupByField.name}_count`: {
+                    case `${groupByField.name}_count`: {
                         groupParams.count = value;
                         break;
                     }

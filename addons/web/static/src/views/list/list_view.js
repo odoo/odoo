@@ -3,7 +3,7 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { isAttr, XMLParser } from "@web/core/utils/xml";
+import { isFalsy, isTruthy, XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { usePager } from "@web/search/pager_hook";
@@ -66,7 +66,7 @@ export class ListArchParser extends XMLParser {
         const xmlDoc = this.parseXML(arch);
         const activeActions = {
             ...getActiveActions(xmlDoc),
-            exportXlsx: isAttr(xmlDoc, "export_xlsx").truthy(true),
+            exportXlsx: isTruthy(xmlDoc.getAttribute("export_xlsx"), true),
         };
         const decorations = getDecoration(xmlDoc);
         const editable = activeActions.edit ? xmlDoc.getAttribute("editable") : false;
@@ -109,7 +109,7 @@ export class ListArchParser extends XMLParser {
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, fields, "list");
                 activeFields[fieldInfo.name] = fieldInfo;
-                if (isAttr(node, "invisible").falsy(true)) {
+                if (isFalsy(node.getAttribute("invisible"), true)) {
                     const displayName = fieldInfo.FieldComponent.displayName;
                     columns.push({
                         ...fieldInfo,

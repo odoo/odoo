@@ -2,6 +2,7 @@
 
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
+import { isTruthy } from "@web/core/utils/xml";
 import { isRelational } from "@web/views/helpers/view_utils";
 import {
     DynamicGroupList,
@@ -10,7 +11,6 @@ import {
     RelationalModel,
 } from "@web/views/relational_model";
 
-const DATE_TYPES = ["date", "datetime"];
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
 const DEFAULT_QUICK_CREATE_VIEW = {
     form: {
@@ -23,6 +23,13 @@ const DEFAULT_QUICK_CREATE_VIEW = {
             display_name: { string: "Display name", type: "char" },
         },
     },
+};
+
+export const isAllowedDateField = (groupByField) => {
+    return (
+        ["date", "datetime"].includes(groupByField.type) &&
+        isTruthy(groupByField.attrs.allow_group_range_value)
+    );
 };
 
 class KanbanGroup extends Group {
@@ -70,63 +77,16 @@ class KanbanDynamicGroupList extends DynamicGroupList {
      * @override
      */
     async load() {
-        const initialLoadPromise = super.load();
-
-        // No progress attributes : normal load
-        if (!this.model.progressAttributes) {
-            return initialLoadPromise;
-        }
-
-        // Progress attributes : load with progress bar data
-        const { colors, fieldName, help, sumField } = this.model.progressAttributes;
-        const progressPromise = this.model.orm.call(this.resModel, "read_progress_bar", [], {
-            domain: this.domain,
-            group_by: this.groupBy[0],
-            progress_bar: {
-                colors,
-                field: fieldName,
-                help,
-                sum_field: sumField && sumField.name,
-            },
-            context: this.context,
-        });
-
-        const [progressData] = await Promise.all([progressPromise, initialLoadPromise]);
-
-        const progressField = this.fields[fieldName];
-        /** @type {[string | false, string][]} */
-        const colorEntries = Object.entries(colors);
-        const selection = Object.fromEntries(progressField.selection || []);
-
-        if (!colorEntries.some((e) => e[1] === "muted")) {
-            colorEntries.push([false, "muted"]);
-        }
-
-        for (const group of this.groups) {
-            const groupKey = group.displayName || group.value;
-            const counts = progressData[groupKey] || { false: group.count };
-            const remaining = group.count - Object.values(counts).reduce((acc, c) => acc + c, 0);
-            for (const [key, color] of colorEntries) {
-                const count = key === false ? remaining : counts[key];
-                group.progressValues.push({
-                    count: count || 0,
-                    value: key,
-                    string: selection[String(key)] || this.model.env._t("Other"),
-                    color,
-                });
-            }
-        }
+        await this._loadWithProgressData(super.load());
     }
 
     canQuickCreate() {
-        if (!this.groupByField || this.model.onCreate !== "quick_create") {
-            return false;
-        }
-        const activeField = this.activeFields[this.groupByField.name];
-        if (activeField && !activeField.readonly && DATE_TYPES.includes(this.groupByField.type)) {
-            return activeField.attrs.allow_group_range_value;
-        }
-        return QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type);
+        return (
+            this.groupByField &&
+            this.model.onCreate === "quick_create" &&
+            (isAllowedDateField(this.groupByField) ||
+                QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type))
+        );
     }
 
     async createGroup(value) {
@@ -213,7 +173,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
             const value = isRelational(this.groupByField) ? [newGroup.value] : newGroup.value;
             await record.update(this.groupByField.name, value);
             await record.save();
-            await this.load();
+            await this._loadWithProgressData(oldGroup.load(), newGroup.load());
         }
         await newGroup.list.resequence();
     }
@@ -241,6 +201,54 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         }
         this.isLoadingQuickCreate = false;
         return new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
+    }
+
+    async _loadWithProgressData(...loadPromises) {
+        // No progress attributes : normal load
+        if (!this.model.progressAttributes) {
+            return Promise.all(loadPromises);
+        }
+
+        // Progress attributes : load with progress bar data
+        const { colors, fieldName, help, sumField } = this.model.progressAttributes;
+        const progressPromise = this.model.orm.call(this.resModel, "read_progress_bar", [], {
+            domain: this.domain,
+            group_by: this.groupBy[0],
+            progress_bar: {
+                colors,
+                field: fieldName,
+                help,
+                sum_field: sumField && sumField.name,
+            },
+            context: this.context,
+        });
+
+        const [progressData] = await Promise.all([progressPromise, ...loadPromises]);
+
+        const progressField = this.fields[fieldName];
+        /** @type {[string | false, string][]} */
+        const colorEntries = Object.entries(colors);
+        const selection = Object.fromEntries(progressField.selection || []);
+
+        if (!colorEntries.some((e) => e[1] === "muted")) {
+            colorEntries.push([false, "muted"]);
+        }
+
+        for (const group of this.groups) {
+            group.progressValues = [];
+            const groupKey = group.displayName || group.value;
+            const counts = progressData[groupKey] || { false: group.count };
+            const remaining = group.count - Object.values(counts).reduce((acc, c) => acc + c, 0);
+            for (const [key, color] of colorEntries) {
+                const count = key === false ? remaining : counts[key];
+                group.progressValues.push({
+                    count: count || 0,
+                    value: key,
+                    string: selection[String(key)] || this.model.env._t("Other"),
+                    color,
+                });
+            }
+        }
     }
 }
 

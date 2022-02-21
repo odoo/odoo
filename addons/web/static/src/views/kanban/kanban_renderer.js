@@ -1,6 +1,11 @@
 /** @odoo-module **/
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { Dialog } from "@web/core/dialog/dialog";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
@@ -15,15 +20,13 @@ import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { useSortable } from "@web/views/kanban/kanban_sortable";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { registry } from "@web/core/registry";
-import { Dialog } from "@web/core/dialog/dialog";
-import { _lt } from "@web/core/l10n/translation";
+import { isAllowedDateField } from "./kanban_model";
 
 const { Component, useExternalListener, useState, useRef } = owl;
 const { RECORD_COLORS } = ColorPickerField;
 
+const DRAGGABLE_GROUP_TYPES = ["many2one"];
+const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
 const GLOBAL_CLICK_CANCEL_SELECTORS = ["a", ".dropdown", ".oe_kanban_action"];
 const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
 
@@ -52,13 +55,17 @@ export class KanbanRenderer extends Component {
         // Sortable
         let dataRecordId;
         let dataGroupId;
+        const rootRef = useRef("root");
         useSortable({
-            activate: () => this.recordsDraggable,
-            listSelector: ".o_kanban_group",
-            itemSelector: ".o_record_draggable",
-            // TODO recordsMovable = whether the records can be moved accross groups
-            // containment: this.props.info.recordsMovable ? false : "parent",
-            cursor: "move",
+            ref: rootRef,
+            setup: () =>
+                this.canResequenceRecords && {
+                    listSelector: ".o_kanban_group",
+                    itemSelector: ".o_record_draggable",
+                    containment: this.canMoveRecords ? false : "parent",
+                    axis: this.canMoveRecords ? false : "y",
+                    cursor: "move",
+                },
             onListEnter(group) {
                 group.classList.add("o_kanban_hover");
             },
@@ -68,10 +75,10 @@ export class KanbanRenderer extends Component {
             onStart(group, item) {
                 dataGroupId = group.dataset.id;
                 dataRecordId = item.dataset.id;
-                item.classList.add("o_currently_dragged", "ui-sortable-helper");
+                item.classList.add("o_dragged");
             },
             onStop(group, item) {
-                item.classList.remove("o_currently_dragged", "ui-sortable-helper");
+                item.classList.remove("o_dragged");
             },
             onDrop: async ({ item, previous, parent }) => {
                 item.classList.remove("o_record_draggable");
@@ -83,13 +90,21 @@ export class KanbanRenderer extends Component {
             },
         });
         useSortable({
-            activate: () => this.groupsDraggable,
-            axis: "x",
-            itemSelector: ".o_group_draggable",
-            handle: ".o_column_title",
-            cursor: "move",
+            ref: rootRef,
+            setup: () =>
+                this.canResequenceGroups && {
+                    itemSelector: ".o_group_draggable",
+                    containment: "parent",
+                    axis: "x",
+                    handle: ".o_column_title",
+                    cursor: "move",
+                },
             onStart(group, item) {
                 dataGroupId = item.dataset.id;
+                item.classList.add("o_dragged");
+            },
+            onStop(group, item) {
+                item.classList.remove("o_dragged");
             },
             onDrop: async ({ item, previous }) => {
                 item.classList.remove("o_group_draggable");
@@ -104,17 +119,33 @@ export class KanbanRenderer extends Component {
     // Getters
     // ------------------------------------------------------------------------
 
-    // `context` can be called in the evaluated kanban template.
-    get context() {
-        return this.props.context;
+    get canMoveRecords() {
+        if (!this.canResequenceRecords) {
+            return false;
+        }
+        const { groupByField } = this.props.list;
+        const { modifiers, type } = groupByField;
+        return (
+            !(modifiers && modifiers.readonly) &&
+            (isAllowedDateField(groupByField) || MOVABLE_RECORD_TYPES.includes(type))
+        );
     }
 
-    get recordsDraggable() {
+    get canResequenceGroups() {
+        if (!this.props.list.isGrouped) {
+            return false;
+        }
+        const { modifiers, type } = this.props.list.groupByField;
+        return !(modifiers && modifiers.readonly) && DRAGGABLE_GROUP_TYPES.includes(type);
+    }
+
+    get canResequenceRecords() {
         return this.props.list.isGrouped && this.props.info.recordsDraggable;
     }
 
-    get groupsDraggable() {
-        return this.props.list.isGrouped && this.props.list.groupByField.type === "many2one";
+    // `context` can be called in the evaluated kanban template.
+    get context() {
+        return this.props.context;
     }
 
     get showNoContentHelper() {
@@ -158,7 +189,7 @@ export class KanbanRenderer extends Component {
 
     getGroupClasses(group) {
         const classes = [];
-        if (this.groupsDraggable) {
+        if (this.canResequenceGroups) {
             classes.push("o_group_draggable");
         }
         if (!group.count) {
@@ -201,7 +232,7 @@ export class KanbanRenderer extends Component {
             const { color } = group.progressValues.find((p) => p.value === value);
             classes.push(`oe_kanban_card_${color}`);
         }
-        if (this.recordsDraggable) {
+        if (this.canResequenceRecords) {
             classes.push("o_record_draggable");
         }
         return classes.join(" ");

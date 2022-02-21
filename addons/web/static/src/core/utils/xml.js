@@ -47,15 +47,11 @@ export class XMLParser {
     }
 }
 
-export function isAttr(node, attr) {
-    const value = node.getAttribute(attr);
-    return {
-        truthy: (canBeUndefined) => (value ? !/^false|0$/i.test(value) : canBeUndefined) || false,
-        falsy: (canBeUndefined) => (value ? /^false|0$/i.test(value) : canBeUndefined) || false,
-        equalTo: (expected) => value === expected,
-        notEqualTo: (expected) => value !== expected,
-    };
-}
+export const isFalsy = (value, falsyIfUndefined) =>
+    (value ? /^false|0$/i.test(value) : falsyIfUndefined) || false;
+
+export const isTruthy = (value, truthyIfUndefined) =>
+    (value ? !/^false|0$/i.test(value) : truthyIfUndefined) || false;
 
 /**
  * Combines the existing value of a node attribute with new given parts. The glue
