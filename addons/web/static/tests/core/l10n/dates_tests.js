@@ -6,6 +6,10 @@ import {
     parseDate,
     parseDateTime,
     strftimeToLuxonFormat,
+    serializeDate,
+    serializeDateTime,
+    deserializeDate,
+    deserializeDateTime,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { patch, unpatch } from "@web/core/utils/patch";
@@ -357,6 +361,80 @@ QUnit.module(
             );
 
             unpatch(localization, "default loc");
+        });
+
+        QUnit.test("serializeDate", async (assert) => {
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(date.toFormat("yyyy-MM-dd"), "2022-02-21");
+            assert.strictEqual(serializeDate(date), "2022-02-21");
+        });
+
+        QUnit.test("serializeDate with different numbering system", async (assert) => {
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(date.toFormat("yyyy-MM-dd"), "٢٠٢٢-٠٢-٢١");
+            assert.strictEqual(serializeDate(date), "2022-02-21");
+        });
+
+        QUnit.test("serializeDateTime", async (assert) => {
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(date.toFormat("yyyy-MM-dd HH:mm:ss"), "2022-02-21 16:11:42");
+            assert.strictEqual(serializeDateTime(date), "2022-02-21 16:11:42");
+        });
+
+        QUnit.test("serializeDateTime with different numbering system", async (assert) => {
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(date.toFormat("yyyy-MM-dd HH:mm:ss"), "٢٠٢٢-٠٢-٢١ ١٦:١١:٤٢");
+            assert.strictEqual(serializeDateTime(date), "2022-02-21 16:11:42");
+        });
+
+        QUnit.test("deserializeDate", async (assert) => {
+            const date = DateTime.utc(2022, 2, 21);
+            assert.strictEqual(
+                DateTime.fromFormat("2022-02-21", "yyyy-MM-dd", { zone: "utc" }).toMillis(),
+                date.toMillis()
+            );
+            assert.strictEqual(deserializeDate("2022-02-21").toMillis(), date.toMillis());
+        });
+
+        QUnit.test("deserializeDate with different numbering system", async (assert) => {
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
+            const date = DateTime.utc(2022, 2, 21);
+            assert.strictEqual(
+                DateTime.fromFormat("٢٠٢٢-٠٢-٢١", "yyyy-MM-dd", { zone: "utc" }).toMillis(),
+                date.toMillis()
+            );
+            assert.strictEqual(deserializeDate("2022-02-21").toMillis(), date.toMillis());
+        });
+
+        QUnit.test("deserializeDateTime", async (assert) => {
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(
+                DateTime.fromFormat("2022-02-21 16:11:42", "yyyy-MM-dd HH:mm:ss", {
+                    zone: "utc",
+                }).toMillis(),
+                date.toMillis()
+            );
+            assert.strictEqual(
+                deserializeDateTime("2022-02-21 16:11:42").toMillis(),
+                date.toMillis()
+            );
+        });
+
+        QUnit.test("deserializeDateTime with different numbering system", async (assert) => {
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(
+                DateTime.fromFormat("٢٠٢٢-٠٢-٢١ ١٦:١١:٤٢", "yyyy-MM-dd HH:mm:ss", {
+                    zone: "utc",
+                }).toMillis(),
+                date.toMillis()
+            );
+            assert.strictEqual(
+                deserializeDateTime("2022-02-21 16:11:42").toMillis(),
+                date.toMillis()
+            );
         });
 
         QUnit.module("dates utils compatibility with legacy", {
