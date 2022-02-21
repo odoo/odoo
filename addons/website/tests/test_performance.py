@@ -109,7 +109,7 @@ class TestWebsitePerformance(UtilPerf):
 
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
-        self.assertEqual(self._get_url_hot_query('/'), 13)
+        self.assertEqual(self._get_url_hot_query('/'), 12)
         self.assertEqual(self._get_url_hot_query('/', cache=False), 15)
 
     def test_30_perf_sql_queries_page_no_layout(self):
