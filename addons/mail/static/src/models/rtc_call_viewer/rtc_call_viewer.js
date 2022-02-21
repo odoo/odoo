@@ -14,11 +14,10 @@ registerModel({
     identifyingFields: ['threadView'],
     lifecycleHooks: {
         _created() {
-            this._timeoutId = undefined;
             browser.addEventListener('fullscreenchange', this._onFullScreenChange);
         },
         _willDelete() {
-            browser.clearTimeout(this._timeoutId);
+            browser.clearTimeout(this.showOverlayTimeout);
             browser.removeEventListener('fullscreenchange', this._onFullScreenChange);
         },
     },
@@ -58,7 +57,7 @@ registerModel({
             this.update({
                 showOverlay: true,
             });
-            browser.clearTimeout(this._timeoutId);
+            browser.clearTimeout(this.showOverlayTimeout);
         },
         /**
          * @param {MouseEvent} ev
@@ -247,18 +246,6 @@ registerModel({
         /**
          * @private
          */
-        _debounce(f, { delay = 0 } = {}) {
-            browser.clearTimeout(this._timeoutId);
-            this._timeoutId = browser.setTimeout(() => {
-                if (!this.exists()) {
-                    return;
-                }
-                f();
-            }, delay);
-        },
-        /**
-         * @private
-         */
         _onChangeRtcChannel() {
             this.deactivateFullScreen();
             this.update({ filterVideoGrid: false });
@@ -280,12 +267,10 @@ registerModel({
             this.update({
                 showOverlay: true,
             });
-            this._debounce(() => {
-                if (!this.exists()) {
-                    return;
-                }
-                this.update({ showOverlay: false });
-            }, { delay: 3000 });
+            browser.clearTimeout(this.showOverlayTimeout);
+            this.update({
+                showOverlayTimeout: browser.setTimeout(this._onShowOverlayTimeout, 3000),
+            });
         },
         /**
          * @private
@@ -297,6 +282,15 @@ registerModel({
                 return;
             }
             this.update({ isFullScreen: false });
+        },
+        /**
+         * @private
+         */
+        _onShowOverlayTimeout() {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ showOverlay: false });
         },
     },
     fields: {
@@ -382,6 +376,7 @@ registerModel({
         showOverlay: attr({
             default: true,
         }),
+        showOverlayTimeout: attr(),
         /**
          * ThreadView on which the call viewer is attached.
          */
