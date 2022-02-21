@@ -20,8 +20,8 @@ const NAV_KEYS = [
     "tab",
     "delete",
 ];
-const MODIFIERS = new Set(["alt", "control", "shift"]);
-const AUTHORIZED_KEYS = new Set([...ALPHANUM_KEYS, ...NAV_KEYS, "escape"]);
+const MODIFIERS = ["alt", "control", "shift"];
+const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, "escape"];
 
 export const hotkeyService = {
     dependencies: ["ui"],
@@ -56,15 +56,16 @@ export const hotkeyService = {
             }
 
             const hotkey = getActiveHotkey(event);
+            const { activeElement, isBlocked } = ui;
 
             // Do not dispatch if UI is blocked
-            if (ui.isBlocked) {
+            if (isBlocked) {
                 return;
             }
 
             // FIXME : this is a temporary hack. It replaces all [accesskey] attrs by [data-hotkey] on all elements.
             const elementsWithoutDataHotkey = getVisibleElements(
-                ui.activeElement,
+                activeElement,
                 "[accesskey]:not([data-hotkey])"
             );
             for (const el of elementsWithoutDataHotkey) {
@@ -73,32 +74,44 @@ export const hotkeyService = {
             }
 
             // Special case: open hotkey overlays
-            if (hotkey === hotkeyService.overlayModifier) {
-                addHotkeyOverlays();
+            if (!overlaysVisible && hotkey === hotkeyService.overlayModifier) {
+                addHotkeyOverlays(activeElement);
                 event.preventDefault();
+                overlaysVisible = true;
                 return;
             }
 
             // Is the pressed key NOT whitelisted ?
             const singleKey = hotkey.split("+").pop();
-            if (!AUTHORIZED_KEYS.has(singleKey)) {
+            if (!AUTHORIZED_KEYS.includes(singleKey)) {
                 return;
             }
 
+            // Prepare and dispatch.
             const targetIsEditable =
                 (event.target instanceof Element && /input|textarea/i.test(event.target.tagName)) ||
                 (event.target instanceof HTMLElement && event.target.isContentEditable);
-            const shouldProtectEditable =
-                targetIsEditable && [...ALPHANUM_KEYS, ...NAV_KEYS].includes(singleKey);
-
-            // Finally, prepare and dispatch.
             const infos = {
+                activeElement,
                 hotkey,
-                shouldProtectEditable,
-                _originalEvent: event,
+                isRepeated: event.repeat,
+                shouldProtectEditable: targetIsEditable && singleKey !== "escape",
             };
-            dispatch(infos);
-            removeHotkeyOverlays(event);
+            const dispatched = dispatch(infos);
+            if (dispatched) {
+                // Only if event has been handled.
+                // Purpose: prevent browser defaults
+                event.preventDefault();
+                // Purpose: stop other window keydown listeners (e.g. home menu)
+                event.stopImmediatePropagation();
+            }
+
+            // Finally, always remove overlays at that point
+            if (overlaysVisible) {
+                removeHotkeyOverlays();
+                event.preventDefault();
+                overlaysVisible = false;
+            }
         }
 
         /**
@@ -109,79 +122,67 @@ export const hotkeyService = {
          * - then all registrations done through the DOM [data-hotkey] attribute
          *
          * @param {{
+         *  activeElement: HTMLElement,
          *  hotkey: string,
+         *  isRepeated: boolean,
          *  shouldProtectEditable: boolean,
-         *  _originalEvent: KeyboardEvent
          * }} infos
+         * @returns {boolean} true if has been dispatched
          */
         function dispatch(infos) {
-            let dispatched = false;
-            const { hotkey, shouldProtectEditable, _originalEvent: event } = infos;
-            const activeElement = ui.activeElement;
+            const { activeElement, hotkey, isRepeated, shouldProtectEditable } = infos;
 
-            // Dispatch actual hotkey to all matching registrations
-            for (const reg of Array.from(registrations.values()).reverse()) {
-                if (!reg.global && reg.activeElement !== activeElement) {
-                    continue;
-                }
+            // Prepare registrations and the common filter
+            const reversedRegistrations = Array.from(registrations.values()).reverse();
+            const domRegistrations = getDomRegistrations(hotkey, activeElement);
+            const allRegistrations = reversedRegistrations.concat(domRegistrations);
 
-                if (reg.hotkey !== hotkey) {
-                    continue;
-                }
-
-                if (!reg.allowRepeat && event.repeat) {
-                    continue;
-                }
-
-                if (!reg.bypassEditableProtection && shouldProtectEditable) {
-                    continue;
-                }
-
-                reg.callback();
-                dispatched = true;
-                break;
+            // Dispatch actual hotkey to first matching registration
+            const match = allRegistrations.find(
+                (reg) =>
+                    reg.hotkey === hotkey &&
+                    (reg.allowRepeat || !isRepeated) &&
+                    (reg.bypassEditableProtection || !shouldProtectEditable) &&
+                    (reg.global || reg.activeElement === activeElement)
+            );
+            if (match) {
+                match.callback();
+                return true;
             }
+            return false;
+        }
+
+        function getDomRegistrations(hotkey, activeElement) {
             const overlayModParts = hotkeyService.overlayModifier.split("+");
-            if (
-                !dispatched &&
-                !event.repeat &&
-                overlayModParts.every((el) => hotkey.includes(el))
-            ) {
-                // Click on all elements having a data-hotkey attribute matching the actual hotkey without the overlayModifier.
-                const cleanHotkey = hotkey
-                    .split("+")
-                    .filter((key) => !overlayModParts.includes(key))
-                    .join("+");
-                const elems = getVisibleElements(
-                    ui.activeElement,
-                    `[data-hotkey='${cleanHotkey}' i]`
-                );
-                for (const el of elems) {
+            if (!overlayModParts.every((el) => hotkey.includes(el))) {
+                return [];
+            }
+
+            // Get all elements having a data-hotkey attribute  and matching
+            // the actual hotkey without the overlayModifier.
+            const cleanHotkey = hotkey
+                .split("+")
+                .filter((key) => !overlayModParts.includes(key))
+                .join("+");
+            const elems = getVisibleElements(activeElement, `[data-hotkey='${cleanHotkey}' i]`);
+            return elems.map((el) => ({
+                hotkey,
+                activeElement,
+                bypassEditableProtection: true,
+                callback: () => {
                     // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
                     el.focus();
                     el.click();
-                    dispatched = true;
-                    break;
-                }
-            }
-
-            // Only if event has been handheld.
-            if (dispatched) {
-                // Purpose: prevent browser defaults
-                event.preventDefault();
-                // Purpose: stop other window keydown listeners (e.g. home menu)
-                event.stopImmediatePropagation();
-            }
+                },
+            }));
         }
 
         /**
          * Add the hotkey overlays respecting the ui active element.
+         * @param {Element} activeElement
          */
-        function addHotkeyOverlays() {
-            if (overlaysVisible) {
-                return;
-            }
-            for (const el of getVisibleElements(ui.activeElement, "[data-hotkey]:not(:disabled)")) {
+        function addHotkeyOverlays(activeElement) {
+            for (const el of getVisibleElements(activeElement, "[data-hotkey]:not(:disabled)")) {
                 const hotkey = el.dataset.hotkey;
                 const overlay = document.createElement("div");
                 overlay.className = "o_web_hotkey_overlay";
@@ -202,21 +203,15 @@ export const hotkeyService = {
                 }
                 overlayParent.appendChild(overlay);
             }
-            overlaysVisible = true;
         }
 
         /**
          * Remove all the hotkey overlays.
          */
-        function removeHotkeyOverlays(event) {
-            if (!overlaysVisible) {
-                return;
-            }
+        function removeHotkeyOverlays() {
             for (const overlay of document.querySelectorAll(".o_web_hotkey_overlay")) {
                 overlay.remove();
             }
-            overlaysVisible = false;
-            event.preventDefault();
         }
 
         /**
@@ -247,11 +242,11 @@ export const hotkeyService = {
                 key = ev.code.slice(-1);
             }
             // Prefer physical keys for non-latin keyboard layout.
-            if (!AUTHORIZED_KEYS.has(key) && ev.code && ev.code.indexOf("Key") === 0) {
+            if (!AUTHORIZED_KEYS.includes(key) && ev.code && ev.code.indexOf("Key") === 0) {
                 key = ev.code.slice(-1).toLowerCase();
             }
             // Make sure we do not duplicate a modifier key
-            if (!MODIFIERS.has(key)) {
+            if (!MODIFIERS.includes(key)) {
                 hotkey.push(key);
             }
             return hotkey.join("+");
@@ -293,8 +288,8 @@ export const hotkeyService = {
             const keys = hotkey
                 .toLowerCase()
                 .split("+")
-                .filter((k) => !MODIFIERS.has(k));
-            if (keys.some((k) => !AUTHORIZED_KEYS.has(k))) {
+                .filter((k) => !MODIFIERS.includes(k));
+            if (keys.some((k) => !AUTHORIZED_KEYS.includes(k))) {
                 throw new Error(
                     `You are trying to subscribe for an hotkey ('${hotkey}')
             that contains parts not whitelisted: ${keys.join(", ")}`
