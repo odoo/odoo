@@ -1347,6 +1347,7 @@ class Website(models.Model):
             'user_id': self.user_id.id,
             'company_id': self.company_id.id,
             'default_lang_id': self.default_lang_id.id,
+            'homepage_id': self.homepage_id.id,
         }
 
     def _get_cached(self, field):
