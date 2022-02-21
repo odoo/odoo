@@ -10,15 +10,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
-const {
-    Component,
-    onPatched,
-    onWillPatch,
-    onWillUpdateProps,
-    useExternalListener,
-    useRef,
-    useState,
-} = owl;
+const { Component, onPatched, onWillPatch, useExternalListener, useRef, useState } = owl;
 
 const formatterRegistry = registry.category("formatters");
 
@@ -407,11 +399,8 @@ export class ListRenderer extends Component {
                 this.focusCell(column);
                 this.cellToFocus = null;
             } else {
-                if (this.props.list.editedRecord) {
-                    await this.props.leaveEdition(); // try to remove this props
-                }
+                await record.switchMode("edit");
                 this.cellToFocus = { column, record };
-                record.switchMode("edit");
             }
         } else {
             this.props.openRecord(record);
@@ -458,9 +447,8 @@ export class ListRenderer extends Component {
     }
 
     async unselectRow() {
-        await this.props.leaveEdition();
         if (this.props.list.editedRecord) {
-            this.props.list.editedRecord.switchMode("readonly");
+            return this.props.list.editedRecord.switchMode("readonly");
         }
     }
 
@@ -477,8 +465,7 @@ export class ListRenderer extends Component {
 
 ListRenderer.template = "web.ListRenderer";
 ListRenderer.components = { CheckBoxDropdownItem, Field, ViewButton, CheckBox, Dropdown };
-ListRenderer.props = ["list", "fields", "info", "openRecord", "hasSelectors?", "leaveEdition?"];
+ListRenderer.props = ["list", "fields", "info", "openRecord", "hasSelectors?"];
 ListRenderer.defaultProps = {
     hasSelectors: false,
-    leaveEdition: () => this.props.list.editedRecord.switchMode("readonly"),
 };

@@ -227,7 +227,7 @@ export class Record extends DataPoint {
         this._onChangePromise = Promise.resolve({});
         this._domains = {};
 
-        this._onSwitchMode = params.onRecordSwitchMode || (() => {});
+        this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
         this.mode = params.mode || (this.resId ? state.mode || "readonly" : "edit");
     }
 
@@ -280,10 +280,11 @@ export class Record extends DataPoint {
         return this.mode === "edit";
     }
 
-    switchMode(mode) {
+    async switchMode(mode) {
         if (this.mode === mode) {
             return;
         }
+        await this._onWillSwitchMode(this, mode);
         if (mode === "readonly") {
             for (const fieldName in this.activeFields) {
                 if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
@@ -295,7 +296,6 @@ export class Record extends DataPoint {
             }
         }
         this.mode = mode;
-        this._onSwitchMode(this);
         this.model.notify();
     }
 
@@ -689,10 +689,18 @@ class DynamicList extends DataPoint {
         this.isDomainSelected = false;
 
         this.editedRecord = null;
-        this.onRecordSwitchMode = (record) => {
-            this.editedRecord = record.isInEdition ? record : null;
-            if (params.onRecordSwitchMode) {
-                params.onRecordSwitchMode(record);
+        this.onRecordWillSwitchMode = async (record, mode) => {
+            const editedRecord = this.editedRecord;
+            this.editedRecord = null;
+            if (!params.onRecordWillSwitchMode && editedRecord) {
+                // not really elegant, but we only need the root list to save the record
+                await editedRecord.save();
+            }
+            if (mode === "edit") {
+                this.editedRecord = record;
+            }
+            if (params.onRecordWillSwitchMode) {
+                params.onRecordWillSwitchMode(record, mode);
             }
         };
     }
@@ -829,7 +837,7 @@ export class DynamicRecordList extends DynamicList {
             resModel: this.resModel,
             fields: this.fields,
             activeFields: this.activeFields,
-            onRecordSwitchMode: this.onRecordSwitchMode,
+            onRecordWillSwitchMode: this.onRecordWillSwitchMode,
         });
         await newRecord.load();
         if (position === "top") {
@@ -881,7 +889,7 @@ export class DynamicRecordList extends DynamicList {
                     values: data,
                     fields: this.fields,
                     activeFields: this.activeFields,
-                    onRecordSwitchMode: this.onRecordSwitchMode,
+                    onRecordWillSwitchMode: this.onRecordWillSwitchMode,
                 });
                 await record.loadRelationalData();
                 await record.loadPreloadedData();
@@ -997,7 +1005,7 @@ export class DynamicGroupList extends DynamicList {
             context: this.context,
             orderBy: this.orderBy,
             groupByInfo: this.groupByInfo,
-            onRecordSwitchMode: this.onRecordSwitchMode,
+            onRecordWillSwitchMode: this.onRecordWillSwitchMode,
         };
         return groups.map((data) => {
             const groupParams = {
@@ -1094,7 +1102,7 @@ export class Group extends DataPoint {
             activeFields: params.activeFields,
             fields: params.fields,
             groupByInfo: params.groupByInfo,
-            onRecordSwitchMode: params.onRecordSwitchMode,
+            onRecordWillSwitchMode: params.onRecordWillSwitchMode,
         };
         this.list = this.model.createDataPoint("list", listParams, state.listState);
     }
@@ -1176,8 +1184,15 @@ export class StaticList extends DataPoint {
         this._changes = [];
 
         this.editedRecord = null;
-        this.onRecordSwitchMode = (record) => {
-            this.editedRecord = record.isInEdition ? record : null;
+        this.onRecordWillSwitchMode = async (record, mode) => {
+            const editedRecord = this.editedRecord;
+            this.editedRecord = null;
+            if (editedRecord) {
+                await editedRecord.switchMode("readonly");
+            }
+            if (mode === "edit") {
+                this.editedRecord = record;
+            }
         };
     }
 
@@ -1241,7 +1256,7 @@ export class StaticList extends DataPoint {
                         activeFields: this.activeFields,
                         viewMode: this.viewMode,
                         views: this.views,
-                        onRecordSwitchMode: this.onRecordSwitchMode,
+                        onRecordWillSwitchMode: this.onRecordWillSwitchMode,
                     });
                     this._cache[resId] = record;
                     await record.load();

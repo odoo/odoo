@@ -247,12 +247,6 @@ export class ListView extends Component {
         }
     }
 
-    async leaveEdition() {
-        if (this.model.root.editedRecord) {
-            await this.model.root.editedRecord.save();
-        }
-    }
-
     async onClickCreate() {
         if (this.archInfo.editable) {
             // add a new row
