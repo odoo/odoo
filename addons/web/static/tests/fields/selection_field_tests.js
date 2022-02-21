@@ -227,7 +227,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("SelectionField");
 
-    QUnit.skipWOWL("SelectionField in a list view", async function (assert) {
+    QUnit.test("SelectionField in a list view", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.records.forEach(function (r) {
@@ -240,19 +240,14 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: '<tree string="Colors" editable="top">' + '<field name="color"/>' + "</tree>",
         });
+        const elements = Array.from(list.el.querySelectorAll("td div[name='color'] span"));
 
-        assert.strictEqual(
-            list.$("td:contains(Red)").length,
-            3,
-            "should have 3 rows with correct value"
-        );
-        await testUtils.dom.click(list.$("td:contains(Red):first"));
+        assert.strictEqual(elements.length, 3, "should have 3 rows with correct value");
+        await click(elements[0]);
 
-        var $td = list.$("tbody tr.o_selected_row td:not(.o_list_record_selector)");
-
-        assert.strictEqual($td.find("select").length, 1, "td should have a child 'select'");
-        assert.strictEqual($td.contents().length, 1, "select tag should be only child of td");
-        list.destroy();
+        const td = list.el.querySelector("tbody tr.o_selected_row td:not(.o_list_record_selector)");
+        assert.containsOnce(td, "select", "td should have a child 'select'");
+        assert.strictEqual(td.childNodes.length, 1, "select tag should be only child of td");
     });
 
     QUnit.test("SelectionField, edition and on many2one field", async function (assert) {
