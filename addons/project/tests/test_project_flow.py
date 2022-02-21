@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import copy
 
 from .test_project_base import TestProjectCommon
 from odoo import Command
@@ -230,7 +229,7 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
         })
 
         rating_good = rating.copy()
-        rating_average = rating.copy({'rating': 3, 'consumed': True, 'feedback': 'Ok'})
+        rating_average = rating.copy({'rating': 3, 'feedback': 'Ok'})
         rating_bad = rating.copy({'rating': 1, 'consumed': True, 'feedback': 'Not Satisfied'})
 
         # We need to invalidate cache since it is not done automatically by the ORM
@@ -239,7 +238,7 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
 
         self.assertEqual(rating_good.rating_text, 'top')
         self.assertEqual(rating_average.rating_text, 'ok')
-        self.assertEqual(rating_average.rating_text, 'ko')
+        self.assertEqual(rating_bad.rating_text, 'ko')
         self.assertEqual(first_task.rating_count, 1, "Task should have only one rating associated, since two are not consumed")
         self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
 

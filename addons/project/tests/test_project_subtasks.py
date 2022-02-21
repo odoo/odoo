@@ -119,6 +119,7 @@ class TestProjectSubtasks(TestProjectCommon):
 
         self.assertTrue(copy_parent_task.child_ids, "Subtasks should be copied when the parent task is duplicated")
         self.assertEqual(copy_parent_task.child_ids.name, "Test Subtask 1 (copy)")
+        self.assertEqual(parent_task.subtask_count, copy_parent_task.subtask_count, "sub task count should be same for both task and copy of task")
 
     def test_subtask_display_project(self):
         """
