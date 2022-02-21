@@ -1507,6 +1507,8 @@ class AccountTax(models.Model):
             if base_amount:
                 return math.copysign(quantity, base_amount) * self.amount
             else:
+                if self.price_include:
+                    return 0.0
                 return quantity * self.amount
 
         price_include = self._context.get('force_price_include', self.price_include)
@@ -1740,7 +1742,7 @@ class AccountTax(models.Model):
                     elif tax.amount_type == 'division':
                         incl_division_amount += tax.amount * sum_repartition_factor
                     elif tax.amount_type == 'fixed':
-                        incl_fixed_amount += quantity * tax.amount * sum_repartition_factor
+                        incl_fixed_amount += quantity * tax.amount * sum_repartition_factor if base else 0.0
                     else:
                         # tax.amount_type == other (python)
                         tax_amount = tax._compute_amount(base, sign * price_unit, abs(quantity), product, partner) * sum_repartition_factor

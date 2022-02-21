@@ -1255,6 +1255,72 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': -2627.014,
         })
 
+    def test_out_invoice_line_onchange_taxes_3_fixed_tax_full_discount(self):
+        ''' Check that fixed tax are correctly discounted when
+            set up as included in price
+        '''
+        fixed_tax_price_include = self.env['account.tax'].create({
+            'name': 'FIXED incl',
+            'type_tax_use': 'sale',
+            'amount_type': 'fixed',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        sale_tax_price_include = self.env['account.tax'].create({
+            'name': '15% incl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15,
+            'price_include': True,
+        })
+        move_form = Form(self.invoice)
+        move_form.invoice_line_ids.remove(1)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = 147
+            line_form.discount = 100.0
+            line_form.tax_ids.clear()
+            line_form.tax_ids.add(fixed_tax_price_include)
+            line_form.tax_ids.add(sale_tax_price_include)
+        move_form.save()
+
+        expected = [{
+            'amount_untaxed': 0.0,
+            'amount_tax': 0.0,
+            'amount_total': 0.0,
+        }]
+        self.assertRecordValues(self.invoice, expected)
+
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'FIXED excl',
+            'type_tax_use': 'sale',
+            'amount_type': 'fixed',
+            'amount': 10,
+            'price_include': False,
+            'include_base_amount': False,
+        })
+        sale_tax = self.env['account.tax'].create({
+            'name': '15% excl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15,
+            'price_include': False,
+            'include_base_amount': False,
+        })
+        move_form = Form(self.invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.tax_ids.clear()
+            line_form.tax_ids.add(fixed_tax)
+            line_form.tax_ids.add(sale_tax)
+        move_form.save()
+
+        expected = [{
+            'amount_untaxed': 0.0,
+            'amount_tax': 10.0,
+            'amount_total': 10.0,
+        }]
+        self.assertRecordValues(self.invoice, expected)
+
     def test_out_invoice_line_onchange_analytic(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
