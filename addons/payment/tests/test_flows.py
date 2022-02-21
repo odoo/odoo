@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from freezegun import freeze_time
 from unittest.mock import patch
+
+from freezegun import freeze_time
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -327,41 +328,44 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
             "odoo.exceptions.ValidationError: The access token is invalid.",
             response.text)
 
-    def test_number_of_payment_request_from_portal(self):
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def test_direct_payment_triggers_no_payment_request(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
         self.partner = self.portal_partner
         self.user = self.portal_user
-        self._test_number_of_payment_request_from_portal('direct', 0)
-        self._test_number_of_payment_request_from_portal('redirect', 0)
-        self._test_number_of_payment_request_from_portal('token', 1)
-
-    @mute_logger('odoo.addons.payment.models.payment_transaction')
-    def _test_number_of_payment_request_from_portal(self, flow, calls):
-        """ Test the number of payment requests made from the portal for a given online payment flow
-
-        :param str flow: The online payment flow to test ('direct', 'redirect', or 'token')
-        :param int calls: The expected number of call to `_send_payment_request`
-        """
-        payment_option_id = self.create_token().id if flow == 'token' else self.acquirer.id
-        data = {
-            'amount': self.amount,
-            'currency_id': self.currency.id,
-            'partner_id': self.partner.id,
-            'access_token': self._generate_test_access_token(
-                self.partner.id, self.amount, self.currency.id
-            ),
-            'payment_option_id': payment_option_id,
-            'reference_prefix': 'test',
-            'tokenization_requested': True,
-            'landing_route': 'Test',
-            'is_validation': False,
-            'invoice_id': self.invoice.id,
-            'flow': flow,
-        }
-
         with patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._send_payment_request'
         ) as patched:
-            self.get_processing_values(**data)
-            self.assertEqual(patched.call_count, calls)
+            self.portal_transaction(
+                **self._prepare_transaction_values(self.acquirer.id, 'direct')
+            )
+            self.assertEqual(patched.call_count, 0)
+
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def test_payment_with_redirect_triggers_no_payment_request(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.partner = self.portal_partner
+        self.user = self.portal_user
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._send_payment_request'
+        ) as patched:
+            self.portal_transaction(
+                **self._prepare_transaction_values(self.acquirer.id, 'redirect')
+            )
+            self.assertEqual(patched.call_count, 0)
+
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def test_payment_by_token_triggers_exactly_one_payment_request(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.partner = self.portal_partner
+        self.user = self.portal_user
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._send_payment_request'
+        ) as patched:
+            self.portal_transaction(
+                **self._prepare_transaction_values(self.create_token().id, 'token')
+            )
+            self.assertEqual(patched.call_count, 1)
