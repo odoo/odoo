@@ -129,7 +129,7 @@ const toggleColumnActions = async (kanban, columnIndex) => {
     const group = kanban.el.querySelector(`.o_kanban_group:nth-child(${columnIndex + 1})`);
     await triggerEvent(group, null, "mouseenter");
     await click(group, ".o_kanban_config .dropdown-toggle");
-    const buttons = group.querySelectorAll(".o_kanban_config .dropdown-menu button");
+    const buttons = group.querySelectorAll(".o_kanban_config .dropdown-menu .dropdown-item");
     return (buttonText) => {
         const re = new RegExp(`\\b${buttonText}\\b`, "i");
         const button = [...buttons].find((b) => re.test(b.innerText));

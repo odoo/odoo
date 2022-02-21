@@ -16,6 +16,7 @@ import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { useSortable } from "@web/views/kanban/kanban_sortable";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _lt } from "@web/core/l10n/translation";
@@ -556,7 +557,14 @@ export class KanbanRenderer extends Component {
 }
 
 KanbanRenderer.template = "web.KanbanRenderer";
-KanbanRenderer.components = { Field, FormRenderer, ViewButton, KanbanAnimatedNumber, Dropdown };
+KanbanRenderer.components = {
+    Field,
+    FormRenderer,
+    ViewButton,
+    KanbanAnimatedNumber,
+    Dropdown,
+    DropdownItem,
+};
 
 class KanbanExamplesDialog extends Dialog {
     setup() {

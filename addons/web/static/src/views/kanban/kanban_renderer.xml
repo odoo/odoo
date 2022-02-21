@@ -21,42 +21,27 @@
                                         <t t-set-slot="toggler">
                                             <i class="fa fa-gear" role="img" aria-label="Settings" title="Settings" />
                                         </t>
-                                        <ul class="list-unstyled m-0">
-                                            <button role="menuitem"
-                                                class="dropdown-item o_kanban_toggle_fold"
-                                                t-on-click="() => this.toggleGroup(group)"
-                                            >
-                                                Fold
-                                            </button>
-                                            <button t-if="canEditGroup(group)"
-                                                role="menuitem"
-                                                class="dropdown-item o_column_edit"
-                                                t-on-click="() => this.editGroup(group)"
-                                            >
+                                        <DropdownItem class="'o_kanban_toggle_fold'" onSelected="() => this.toggleGroup(group)">
+                                            Fold
+                                        </DropdownItem>
+                                        <t t-if="canEditGroup(group)">
+                                            <DropdownItem class="'o_column_edit'" onSelected="() => this.editGroup(group)">
                                                 Edit Stage
-                                            </button>
-                                            <button t-if="canDeleteGroup(group)"
-                                                role="menuitem"
-                                                class="dropdown-item o_column_delete"
-                                                t-on-click="() => this.deleteGroup(group)"
-                                            >
+                                            </DropdownItem>
+                                        </t>
+                                        <t t-if="canDeleteGroup(group)">
+                                            <DropdownItem class="'o_column_delete'" onSelected="() => this.deleteGroup(group)">
                                                 Delete
-                                            </button>
-                                            <t t-if="canArchiveGroup(group)">
-                                                <button role="menuitem"
-                                                    class="dropdown-item o_column_archive_records"
-                                                    t-on-click="() => this.archiveGroup(group)"
-                                                >
-                                                    Archive All
-                                                </button>
-                                                <button role="menuitem"
-                                                    class="dropdown-item o_column_unarchive_records"
-                                                    t-on-click="() => this.unarchiveGroup(group)"
-                                                >
-                                                    Unarchive All
-                                                </button>
-                                            </t>
-                                        </ul>
+                                            </DropdownItem>
+                                        </t>
+                                        <t t-if="canArchiveGroup(group)">
+                                            <DropdownItem class="'o_column_archive_records'" onSelected="() => this.archiveGroup(group)">
+                                                Archive All
+                                            </DropdownItem>
+                                            <DropdownItem class="'o_column_unarchive_records'" onSelected="() => this.unarchiveGroup(group)">
+                                                Unarchive All
+                                            </DropdownItem>
+                                        </t>
                                     </Dropdown>
                                     <span t-if="props.list.canQuickCreate()" class="o_kanban_quick_add" t-on-click="() => props.list.quickCreate(group)">
                                         <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
