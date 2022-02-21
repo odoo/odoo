@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from operator import itemgetter
-
 from odoo import _
-from odoo.http import request
-from odoo.tools import groupby as groupbyelem
-
 from odoo.osv.expression import OR
 
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
