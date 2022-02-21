@@ -328,6 +328,14 @@ registerModel({
             default: false,
         }),
         /**
+         * States whether this RTC session is connected.
+         * Useful when attempting to recover a failed peer connection by
+         * inverting the call direction.
+         */
+         isConnected: attr({
+            default: false,
+        }),
+        /**
          * Determines if the user is deafened, which means that all incoming
          * audio tracks are disabled.
          */
