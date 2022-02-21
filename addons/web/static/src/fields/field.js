@@ -116,20 +116,18 @@ export class Field extends Component {
         }
     }
 
-    parseValue(value, silent = false) {
+    parseValue(value, options = {}) {
         const record = this.props.record;
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];
 
         const parserRegistry = registry.category("parsers");
         if (parserRegistry.contains(activeField.widget)) {
-            return parserRegistry.get(activeField.widget)(value);
+            return parserRegistry.get(activeField.widget)(value, options);
         } else if (parserRegistry.contains(field.type)) {
-            return parserRegistry.get(field.type)(value);
+            return parserRegistry.get(field.type)(value, options);
         } else {
-            if (!silent) {
-                console.warn(`No parser found for ${field.type} field. It should be implemented.`);
-            }
+            console.warn(`No parser found for ${field.type} field. It should be implemented.`);
             return value;
         }
     }

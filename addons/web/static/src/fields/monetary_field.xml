@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web.MonetaryField" owl="1">
+        <span t-if="props.readonly" t-esc="formattedValue" />
+        <div t-else="">
+            <span t-if="currencyPosition === 'before'" t-out="currencySymbol"></span><input t-ref="input" t-att-type="props.inputType"  class="o_input"  t-att-value="formattedInputValue" t-on-change="onChange" /><span t-if="currencyPosition === 'after'" t-out="currencySymbol"></span>
+        </div>
+    </t>
+
+</templates>

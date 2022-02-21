@@ -310,14 +310,13 @@ export const formatX2many = (value) => {
  * @returns {string}
  */
 export const formatMonetary = (value, options = {}) => {
-    let currencyId = options.currencyId;
-    if (!currencyId && options.data) {
-        const currencyField =
-            options.currencyField ||
-            (options.field && options.field.currency_field) ||
-            "currency_id";
-        currencyId = options.data[currencyField] && options.data[currencyField].res_id;
+    // Monetary fields want to display nothing when the value is unset.
+    // You wouldn't want a value of 0 euro if nothing has been provided.
+    if (value === false) {
+        return "";
     }
+
+    let currencyId = options.currencyId;
     const currency = session.currencies[currencyId];
     const digits = (currency && currency.digits) || options.digits;
 
@@ -332,9 +331,9 @@ export const formatMonetary = (value, options = {}) => {
         return formatted;
     }
     if (currency.position === "after") {
-        return `${formatted} ${currency.symbol}`;
+        return `${formatted}\u00a0${currency.symbol}`;
     } else {
-        return `${currency.symbol} ${formatted}`;
+        return `${currency.symbol}\u00a0${formatted}`;
     }
 };
 

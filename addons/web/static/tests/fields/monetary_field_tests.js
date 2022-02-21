@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
-import { setupViewRegistries } from "../views/helpers";
+import { makeView, setupViewRegistries } from "../views/helpers";
+import { click, clickEdit, clickSave, editInput, patchWithCleanup } from "../helpers/utils";
+import { session } from "@web/session";
 
 let serverData;
 
@@ -10,29 +12,7 @@ QUnit.module("Fields", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        date: { string: "A date", type: "date", searchable: true },
-                        datetime: { string: "A datetime", type: "datetime", searchable: true },
-                        display_name: { string: "Displayed name", type: "char", searchable: true },
-                        foo: {
-                            string: "Foo",
-                            type: "char",
-                            default: "My little Foo Value",
-                            searchable: true,
-                            trim: true,
-                        },
                         bar: { string: "Bar", type: "boolean", default: true, searchable: true },
-                        empty_string: {
-                            string: "Empty string",
-                            type: "char",
-                            default: false,
-                            searchable: true,
-                            trim: true,
-                        },
-                        txt: {
-                            string: "txt",
-                            type: "text",
-                            default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
-                        },
                         int_field: {
                             string: "int_field",
                             type: "integer",
@@ -46,112 +26,36 @@ QUnit.module("Fields", (hooks) => {
                             relation: "partner",
                             searchable: true,
                         },
-                        trululu: {
-                            string: "Trululu",
-                            type: "many2one",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        timmy: {
-                            string: "pokemon",
-                            type: "many2many",
-                            relation: "partner_type",
-                            searchable: true,
-                        },
-                        product_id: {
-                            string: "Product",
-                            type: "many2one",
-                            relation: "product",
-                            searchable: true,
-                        },
-                        sequence: { type: "integer", string: "Sequence", searchable: true },
                         currency_id: {
                             string: "Currency",
                             type: "many2one",
                             relation: "currency",
                             searchable: true,
                         },
-                        selection: {
-                            string: "Selection",
-                            type: "selection",
-                            searchable: true,
-                            selection: [
-                                ["normal", "Normal"],
-                                ["blocked", "Blocked"],
-                                ["done", "Done"],
-                            ],
-                        },
-                        document: { string: "Binary", type: "binary" },
-                        hex_color: { string: "hexadecimal color", type: "char" },
                     },
                     records: [
                         {
                             id: 1,
-                            date: "2017-02-03",
-                            datetime: "2017-02-08 10:00:00",
-                            display_name: "first record",
                             bar: true,
-                            foo: "yop",
                             int_field: 10,
                             qux: 0.44444,
                             p: [],
-                            timmy: [],
-                            trululu: 4,
-                            selection: "blocked",
-                            document: "coucou==\n",
-                            hex_color: "#ff0000",
                         },
                         {
                             id: 2,
-                            display_name: "second record",
                             bar: true,
-                            foo: "blip",
                             int_field: 0,
                             qux: 0,
                             p: [],
-                            timmy: [],
-                            trululu: 1,
-                            sequence: 4,
                             currency_id: 2,
-                            selection: "normal",
                         },
                         {
                             id: 4,
-                            display_name: "aaa",
-                            foo: "abc",
-                            sequence: 9,
                             int_field: false,
                             qux: false,
-                            selection: "done",
                         },
-                        { id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859 },
-                        { id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1 },
-                    ],
-                    onchanges: {},
-                },
-                product: {
-                    fields: {
-                        name: { string: "Product Name", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 37,
-                            display_name: "xphone",
-                        },
-                        {
-                            id: 41,
-                            display_name: "xpad",
-                        },
-                    ],
-                },
-                partner_type: {
-                    fields: {
-                        name: { string: "Partner Type", type: "char", searchable: true },
-                        color: { string: "Color index", type: "integer", searchable: true },
-                    },
-                    records: [
-                        { id: 12, display_name: "gold", color: 2 },
-                        { id: 14, display_name: "silver", color: 5 },
+                        { id: 3, bar: true, int_field: 80, qux: -3.89859 },
+                        { id: 5, bar: false, int_field: -4, qux: 9.1, currency_id: 1 },
                     ],
                 },
                 currency: {
@@ -173,20 +77,12 @@ QUnit.module("Fields", (hooks) => {
                             symbol: "€",
                             position: "after",
                         },
-                    ],
-                },
-                "ir.translation": {
-                    fields: {
-                        lang: { type: "char" },
-                        value: { type: "char" },
-                        res_id: { type: "integer" },
-                    },
-                    records: [
                         {
-                            id: 99,
-                            res_id: 37,
-                            value: "",
-                            lang: "en_US",
+                            id: 3,
+                            display_name: "VEF",
+                            symbol: "Bs.F",
+                            position: "after",
+                            digits: [0, 4],
                         },
                     ],
                 },
@@ -198,309 +94,266 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("MonetaryField");
 
-    QUnit.skipWOWL("MonetaryField in form view", async function (assert) {
+    QUnit.test("basic flow in form view", async function (assert) {
         assert.expect(5);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="qux" widget="monetary"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</sheet>" +
-                "</form>",
-            res_id: 5,
-            session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
-            },
+        const form = await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 5,
+            arch: `
+                <form>
+                    <field name="qux" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                </form>`,
         });
 
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            form.$(".o_field_widget").first().text(),
+            form.el.querySelector(".o_field_widget").textContent,
             "$\u00a09.10",
             "The value should be displayed properly."
         );
 
-        await testUtils.form.clickEdit(form);
+        await clickEdit(form);
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").val(),
+            form.el.querySelector(".o_field_widget[name=qux] input").value,
             "9.10",
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").parent().children().first().text(),
+            form.el.querySelector(".o_field_widget[name=qux] input").parentNode.childNodes[0]
+                .textContent,
             "$",
             "The input should be preceded by a span containing the currency symbol."
         );
 
-        await testUtils.fields.editInput(form.$(".o_field_monetary input"), "108.2458938598598");
+        await editInput(form.el, ".o_field_monetary input", "108.2458938598598");
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").val(),
-            "108.2458938598598",
-            "The value should not be formated yet."
+            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            "108.25",
+            "The new value should be rounded properly after the blur"
         );
 
-        await testUtils.form.clickSave(form);
+        await clickSave(form);
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            form.$(".o_field_widget").first().text(),
+            form.el.querySelector(".o_field_widget").textContent,
             "$\u00a0108.25",
             "The new value should be rounded properly."
         );
-
-        form.destroy();
     });
 
-    QUnit.skipWOWL("MonetaryField rounding using formula in form view", async function (assert) {
+    QUnit.test("rounding using formula in form view", async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="qux" widget="monetary"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</sheet>" +
-                "</form>",
-            res_id: 5,
-            session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
-            },
+        const form = await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 5,
+            arch: `
+                <form>
+                    <field name="qux" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                </form>`,
         });
 
         // Test computation and rounding
-        await testUtils.form.clickEdit(form);
-        await testUtils.fields.editInput(form.$(".o_field_monetary input"), "=100/3");
-        await testUtils.form.clickSave(form);
+        await clickEdit(form);
+        await editInput(form.el, ".o_field_monetary input", "=100/3");
+        await clickSave(form);
         assert.strictEqual(
-            form.$(".o_field_widget").first().text(),
+            form.el.querySelector(".o_field_widget").textContent,
             "$\u00a033.33",
             "The new value should be calculated and rounded properly."
         );
-
-        form.destroy();
     });
 
-    QUnit.skipWOWL("MonetaryField with currency symbol after", async function (assert) {
-        assert.expect(5);
-
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="qux" widget="monetary"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</sheet>" +
-                "</form>",
-            res_id: 2,
-            session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
-            },
+    QUnit.test("with currency symbol after", async function (assert) {
+        const form = await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 2,
+            arch: `
+                <form>
+                    <field name="qux" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                </form>`,
         });
 
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            form.$(".o_field_widget").first().text(),
+            form.el.querySelector(".o_field_widget").textContent,
             "0.00\u00a0€",
             "The value should be displayed properly."
         );
 
-        await testUtils.form.clickEdit(form);
+        await clickEdit(form);
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").val(),
+            form.el.querySelector(".o_field_widget[name=qux] input").value,
             "0.00",
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").parent().children().eq(1).text(),
+            form.el.querySelector(".o_field_widget[name=qux] input").parentNode.children[1]
+                .textContent,
             "€",
             "The input should be followed by a span containing the currency symbol."
         );
 
-        await testUtils.fields.editInput(
-            form.$(".o_field_widget[name=qux] input"),
-            "108.2458938598598"
-        );
+        await editInput(form.el, ".o_field_widget[name=qux] input", "108.2458938598598");
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").val(),
-            "108.2458938598598",
-            "The value should not be formated yet."
+            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            "108.25",
+            "The value should be formatted on blur."
         );
 
-        await testUtils.form.clickSave(form);
+        await clickSave(form);
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            form.$(".o_field_widget").first().text(),
+            form.el.querySelector(".o_field_widget").textContent,
             "108.25\u00a0€",
             "The new value should be rounded properly."
         );
-
-        form.destroy();
     });
 
-    QUnit.skipWOWL("MonetaryField with currency digits != 2", async function (assert) {
+    QUnit.test("MonetaryField with currency digits != 2", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records = [
-            {
-                id: 1,
-                bar: false,
-                foo: "pouet",
-                int_field: 68,
-                qux: 99.1234,
-                currency_id: 1,
+        // need to also add it to the session (as currencies are loaded there)
+        patchWithCleanup(session, {
+            currencies: {
+                ...session.currencies,
+                3: {
+                    name: "VEF",
+                    symbol: "Bs.F",
+                    position: "after",
+                    digits: [0, 4],
+                },
             },
-        ];
-        this.data.currency.records = [
+        });
+
+        serverData.models.partner.records = [
             {
                 id: 1,
-                display_name: "VEF",
-                symbol: "Bs.F",
-                position: "after",
-                digits: [16, 4],
+                qux: 99.1234,
+                currency_id: 3,
             },
         ];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="qux" widget="monetary"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
-            session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
-            },
+        const form = await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="qux" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                </form>`,
         });
 
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            form.$(".o_field_widget").first().text(),
+            form.el.querySelector(".o_field_widget").textContent,
             "99.1234\u00a0Bs.F",
             "The value should be displayed properly."
         );
 
-        await testUtils.form.clickEdit(form);
+        await clickEdit(form);
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").val(),
+            form.el.querySelector(".o_field_widget[name=qux] input").value,
             "99.1234",
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").parent().children().eq(1).text(),
+            form.el.querySelector(".o_field_widget[name=qux] input").parentNode.children[1]
+                .textContent,
             "Bs.F",
             "The input should be followed by a span containing the currency symbol."
         );
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=qux] input"), "99.111111111");
+        await editInput(form.el, ".o_field_widget[name=qux] input", "99.111111111");
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").val(),
-            "99.111111111",
-            "The value should not be formated yet."
+            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            "99.1111",
+            "The value should should be formatted on blur."
         );
 
-        await testUtils.form.clickSave(form);
+        await clickSave(form);
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            form.$(".o_field_widget").first().text(),
+            form.el.querySelector(".o_field_widget").textContent,
             "99.1111\u00a0Bs.F",
             "The new value should be rounded properly."
         );
-
-        form.destroy();
     });
 
-    QUnit.skipWOWL("MonetaryField in editable list view", async function (assert) {
-        assert.expect(9);
-
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<tree editable="bottom">' +
-                '<field name="qux" widget="monetary"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</tree>",
-            session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
-            },
+    QUnit.test("basic flow in editable list view", async function (assert) {
+        var list = await makeView({
+            type: "list",
+            serverData,
+            resModel: "partner",
+            arch: `<tree editable="bottom">
+                    <field name="qux" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>`,
         });
 
-        var dollarValues = list.$("td").filter(function () {
-            return _.str.include($(this).text(), "$");
-        });
+        const dollarValues = Array.from(list.el.querySelectorAll("td")).filter((x) =>
+            x.textContent.includes("$")
+        );
         assert.strictEqual(dollarValues.length, 1, "Only one line has dollar as a currency.");
 
-        var euroValues = list.$("td").filter(function () {
-            return _.str.include($(this).text(), "€");
-        });
+        const euroValues = Array.from(list.el.querySelectorAll("td")).filter((x) =>
+            x.textContent.includes("€")
+        );
         assert.strictEqual(euroValues.length, 1, "One one line has euro as a currency.");
 
-        var zeroValues = list.$("td.o_data_cell").filter(function () {
-            return $(this).text() === "";
-        });
-        assert.strictEqual(
-            zeroValues.length,
-            1,
-            "Unset float values should be rendered as empty strings."
-        );
-
         // switch to edit mode
-        var $cell = list.$("tr.o_data_row td:not(.o_list_record_selector):contains($)");
-        await testUtils.dom.click($cell);
+        const dollarCell = list.el.querySelector("td[title='9.1']");
+        await click(dollarCell);
 
         assert.strictEqual(
-            $cell.children().length,
+            dollarCell.childNodes.length,
             1,
             "The cell td should only contain the special div of monetary widget."
         );
+
         assert.containsOnce(
-            list,
+            list.el,
             '[name="qux"] input',
             "The view should have 1 input for editable monetary float."
         );
+
         assert.strictEqual(
-            list.$('[name="qux"] input').val(),
+            list.el.querySelector('[name="qux"] input').value,
             "9.10",
             "The input should be rendered without the currency symbol."
         );
+
         assert.strictEqual(
-            list.$('[name="qux"] input').parent().children().first().text(),
+            list.el.querySelector('[name="qux"] input').parentNode.childNodes[0].textContent,
             "$",
             "The input should be preceded by a span containing the currency symbol."
         );
 
-        await testUtils.fields.editInput(list.$('[name="qux"] input'), "108.2458938598598");
+        await editInput(list.el, '[name="qux"] input', "108.2458938598598");
         assert.strictEqual(
-            list.$('[name="qux"] input').val(),
-            "108.2458938598598",
-            "The typed value should be correctly displayed."
+            list.el.querySelector('[name="qux"] input').value,
+            "108.25",
+            "The typed value should be correctly displayed and formatted on blur"
         );
 
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_save"));
+        await clickSave(list);
         assert.strictEqual(
-            list.$("tr.o_data_row td:not(.o_list_record_selector):contains($)").text(),
+            dollarCell.textContent,
             "$\u00a0108.25",
-            "The new value should be rounded properly."
+            "The new value should be correct"
         );
-
-        list.destroy();
     });
 
     QUnit.skipWOWL("MonetaryField with real monetary field in model", async function (assert) {
@@ -525,7 +378,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: "partner",
             data: this.data,
@@ -602,7 +455,7 @@ QUnit.module("Fields", (hooks) => {
         };
         this.data.partner.records[4].company_currency_id = 2;
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: "partner",
             data: this.data,
@@ -640,7 +493,7 @@ QUnit.module("Fields", (hooks) => {
                 relation: "partner",
                 default: [[6, false, [2]]],
             };
-            var form = await createView({
+            const form = await createView({
                 View: FormView,
                 model: "partner",
                 data: this.data,

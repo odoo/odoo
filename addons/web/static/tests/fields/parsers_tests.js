@@ -91,8 +91,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("parseMonetary", function (assert) {
-        assert.expect(17);
-
         patchWithCleanup(session, {
             currencies: {
                 1: {
@@ -110,24 +108,24 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(parseMonetary(""), 0);
         assert.strictEqual(parseMonetary("0"), 0);
-        assert.strictEqual(parseMonetary("100.00&nbsp;€"), 100);
+        assert.strictEqual(parseMonetary("100.00\u00a0€"), 100);
         assert.strictEqual(parseMonetary("-100.00"), -100);
         assert.strictEqual(parseMonetary("1,000.00"), 1000);
         assert.strictEqual(parseMonetary("1,000,000.00"), 1000000);
-        assert.strictEqual(parseMonetary("$&nbsp;125.00", { currencyId: 3 }), 125);
-        assert.strictEqual(parseMonetary("1,000.00&nbsp;€", { currencyId: 1 }), 1000);
+        assert.strictEqual(parseMonetary("$\u00a0125.00", { currencyId: 3 }), 125);
+        assert.strictEqual(parseMonetary("1,000.00\u00a0€", { currencyId: 1 }), 1000);
 
-        assert.throws(() => parseMonetary("&nbsp;", { currencyId: 3 }));
-        assert.throws(() => parseMonetary("1&nbsp;", { currencyId: 3 }));
-        assert.throws(() => parseMonetary("&nbsp;1", { currencyId: 3 }));
+        assert.throws(() => parseMonetary("\u00a0", { currencyId: 3 }));
+        assert.throws(() => parseMonetary("1\u00a0", { currencyId: 3 }));
+        assert.throws(() => parseMonetary("\u00a01", { currencyId: 3 }));
 
         assert.throws(() => parseMonetary("12.00 €"));
         assert.throws(() => parseMonetary("$ 12.00", { currencyId: 3 }));
-        assert.throws(() => parseMonetary("1&nbsp;$", { currencyId: 1 }));
-        assert.throws(() => parseMonetary("$&nbsp;1")); // "€" is the default currency here
+        assert.throws(() => parseMonetary("1\u00a0$", { currencyId: 1 }));
+        assert.throws(() => parseMonetary("$\u00a01")); // "€" is the default currency here
 
-        assert.throws(() => parseMonetary("1$&nbsp;1", { currencyId: 1 }));
-        assert.throws(() => parseMonetary("$&nbsp;12.00&nbsp;34", { currencyId: 3 }));
+        assert.throws(() => parseMonetary("1$\u00a01", { currencyId: 1 }));
+        assert.throws(() => parseMonetary("$\u00a012.00\u00a034", { currencyId: 3 }));
     });
 
     QUnit.test("parsers fallback on english localisation", function (assert) {

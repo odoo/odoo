@@ -164,23 +164,30 @@ export function parsePercentage(value) {
  * @returns {number} float
  */
 export function parseMonetary(value, options = {}) {
-    const values = value.split("&nbsp;");
+    // TODO GES help ?
+    // const values = value.split("&nbsp;");
+    const values = value.split("\u00a0");
     if (values.length === 1) {
         return parseFloat(value);
     }
-    let currency;
-    if (options.currencyId) {
-        currency = session.currencies[options.currencyId];
-    } else {
-        currency = Object.values(session.currencies)[0];
+    let currency = session.currencies[options.currencyId];
+    if (!currency) {
+        if (Object.keys(session.currencies).length !== 0) {
+            // BS
+            currency = session.currencies[Object.keys(session.currencies)[0]];
+        } else {
+            throw new InvalidNumberError(
+                `"${value}" is either an invalid number or is using an unconfigured currency symbol`
+            );
+        }
     }
     const symbolIndex = values.findIndex((v) => v === currency.symbol);
     if (symbolIndex === -1) {
-        throw new InvalidNumberError(`"${value}" is not a correct number`);
+        throw new InvalidNumberError(`"${value}" doesn't have the expected currency symbol`);
     }
     values.splice(symbolIndex, 1);
     if (values.length !== 1) {
-        throw new InvalidNumberError(`"${value}" is not a correct number`);
+        throw new InvalidNumberError(`"${value}" is not a valid number`);
     }
     return parseFloat(values[0]);
 }

@@ -388,12 +388,15 @@ export class Record extends DataPoint {
     }
 
     setInvalidField(fieldName) {
-        this._invalidFields.add(fieldName);
+        this._invalidFields.add({ fieldName });
         this.model.notify();
     }
 
     isInvalid(fieldName) {
-        return this._invalidFields.has(fieldName);
+        for (const invalid of this._invalidFields) {
+            if (invalid.fieldName === fieldName) return true;
+        }
+        return false;
     }
 
     async load() {
@@ -512,16 +515,26 @@ export class Record extends DataPoint {
             await this._performOnchange(fieldName);
         }
         await this.loadPreloadedData();
-        this._invalidFields.delete(fieldName);
+        this._invalidFields.forEach((x) =>
+            x.fieldName === fieldName ? this._invalidFields.delete(x) : x
+        );
         this.model.notify();
     }
 
     async save(options = { stayInEdition: false }) {
         return this.model.mutex.exec(async () => {
             if (this._invalidFields.size > 0) {
+                let invalidStringArr = [];
+                for (const invalid of this._invalidFields) {
+                    // TODO only add debugMessage if debug mode is active.
+                    if (invalid.debugMessage) {
+                        invalidStringArr.push(invalid.fieldName + ":" + invalid.debugMessage);
+                    } else {
+                        invalidStringArr.push(invalid.fieldName);
+                    }
+                }
                 this.model.notificationService.add(
-                    this.model.env._t("Invalid fields: ") +
-                        Array.from(this._invalidFields).join(", ")
+                    this.model.env._t("Invalid fields: ") + invalidStringArr.join(", ")
                 );
                 return;
             }
@@ -676,7 +689,9 @@ export class Record extends DataPoint {
                 Object.assign(this._domains, result.domain);
             }
             for (const fieldName in result.value) {
-                this._invalidFields.delete(fieldName);
+                this._invalidFields.forEach((x) =>
+                    x.fieldName === fieldName ? this._invalidFields.delete(x) : x
+                );
                 // for x2many fields, the onchange returns commands, not ids, so we need to process them
                 // for now, we simply return an empty list
                 if (isX2Many(this.fields[fieldName])) {

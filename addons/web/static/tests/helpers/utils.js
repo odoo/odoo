@@ -333,6 +333,28 @@ export function click(el, selector) {
     return triggerEvent(el, selector, "click", { bubbles: true, cancelable: true });
 }
 
+export function clickEdit(view) {
+    const htmlElement = view.el;
+    if (htmlElement.querySelectorAll(".o_form_button_edit").length) {
+        return click(htmlElement, ".o_form_button_edit");
+    } else if (htmlElement.querySelectorAll(".o_list_button_edit").length) {
+        return click(htmlElement, ".o_list_button_edit");
+    } else {
+        throw new Error("No edit button found to be clicked.");
+    }
+}
+
+export function clickSave(view) {
+    const htmlElement = view.el;
+    if (htmlElement.querySelectorAll(".o_form_button_save").length) {
+        return click(htmlElement, ".o_form_button_save");
+    } else if (htmlElement.querySelectorAll(".o_list_button_save").length) {
+        return click(htmlElement, ".o_list_button_save");
+    } else {
+        throw new Error("No save button found to be clicked.");
+    }
+}
+
 export async function mouseEnter(el, selector) {
     return triggerEvent(el, selector, "mouseenter");
 }
