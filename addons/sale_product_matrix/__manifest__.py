@@ -12,7 +12,7 @@
     'depends': ['sale', 'product_matrix', 'sale_product_configurator'],
     'data': [
         'views/product_template_views.xml',
-        'views/sale_views.xml',
+        'views/sale_order_views.xml',
         'report/sale_report_templates.xml',
     ],
     'demo': [
