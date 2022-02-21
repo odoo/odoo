@@ -19,10 +19,9 @@ const ProjectFormController = FormController.extend({
         this.archiveEnabled = true;
 
         if (actions) {
-            const activeField = this.model.getActiveField(state);
             actions.items.other.unshift({
-                description: state.data[activeField] ? _t('Archive') : _t('Unarchive'),
-                callback: () => this._stopRecurrence(state.data['id'], state.data[activeField] ? 'archive' : 'unarchive'),
+                description: _t('Archive'),
+                callback: () => this._stopRecurrence(state.data['id'], 'archive'),
             });
         }
 
@@ -38,8 +37,24 @@ const ProjectFormController = FormController.extend({
         this._stopRecurrence(record.res_id, 'delete');
     },
 
-    _stopRecurrence(resId, mode) {
-        new Dialog(this, {
+    _countTasks(recurrence_id) {
+        return this._rpc({
+            model: 'project.task',
+            method: 'search_count',
+            args: [[["recurrence_id", "=", recurrence_id.res_id]]],
+        });
+    },
+
+    async _stopRecurrence(resId, mode) {
+        const record = this.model.get(this.handle);
+        const recurrence_id = record.data.recurrence_id;
+        const count = await this._countTasks(recurrence_id);
+        const allowContinue = count != 1;
+
+        const alert = allowContinue
+            ? _t('It seems that this task is part of a recurrence.')
+            : _t('It seems that this task is part of a recurrence. You must keep it as a model to create the next occurences.');
+        const dialog = new Dialog(this, {
             buttons: [
                 {
                     classes: 'btn-primary',
@@ -51,8 +66,6 @@ const ProjectFormController = FormController.extend({
                         }).then(() => {
                             if (mode === 'archive') {
                                 this._toggleArchiveState(true);
-                            } else if (mode === 'unarchive') {
-                                this._toggleArchiveState(false);
                             } else if (mode === 'delete') {
                                 this._deleteRecords([this.handle]);
                             }
@@ -60,25 +73,6 @@ const ProjectFormController = FormController.extend({
                     },
                     close: true,
                     text: _t('Stop Recurrence'),
-                },
-                {
-                    click: () => {
-                        this._rpc({
-                            model: 'project.task',
-                            method: 'action_continue_recurrence',
-                            args: [resId],
-                        }).then(() => {
-                            if (mode === 'archive') {
-                                this._toggleArchiveState(true);
-                            } else if (mode === 'unarchive') {
-                                this._toggleArchiveState(false);
-                            } else if (mode === 'delete') {
-                                this._deleteRecords([this.handle]);
-                            }
-                        });
-                    },
-                    close: true,
-                    text: _t('Continue Recurrence'),
                 },
                 {
                     close: true,
@@ -89,9 +83,32 @@ const ProjectFormController = FormController.extend({
             title: _t('Confirmation'),
             $content: $('<main/>', {
                 role: 'alert',
-                text: _t('It seems that this task is part of a recurrence.'),
+                text: alert,
             }),
-        }).open();
+        });
+
+        if (allowContinue) {
+            dialog.buttons.splice(1, 0,
+                {
+                    click: () => {
+                        this._rpc({
+                            model: 'project.task',
+                            method: 'action_continue_recurrence',
+                            args: [resId],
+                        }).then(() => {
+                            if (mode === 'archive') {
+                                this._toggleArchiveState(true);
+                            } else if (mode === 'delete') {
+                                this._deleteRecords([this.handle]);
+                            }
+                        });
+                    },
+                    close: true,
+                    text: _t('Continue Recurrence'),
+                })
+        };
+
+        dialog.open();
     }
 });
 
