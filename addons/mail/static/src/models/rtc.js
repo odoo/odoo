@@ -51,30 +51,12 @@ registerModel({
             browser.addEventListener('keyup', this._onKeyUp);
             // Disconnects the RTC session if the page is closed or reloaded.
             browser.addEventListener('beforeunload', this._onBeforeUnload);
-            /**
-             * Call all sessions for which no peerConnection is established at
-             * a regular interval to try to recover any connection that failed
-             * to start.
-             *
-             * This is distinct from this._recoverConnection which tries to restores
-             * connection that were established but failed or timed out.
-             */
-            this._intervalId = browser.setInterval(async () => {
-                if (!this.currentRtcSession || !this.channel) {
-                    return;
-                }
-                await this._pingServer();
-                if (!this.currentRtcSession || !this.channel) {
-                    return;
-                }
-                this._callSessions();
-            }, 30000); // 30 seconds
         },
         async _willDelete() {
             browser.removeEventListener('beforeunload', this._onBeforeUnload);
             browser.removeEventListener('keydown', this._onKeyDown);
             browser.removeEventListener('keyup', this._onKeyUp);
-            browser.clearInterval(this._intervalId);
+            this.messaging.browser.clearInterval(this.pingInterval);
         },
     },
     recordMethods: {
@@ -430,6 +412,13 @@ registerModel({
          */
         _computeIsClientRtcCompatible() {
             return window.RTCPeerConnection && window.MediaStream;
+        },
+        /**
+         * @private
+         * @returns {integer}
+         */
+        _computePingInterval() {
+            return this.messaging.browser.setInterval(this._onPingInterval, 30000); // 30 seconds
         },
         /**
          * Creates and setup a RTCPeerConnection.
@@ -1199,6 +1188,19 @@ registerModel({
         },
         /**
          * @private
+         */
+        async _onPingInterval() {
+            if (!this.currentRtcSession || !this.channel) {
+                return;
+            }
+            await this._pingServer();
+            if (!this.currentRtcSession || !this.channel) {
+                return;
+            }
+            this._callSessions();
+        },
+        /**
+         * @private
          * @param {boolean} isAboveThreshold 
          */
         _onThresholdAudioMonitor(isAboveThreshold) {
@@ -1279,6 +1281,19 @@ registerModel({
          */
         peerNotificationWaitDelay: attr({
             default: 50,
+        }),
+        /**
+         * Interval to regularly ping and connect to RTC sessions.
+         *
+         * - Ping is to update rtc sessions of the channel, i.e. add or remove rtc sessions.
+         *   This also deals with possible race conditions that could make us unaware of some sessions.
+         * - Connect to RTC sessions for which no peerConnection is established, to try to recover any
+         *   connection that failed to start.
+         *   This is distinct from this._recoverConnection which tries to restores connection that were
+         *   established but failed or timed out.
+         */
+        pingInterval: attr({
+            compute: '_computePingInterval',
         }),
         /**
          * How long to wait before considering a connection as needing recovery in ms.
