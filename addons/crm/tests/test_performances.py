@@ -92,7 +92,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush()
 
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=674):  # 668 generally, sometimes 672
+            with self.assertQueryCount(user_sales_manager=674):  # 669 generally, sometimes 672
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
