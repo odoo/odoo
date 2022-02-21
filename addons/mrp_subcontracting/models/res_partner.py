@@ -15,10 +15,10 @@ class ResPartner(models.Model):
         string="Subcontractor", store=False, search="_search_is_subcontractor")
 
     def _search_is_subcontractor(self, operator, value):
-        assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
+        assert operator in ('=', '!=') and value in (True, False), 'Operation not supported'
         subcontractor_ids = self.env['mrp.bom'].search(
             [('type', '=', 'subcontract')]).subcontractor_ids.ids
-        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
+        if (operator == '=' and value is True) or (operator == '!=' and value is False):
             search_operator = 'in'
         else:
             search_operator = 'not in'

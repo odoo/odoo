@@ -204,8 +204,8 @@ class FleetVehicle(models.Model):
         params = self.env['ir.config_parameter'].sudo()
         delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
         res = []
-        assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
-        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
+        assert operator in ('=', '!=') and value in (True, False), 'Operation not supported'
+        if (operator == '=' and value is True) or (operator == '!=' and value is False):
             search_operator = 'in'
         else:
             search_operator = 'not in'
@@ -222,8 +222,8 @@ class FleetVehicle(models.Model):
 
     def _search_get_overdue_contract_reminder(self, operator, value):
         res = []
-        assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
-        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
+        assert operator in ('=', '!=') and value in (True, False), 'Operation not supported'
+        if (operator == '=' and value is True) or (operator == '!=' and value is False):
             search_operator = 'in'
         else:
             search_operator = 'not in'
