@@ -99,7 +99,11 @@ class TestDiscussFullPerformance(TransactionCase):
         self.maxDiff = None
         self.users[0].flush()
         self.users[0].invalidate_cache()
+<<<<<<< HEAD
         with self.assertQueryCount(emp=90):  # ent: 89
+=======
+        with self.assertQueryCount(emp=96):  # ent: 95
+>>>>>>> 9b3974831b8... temp
             init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
 
         self.assertEqual(init_messaging, {
