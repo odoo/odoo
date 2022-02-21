@@ -78,9 +78,15 @@ export class CommandPalette extends Component {
 
         useAutofocus();
 
-        useHotkey("Enter", () => this.executeSelectedCommand());
-        useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), { allowRepeat: true });
-        useHotkey("ArrowDown", () => this.selectCommandAndScrollTo("NEXT"), { allowRepeat: true });
+        useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
+        useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), {
+            bypassEditableProtection: true,
+            allowRepeat: true,
+        });
+        useHotkey("ArrowDown", () => this.selectCommandAndScrollTo("NEXT"), {
+            bypassEditableProtection: true,
+            allowRepeat: true,
+        });
 
         /**
          * @type {{ commands: CommandItem[],
