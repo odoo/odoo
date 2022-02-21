@@ -79,7 +79,7 @@ class MicrosoftSync(models.AbstractModel):
         if 'ms_universal_event_id' in vals:
             self._from_uids.clear_cache(self)
         synced_fields = self._get_microsoft_synced_fields()
-        if 'need_sync_m' not in vals and vals.keys() & synced_fields:
+        if 'need_sync_m' not in vals and vals.keys() & synced_fields and self.ms_organizer_event_id:
             fields_to_sync = [x for x in vals.keys() if x in synced_fields]
             if fields_to_sync:
                 vals['need_sync_m'] = True
@@ -214,6 +214,7 @@ class MicrosoftSync(models.AbstractModel):
         default_values = {'need_sync_m': False}
 
         new_recurrence = self.env['calendar.recurrence']
+        updated_events = self.env['calendar.event']
 
         for recurrent_master in recurrent_masters:
             new_calendar_recurrence = dict(
@@ -265,14 +266,17 @@ class MicrosoftSync(models.AbstractModel):
                     value = self.env['calendar.event']._microsoft_to_odoo_recurrence_values(recurrent_event, {'need_sync_m': False})
                 else:
                     value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values)
-                existing_event = recurrence_id.calendar_event_ids.filtered(lambda e: e._range() == (value['start'], value['stop']))
+                existing_event = recurrence_id.calendar_event_ids.filtered(
+                    lambda e: e._is_matching_timeslot(value['start'], value['stop'], recurrent_event.isAllDay)
+                )
                 if not existing_event:
                     continue
                 value.pop('start')
                 value.pop('stop')
                 existing_event._write_from_microsoft(recurrent_event, value)
+                updated_events |= existing_event
             new_recurrence |= recurrence_id
-        return new_recurrence
+        return new_recurrence, updated_events
 
     def _update_microsoft_recurrence(self, recurrence, events):
         """
@@ -331,7 +335,8 @@ class MicrosoftSync(models.AbstractModel):
             for e in (new - new_recurrence)
         ]
         synced_events = self.with_context(dont_notify=True)._create_from_microsoft(new, odoo_values)
-        synced_recurrences = self._sync_recurrence_microsoft2odoo(new_recurrence)
+        synced_recurrences, updated_events = self._sync_recurrence_microsoft2odoo(new_recurrence)
+        synced_events |= updated_events
 
         # remove cancelled events and recurrences
         cancelled_recurrences = self.env['calendar.recurrence'].search([
