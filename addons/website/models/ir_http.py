@@ -280,6 +280,8 @@ class Http(models.AbstractModel):
 
         if page:
             # prefetch all menus (it will prefetch website.page too)
+            menu_pages_ids = request.website._get_menu_page_ids()
+            page.browse([page.id] + menu_pages_ids).mapped('view_id.name')
             request.website.menu_id
 
         if page and (request.website.is_publisher() or page.is_visible):
