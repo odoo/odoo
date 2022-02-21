@@ -31,7 +31,7 @@ class TestMicrosoftService(TransactionCase):
         self.call_with_sync_token = call(
             "/v1.0/me/calendarView/delta",
             {"$deltatoken": self.fake_sync_token},
-            {**self.header, 'Prefer': 'odata.maxpagesize=50'},
+            {**self.header, 'Prefer': 'odata.maxpagesize=50,outlook.body-content-type="text"'},
             method="GET", timeout=DEFAULT_TIMEOUT,
         )
         self.call_without_sync_token = call(
@@ -40,7 +40,7 @@ class TestMicrosoftService(TransactionCase):
                 'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
                 'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
             },
-            {**self.header, 'Prefer': 'odata.maxpagesize=50'},
+            {**self.header, 'Prefer': 'odata.maxpagesize=50,outlook.body-content-type="text"'},
             method="GET", timeout=DEFAULT_TIMEOUT,
         )
 
@@ -162,8 +162,18 @@ class TestMicrosoftService(TransactionCase):
         ]))
         mock_do_request.assert_has_calls([
             self.call_without_sync_token,
-            call("link_1", {}, {**self.header, 'Prefer': 'odata.maxpagesize=50'}, preuri='', method="GET", timeout=DEFAULT_TIMEOUT),
-            call("link_2", {}, {**self.header, 'Prefer': 'odata.maxpagesize=50'}, preuri='', method="GET", timeout=DEFAULT_TIMEOUT),
+            call(
+                "link_1",
+                {},
+                {**self.header, 'Prefer': 'odata.maxpagesize=50,outlook.body-content-type="text"'},
+                preuri='', method="GET", timeout=DEFAULT_TIMEOUT
+            ),
+            call(
+                "link_2",
+                {},
+                {**self.header, 'Prefer': 'odata.maxpagesize=50,outlook.body-content-type="text"'},
+                preuri='', method="GET", timeout=DEFAULT_TIMEOUT
+            ),
         ])
 
     @patch.object(MicrosoftService, "_do_request")

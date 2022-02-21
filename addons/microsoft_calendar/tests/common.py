@@ -195,7 +195,10 @@ class TestCommon(HttpCase):
             'id': '123',
             'iCalUId': '456',
             'subject': 'simple_event',
-            'bodyPreview': 'my simple event',
+            'body': {
+                'content': "my simple event",
+                'contentType': "text",
+            },
             'start': {'dateTime': self.start_date.strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
             'end': {'dateTime': self.end_date.strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
             'attendees': [{
@@ -275,7 +278,10 @@ class TestCommon(HttpCase):
                 'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'},
                 'type': 'required'
             }],
-            'bodyPreview': "my recurrent event",
+            'body': {
+                'content': "my recurrent event",
+                'contentType': "text",
+            },
             'start': {'dateTime': self.start_date.strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
             'end': {'dateTime': self.end_date.strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
             'id': 'REC123',
@@ -322,7 +328,10 @@ class TestCommon(HttpCase):
                     'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'},
                     'type': 'required'
                 }],
-                'bodyPreview': "my recurrent event",
+                'body': {
+                    'content': "my recurrent event",
+                    'contentType': "text",
+                },
                 'start': {
                     'dateTime': (
                         self.start_date + timedelta(days=i * self.recurrent_event_interval)

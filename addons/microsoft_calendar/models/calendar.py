@@ -3,6 +3,7 @@
 
 import logging
 import pytz
+from datetime import datetime
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
@@ -78,6 +79,19 @@ class Meeting(models.Model):
                 "Outlook limitation: in a recurrence, an event cannot be moved to or before the day of the "
                 "previous event, and cannot be moved to or after the day of the following event."
             ))
+
+    def _is_matching_timeslot(self, start, stop, allday):
+        """
+        Check if an event matches with the provided timeslot
+        """
+        self.ensure_one()
+
+        event_start, event_stop = self._range()
+        if allday:
+            event_start = datetime(event_start.year, event_start.month, event_start.day, 0, 0)
+            event_stop = datetime(event_stop.year, event_stop.month, event_stop.day, 0, 0)
+
+        return (event_start, event_stop) == (start, stop)
 
     def write(self, values):
         recurrence_update_setting = values.get('recurrence_update')

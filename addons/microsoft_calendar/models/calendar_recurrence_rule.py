@@ -70,15 +70,31 @@ class RecurrenceRule(models.Model):
     def _get_microsoft_synced_fields(self):
         return {'rrule'} | self.env['calendar.event']._get_microsoft_synced_fields()
 
+    def _has_base_event_time_fields_changed(self, new):
+        """
+        Indicates if at least one time field of the base event has changed, based
+        on provided `new` values.
+        Note: for all day event comparison, hours/minutes are ignored.
+        """
+        def _convert(value, to_convert):
+            return value.date() if to_convert else value
+
+        old = self.base_event_id and self.base_event_id.read(['start', 'stop', 'allday'])[0]
+        return old and (
+            old['allday'] != new['allday']
+            or any(
+                _convert(new[f], new['allday']) != _convert(old[f], old['allday'])
+                for f in ('start', 'stop')
+            )
+        )
+
     def _write_from_microsoft(self, microsoft_event, vals):
         current_rrule = self.rrule
         # event_tz is written on event in Microsoft but on recurrence in Odoo
         vals['event_tz'] = microsoft_event.start.get('timeZone')
         super()._write_from_microsoft(microsoft_event, vals)
-        base_event_time_fields = ['start', 'stop', 'allday']
         new_event_values = self.env["calendar.event"]._microsoft_to_odoo_values(microsoft_event)
-        old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
-        if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
+        if self._has_base_event_time_fields_changed(new_event_values):
             # we need to recreate the recurrence, time_fields were modified.
             base_event_id = self.base_event_id
             # We archive the old events to recompute the recurrence. These events are already deleted on Microsoft side.
