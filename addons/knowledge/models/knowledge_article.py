@@ -349,18 +349,6 @@ class Article(models.Model):
         for vals in vals_list:
             vals['last_edition_id'] = self._uid
             vals['last_edition_date'] = fields.Datetime.now()
-            if vals.get('parent_id'):
-                # copy members from parent
-                parent = self.browse(vals['parent_id'])
-                if not parent.user_can_write:
-                    raise AccessError(_("You cannot create articles under an article you can't write on"))
-                vals['internal_permission'] = parent.internal_permission
-                if parent.article_member_ids:
-                    # At creation, always take the membership of the parent
-                    vals['article_member_ids'] = [(0, 0, {
-                        'partner_id': member.partner_id.id,
-                        'permission': member.permission
-                    }) for member in parent.article_member_ids]
 
         articles = super(Article, self).create(vals_list)
         for article, vals in zip(articles, vals_list):
@@ -377,54 +365,7 @@ class Article(models.Model):
                 "last_edition_date": fields.Datetime.now(),
             })
 
-        membership_changed = False
-        wrote_articles = self.env['knowledge.article']
-        if vals.get('parent_id'):
-            # copy members from parent
-            parent = self.browse(vals['parent_id'])
-            if not parent.user_can_write:
-                raise AccessError(_("You cannot move articles under an article you can't write on"))
-            vals['internal_permission'] = parent.internal_permission
-            for article in self:  # need to do it one by one as each article has their own set of members
-                if parent.article_member_ids:
-                    # In case of conflict, give priority to the article's members, not parent's ones
-                    article_vals = vals.copy()
-                    article_vals['article_member_ids'] = [(0, 0, {
-                        'partner_id': member.partner_id.id,
-                        'permission': member.permission
-                    }) for member in parent.article_member_ids if member.partner_id not in article.partner_ids]
-                    super(Article, article).write(article_vals)
-                    membership_changed = True
-                    wrote_articles |= article
-
-        result = super(Article, self - wrote_articles).write(vals)
-
-        # Propagate access rules to children (only the ones we can write on)
-        write_child_ids = self.child_ids.filtered(lambda child: child.user_can_write)
-        if write_child_ids:
-            children_values = {}
-            if 'internal_permission' in vals:
-                # Propagate permission to children
-                children_values = {
-                    'internal_permission': vals['internal_permission']
-                }
-
-            wrote_children = self.env['knowledge.article']
-            if 'article_member_ids' in vals or membership_changed:
-                # propagate members to children: need to do it one by one as each article has their own set of members
-                for article in self:
-                    for child in article.child_ids:
-                        # In case of conflict, give priority to the article's members, not parent's ones
-                        child_values = children_values.copy()
-                        child_values['article_member_ids'] = [(0, 0, {
-                            'partner_id': member.partner_id.id,
-                            'permission': member.permission
-                        }) for member in article.article_member_ids if member.partner_id not in child.partner_ids]
-                        child.write(child_values)
-                        wrote_children |= child
-
-            if children_values:
-                (write_child_ids - wrote_children).write(children_values)
+        result = super(Article, self).write(vals)
 
         # use context key to stop reordering loop as "_resequence" calls write method.
         if any(field in ['parent_id', 'sequence'] for field in vals) and not self.env.context.get('resequencing_articles'):
@@ -501,8 +442,14 @@ class Article(models.Model):
                     'permission': 'write'
                 })]
             })
+        elif parent:
+            values.update(self._get_access_values_from_parent(parent))
 
         self.write(values)
+
+        if self.child_ids:
+            self._propagate_access_to_children()
+
         return True
 
     def article_create(self, title=False, parent_id=False, private=False):
@@ -530,6 +477,9 @@ class Article(models.Model):
                     'permission': 'write'
                 })]
             })
+        elif parent:
+            values.update(self._get_access_values_from_parent(parent))
+
         if title:
             values.update({
                 'name': title,
@@ -623,6 +573,49 @@ class Article(models.Model):
     ###########
     #  Tools
     ###########
+
+    def _propagate_access_to_children(self):
+        """ Propagate the access rule and members of the current article to its children.
+        Only the children the user can write on will be updated. """
+        # Propagate access rules to children (only the ones we can write on)
+        write_child_ids = self.child_ids.filtered(lambda child: child.user_can_write)
+        if not write_child_ids:
+            return
+
+        for child in self.child_ids:
+            write_values = child._get_access_values_from_parent(self)
+            if write_values:
+                child.write(write_values)
+                child._propagate_access_to_children()
+
+    def _get_access_values_from_parent(self, parent):
+        """ Copy the access rule and members from the given parent to the current article.
+        In case of conflict, the highest permission is kept between parent.member and article.member (write > read)
+        Called by move_to and _propagate_access_to_children -> when moving an article under a parent
+        Directly modifies the given write_values"""
+        if not parent.user_can_write:
+            # When propagating to children, this should never raise.
+            raise AccessError(_("You cannot move articles under an article you can't write on"))
+        values = {}
+        if parent.internal_permission != self.internal_permission:
+            values['internal_permission'] = parent.internal_permission
+        if parent.article_member_ids:
+            # add the parent's members.
+            values['article_member_ids'] = [(0, 0, {
+                'partner_id': member.partner_id.id,
+                'permission': member.permission
+            }) for member in parent.article_member_ids if member.partner_id not in self.partner_ids]
+
+            # Modify article member in case of conflict: use highest permission
+            permission_priority = {'none': 0, 'read': 1, 'write': 2}
+            for member in self.article_member_ids:
+                parent_member_permission = parent.article_member_ids.filtered(
+                    lambda p_member: p_member.partner_id == member.partner_id).permission
+                if parent_member_permission and permission_priority[parent_member_permission] > permission_priority[member.permission]:
+                    values['article_member_ids'].push((1, member.id, {
+                        'permission': parent_member_permission
+                    }))
+        return values
 
     def _get_max_sequence_inside_parent(self, parent_id):
         # TODO DBE: maybe order the childs_ids in desc on parent should be enough

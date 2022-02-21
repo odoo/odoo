@@ -84,7 +84,7 @@
             </div>
             <ul t-if="article.child_ids">
                 <t t-foreach="article.child_ids.sorted('sequence')" t-as="child">
-                    <t t-call="knowledge.article_template">
+                    <t t-if="child.user_has_access" t-call="knowledge.article_template">
                         <t t-set="article" t-value="child"/>
                     </t>
                 </t>
