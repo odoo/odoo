@@ -38,8 +38,24 @@ const ProjectFormController = FormController.extend({
         this._stopRecurrence(record.res_id, 'delete');
     },
 
-    _stopRecurrence(resId, mode) {
-        new Dialog(this, {
+    _countTasks(recurrence_id) {
+        return this._rpc({
+            model: 'project.task',
+            method: 'search_count',
+            args: [[["recurrence_id", "=", recurrence_id.res_id]]],
+        });
+    },
+
+    async _stopRecurrence(resId, mode) {
+        const record = this.model.get(this.handle);
+        const recurrence_id = record.data.recurrence_id;
+        const count = await this._countTasks(recurrence_id);
+        const allowContinue = count != 1;
+
+        const alert = allowContinue
+            ? _t('It seems that this task is part of a recurrence.')
+            : _t('It seems that this task is part of a recurrence. You must keep it as a model to create the next occurences.');
+        const dialog = new Dialog(this, {
             buttons: [
                 {
                     classes: 'btn-primary',
@@ -62,6 +78,21 @@ const ProjectFormController = FormController.extend({
                     text: _t('Stop Recurrence'),
                 },
                 {
+                    close: true,
+                    text: _t('Discard'),
+                }
+            ],
+            size: 'medium',
+            title: _t('Confirmation'),
+            $content: $('<main/>', {
+                role: 'alert',
+                text: alert,
+            }),
+        });
+
+        if (allowContinue) {
+            dialog.buttons.splice(1, 0,
+                {
                     click: () => {
                         this._rpc({
                             model: 'project.task',
@@ -79,19 +110,10 @@ const ProjectFormController = FormController.extend({
                     },
                     close: true,
                     text: _t('Continue Recurrence'),
-                },
-                {
-                    close: true,
-                    text: _t('Discard'),
-                }
-            ],
-            size: 'medium',
-            title: _t('Confirmation'),
-            $content: $('<main/>', {
-                role: 'alert',
-                text: _t('It seems that this task is part of a recurrence.'),
-            }),
-        }).open();
+                })
+        };
+
+        dialog.open();
     }
 });
 
