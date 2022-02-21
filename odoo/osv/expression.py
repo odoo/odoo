@@ -114,13 +114,9 @@ start the server specifying the ``--unaccent`` flag.
 
 """
 import collections.abc
-import warnings
-
 import logging
 import reprlib
 import traceback
-from functools import partial
-
 from datetime import date, datetime, time
 
 from psycopg2.sql import Composable, SQL
@@ -128,9 +124,7 @@ from psycopg2.sql import Composable, SQL
 import odoo.modules
 from odoo.osv.query import Query
 from odoo.tools import pycompat
-from odoo.tools.misc import get_lang
-from ..models import MAGIC_COLUMNS, BaseModel
-import odoo.tools as tools
+from ..models import BaseModel
 
 
 # Domain operators.
@@ -336,12 +330,6 @@ def distribute_not(domain):
 # Generic leaf manipulation
 # --------------------------------------------------
 
-def _quote(to_quote):
-    if '"' not in to_quote:
-        return '"%s"' % to_quote
-    return to_quote
-
-
 def normalize_leaf(element):
     """ Change a term's operator to some canonical form, simplifying later
         processing. """
@@ -449,15 +437,6 @@ class expression(object):
         if getattr(field, 'unaccent', False):
             return self._unaccent_wrapper
         return lambda x: x
-
-    # ----------------------------------------
-    # Leafs management
-    # ----------------------------------------
-
-    def get_tables(self):
-        warnings.warn("deprecated expression.get_tables(), use expression.query instead",
-                      DeprecationWarning)
-        return self.query.tables
 
     # ----------------------------------------
     # Parsing
@@ -1064,8 +1043,3 @@ class expression(object):
                 params = [field.convert_to_column(right, model, validate=False)]
 
         return query, params
-
-    def to_sql(self):
-        warnings.warn("deprecated expression.to_sql(), use expression.query instead",
-                      DeprecationWarning)
-        return self.result
