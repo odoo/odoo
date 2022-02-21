@@ -1114,6 +1114,9 @@ registerModel({
                 connectionState,
             });
             switch (connectionState) {
+                case "connected":
+                    rtcSession.updateConnectionTypes();
+                    break;
                 case "closed":
                     this._removePeer(rtcSession.id);
                     break;
@@ -1292,6 +1295,19 @@ registerModel({
          */
         pingInterval: attr({
             compute: '_computePingInterval',
+        }),
+        /**
+         * The protocols for each RTC ICE candidate types.
+         */
+        protocolsByCandidateTypes: attr({
+            default: {
+                'host': "HOST",
+                'srflx': "STUN",
+                'prflx': "STUN",
+                'relay': "TURN",
+            },
+            readonly: true,
+            required: true,
         }),
         /**
          *  timeoutId for the push to talk release delay.

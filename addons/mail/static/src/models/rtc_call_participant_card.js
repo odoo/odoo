@@ -4,6 +4,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
+import { sprintf } from '@web/core/utils/strings';
+
 registerModel({
     name: 'RtcCallParticipantCard',
     identifyingFields: ['relationalId'],
@@ -71,6 +73,29 @@ registerModel({
          * @private
          * @returns {boolean}
          */
+        _computeHasConnectionInfo() {
+            return Boolean(this.rtcSession && this.env.isDebug() && this.channel.rtc);
+        },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeInboundConnectionTypeText() {
+            if (!this.rtcSession || !this.rtcSession.remoteCandidateType) {
+                return sprintf(this.env._t('From %s: no connection'), this.name);
+            }
+            return sprintf(
+                this.env._t('From %(name)s: %(candidateType)s (%(protocol)s)'), {
+                    candidateType: this.rtcSession.remoteCandidateType,
+                    name: this.name,
+                    protocol: this.messaging.rtc.protocolsByCandidateTypes[this.rtcSession.remoteCandidateType],
+                },
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsMinimized() {
             const callViewer = this.rtcCallViewerOfMainCard || this.rtcCallViewerOfTile;
             return Boolean(callViewer && callViewer.isMinimized);
@@ -104,6 +129,22 @@ registerModel({
                 return this.invitedGuest.name;
             }
         },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeOutboundConnectionTypeText() {
+            if (!this.rtcSession || !this.rtcSession.localCandidateType) {
+                return sprintf(this.env._t('To %s: no connection'), this.name);
+            }
+            return sprintf(
+                this.env._t('To %(name)s: %(candidateType)s (%(protocol)s)'), {
+                    candidateType: this.rtcSession.localCandidateType,
+                    name: this.name,
+                    protocol: this.messaging.rtc.protocolsByCandidateTypes[this.rtcSession.localCandidateType],
+                },
+            );
+        },
     },
     fields: {
         /**
@@ -117,6 +158,18 @@ registerModel({
          */
         channel: one('Thread', {
             required: true,
+        }),
+        /**
+         * Determines whether or not we show the connection info.
+         */
+        hasConnectionInfo: attr({
+            compute: '_computeHasConnectionInfo',
+        }),
+        /**
+         * The text describing the inbound ice connection candidate type.
+         */
+        inboundConnectionTypeText: attr({
+            compute: '_computeInboundConnectionTypeText',
         }),
         /**
          * If set, this card represents an invitation of this guest to this call.
@@ -153,6 +206,12 @@ registerModel({
         name: attr({
             default: 'Anonymous',
             compute: '_computeName',
+        }),
+        /**
+         * The text describing the outbound ice connection candidate type.
+         */
+        outboundConnectionTypeText: attr({
+            compute: '_computeOutboundConnectionTypeText',
         }),
         /**
          * Unique id for this session provided when instantiated.
