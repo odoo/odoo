@@ -10,6 +10,7 @@
     Invoices for the Kingdom of Saudi Arabia
 """,
     'depends': ['l10n_sa', 'l10n_gcc_invoice'],
+    'auto_install': ['l10n_sa'],
     'data': [
         'views/view_move_form.xml',
         'views/report_invoice.xml',
