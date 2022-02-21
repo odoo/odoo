@@ -1173,10 +1173,10 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         const _super = this._super.bind(this);
         if (this.view) {
             this._renderButtons();
-            this._controlPanelWrapper = new ComponentWrapper(this, ControlPanelX2Many, {
-                cp_content: { $buttons: this.$buttons },
-                pager: this.pagingState,
-            });
+            this._controlPanelWrapper = new ComponentWrapper(this,
+                this._getControlPanelComponent(),
+                this._getControlPanelContext(),
+            );
             await this._controlPanelWrapper.mount(this.el, { position: 'first-child' });
         }
         return _super(...arguments);
@@ -1428,6 +1428,25 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         if (this.view.arch.tag === 'kanban') {
             return KanbanRenderer;
         }
+    },
+    /**
+     * Provides a way to override the control panel component to be used.
+     *
+     * @private
+     * @returns {Component} The component to use.
+     */
+    _getControlPanelComponent: function () {
+        return ControlPanelX2Many;
+    },
+    /**
+     * @private
+     * @returns {Object} The context that will be passed to the control panel.
+     */
+    _getControlPanelContext: function () {
+        return {
+            cp_content: { $buttons: this.$buttons },
+            pager: this.pagingState,
+        };
     },
     /**
      * @private
