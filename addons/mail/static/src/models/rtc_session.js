@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'RtcSession',
@@ -126,13 +126,13 @@ registerModel({
          * of the current partner.
          */
         async toggleDeaf() {
-            if (!this.rtc) {
+            if (!this.rtcAsCurrentSession) {
                 return;
             }
-            if (this.rtc.currentRtcSession.isDeaf) {
-                await this.rtc.undeafen();
+            if (this.messaging.rtc.currentRtcSession.isDeaf) {
+                await this.messaging.rtc.undeafen();
             } else {
-                await this.rtc.deafen();
+                await this.messaging.rtc.deafen();
             }
         },
         /**
@@ -141,7 +141,7 @@ registerModel({
          * @param {Object} data
          */
         updateAndBroadcast(data) {
-            if (!this.rtc) {
+            if (!this.rtcAsCurrentSession) {
                 return;
             }
             this.update(data);
@@ -194,6 +194,19 @@ registerModel({
             if (this.guest) {
                 return this.guest.name;
             }
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeRtcAsConnectedSession() {
+            if (!this.messaging || !this.messaging.rtc) {
+                return clear();
+            }
+            if (this.rtcPeerConnection) {
+                return replace(this.messaging.rtc);
+            }
+            return clear();
         },
         /**
          * @private
@@ -362,7 +375,7 @@ registerModel({
          * This can be true for many sessions, as one user can have multiple
          * sessions active across several tabs, browsers and devices.
          * To determine if this session is the active session of this tab,
-         * use this.rtc instead.
+         * use this.rtcAsCurrentSession instead.
          */
         isOwnSession: attr({
             compute: '_computeIsOwnSession',
@@ -408,8 +421,16 @@ registerModel({
          * sessions from other channels with the same partner (sessions opened from different
          * tabs or devices).
          */
-        rtc: one('Rtc', {
+        rtcAsCurrentSession: one('Rtc', {
             inverse: 'currentRtcSession',
+        }),
+        rtcAsConnectedSession: one('Rtc', {
+            compute: '_computeRtcAsConnectedSession',
+            inverse: 'connectedRtcSessions',
+        }),
+        rtcPeerConnection: one('RtcPeerConnection', {
+            inverse: 'rtcSession',
+            isCausal: true,
         }),
         /**
          * Contains the RTCDataChannel of the rtc session.
