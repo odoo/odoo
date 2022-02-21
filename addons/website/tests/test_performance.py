@@ -95,8 +95,8 @@ class TestWebsitePerformance(UtilPerf):
         self.assertEqual(self._get_url_hot_query(self.page.url), 5)
         self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 8)
         self.menu.unlink()
-        self.assertEqual(self._get_url_hot_query(self.page.url), 7)
-        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 5)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 8)
 
     def test_15_perf_sql_queries_page(self):
         # standard tracked website.page
@@ -104,8 +104,8 @@ class TestWebsitePerformance(UtilPerf):
         self.assertEqual(self._get_url_hot_query(self.page.url), 13)
         self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 16)
         self.menu.unlink()
-        self.assertEqual(self._get_url_hot_query(self.page.url), 15)
-        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 18)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 13)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 16)
 
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
