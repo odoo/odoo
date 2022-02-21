@@ -4128,6 +4128,14 @@ class AccountMoveLine(models.Model):
                     raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_LINE_FIELDS))
                 if any(key in vals for key in ('tax_ids', 'tax_line_ids')):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
+<<<<<<< HEAD
+=======
+            if 'statement_line_id' in vals and line.payment_id:
+                # In case of an internal transfer, there are 2 liquidity move lines to match with a bank statement
+                if all(_line.statement_id for _line in line.payment_id.move_line_ids.filtered(
+                        lambda r: r.id != line.id and r.account_id.internal_type == 'liquidity')):
+                    line.payment_id.state = 'reconciled'
+>>>>>>> 704af3b2cef... temp
 
             # Check the lock date.
             if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_LOCK_DATE):
