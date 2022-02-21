@@ -603,8 +603,11 @@ class IrHttp(models.AbstractModel):
         elif isinstance(exception, QWebException):
             values.update(qweb_exception=exception)
 
-            if isinstance(exception.__cause__, exceptions.AccessError):
-                code = 403
+            if isinstance(exception.__context__, exceptions.UserError):
+                code = 400
+                values['error_message'] = exception.__context__.args[0]
+                if isinstance(exception.__context__, exceptions.AccessError):
+                    code = 403
 
         elif isinstance(exception, werkzeug.exceptions.HTTPException):
             code = exception.code
