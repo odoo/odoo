@@ -39,10 +39,10 @@ export class RtcCallParticipantCard extends Component {
      * @param {Event} ev
      */
     async _onContextMenu(ev) {
+        ev.preventDefault();
         if (!this._volumeMenuAnchorRef || !this._volumeMenuAnchorRef.el) {
             return;
         }
-        ev.preventDefault();
         this._volumeMenuAnchorRef.el.click();
     }
 }

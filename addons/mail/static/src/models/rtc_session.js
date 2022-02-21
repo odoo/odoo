@@ -43,6 +43,8 @@ registerModel({
                 broadcastTimeout: clear(),
                 connectionRecoveryTimeout: clear(),
                 isTalking: clear(),
+                localCandidateType: clear(),
+                remoteCandidateType: clear(),
             });
         },
         /**
@@ -165,6 +167,33 @@ registerModel({
             this.messaging.browser.clearTimeout(this.broadcastTimeout);
             this.update({
                 broadcastTimeout: this.messaging.browser.setTimeout(this._onBroadcastTimeout, 3000),
+            });
+        },
+        /**
+         * Updates the rtcSession with information on the type of candidate used
+         * to establish the connections.
+         *
+         * @private
+         */
+        async updateConnectionTypes() {
+            if (!this.rtcPeerConnection) {
+                return;
+            }
+            const stats = await this.rtcPeerConnection.peerConnection.getStats();
+            for (const { localCandidateId, remoteCandidateId, state, type } of stats.values()) {
+                if (type === 'candidate-pair' && state === 'succeeded' && localCandidateId) {
+                    const localCandidate = stats.get(localCandidateId);
+                    const remoteCandidate = stats.get(remoteCandidateId);
+                    this.update({
+                        localCandidateType: localCandidate ? localCandidate.candidateType : clear(),
+                        remoteCandidateType: remoteCandidate ? remoteCandidate.candidateType : clear(),
+                    });
+                    return;
+                }
+            }
+            this.update({
+                localCandidateType: clear(),
+                remoteCandidateType: clear(),
             });
         },
         /**
@@ -411,6 +440,10 @@ registerModel({
             default: false,
         }),
         /**
+         * RTCIceCandidate.type String
+         */
+        localCandidateType: attr(),
+        /**
          * Name of the session, based on the partner name if set.
          */
         name: attr({
@@ -432,6 +465,10 @@ registerModel({
         peerToken: attr({
             compute: '_computePeerToken',
         }),
+        /**
+         * RTCIceCandidate.type String
+         */
+        remoteCandidateType: attr(),
         /**
          * If set, this session is the session of the current user and is in the active RTC call.
          * This information is distinct from this.isOwnSession as there can be other
