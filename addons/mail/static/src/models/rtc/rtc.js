@@ -36,11 +36,6 @@ registerModel({
              */
             this._dataChannels = {};
             /**
-             * Object { token: timeoutId<Number> }
-             * Contains the timeoutIds of the reconnection attempts.
-             */
-            this._fallBackTimeouts = {};
-            /**
              * Set of peerTokens, used to track which calls are outgoing,
              * which is used when attempting to recover a failed peer connection by
              * inverting the call direction.
@@ -218,10 +213,13 @@ registerModel({
             this.videoTrack && this.videoTrack.stop();
 
             this._dataChannels = {};
-            this._fallBackTimeouts = {};
             this._outGoingCallTokens = new Set();
             this._peerConnections = {};
 
+            for (const rtcSession of this.messaging.models['RtcSession'].all()) {
+                this.messaging.browser.clearTimeout(rtcSession.connectionRecoveryTimeout);
+                rtcSession.update({ connectionRecoveryTimeout: clear() });
+            }
             this.update({
                 currentRtcSession: clear(),
                 disconnectAudioMonitor: clear(),
@@ -690,7 +688,8 @@ registerModel({
          * @param {string} [reason]
          */
         async _onRecoverConnectionTimeout(token, reason) {
-            delete this._fallBackTimeouts[token];
+            const rtcSession = this.messaging.models['RtcSession'].insert({ id: token });
+            rtcSession.update({ connectionRecoveryTimeout: clear() });
             const peerConnection = this._peerConnections[token];
             if (!peerConnection || !this.channel) {
                 return;
@@ -736,13 +735,16 @@ registerModel({
          * @param {string} [param1.reason]
          */
         _recoverConnection(token, { delay = 0, reason = '' } = {}) {
-            if (this._fallBackTimeouts[token]) {
+            const rtcSession = this.messaging.models['RtcSession'].insert({ id: token });
+            if (rtcSession.connectionRecoveryTimeout) {
                 return;
             }
-            this._fallBackTimeouts[token] = browser.setTimeout(
-                this._onRecoverConnectionTimeout.bind(this, token, reason),
-                delay,
-            );
+            rtcSession.update({
+                connectionRecoveryTimeout: this.messaging.browser.setTimeout(
+                    this._onRecoverConnectionTimeout.bind(this, token, reason),
+                    delay,
+                ),
+            });
         },
         /**
          * Cleans up a peer by closing all its associated content and the connection.
@@ -766,8 +768,6 @@ registerModel({
                 peerConnection.close();
             }
             delete this._peerConnections[token];
-            browser.clearTimeout(this._fallBackTimeouts[token]);
-            delete this._fallBackTimeouts[token];
             this._outGoingCallTokens.delete(token);
             this._addLogEntry(token, 'peer removed', { step: 'peer removed' });
         },

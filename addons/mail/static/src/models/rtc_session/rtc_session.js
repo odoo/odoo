@@ -18,11 +18,13 @@ registerModel({
          */
         reset() {
             this.messaging.browser.clearTimeout(this.broadcastTimeout);
+            this.messaging.browser.clearTimeout(this.connectionRecoveryTimeout);
             this._removeAudio();
             this.removeVideo();
             this.update({
                 audioElement: clear(),
                 broadcastTimeout: clear(),
+                connectionRecoveryTimeout: clear(),
                 isTalking: clear(),
             });
         },
@@ -287,6 +289,7 @@ registerModel({
         channel: one('Thread', {
             inverse: 'rtcSessions',
         }),
+        connectionRecoveryTimeout: attr(),
         /**
          * State of the connection with this session, uses RTCPeerConnection.iceConnectionState
          * once a peerConnection has been initialized.
