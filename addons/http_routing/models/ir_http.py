@@ -515,8 +515,8 @@ class IrHttp(models.AbstractModel):
         result = super(IrHttp, cls)._dispatch()
 
         cook_lang = request.httprequest.cookies.get('frontend_lang')
-        if request.is_frontend and cook_lang != request.lang.code and hasattr(result, 'set_cookie'):
-            result.set_cookie('frontend_lang', request.lang.code)
+        if request.is_frontend and cook_lang != request.lang._get_cached('code') and hasattr(result, 'set_cookie'):
+            result.set_cookie('frontend_lang', request.lang._get_cached('code'))
 
         return result
 
