@@ -36,12 +36,6 @@ registerModel({
              */
             this._dataChannels = {};
             /**
-             * callback to properly end the audio monitoring.
-             * If set it indicates that we are currently monitoring the local
-             * audioTrack for the voice activation feature.
-             */
-            this._disconnectAudioMonitor = undefined;
-            /**
              * Object { token: timeoutId<Number> }
              * Contains the timeoutIds of the reconnection attempts.
              */
@@ -217,11 +211,12 @@ registerModel({
                 }
             }
 
-            this._disconnectAudioMonitor && this._disconnectAudioMonitor();
+            if (this.disconnectAudioMonitor) {
+                this.disconnectAudioMonitor()
+            }
             this.audioTrack && this.audioTrack.stop();
             this.videoTrack && this.videoTrack.stop();
 
-            this._disconnectAudioMonitor = undefined;
             this._dataChannels = {};
             this._fallBackTimeouts = {};
             this._outGoingCallTokens = new Set();
@@ -229,6 +224,7 @@ registerModel({
 
             this.update({
                 currentRtcSession: clear(),
+                disconnectAudioMonitor: clear(),
                 logs: clear(),
                 sendUserVideo: clear(),
                 sendDisplay: clear(),
@@ -335,18 +331,23 @@ registerModel({
          * attaches an audio monitor for voice activation if necessary.
          */
         async updateVoiceActivation() {
-            this._disconnectAudioMonitor && this._disconnectAudioMonitor();
+            if (this.disconnectAudioMonitor) {
+                this.disconnectAudioMonitor();
+            }
             if (this.messaging.userSetting.usePushToTalk || !this.channel || !this.audioTrack) {
                 this.currentRtcSession.update({ isTalking: false });
                 await this._updateLocalAudioTrackEnabledState();
                 return;
             }
             try {
-                this._disconnectAudioMonitor = await monitorAudio(this.audioTrack, {
-                    onThreshold: async (isAboveThreshold) => {
-                        this._setSoundBroadcast(isAboveThreshold);
-                    },
-                    volumeThreshold: this.messaging.userSetting.voiceActivationThreshold,
+                this.update({
+                    disconnectAudioMonitor: await monitorAudio(
+                        this.audioTrack,
+                        {
+                            onThreshold: this._onThresholdAudioMonitor,
+                            volumeThreshold: this.messaging.userSetting.voiceActivationThreshold,
+                        },
+                    ),
                 });
             } catch (_e) {
                 /**
@@ -1204,6 +1205,13 @@ registerModel({
                 this.messaging.userSetting.voiceActiveDuration || 0,
             );
         },
+        /**
+         * @private
+         * @param {boolean} isAboveThreshold 
+         */
+        _onThresholdAudioMonitor(isAboveThreshold) {
+            this._setSoundBroadcast(isAboveThreshold);
+        },
     },
     fields: {
         /**
@@ -1222,6 +1230,12 @@ registerModel({
         currentRtcSession: one('RtcSession', {
             inverse: 'rtc',
         }),
+        /**
+         * callback to properly end the audio monitoring.
+         * If set it indicates that we are currently monitoring the local
+         * audioTrack for the voice activation feature.
+         */
+        disconnectAudioMonitor: attr(),
         /**
          * ICE servers used by RTCPeerConnection to retrieve the public IP address (STUN)
          * or to relay packets when necessary (TURN).
