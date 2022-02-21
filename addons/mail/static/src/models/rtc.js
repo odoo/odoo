@@ -35,11 +35,6 @@ registerModel({
              */
             this._dataChannels = {};
             /**
-             * Set of RtcSession.ids, used to track which calls are outgoing,
-             * which is used when attempting to recover a failed peer connection by
-             * inverting the call direction.
-             */
-            this._outGoingCallTokens = new Set();
              /**
              * Object { token: peerConnection<RTCPeerConnection> }
              * Contains the RTCPeerConnection established with the other rtc sessions.
@@ -212,12 +207,14 @@ registerModel({
             this.videoTrack && this.videoTrack.stop();
 
             this._dataChannels = {};
-            this._outGoingCallTokens = new Set();
             this._peerConnections = {};
 
             for (const rtcSession of this.messaging.models['RtcSession'].all()) {
                 this.messaging.browser.clearTimeout(rtcSession.connectionRecoveryTimeout);
-                rtcSession.update({ connectionRecoveryTimeout: clear() });
+                rtcSession.update({
+                    connectionRecoveryTimeout: clear(),
+                    isConnected: clear(),
+                });
             }
             this.update({
                 currentRtcSession: clear(),
@@ -402,7 +399,7 @@ registerModel({
             for (const trackKind of TRANSCEIVER_ORDER) {
                 await this._updateRemoteTrack(peerConnection, trackKind, { initTransceiver: true, sessionId: rtcSession.id });
             }
-            this._outGoingCallTokens.add(rtcSession.id);
+            rtcSession.update({ isConnected: true });
         },
         /**
          * Call all the sessions that do not have an already initialized peerConnection.
@@ -692,7 +689,7 @@ registerModel({
             if (!peerConnection || !this.channel) {
                 return;
             }
-            if (this._outGoingCallTokens.has(rtcSession.id)) {
+            if (rtcSession.isConnected) {
                 return;
             }
             if (peerConnection.iceConnectionState === 'connected') {
@@ -765,7 +762,10 @@ registerModel({
                 peerConnection.close();
             }
             delete this._peerConnections[sessionId];
-            this._outGoingCallTokens.delete(sessionId);
+            this.messaging.models['RtcSession'].insert({
+                id: sessionId,
+                isConnected: false,
+            });
             this._addLogEntry(sessionId, 'peer removed', { step: 'peer removed' });
         },
         /**
