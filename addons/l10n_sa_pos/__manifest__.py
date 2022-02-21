@@ -9,7 +9,10 @@ K.S.A. POS Localization
 =======================================================
     """,
     'license': 'LGPL-3',
-    'depends': ['l10n_gcc_pos', 'l10n_sa_invoice'],
+    'depends': [
+        'l10n_gcc_pos',
+        'l10n_sa',
+    ],
     'data': [
     ],
     'assets': {
