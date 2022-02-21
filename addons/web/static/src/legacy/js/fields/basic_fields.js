@@ -2471,7 +2471,7 @@ var PriorityWidget = AbstractField.extend({
     events: {
         'mouseover > a': '_onMouseOver',
         'mouseout > a': '_onMouseOut',
-        'click > a': '_onClick',
+        'click > a': '_onPriorityClick',
         'keydown > a': '_onKeydown',
     },
     supportedFieldTypes: ['selection'],
@@ -2594,7 +2594,7 @@ var PriorityWidget = AbstractField.extend({
      * @param {MouseEvent} event
      * @private
      */
-    _onClick: function (event) {
+    _onPriorityClick: function (event) {
         event.preventDefault();
         event.stopPropagation();
         var index = $(event.currentTarget).data('index');
