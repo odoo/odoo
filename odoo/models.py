@@ -3355,11 +3355,11 @@ Fields:
             for field in fields_pre:
                 values = next(cols)
                 if context.get('lang') and not field.inherited and callable(field.translate):
-                    translate = field.get_trans_func(fetched)
                     values = list(values)
-                    for index in range(len(ids)):
-                        values[index] = translate(ids[index], values[index])
-
+                    if any(values):
+                        translate = field.get_trans_func(fetched)
+                        for index in range(len(ids)):
+                            values[index] = translate(ids[index], values[index])
                 # store values in cache
                 self.env.cache.update(fetched, field, values)
 
