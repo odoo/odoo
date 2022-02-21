@@ -26,11 +26,6 @@ registerModel({
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _created() {
-            /**
-             *  timeoutId for the push to talk release delay.
-             */
-            this._pushToTalkTimeoutId = undefined;
-
             browser.addEventListener('keydown', this._onKeyDown);
             browser.addEventListener('keyup', this._onKeyUp);
             // Disconnects the RTC session if the page is closed or reloaded.
@@ -1145,9 +1140,7 @@ registerModel({
             if (this.messaging.userSetting.rtcConfigurationMenu.isRegisteringKey) {
                 return;
             }
-            if (this._pushToTalkTimeoutId) {
-                browser.clearTimeout(this._pushToTalkTimeoutId);
-            }
+            this.messaging.browser.clearTimeout(this.pushToTalkTimeout);
             if (!this.currentRtcSession.isTalking) {
                 this.messaging.soundEffects.pushToTalkOn.play();
                 this._setSoundBroadcast(true);
@@ -1170,12 +1163,19 @@ registerModel({
             if (!this.currentRtcSession.isMute) {
                 this.messaging.soundEffects.pushToTalkOff.play();
             }
-            this._pushToTalkTimeoutId = browser.setTimeout(
-                () => {
-                    this._setSoundBroadcast(false);
-                },
-                this.messaging.userSetting.voiceActiveDuration || 0,
-            );
+            this.update({
+                pushToTalkTimeout: this.messaging.browser.setTimeout(
+                    this._onPushToTalkTimeout,
+                    this.messaging.userSetting.voiceActiveDuration,
+                ),
+            });
+        },
+        /**
+         * @private
+         */
+        _onPushToTalkTimeout() {
+            this.update({ pushToTalkTimeout: clear() });
+            this._setSoundBroadcast(false);
         },
         /**
          * @private
@@ -1293,6 +1293,10 @@ registerModel({
         pingInterval: attr({
             compute: '_computePingInterval',
         }),
+        /**
+         *  timeoutId for the push to talk release delay.
+         */
+        pushToTalkTimeout: attr(),
         /**
          * How long to wait before considering a connection as needing recovery in ms.
          */
