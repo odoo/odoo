@@ -389,6 +389,7 @@ class Website(models.Model):
 
     def _bootstrap_snippet_filters(self):
         super(Website, self)._bootstrap_snippet_filters()
+        # The same behavior is done in the post_init hook
         action = self.env.ref('website_sale.dynamic_snippet_products_action', raise_if_not_found=False)
         if action:
             self.env['website.snippet.filter'].create({
