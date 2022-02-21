@@ -24,4 +24,13 @@
             </form>
         </field>
     </record>
+
+    <record id="action_open_label_layout" model="ir.actions.act_window">
+        <field name="name">Choose Labels Layout</field>
+        <field name="res_model">product.label.layout</field>
+        <field name="view_ids"
+                eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('product_label_layout_form')})]" />
+        <field name="target">new</field>
+    </record>
 </odoo>
