@@ -89,30 +89,30 @@ class TestWebsitePerformance(UtilPerf):
 
     def test_10_perf_sql_queries_page(self):
         # standard untracked website.page
-        self.assertEqual(self._get_url_hot_query(self.page.url), 7)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 6)
         self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
         self.menu.unlink()
-        self.assertEqual(self._get_url_hot_query(self.page.url), 7)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 6)
         self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
 
     def test_15_perf_sql_queries_page(self):
         # standard tracked website.page
         self.page.track = True
-        self.assertEqual(self._get_url_hot_query(self.page.url), 15)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 14)
         self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 18)
         self.menu.unlink()
-        self.assertEqual(self._get_url_hot_query(self.page.url), 15)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 14)
         self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 18)
 
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
-        self.assertEqual(self._get_url_hot_query('/'), 14)
+        self.assertEqual(self._get_url_hot_query('/'), 13)
         self.assertEqual(self._get_url_hot_query('/', cache=False), 17)
 
     def test_30_perf_sql_queries_page_no_layout(self):
         # website.page with no call to layout templates
         self.page.arch = '<div>I am a blank page</div>'
-        self.assertEqual(self._get_url_hot_query(self.page.url), 7)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 6)
         self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 7)
 
     def test_40_perf_sql_queries_page_multi_level_menu(self):
@@ -131,7 +131,7 @@ class TestWebsitePerformance(UtilPerf):
         menu_bb.parent_id = menu_b
         menu_aa.parent_id = menu_a
 
-        self.assertEqual(self._get_url_hot_query(self.page.url), 7)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 6)
         self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
 
     def test_50_perf_sql_web_assets(self):
