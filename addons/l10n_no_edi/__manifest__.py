@@ -8,12 +8,16 @@
     'description': """
 EHF 3 is the Norwegian implementation of EN 16931 norm.
     """,
-    'depends': ['l10n_no', 'account_edi_ubl_bis3'],
+    'depends': [
+        'l10n_no',
+        'account_edi',
+        'account_edi_ubl_bis3',
+    ],
     'data': [
         'data/account_edi_data.xml',
         'data/ehf_3_template.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': ['l10n_no', 'account_edi'],
     'license': 'LGPL-3',
 }
