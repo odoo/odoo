@@ -9,6 +9,7 @@
         'account_edi',
         'account_edi_proxy_client',
     ],
+    'auto_install': ['l10n_it_edi'],
     'author': 'Odoo',
     'description': """
 E-invoice implementation for Italy with the web-service. Ability to send and receive document from SdiCoop. Files sent by SdiCoop are first stored on the proxy
