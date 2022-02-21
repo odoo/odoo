@@ -350,21 +350,19 @@ class PaymentAcquirer(models.Model):
             response = requests.post(url=url, json=proxy_payload, timeout=60)
             response.raise_for_status()
         except requests.exceptions.ConnectionError:
-            raise ValidationError(
-                _("Stripe Proxy: Could not establish the connection.")
-            )
+            _logger.exception("unable to reach endpoint at %s", url)
+            raise ValidationError(_("Stripe Proxy: Could not establish the connection."))
         except requests.exceptions.HTTPError:
+            _logger.exception("invalid API request at %s with data %s", url, payload)
             raise ValidationError(
                 _("Stripe Proxy: An error occurred when communicating with the proxy.")
             )
+
+        # Stripe proxy endpoints always respond with HTTP 200 as they implement JSON-RPC 2.0
         response_content = response.json()
-        if response_content.get('error'):
-            _logger.exception(
-                "Stripe proxy error: %s, traceback:\n%s",
-                response_content['error']['data']['message'],
-                response_content['error']['data']['debug']
-            )
-            raise ValidationError(_(
-                "Stripe Proxy error: %(error)s", error=response_content['error']['data']['message']
-            ))
+        if response_content.get('error'):  # An exception was raised on the proxy
+            error_data = response_content['error']['data']
+            _logger.error("request forwarded with error: %s", error_data['message'])
+            raise ValidationError(_("Stripe Proxy error: %(error)s", error=error_data['message']))
+
         return response_content.get('result', {})
