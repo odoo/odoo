@@ -615,3 +615,51 @@ QUnit.test("replace the overlayModifier for MacOs", async (assert) => {
 
     assert.verifySteps([]);
 });
+
+QUnit.test("protects editable elements", async (assert) => {
+    assert.expect(4);
+    class Comp extends Component {
+        setup() {
+            useHotkey("arrowleft", () => assert.step("called"));
+        }
+    }
+    Comp.template = xml`<div><input class="foo"/></div>`;
+    await mount(Comp, target, { env });
+    const input = target.querySelector(".foo");
+
+    assert.verifySteps([]);
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(["called"]);
+
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(
+        [],
+        "the callback is not getting called when it is triggered from an editable"
+    );
+});
+
+QUnit.test("protects editable elements: can bypassEditableProtection", async (assert) => {
+    assert.expect(5);
+    class Comp extends Component {
+        setup() {
+            useHotkey("arrowleft", () => assert.step("called"), { bypassEditableProtection: true });
+        }
+    }
+    Comp.template = xml`<div><input class="foo"/></div>`;
+    await mount(Comp, target, { env });
+    const input = target.querySelector(".foo");
+
+    assert.verifySteps([]);
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(["called"]);
+
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(
+        ["called"],
+        "the callback still gets called even if triggered from an editable"
+    );
+});
