@@ -2048,9 +2048,9 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_field_cell"));
         assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
-        await editInput(target, ".o_field_widget input", "abc");
+        await editInput(target, ".o_field_char input", "abc");
         assert.strictEqual(
-            target.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_char input").value,
             "abc",
             "char field has been edited correctly"
         );
@@ -9095,7 +9095,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(target.querySelector(".o_data_cell"));
-        await editInput(target, ".o_field_widget[name=foo]", "abc");
+        await editInput(target.querySelector(".o_field_widget[name=foo]"), null, "abc");
         await click(target.querySelector(".o_list_button_save"));
     });
 
