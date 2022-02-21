@@ -1216,7 +1216,6 @@ export class StaticList extends DataPoint {
         this.resIds = params.resIds || [];
         this.records = [];
         this._cache = {};
-        this.offset = 0;
         this.views = params.views || {};
         this.viewMode = params.viewMode;
         this.orderBy = (params.orderBy && params.orderBy[0]) || {}; // rename orderBy + get back from state
