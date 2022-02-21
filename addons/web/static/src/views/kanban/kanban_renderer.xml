@@ -9,15 +9,13 @@
                     <div class="o_kanban_group"
                         t-att-class="getGroupClasses(group)"
                         t-att-data-id="(recordsDraggable or groupsDraggable) and group.id"
-                        t-on-mouseenter="() => state.hoveredGroup = group.id"
-                        t-on-mouseleave="() => state.hoveredGroup = null"
                         t-on-click="(ev) => this.onGroupClick(group, ev)"
                     >
                         <div class="o_kanban_header">
                             <div class="o_kanban_header_title">
                                 <span class="o_column_title" t-esc="getGroupName(group)" />
                                 <t t-if="!group.isFolded">
-                                    <Dropdown t-if="state.hoveredGroup === group.id" class="'o_kanban_config'" togglerClass="'btn p-0'">
+                                    <Dropdown class="'o_kanban_config'" togglerClass="'btn p-0'">
                                         <t t-set-slot="toggler">
                                             <i class="fa fa-gear" role="img" aria-label="Settings" title="Settings" />
                                         </t>
