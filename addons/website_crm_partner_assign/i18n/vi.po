@@ -36,13 +36,6 @@ msgstr "# Cơ hội"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "&amp;times;"
-msgstr "&amp;times;"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<i class=\"fa fa-file-text-o\"/> I'm interested"
 msgstr "<i class=\"fa fa-file-text-o\"/>Tôi quan tâm "
 
@@ -97,8 +90,8 @@ msgid ""
 "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
 "link\" title=\"External link\"/>"
 msgstr ""
-"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
-"link\" title=\"External link\"/>"
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"Link ngoại "
+"trú\" title=\"Link ngoại trú\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -106,8 +99,8 @@ msgid ""
 "<span class=\"fa fa-map-marker fa-fw\" role=\"img\" aria-label=\"Address\" "
 "title=\"Address\"/>"
 msgstr ""
-"<span class=\"fa fa-map-marker fa-fw\" role=\"img\" aria-label=\"Address\" "
-"title=\"Address\"/>"
+"<span class=\"fa fa-map-marker fa-fw\" role=\"img\" aria-label=\"Địa chỉ\" "
+"title=\"Địa chỉ\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -121,22 +114,30 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<span class=\"fa fa-mobile\" role=\"img\" aria-label=\"Mobile\" title=\"Mobile\"/>"
-msgstr "<span class=\"fa fa-mobile\" role=\"img\" aria-label=\"Số Di động\" title=\"Số Di động\"/>"
+msgstr ""
+"<span class=\"fa fa-mobile\" role=\"img\" aria-label=\"Số Di động\" "
+"title=\"Số Di động\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<span class=\"fa fa-phone fa-fw\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr "<span class=\"fa fa-phone fa-fw\" role=\"img\" aria-label=\"Số điện thoại\" title=\"Số điện thoại\"/>"
+msgstr ""
+"<span class=\"fa fa-phone fa-fw\" role=\"img\" aria-label=\"Số điện thoại\" "
+"title=\"Số điện thoại\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<span class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr "<span class=\"fa fa-phone\" role=\"img\" aria-label=\"Số điện thoại\" title=\"Số điện thoại\"/>"
+msgstr ""
+"<span class=\"fa fa-phone\" role=\"img\" aria-label=\"Số điện thoại\" "
+"title=\"Số điện thoại\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<span class=\"fa fa-user fa-fw\" role=\"img\" aria-label=\"User\" title=\"User\"/>"
-msgstr "<span class=\"fa fa-user fa-fw\" role=\"img\" aria-label=\"Người dùng\" title=\"Người dùng\"/>"
+msgstr ""
+"<span class=\"fa fa-user fa-fw\" role=\"img\" aria-label=\"Người dùng\" "
+"title=\"Người dùng\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -183,6 +184,12 @@ msgstr ""
 " với khách hàng trước khi chấp nhận khách hàng tiềm năng</span>"
 
 #. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid "<span> at </span>"
+msgstr "<span> đạt </span>"
+
+#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<strong class=\"col-12 col-sm-3\">Address</strong>"
 msgstr "<strong class=\"col-12 col-sm-3\">Đia chỉ</strong>"
@@ -200,7 +207,7 @@ msgstr "<strong class=\"col-12 col-sm-4\">Đóng dự kiến</strong>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<strong class=\"col-12 col-sm-4\">Next Activity</strong>"
-msgstr "<strong class=\"col-12 col-sm-4\">Hoạt đọng tiếp theo</strong>"
+msgstr "<strong class=\"col-12 col-sm-4\">Hoạt động tiếp theo</strong>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -997,6 +1004,12 @@ msgid "No result found"
 msgstr "Không có kết quả nào"
 
 #. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:0
+#, python-format
+msgid "Not allowed to update the following field(s) : %s."
+msgstr "Không được phép cập nhật (các) trường sau: %s."
+
+#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1042,7 +1055,7 @@ msgstr "Kích hoạt Đối tác"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__forward_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__assignation_lines
 msgid "Partner Assignment"
-msgstr "Partner Assignment"
+msgstr "Phân công Đối tác"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__date_partner_assign
@@ -1383,13 +1396,8 @@ msgstr "Bản đồ Thế giới"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "ZIP"
-msgstr "Mã bưu điện"
+msgstr "Mã ZIP"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields.selection,name:website_crm_partner_assign.selection__crm_lead_forward_to_partner__forward_type__single
@@ -1397,7 +1405,6 @@ msgid "a single partner: manual selection of partner"
 msgstr "một đối tác duy nhất: lựa chọn đối tác thủ công"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "at"
 msgstr "đạt"

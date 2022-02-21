@@ -22,13 +22,6 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "&amp;times;"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<i class=\"fa fa-file-text-o\"/> I'm interested"
 msgstr ""
 
@@ -146,6 +139,12 @@ msgid ""
 "<span class=\"text-danger error_partner_assign_interested\" "
 "style=\"display:none;\">You need to fill up the next action and contact the "
 "customer before accepting the lead</span>"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid "<span> at </span>"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -867,6 +866,12 @@ msgid "No result found"
 msgstr ""
 
 #. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:0
+#, python-format
+msgid "Not allowed to update the following field(s) : %s."
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1251,11 +1256,6 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "YYYY-MM-DD"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "ZIP"
 msgstr ""
 
@@ -1265,7 +1265,6 @@ msgid "a single partner: manual selection of partner"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "at"
 msgstr ""
