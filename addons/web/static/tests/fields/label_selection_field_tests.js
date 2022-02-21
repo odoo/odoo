@@ -199,7 +199,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("LabelSelectionField");
 
-    QUnit.skipWOWL("LabelSelectionField in form view", async function (assert) {
+    QUnit.test("LabelSelectionField in form view", async function (assert) {
         assert.expect(12);
 
         const form = await makeView({
@@ -220,21 +220,21 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             form.el,
-            ".o_field_widget.badge.badge-warning",
+            ".o_field_widget .badge.badge-warning",
             "should have a warning status label since selection is the second, blocked state"
         );
         assert.containsNone(
             form.el,
-            ".o_field_widget.badge.badge-secondary",
+            ".o_field_widget .badge.badge-secondary",
             "should not have a default status since selection is the second, blocked state"
         );
         assert.containsNone(
             form.el,
-            ".o_field_widget.badge.badge-success",
+            ".o_field_widget .badge.badge-success",
             "should not have a success status since selection is the second, blocked state"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget.badge.badge-warning").innerText,
+            form.el.querySelector(".o_field_widget .badge.badge-warning").innerText,
             "Blocked",
             "the label should say 'Blocked' since this is the label value for that state"
         );
@@ -243,21 +243,21 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.containsOnce(
             form.el,
-            ".o_field_widget.badge.badge-warning",
+            ".o_field_widget .badge.badge-warning",
             "should have a warning status label since selection is the second, blocked state"
         );
         assert.containsNone(
             form.el,
-            ".o_field_widget.badge.badge-secondary",
+            ".o_field_widget .badge.badge-secondary",
             "should not have a default status since selection is the second, blocked state"
         );
         assert.containsNone(
             form.el,
-            ".o_field_widget.badge.badge-success",
+            ".o_field_widget .badge.badge-success",
             "should not have a success status since selection is the second, blocked state"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget.badge.badge-warning").innerText,
+            form.el.querySelector(".o_field_widget .badge.badge-warning").innerText,
             "Blocked",
             "the label should say 'Blocked' since this is the label value for that state"
         );
@@ -266,30 +266,30 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el.querySelector(".o_form_button_save"));
         assert.containsOnce(
             form.el,
-            ".o_field_widget.badge.badge-warning",
+            ".o_field_widget .badge.badge-warning",
             "should have a warning status label since selection is the second, blocked state"
         );
         assert.containsNone(
             form.el,
-            ".o_field_widget.badge.badge-secondary",
+            ".o_field_widget .badge.badge-secondary",
             "should not have a default status since selection is the second, blocked state"
         );
         assert.containsNone(
             form.el,
-            ".o_field_widget.badge.badge-success",
+            ".o_field_widget .badge.badge-success",
             "should not have a success status since selection is the second, blocked state"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget.badge.badge-warning").innerText,
+            form.el.querySelector(".o_field_widget .badge.badge-warning").innerText,
             "Blocked",
             "the label should say 'Blocked' since this is the label value for that state"
         );
     });
 
-    QUnit.skipWOWL("LabelSelectionField in editable list view", async function (assert) {
+    QUnit.test("LabelSelectionField in editable list view", async function (assert) {
         assert.expect(21);
 
-        var list = await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "partner",
             serverData,
@@ -302,37 +302,37 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            list.el.querySelectorAll(".o_field_widget.badge:not(:empty)").length,
+            list.el.querySelectorAll(".o_field_widget .badge:not(:empty)").length,
             3,
             "should have three visible status labels"
         );
         assert.containsOnce(
             list.el,
-            ".o_field_widget.badge.badge-warning",
+            ".o_field_widget .badge.badge-warning",
             "should have one warning status label"
         );
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget.badge.badge-warning").innerText,
+            list.el.querySelector(".o_field_widget .badge.badge-warning").innerText,
             "Blocked",
             "the warning label should read 'Blocked'"
         );
         assert.containsOnce(
             list.el,
-            ".o_field_widget.badge.badge-secondary",
+            ".o_field_widget .badge.badge-secondary",
             "should have one default status label"
         );
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget.badge.badge-secondary").innerText,
+            list.el.querySelector(".o_field_widget .badge.badge-secondary").innerText,
             "Normal",
             "the default label should read 'Normal'"
         );
         assert.containsOnce(
             list.el,
-            ".o_field_widget.badge.badge-success",
+            ".o_field_widget .badge.badge-success",
             "should have one success status label"
         );
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget.badge.badge-success").innerText,
+            list.el.querySelector(".o_field_widget .badge.badge-success").innerText,
             "Done",
             "the success label should read 'Done'"
         );
@@ -340,75 +340,75 @@ QUnit.module("Fields", (hooks) => {
         // switch to edit mode and check the result
         await click(list.el.querySelector("tbody td:not(.o_list_record_selector)"));
         assert.strictEqual(
-            list.el.querySelectorAll(".o_field_widget.badge:not(:empty)").length,
+            list.el.querySelectorAll(".o_field_widget .badge:not(:empty)").length,
             3,
             "should have three visible status labels"
         );
         assert.containsOnce(
             list.el,
-            ".o_field_widget.badge.badge-warning",
+            ".o_field_widget .badge.badge-warning",
             "should have one warning status label"
         );
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget.badge.badge-warning").innerText,
+            list.el.querySelector(".o_field_widget .badge.badge-warning").innerText,
             "Blocked",
             "the warning label should read 'Blocked'"
         );
         assert.containsOnce(
             list.el,
-            ".o_field_widget.badge.badge-secondary",
+            ".o_field_widget .badge.badge-secondary",
             "should have one default status label"
         );
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget.badge.badge-secondary").innerText,
+            list.el.querySelector(".o_field_widget .badge.badge-secondary").innerText,
             "Normal",
             "the default label should read 'Normal'"
         );
         assert.containsOnce(
             list.el,
-            ".o_field_widget.badge.badge-success",
+            ".o_field_widget .badge.badge-success",
             "should have one success status label"
         );
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget.badge.badge-success").innerText,
+            list.el.querySelector(".o_field_widget .badge.badge-success").innerText,
             "Done",
             "the success label should read 'Done'"
         );
 
         // save and check the result
-        await click(form.el.querySelector(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
         assert.strictEqual(
-            list.el.querySelectorAll(".o_field_widget.badge:not(:empty)").length,
+            list.el.querySelectorAll(".o_field_widget .badge:not(:empty)").length,
             3,
             "should have three visible status labels"
         );
         assert.containsOnce(
             list.el,
-            ".o_field_widget.badge.badge-warning",
+            ".o_field_widget .badge.badge-warning",
             "should have one warning status label"
         );
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget.badge.badge-warning").innerText,
+            list.el.querySelector(".o_field_widget .badge.badge-warning").innerText,
             "Blocked",
             "the warning label should read 'Blocked'"
         );
         assert.containsOnce(
             list.el,
-            ".o_field_widget.badge.badge-secondary",
+            ".o_field_widget .badge.badge-secondary",
             "should have one default status label"
         );
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget.badge.badge-secondary").innerText,
+            list.el.querySelector(".o_field_widget .badge.badge-secondary").innerText,
             "Normal",
             "the default label should read 'Normal'"
         );
         assert.containsOnce(
             list.el,
-            ".o_field_widget.badge.badge-success",
+            ".o_field_widget .badge.badge-success",
             "should have one success status label"
         );
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget.badge.badge-success").innerText,
+            list.el.querySelector(".o_field_widget .badge.badge-success").innerText,
             "Done",
             "the success label should read 'Done'"
         );
