@@ -25,9 +25,6 @@ registerModel({
     name: 'Chatter',
     identifyingFields: ['id'],
     lifecycleHooks: {
-        _created() {
-            this._isPreparingAttachmentsLoading = undefined;
-        },
         _willDelete() {
             this.messaging.browser.clearTimeout(this.attachmentsLoaderTimeout);
         },
@@ -163,6 +160,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsPreparingAttachmentsLoading() {
+            return this.attachmentsLoaderTimeout !== undefined;
+        },
+        /**
+         * @private
          * @returns {ThreadViewer}
          */
         _computeThreadViewer() {
@@ -176,8 +180,10 @@ registerModel({
          * @private
          */
         _onAttachmentsLoadingTimeout() {
-            this.update({ isShowingAttachmentsLoading: true });
-            this._isPreparingAttachmentsLoading = false;
+            this.update({
+                attachmentsLoaderTimeout: clear(),
+                isShowingAttachmentsLoading: true,
+            });
         },
         /**
          * @private
@@ -227,7 +233,7 @@ registerModel({
                 this.update({ isShowingAttachmentsLoading: false });
                 return;
             }
-            if (this._isPreparingAttachmentsLoading || this.isShowingAttachmentsLoading) {
+            if (this.isPreparingAttachmentsLoading || this.isShowingAttachmentsLoading) {
                 return;
             }
             this._prepareAttachmentsLoading();
@@ -236,7 +242,6 @@ registerModel({
          * @private
          */
         _prepareAttachmentsLoading() {
-            this._isPreparingAttachmentsLoading = true;
             this.update({
                 attachmentsLoaderTimeout: this.messaging.browser.setTimeout(
                     this._onAttachmentsLoadingTimeout,
@@ -250,7 +255,6 @@ registerModel({
         _stopAttachmentsLoading() {
             this.messaging.browser.clearTimeout(this.attachmentsLoaderTimeout);
             this.update({ attachmentsLoaderTimeout: clear() });
-            this._isPreparingAttachmentsLoading = false;
         },
     },
     fields: {
@@ -338,6 +342,10 @@ registerModel({
         }),
         isDisabled: attr({
             compute: '_computeIsDisabled',
+            default: false,
+        }),
+        isPreparingAttachmentsLoading: attr({
+            compute: '_computeIsPreparingAttachmentsLoading',
             default: false,
         }),
         isShowingAttachmentsLoading: attr({
