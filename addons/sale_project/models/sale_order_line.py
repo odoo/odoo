@@ -113,7 +113,7 @@ class SaleOrderLine(models.Model):
                 'email_from': self.order_id.partner_id.email,
             })
             # duplicating a project doesn't set the SO on sub-tasks
-            project.tasks.filtered(lambda task: task.parent_id != False).write({
+            project.tasks.filtered('parent_id').write({
                 'sale_line_id': self.id,
                 'sale_order_id': self.order_id,
             })
