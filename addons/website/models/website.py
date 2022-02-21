@@ -174,6 +174,11 @@ class Website(models.Model):
     def _get_menu_ids(self):
         return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
 
+    # self.env.uid for ir.rule groups on menu
+    @tools.ormcache('self.env.uid', 'self.id')
+    def _get_menu_page_ids(self):
+        return self.env['website.menu'].search([('website_id', '=', self.id)]).page_id.ids
+
     @api.model
     def create(self, vals):
         self._handle_create_write(vals)
