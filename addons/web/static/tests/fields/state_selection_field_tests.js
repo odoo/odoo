@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { click, nextTick } from "../helpers/utils";
-import { setupViewRegistries } from "../views/helpers";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 
@@ -67,12 +67,6 @@ QUnit.module("Fields", (hooks) => {
                             searchable: true,
                         },
                         sequence: { type: "integer", string: "Sequence", searchable: true },
-                        currency_id: {
-                            string: "Currency",
-                            type: "many2one",
-                            relation: "currency",
-                            searchable: true,
-                        },
                         selection: {
                             string: "Selection",
                             type: "selection",
@@ -114,7 +108,6 @@ QUnit.module("Fields", (hooks) => {
                             timmy: [],
                             trululu: 1,
                             sequence: 4,
-                            currency_id: 2,
                             selection: "normal",
                         },
                         {
@@ -127,7 +120,7 @@ QUnit.module("Fields", (hooks) => {
                             selection: "done",
                         },
                         { id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859 },
-                        { id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1 },
+                        { id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1 },
                     ],
                     onchanges: {},
                 },
@@ -156,27 +149,6 @@ QUnit.module("Fields", (hooks) => {
                         { id: 14, display_name: "silver", color: 5 },
                     ],
                 },
-                currency: {
-                    fields: {
-                        digits: { string: "Digits" },
-                        symbol: { string: "Currency Sumbol", type: "char", searchable: true },
-                        position: { string: "Currency Position", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 1,
-                            display_name: "$",
-                            symbol: "$",
-                            position: "before",
-                        },
-                        {
-                            id: 2,
-                            display_name: "€",
-                            symbol: "€",
-                            position: "after",
-                        },
-                    ],
-                },
                 "ir.translation": {
                     fields: {
                         lang: { type: "char" },
@@ -200,13 +172,13 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("StateSelectionField");
 
-    QUnit.skipWOWL("StateSelectionField in form view", async function (assert) {
+    QUnit.test("StateSelectionField in form view", async function (assert) {
         assert.expect(21);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -215,225 +187,199 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
+            /*
             viewOptions: {
                 disable_autofocus: true,
-            },
+            },*/
         });
 
         assert.containsOnce(
             form,
-            ".o_field_widget.o_selection > a span.o_status.o_status_red",
+            ".o_field_widget.o_field_state_selection span.o_status.o_status_red",
             "should have one red status since selection is the second, blocked state"
         );
         assert.containsNone(
             form,
-            ".o_field_widget.o_selection > a span.o_status.o_status_green",
+            ".o_field_widget.o_field_state_selection span.o_status.o_status_green",
             "should not have one green status since selection is the second, blocked state"
         );
-        assert.containsNone(form, ".dropdown-menu.state:visible", "there should not be a dropdown");
+        assert.containsNone(form, ".dropdown-menu", "there should not be a dropdown");
 
         // Click on the status button to make the dropdown appear
-        await testUtils.dom.click(form.$(".o_field_widget.o_selection .o_status").first());
-        assert.containsOnce(form, ".dropdown-menu.state:visible", "there should be a dropdown");
+        await click(form.el, ".o_field_widget.o_field_state_selection .o_status");
+        assert.containsOnce(document.body, ".dropdown-menu", "there should be a dropdown");
         assert.containsN(
             form,
-            ".dropdown-menu.state:visible .dropdown-item",
+            ".dropdown-menu .dropdown-item",
             2,
             "there should be two options in the dropdown"
         );
 
         // Click on the first option, "Normal"
-        await testUtils.dom.click(form.$(".dropdown-menu.state:visible .dropdown-item").first());
+        await click(form.el.querySelector(".dropdown-menu .dropdown-item"));
+        assert.containsNone(form, ".dropdown-menu", "there should not be a dropdown anymore");
         assert.containsNone(
             form,
-            ".dropdown-menu.state:visible",
-            "there should not be a dropdown anymore"
-        );
-        assert.containsNone(
-            form,
-            ".o_field_widget.o_selection > a span.o_status.o_status_red",
+            ".o_field_widget.o_field_state_selection span.o_status.o_status_red",
             "should not have one red status since selection is the first, normal state"
         );
         assert.containsNone(
             form,
-            ".o_field_widget.o_selection > a span.o_status.o_status_green",
+            ".o_field_widget.o_field_state_selection span.o_status.o_status_green",
             "should not have one green status since selection is the first, normal state"
         );
         assert.containsOnce(
             form,
-            ".o_field_widget.o_selection > a span.o_status",
+            ".o_field_widget.o_field_state_selection span.o_status",
             "should have one grey status since selection is the first, normal state"
         );
 
         // switch to edit mode and check the result
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
+        assert.containsNone(form, ".dropdown-menu", "there should still not be a dropdown");
         assert.containsNone(
             form,
-            ".dropdown-menu.state:visible",
-            "there should still not be a dropdown"
-        );
-        assert.containsNone(
-            form,
-            ".o_field_widget.o_selection > a span.o_status.o_status_red",
+            ".o_field_widget.o_field_state_selection span.o_status.o_status_red",
             "should still not have one red status since selection is the first, normal state"
         );
         assert.containsNone(
             form,
-            ".o_field_widget.o_selection > a span.o_status.o_status_green",
+            ".o_field_widget.o_field_state_selection span.o_status.o_status_green",
             "should still not have one green status since selection is the first, normal state"
         );
         assert.containsOnce(
             form,
-            ".o_field_widget.o_selection > a span.o_status",
+            ".o_field_widget.o_field_state_selection span.o_status",
             "should still have one grey status since selection is the first, normal state"
         );
 
         // Click on the status button to make the dropdown appear
-        await testUtils.dom.click(form.$(".o_field_widget.o_selection .o_status").first());
-        assert.containsOnce(form, ".dropdown-menu.state:visible", "there should be a dropdown");
+        await click(form.el, ".o_field_widget.o_field_state_selection .o_status");
+        assert.containsOnce(form, ".dropdown-menu", "there should be a dropdown");
         assert.containsN(
             form,
-            ".dropdown-menu.state:visible .dropdown-item",
+            ".dropdown-menu .dropdown-item",
             2,
             "there should be two options in the dropdown"
         );
 
         // Click on the last option, "Done"
-        await testUtils.dom.click(form.$(".dropdown-menu.state:visible .dropdown-item").last());
+        await click(form.el, ".dropdown-menu .dropdown-item:last-child");
+        assert.containsNone(form, ".dropdown-menu", "there should not be a dropdown anymore");
         assert.containsNone(
             form,
-            ".dropdown-menu.state:visible",
-            "there should not be a dropdown anymore"
-        );
-        assert.containsNone(
-            form,
-            ".o_field_widget.o_selection > a span.o_status.o_status_red",
+            ".o_field_widget.o_field_state_selection span.o_status.o_status_red",
             "should not have one red status since selection is the third, done state"
         );
         assert.containsOnce(
             form,
-            ".o_field_widget.o_selection > a span.o_status.o_status_green",
+            ".o_field_widget.o_field_state_selection span.o_status.o_status_green",
             "should have one green status since selection is the third, done state"
         );
 
         // save
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
+        assert.containsNone(form, ".dropdown-menu", "there should still not be a dropdown anymore");
         assert.containsNone(
             form,
-            ".dropdown-menu.state:visible",
-            "there should still not be a dropdown anymore"
-        );
-        assert.containsNone(
-            form,
-            ".o_field_widget.o_selection > a span.o_status.o_status_red",
+            ".o_field_widget.o_field_state_selection span.o_status.o_status_red",
             "should still not have one red status since selection is the third, done state"
         );
         assert.containsOnce(
             form,
-            ".o_field_widget.o_selection > a span.o_status.o_status_green",
+            ".o_field_widget.o_field_state_selection span.o_status.o_status_green",
             "should still have one green status since selection is the third, done state"
         );
-
-        form.destroy();
     });
 
-    QUnit.skipWOWL("StateSelectionField with readonly modifier", async function (assert) {
+    QUnit.test("StateSelectionField with readonly modifier", async function (assert) {
         assert.expect(4);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: '<form><field name="selection" widget="state_selection" readonly="1"/></form>',
-            res_id: 1,
+            resId: 1,
         });
 
-        assert.hasClass(form.$(".o_selection"), "o_readonly_modifier");
-        assert.hasClass(form.$(".o_selection > a"), "disabled");
-        assert.isNotVisible(form.$(".dropdown-menu.state"));
-
-        await testUtils.dom.click(form.$(".o_selection > a"));
-        assert.isNotVisible(form.$(".dropdown-menu.state"));
-
-        form.destroy();
+        assert.hasClass(form.el.querySelector(".o_field_state_selection"), "o_readonly_modifier");
+        assert.hasClass(form.el.querySelector(".o_field_state_selection button"), "disabled");
+        assert.isNotVisible(form.el.querySelector(".dropdown-menu"));
+        await click(form.el, ".o_field_state_selection span.o_status");
+        assert.isNotVisible(form.el.querySelector(".dropdown-menu"));
     });
 
-    QUnit.skipWOWL(
-        "StateSelectionField for list view with hide_label option",
-        async function (assert) {
-            assert.expect(6);
+    QUnit.test("StateSelectionField for list view with hide_label option", async function (assert) {
+        assert.expect(6);
 
-            Object.assign(this.data.partner.fields, {
-                graph_type: {
-                    string: "Graph Type",
-                    type: "selection",
-                    selection: [
-                        ["line", "Line"],
-                        ["bar", "Bar"],
-                    ],
-                },
-            });
-            this.data.partner.records[0].graph_type = "bar";
-            this.data.partner.records[1].graph_type = "line";
+        Object.assign(serverData.models.partner.fields, {
+            graph_type: {
+                string: "Graph Type",
+                type: "selection",
+                selection: [
+                    ["line", "Line"],
+                    ["bar", "Bar"],
+                ],
+            },
+        });
+        serverData.models.partner.records[0].graph_type = "bar";
+        serverData.models.partner.records[1].graph_type = "line";
 
-            const list = await createView({
-                View: ListView,
-                model: "partner",
-                data: this.data,
-                arch: `
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
                 <tree>
                     <field name="graph_type" widget="state_selection" options="{'hide_label': True}"/>
                     <field name="selection" widget="state_selection"/>
                 </tree>`,
-            });
+        });
 
-            assert.containsN(
-                list,
-                ".o_state_selection_cell .o_selection > a span.o_status",
-                10,
-                "should have ten status selection widgets"
-            );
-            assert.containsN(
-                list,
-                ".o_state_selection_cell .o_selection[name=selection] > span.align-middle",
-                5,
-                "should have five label on selection widgets"
-            );
-            assert.containsOnce(
-                list,
-                ".o_state_selection_cell .o_selection[name=selection] > span.align-middle:contains(Done)",
-                "should have one Done status label"
-            );
-            assert.containsN(
-                list,
-                ".o_state_selection_cell .o_selection[name=selection] > span.align-middle:contains(Normal)",
-                3,
-                "should have three Normal status label"
-            );
-            assert.containsN(
-                list,
-                ".o_state_selection_cell .o_selection[name=graph_type] > a span.o_status",
-                5,
-                "should have five status selection widgets"
-            );
-            assert.containsNone(
-                list,
-                ".o_state_selection_cell .o_selection[name=graph_type] > span.align-middle",
-                "should not have status label in selection widgets"
-            );
-
-            list.destroy();
-        }
-    );
+        assert.containsN(
+            list,
+            ".o_state_selection_cell .o_field_state_selection span.o_status",
+            10,
+            "should have ten status selection widgets"
+        );
+        const selection = Array.from(
+            list.el.querySelectorAll(
+                ".o_state_selection_cell .o_field_state_selection[name=selection] span.o_status_label"
+            )
+        );
+        assert.strictEqual(selection.length, 5, "should have five label on selection widgets");
+        assert.strictEqual(
+            selection.filter((el) => el.innerText === "Done").length,
+            1,
+            "should have one Done status label"
+        );
+        assert.strictEqual(
+            selection.filter((el) => el.innerText === "Normal").length,
+            3,
+            "should have three Normal status label"
+        );
+        assert.containsN(
+            list,
+            ".o_state_selection_cell .o_field_state_selection[name=graph_type] span.o_status",
+            5,
+            "should have five status selection widgets"
+        );
+        assert.containsNone(
+            list,
+            ".o_state_selection_cell .o_field_state_selection[name=graph_type] span.o_status_label",
+            "should not have status label in selection widgets"
+        );
+    });
 
     QUnit.skipWOWL("StateSelectionField in editable list view", async function (assert) {
         assert.expect(33);
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
             arch:
                 '<tree editable="bottom">' +
                 '<field name="foo"/>' +
@@ -443,171 +389,164 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status",
+            ".o_state_selection_cell .o_field_state_selection span.o_status",
             5,
             "should have five status selection widgets"
         );
         assert.containsOnce(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status.o_status_red",
+            ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_red",
             "should have one red status"
         );
         assert.containsOnce(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status.o_status_green",
+            ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green",
             "should have one green status"
         );
-        assert.containsNone(list, ".dropdown-menu.state:visible", "there should not be a dropdown");
+        assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown");
 
         // Click on the status button to make the dropdown appear
-        var $cell = list.$("tbody td.o_state_selection_cell").first();
-        await testUtils.dom.click(
-            list.$(".o_state_selection_cell .o_selection > a span.o_status").first()
-        );
+        const cell = list.el.querySelector("tbody td.o_state_selection_cell");
+        await click(list.el, ".o_state_selection_cell .o_field_state_selection span.o_status");
         assert.doesNotHaveClass(
-            $cell.parent(),
+            cell.parentElement,
             "o_selected_row",
             "should not be in edit mode since we clicked on the state selection widget"
         );
-        assert.containsOnce(list, ".dropdown-menu.state:visible", "there should be a dropdown");
+        assert.containsOnce(list, ".dropdown-menu", "there should be a dropdown");
         assert.containsN(
             list,
-            ".dropdown-menu.state:visible .dropdown-item",
+            ".dropdown-menu .dropdown-item",
             2,
             "there should be two options in the dropdown"
         );
 
         // Click on the first option, "Normal"
-        await testUtils.dom.click(list.$(".dropdown-menu.state:visible .dropdown-item").first());
+        await click(list.el.querySelector(".dropdown-menu .dropdown-item"));
         assert.containsN(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status",
+            ".o_state_selection_cell .o_field_state_selection span.o_status",
             5,
             "should still have five status selection widgets"
         );
         assert.containsNone(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status.o_status_red",
+            ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_red",
             "should now have no red status"
         );
         assert.containsOnce(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status.o_status_green",
+            ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green",
             "should still have one green status"
         );
-        assert.containsNone(list, ".dropdown-menu.state:visible", "there should not be a dropdown");
+        assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown");
         assert.containsNone(list, "tr.o_selected_row", "should not be in edit mode");
 
         // switch to edit mode and check the result
-        $cell = list.$("tbody td.o_state_selection_cell").first();
-        await testUtils.dom.click($cell);
-        assert.hasClass($cell.parent(), "o_selected_row", "should now be in edit mode");
+        cell = list.el.querySelector("tbody td.o_state_selection_cell");
+        await click(cell);
+        assert.hasClass(cell.parentElement, "o_selected_row", "should now be in edit mode");
         assert.containsN(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status",
+            ".o_state_selection_cell .o_field_state_selection span.o_status",
             5,
             "should still have five status selection widgets"
         );
         assert.containsNone(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status.o_status_red",
+            ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_red",
             "should now have no red status"
         );
         assert.containsOnce(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status.o_status_green",
+            ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green",
             "should still have one green status"
         );
-        assert.containsNone(list, ".dropdown-menu.state:visible", "there should not be a dropdown");
+        assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown");
 
         // Click on the status button to make the dropdown appear
-        await testUtils.dom.click(
-            list.$(".o_state_selection_cell .o_selection > a span.o_status").first()
+        await click(
+            list.el.querySelector(".o_state_selection_cell .o_field_state_selection span.o_status")
         );
-        assert.containsOnce(list, ".dropdown-menu.state:visible", "there should be a dropdown");
+        assert.containsOnce(list, ".dropdown-menu", "there should be a dropdown");
         assert.containsN(
             list,
-            ".dropdown-menu.state:visible .dropdown-item",
+            ".dropdown-menu .dropdown-item",
             2,
             "there should be two options in the dropdown"
         );
 
         // Click on another row
-        var $lastCell = list.$("tbody td.o_state_selection_cell").last();
-        await testUtils.dom.click($lastCell);
-        assert.containsNone(
-            list,
-            ".dropdown-menu.state:visible",
-            "there should not be a dropdown anymore"
-        );
-        var $firstCell = list.$("tbody td.o_state_selection_cell").first();
+        const lastCell = list.el.querySelector("tbody td.o_state_selection_cell:last-child");
+        await click(lastCell);
+        assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown anymore");
+        const firstCell = list.el.querySelector("tbody td.o_state_selection_cell");
         assert.doesNotHaveClass(
-            $firstCell.parent(),
+            firstCell.parentElement,
             "o_selected_row",
             "first row should not be in edit mode anymore"
         );
-        assert.hasClass($lastCell.parent(), "o_selected_row", "last row should be in edit mode");
+        assert.hasClass(
+            lastCell.parentElement,
+            "o_selected_row",
+            "last row should be in edit mode"
+        );
 
         // Click on the last status button to make the dropdown appear
-        await testUtils.dom.click(
-            list.$(".o_state_selection_cell .o_selection > a span.o_status").last()
+        await click(
+            list.el,
+            ".o_state_selection_cell .o_field_state_selection span.o_status:last-child"
         );
-        assert.containsOnce(list, ".dropdown-menu.state:visible", "there should be a dropdown");
+        assert.containsOnce(list, ".dropdown-menu", "there should be a dropdown");
         assert.containsN(
             list,
-            ".dropdown-menu.state:visible .dropdown-item",
+            ".dropdown-menu .dropdown-item",
             2,
             "there should be two options in the dropdown"
         );
 
         // Click on the last option, "Done"
-        await testUtils.dom.click(list.$(".dropdown-menu.state:visible .dropdown-item").last());
-        assert.containsNone(
-            list,
-            ".dropdown-menu.state:visible",
-            "there should not be a dropdown anymore"
-        );
+        await click(list.el, ".dropdown-menu .dropdown-item:last-child");
+        assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown anymore");
         assert.containsN(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status",
+            ".o_state_selection_cell .o_field_state_selection span.o_status",
             5,
             "should still have five status selection widgets"
         );
         assert.containsNone(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status.o_status_red",
+            ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_red",
             "should still have no red status"
         );
         assert.containsN(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status.o_status_green",
+            ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green",
             2,
             "should now have two green status"
         );
-        assert.containsNone(list, ".dropdown-menu.state:visible", "there should not be a dropdown");
+        assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown");
 
         // save
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
         assert.containsN(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status",
+            ".o_state_selection_cell .o_field_state_selection span.o_status",
             5,
             "should have five status selection widgets"
         );
         assert.containsNone(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status.o_status_red",
+            ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_red",
             "should have no red status"
         );
         assert.containsN(
             list,
-            ".o_state_selection_cell .o_selection > a span.o_status.o_status_green",
+            ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green",
             2,
             "should have two green status"
         );
-        assert.containsNone(list, ".dropdown-menu.state:visible", "there should not be a dropdown");
-
-        list.destroy();
+        assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown");
     });
 
     QUnit.skipWOWL(
@@ -624,7 +563,7 @@ QUnit.module("Fields", (hooks) => {
                     "<form>" + '<field name="selection" widget="state_selection"/>' + "</form>",
                 "partner,false,search": "<search></search>",
             };
-            const serverData = { models: this.data, views };
+            const serverData = { models: serverData.models, views };
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, {
                 res_id: 1,

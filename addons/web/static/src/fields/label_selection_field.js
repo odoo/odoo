@@ -23,8 +23,7 @@ export class LabelSelectionField extends Component {
      * @param {Event} ev
      */
     onChange(ev) {
-        const value = JSON.parse(ev.target.value);
-        this.props.update(value);
+        this.props.update(ev.target.value);
     }
 }
 
