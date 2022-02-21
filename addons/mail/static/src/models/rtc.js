@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, unlink } from '@mail/model/model_field_command';
+import { clear, insert, replace, unlink } from '@mail/model/model_field_command';
 import { monitorAudio } from '@mail/utils/media_monitoring';
 
 /**
@@ -26,14 +26,6 @@ registerModel({
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _created() {
-            // technical fields that are not exposed
-            // Especially important for _peerConnections, as garbage collection of peerConnections is important for
-            // peerConnection.close().
-            /**
-             * Object { token: dataChannel<RTCDataChannel> }
-             * Contains the RTCDataChannels with the other rtc sessions.
-             */
-            this._dataChannels = {};
             /**
              /**
              * Object { token: peerConnection<RTCPeerConnection> }
@@ -206,7 +198,6 @@ registerModel({
             this.audioTrack && this.audioTrack.stop();
             this.videoTrack && this.videoTrack.stop();
 
-            this._dataChannels = {};
             this._peerConnections = {};
 
             for (const rtcSession of this.messaging.models['RtcSession'].all()) {
@@ -214,6 +205,7 @@ registerModel({
                 rtcSession.update({
                     connectionRecoveryTimeout: clear(),
                     isConnected: clear(),
+                    rtcDataChannel: clear(),
                 });
             }
             this.update({
@@ -507,7 +499,10 @@ registerModel({
                 }
             };
             this._peerConnections[rtcSession.id] = peerConnection;
-            this._dataChannels[rtcSession.id] = dataChannel;
+            this.messaging.models['RtcDataChannel'].insert({
+                dataChannel,
+                rtcSession: replace(rtcSession),
+            });
             return peerConnection;
         },
         /**
@@ -667,11 +662,15 @@ registerModel({
             }
             if (type === 'peerToPeer') {
                 for (const token of targetTokens) {
-                    const dataChannel = this._dataChannels[token];
-                    if (!dataChannel || dataChannel.readyState !== 'open') {
+                    const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: token });
+                    if (!rtcSession) {
                         continue;
                     }
-                    dataChannel.send(JSON.stringify({
+                    const rtcDataChannel = rtcSession.rtcDataChannel;
+                    if (!rtcDataChannel || rtcDataChannel.dataChannel.readyState !== 'open') {
+                        continue;
+                    }
+                    rtcDataChannel.dataChannel.send(JSON.stringify({
                         event,
                         channelId: this.channel.id,
                         payload,
@@ -750,12 +749,11 @@ registerModel({
             const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: sessionId });
             if (rtcSession) {
                 rtcSession.reset();
+                const rtcDataChannel = rtcSession.rtcDataChannel;
+                if (rtcDataChannel) {
+                    rtcDataChannel.delete();
+                }
             }
-            const dataChannel = this._dataChannels[sessionId];
-            if (dataChannel) {
-                dataChannel.close();
-            }
-            delete this._dataChannels[sessionId];
             const peerConnection = this._peerConnections[sessionId];
             if (peerConnection) {
                 this._removeRemoteTracks(peerConnection);
