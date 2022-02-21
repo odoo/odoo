@@ -6652,21 +6652,29 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('priority widget with readonly attribute', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch: `
-                <form>
-                    <field name="selection" widget="priority" readonly="1"/>
-                </form>`,
+            arch: '<form><field name="selection" widget="priority" readonly="1"/></form>',
             res_id: 2,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    throw new Error("should not save");
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
-        assert.containsN(form, '.o_field_widget.o_priority span', 2,
-            "stars of priority widget should rendered with span tag if readonly");
+        assert.strictEqual(form.$('span.o_priority_star.fa.fa-star-o').length, 2,
+        "stars of priority widget should rendered with span tag if readonly");
+
+        await testUtils.dom.click(form.$('.o_priority_star.fa-star-o').last());
+
+        assert.strictEqual(form.$('.o_priority_star.fa.fa-star-o').length, 2,
+        "should still have two stars");
 
         form.destroy();
     });
