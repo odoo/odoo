@@ -17,12 +17,11 @@ const NAV_KEYS = [
     "end",
     "backspace",
     "enter",
-    "escape",
     "tab",
     "delete",
 ];
 const MODIFIERS = new Set(["alt", "control", "shift"]);
-const AUTHORIZED_KEYS = new Set([...ALPHANUM_KEYS, ...NAV_KEYS]);
+const AUTHORIZED_KEYS = new Set([...ALPHANUM_KEYS, ...NAV_KEYS, "escape"]);
 
 export const hotkeyService = {
     dependencies: ["ui"],
@@ -86,9 +85,16 @@ export const hotkeyService = {
                 return;
             }
 
+            const targetIsEditable =
+                (event.target instanceof Element && /input|textarea/i.test(event.target.tagName)) ||
+                (event.target instanceof HTMLElement && event.target.isContentEditable);
+            const shouldProtectEditable =
+                targetIsEditable && [...ALPHANUM_KEYS, ...NAV_KEYS].includes(singleKey);
+
             // Finally, prepare and dispatch.
             const infos = {
                 hotkey,
+                shouldProtectEditable,
                 _originalEvent: event,
             };
             dispatch(infos);
@@ -104,12 +110,13 @@ export const hotkeyService = {
          *
          * @param {{
          *  hotkey: string,
+         *  shouldProtectEditable: boolean,
          *  _originalEvent: KeyboardEvent
          * }} infos
          */
         function dispatch(infos) {
             let dispatched = false;
-            const { hotkey, _originalEvent: event } = infos;
+            const { hotkey, shouldProtectEditable, _originalEvent: event } = infos;
             const activeElement = ui.activeElement;
 
             // Dispatch actual hotkey to all matching registrations
@@ -123,6 +130,10 @@ export const hotkeyService = {
                 }
 
                 if (!reg.allowRepeat && event.repeat) {
+                    continue;
+                }
+
+                if (!reg.bypassEditableProtection && shouldProtectEditable) {
                     continue;
                 }
 
@@ -254,6 +265,9 @@ export const hotkeyService = {
          * @param {Object} options additional options
          * @param {boolean} [options.allowRepeat=false]
          *  allow registration to perform multiple times when hotkey is held down
+         * @param {boolean} [options.bypassEditableProtection=false]
+         *  if true the hotkey service will call this registration
+         *  even if an editable element is focused
          * @param {boolean} [options.global=false]
          *  allow registration to perform no matter the UI active element
          * @returns {number} registration token
@@ -299,6 +313,7 @@ export const hotkeyService = {
                 callback,
                 activeElement: null,
                 allowRepeat: options && options.allowRepeat,
+                bypassEditableProtection: options && options.bypassEditableProtection,
                 global: options && options.global,
             };
             registrations.set(token, registration);
@@ -327,6 +342,7 @@ export const hotkeyService = {
              * @param {() => void} callback
              * @param {Object} options
              * @param {boolean} [options.allowRepeat=false]
+             * @param {boolean} [options.bypassEditableProtection=false]
              * @param {boolean} [options.global=false]
              * @returns {() => void}
              */

@@ -84,9 +84,15 @@ export class CommandPalette extends Component {
         this.defaultDebounceSearch = debounce.apply(this, [this.search, 0]);
         useAutofocus();
 
-        useHotkey("Enter", () => this.executeSelectedCommand());
-        useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), { allowRepeat: true });
-        useHotkey("ArrowDown", () => this.selectCommandAndScrollTo("NEXT"), { allowRepeat: true });
+        useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
+        useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), {
+            bypassEditableProtection: true,
+            allowRepeat: true,
+        });
+        useHotkey("ArrowDown", () => this.selectCommandAndScrollTo("NEXT"), {
+            bypassEditableProtection: true,
+            allowRepeat: true,
+        });
 
         /**
          * @type {{ commands: CommandItem[],
