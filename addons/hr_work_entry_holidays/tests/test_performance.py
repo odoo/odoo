@@ -31,7 +31,7 @@ class TestWorkEntryHolidaysPerformance(TestWorkEntryHolidaysBase):
         self.richard_emp.generate_work_entries(date(2018, 1, 1), date(2018, 1, 2))
         leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
 
-        with self.assertQueryCount(__system__=92, admin=93):
+        with self.assertQueryCount(__system__=91, admin=92):
             leave.action_validate()
         leave.action_refuse()
 
@@ -47,7 +47,7 @@ class TestWorkEntryHolidaysPerformance(TestWorkEntryHolidaysBase):
     @users('__system__', 'admin')
     @warmup
     def test_performance_leave_create(self):
-        with self.assertQueryCount(__system__=26, admin=27):
+        with self.assertQueryCount(__system__=26, admin=27):  # 25/26 com
             leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
         leave.action_refuse()
 
@@ -56,7 +56,7 @@ class TestWorkEntryHolidaysPerformance(TestWorkEntryHolidaysBase):
     def test_performance_leave_confirm(self):
         leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
         leave.action_draft()
-        with self.assertQueryCount(__system__=19, admin=20):
+        with self.assertQueryCount(__system__=19, admin=20):  # 18/19 com
             leave.action_confirm()
         leave.state = 'refuse'
 
