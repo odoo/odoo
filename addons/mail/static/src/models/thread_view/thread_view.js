@@ -10,11 +10,8 @@ registerModel({
     name: 'ThreadView',
     identifyingFields: ['threadViewer'],
     lifecycleHooks: {
-        _created() {
-            this._loaderTimeout = undefined;
-        },
         _willDelete() {
-            this.messaging.browser.clearTimeout(this._loaderTimeout);
+            this.messaging.browser.clearTimeout(this.loaderTimeout);
         },
     },
     recordMethods: {
@@ -229,7 +226,7 @@ registerModel({
                     this.update({ isPreparingLoading: true });
                     this.async(() =>
                         new Promise(resolve => {
-                            this._loaderTimeout = this.messaging.browser.setTimeout(resolve, 400);
+                            this.update({ loaderTimeout: this.messaging.browser.setTimeout(resolve, this.messaging.loadingBaseDelayDuration) });
                         }
                     )).then(() => {
                         const isLoading = this.threadCache
@@ -240,7 +237,7 @@ registerModel({
                 }
                 return;
             }
-            this.messaging.browser.clearTimeout(this._loaderTimeout);
+            this.messaging.browser.clearTimeout(this.loaderTimeout);
             this.update({ isLoading: false, isPreparingLoading: false });
         },
         /**
@@ -414,6 +411,7 @@ registerModel({
          * current partner in the currently displayed thread cache.
          */
         lastVisibleMessage: one('Message'),
+        loaderTimeout: attr(),
         messageListView: one('MessageListView', {
             compute: '_computeMessageListView',
             inverse: 'threadViewOwner',
