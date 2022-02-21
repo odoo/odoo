@@ -3,3 +3,4 @@
 from . import product
 from . import project
 from . import sale_order
+from . import sale_order_line
