@@ -1,7 +1,14 @@
 /** @odoo-module **/
 
 import { makeView, setupViewRegistries } from "../views/helpers";
-import { click, makeDeferred, nextTick, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import {
+    click,
+    editInput,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+    triggerEvent,
+} from "../helpers/utils";
 
 let serverData;
 
@@ -507,15 +514,15 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.equal(
-            form.$(".o_domain_show_selection_button").text().trim().substr(0, 2),
+            form.el.querySelector(".o_domain_show_selection_button").innerText.trim().substr(0, 2),
             "2 ",
             "selection should contain 2 records"
         );
 
         // open the selection
-        await testUtils.dom.click(form.$(".o_domain_show_selection_button"));
+        await click(form.el, ".o_domain_show_selection_button");
         assert.strictEqual(
-            $(".modal .o_list_view .o_data_row").length,
+            form.el.querySelectorAll(".modal .o_list_view .o_data_row").length,
             2,
             "should have open a list view with 2 records in a dialog"
         );
@@ -523,7 +530,7 @@ QUnit.module("Fields", (hooks) => {
         // click on a record -> should not open the record
         // we don't actually check that it doesn't open the record because even
         // if it tries to, it will crash as we don't define an arch in this test
-        await testUtils.dom.click($(".modal .o_list_view .o_data_row:first .o_data_cell"));
+        await click(form.el, ".modal .o_list_view .o_data_row:first .o_data_cell");
     });
 
     QUnit.skipWOWL("field context is propagated when opening selection", async function (assert) {
@@ -550,7 +557,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(form.el, ".o_domain_show_selection_button");
         assert.strictEqual(
-            $(".modal .o_data_row").text(),
+            form.el.querySelector(".modal .o_data_row").innerText,
             "1214",
             "should have picked the correct list view"
         );
@@ -584,20 +591,25 @@ QUnit.module("Fields", (hooks) => {
         });
         await click(form.el, ".o_form_button_edit");
 
-        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
+        assert.strictEqual(
+            form.el.querySelector(".o_domain_show_selection_button").innerText.trim(),
+            "2 record(s)"
+        );
         assert.verifySteps(["[]"]);
 
-        await testUtils.fields.editAndTrigger(
-            form.$(".o_domain_debug_input"),
-            "[['id', '<', 40]]",
-            ["change"]
-        );
+        await editInput(form.el, ".o_domain_debug_input", "[['id', '<', 40]]");
         // the count should not be re-computed when editing with the textarea
-        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
+        assert.strictEqual(
+            form.el.querySelector(".o_domain_show_selection_button").innerText.trim(),
+            "2 record(s)"
+        );
         assert.verifySteps([]);
 
         await click(form.el, ".o_form_button_save");
-        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "1 record(s)");
+        assert.strictEqual(
+            form.el.querySelector(".o_domain_show_selection_button").innerText.trim(),
+            "1 record(s)"
+        );
         assert.verifySteps([
             '[["id","<",40]]', // to validate the domain, before saving
             '[["id","<",40]]', // to render in readonly once it has been saved
@@ -638,29 +650,27 @@ QUnit.module("Fields", (hooks) => {
             await click(form.el, ".o_form_button_edit");
 
             assert.strictEqual(
-                form.$(".o_domain_show_selection_button").text().trim(),
+                form.el.querySelector(".o_domain_show_selection_button").innerText.trim(),
                 "2 record(s)"
             );
             assert.verifySteps(["[]"]);
 
-            await testUtils.fields.editAndTrigger(form.$(".o_domain_debug_input"), "[['abc']]", [
-                "change",
-            ]);
+            await editInput(form.el, ".o_domain_debug_input", "[['abc']]");
             // the count should not be re-computed when editing with the textarea
             assert.strictEqual(
-                form.$(".o_domain_show_selection_button").text().trim(),
+                form.el.querySelector(".o_domain_show_selection_button").innerText.trim(),
                 "2 record(s)"
             );
             assert.verifySteps([]);
 
             await click(form.el, ".o_form_button_save");
             assert.hasClass(
-                form.$(".o_field_domain"),
+                form.el.querySelector(".o_field_domain"),
                 "o_field_invalid",
                 "the field is marked as invalid"
             );
             assert.hasClass(
-                form.$(".o_form_view"),
+                form.el.querySelector(".o_form_view"),
                 "o_form_editable",
                 "the view is still in edit mode"
             );
@@ -699,26 +709,22 @@ QUnit.module("Fields", (hooks) => {
             await click(form.el, ".o_form_button_edit");
 
             assert.strictEqual(
-                form.$(".o_domain_show_selection_button").text().trim(),
+                form.el.querySelector(".o_domain_show_selection_button").innerText.trim(),
                 "2 record(s)"
             );
 
-            await testUtils.fields.editAndTrigger(
-                form.$(".o_domain_debug_input"),
-                "[['id', '<', 40]]",
-                ["change"]
-            );
+            await editInput(form.el, ".o_domain_debug_input", "[['id', '<', 40]]");
             // the count should not be re-computed when editing with the textarea
             assert.strictEqual(
-                form.$(".o_domain_show_selection_button").text().trim(),
+                form.el.querySelector(".o_domain_show_selection_button").innerText.trim(),
                 "2 record(s)"
             );
             assert.verifySteps(["[]"]);
 
             // click on the refresh button
-            await testUtils.dom.click(form.$(".o_refresh_count"));
+            await testUtils.dom.click(form.el.querySelector(".o_refresh_count"));
             assert.strictEqual(
-                form.$(".o_domain_show_selection_button").text().trim(),
+                form.el.querySelector(".o_domain_show_selection_button").innerText.trim(),
                 "1 record(s)"
             );
             assert.verifySteps(['[["id","<",40]]']);
@@ -800,16 +806,14 @@ QUnit.module("Fields", (hooks) => {
         });
         await click(form.el, ".o_form_button_edit");
 
-        assert.strictEqual(form.$(".o_domain_debug_input").val(), rawDomain);
+        assert.strictEqual(form.el.querySelector(".o_domain_debug_input").value, rawDomain);
 
         rawDomain = `
             [
                 ["date", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")]
             ]
         `;
-        await testUtils.fields.editAndTrigger(form.$(".o_domain_debug_input"), rawDomain, [
-            "change",
-        ]);
+        await editInput(form.el, ".o_domain_debug_input", rawDomain);
         await click(form.el, ".o_form_button_save");
     });
 });

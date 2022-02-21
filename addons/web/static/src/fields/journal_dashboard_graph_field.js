@@ -11,7 +11,6 @@ export class JournalDashboardGraphField extends Component {
         this.chart = null;
         this.canvasRef = useRef("canvas");
         this.data = JSON.parse(this.props.value);
-        console.log(this.data);
 
         useAssets({ jsLibs: ["/web/static/lib/Chart/Chart.js"] });
 

@@ -289,7 +289,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("LabelSelectionField in editable list view", async function (assert) {
         assert.expect(21);
 
-        var list = await createView({
+        var list = await makeView({
             type: "list",
             resModel: "partner",
             serverData,
