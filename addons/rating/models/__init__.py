@@ -2,5 +2,6 @@
 
 from . import rating
 from . import rating_mixin
+from . import rating_parent_mixin
 from . import mail_thread
 from . import mail_message
