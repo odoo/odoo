@@ -144,9 +144,9 @@ odoo.define('website.s_website_form', function (require) {
                 for (const name of fieldNames) {
                     const fieldEl = this.$target[0].querySelector(`[name="${name}"]`);
                     let newValue;
-                    if (!fieldEl.value && dataForValues && dataForValues[name]) {
+                    if (dataForValues && dataForValues[name]) {
                         newValue = dataForValues[name];
-                    } else if (!fieldEl.value && this.preFillValues[fieldEl.dataset.fillWith]) {
+                    } else if (this.preFillValues[fieldEl.dataset.fillWith]) {
                         newValue = this.preFillValues[fieldEl.dataset.fillWith];
                     }
                     if (newValue) {
