@@ -141,6 +141,14 @@
                 <we-button class="fa fa-fw fa-long-arrow-down" title="Bottom" data-customize-website-views="website_sale.carousel_product_indicators_bottom"/>
             </we-button-group>
         </div>
+        <div data-js="WebsiteSaleProductAttribute" data-selector="#product_detail .o_wsale_product_attribute" data-no-check="true">
+            <we-select string="Display Type" data-no-preview="true">
+                <we-button data-set-display-type="radio">Radio</we-button>
+                <we-button data-set-display-type="pills">Pills</we-button>
+                <we-button data-set-display-type="select">Select</we-button>
+                <we-button data-set-display-type="color">Color</we-button>
+            </we-select>
+        </div>
     </xpath>
 </template>
 
