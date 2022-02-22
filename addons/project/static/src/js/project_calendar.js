@@ -37,6 +37,14 @@ export const ProjectCalendarView = CalendarView.extend({
         ControlPanel: ProjectControlPanel,
         Model: ProjectCalendarModel,
     }),
+
+    /**
+    * @override
+    */
+    init: function (viewInfo, params) {
+        this._super.apply(this, arguments);
+        this.controllerParams.displayName += " - Tasks by Deadline";
+    }
 });
 
 viewRegistry.add('project_calendar', ProjectCalendarView);
