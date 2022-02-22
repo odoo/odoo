@@ -300,7 +300,7 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: '.s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle',
             run: () => null,
         },
-        // Add a default value.
+        // Add a default value to a auto-fillable field.
         {
             content: 'Select the name field',
             trigger: '.s_website_form_field:eq(0)',
@@ -309,20 +309,13 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: 'we-input[data-attribute-name="value"] input',
             run: 'text John Smith',
         },
-        // Save the page
-        {
-            trigger: 'body',
-            run: function () {
-                $('body').append('<div id="completlyloaded"></div>');
-            },
-        },
         {
             content:  "Save the page",
             trigger:  "button[data-action=save]",
         },
         {
-            content:  "Wait reloading...",
-            trigger:  "html:not(:has(#completlyloaded)) div",
+            content: 'Verify value attribute and property',
+            trigger: '.s_website_form_field:eq(0) input[value="John Smith"]:propValue("Mitchell Admin")',
         },
         // Check that if we edit again and save again the default value is not deleted.
         {
