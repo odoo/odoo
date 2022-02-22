@@ -11,13 +11,15 @@ import {
     RelationalModel,
 } from "@web/views/relational_model";
 
+const { EventBus } = owl;
+
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
 const DEFAULT_QUICK_CREATE_VIEW = {
     form: {
         // note: the required modifier is written in the format returned by the server
         arch: /* xml */ `
             <form>
-                <field name="display_name" placeholder="Title" modifiers='{"required": true}'/>
+                <field name="display_name" placeholder="Title" modifiers='{"required": true}' />
             </form>`,
         fields: {
             display_name: { string: "Display name", type: "char" },
@@ -32,13 +34,53 @@ export const isAllowedDateField = (groupByField) => {
     );
 };
 
+const useTransaction = () => {
+    const bus = new EventBus();
+    let started = false;
+    return {
+        start: () => {
+            if (started) {
+                throw new Error(`Transaction in progress: commit or abort to start a new one.`);
+            }
+            started = true;
+            bus.trigger("START");
+        },
+        commit: () => {
+            if (!started) {
+                throw new Error(`No transaction in progress.`);
+            }
+            started = false;
+            bus.trigger("COMMIT");
+        },
+        abort: () => {
+            if (!started) {
+                throw new Error(`No transaction in progress.`);
+            }
+            started = false;
+            bus.trigger("ABORT");
+        },
+        register: ({ onStart, onCommit, onAbort }) => {
+            let currentData = null;
+            bus.addEventListener("START", () => onStart && (currentData = onStart()));
+            bus.addEventListener("COMMIT", () => onCommit && onCommit(currentData));
+            bus.addEventListener("ABORT", () => onAbort && onAbort(currentData));
+        },
+    };
+};
+
 class KanbanGroup extends Group {
     constructor(model, params, state = {}) {
         super(...arguments);
 
         this.activeProgressValue = state.activeProgressValue || null;
-        this.isDirty = false;
         this.progressValues = [];
+        this.model.transaction.register({
+            onStart: () => ({ count: this.count, records: [...this.list.records] }),
+            onAbort: ({ count, records }) => {
+                this.count = count;
+                this.list.records = records;
+            },
+        });
     }
 
     get hasActiveProgressValue() {
@@ -96,46 +138,18 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         );
     }
 
-    async createGroup(value) {
-        return this.model.mutex.exec(async () => {
-            const [id, displayName] = await this.model.orm.call(
-                this.groupByField.relation,
-                "name_create",
-                [value],
-                { context: this.context }
-            );
-            const group = this.model.createDataPoint("group", {
-                count: 0,
-                value: id,
-                displayName,
-                aggregates: {},
-                fields: this.fields,
-                activeFields: this.activeFields,
-                resModel: this.resModel,
-                domain: this.domain,
-                groupBy: this.groupBy.slice(1),
-                groupByField: this.groupByField,
-                groupByInfo: this.groupByInfo,
-                groupDomain: this.groupDomain,
-                context: this.context,
-                orderedBy: this.orderBy,
-            });
-            group.isFolded = false;
-            group.progressValues.push({
-                count: 0,
-                value: false,
-                string: this.model.env._t("Other"),
-                color: "muted",
-            });
-            this.groups.push(group);
-            this.model.notify();
+    /**
+     * @override
+     */
+    async createGroup() {
+        const group = await super.createGroup(...arguments);
+        group.progressValues.push({
+            count: 0,
+            value: false,
+            string: this.model.env._t("Other"),
+            color: "muted",
         });
-    }
-
-    async deleteGroup(group) {
-        await this.model.orm.unlink(this.groupByField.relation, [group.value], this.context);
-        this.groups = this.groups.filter((g) => g.id !== group.id);
-        this.model.notify();
+        return group;
     }
 
     async quickCreate(group) {
@@ -166,29 +180,30 @@ class KanbanDynamicGroupList extends DynamicGroupList {
             return; // Groups have been re-rendered, old ids are ignored
         }
 
-        const record = oldGroup.list.records.find((r) => r.id === dataRecordId);
+        this.model.transaction.start();
+
+        const record = oldGroup.removeRecord(dataRecordId);
+        const refIndex = newGroup.list.records.findIndex((r) => r.id === refId);
+        newGroup.addRecord(record, refIndex >= 0 ? refIndex + 1 : 0);
 
         // Quick update: moves the record at the right position and notifies components
-        oldGroup.list.records = oldGroup.list.records.filter((r) => r !== record);
-        oldGroup.list.count--;
-        oldGroup.isDirty = true;
-        if (!newGroup.list.isFolded) {
-            const index = refId ? newGroup.list.records.findIndex((r) => r.id === refId) + 1 : 0;
-            newGroup.list.records.splice(index, 0, record);
-        }
-        newGroup.list.count++;
-        newGroup.isDirty = true;
-        newGroup.isFolded = false;
         this.model.notify();
 
-        // move from one group to another
-        if (dataGroupId !== newGroupId) {
-            const value = isRelational(this.groupByField) ? [newGroup.value] : newGroup.value;
-            await record.update(this.groupByField.name, value);
-            await record.save();
-            await this._loadWithProgressData(oldGroup.load(), newGroup.load());
+        // Move from one group to another
+        try {
+            if (dataGroupId !== newGroupId) {
+                const value = isRelational(this.groupByField) ? [newGroup.value] : newGroup.value;
+                await record.update(this.groupByField.name, value);
+                await record.save();
+                await this._loadWithProgressData(oldGroup.load(), newGroup.load());
+            }
+            await newGroup.list.resequence();
+        } catch (err) {
+            this.model.transaction.abort();
+            this.model.notify();
+            throw err;
         }
-        await newGroup.list.resequence();
+        this.model.transaction.commit();
     }
 
     // ------------------------------------------------------------------------
@@ -325,6 +340,7 @@ export class KanbanModel extends RelationalModel {
         this.quickCreateView = params.quickCreateView;
         this.progressAttributes = params.progressAttributes;
         this.defaultGroupBy = params.defaultGroupBy || false;
+        this.transaction = useTransaction();
     }
 
     /**

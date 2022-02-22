@@ -48,15 +48,20 @@ const makeFakeActionService = (actionService) => {
 
 // Kanban
 const reload = async (kanban, params = {}) => {
-    await kanban.model.load(params);
-    await nextTick();
-};
-
-async function search(kanban, searchParams) {
-    kanban.env.searchModel.reload(searchParams);
+    kanban.env.searchModel.reload(params);
     kanban.env.searchModel.search();
     await nextTick();
-}
+};
+const getCardTexts = (groupIndex) => {
+    const cards = [];
+    if (groupIndex >= 0) {
+        const group = target.querySelectorAll(".o_kanban_group")[groupIndex];
+        cards.push(...group.querySelectorAll(".o_kanban_record"));
+    } else {
+        cards.push(...target.querySelectorAll(".o_kanban_record"));
+    }
+    return cards.map((card) => card.innerText.trim());
+};
 /**
  * @param {owl.Component} kanban
  * @param {string} selector
@@ -1139,7 +1144,7 @@ QUnit.module("Views", (hooks) => {
 
         serverData.models.partner.fields.int_field.default = 4;
         serverData.models.partner.onchanges = {
-            foo: (obj) => {
+            foo(obj) {
                 if (obj.foo) {
                     obj.int_field = 8;
                 }
@@ -1700,7 +1705,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(13);
 
             serverData.models.partner.onchanges = {
-                foo: function (obj) {
+                foo(obj) {
                     obj.int_field += obj.foo ? 3 : 0;
                 },
             };
@@ -3409,7 +3414,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await reload(kanban);
+        await reload(kanban, { groupBy: ["product_id"] });
         assert.verifySteps([
             "web_read_group",
             "web_search_read",
@@ -3444,7 +3449,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await reload(kanban);
+        await reload(kanban, { groupBy: ["product_id"] });
         assert.verifySteps([
             "web_read_group",
             "web_search_read",
@@ -3486,7 +3491,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await reload(kanban);
+        await reload(kanban, { groupBy: ["product_id"] });
         assert.verifySteps([
             "web_read_group",
             "web_search_read",
@@ -3689,11 +3694,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
         assert.containsOnce(target, ".o_kanban_group:nth-child(3) .o_kanban_record");
 
-        const firstGroup = target.querySelector(".o_kanban_group:first-child");
-        assert.deepEqual(
-            [...firstGroup.children].map((c) => c.innerText),
-            ["blip", "blipdef", "blipghi"]
-        );
+        assert.deepEqual(getCardTexts(0), ["blipdef", "blipghi"]);
 
         // second record of first column moved at first place
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record:last-child", {
@@ -3701,10 +3702,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // should still be able to resequence
-        assert.deepEqual(
-            [...firstGroup.children].map((c) => c.innerText),
-            ["blip", "blipghi", "blipdef"]
-        );
+        assert.deepEqual(getCardTexts(0), ["blipghi", "blipdef"]);
     });
 
     QUnit.test("prevent drag and drop if grouped by date/datetime field", async (assert) => {
@@ -3994,10 +3992,10 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "completely prevent drag and drop if records_draggable set to false",
         async (assert) => {
-            assert.expect(6);
+            assert.expect(8);
 
             await makeView({
                 type: "kanban",
@@ -4013,17 +4011,15 @@ QUnit.module("Views", (hooks) => {
             });
 
             // testing initial state
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
             assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
-            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
-            assert.deepEqual();
-            assert.deepEqual(kanban.exportState().resIds, envIDs);
+            assert.deepEqual(getCardTexts(), ["yop", "gnap", "blip", "blip"]);
+            assert.containsNone(target, ".o_record_draggable");
 
             // attempt to drag&drop a record in another column
-            const $record = target.querySelector(
-                ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-            );
-            const $group = target.querySelector(".o_kanban_group:nth-child(2)");
-            await testUtils.dom.dragAndDrop($record, $group, { withTrailingClick: true });
+            await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
+                inside: ".o_kanban_group:nth-child(2)",
+            });
 
             // should not drag&drop record
             assert.containsN(
@@ -4038,15 +4034,30 @@ QUnit.module("Views", (hooks) => {
                 2,
                 "Second column should still contain 2 records"
             );
-            assert.deepEqual(kanban.exportState().resIds, envIDs, "Records should not have moved");
+            assert.deepEqual(
+                getCardTexts(),
+                ["yop", "gnap", "blip", "blip"],
+                "Records should not have moved"
+            );
+
+            // attempt to drag&drop a record in the same column
+            await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
+                after: ".o_kanban_group:first-child .o_kanban_record:last-child",
+            });
+
+            assert.deepEqual(
+                getCardTexts(),
+                ["yop", "gnap", "blip", "blip"],
+                "Records should not have moved"
+            );
         }
     );
 
-    QUnit.skipWOWL("prevent drag and drop of record if onchange fails", async (assert) => {
+    QUnit.test("prevent drag and drop of record if onchange fails", async (assert) => {
         assert.expect(4);
 
         serverData.models.partner.onchanges = {
-            product_id: function (obj) {},
+            product_id() {},
         };
 
         await makeView({
@@ -4064,41 +4075,24 @@ QUnit.module("Views", (hooks) => {
                 "</templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/onchange") {
-                    return Promise.reject({});
+            async mockRPC(route, { model, method }) {
+                if (model === "partner" && method === "onchange") {
+                    throw {};
                 }
-                return this._super(route, args);
             },
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
-            2,
-            "column should contain 2 records"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
-            2,
-            "column should contain 2 records"
-        );
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
         // drag&drop a record in another column
-        const $record = target.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-        );
-        const $group = target.querySelector(".o_kanban_group:nth-child(2)");
-        await testUtils.dom.dragAndDrop($record, $group);
+        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:nth-child(2)",
+        });
+
         // should not be dropped, card should reset back to first column
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
-            2,
-            "column should now contain 2 records"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
-            2,
-            "column should contain 2 records"
-        );
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
     });
 
     QUnit.skipWOWL("kanban view with default_group_by", async (assert) => {
@@ -5926,7 +5920,8 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(target, ".o_view_nocontent");
 
-        await search(kanban, { domain: [["id", "<", 0]] });
+        await reload(kanban, { domain: [["id", "<", 0]] });
+
         assert.doesNotHaveClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
         assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
         assert.containsOnce(target, ".o_view_nocontent");
@@ -7759,7 +7754,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await reload(kanban);
+        await reload(kanban, { groupBy: ["bar"] });
 
         assert.verifySteps([
             // initial load

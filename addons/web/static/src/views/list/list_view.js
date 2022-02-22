@@ -259,7 +259,7 @@ export class ListView extends Component {
             if (this.model.root.editedRecord) {
                 await this.model.root.editedRecord.save();
             }
-            await this.model.root.addNewRecord(this.archInfo.editable);
+            await this.model.root.addNewRecord(this.archInfo.editable === "top");
             this.render();
         } else {
             // switch to form view to create a new record
@@ -277,7 +277,7 @@ export class ListView extends Component {
 
     onClickDiscard() {
         if (this.model.root.editedRecord.isNew) {
-            this.model.root.abandonRecord(this.model.root.editedRecord);
+            this.model.root.removeRecord(this.model.root.editedRecord);
         } else {
             this.model.root.editedRecord.discard();
         }
@@ -410,7 +410,7 @@ export class ListView extends Component {
         const dialogProps = {
             body,
             confirm: async () => {
-                const resIds = await this.model.root.delete(true);
+                const resIds = await this.model.root.deleteRecords(true);
                 const total = root.count;
                 if (
                     root.isDomainSelected &&

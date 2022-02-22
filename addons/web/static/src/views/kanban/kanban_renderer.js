@@ -208,9 +208,6 @@ export class KanbanRenderer extends Component {
     }
 
     getGroupUnloadedCount(group) {
-        if (group.isDirty) {
-            return 0;
-        }
         let total = group.count;
         if (group.hasActiveProgressValue) {
             const progressValue = group.progressValues.find(
@@ -380,7 +377,7 @@ export class KanbanRenderer extends Component {
         const { list } = group || this.props;
         this.dialog.add(ConfirmationDialog, {
             body: this.env._t("Are you sure you want to delete this record?"),
-            confirm: () => list.unlink(record),
+            confirm: () => list.deleteRecord(record),
             cancel: () => {},
         });
     }

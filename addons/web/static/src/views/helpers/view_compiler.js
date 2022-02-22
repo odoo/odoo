@@ -485,6 +485,7 @@ export class ViewCompiler {
 
     compileLabel(node, params) {
         const forAttr = node.getAttribute("for");
+        // FIXME: this is the only place we use 'fields'. Maybe make it more simple?
         if (forAttr && this.fields[forAttr]) {
             const label = this.document.createElement("label");
             const string = node.getAttribute("string");

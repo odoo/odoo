@@ -527,7 +527,7 @@ export class Record extends DataPoint {
     }
 
     async delete() {
-        await this.model.orm.unlink(this.resModel, [this.resId], this.context);
+        const result = await this.model.orm.unlink(this.resModel, [this.resId], this.context);
         const index = this.resIds.indexOf(this.resId);
         this.resIds.splice(index, 1);
         this.resId = this.resIds[Math.min(index, this.resIds.length - 1)] || false;
@@ -540,6 +540,7 @@ export class Record extends DataPoint {
             this._changes = {};
             this.preloadedData = {};
         }
+        return result;
     }
 
     toggleSelection(selected) {
@@ -724,6 +725,7 @@ class DynamicList extends DataPoint {
     }
 
     get selection() {
+        // FIXME: 'this.records' doesn't exist on DynamicList
         return this.records.filter((r) => r.selected);
     }
 
@@ -742,6 +744,7 @@ class DynamicList extends DataPoint {
                 resIds = this.selection.map((r) => r.resId);
             }
         } else {
+            // FIXME: 'this.records' doesn't exist on DynamicList
             resIds = this.records.map((r) => r.resId);
         }
         return resIds;
@@ -763,7 +766,8 @@ class DynamicList extends DataPoint {
         //todo fge _invalidateCache
     }
 
-    async delete(isSelected) {
+    async deleteRecords(isSelected) {
+        // TODO: make more generic
         const resIds = await this.getResIds(isSelected);
         await this.model.orm.unlink(this.resModel, resIds, this.context);
         await this.model.load();
@@ -840,18 +844,18 @@ export class DynamicRecordList extends DynamicList {
         this.records = await this._resequence(this.records, "resId", ...arguments);
     }
 
-    async unlink({ resId }) {
-        const result = await this.model.orm.unlink(this.resModel, [resId], this.context);
+    async deleteRecord(record) {
+        const result = await record.delete();
         if (result) {
             await this.model.load();
         }
     }
 
     /**
-     * @param {"top" | "bottom"} [position="top"]
-     * @returns {Record} the newly created record
+     * @param {boolean} [atFirstPosition]
+     * @returns {Promise<Record>} the newly created record
      */
-    async addNewRecord(position = "top") {
+    async addNewRecord(atFirstPosition = false) {
         const newRecord = this.model.createDataPoint("record", {
             resModel: this.resModel,
             fields: this.fields,
@@ -859,22 +863,25 @@ export class DynamicRecordList extends DynamicList {
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
         });
         await newRecord.load();
-        if (position === "top") {
-            this.records.unshift(newRecord);
-        } else {
-            this.records.push(newRecord);
-        }
-        this.count++;
+        this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
         this.editedRecord = newRecord;
         return newRecord;
     }
 
-    abandonRecord(record) {
-        const index = this.records.indexOf(record);
-        this.records.splice(index, 1);
+    addRecord(record, index) {
+        this.records.splice(Number.isInteger(index) ? index : this.count, 0, record);
+        this.count++;
+    }
+
+    removeRecord(recordOrId) {
+        const index = this.records.findIndex(
+            (record) => record.id === recordOrId || record === recordOrId
+        );
+        const [record] = this.records.splice(index, 1);
         this.count--;
         this.editedRecord = this.editedRecord === record ? null : record;
         this.model.notify();
+        return record;
     }
 
     // -------------------------------------------------------------------------
@@ -1009,6 +1016,56 @@ export class DynamicGroupList extends DynamicList {
 
     async resequence() {
         this.groups = await this._resequence(this.groups, "value", ...arguments);
+    }
+
+    async createGroup(value) {
+        const [id, displayName] = await this.model.mutex.exec(() =>
+            this.model.orm.call(this.groupByField.relation, "name_create", [value], {
+                context: this.context,
+            })
+        );
+        const group = this.model.createDataPoint("group", {
+            count: 0,
+            value: id,
+            displayName,
+            aggregates: {},
+            fields: this.fields,
+            activeFields: this.activeFields,
+            resModel: this.resModel,
+            domain: this.domain,
+            groupBy: this.groupBy.slice(1),
+            groupByField: this.groupByField,
+            groupByInfo: this.groupByInfo,
+            // FIXME
+            // groupDomain: this.groupDomain,
+            context: this.context,
+            orderedBy: this.orderBy,
+        });
+        group.isFolded = false;
+        return this.addGroup(group);
+    }
+
+    async deleteGroup(group) {
+        await group.delete();
+        return this.removeGroup(group);
+    }
+
+    addGroup(group, index) {
+        this.groups.splice(Number.isInteger(index) ? index : this.count, 0, group);
+        this.count++;
+        this.model.notify();
+        return group;
+    }
+
+    removeGroup(groupOrId) {
+        const index = this.groups.findIndex((g) => g === groupOrId || g.id === groupOrId);
+        if (index < 0) {
+            return false;
+        }
+        const [removedGroup] = this.groups.splice(index, 1);
+        this.count--;
+        this.model.notify();
+        return removedGroup;
     }
 
     // ------------------------------------------------------------------------
@@ -1215,6 +1272,23 @@ export class Group extends DataPoint {
         this.isFolded = !this.isFolded;
         await this.model.keepLast.add(this.load());
         this.model.notify();
+    }
+
+    async addRecord(record, index) {
+        this.count++;
+        this.list.addRecord(record, index);
+        if (this.isFolded) {
+            await this.toggle();
+        }
+    }
+
+    async delete() {
+        return this.model.orm.unlink(this.groupByField.relation, [this.value], this.context);
+    }
+
+    removeRecord(record) {
+        this.count--;
+        return this.list.removeRecord(record);
     }
 }
 export class StaticList extends DataPoint {
@@ -1504,597 +1578,3 @@ RelationalModel.Group = Group;
 RelationalModel.DynamicRecordList = DynamicRecordList;
 RelationalModel.DynamicGroupList = DynamicGroupList;
 RelationalModel.StaticList = StaticList;
-
-////////////////////////////////////////////////////////////////////////////////
-// OLD IMPLEM
-////////////////////////////////////////////////////////////////////////////////
-
-// class DataPoint {
-//     /**
-//      * @param {RelationalModel} model
-//      * @param {{ fields: any, activeFields: string[] }} params
-//      */
-//     constructor(model, resModel, params) {
-//         this.model = model;
-//         this.resModel = resModel;
-//         this.id = DataPoint.nextId++;
-//         this.data = null;
-
-//         this.fields = params.fields;
-//         this.activeFields = params.activeFields;
-//         this.fieldNames = Object.keys(this.activeFields);
-//         this.viewMode = params.viewMode || null;
-
-//         this.model.db[this.id] = this;
-//     }
-
-//     /**
-//      * @returns {boolean}
-//      */
-//     get hasData() {
-//         return Boolean(this.data);
-//     }
-
-//     /**
-//      * Transmits the current informations to a child datapoint
-//      * @private
-//      * @returns {any}
-//      */
-//     get dataPointContext() {
-//         return {
-//             activeFields: this.activeFields,
-//             fields: this.fields,
-//             viewMode: this.viewMode,
-//         };
-//     }
-
-//     /**
-//      * Returns the existing record with the samel resModel and resId if any, or
-//      * creates and returns a new one.
-//      * @param {string} resModel
-//      * @param {number} resId
-//      * @param {any} params
-//      * @returns {Record}
-//      */
-//     createRecord(resModel, resId, params = {}) {
-//         const existingRecord = this.model.get({ resModel, resId });
-//         if (existingRecord) {
-//             return existingRecord;
-//         }
-//         return new Record(this.model, resModel, resId, { ...this.dataPointContext, ...params });
-//     }
-
-//     /**
-//      * Creates and returns a new data list with the given parameters.
-//      * @param {string} resModel
-//      * @param {any} params
-//      * @returns {List}
-//      */
-//     createList(resModel, params = {}) {
-//         return new List(this.model, resModel, { ...this.dataPointContext, ...params });
-//     }
-// }
-// DataPoint.nextId = 1;
-
-// class Record extends DataPoint {
-//     /**
-//      * @param {RelationalModel} model
-//      * @param {string} resModel
-//      * @param {number} resId
-//      * @param {any} params
-//      */
-//     constructor(model, resModel, resId, params) {
-//         super(model, resModel, params);
-//         this.resId = resId;
-//         this.data = {};
-//         this._values = {};
-//         this._changes = {};
-//     }
-
-//     /**
-//      * @param {{ fields?: string[], data?: any }} [params={}]
-//      * @returns {Promise<void>}
-//      */
-//     async load(params = {}) {
-//         // Record data
-//         const fields = params.fields || this.fieldNames;
-//         if (!fields.length) {
-//             return;
-//         }
-//         if ("resId" in params) {
-//             this.resId = params.resId; // FIXME: don't update internal state directly
-//         }
-//         let { data } = params;
-//         if (!data) {
-//             if (this.resId) {
-//                 // FIXME: if fieldNames contains only "id", we read anyway
-//                 const result = await this.model.orm.read(
-//                     this.resModel,
-//                     [this.resId],
-//                     this.fieldNames,
-//                     { bin_size: true }
-//                 );
-//                 data = this._sanitizeValues(result[0]);
-//             } else {
-//                 data = await this._performOnchange();
-//             }
-//         }
-//         this._values = data;
-//         this._changes = {};
-//         this.data = { ...data };
-
-//         // Relational data
-//         await Promise.all(this.fieldNames.map((fieldName) => this.loadRelationalField(fieldName)));
-//     }
-
-//     /**
-//      * @param {string} fieldName
-//      * @returns {Promise<void>}
-//      */
-//     async loadRelationalField(fieldName) {
-//         const field = this.activeFields[fieldName];
-//         if (!isX2Many(this.fields[fieldName])) {
-//             return;
-//         }
-//         const { invisible, relatedFields = {}, relation, views = {}, viewMode } = field;
-
-//         if (invisible) {
-//             // FIXME: we'll maybe have to create a datapoint anyway, for instance when we'll
-//             // implement the edition
-//             return;
-//         }
-
-//         const resIds = this.data[fieldName];
-//         const list = this.createList(relation, {
-//             activeFields: relatedFields,
-//             fields: relatedFields,
-//             resIds,
-//             views,
-//             viewMode,
-//         });
-//         this.data[fieldName] = list;
-//         return list.load();
-//     }
-
-//     async update(fieldName, value) {
-//         this.data[fieldName] = value;
-//         this._changes[fieldName] = value;
-//         const onChangeValues = await this._performOnchange(fieldName);
-//         Object.assign(this.data, onChangeValues);
-//         Object.assign(this._changes, onChangeValues);
-//         this.model.notify();
-//     }
-
-//     async save() {
-//         const changes = this._getChanges();
-//         if (this.resId) {
-//             await this.model.orm.write(this.resModel, [this.resId], changes);
-//         } else {
-//             this.resId = await this.model.orm.create(this.resModel, changes);
-//         }
-//         await this.load();
-//         this.model.notify();
-//     }
-
-//     discard() {
-//         this.data = { ...this._values };
-//         this._changes = {};
-//         this.model.notify();
-//     }
-
-//     _getChanges(allFields = false) {
-//         const changes = Object.assign({}, allFields ? this.data : this._changes);
-//         for (const fieldName in changes) {
-//             const fieldType = this.fields[fieldName].type;
-//             if (fieldType === "one2many" || fieldType === "many2many") {
-//                 // TODO: need to generate commands
-//                 changes[fieldName] = [];
-//             } else if (fieldType === "many2one") {
-//                 changes[fieldName] = changes[fieldName] ? changes[fieldName][0] : false;
-//             }
-//         }
-//         return changes;
-//     }
-
-//     async _performOnchange(fieldName) {
-//         const result = await this.model.orm.call(this.resModel, "onchange", [
-//             [],
-//             this._getChanges(true),
-//             fieldName ? [fieldName] : [],
-//             this._getOnchangeSpec(),
-//         ]);
-//         return this._sanitizeValues(result.value);
-//     }
-
-//     _getOnchangeSpec() {
-//         const onChangeSpec = {};
-//         for (const fieldName of this.fieldNames) {
-//             onChangeSpec[fieldName] = "1"; // FIXME: need to on_change info from arch
-//         }
-//         return onChangeSpec;
-//     }
-
-//     _sanitizeValues(values) {
-//         const sanitizedValues = {};
-//         for (const fieldName in values) {
-//             switch (this.fields[fieldName].type) {
-//                 case "char": {
-//                     sanitizedValues[fieldName] = values[fieldName] || "";
-//                     break;
-//                 }
-//                 case "date":
-//                 case "datetime": {
-//                     // TODO
-//                     break;
-//                 }
-//                 default: {
-//                     sanitizedValues[fieldName] = values[fieldName];
-//                 }
-//             }
-//         }
-//         return sanitizedValues;
-//     }
-// }
-
-// class List extends DataPoint {
-//     /**
-//      * @param {RelationalModel} model
-//      * @param {string} resModel
-//      * @param {{
-//      *  resIds?: number[],
-//      *  groupData?: any,
-//      *  views?: any,
-//      * }} [params={}]
-//      */
-//     constructor(model, resModel, params = {}) {
-//         super(model, resModel, params);
-
-//         this.openGroupsByDefault = params.openGroupsByDefault;
-
-//         this.resIds = params.resIds;
-
-//         this.domains = {};
-//         this.groupBy = params.groupBy || [];
-//         this.groupByField = this.fields[this.groupBy[0]];
-//         this.limit = params.limit;
-//         this.groupLimit = params.groupLimit;
-//         this.data = [];
-//         this.views = {};
-//         this.orderByColumn = {};
-
-//         // Group parameters
-//         this.updateGroupParams(params);
-
-//         for (const type in params.views || {}) {
-//             const [mode] = getX2MViewModes(type);
-//             this.views[mode] = Object.freeze(params.views[type]);
-//         }
-//     }
-
-//     /**
-//      * @override
-//      */
-//     get dataPointContext() {
-//         return {
-//             limit: this.limit,
-//             groupLimit: this.groupLimit,
-//             ...super.dataPointContext,
-//         };
-//     }
-
-//     /**
-//      * @override
-//      */
-//     get hasData() {
-//         return Boolean(super.hasData && this.data.length);
-//     }
-
-//     /**
-//      * @returns {boolean}
-//      */
-//     get isGrouped() {
-//         return Boolean(this.groupBy.length);
-//     }
-
-//     /**
-//      * Returns the aggregate values of each (aggregatable) column for the given
-//      * records.
-//      *
-//      * @param {Record[]} records list of records to aggregate (defaults to
-//      *   all records if the list is empty)
-//      * @param {Object}
-//      */
-//     getAggregates(records) {
-//         if (this.isGrouped) {
-//             console.warn("Aggregates on grouped list not supported yet");
-//             return {};
-//         }
-//         records = records.length ? records : this.data;
-//         const aggregates = {};
-//         for (const fieldName in this.activeFields) {
-//             const field = this.fields[fieldName];
-//             const type = field.type;
-//             if (type !== "integer" && type !== "float" && type !== "monetary") {
-//                 continue;
-//             }
-//             // FIXME retrieve this from arch
-//             // const func =
-//             //     (attrs.sum && "sum") ||
-//             //     (attrs.avg && "avg") ||
-//             //     (attrs.max && "max") ||
-//             //     (attrs.min && "min");
-//             const func = field.group_operator;
-//             if (func) {
-//                 let count = 0;
-//                 let aggregateValue = 0;
-//                 if (func === "max") {
-//                     aggregateValue = -Infinity;
-//                 } else if (func === "min") {
-//                     aggregateValue = Infinity;
-//                 }
-//                 for (const record of records) {
-//                     count += 1;
-//                     // FIXME: could be groups instead of records
-//                     // const value = (d.type === 'record') ? d.data[attrs.name] : d.aggregateValues[attrs.name];
-//                     const value = record.data[fieldName];
-//                     if (func === "avg" || func === "sum") {
-//                         aggregateValue += value;
-//                     } else if (func === "max") {
-//                         aggregateValue = Math.max(aggregateValue, value);
-//                     } else if (func === "min") {
-//                         aggregateValue = Math.min(aggregateValue, value);
-//                     }
-//                 }
-//                 if (func === "avg") {
-//                     aggregateValue = count > 0 ? aggregateValue / count : aggregateValue;
-//                 }
-//                 const formatter = formatterRegistry.get(type, false);
-//                 aggregates[fieldName] = {
-//                     // help: attrs[func], // FIXME: from arch
-//                     value: formatter ? formatter(aggregateValue) : aggregateValue,
-//                 };
-//             }
-//         }
-//         return aggregates;
-//     }
-
-//     /**
-//      * @param {{ domains?: any[], groupBy?: string[], defer?: boolean, orderByColumn?: { name: string, asc: boolean } }} [params={}]
-//      * @returns {Promise<void> | () => Promise<void>}
-//      */
-//     async load(params = {}) {
-//         this.offset = 0;
-
-//         if (params.domain && !this.groupData) {
-//             this.domains.main = params.domain; // FIXME: do not modify internal state directly
-//         }
-//         if (params.groupBy) {
-//             this.groupBy = params.groupBy;
-//             this.groupByField = this.fields[this.groupBy[0]];
-//         }
-//         if ("orderByColumn" in params) {
-//             this.orderByColumn = params.orderByColumn; // FIXME: incorrect param name (could come from a favorite)
-//         }
-
-//         const previousData = this.data;
-
-//         if (this.resIds !== undefined) {
-//             this.data = await this.loadRecords();
-//         } else if (this.isGrouped) {
-//             this.data = await this.loadGroups(params.keepRecords);
-//         } else {
-//             this.data = await this.searchRecords();
-//         }
-
-//         if (params.keepArchivedLists) {
-//             const archivedLists = previousData.filter((l) => l.archived);
-//             this.data.push(...archivedLists);
-//         }
-
-//         this.offset = this.data.length;
-//         this.isLoaded = true;
-//     }
-
-//     /**
-//      * @private
-//      * @returns {Promise<Record>}
-//      */
-//     async searchRecords() {
-//         const order = this.orderByColumn.name
-//             ? `${this.orderByColumn.name} ${this.orderByColumn.asc ? "ASC" : "DESC"}`
-//             : "";
-//         const recordsData = await this.model.orm.searchRead(
-//             this.resModel,
-//             this.getDomain(),
-//             this.fieldNames,
-//             {
-//                 limit: this.limit,
-//                 order,
-//                 offset: this.offset,
-//             },
-//             { bin_size: true }
-//         );
-
-//         return Promise.all(
-//             recordsData.map(async (data) => {
-//                 const record = this.createRecord(this.resModel, data.id);
-//                 await record.load({ data });
-//                 return record;
-//             })
-//         );
-//     }
-
-//     /**
-//      * @private
-//      * @returns {Promise<Record>}
-//      */
-//     async loadRecords() {
-//         if (!this.resIds.length) {
-//             return [];
-//         }
-//         return Promise.all(
-//             this.resIds.map(async (resId) => {
-//                 const record = this.createRecord(this.resModel, resId);
-//                 await record.load();
-//                 return record;
-//             })
-//         );
-//     }
-
-//     async loadMore() {
-//         const nextRecords = await this.searchRecords();
-//         this.data.push(...nextRecords);
-//         this.offset = this.data.length;
-//         this.model.notify();
-//     }
-
-//     /**
-//      * @private
-//      * @param {boolean} [keepRecords=false] Whether to keep the previous data
-//      * @returns {Promise<Record>}
-//      */
-//     async loadGroups(keepRecords = false) {
-//         const { groups, length } = await this.model.orm.webReadGroup(
-//             this.resModel,
-//             this.getDomain(),
-//             this.fieldNames,
-//             this.groupBy,
-//             {
-//                 limit: this.groupLimit,
-//                 lazy: true,
-//             }
-//         );
-//         this.count = length;
-
-//         const groupBy = this.groupBy.slice(1);
-//         let loadedGroups = 0;
-//         return Promise.all(
-//             groups.map(async (groupData) => {
-//                 const groupParams = {
-//                     groupAggregates: Object.create(null),
-//                     groupBy,
-//                 };
-//                 let shouldFold = false;
-//                 for (const key in groupData) {
-//                     const value = groupData[key];
-//                     switch (key) {
-//                         case this.groupByField.name: {
-//                             const formatter = formatterRegistry.get(this.groupByField.type, false);
-//                             let groupDisplay = formatter ? formatter(value) : value;
-//                             let groupValue = value;
-//                             if (isRelational(this.groupByField)) {
-//                                 // many2many or many2one -> in both cases the group's value is a many2one value
-//                                 groupValue = groupValue ? groupValue[0] : false;
-//                                 groupDisplay = groupDisplay || _t("Undefined");
-//                             }
-//                             Object.assign(groupParams, { groupValue, groupDisplay });
-//                             break;
-//                         }
-//                         case `${this.groupByField.name}_count`: {
-//                             groupParams.groupCount = value;
-//                             break;
-//                         }
-//                         case "__domain": {
-//                             groupParams.groupDomain = value;
-//                             break;
-//                         }
-//                         case "__fold": {
-//                             shouldFold = value || false;
-//                             break;
-//                         }
-//                         default: {
-//                             if (key in this.fields) {
-//                                 const formatter = formatterRegistry.get(
-//                                     this.fields[key].type,
-//                                     false
-//                                 );
-//                                 const formattedValue = formatter ? formatter(value) : value;
-//                                 groupParams.groupAggregates[key] = formattedValue;
-//                             }
-//                         }
-//                     }
-//                 }
-//                 // FIXME: only retrieve the former group if groupby same field
-//                 let group = this.data.find((g) => g.value === groupParams.groupValue);
-//                 if (group && group.isLoaded) {
-//                     group.updateGroupParams(groupParams);
-//                 } else {
-//                     keepRecords = false;
-//                     group = this.createList(this.resModel, groupParams);
-//                 }
-//                 if (
-//                     !keepRecords &&
-//                     !shouldFold &&
-//                     loadedGroups < LOADED_GROUP_LIMIT &&
-//                     (this.openGroupsByDefault || group.isLoaded)
-//                 ) {
-//                     loadedGroups++;
-//                     const loadParams = { groupBy, orderByColumn: this.orderByColumn };
-//                     if (groupParams.groupDomain) {
-//                         loadParams.domain = groupParams.groupDomain;
-//                     }
-//                     await group.load(loadParams);
-//                 }
-//                 return group;
-//             })
-//         );
-//     }
-
-//     async toggle() {
-//         if (this.isLoaded) {
-//             this.data = [];
-//             this.isLoaded = false;
-//         } else {
-//             await this.load();
-//         }
-//         this.model.notify();
-//     }
-
-//     async archive() {
-//         const resIds = this.data.map((r) => r.resId);
-//         await this.model.orm.call(this.resModel, "action_archive", [resIds]);
-//         await this.model.load();
-//     }
-
-//     async unarchive() {
-//         const resIds = this.data.map((r) => r.resId);
-//         await this.model.orm.call(this.resModel, "action_unarchive", [resIds]);
-//         await this.model.load();
-//     }
-
-//     async resequence(dataPointId, refId) {
-//         if (dataPointId) {
-//             this.data = this.data.filter((dp) => dp.id !== dataPointId);
-//             const index = refId ? this.data.findIndex((dp) => dp.id === refId) + 1 : 0;
-//             this.data.splice(index || 0, 0, this.model.db[dataPointId]);
-//         }
-//         const model = this.resModel;
-//         const ids = this.data.map((r) => r.resId || r.value);
-//         await this.model.rpc("/web/dataset/resequence", { model, ids });
-//         this.model.notify();
-//     }
-
-//     async sortBy(fieldName) {
-//         const { name, asc } = this.orderByColumn;
-//         let orderByColumn = {
-//             name: fieldName,
-//             asc: fieldName === name ? !asc : true,
-//         };
-//         await this.model.keepLast.add(this.load({ orderByColumn }));
-//         this.model.notify();
-//     }
-
-//     getDomain() {
-//         return Domain.and(Object.values(this.domains)).toList();
-//     }
-
-//     updateGroupParams(params) {
-//         if (params.groupDomain) {
-//             this.domains.main = params.groupDomain;
-//         }
-//         this.count = params.groupCount;
-//         this.displayName = params.groupDisplay;
-//         this.value = params.groupValue;
-//         this.aggregates = params.groupAggregates;
-//     }
-// }
