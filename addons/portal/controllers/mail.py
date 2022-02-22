@@ -112,6 +112,10 @@ class PortalChatter(http.Controller):
             except (AccessError, MissingError):
                 raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.", attachment_id))
 
+    def _portal_post_has_content(self, res_model, res_id, message, attachment_ids=None, **kw):
+        """ Tells if we can effectively post on the model based on content. """
+        return bool(message) or bool(attachment_ids)
+
     @http.route(['/mail/chatter_post'], type='json', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, attachment_ids=None, attachment_tokens=None, **kw):
         """Create a new `mail.message` with the given `message` and/or `attachment_ids` and return new message values.
@@ -120,38 +124,42 @@ class PortalChatter(http.Controller):
         `res_model`. The user must have access rights on this target document or
         must provide valid identifiers through `kw`. See `_message_post_helper`.
         """
+        if not self._portal_post_has_content(res_model, res_id, message,
+                                             attachment_ids=attachment_ids, attachment_tokens=attachment_tokens,
+                                             **kw):
+            return
+
         res_id = int(res_id)
 
         self._portal_post_check_attachments(attachment_ids, attachment_tokens)
 
-        if message or attachment_ids:
-            result = {'default_message': message}
-            # message is received in plaintext and saved in html
-            if message:
-                message = plaintext2html(message)
-            post_values = {
-                'res_model': res_model,
-                'res_id': res_id,
-                'message': message,
-                'send_after_commit': False,
-                'attachment_ids': False,  # will be added afterward
-            }
-            post_values.update((fname, kw.get(fname)) for fname in self._portal_post_filter_params())
-            message = _message_post_helper(**post_values)
-            result.update({'default_message_id': message.id})
+        result = {'default_message': message}
+        # message is received in plaintext and saved in html
+        if message:
+            message = plaintext2html(message)
+        post_values = {
+            'res_model': res_model,
+            'res_id': res_id,
+            'message': message,
+            'send_after_commit': False,
+            'attachment_ids': False,  # will be added afterward
+        }
+        post_values.update((fname, kw.get(fname)) for fname in self._portal_post_filter_params())
+        message = _message_post_helper(**post_values)
+        result.update({'default_message_id': message.id})
 
-            if attachment_ids:
-                # sudo write the attachment to bypass the read access
-                # verification in mail message
-                record = request.env[res_model].browse(res_id)
-                message_values = {'res_id': res_id, 'model': res_model}
-                attachments = record._message_post_process_attachments([], attachment_ids, message_values)
+        if attachment_ids:
+            # sudo write the attachment to bypass the read access
+            # verification in mail message
+            record = request.env[res_model].browse(res_id)
+            message_values = {'res_id': res_id, 'model': res_model}
+            attachments = record._message_post_process_attachments([], attachment_ids, message_values)
 
-                if attachments.get('attachment_ids'):
-                    message.sudo().write(attachments)
+            if attachments.get('attachment_ids'):
+                message.sudo().write(attachments)
 
-                result.update({'default_attachment_ids': message.attachment_ids.sudo().read(['id', 'name', 'mimetype', 'file_size', 'access_token'])})
-            return result
+            result.update({'default_attachment_ids': message.attachment_ids.sudo().read(['id', 'name', 'mimetype', 'file_size', 'access_token'])})
+        return result
 
     @http.route('/mail/chatter_init', type='json', auth='public', website=True)
     def portal_chatter_init(self, res_model, res_id, domain=False, limit=False, **kwargs):

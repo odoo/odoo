@@ -153,6 +153,7 @@
                                     <t t-set="default_rating_value" t-value="last_rating_value"/>
                                     <t t-set="default_attachment_ids" t-value="last_message_attachment_ids"/>
                                     <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
+                                    <t t-set="rate_with_void_content" t-value="True"/>
                                     <t t-set="disable_composer" t-value="not channel.can_review"/>
                                     <t t-set="_link_btn_classes" t-value="'btn-sm btn-link text-white mx-3'"/>
                                 </t>

@@ -138,13 +138,14 @@ PortalChatter.include({
         if (!result['rating_stats']) {
             return;
         }
+        const self = this;
         const ratingData = {
             'avg': Math.round(result['rating_stats']['avg'] * 100) / 100,
             'percent': [],
         };
-        _.each(_.keys(result['rating_stats']['percent']).reverse(), function (rating) {
+        _.each(_.sortBy(_.keys(result['rating_stats']['percent'])).reverse(), function (rating) {
             ratingData['percent'].push({
-                'num': rating,
+                'num': self.roundToHalf(rating),
                 'percent': utils.round_precision(result['rating_stats']['percent'][rating], 0.01),
             });
         });
