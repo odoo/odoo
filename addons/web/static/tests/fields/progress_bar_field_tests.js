@@ -459,11 +459,7 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target.querySelector(".o_form_button_save"));
 
-            assert.strictEqual(
-                target.querySelector(".o_progressbar_value").innerText,
-                "99%",
-                "The value has not changed"
-            );
+            assert.containsOnce(target, ".o_form_button_save", "The form has not been saved");
             assert.verifySteps(["Show error message"], "The error message was shown correctly");
         }
     );

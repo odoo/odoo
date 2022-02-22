@@ -21,12 +21,12 @@
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
                 <t t-if="props.maxValue">
-                    <t t-if="(props.editable and !props.editMaxValue) or props.editCurrentValue">
+                    <t t-if="props.isCurrentValueEditable">
                         <input
                             class="o_progressbar_value o_input"
                             type="text"
                             inputmode="numeric"
-                            t-att-value="getFieldValue('currentValue')"
+                            t-att-value="getInitialValue('currentValue')"
                             t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
                             t-on-keydown="(ev) => this.onKeyDownValue(ev, 'currentValue')"
                         />
@@ -35,12 +35,12 @@
                         <span class="o_progressbar_value" t-esc="state.currentValue"/>
                     </t>
                     <span>/</span>
-                    <t t-if="props.editMaxValue">
+                    <t t-if="props.isMaxValueEditable">
                         <input
                             class="o_progressbar_value o_input"
                             type="text"
                             inputmode="numeric"
-                            t-att-value="getFieldValue('maxValue')"
+                            t-att-value="getInitialValue('maxValue')"
                             t-on-change="(ev) => this.onChangeValue(ev.target.value, 'maxValue')"
                             t-on-keydown="(ev) => this.onKeyDownValue(ev, 'maxValue')"
                         />
@@ -55,7 +55,7 @@
                             class="o_input o_progressbar_value"
                             type="text"
                             inputmode="numeric"
-                            t-att-value="getFieldValue('currentValue') or ''"
+                            t-att-value="getInitialValue('currentValue') or ''"
                             t-att-required="props.required"
                             t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
                             t-on-keydown="(ev) => this.onKeyDownValue(ev, 'currentValue')"
