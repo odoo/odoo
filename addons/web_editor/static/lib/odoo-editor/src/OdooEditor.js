@@ -1062,6 +1062,9 @@ export class OdooEditor extends EventTarget {
             this.historyApply(stepToApply.mutations);
         }
     }
+    collaborationSetClientId(id) {
+        this._collabClientId = id;
+    }
 
     onExternalHistorySteps(newSteps) {
         this.observerUnactive();
