@@ -348,7 +348,7 @@ class IrActionsReport(models.Model):
 
         return command_args
 
-    def _prepare_html(self, html):
+    def _prepare_html(self, html, report_model=False):
         '''Divide and recreate the header/footer html by merging all found in html.
         The bodies are extracted and added to a list. Then, extract the specific_paperformat_args.
         The idea is to put all headers/footers together. Then, we will use a javascript trick
@@ -404,7 +404,7 @@ class IrActionsReport(models.Model):
                 'base_url': base_url
             })
             bodies.append(body)
-            if node.get('data-oe-model') == self.model:
+            if node.get('data-oe-model') == report_model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
             else:
                 res_ids.append(None)
@@ -872,7 +872,7 @@ class IrActionsReport(models.Model):
 
         html = self.with_context(context)._render_qweb_html(report_ref, res_ids, data=data)[0]
 
-        bodies, html_ids, header, footer, specific_paperformat_args = report_sudo.with_context(context)._prepare_html(html)
+        bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(context)._prepare_html(html, report_model=report_sudo.model)
 
         if report_sudo.attachment and set(res_ids) != set(html_ids):
             raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
