@@ -3,7 +3,7 @@
 import { Many2OneAvatarUser } from '@mail/js/m2x_avatar_user';
 import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { createWebClient, doAction } from '@web/../tests/webclient/helpers';
+import { doAction } from '@web/../tests/webclient/helpers';
 import { registry } from "@web/core/registry";
 import { makeLegacyCommandService } from "@web/legacy/utils";
 import core from 'web.core';
@@ -12,7 +12,7 @@ import KanbanView from 'web.KanbanView';
 import ListView from 'web.ListView';
 import session from 'web.session';
 import makeTestEnvironment from "web.test_env";
-import { dom, mock, nextTick } from 'web.test_utils';
+import { dom, nextTick } from 'web.test_utils';
 
 let target;
 
@@ -58,189 +58,54 @@ QUnit.module('mail', {}, function () {
     });
 
     QUnit.test('many2one_avatar_user widget in list view', async function (assert) {
-        assert.expect(5);
+        assert.expect(2);
 
         const { widget: list } = await start({
+            hasChatWindow: true,
             hasView: true,
             View: ListView,
             model: 'foo',
             data: this.data,
             arch: '<tree><field name="user_id" widget="many2one_avatar_user"/></tree>',
-            mockRPC(route, args) {
-                if (args.method === 'read') {
-                    assert.step(`read ${args.model} ${args.args[0]}`);
-                }
-                return this._super(...arguments);
-            },
         });
-
-        mock.intercept(list, 'open_record', () => {
-            assert.step('open record');
-        });
-
-        assert.strictEqual(list.$('.o_data_cell span').text(), 'MarioLuigiMarioYoshi');
-
-        // sanity check: later on, we'll check that clicking on the avatar doesn't open the record
-        await dom.click(list.$('.o_data_row:first span'));
 
         await dom.click(list.$('.o_data_cell:nth(0) .o_m2o_avatar > img'));
-        await dom.click(list.$('.o_data_cell:nth(1) .o_m2o_avatar > img'));
-        await dom.click(list.$('.o_data_cell:nth(2) .o_m2o_avatar > img'));
-
-
-        assert.verifySteps([
-            'open record',
-            'read res.users 11',
-            // 'call service openDMChatWindow 1',
-            'read res.users 7',
-            // 'call service openDMChatWindow 2',
-            // 'call service openDMChatWindow 1',
-        ]);
+        assert.containsOnce(document.body, '.o_ChatWindow', 'Chat window should be opened');
+        assert.strictEqual(
+            document.querySelector('.o_ChatWindowHeader_name').textContent,
+            'Partner 1',
+            'Chat window should be related to partner 1'
+        );
 
         list.destroy();
     });
 
-    QUnit.test('many2one_avatar_user widget in kanban view', async function (assert) {
-        assert.expect(6);
-
-        const { widget: kanban } = await start({
-            hasView: true,
-            View: KanbanView,
-            model: 'foo',
-            data: this.data,
-            arch: `
-                <kanban>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="user_id" widget="many2one_avatar_user"/>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>`,
-        });
-
-        assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), '');
-        assert.containsN(kanban, '.o_m2o_avatar', 4);
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0) > img').data('src'), '/web/image/res.users/11/avatar_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(1) > img').data('src'), '/web/image/res.users/7/avatar_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(2) > img').data('src'), '/web/image/res.users/11/avatar_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(3) > img').data('src'), '/web/image/res.users/23/avatar_128');
-
-        kanban.destroy();
-    });
-
     QUnit.test('many2many_avatar_user widget in form view', async function (assert) {
-        assert.expect(7);
+        assert.expect(2);
 
         const { widget: form } = await start({
+            hasChatWindow: true,
             hasView: true,
             View: FormView,
             model: 'foo',
             data: this.data,
             arch: '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
-            mockRPC(route, args) {
-                if (args.method === 'read') {
-                    assert.step(`read ${args.model} ${args.args[0]}`);
-                }
-                return this._super(...arguments);
-            },
             res_id: 1,
         });
 
-        assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
-            "should have 2 records");
-        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'), '/web/image/res.users/11/avatar_128',
-            "should have correct avatar image");
-
         await dom.click(form.$('.o_field_many2manytags.avatar .badge:first .o_m2m_avatar'));
-        await dom.click(form.$('.o_field_many2manytags.avatar .badge:nth(1) .o_m2m_avatar'));
-
-        assert.verifySteps([
-            "read foo 1",
-            'read res.users 11,23',
-            "read res.users 11",
-            "read res.users 23",
-        ]);
+        assert.containsOnce(document.body, '.o_ChatWindow', 'Chat window should be opened');
+        assert.strictEqual(
+            document.querySelector('.o_ChatWindowHeader_name').textContent,
+            'Partner 1',
+            'First chat window should be related to partner 1'
+        );
 
         form.destroy();
     });
 
-    QUnit.test('many2many_avatar_user widget with single record in list view', async function (assert) {
-        assert.expect(4);
-
-        this.data.foo.records[1].user_ids = [11];
-
-        const { widget: list } = await start({
-            hasView: true,
-            View: ListView,
-            model: 'foo',
-            data: this.data,
-            arch: '<tree editable="top"><field name="user_ids" widget="many2many_avatar_user"/></tree>',
-            res_id: 1,
-        });
-
-        assert.containsN(list, '.o_data_row:eq(0) .o_field_many2manytags.avatar.o_field_widget .o_m2m_avatar', 2,
-            "should have 2 records");
-        assert.containsN(list, '.o_data_row:eq(1) .o_field_many2manytags.avatar.o_field_widget > div > span', 1,
-            "should have 1 record in second row");
-        assert.containsN(list, '.o_data_row:eq(1) .o_field_many2manytags.avatar.o_field_widget > div > span', 1,
-            "should have img and span in second record");
-
-        await dom.click(list.$('.o_data_row:eq(1) .o_field_many2manytags.avatar:first > div > span'));
-        assert.containsOnce(list, '.o_selected_row');
-
-        list.destroy();
-    });
-
-    QUnit.test('many2many_avatar_user widget in list view', async function (assert) {
-        assert.expect(8);
-
-        const { widget: list } = await start({
-            hasView: true,
-            View: ListView,
-            model: 'foo',
-            data: this.data,
-            arch: '<tree><field name="user_ids" widget="many2many_avatar_user"/></tree>',
-            mockRPC(route, args) {
-                if (args.method === 'read') {
-                    assert.step(`read ${args.model} ${args.args[0]}`);
-                }
-                return this._super(...arguments);
-            },
-        });
-
-        mock.intercept(list, 'open_record', () => {
-            assert.step('open record');
-        });
-
-        assert.containsN(list.$(".o_data_cell:first"), '.o_field_many2manytags.avatar.o_field_widget span', 2,
-            "should have 2 records");
-        assert.strictEqual(list.$(".o_data_cell:first .o_field_many2manytags.avatar img.o_m2m_avatar:first").data('src'),
-            "/web/image/res.users/11/avatar_128",
-            "should have right image");
-        assert.strictEqual(list.$(".o_data_cell:eq(0) .o_field_many2manytags.avatar img.o_m2m_avatar:eq(1)").data('src'),
-            "/web/image/res.users/23/avatar_128",
-            "should have right image");
-
-        // sanity check: later on, we'll check that clicking on the avatar doesn't open the record
-        await dom.click(list.$('.o_data_row:first .o_field_many2manytags'));
-
-        await dom.click(list.$('.o_data_cell:nth(0) .o_m2m_avatar:nth(0)'));
-        await dom.click(list.$('.o_data_cell:nth(0) .o_m2m_avatar:nth(1)'));
-
-        assert.verifySteps([
-            'read res.users 11,23',
-            "open record",
-            "read res.users 11",
-            "read res.users 23",
-        ]);
-
-        list.destroy();
-    });
-
     QUnit.test('many2many_avatar_user in kanban view', async function (assert) {
-        assert.expect(11);
+        assert.expect(4);
 
         this.data['res.users'].records.push({ id: 15, name: "Tapu", partner_id: 11 },);
         this.data.foo.records[2].user_ids = [11, 23, 7, 15];
@@ -267,33 +132,8 @@ QUnit.module('mail', {}, function () {
                         </t>
                     </templates>
                 </kanban>`,
-            mockRPC(route, args) {
-                if (args.method === 'read') {
-                    assert.step(`read ${args.model} ${args.args[0]}`);
-                }
-                return this._super(...arguments);
-            },
         });
 
-        mock.intercept(kanban, 'open_record', () => {
-            assert.step('open record');
-        });
-
-        assert.strictEqual(kanban.$('.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar:first').data('src'),
-            "/web/image/res.users/11/avatar_128",
-            "should have correct avatar image");
-        assert.strictEqual(kanban.$('.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar:eq(1)').data('src'),
-            "/web/image/res.users/23/avatar_128",
-            "should have correct avatar image");
-
-        assert.containsN(kanban, '.o_kanban_record:eq(2) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)', 2,
-            "should have 2 records");
-        assert.strictEqual(kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags img.o_m2m_avatar:first').data('src'),
-            "/web/image/res.users/11/avatar_128",
-            "should have correct avatar image");
-        assert.strictEqual(kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags img.o_m2m_avatar:eq(1)').data('src'),
-            "/web/image/res.users/23/avatar_128",
-            "should have correct avatar image");
         assert.containsOnce(kanban, '.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty',
             "should have o_m2m_avatar_empty span");
         assert.strictEqual(kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty').text().trim(), "+2",
@@ -305,10 +145,6 @@ QUnit.module('mail', {}, function () {
             "should open a popover hover on o_m2m_avatar_empty");
         assert.strictEqual(kanban.$('.popover .popover-body > div').text().trim(), "LuigiTapu",
             "should have a right text in popover");
-
-        assert.verifySteps([
-            "read res.users 7,11,15,23",
-        ]);
 
         kanban.destroy();
     });
@@ -324,13 +160,8 @@ QUnit.module('mail', {}, function () {
             'foo,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
             'foo,false,search': '<search></search>',
         };
-        const models = {
-            'foo': this.data.foo,
-            'res.partner': this.data['res.partner'],
-            'res.users': this.data['res.users'],
-        }
-        const serverData = { models, views}
-        const webClient = await createWebClient({ serverData });
+        const serverData = { models: this.data, views };
+        const { widget: webClient } = await start({ hasWebClient: true, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -372,13 +203,8 @@ QUnit.module('mail', {}, function () {
             'foo,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
             'foo,false,search': '<search></search>',
         };
-        const models = {
-            'foo': this.data.foo,
-            'res.partner': this.data['res.partner'],
-            'res.users': this.data['res.users'],
-        }
-        const serverData = { models, views}
-        const webClient = await createWebClient({ serverData });
+        const serverData = { models: this.data, views };
+        const { widget: webClient } = await start({ hasWebClient: true, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -417,13 +243,8 @@ QUnit.module('mail', {}, function () {
             'foo,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
             'foo,false,search': '<search></search>',
         };
-        const models = {
-            'foo': this.data.foo,
-            'res.partner': this.data['res.partner'],
-            'res.users': this.data['res.users'],
-        }
-        const serverData = { models, views}
-        const webClient = await createWebClient({ serverData });
+        const serverData = { models: this.data, views };
+        const { widget: webClient } = await start({ hasWebClient: true, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -466,13 +287,8 @@ QUnit.module('mail', {}, function () {
             'foo,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
             'foo,false,search': '<search></search>',
         };
-        const models = {
-            'foo': this.data.foo,
-            'res.partner': this.data['res.partner'],
-            'res.users': this.data['res.users'],
-        }
-        const serverData = { models, views}
-        const webClient = await createWebClient({ serverData });
+        const serverData = { models: this.data, views };
+        const { widget: webClient } = await start({ hasWebClient: true, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -504,4 +320,68 @@ QUnit.module('mail', {}, function () {
         assert.deepEqual(userNames, ["Mario", "Yoshi"]);
     });
 
+    QUnit.test('avatar_user widget displays the appropriate user image in list view', async function (assert) {
+        assert.expect(1);
+
+        const { widget: list } = await start({
+            hasView: true,
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="user_id" widget="many2one_avatar_user"/></tree>',
+            res_id: 1,
+        });
+        assert.strictEqual(
+            list.$('.o_m2o_avatar > img').data('src'),
+            '/web/image/res.users/11/avatar_128',
+            'Should have correct avatar image'
+        );
+        list.destroy();
+    });
+
+    QUnit.test('avatar_user widget displays the appropriate user image in kanban view', async function (assert) {
+        assert.expect(1);
+
+        const { widget: kanban } = await start({
+            hasView: true,
+            View: KanbanView,
+            model: 'foo',
+            data: this.data,
+            arch: `<kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+            res_id: 1,
+        });
+        assert.strictEqual(
+            kanban.$('.o_m2o_avatar > img').data('src'),
+            '/web/image/res.users/11/avatar_128',
+            'Should have correct avatar image'
+        );
+        kanban.destroy();
+    });
+
+    QUnit.test('avatar_user widget displays the appropriate user image in form view', async function (assert) {
+        assert.expect(1);
+
+        const { widget: form } = await start({
+            hasView: true,
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+            res_id: 1,
+        });
+        assert.strictEqual(
+            form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'),
+            '/web/image/res.users/11/avatar_128',
+            'Should have correct avatar image'
+        );
+        form.destroy();
+    });
 });
