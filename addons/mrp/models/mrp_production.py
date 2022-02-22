@@ -1664,6 +1664,8 @@ class MrpProduction(models.Model):
         # We need to adapt `duration_expected` on both the original workorders and their
         # backordered workorders. To do that, we use the original `duration_expected` and the
         # ratio of the quantity produced and the quantity to produce.
+        workorders_to_cancel = self.env['mrp.workorder']
+        workorders_to_update = self.env['mrp.workorder']
         for production in self:
             initial_qty = initial_qty_by_production[production]
             initial_workorder_remaining_qty = []
@@ -1675,15 +1677,21 @@ class MrpProduction(models.Model):
 
             # Adapt quantities produced
             for workorder in production.workorder_ids:
-                initial_workorder_remaining_qty.append(max(workorder.qty_produced - workorder.qty_production, 0))
+                initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_produced, 0))
                 workorder.qty_produced = min(workorder.qty_produced, workorder.qty_production)
-            workorders_len = len(bo.workorder_ids)
+            workorders_len = len(production.workorder_ids)
             for index, workorder in enumerate(bo.workorder_ids):
-                remaining_qty = initial_workorder_remaining_qty[index // workorders_len]
+                remaining_qty = initial_workorder_remaining_qty[index % workorders_len]
+                workorder.qty_reported_from_previous_wo = max(workorder.qty_production - remaining_qty, 0)
                 if remaining_qty:
-                    workorder.qty_produced = max(workorder.qty_production, remaining_qty)
                     initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_produced, 0)
-
+                    if workorders_to_update[-1:].production_id != workorder.production_id:
+                        workorders_to_update += workorder
+                else:
+                    workorders_to_cancel += workorder
+        workorders_to_cancel.action_cancel()
+        for workorder in workorders_to_update:
+            workorder.state = 'ready' if workorder.next_work_order_id.production_availability == 'assigned' else 'waiting'
         backorders.workorder_ids._action_confirm()
 
         return self.env['mrp.production'].browse(production_ids)
