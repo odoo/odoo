@@ -78,6 +78,7 @@ export class Many2OneField extends Component {
     }
 
     async loadDisplayName(value) {
+        // FIXME WOWL should not be done here (in list, we do a name_get by line)
         if (this.props.alwaysReload && value) {
             const nameGet = await this.orm.call(this.relation, "name_get", [value[0]], {
                 context: this.props.record.getFieldContext(this.props.name),

@@ -514,6 +514,7 @@ export class ViewCompiler {
             field.setAttribute("viewMode", `${JSON.stringify(viewModes)}`);
         }
 
+        // FIXME WOWL: only for x2many fields
         field.setAttribute(
             "archs",
             `"views" in props.fields.${fieldName} and props.fields.${fieldName}.views`
