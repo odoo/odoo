@@ -108,6 +108,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
      */
     destroy: function () {
         this._stopScrolling();
+        this.$el.find('.twitter_timeline').empty();
         this._super.apply(this, arguments);
     },
 

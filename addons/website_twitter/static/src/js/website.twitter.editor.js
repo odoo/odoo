@@ -21,7 +21,12 @@ sOptions.registry.twitter = sOptions.Class.extend({
         }).appendTo(this.$target).on('click', (ev) => {
             ev.preventDefault();
             ev.stopPropagation();
-            this._rpc({route: '/website_twitter/reload'});
+            this._rpc({route: '/website_twitter/reload'}).then(() => {
+                // Restart the twitter animation widget.
+                this.trigger_up('widgets_start_request', {
+                    $target: this.$target,
+                });
+            });
         });
         this.$target.on('mouseover.website_twitter', (ev) => {
             $configuration.removeClass('d-none');
@@ -31,16 +36,7 @@ sOptions.registry.twitter = sOptions.Class.extend({
         this.$target.on('click.website_twitter', '.lnk_configure', (ev) => {
             window.location = ev.currentTarget.href;
         });
-        this.trigger_up('widgets_stop_request', {
-            $target: this.$target,
-        });
         return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    cleanForSave: function () {
-        this.$target.find('.twitter_timeline').empty();
     },
     /**
      * @override
