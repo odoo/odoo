@@ -243,7 +243,7 @@ export class KanbanRenderer extends Component {
         if (sumField) {
             const { currency_field, name } = sumField;
             title = sumField.string;
-            if (group.activeProgressValue) {
+            if (group.activeProgressValue !== null) {
                 value = group.list.records.reduce((acc, r) => acc + r.data[name], 0);
             } else {
                 value = group.aggregates[name];
