@@ -169,6 +169,12 @@ export class PeerToPeer {
         this.clientsInfos = {};
         this._lastRequestId = -1;
         this._pendingRequestResolver = {};
+        this._stopped = false;
+    }
+
+    stop() {
+        this._stopped = true;
+        this.closeAllConnections();
     }
 
     getConnectedClientIds() {
@@ -193,7 +199,7 @@ export class PeerToPeer {
         delete this.clientsInfos[clientId];
     }
 
-    async closeAllConnections() {
+    closeAllConnections() {
         for (const clientId of Object.keys(this.clientsInfos)) {
             this.notifyAllClients('ptp_disconnect');
             this.removeClient(clientId);
@@ -201,6 +207,9 @@ export class PeerToPeer {
     }
 
     async notifyAllClients(notificationName, notificationPayload, { transport = 'server' } = {}) {
+        if (this._stopped) {
+            return;
+        }
         const transportPayload = {
             fromClientId: this._currentClientId,
             notificationName,
@@ -220,6 +229,9 @@ export class PeerToPeer {
     }
 
     notifyClient(clientId, notificationName, notificationPayload, { transport = 'server' } = {}) {
+        if (this._stopped) {
+            return;
+        }
         if (debugShowNotifications) {
             if (notificationName === 'ptp_request_result') {
                 console.log(
@@ -267,10 +279,16 @@ export class PeerToPeer {
     }
 
     notifySelf(notificationName, notificationPayload) {
+        if (this._stopped) {
+            return;
+        }
         this.handleNotification({ notificationName, notificationPayload });
     }
 
     handleNotification(notification) {
+        if (this._stopped) {
+            return;
+        }
         const isInternalNotification =
             typeof notification.fromClientId === 'undefined' &&
             typeof notification.toClientId === 'undefined';
@@ -323,6 +341,9 @@ export class PeerToPeer {
     }
 
     requestClient(clientId, requestName, requestPayload, { transport = 'server' } = {}) {
+        if (this._stopped) {
+            return;
+        }
         return new Promise((resolve, reject) => {
             const requestId = this._getRequestId();
 
@@ -351,6 +372,9 @@ export class PeerToPeer {
     }
 
     _createClient(clientId, { makeOffer = true } = {}) {
+        if (this._stopped) {
+            return;
+        }
         if (debugShowLog) console.log('CREATE CONNECTION with client id:', clientId);
         this.clientsInfos[clientId] = {
             makingOffer: false,
@@ -472,6 +496,9 @@ export class PeerToPeer {
     }
 
     _channelNotify(clientId, transportPayload) {
+        if (this._stopped) {
+            return;
+        }
         const clientInfo = this.clientsInfos[clientId];
         const dataChannel = clientInfo && clientInfo.dataChannel;
 
@@ -503,6 +530,9 @@ export class PeerToPeer {
     }
 
     async _onRequest(fromClientId, requestId, requestName, requestPayload, requestTransport) {
+        if (this._stopped) {
+            return;
+        }
         const requestFunction = this.options.onRequest && this.options.onRequest[requestName];
         const result = await requestFunction({
             fromClientId,
@@ -527,6 +557,10 @@ export class PeerToPeer {
      * @param {string} [param1.reason]
      */
     _recoverConnection(clientId, { delay = 0, reason = '' } = {}) {
+        if (this._stopped) {
+            this.removeClient(clientId);
+            return;
+        }
         const clientInfos = this.clientsInfos[clientId];
         if (!clientInfos || clientInfos.fallbackTimeout) return;
 
@@ -552,6 +586,10 @@ export class PeerToPeer {
     // todo: do we try to salvage the connection after killing the zombie ?
     // Maybe the salvage should be done when the connection is dropped.
     _killPotentialZombie(clientId) {
+        if (this._stopped) {
+            this.removeClient(clientId);
+            return;
+        }
         const clientInfos = this.clientsInfos[clientId];
         if (!clientInfos || clientInfos.zombieTimeout) {
             return;
