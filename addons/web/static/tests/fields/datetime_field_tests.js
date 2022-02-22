@@ -2,13 +2,15 @@
 
 import { registry } from "@web/core/registry";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { click, patchTimeZone, triggerEvent, triggerEvents } from "../helpers/utils";
+import { click, getFixture, patchTimeZone, triggerEvent, triggerEvents } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -220,15 +222,15 @@ QUnit.module("Fields", (hooks) => {
 
         const expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
         assert.strictEqual(
-            form.el.querySelector(".o_field_datetime").textContent,
+            target.querySelector(".o_field_datetime").textContent,
             expectedDateString,
             "the datetime should be correctly displayed in readonly"
         );
 
         // switch to edit mode
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
         assert.strictEqual(
-            form.el.querySelector(".o_datepicker_input").value,
+            target.querySelector(".o_datepicker_input").value,
             expectedDateString,
             "the datetime should be correct in edit mode"
         );
@@ -236,7 +238,7 @@ QUnit.module("Fields", (hooks) => {
         // datepicker should not open on focus
         assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
 
-        await click(form.el, ".o_datepicker_input");
+        await click(target, ".o_datepicker_input");
         assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
 
         // select 22 February at 8:25:35
@@ -273,15 +275,15 @@ QUnit.module("Fields", (hooks) => {
 
         const newExpectedDateString = "04/22/2017 08:25:35";
         assert.strictEqual(
-            form.el.querySelector(".o_datepicker_input").value,
+            target.querySelector(".o_datepicker_input").value,
             newExpectedDateString,
             "the selected date should be displayed in the input"
         );
 
         // save
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.strictEqual(
-            form.el.querySelector(".o_field_datetime").textContent,
+            target.querySelector(".o_field_datetime").textContent,
             newExpectedDateString,
             "the selected date should be displayed after saving"
         );
@@ -314,9 +316,9 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await click(form.el, ".o_form_button_edit");
+            await click(target, ".o_form_button_edit");
 
-            await click(form.el, ".o_datepicker_input");
+            await click(target, ".o_datepicker_input");
             assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
 
             // select a date and time
@@ -362,7 +364,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
             assert.strictEqual(
-                form.el.querySelector(".o_datepicker_input").value,
+                target.querySelector(".o_datepicker_input").value,
                 "04/22/2017 08:25:35"
             );
             assert.verifySteps(["onchange"], "should have done only one onchange");
@@ -387,14 +389,14 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
-            await click(form.el, ".o_form_button_edit");
+            await click(target, ".o_form_button_edit");
 
-            await triggerEvent(form.el, ".o_field_widget[name='txt'] textarea", "keydown", {
+            await triggerEvent(target, ".o_field_widget[name='txt'] textarea", "keydown", {
                 key: "Tab",
             });
             assert.strictEqual(
                 document.activeElement,
-                form.el.querySelector(".o_form_button_save"),
+                target.querySelector(".o_form_button_save"),
                 "the save button should be selected, because the datepicker did not capture the focus"
             );
         }
@@ -431,12 +433,12 @@ QUnit.module("Fields", (hooks) => {
 
         const expectedDateString = "08/02/2017 12:00";
         assert.strictEqual(
-            form.el.querySelector(".o_field_datetime input").value,
+            target.querySelector(".o_field_datetime input").value,
             expectedDateString,
             "the datetime should be correctly displayed in readonly"
         );
 
-        await click(form.el, ".o_form_button_cancel");
+        await click(target, ".o_form_button_cancel");
         assert.containsNone(document.body, ".modal", "there should not be a Warning dialog");
     });
 
@@ -453,7 +455,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         const expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
-        const cell = list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
+        const cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
         assert.strictEqual(
             cell.innerText,
             expectedDateString,
@@ -461,26 +463,26 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // switch to edit mode
-        await click(list.el, ".o_data_row:first-child div[name='datetime']");
+        await click(target, ".o_data_row:first-child div[name='datetime']");
         assert.containsOnce(
             list,
             "input.o_datepicker_input",
             "the view should have a date input for editable mode"
         );
         assert.strictEqual(
-            list.el.querySelector("input.o_datepicker_input"),
+            target.querySelector("input.o_datepicker_input"),
             document.activeElement,
             "date input should have the focus"
         );
 
         assert.strictEqual(
-            list.el.querySelector("input.o_datepicker_input").value,
+            target.querySelector("input.o_datepicker_input").value,
             expectedDateString,
             "the date should be correct in edit mode"
         );
 
         assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
-        await click(list.el, ".o_datepicker_input");
+        await click(target, ".o_datepicker_input");
         assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
 
         // select 22 February at 8:25:35
@@ -517,15 +519,15 @@ QUnit.module("Fields", (hooks) => {
 
         const newExpectedDateString = "04/22/2017 08:25:35";
         assert.strictEqual(
-            list.el.querySelector(".o_datepicker_input").value,
+            target.querySelector(".o_datepicker_input").value,
             newExpectedDateString,
             "the selected datetime should be displayed in the input"
         );
 
         // save
-        await click(list.el.querySelector(".o_list_button_save"));
+        await click(target.querySelector(".o_list_button_save"));
         assert.strictEqual(
-            list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)").innerText,
+            target.querySelector("tr.o_data_row td:not(.o_list_record_selector)").innerText,
             newExpectedDateString,
             "the selected datetime should be displayed after saving"
         );
@@ -595,26 +597,26 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // switch to edit mode
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
         assert.strictEqual(
-            form.el.querySelector(".o_datepicker_input").value,
+            target.querySelector(".o_datepicker_input").value,
             "02/08/2017 12:00:00",
             "the date time should be correct in edit mode"
         );
 
-        const input = form.el.querySelector(".o_datepicker_input");
+        const input = target.querySelector(".o_datepicker_input");
         input.value = "";
         await triggerEvents(input, null, ["input", "change", "focusout"]);
         assert.strictEqual(
-            form.el.querySelector(".o_datepicker_input").value,
+            target.querySelector(".o_datepicker_input").value,
             "",
             "should have an empty input"
         );
 
         // save
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.strictEqual(
-            form.el.querySelector(".o_field_datetime").textContent,
+            target.querySelector(".o_field_datetime").textContent,
             "",
             "the selected date should be displayed after saving"
         );
@@ -652,13 +654,13 @@ QUnit.module("Fields", (hooks) => {
 
             const expectedDateString = "02/07/2017 22:00:00"; // local time zone
             assert.strictEqual(
-                form.el.querySelector(".o_field_widget[name='p'] .o_data_cell").textContent,
+                target.querySelector(".o_field_widget[name='p'] .o_data_cell").textContent,
                 expectedDateString,
                 "the datetime (datetime widget) should be correctly displayed in tree view"
             );
 
             // switch to form view
-            await click(form.el, ".o_field_widget[name='p'] .o_data_cell");
+            await click(target, ".o_field_widget[name='p'] .o_data_cell");
             assert.strictEqual(
                 document.body.querySelector(".modal .o_field_date[name='datetime']").textContent,
                 "02/07/2017",
@@ -699,13 +701,13 @@ QUnit.module("Fields", (hooks) => {
 
             const expectedDateString = "02/08/2017 06:00:00"; // with timezone
             assert.strictEqual(
-                form.el.querySelector(".o_field_widget[name='p'] .o_data_cell").textContent,
+                target.querySelector(".o_field_widget[name='p'] .o_data_cell").textContent,
                 expectedDateString,
                 "the datetime (datetime widget) should be correctly displayed in tree view"
             );
 
             // switch to form view
-            await click(form.el, ".o_field_widget[name='p'] .o_data_cell");
+            await click(target, ".o_field_widget[name='p'] .o_data_cell");
             assert.strictEqual(
                 document.body.querySelector(".modal .o_field_date[name='datetime']").textContent,
                 "02/08/2017",
@@ -731,7 +733,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await click(form.el, ".o_datepicker_input");
+        await click(target, ".o_datepicker_input");
 
         for (const el of document.body.querySelectorAll(".day:nth-child(2), .day:last-child")) {
             assert.hasClass(el, "disabled", "first and last days must be disabled");

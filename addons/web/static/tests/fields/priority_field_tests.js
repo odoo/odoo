@@ -1,13 +1,15 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { click, nextTick, triggerEvent } from "../helpers/utils";
+import { click, getFixture, nextTick, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -220,23 +222,23 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority:not(.o_field_empty)",
             "widget should be considered set, even though there is no value for this field"
         );
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsNone(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should have no full star since there is no value"
         );
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             2,
             "should have two empty stars since there is no value"
@@ -296,164 +298,164 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority:not(.o_field_empty)",
             "widget should be considered set"
         );
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should have one full star since the value is the second value"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should have one empty star since the value is the second value"
         );
 
         // hover last star
-        let stars = form.el.querySelectorAll(
+        let stars = target.querySelectorAll(
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o"
         );
         await triggerEvent(stars[stars.length - 1], null, "mouseenter");
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star",
             2,
             "should temporary have two full stars since we are hovering the third value"
         );
         assert.containsNone(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should temporary have no empty star since we are hovering the third value"
         );
 
         await triggerEvent(stars[stars.length - 1], null, "mouseleave");
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should temporary have two full stars since we are hovering the third value"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should temporary have no empty star since we are hovering the third value"
         );
 
         // switch to edit mode and check the result
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should still have one full star since the value is the second value"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should still have one empty star since the value is the second value"
         );
 
         // save
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should still have one full star since the value is the second value"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should still have one empty star since the value is the second value"
         );
 
         // switch to edit mode to check that the new value was properly written
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should still have one full star since the value is the second value"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should still have one empty star since the value is the second value"
         );
 
         // click on the second star in edit mode
-        stars = form.el.querySelectorAll(".o_field_widget .o_priority a.o_priority_star.fa-star-o");
+        stars = target.querySelectorAll(".o_field_widget .o_priority a.o_priority_star.fa-star-o");
         await click(stars[stars.length - 1]);
 
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star",
             2,
             "should now have two full stars since the value is the third value"
         );
         assert.containsNone(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should now have no empty star since the value is the third value"
         );
 
         // save
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star",
             2,
             "should now have two full stars since the value is the third value"
         );
         assert.containsNone(
-            form.el,
+            target,
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should now have no empty star since the value is the third value"
         );
@@ -474,139 +476,139 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority:not(.o_field_empty)",
             "widget should be considered set"
         );
         assert.containsN(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsOnce(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star.fa-star",
             "should have one full star since the value is the second value"
         );
         assert.containsOnce(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star.fa-star-o",
             "should have one empty star since the value is the second value"
         );
 
         // switch to edit mode and check the result
-        await click(list.el.querySelector("tbody td:not(.o_list_record_selector)"));
+        await click(target.querySelector("tbody td:not(.o_list_record_selector)"));
 
         assert.containsN(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsOnce(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star.fa-star",
             "should have one full star since the value is the second value"
         );
         assert.containsOnce(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star.fa-star-o",
             "should have one empty star since the value is the second value"
         );
 
         // save
-        await click(list.el, ".o_list_button_save");
+        await click(target, ".o_list_button_save");
 
         assert.containsN(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsOnce(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star.fa-star",
             "should have one full star since the value is the second value"
         );
         assert.containsOnce(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star.fa-star-o",
             "should have one empty star since the value is the second value"
         );
 
         // hover last star
         await triggerEvent(
-            list.el.querySelector(".o_data_row"),
+            target.querySelector(".o_data_row"),
             ".o_priority a.o_priority_star.fa-star-o",
             "mouseenter"
         );
 
         assert.containsN(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsN(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             "a.o_priority_star.fa-star",
             2,
             "should temporary have two full stars since we are hovering the third value"
         );
         assert.containsNone(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             "a.o_priority_star.fa-star-o",
             "should temporary have no empty star since we are hovering the third value"
         );
 
         // click on the first star in readonly mode
-        await click(list.el.querySelector(".o_priority a.o_priority_star.fa-star"));
+        await click(target.querySelector(".o_priority a.o_priority_star.fa-star"));
 
         assert.containsN(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsNone(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star.fa-star",
             "should now have no full star since the value is the first value"
         );
         assert.containsN(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star.fa-star-o",
             2,
             "should now have two empty stars since the value is the first value"
         );
 
         // re-enter edit mode to force re-rendering the widget to check if the value was correctly saved
-        await click(list.el.querySelector("tbody td:not(.o_list_record_selector)"));
+        await click(target.querySelector("tbody td:not(.o_list_record_selector)"));
 
         assert.containsN(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsNone(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star.fa-star",
             "should now only have no full star since the value is the first value"
         );
         assert.containsN(
-            list.el.querySelectorAll(".o_data_row")[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_priority a.o_priority_star.fa-star-o",
             2,
             "should now have two empty stars since the value is the first value"
         );
 
         // Click on second star in edit mode
-        let stars = list.el.querySelectorAll(".o_priority a.o_priority_star.fa-star-o");
+        let stars = target.querySelectorAll(".o_priority a.o_priority_star.fa-star-o");
         await click(stars[stars.length - 1]);
 
-        let rows = list.el.querySelectorAll(".o_data_row");
+        let rows = target.querySelectorAll(".o_data_row");
         assert.containsN(
             rows[rows.length - 1],
             ".o_priority a.o_priority_star",
@@ -626,8 +628,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // save
-        await click(list.el, ".o_list_button_save");
-        rows = list.el.querySelectorAll(".o_data_row");
+        await click(target, ".o_list_button_save");
+        rows = target.querySelectorAll(".o_data_row");
 
         assert.containsN(
             rows[rows.length - 1],

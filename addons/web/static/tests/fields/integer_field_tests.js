@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { click, editInput } from "../helpers/utils";
+import { click, editInput, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -33,7 +35,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("should be 0 when unset", async function (assert) {
         assert.expect(2);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -42,13 +44,13 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.doesNotHaveClass(
-            form.el.querySelector(".o_field_widget"),
+            target.querySelector(".o_field_widget"),
             "o_field_empty",
             "Non-set integer field should be recognized as 0."
         );
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "0",
             "Non-set integer field should be recognized as 0."
         );
@@ -57,7 +59,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("basic form view flow", async function (assert) {
         assert.expect(3);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -65,26 +67,26 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="int_field"/></form>',
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=int_field] input").value,
+            target.querySelector(".o_field_widget[name=int_field] input").value,
             "10",
             "The value should be rendered correctly in edit mode."
         );
 
-        await editInput(form.el, ".o_field_widget[name=int_field] input", "30");
+        await editInput(target, ".o_field_widget[name=int_field] input", "30");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=int_field] input").value,
+            target.querySelector(".o_field_widget[name=int_field] input").value,
             "30",
             "The value should be correctly displayed in the input."
         );
 
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "30",
             "The new value should be saved and displayed properly."
         );
@@ -93,7 +95,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("rounded when using formula in form view", async function (assert) {
         assert.expect(1);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -101,12 +103,12 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="int_field"/></form>',
         });
 
-        await click(form.el, ".o_form_button_edit");
-        await editInput(form.el, ".o_field_widget[name=int_field] input", "=100/3");
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_edit");
+        await editInput(target, ".o_field_widget[name=int_field] input", "=100/3");
+        await click(target, ".o_form_button_save");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "33",
             "The new value should be calculated properly."
         );
@@ -115,7 +117,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("with input type 'number' option", async function (assert) {
         assert.expect(4);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -123,34 +125,34 @@ QUnit.module("Fields", (hooks) => {
             arch: `<form><field name="int_field" options="{'type': 'number'}"/></form>`,
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.ok(
-            form.el.querySelector(".o_field_widget input").hasAttribute("type"),
+            target.querySelector(".o_field_widget input").hasAttribute("type"),
             "Integer field with option type must have a type attribute."
         );
 
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_widget input"),
+            target.querySelector(".o_field_widget input"),
             "type",
             "number",
             'Integer field with option type must have a type attribute equals to "number".'
         );
 
-        await editInput(form.el, ".o_field_widget[name=int_field] input", "1234567890");
-        await click(form.el, ".o_form_button_save");
-        await click(form.el, ".o_form_button_edit");
+        await editInput(target, ".o_field_widget[name=int_field] input", "1234567890");
+        await click(target, ".o_form_button_save");
+        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_widget input").value,
             "1234567890",
             "Integer value must be not formatted if input type is number."
         );
 
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "1,234,567,890",
             "Integer value must be formatted in readonly view even if the input type is number."
         );
@@ -159,7 +161,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("without input type option", async function (assert) {
         assert.expect(2);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -167,21 +169,21 @@ QUnit.module("Fields", (hooks) => {
             arch: `<form><field name="int_field"/></form>`,
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_widget input"),
+            target.querySelector(".o_field_widget input"),
             "type",
             "text",
             "Integer field without option type must have a text type (default type)."
         );
 
-        await editInput(form.el, ".o_field_widget[name=int_field] input", "1234567890");
-        await click(form.el, ".o_form_button_save");
-        await click(form.el, ".o_form_button_edit");
+        await editInput(target, ".o_field_widget[name=int_field] input", "1234567890");
+        await click(target, ".o_form_button_save");
+        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_widget input").value,
             "1,234,567,890",
             "Integer value must be formatted if input type isn't number."
         );
@@ -190,7 +192,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("with disable formatting option", async function (assert) {
         assert.expect(2);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -199,15 +201,15 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=int_field]").textContent,
+            target.querySelector(".o_field_widget[name=int_field]").textContent,
             "8069",
             "Integer value must not be formatted"
         );
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_widget input").value,
             "8069",
             "Integer value must not be formatted"
         );
@@ -216,7 +218,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("IntegerField is formatted by default", async function (assert) {
         assert.expect(2);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -225,15 +227,15 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=int_field]").textContent,
+            target.querySelector(".o_field_widget[name=int_field]").textContent,
             "8,069",
             "Integer value must be formatted by default"
         );
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_widget input").value,
             "8,069",
             "Integer value must be formatted by default"
         );
@@ -250,10 +252,10 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="int_field"/></form>',
         };
         params.resId = serverData.models.partner.records[1].id = "2-20170808020000";
-        var form = await makeView(params);
+        await makeView(params);
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "2-20170808020000",
             "Should display virtual id"
         );
@@ -268,7 +270,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             arch: '<tree editable="bottom">' + '<field name="int_field"/>' + "</tree>",
         });
-        var zeroValues = Array.from(list.el.querySelectorAll("td")).filter(
+        var zeroValues = Array.from(target.querySelectorAll("td")).filter(
             (el) => el.innerText === "0"
         );
         assert.strictEqual(
@@ -278,7 +280,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // switch to edit mode
-        var cell = list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
+        var cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
         await click(cell);
 
         assert.containsOnce(
@@ -287,16 +289,16 @@ QUnit.module("Fields", (hooks) => {
             "The view should have 1 input for editable integer."
         );
 
-        await editInput(list.el, ".o_field_widget[name=int_field] input", "-28");
+        await editInput(target, ".o_field_widget[name=int_field] input", "-28");
         assert.strictEqual(
-            list.el.querySelector('.o_field_widget[name="int_field"] input').value,
+            target.querySelector('.o_field_widget[name="int_field"] input').value,
             "-28",
             "The value should be displayed properly in the input."
         );
 
-        await click(list.el.querySelector(".o_list_button_save"));
+        await click(target.querySelector(".o_list_button_save"));
         assert.strictEqual(
-            list.el.querySelector("td:not(.o_list_record_selector)").innerText,
+            target.querySelector("td:not(.o_list_record_selector)").innerText,
             "-28",
             "The new value should be saved and displayed properly."
         );

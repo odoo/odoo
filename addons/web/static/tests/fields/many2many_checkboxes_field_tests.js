@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { click, triggerEvent } from "../helpers/utils";
+import { click, getFixture, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -61,35 +63,35 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsN(
-            form.el,
+            target,
             "div.o_field_widget div.custom-checkbox",
             2,
             "should have fetched and displayed the 2 values of the many2many"
         );
 
-        let checkboxes = form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input");
+        let checkboxes = target.querySelectorAll("div.o_field_widget div.custom-checkbox input");
         assert.ok(checkboxes[0].checked, "first checkbox should be checked");
         assert.notOk(checkboxes[1].checked, "second checkbox should not be checked");
 
         assert.containsN(
-            form.el,
+            target,
             "div.o_field_widget div.custom-checkbox input:disabled",
             2,
             "the checkboxes should not be disabled"
         );
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.containsNone(
-            form.el,
+            target,
             "div.o_field_widget div.custom-checkbox input:disabled",
             "the checkboxes should not be disabled"
         );
 
         // add a m2m value by clicking on input
-        checkboxes = form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input");
+        checkboxes = target.querySelectorAll("div.o_field_widget div.custom-checkbox input");
         await click(checkboxes[1]);
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.deepEqual(
             serverData.models.partner.records[0].timmy,
             [12, 14],
@@ -98,15 +100,15 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(form, "input:checked", 2, "both checkboxes should be checked");
 
         // remove a m2m value by clinking on label
-        await click(form.el, ".o_form_button_edit");
-        await click(form.el.querySelector("div.o_field_widget div.custom-checkbox > label"));
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_edit");
+        await click(target.querySelector("div.o_field_widget div.custom-checkbox > label"));
+        await click(target, ".o_form_button_save");
         assert.deepEqual(
             serverData.models.partner.records[0].timmy,
             [14],
             "should have removed the first element to the many2many"
         );
-        checkboxes = form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input");
+        checkboxes = target.querySelectorAll("div.o_field_widget div.custom-checkbox input");
         assert.notOk(checkboxes[0].checked, "first checkbox should be checked");
         assert.ok(checkboxes[1].checked, "second checkbox should not be checked");
     });
@@ -130,45 +132,45 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsN(
-            form.el,
+            target,
             "div.o_field_widget div.custom-checkbox",
             2,
             "should have fetched and displayed the 2 values of the many2many"
         );
 
         assert.ok(
-            form.el.querySelector("div.o_field_widget div.custom-checkbox input").checked,
+            target.querySelector("div.o_field_widget div.custom-checkbox input").checked,
             "first checkbox should be checked"
         );
         assert.notOk(
-            form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input")[1].checked,
+            target.querySelectorAll("div.o_field_widget div.custom-checkbox input")[1].checked,
             "second checkbox should not be checked"
         );
 
         assert.containsN(
-            form.el,
+            target,
             "div.o_field_widget div.custom-checkbox input:disabled",
             2,
             "the checkboxes should be disabled"
         );
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.containsN(
-            form.el,
+            target,
             "div.o_field_widget div.custom-checkbox input:disabled",
             2,
             "the checkboxes should be disabled"
         );
 
-        await click(form.el.querySelectorAll("div.o_field_widget div.custom-checkbox > label")[1]);
+        await click(target.querySelectorAll("div.o_field_widget div.custom-checkbox > label")[1]);
 
         assert.ok(
-            form.el.querySelector("div.o_field_widget div.custom-checkbox input").checked,
+            target.querySelector("div.o_field_widget div.custom-checkbox input").checked,
             "first checkbox should be checked"
         );
         assert.notOk(
-            form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input")[1].checked,
+            target.querySelectorAll("div.o_field_widget div.custom-checkbox input")[1].checked,
             "second checkbox should not be checked"
         );
     });
@@ -193,21 +195,17 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
-            await click(form.el, ".o_form_button_edit");
+            await click(target, ".o_form_button_edit");
 
-            await click(
-                form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input")[0]
-            );
-            await click(
-                form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input")[1]
-            );
-            await click(form.el, ".o_form_button_save");
+            await click(target.querySelectorAll("div.o_field_widget div.custom-checkbox input")[0]);
+            await click(target.querySelectorAll("div.o_field_widget div.custom-checkbox input")[1]);
+            await click(target, ".o_form_button_save");
             assert.notOk(
-                form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input")[0].checked,
+                target.querySelectorAll("div.o_field_widget div.custom-checkbox input")[0].checked,
                 "first checkbox should not be checked"
             );
             assert.notOk(
-                form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input")[1].checked,
+                target.querySelectorAll("div.o_field_widget div.custom-checkbox input")[1].checked,
                 "second checkbox should not be checked"
             );
         }
@@ -231,25 +229,25 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
-            await click(form.el, ".o_form_button_edit");
+            await click(target, ".o_form_button_edit");
 
             assert.strictEqual(
-                form.el.querySelector(".o_field_widget[name='int_field'] input").value,
+                target.querySelector(".o_field_widget[name='int_field'] input").value,
                 "10"
             );
-            assert.containsN(form.el, ".o_field_widget[name='timmy'] .custom-checkbox", 2);
+            assert.containsN(target, ".o_field_widget[name='timmy'] .custom-checkbox", 2);
             assert.strictEqual(
-                form.el.querySelector(".o_field_widget[name='timmy']").textContent,
+                target.querySelector(".o_field_widget[name='timmy']").textContent,
                 "goldsilver"
             );
 
-            const input = form.el.querySelector(".o_field_widget[name='int_field'] input");
+            const input = target.querySelector(".o_field_widget[name='int_field'] input");
             input.value = 13;
             await triggerEvent(input, null, "change");
 
-            assert.containsOnce(form.el, ".o_field_widget[name='timmy'] .custom-checkbox");
+            assert.containsOnce(target, ".o_field_widget[name='timmy'] .custom-checkbox");
             assert.strictEqual(
-                form.el.querySelector(".o_field_widget[name='timmy']").textContent,
+                target.querySelector(".o_field_widget[name='timmy']").textContent,
                 "silver"
             );
         }
@@ -294,18 +292,18 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.containsN(form, ".o_field_widget[name='timmy'] input[type='checkbox']:checked", 90);
 
         // toggle the last value
-        let checkboxes = form.el.querySelectorAll(
+        let checkboxes = target.querySelectorAll(
             ".o_field_widget[name='timmy'] input[type='checkbox']"
         );
         await click(checkboxes[checkboxes.length - 1]);
 
-        await click(form.el, ".o_form_button_save");
-        checkboxes = form.el.querySelectorAll(
+        await click(target, ".o_form_button_save");
+        checkboxes = target.querySelectorAll(
             ".o_field_widget[name='timmy'] input[type='checkbox']"
         );
         assert.notOk(checkboxes[checkboxes.length - 1].checked);
@@ -358,24 +356,24 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.containsN(
-            form.el,
+            target,
             ".o_field_widget[name='timmy'] input[type='checkbox']",
             100,
             "should only display 100 checkboxes"
         );
         assert.ok(
-            form.el.querySelector(".o_field_widget[name='timmy'] input[type='checkbox']").checked
+            target.querySelector(".o_field_widget[name='timmy'] input[type='checkbox']").checked
         );
 
         // toggle the first value
-        await click(form.el.querySelector(".o_field_widget[name='timmy'] input[type='checkbox']"));
+        await click(target.querySelector(".o_field_widget[name='timmy'] input[type='checkbox']"));
 
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.notOk(
-            form.el.querySelector(".o_field_widget[name='timmy'] input[type='checkbox']").checked
+            target.querySelector(".o_field_widget[name='timmy'] input[type='checkbox']").checked
         );
     });
 });

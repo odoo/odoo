@@ -1,11 +1,14 @@
 /** @odoo-module **/
 
+import { getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -50,7 +53,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.ok("ace" in window, "the ace library should be loaded");
         assert.containsOnce(
-            form.el,
+            target,
             "div.ace_content",
             "should have rendered something with ace editor"
         );

@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { click, triggerEvent } from "../helpers/utils";
+import { click, getFixture, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -59,10 +61,10 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // switch to edit mode
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         // click on the only element (because it's closed) to open the field component
-        await click(form.el, "a");
+        await click(target, "a");
 
         await triggerEvent(document.activeElement, null, "keydown", {
             which: 13, // tab
@@ -70,7 +72,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             document.activeElement,
-            form.el.querySelector('.o_field_widget[name="foo"] input'),
+            target.querySelector('.o_field_widget[name="foo"] input'),
             "foo field should be focused"
         );
     });
@@ -94,27 +96,27 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // switch to edit mode
-            await click(form.el, ".o_form_button_edit");
+            await click(target, ".o_form_button_edit");
 
             assert.hasClass(
-                form.el.querySelectorAll("a:first-child"),
+                target.querySelectorAll("a:first-child"),
                 "o_field_color_picker_color_0",
                 "The no color item doesn't have the right class"
             );
 
-            await click(form.el, "a");
+            await click(target, "a");
 
             assert.hasClass(
-                form.el.querySelectorAll("a:first-child"),
+                target.querySelectorAll("a:first-child"),
                 "o_field_color_picker_color_0",
                 "The no color item doesn't have the right class"
             );
 
-            await click(form.el, ".o_field_color_picker_color_3");
-            await click(form.el, "a");
+            await click(target, ".o_field_color_picker_color_3");
+            await click(target, "a");
 
             assert.hasClass(
-                form.el.querySelectorAll("a:first-child"),
+                target.querySelectorAll("a:first-child"),
                 "o_field_color_picker_color_0",
                 "The no color item doesn't have the right class"
             );
@@ -139,30 +141,30 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // switch to edit mode
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
-        await click(form.el, "a");
+        await click(target, "a");
 
         assert.strictEqual(
-            form.el.querySelectorAll("a").length > 1,
+            target.querySelectorAll("a").length > 1,
             true,
             "there should be more color elements when the component is opened"
         );
 
-        await click(form.el, ".o_field_color_picker_color_3");
+        await click(target, ".o_field_color_picker_color_3");
 
         assert.strictEqual(
-            form.el.querySelectorAll("a").length,
+            target.querySelectorAll("a").length,
             1,
             "there should be one color element when the component is closed"
         );
 
-        await click(form.el, "a");
+        await click(target, "a");
 
-        await click(form.el.querySelector('.o_field_widget[name="foo"] input'));
+        await click(target.querySelector('.o_field_widget[name="foo"] input'));
 
         assert.strictEqual(
-            form.el.querySelectorAll("a").length,
+            target.querySelectorAll("a").length,
             1,
             "there should be one color element when the component is closed"
         );
@@ -183,7 +185,7 @@ QUnit.module("Fields", (hooks) => {
                 </tree>`,
             });
 
-            await click(list.el, ".o_field_color_picker a");
+            await click(target, ".o_field_color_picker a");
 
             assert.strictEqual(
                 document.querySelectorAll(".o_list_renderer").length,
@@ -191,7 +193,7 @@ QUnit.module("Fields", (hooks) => {
                 "The current view should still be a list view"
             );
 
-            await click(list.el, ".o_field_color_picker_color_6");
+            await click(target, ".o_field_color_picker_color_6");
 
             assert.strictEqual(
                 document.querySelectorAll(".o_list_renderer").length,

@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { click, editInput } from "../helpers/utils";
+import { click, editInput, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -53,27 +55,27 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").innerText,
             "44.4%",
             "The value should be displayed properly."
         );
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=float_field] input").value,
+            target.querySelector(".o_field_widget[name=float_field] input").value,
             "44.444",
             "The input should be rendered without the percentage symbol."
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=float_field] span").innerText,
+            target.querySelector(".o_field_widget[name=float_field] span").innerText,
             "%",
             "The input should be followed by a span containing the percentage symbol."
         );
-        const field = form.el.querySelector("input");
-        await editInput(form.el, "input", "24");
+        const field = target.querySelector("input");
+        await editInput(target, "input", "24");
         assert.strictEqual(field.value, "24", "The value should not be formated yet.");
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_save"));
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").innerText,
             "24%",
             "The new value should be formatted properly."
         );

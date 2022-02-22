@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { triggerEvent, nextTick } from "../helpers/utils";
+import { getFixture, triggerEvent, nextTick } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -37,7 +39,7 @@ QUnit.module("Fields", (hooks) => {
             arch: "<form>" + '<field name="document" widget="pdf_viewer"/>' + "</form>",
         });
 
-        assert.hasClass(form.el.querySelector(".o_field_widget"), "o_field_pdf_viewer");
+        assert.hasClass(target.querySelector(".o_field_widget"), "o_field_pdf_viewer");
         assert.containsOnce(
             form,
             ".o_select_file_button:not(.o_hidden)",
@@ -62,14 +64,14 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        assert.hasClass(form.el.querySelector(".o_field_widget"), "o_field_pdf_viewer");
+        assert.hasClass(target.querySelector(".o_field_widget"), "o_field_pdf_viewer");
         assert.containsNone(form, ".o_select_file_button", "there should be no 'Upload' button");
         assert.containsOnce(
             form,
             ".o_field_widget iframe.o_pdfview_iframe",
             "there should be an iframe"
         );
-        const iframeFile = form.el
+        const iframeFile = target
             .querySelector(".o_field_widget iframe.o_pdfview_iframe")
             .src.split("%2Fweb%2Fcontent")[1];
         assert.strictEqual(
@@ -92,7 +94,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(form, ".o_pdfview_iframe", "there is no PDF Viewer");
 
         // Set and trigger the change of a pdf file for the input
-        const fileInput = form.el.querySelector('input[type="file"]');
+        const fileInput = target.querySelector('input[type="file"]');
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(new File(["test"], "test.pdf", { type: "application/pdf" }));
         fileInput.files = dataTransfer.files;
@@ -101,7 +103,7 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
 
         assert.containsOnce(form, ".o_pdfview_iframe", "there is a PDF Viewer");
-        const iframeFile = form.el
+        const iframeFile = target
             .querySelector(".o_field_widget iframe.o_pdfview_iframe")
             .src.split("?file=")[1];
         assert.ok(/^blob%3/.test(iframeFile), "the file starts with 'blob:'");

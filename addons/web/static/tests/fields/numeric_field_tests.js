@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import {
-    makeFakeLocalizationService,
-} from "@web/../tests/helpers/mock_services";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { registry } from "@web/core/registry";
-import { click } from "../helpers/utils";
+import { click, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -218,16 +218,16 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.records[0].monetary = 9.99;
             serverData.models.partner.records[0].currency_id = 1;
 
-            serverData.models.partner.fields.percentage = { string: "Percentage", type: "percentage" };
+            serverData.models.partner.fields.percentage = {
+                string: "Percentage",
+                type: "percentage",
+            };
             serverData.models.partner.records[0].percentage = 0.99;
 
-            registry.category("services").remove("localization")
+            registry.category("services").remove("localization");
             registry
-            .category("services")
-            .add(
-                "localization",
-                makeFakeLocalizationService({ decimal_point: "🇧🇪" })
-            );
+                .category("services")
+                .add("localization", makeFakeLocalizationService({ decimal_point: "🇧🇪" }));
             const form = await makeView({
                 serverData,
                 type: "form",
@@ -246,14 +246,14 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // Record edit mode
-            await click(form.el.querySelector(".o_form_button_edit"));
+            await click(target.querySelector(".o_form_button_edit"));
 
             // Get all inputs
-            const floatFactorField = form.el.querySelector('.o_input[name="float_factor_field"]');
-            const floatInput = form.el.querySelector('.o_input[name="qux"]');
-            const integerInput = form.el.querySelector('.o_input[name="int_field"]');
-            const monetaryInput = form.el.querySelector('.o_input[name="monetary"]');
-            const percentageInput = form.el.querySelector('.o_input[name="percentage"]');
+            const floatFactorField = target.querySelector('.o_input[name="float_factor_field"]');
+            const floatInput = target.querySelector('.o_input[name="qux"]');
+            const integerInput = target.querySelector('.o_input[name="int_field"]');
+            const monetaryInput = target.querySelector('.o_input[name="monetary"]');
+            const percentageInput = target.querySelector('.o_input[name="percentage"]');
 
             // Dispatch numpad "dot" and numpad "comma" keydown events to all inputs and check
             // Numpad "comma" is specific to some countries (Brazil...)

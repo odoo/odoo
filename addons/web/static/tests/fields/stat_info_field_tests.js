@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { click } from "../helpers/utils";
+import { click, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -92,14 +94,12 @@ QUnit.module("Fields", (hooks) => {
 
         // formatFloat renders according to this.field.digits
         assert.strictEqual(
-            form.el.querySelectorAll(".oe_stat_button .o_field_widget .o_stat_value")[0]
-                .textContent,
+            target.querySelectorAll(".oe_stat_button .o_field_widget .o_stat_value")[0].textContent,
             "0.4",
             "Default precision should be [16,1]"
         );
         assert.strictEqual(
-            form.el.querySelectorAll(".oe_stat_button .o_field_widget .o_stat_value")[1]
-                .textContent,
+            target.querySelectorAll(".oe_stat_button .o_field_widget .o_stat_value")[1].textContent,
             "10.00",
             "Currency decimal precision should be 2"
         );
@@ -125,53 +125,53 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            form.el,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "int_field",
             "should have 'int_field' as text"
         );
 
         // switch to edit mode and check the result
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
         assert.containsOnce(
-            form.el,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should still have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should still have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "int_field",
             "should have 'int_field' as text"
         );
 
         // save
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.containsOnce(
-            form.el,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "int_field",
             "should have 'int_field' as text"
         );
@@ -207,48 +207,48 @@ QUnit.module("Fields", (hooks) => {
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "yop",
             "should have 'yop' as text, since it is the value of field foo"
         );
 
         // switch to edit mode and check the result
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
         assert.containsOnce(
             form,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should still have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should still have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "yop",
             "should have 'yop' as text, since it is the value of field foo"
         );
 
         // save
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.containsOnce(
             form,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "yop",
             "should have 'yop' as text, since it is the value of field foo"
         );
@@ -280,48 +280,48 @@ QUnit.module("Fields", (hooks) => {
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.containsNone(
-            form.el,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_text",
             "should not have any label"
         );
 
         // switch to edit mode and check the result
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
         assert.containsOnce(
             form,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should still have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should still have 10 as value"
         );
         assert.containsNone(
-            form.el,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_text",
             "should not have any label"
         );
 
         // save
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.containsOnce(
             form,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
+            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.containsNone(
-            form.el,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_text",
             "should not have any label"
         );

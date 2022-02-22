@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click } from "../helpers/utils";
+import { click, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 const MY_IMAGE =
@@ -9,9 +9,11 @@ const PRODUCT_IMAGE =
     "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -94,36 +96,36 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.hasClass(
-            form.el.querySelector(".o_field_widget[name='document']"),
+            target.querySelector(".o_field_widget[name='document']"),
             "o_field_image",
             "the widget should have the correct class"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget[name='document'] > div > img",
             "the widget should contain an image"
         );
         assert.hasClass(
-            form.el.querySelector(".o_field_widget[name='document'] > div > img"),
+            target.querySelector(".o_field_widget[name='document'] > div > img"),
             "img-fluid",
             "the image should have the correct class"
         );
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_widget[name='document'] > div > img"),
+            target.querySelector(".o_field_widget[name='document'] > div > img"),
             "width",
             "90",
             "the image should correctly set its attributes"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name='document'] > div > img").style.maxWidth,
+            target.querySelector(".o_field_widget[name='document'] > div > img").style.maxWidth,
             "90px",
             "the image should correctly set its attributes"
         );
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector("input.o_input_file").getAttribute("accept"),
+            target.querySelector("input.o_input_file").getAttribute("accept"),
             "image/*",
             'the default value for the attribute "accept" on the "image" widget must be "image/*"'
         );
@@ -168,7 +170,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.hasClass(
-                form.el.querySelector('.o_field_widget[name="document"]'),
+                target.querySelector('.o_field_widget[name="document"]'),
                 "o_field_image",
                 "the widget should have the correct class"
             );
@@ -178,19 +180,18 @@ QUnit.module("Fields", (hooks) => {
                 "the widget should contain an image"
             );
             assert.hasClass(
-                form.el.querySelector(".o_field_widget[name='document'] > div > img"),
+                target.querySelector(".o_field_widget[name='document'] > div > img"),
                 "img-fluid",
                 "the image should have the correct class"
             );
             assert.hasAttrValue(
-                form.el.querySelector(".o_field_widget[name='document'] > div > img"),
+                target.querySelector(".o_field_widget[name='document'] > div > img"),
                 "width",
                 "90",
                 "the image should correctly set its attributes"
             );
             assert.strictEqual(
-                form.el.querySelector(".o_field_widget[name='document'] > div > img").style
-                    .maxWidth,
+                target.querySelector(".o_field_widget[name='document'] > div > img").style.maxWidth,
                 "90px",
                 "the image should correctly set its attributes"
             );
@@ -214,9 +215,9 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
         // The view must be in edit mode
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            form.el.querySelector("input.o_input_file").getAttribute("accept"),
+            target.querySelector("input.o_input_file").getAttribute("accept"),
             ".png,.jpeg",
             "the input should have the correct ``accept`` attribute"
         );
@@ -281,7 +282,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Actual flow: click on an element of the m2m to get its form view
-        await click(form.el, ".oe_kanban_global_click");
+        await click(target, ".oe_kanban_global_click");
         assert.strictEqual($(".modal").length, 1, "The modal should have opened");
         //assert.verifySteps(["The dialog's image should have been fetched"]);
     });
@@ -337,15 +338,15 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
 
         assert.hasClass(
-            form.el.querySelector(".o_form_view"),
+            target.querySelector(".o_form_view"),
             "o_form_editable",
             "form view should still be editable"
         );
         assert.hasClass(
-            form.el.querySelector(".o_field_widget"),
+            target.querySelector(".o_field_widget"),
             "o_field_invalid",
             "image field should be displayed as invalid"
         );

@@ -1,14 +1,16 @@
 /** @odoo-module **/
 
-import { click } from "../helpers/utils";
+import { click, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 const FR_FLAG_URL = "/base/static/img/country_flags/fr.png";
 const EN_FLAG_URL = "/base/static/img/country_flags/gb.png";
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -237,24 +239,24 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.hasClass(
-            form.el.querySelector('div[name="foo"]'),
+            target.querySelector('div[name="foo"]'),
             "o_field_image_url",
             "the widget should have the correct class"
         );
         assert.containsOnce(form, 'div[name="foo"] > img', "the widget should contain an image");
         assert.hasClass(
-            form.el.querySelector('div[name="foo"] > img'),
+            target.querySelector('div[name="foo"] > img'),
             "img-fluid",
             "the image should have the correct class"
         );
         assert.hasAttrValue(
-            form.el.querySelector('div[name="foo"] > img'),
+            target.querySelector('div[name="foo"] > img'),
             "width",
             "90",
             "the image should correctly set its attributes"
         );
         assert.strictEqual(
-            form.el.querySelector('div[name="foo"] > img').style.maxWidth,
+            target.querySelector('div[name="foo"] > img').style.maxWidth,
             "90px",
             "the image should correctly set its attributes"
         );
@@ -314,9 +316,9 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Actual flow: click on an element of the m2m to get its form view
-        await click(form.el.querySelector(".oe_kanban_global_click"));
+        await click(target.querySelector(".oe_kanban_global_click"));
         assert.strictEqual(
-            form.el.querySelector(".modal").length,
+            target.querySelector(".modal").length,
             1,
             "The modal should have opened"
         );

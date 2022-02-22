@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { click } from "../helpers/utils";
+import { click, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -69,36 +71,36 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector("td span.o_row_handle").textContent,
+            target.querySelector("td span.o_row_handle").textContent,
             "",
             "handle should not have any content"
         );
 
         assert.strictEqual(
-            getComputedStyle(form.el.querySelector("td span.o_row_handle")).display,
+            getComputedStyle(target.querySelector("td span.o_row_handle")).display,
             "none",
             "handle should be invisible in readonly mode"
         );
 
-        assert.containsN(form.el, "span.o_row_handle", 2, "should have 2 handles");
+        assert.containsN(target, "span.o_row_handle", 2, "should have 2 handles");
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.hasClass(
-            form.el.querySelector("td"),
+            target.querySelector("td"),
             "o_handle_cell",
             "column widget should be displayed in css class"
         );
 
         assert.notStrictEqual(
-            getComputedStyle(form.el.querySelector("td span.o_row_handle")).display,
+            getComputedStyle(target.querySelector("td span.o_row_handle")).display,
             "none",
             "handle should be visible in edit mode"
         );
 
-        await click(form.el.querySelectorAll("td")[1]);
+        await click(target.querySelectorAll("td")[1]);
         assert.containsOnce(
-            form.el.querySelector("td"),
+            target.querySelector("td"),
             "span.o_row_handle",
             "content of the cell should have been replaced"
         );
@@ -119,7 +121,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        const visibleRowHandles = [...list.el.querySelectorAll(".o_row_handle")].filter(
+        const visibleRowHandles = [...target.querySelectorAll(".o_row_handle")].filter(
             (el) => getComputedStyle(el).display !== "none"
         );
 

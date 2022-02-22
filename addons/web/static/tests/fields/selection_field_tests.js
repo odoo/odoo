@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { click, triggerEvent } from "../helpers/utils";
+import { click, getFixture, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -81,12 +83,12 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: '<tree string="Colors" editable="top">' + '<field name="color"/>' + "</tree>",
         });
-        const elements = Array.from(list.el.querySelectorAll("td div[name='color'] span"));
+        const elements = Array.from(target.querySelectorAll("td div[name='color'] span"));
 
         assert.strictEqual(elements.length, 3, "should have 3 rows with correct value");
         await click(elements[0]);
 
-        const td = list.el.querySelector("tbody tr.o_selected_row td:not(.o_list_record_selector)");
+        const td = target.querySelector("tbody tr.o_selected_row td:not(.o_list_record_selector)");
         assert.containsOnce(td, "select", "td should have a child 'select'");
         assert.strictEqual(td.childNodes.length, 1, "select tag should be only child of td");
     });
@@ -115,72 +117,72 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.containsNone(form.el, "select");
+        assert.containsNone(target, "select");
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name='product_id']").textContent,
+            target.querySelector(".o_field_widget[name='product_id']").textContent,
             "xphone",
             "should have rendered the many2one field correctly"
         );
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_widget[name='product_id'] span"),
+            target.querySelector(".o_field_widget[name='product_id'] span"),
             "raw-value",
             "37",
             "should have set the raw-value attr for many2one field correctly"
         );
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name='trululu']").textContent,
+            target.querySelector(".o_field_widget[name='trululu']").textContent,
             "",
             "should have rendered the unset many2one field correctly"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name='color']").textContent,
+            target.querySelector(".o_field_widget[name='color']").textContent,
             "Red",
             "should have rendered the selection field correctly"
         );
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_widget[name='color'] span"),
+            target.querySelector(".o_field_widget[name='color'] span"),
             "raw-value",
             "red",
             "should have set the raw-value attr for selection field correctly"
         );
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
-        assert.containsN(form.el, "select", 3);
+        assert.containsN(target, "select", 3);
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget[name='product_id'] select option[value='37']",
             "should have fetched xphone option"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget[name='product_id'] select option[value='41']",
             "should have fetched xpad option"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name='product_id'] select").value,
+            target.querySelector(".o_field_widget[name='product_id'] select").value,
             "37",
             "should have correct product_id value"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name='trululu'] select").value,
+            target.querySelector(".o_field_widget[name='trululu'] select").value,
             "false",
             "should not have any value in trululu field"
         );
 
-        const select = form.el.querySelector(".o_field_widget[name='product_id'] select");
+        const select = target.querySelector(".o_field_widget[name='product_id'] select");
         select.value = "41";
         await triggerEvent(select, null, "change");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name='product_id'] select").value,
+            target.querySelector(".o_field_widget[name='product_id'] select").value,
             "41",
             "should have a value of xphone"
         );
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name='color'] select").value,
+            target.querySelector(".o_field_widget[name='color'] select").value,
             `"red"`,
             "should have correct value in color field"
         );
@@ -215,12 +217,12 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "Value O",
             "the displayed value should be 'Value O'"
         );
         assert.doesNotHaveClass(
-            form.el.querySelector(".o_field_widget"),
+            target.querySelector(".o_field_widget"),
             "o_field_empty",
             "should not have class o_field_empty"
         );
@@ -254,12 +256,12 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "",
             "there should be no displayed value"
         );
         assert.hasClass(
-            form.el.querySelector(".o_field_widget"),
+            target.querySelector(".o_field_widget"),
             "o_field_empty",
             "should have class o_field_empty"
         );
@@ -289,13 +291,13 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
-        const select = form.el.querySelector(".o_form_view select");
+        const select = target.querySelector(".o_form_view select");
         select.value = "false";
         await triggerEvent(select, null, "change");
 
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
     });
 
     QUnit.test("field selection with many2ones and special characters", async function (assert) {
@@ -316,10 +318,10 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector("select option[value='4']").textContent,
+            target.querySelector("select option[value='4']").textContent,
             "<span>hey</span>"
         );
     });
@@ -360,7 +362,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await click(form.el, ".o_form_button_edit");
+            await click(target, ".o_form_button_edit");
 
             assert.containsN(
                 form,
@@ -370,7 +372,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // trigger an onchange that will update the domain
-            const input = form.el.querySelector(".o_field_widget[name='int_field'] input");
+            const input = target.querySelector(".o_field_widget[name='int_field'] input");
             input.value = 2;
             await triggerEvent(input, null, "change");
 
@@ -408,28 +410,28 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.containsN(
-            form.el.querySelector(".o_field_widget[name='color']"),
+            target.querySelector(".o_field_widget[name='color']"),
             "option",
             3,
             "Three options in non required field"
         );
         assert.containsN(
-            form.el.querySelector(".o_field_widget[name='feedback_value']"),
+            target.querySelector(".o_field_widget[name='feedback_value']"),
             "option",
             2,
             "Three options in required field"
         );
 
         // change value to update widget modifier values
-        const select = form.el.querySelector(".o_field_widget[name='feedback_value'] select");
+        const select = target.querySelector(".o_field_widget[name='feedback_value'] select");
         select.value = `"bad"`;
         await triggerEvent(select, null, "change");
 
         assert.containsN(
-            form.el.querySelector(".o_field_widget[name='color']"),
+            target.querySelector(".o_field_widget[name='color']"),
             "option",
             2,
             "Three options in non required field"

@@ -1,11 +1,14 @@
 /** @odoo-module **/
 
+import { getFixture } from "../helpers/utils";
 import { setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -1494,7 +1497,7 @@ QUnit.module("Fields", (hooks) => {
         await testUtils.form.clickSave(form);
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_many2manytags").innerText.trim(),
+            target.querySelector(".o_field_many2manytags").innerText.trim(),
             "new value"
         );
 

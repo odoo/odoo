@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { click } from "../helpers/utils";
+import { click, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -38,19 +40,19 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            form.el,
+            target,
             ".custom-checkbox.o_boolean_toggle",
             "Boolean toggle widget applied to boolean field"
         );
         assert.containsOnce(
-            form.el,
+            target,
             ".custom-checkbox.o_boolean_toggle .fa-check-circle",
             "Boolean toggle should have fa-check-circle icon"
         );
 
-        await click(form.el, ".o_field_widget[name='bar'] input");
+        await click(target, ".o_field_widget[name='bar'] input");
         assert.containsOnce(
-            form.el,
+            target,
             ".custom-checkbox.o_boolean_toggle .fa-times-circle",
             "Boolean toggle should have fa-times-circle icon"
         );
@@ -70,10 +72,10 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        assert.containsOnce(form.el, ".o_boolean_toggle input:disabled:checked");
+        assert.containsOnce(target, ".o_boolean_toggle input:disabled:checked");
 
-        await click(form.el, ".o_field_widget[name='bar'] label");
+        await click(target, ".o_field_widget[name='bar'] label");
 
-        assert.containsOnce(form.el, ".o_boolean_toggle input:disabled:checked");
+        assert.containsOnce(target, ".o_boolean_toggle input:disabled:checked");
     });
 });

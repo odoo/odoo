@@ -1,13 +1,15 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { click, nextTick } from "../helpers/utils";
+import { click, getFixture, nextTick } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -207,7 +209,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(form, ".dropdown-menu", "there should not be a dropdown");
 
         // Click on the status button to make the dropdown appear
-        await click(form.el, ".o_field_widget.o_field_state_selection .o_status");
+        await click(target, ".o_field_widget.o_field_state_selection .o_status");
         assert.containsOnce(document.body, ".dropdown-menu", "there should be a dropdown");
         assert.containsN(
             form,
@@ -217,7 +219,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Click on the first option, "Normal"
-        await click(form.el.querySelector(".dropdown-menu .dropdown-item"));
+        await click(target.querySelector(".dropdown-menu .dropdown-item"));
         assert.containsNone(form, ".dropdown-menu", "there should not be a dropdown anymore");
         assert.containsNone(
             form,
@@ -236,7 +238,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // switch to edit mode and check the result
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
         assert.containsNone(form, ".dropdown-menu", "there should still not be a dropdown");
         assert.containsNone(
             form,
@@ -255,7 +257,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Click on the status button to make the dropdown appear
-        await click(form.el, ".o_field_widget.o_field_state_selection .o_status");
+        await click(target, ".o_field_widget.o_field_state_selection .o_status");
         assert.containsOnce(form, ".dropdown-menu", "there should be a dropdown");
         assert.containsN(
             form,
@@ -265,7 +267,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Click on the last option, "Done"
-        await click(form.el, ".dropdown-menu .dropdown-item:last-child");
+        await click(target, ".dropdown-menu .dropdown-item:last-child");
         assert.containsNone(form, ".dropdown-menu", "there should not be a dropdown anymore");
         assert.containsNone(
             form,
@@ -279,7 +281,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // save
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_save"));
         assert.containsNone(form, ".dropdown-menu", "there should still not be a dropdown anymore");
         assert.containsNone(
             form,
@@ -304,11 +306,11 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        assert.hasClass(form.el.querySelector(".o_field_state_selection"), "o_readonly_modifier");
-        assert.hasClass(form.el.querySelector(".o_field_state_selection button"), "disabled");
-        assert.isNotVisible(form.el.querySelector(".dropdown-menu"));
-        await click(form.el, ".o_field_state_selection span.o_status");
-        assert.isNotVisible(form.el.querySelector(".dropdown-menu"));
+        assert.hasClass(target.querySelector(".o_field_state_selection"), "o_readonly_modifier");
+        assert.hasClass(target.querySelector(".o_field_state_selection button"), "disabled");
+        assert.isNotVisible(target.querySelector(".dropdown-menu"));
+        await click(target, ".o_field_state_selection span.o_status");
+        assert.isNotVisible(target.querySelector(".dropdown-menu"));
     });
 
     QUnit.test("StateSelectionField for list view with hide_label option", async function (assert) {
@@ -345,7 +347,7 @@ QUnit.module("Fields", (hooks) => {
             "should have ten status selection widgets"
         );
         const selection = Array.from(
-            list.el.querySelectorAll(
+            target.querySelectorAll(
                 ".o_state_selection_cell .o_field_state_selection[name=selection] span.o_status_label"
             )
         );
@@ -406,9 +408,9 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown");
 
         // Click on the status button to make the dropdown appear
-        let cell = list.el.querySelector("tbody td.o_state_selection_cell");
+        let cell = target.querySelector("tbody td.o_state_selection_cell");
         await click(
-            list.el.querySelector(".o_state_selection_cell .o_field_state_selection span.o_status")
+            target.querySelector(".o_state_selection_cell .o_field_state_selection span.o_status")
         );
         assert.doesNotHaveClass(
             cell.parentElement,
@@ -424,7 +426,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Click on the first option, "Normal"
-        await click(list.el.querySelector(".dropdown-menu .dropdown-item"));
+        await click(target.querySelector(".dropdown-menu .dropdown-item"));
         assert.containsN(
             list,
             ".o_state_selection_cell .o_field_state_selection span.o_status",
@@ -445,7 +447,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(list, "tr.o_selected_row", "should not be in edit mode");
 
         // switch to edit mode and check the result
-        cell = list.el.querySelector("tbody td.o_state_selection_cell");
+        cell = target.querySelector("tbody td.o_state_selection_cell");
         await click(cell);
         assert.hasClass(cell.parentElement, "o_selected_row", "should now be in edit mode");
         assert.containsN(
@@ -468,7 +470,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Click on the status button to make the dropdown appear
         await click(
-            list.el.querySelector(".o_state_selection_cell .o_field_state_selection span.o_status")
+            target.querySelector(".o_state_selection_cell .o_field_state_selection span.o_status")
         );
         assert.containsOnce(list, ".dropdown-menu", "there should be a dropdown");
         assert.containsN(
@@ -479,10 +481,10 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Click on another row
-        const lastCell = list.el.querySelector("tbody td.o_state_selection_cell:last-child");
+        const lastCell = target.querySelector("tbody td.o_state_selection_cell:last-child");
         await click(lastCell);
         assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown anymore");
-        const firstCell = list.el.querySelector("tbody td.o_state_selection_cell");
+        const firstCell = target.querySelector("tbody td.o_state_selection_cell");
         assert.doesNotHaveClass(
             firstCell.parentElement,
             "o_selected_row",
@@ -496,7 +498,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Click on the last status button to make the dropdown appear
         await click(
-            list.el.querySelectorAll(
+            target.querySelectorAll(
                 ".o_state_selection_cell .o_field_state_selection span.o_status"
             )[4]
         );
@@ -509,7 +511,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Click on the last option, "Done"
-        await click(list.el, ".dropdown-menu .dropdown-item:last-child");
+        await click(target, ".dropdown-menu .dropdown-item:last-child");
         assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown anymore");
         assert.containsN(
             list,
@@ -531,7 +533,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown");
 
         // save
-        await click(list.el.querySelector(".o_list_button_save"));
+        await click(target.querySelector(".o_list_button_save"));
         assert.containsN(
             list,
             ".o_state_selection_cell .o_field_state_selection span.o_status",

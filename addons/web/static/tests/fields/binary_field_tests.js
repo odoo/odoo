@@ -3,16 +3,25 @@
 import { browser } from "@web/core/browser/browser";
 import { download } from "@web/core/network/download";
 import { makeMockXHR } from "../helpers/mock_services";
-import { click, editInput, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+} from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 import { registerCleanup } from "../helpers/cleanup";
 import { FileUploader } from "@web/fields/file_handler";
 import { patch, unpatch } from "@web/core/utils/patch";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -86,12 +95,12 @@ QUnit.module("Fields", (hooks) => {
             "the binary field should be rendered as a downloadable link in readonly"
         );
         assert.strictEqual(
-            form.el.querySelector('.o_field_widget[name="document"] span').innerText.trim(),
+            target.querySelector('.o_field_widget[name="document"] span').innerText.trim(),
             "coucou.txt",
             "the binary field should display the name of the file in the link"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_char").innerText,
+            target.querySelector(".o_field_char").innerText,
             "coucou.txt",
             "the filename field should have the file name as value"
         );
@@ -109,10 +118,10 @@ QUnit.module("Fields", (hooks) => {
         };
         document.addEventListener("click", downloadOnClick);
         registerCleanup(() => document.removeEventListener("click", downloadOnClick));
-        await click(form.el.querySelector('.o_field_widget[name="document"] a'));
+        await click(target.querySelector('.o_field_widget[name="document"] a'));
         await prom;
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.containsNone(
             form,
@@ -120,7 +129,7 @@ QUnit.module("Fields", (hooks) => {
             "the binary field should not be rendered as a downloadable link in edit"
         );
         assert.strictEqual(
-            form.el.querySelector('.o_field_widget[name="document"] div.o_field_binary_file span')
+            target.querySelector('.o_field_widget[name="document"] div.o_field_binary_file span')
                 .innerText,
             "coucou.txt",
             "the binary field should display the file name in the input edit mode"
@@ -131,15 +140,15 @@ QUnit.module("Fields", (hooks) => {
             "there shoud be a button to clear the file"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_char input").value,
+            target.querySelector(".o_field_char input").value,
             "coucou.txt",
             "the filename field should have the file name as value"
         );
 
-        await click(form.el.querySelector(".o_field_binary_file .o_clear_file_button"));
+        await click(target.querySelector(".o_field_binary_file .o_clear_file_button"));
 
         assert.isNotVisible(
-            form.el.querySelector(".o_field_binary_file input"),
+            target.querySelector(".o_field_binary_file input"),
             "the input should be hidden"
         );
         assert.containsOnce(
@@ -148,12 +157,12 @@ QUnit.module("Fields", (hooks) => {
             "there should be a button to upload the file"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_char input").value,
+            target.querySelector(".o_field_char input").value,
             "",
             "the filename field should be empty since we removed the file"
         );
 
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.containsNone(
             form,
             '.o_field_widget[name="document"] a > .fa-download',
@@ -181,7 +190,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -193,25 +202,25 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            await click(form.el, ".o_form_button_edit");
+            await click(target, ".o_form_button_edit");
 
             // We need to convert the input type since we can't programmatically set
             // the value of a file input. The patch of the onFileChange will create
             // a file object to be used by the component.
-            form.el.querySelector(".o_field_binary_file input").setAttribute("type", "text");
-            await editInput(form.el, ".o_field_binary_file input", "fake_file");
+            target.querySelector(".o_field_binary_file input").setAttribute("type", "text");
+            await editInput(target, ".o_field_binary_file input", "fake_file");
             await nextTick();
 
             assert.strictEqual(
-                form.el.querySelector(".o_field_binary_file span").innerText,
+                target.querySelector(".o_field_binary_file span").innerText,
                 "fake_file.txt",
                 'displayed value should be changed to "fake_file.txt"'
             );
 
-            await click(form.el.querySelector(".o_clear_file_button"));
+            await click(target.querySelector(".o_clear_file_button"));
 
             assert.strictEqual(
-                form.el.querySelector(".o_input_file").value,
+                target.querySelector(".o_input_file").value,
                 "",
                 "input value should be empty"
             );
@@ -223,7 +232,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("BinaryField: option accepted_file_extensions", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -232,7 +241,7 @@ QUnit.module("Fields", (hooks) => {
                    </form>`,
         });
         assert.strictEqual(
-            form.el.querySelector("input.o_input_file").getAttribute("accept"),
+            target.querySelector("input.o_input_file").getAttribute("accept"),
             ".dat,.bin",
             "the input should have the correct ``accept`` attribute"
         );
@@ -270,7 +279,7 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            await click(form.el, ".o_form_button_create");
+            await click(target, ".o_form_button_create");
             await testUtils.fields.many2one.clickOpenDropdown("product_id");
             await testUtils.fields.many2one.clickHighlightedItem("product_id");
 
@@ -285,7 +294,7 @@ QUnit.module("Fields", (hooks) => {
                 "The download icon should not be present"
             );
 
-            var link = form.el.querySelector('.o_field_widget[name="document"] a');
+            var link = target.querySelector('.o_field_widget[name="document"] a');
             assert.ok(link.is(":hidden"), "the link element should not be visible");
 
             assert.verifySteps([]); // We shouldn't have passed through steps

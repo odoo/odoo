@@ -14,7 +14,6 @@ let target;
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
-
         serverData = {
             models: {
                 partner: {
@@ -177,33 +176,33 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "yop",
             "the value should be displayed properly"
         );
 
         // switch to edit mode and check the result
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
         assert.containsOnce(
-            form.el,
+            target,
             ".o_field_widget input[type='text']",
             "should have an input for the char field"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input[type='text']").value,
+            target.querySelector(".o_field_widget input[type='text']").value,
             "yop",
             "input should contain field value in edit mode"
         );
 
         // change value in edit mode
-        const input = form.el.querySelector(".o_field_widget input[type='text']");
+        const input = target.querySelector(".o_field_widget input[type='text']");
         input.value = "limbo";
         await triggerEvent(input, null, "change");
 
         // save
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "limbo",
             "the new value should be displayed"
         );
@@ -235,14 +234,14 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await click(form.el, ".o_form_button_edit");
+            await click(target, ".o_form_button_edit");
 
-            const input = form.el.querySelector(".o_field_widget input[type='text']");
+            const input = target.querySelector(".o_field_widget input[type='text']");
             input.value = "";
             await triggerEvent(input, null, "change");
 
             // save
-            await click(form.el, ".o_form_button_save");
+            await click(target, ".o_form_button_save");
         }
     );
 
@@ -267,10 +266,10 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.hasAttrValue(
-            form.el.querySelector("input"),
+            target.querySelector("input"),
             "maxlength",
             "5",
             "maxlength attribute should have been set correctly on the input"
@@ -291,20 +290,15 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        assert.containsN(
-            list.el,
-            "tbody td:not(.o_list_record_selector)",
-            5,
-            "should have 5 cells"
-        );
+        assert.containsN(target, "tbody td:not(.o_list_record_selector)", 5, "should have 5 cells");
         assert.strictEqual(
-            list.el.querySelector("tbody td:not(.o_list_record_selector)").textContent,
+            target.querySelector("tbody td:not(.o_list_record_selector)").textContent,
             "yop",
             "value should be displayed properly as text"
         );
 
         // Edit a line and check the result
-        let cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
+        let cell = target.querySelector("tbody td:not(.o_list_record_selector)");
         await click(cell);
         assert.hasClass(cell.parentElement, "o_selected_row", "should be set as edit mode");
         assert.strictEqual(
@@ -319,14 +313,14 @@ QUnit.module("Fields", (hooks) => {
 
         // save
         await click(list, ".o_list_button_save");
-        cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
+        cell = target.querySelector("tbody td:not(.o_list_record_selector)");
         assert.doesNotHaveClass(
             cell.parentElement,
             "o_selected_row",
             "should not be in edit mode anymore"
         );
         assert.strictEqual(
-            list.el.querySelector("tbody td:not(.o_list_record_selector)").textContent,
+            target.querySelector("tbody td:not(.o_list_record_selector)").textContent,
             "brolo",
             "value should be properly updated"
         );
@@ -612,14 +606,14 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await click(form.el, ".o_form_button_edit");
-        const input = form.el.querySelector("input");
+        await click(target, ".o_form_button_edit");
+        const input = target.querySelector("input");
         input.value = "<script>throw Error();</script>";
         await triggerEvent(input, null, "change");
 
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "<script>throw Error();</script>",
             "the value should have been properly escaped"
         );
@@ -647,27 +641,27 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
-        let input = form.el.querySelector(".o_field_widget[name='foo'] input");
+        let input = target.querySelector(".o_field_widget[name='foo'] input");
         input.value = "  abc  ";
         await triggerEvent(input, null, "change");
 
-        input = form.el.querySelector(".o_field_widget[name='foo2'] input");
+        input = target.querySelector(".o_field_widget[name='foo2'] input");
         input.value = "  def  ";
         await triggerEvent(input, null, "change");
 
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
 
         // edit mode
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name='foo'] input").value,
+            target.querySelector(".o_field_widget[name='foo'] input").value,
             "abc",
             "Foo value should have been trimmed"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name='foo2'] input").value,
+            target.querySelector(".o_field_widget[name='foo2'] input").value,
             "  def  ",
             "Foo2 value should not have been trimmed"
         );
@@ -850,26 +844,26 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.notEqual(
-            form.el.querySelector(".o_field_char").textContent,
+            target.querySelector(".o_field_char").textContent,
             "yop",
             "password field value should not be visible in read mode"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_char").textContent,
+            target.querySelector(".o_field_char").textContent,
             "***",
             "password field value should be hidden with '*' in read mode"
         );
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_char input"),
+            target.querySelector(".o_field_char input"),
             "type",
             "password",
             "password field input should be with type 'password' in edit mode"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_char input").value,
+            target.querySelector(".o_field_char input").value,
             "yop",
             "password field input value should be the (non-hidden) password value"
         );
@@ -893,21 +887,21 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_char").textContent,
+            target.querySelector(".o_field_char").textContent,
             "",
             "password field value should be empty in read mode"
         );
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_char input"),
+            target.querySelector(".o_field_char input"),
             "type",
             "password",
             "password field input should be with type 'password' in edit mode"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_char input").value,
+            target.querySelector(".o_field_char input").value,
             "",
             "password field input value should be the (non-hidden, empty) password value"
         );

@@ -1,13 +1,15 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { click, patchWithCleanup } from "../helpers/utils";
+import { click, getFixture, patchWithCleanup } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -320,15 +322,15 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.hasClass(
-            form.el.querySelector(".o_statusbar_status button[data-value='4']"),
+            target.querySelector(".o_statusbar_status button[data-value='4']"),
             "btn-primary"
         );
         assert.hasClass(
-            form.el.querySelector(".o_statusbar_status button[data-value='4']"),
+            target.querySelector(".o_statusbar_status button[data-value='4']"),
             "disabled"
         );
 
-        const clickableButtons = form.el.querySelectorAll(
+        const clickableButtons = target.querySelectorAll(
             ".o_statusbar_status button.btn-secondary:not(.dropdown-toggle):not(:disabled)"
         );
         assert.strictEqual(clickableButtons.length, 2);
@@ -336,11 +338,11 @@ QUnit.module("Fields", (hooks) => {
         await click(clickableButtons[clickableButtons.length - 1]); // (last is visually the first here (css))
 
         assert.hasClass(
-            form.el.querySelector(".o_statusbar_status button[data-value='1']"),
+            target.querySelector(".o_statusbar_status button[data-value='1']"),
             "btn-primary"
         );
         assert.hasClass(
-            form.el.querySelector(".o_statusbar_status button[data-value='1']"),
+            target.querySelector(".o_statusbar_status button[data-value='1']"),
             "disabled"
         );
     });
@@ -364,9 +366,9 @@ QUnit.module("Fields", (hooks) => {
             // config: { device: { isMobile: false } },
         });
 
-        assert.doesNotHaveClass(form.el.querySelector(".o_statusbar_status"), "o_field_empty");
+        assert.doesNotHaveClass(target.querySelector(".o_statusbar_status"), "o_field_empty");
         assert.strictEqual(
-            form.el.querySelector(".o_statusbar_status").children.length,
+            target.querySelector(".o_statusbar_status").children.length,
             0,
             "statusbar widget should be empty"
         );
@@ -422,8 +424,8 @@ QUnit.module("Fields", (hooks) => {
             // config: { device: { isMobile: false } },
         });
 
-        assert.doesNotHaveClass(form.el.querySelector(".o_statusbar_status"), "o_field_empty");
-        assert.containsN(form.el, ".o_statusbar_status button:visible", 2);
+        assert.doesNotHaveClass(target.querySelector(".o_statusbar_status"), "o_field_empty");
+        assert.containsN(target, ".o_statusbar_status button:visible", 2);
     });
 
     QUnit.skipWOWL("statusbar with domain but no value (create mode)", async function (assert) {
@@ -503,10 +505,10 @@ QUnit.module("Fields", (hooks) => {
                 // config: { device: { isMobile: false } },
             });
 
-            await click(form.el, ".o_form_button_edit");
-            await click(form.el, ".o_statusbar_status .dropdown-toggle");
+            await click(target, ".o_form_button_edit");
+            await click(target, ".o_statusbar_status .dropdown-toggle");
 
-            const status = form.el.querySelectorAll(".o_statusbar_status");
+            const status = target.querySelectorAll(".o_statusbar_status");
             assert.containsOnce(status[0], ".dropdown-item.disabled");
             assert.containsOnce(status[status.length - 1], "button.disabled");
         }

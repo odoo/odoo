@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { click, patchDate, patchTimeZone, triggerEvents } from "../helpers/utils";
+import { click, getFixture, patchDate, patchTimeZone, triggerEvents } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -225,7 +227,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        const cells = list.el.querySelectorAll(".o_data_cell");
+        const cells = target.querySelectorAll(".o_data_cell");
         assert.strictEqual(cells[0].textContent, "Today");
         assert.strictEqual(cells[1].textContent, "Tomorrow");
         assert.strictEqual(cells[2].textContent, "Yesterday");
@@ -289,8 +291,8 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
-            const cells = list.el.querySelectorAll(".o_data_cell");
-            const rows = list.el.querySelectorAll(".o_data_row");
+            const cells = target.querySelectorAll(".o_data_cell");
+            const rows = target.querySelectorAll(".o_data_row");
 
             assert.strictEqual(cells[0].textContent, "Today");
             assert.strictEqual(cells[1].textContent, "Tomorrow");
@@ -301,15 +303,15 @@ QUnit.module("Fields", (hooks) => {
 
             await click(rows[0], ".o_data_cell");
             assert.containsOnce(
-                list.el,
+                target,
                 "input.o_datepicker_input",
                 "should have date picker input"
             );
 
-            const input = list.el.querySelector(".o_datepicker_input");
+            const input = target.querySelector(".o_datepicker_input");
             input.value = "blabla";
             await triggerEvents(input, null, ["input", "change"]);
-            await click(list.el);
+            await click(target);
 
             assert.containsNone(document.body, ".modal");
             assert.strictEqual(
@@ -355,8 +357,8 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
-            const cells = list.el.querySelectorAll(".o_data_cell");
-            const rows = list.el.querySelectorAll(".o_data_row");
+            const cells = target.querySelectorAll(".o_data_cell");
+            const rows = target.querySelectorAll(".o_data_row");
 
             assert.strictEqual(cells[0].textContent, "Today");
             assert.strictEqual(cells[1].textContent, "Tomorrow");
@@ -367,15 +369,15 @@ QUnit.module("Fields", (hooks) => {
 
             await click(rows[0], ".o_data_cell");
             assert.containsOnce(
-                list.el,
+                target,
                 "input.o_datepicker_input",
                 "should have date picker input"
             );
 
-            const input = list.el.querySelector(".o_datepicker_input");
+            const input = target.querySelector(".o_datepicker_input");
             input.value = "blabla";
             await triggerEvents(input, null, ["input", "change"]);
-            await click(list.el);
+            await click(target);
 
             assert.containsNone(document.body, ".modal");
             assert.strictEqual(cells[0].textContent, "Today");
@@ -403,19 +405,19 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Today");
+        assert.strictEqual(target.querySelector(".o_field_widget").textContent, "Today");
         assert.hasClass(
-            form.el.querySelector(".o_field_widget > div "),
+            target.querySelector(".o_field_widget > div "),
             "font-weight-bold text-warning"
         );
 
         // in edit mode, this widget should be editable.
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
-        assert.containsOnce(form.el, ".o_form_editable");
-        assert.containsOnce(form.el, "div.o_field_widget[name='date'] .o_datepicker");
+        assert.containsOnce(target, ".o_form_editable");
+        assert.containsOnce(target, "div.o_field_widget[name='date'] .o_datepicker");
 
-        await click(form.el.querySelector(".o_datepicker .o_datepicker_input"));
+        await click(target.querySelector(".o_datepicker .o_datepicker_input"));
         assert.containsOnce(
             document.body,
             ".bootstrap-datetimepicker-widget",
@@ -423,15 +425,15 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/09/2017']");
-        await click(form.el, ".o_form_button_save");
-        assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Tomorrow");
+        await click(target, ".o_form_button_save");
+        assert.strictEqual(target.querySelector(".o_field_widget").textContent, "Tomorrow");
 
-        await click(form.el, ".o_form_button_edit");
-        await click(form.el.querySelector(".o_datepicker .o_datepicker_input"));
+        await click(target, ".o_form_button_edit");
+        await click(target.querySelector(".o_datepicker .o_datepicker_input"));
         await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/07/2017']");
-        await click(form.el, ".o_form_button_save");
-        assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Yesterday");
-        assert.hasClass(form.el.querySelector(".o_field_widget > div"), "text-danger");
+        await click(target, ".o_form_button_save");
+        assert.strictEqual(target.querySelector(".o_field_widget").textContent, "Yesterday");
+        assert.hasClass(target.querySelector(".o_field_widget > div"), "text-danger");
     });
 
     QUnit.test("RemainingDaysField on a datetime field in form view", async function (assert) {
@@ -453,16 +455,16 @@ QUnit.module("Fields", (hooks) => {
                 </form>
             `,
         });
-        assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Today");
-        assert.hasClass(form.el.querySelector(".o_field_widget > div"), "text-warning");
+        assert.strictEqual(target.querySelector(".o_field_widget").textContent, "Today");
+        assert.hasClass(target.querySelector(".o_field_widget > div"), "text-warning");
 
         // in edit mode, this widget should be editable.
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
-        assert.containsOnce(form.el, ".o_form_editable");
-        assert.containsOnce(form.el, "div.o_field_widget[name='datetime'] .o_datepicker");
+        assert.containsOnce(target, ".o_form_editable");
+        assert.containsOnce(target, "div.o_field_widget[name='datetime'] .o_datepicker");
 
-        await click(form.el.querySelector(".o_datepicker .o_datepicker_input"));
+        await click(target.querySelector(".o_datepicker .o_datepicker_input"));
         assert.containsOnce(
             document.body,
             ".bootstrap-datetimepicker-widget",
@@ -471,8 +473,8 @@ QUnit.module("Fields", (hooks) => {
 
         await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/09/2017']");
         await click(document.body, "a[data-action='close']");
-        await click(form.el, ".o_form_button_save");
-        assert.strictEqual(form.el.querySelector(".o_field_widget > div").textContent, "Tomorrow");
+        await click(target, ".o_form_button_save");
+        assert.strictEqual(target.querySelector(".o_field_widget > div").textContent, "Tomorrow");
     });
 
     QUnit.test(
@@ -504,62 +506,56 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
-            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[0].textContent, "Today");
-            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[1].textContent, "Tomorrow");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[0].textContent, "Today");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[1].textContent, "Tomorrow");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[2].textContent, "Yesterday");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[3].textContent, "In 2 days");
             assert.strictEqual(
-                list.el.querySelectorAll(".o_data_cell")[2].textContent,
-                "Yesterday"
-            );
-            assert.strictEqual(
-                list.el.querySelectorAll(".o_data_cell")[3].textContent,
-                "In 2 days"
-            );
-            assert.strictEqual(
-                list.el.querySelectorAll(".o_data_cell")[4].textContent,
+                target.querySelectorAll(".o_data_cell")[4].textContent,
                 "3 days ago"
             );
             assert.strictEqual(
-                list.el.querySelectorAll(".o_data_cell")[5].textContent,
+                target.querySelectorAll(".o_data_cell")[5].textContent,
                 "02/08/2018"
             );
             assert.strictEqual(
-                list.el.querySelectorAll(".o_data_cell")[6].textContent,
+                target.querySelectorAll(".o_data_cell")[6].textContent,
                 "06/08/2017"
             );
-            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[7].textContent, "");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[7].textContent, "");
 
             assert.hasAttrValue(
-                list.el.querySelector(".o_data_cell .o_field_widget div"),
+                target.querySelector(".o_data_cell .o_field_widget div"),
                 "title",
                 "10/08/2017"
             );
 
             assert.hasClass(
-                list.el.querySelectorAll(".o_data_cell div div")[0],
+                target.querySelectorAll(".o_data_cell div div")[0],
                 "font-weight-bold text-warning"
             );
             assert.doesNotHaveClass(
-                list.el.querySelectorAll(".o_data_cell div div")[1],
+                target.querySelectorAll(".o_data_cell div div")[1],
                 "font-weight-bold text-warning text-danger"
             );
             assert.hasClass(
-                list.el.querySelectorAll(".o_data_cell div div")[2],
+                target.querySelectorAll(".o_data_cell div div")[2],
                 "font-weight-bold text-danger"
             );
             assert.doesNotHaveClass(
-                list.el.querySelectorAll(".o_data_cell div div")[3],
+                target.querySelectorAll(".o_data_cell div div")[3],
                 "font-weight-bold text-warning text-danger"
             );
             assert.hasClass(
-                list.el.querySelectorAll(".o_data_cell div div")[4],
+                target.querySelectorAll(".o_data_cell div div")[4],
                 "font-weight-bold text-danger"
             );
             assert.doesNotHaveClass(
-                list.el.querySelectorAll(".o_data_cell div div")[5],
+                target.querySelectorAll(".o_data_cell div div")[5],
                 "font-weight-bold text-warning text-danger"
             );
             assert.hasClass(
-                list.el.querySelectorAll(".o_data_cell div div")[6],
+                target.querySelectorAll(".o_data_cell div div")[6],
                 "font-weight-bold text-danger"
             );
         }
@@ -591,20 +587,14 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
-            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[0].textContent, "Tomorrow");
-            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[1].textContent, "Tomorrow");
-            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[2].textContent, "Today");
-            assert.strictEqual(
-                list.el.querySelectorAll(".o_data_cell")[3].textContent,
-                "Yesterday"
-            );
-            assert.strictEqual(
-                list.el.querySelectorAll(".o_data_cell")[4].textContent,
-                "In 2 days"
-            );
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[0].textContent, "Tomorrow");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[1].textContent, "Tomorrow");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[2].textContent, "Today");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[3].textContent, "Yesterday");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[4].textContent, "In 2 days");
 
             assert.hasAttrValue(
-                list.el.querySelector(".o_data_cell .o_field_widget div"),
+                target.querySelector(".o_data_cell .o_field_widget div"),
                 "title",
                 "10/09/2017"
             );
@@ -635,14 +625,14 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[0].textContent, "Today");
-        assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[1].textContent, "Tomorrow");
-        assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[2].textContent, "Yesterday");
-        assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[3].textContent, "In 2 days");
-        assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[4].textContent, "3 days ago");
+        assert.strictEqual(target.querySelectorAll(".o_data_cell")[0].textContent, "Today");
+        assert.strictEqual(target.querySelectorAll(".o_data_cell")[1].textContent, "Tomorrow");
+        assert.strictEqual(target.querySelectorAll(".o_data_cell")[2].textContent, "Yesterday");
+        assert.strictEqual(target.querySelectorAll(".o_data_cell")[3].textContent, "In 2 days");
+        assert.strictEqual(target.querySelectorAll(".o_data_cell")[4].textContent, "3 days ago");
 
         assert.hasAttrValue(
-            list.el.querySelector(".o_data_cell .o_field_widget div"),
+            target.querySelector(".o_data_cell .o_field_widget div"),
             "title",
             "10/08/2017"
         );
@@ -674,15 +664,12 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
-            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[0].textContent, "Today");
-            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[1].textContent, "Today");
-            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[2].textContent, "Tomorrow");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[0].textContent, "Today");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[1].textContent, "Today");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[2].textContent, "Tomorrow");
+            assert.strictEqual(target.querySelectorAll(".o_data_cell")[3].textContent, "Yesterday");
             assert.strictEqual(
-                list.el.querySelectorAll(".o_data_cell")[3].textContent,
-                "Yesterday"
-            );
-            assert.strictEqual(
-                list.el.querySelectorAll(".o_data_cell")[4].textContent,
+                target.querySelectorAll(".o_data_cell")[4].textContent,
                 "2 days ago"
             );
         }

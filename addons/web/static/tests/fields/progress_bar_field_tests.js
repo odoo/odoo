@@ -5,13 +5,15 @@ import {
     makeFakeLocalizationService,
 } from "@web/../tests/helpers/mock_services";
 import { registry } from "@web/core/registry";
-import { click, editInput } from "../helpers/utils";
+import { click, editInput, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -86,18 +88,18 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector(".o_progressbar_value").innerText,
+            target.querySelector(".o_progressbar_value").innerText,
             "10 / 2",
             "The initial value of the progress bar should be correct"
         );
         // The view should be in edit mode
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
 
-        await editInput(form.el, ".o_field_widget[name=display_name] input", "new name");
-        await click(form.el.querySelector(".o_form_button_save"));
+        await editInput(target, ".o_field_widget[name=display_name] input", "new name");
+        await click(target.querySelector(".o_form_button_save"));
 
         assert.strictEqual(
-            form.el.querySelector(".o_progressbar_value").innerText,
+            target.querySelector(".o_progressbar_value").innerText,
             "999 / 5",
             "The value of the progress bar should be correct after the update"
         );
@@ -130,25 +132,25 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // The view should be in edit mode by default
-            await click(form.el.querySelector(".o_form_button_edit"));
+            await click(target.querySelector(".o_form_button_edit"));
 
-            assert.ok(form.el.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
+            assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
 
-            const input = form.el.querySelector(".o_progressbar_value.o_input");
+            const input = target.querySelector(".o_progressbar_value.o_input");
 
             assert.strictEqual(input.value, "99", "Initial value should be correct");
 
             // Clicking on the progress bar should not change the value
-            await click(form.el.querySelector(".o_progress"));
+            await click(target.querySelector(".o_progress"));
 
             assert.strictEqual(input.value, "99", "Initial value in input is still correct");
 
-            await editInput(form.el, ".o_progressbar_value.o_input", "69");
+            await editInput(target, ".o_progressbar_value.o_input", "69");
 
-            await click(form.el.querySelector(".o_form_button_save"));
+            await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                form.el.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").innerText,
                 "69%",
                 "New value should be different than initial after click"
             );
@@ -182,26 +184,26 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
             // The view should be in edit mode by default
-            await click(form.el.querySelector(".o_form_button_edit"));
+            await click(target.querySelector(".o_form_button_edit"));
 
-            assert.ok(form.el.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
+            assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
             assert.ok(
-                form.el.querySelector(".o_progressbar_value").value === "99" &&
-                    form.el.querySelectorAll(".o_progressbar_value")[1].innerText === "0.44444",
+                target.querySelector(".o_progressbar_value").value === "99" &&
+                    target.querySelectorAll(".o_progressbar_value")[1].innerText === "0.44444",
                 "Initial value should be correct"
             );
 
-            await click(form.el.querySelector(".o_progress"));
+            await click(target.querySelector(".o_progress"));
 
-            const input = form.el.querySelector(".o_progressbar_value.o_input");
+            const input = target.querySelector(".o_progressbar_value.o_input");
             assert.strictEqual(input.value, "99", "Initial value in input is still correct");
 
-            await editInput(form.el, ".o_progressbar_value.o_input", "69");
+            await editInput(target, ".o_progressbar_value.o_input", "69");
 
-            await click(form.el.querySelector(".o_form_button_save"));
+            await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                form.el.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").innerText,
                 "69 / 0.44444",
                 "New value should be different than initial after click"
             );
@@ -236,26 +238,26 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
-                form.el.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").innerText,
                 "99 / 0.44444",
                 "Initial value should be correct"
             );
             // The view should be in edit mode by default
-            await click(form.el.querySelector(".o_form_button_edit"));
+            await click(target.querySelector(".o_form_button_edit"));
 
-            assert.ok(form.el.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
+            assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
 
-            await click(form.el.querySelector(".o_progress"));
+            await click(target.querySelector(".o_progress"));
 
-            const input = form.el.querySelector(".o_progressbar_value.o_input");
+            const input = target.querySelector(".o_progressbar_value.o_input");
             assert.strictEqual(input.value, "0.44444", "Initial value in input is correct");
 
-            await editInput(form.el, ".o_progressbar_value.o_input", "69");
+            await editInput(target, ".o_progressbar_value.o_input", "69");
 
-            await click(form.el.querySelector(".o_form_button_save"));
+            await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                form.el.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").innerText,
                 "99 / 69",
                 "New value should be different than initial after click"
             );
@@ -291,29 +293,29 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
-                form.el.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").innerText,
                 "99 / 0.44444",
                 "Initial value should be correct"
             );
             // The view should be in edit mode by default
-            await click(form.el.querySelector(".o_form_button_edit"));
+            await click(target.querySelector(".o_form_button_edit"));
 
-            assert.ok(form.el.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
+            assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
 
-            await click(form.el.querySelector(".o_progress"));
+            await click(target.querySelector(".o_progress"));
 
-            const currentVal = form.el.querySelectorAll(".o_progressbar_value.o_input")[0];
-            const maxVal = form.el.querySelectorAll(".o_progressbar_value.o_input")[1];
+            const currentVal = target.querySelectorAll(".o_progressbar_value.o_input")[0];
+            const maxVal = target.querySelectorAll(".o_progressbar_value.o_input")[1];
             assert.strictEqual(currentVal.value, "99", "Initial value in input is correct");
             assert.strictEqual(maxVal.value, "0.44444", "Initial value in input is correct");
 
-            await editInput(form.el, ".o_progressbar input:nth-of-type(1)", "2000");
-            await editInput(form.el, ".o_progressbar input:nth-of-type(2)", "69");
+            await editInput(target, ".o_progressbar input:nth-of-type(1)", "2000");
+            await editInput(target, ".o_progressbar input:nth-of-type(2)", "69");
 
-            await click(form.el.querySelector(".o_form_button_save"));
+            await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                form.el.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").innerText,
                 "2000 / 69",
                 "New value should be different than initial after click"
             );
@@ -339,15 +341,15 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.ok(form.el.querySelector(".o_form_view .o_form_readonly"), "Form in readonly mode");
+        assert.ok(target.querySelector(".o_form_view .o_form_readonly"), "Form in readonly mode");
 
         assert.strictEqual(
-            form.el.querySelector(".o_progressbar_value").innerText,
+            target.querySelector(".o_progressbar_value").innerText,
             "99 / 0.44444",
             "Initial value should be correct"
         );
 
-        await click(form.el.querySelector(".o_progress"));
+        await click(target.querySelector(".o_progress"));
 
         assert.containsNone(form, ".o_progressbar_value.o_input", "no input in readonly mode");
 
@@ -389,25 +391,25 @@ QUnit.module("Fields", (hooks) => {
                 );
 
             assert.strictEqual(
-                form.el.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").innerText,
                 "99%",
                 "Initial value should be correct"
             );
 
-            await click(form.el.querySelector(".o_form_button_edit"));
-            assert.ok(form.el.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
+            await click(target.querySelector(".o_form_button_edit"));
+            assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
 
-            await click(form.el.querySelector(".o_progress"));
+            await click(target.querySelector(".o_progress"));
 
-            const input = form.el.querySelector(".o_progressbar_value.o_input");
+            const input = target.querySelector(".o_progressbar_value.o_input");
             assert.strictEqual(input.value, "99", "Initial value in input is correct");
 
-            await editInput(form.el, "input", "1#037:9");
+            await editInput(target, "input", "1#037:9");
 
-            await click(form.el.querySelector(".o_form_button_save"));
+            await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                form.el.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").innerText,
                 "1037%",
                 "New value should be different than initial after click"
             );
@@ -439,26 +441,26 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
             // The view should be in edit mode by default
-            await click(form.el.querySelector(".o_form_button_edit"));
+            await click(target.querySelector(".o_form_button_edit"));
 
-            assert.ok(form.el.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
+            assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
 
             assert.strictEqual(
-                form.el.querySelector(".o_progressbar_value").value,
+                target.querySelector(".o_progressbar_value").value,
                 "99",
                 "Initial value should be correct"
             );
 
-            const input = form.el.querySelector(".o_progressbar_value.o_input");
+            const input = target.querySelector(".o_progressbar_value.o_input");
 
             assert.strictEqual(input.value, "99", "Initial value in input is correct");
 
-            await editInput(form.el, ".o_progressbar_value.o_input", "trente sept virgule neuf");
+            await editInput(target, ".o_progressbar_value.o_input", "trente sept virgule neuf");
 
-            await click(form.el.querySelector(".o_form_button_save"));
+            await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                form.el.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").innerText,
                 "99%",
                 "The value has not changed"
             );

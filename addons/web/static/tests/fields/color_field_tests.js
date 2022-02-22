@@ -1,16 +1,18 @@
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
 import { makeFakeDialogService } from "../helpers/mock_services";
-import { click, makeDeferred } from "../helpers/utils";
+import { click, getFixture, makeDeferred } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 import { ColorPickerDialog } from "@web/core/colorpicker/colorpicker_dialog";
 
 const serviceRegistry = registry.category("services");
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
-    hooks.beforeEach(async () => {
+    hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -51,7 +53,7 @@ QUnit.module("Fields", (hooks) => {
             { force: true }
         );
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -65,7 +67,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await click(form.el.querySelector(".o_field_color button"));
+        await click(target.querySelector(".o_field_color button"));
 
         await dialogOpenedDeffered;
 
@@ -86,7 +88,7 @@ QUnit.module("Fields", (hooks) => {
             { force: true }
         );
 
-        var list = await makeView({
+        await makeView({
             type: "list",
             serverData,
             resModel: "partner",
@@ -97,7 +99,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await click(list.el.querySelector(".o_field_color button"));
+        await click(target.querySelector(".o_field_color button"));
         await dialogOpenedDeffered;
         assert.verifySteps(["clicked"]);
     });

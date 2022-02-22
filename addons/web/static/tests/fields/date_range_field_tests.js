@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { click, patchTimeZone, triggerEvent } from "../helpers/utils";
+import { click, getFixture, patchTimeZone, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+let target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -210,7 +212,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("Datetime field without quickedit [REQUIRE FOCUS]", async function (assert) {
         assert.expect(21);
 
-        serverData.models.partner.fields.datetime_end = { string: "Datetime End", type: "datetime" };
+        serverData.models.partner.fields.datetime_end = {
+            string: "Datetime End",
+            type: "datetime",
+        };
         serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
 
         const form = await makeView({
@@ -227,18 +232,18 @@ QUnit.module("Fields", (hooks) => {
 
         // Check date display correctly in readonly
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:first-child").innerText,
+            target.querySelector(".o_field_date_range:first-child").innerText,
             "02/08/2017 15:30:00",
             "the start date should be correctly displayed in readonly"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:last-child").innerText,
+            target.querySelector(".o_field_date_range:last-child").innerText,
             "03/13/2017 05:30:00",
             "the end date should be correctly displayed in readonly"
         );
 
         // Edit
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
 
         // Check date range picker initialization
         assert.containsN(
@@ -248,102 +253,117 @@ QUnit.module("Fields", (hooks) => {
             "should initialize 2 date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child").style.display,
+            target.querySelector(".daterangepicker:first-child").style.display,
             "none",
             "first date range picker should be closed initially"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child").style.display,
+            target.querySelector(".daterangepicker:last-child").style.display,
             "none",
             "second date range picker should be closed initially"
         );
 
         // open the first one
-        await click(form.el.querySelector(".o_field_date_range:first-child"));
+        await click(target.querySelector(".o_field_date_range:first-child"));
 
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child").style.display,
+            target.querySelector(".daterangepicker:first-child").style.display,
             "block",
             "first date range picker should be opened"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child .drp-calendar.left .active.start-date").innerText,
+            target.querySelector(
+                ".daterangepicker:first-child .drp-calendar.left .active.start-date"
+            ).innerText,
             "8",
             "active start date should be '8' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child .drp-calendar.left .hourselect").value,
+            target.querySelector(".daterangepicker:first-child .drp-calendar.left .hourselect")
+                .value,
             "15",
             "active start date hour should be '15' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child .drp-calendar.left .minuteselect").value,
+            target.querySelector(".daterangepicker:first-child .drp-calendar.left .minuteselect")
+                .value,
             "30",
             "active start date minute should be '30' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child .drp-calendar.right .active.end-date").innerText,
+            target.querySelector(
+                ".daterangepicker:first-child .drp-calendar.right .active.end-date"
+            ).innerText,
             "13",
             "active end date should be '13' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child .drp-calendar.right .hourselect").value,
+            target.querySelector(".daterangepicker:first-child .drp-calendar.right .hourselect")
+                .value,
             "5",
             "active end date hour should be '5' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child .drp-calendar.right .minuteselect").value,
+            target.querySelector(".daterangepicker:first-child .drp-calendar.right .minuteselect")
+                .value,
             "30",
             "active end date minute should be '30' in date range picker"
         );
         assert.containsN(
-            form.el.querySelector(".daterangepicker:first-child .drp-calendar.left .minuteselect"),
+            target.querySelector(".daterangepicker:first-child .drp-calendar.left .minuteselect"),
             "option",
             12,
             "minute selection should contain 12 options (1 for each 5 minutes)"
         );
         // Close picker
-        await click(form.el.querySelector(".daterangepicker:first-child .cancelBtn"));
+        await click(target.querySelector(".daterangepicker:first-child .cancelBtn"));
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child").style.display,
+            target.querySelector(".daterangepicker:first-child").style.display,
             "none",
             "date range picker should be closed"
         );
 
         // Try to check with end date
-        await click(form.el.querySelector(".o_field_date_range:last-child"));
+        await click(target.querySelector(".o_field_date_range:last-child"));
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child").style.display,
+            target.querySelector(".daterangepicker:last-child").style.display,
             "block",
             "date range picker should be opened"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child .drp-calendar.left .active.start-date").innerText,
+            target.querySelector(
+                ".daterangepicker:last-child .drp-calendar.left .active.start-date"
+            ).innerText,
             "8",
             "active start date should be '8' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child .drp-calendar.left .hourselect").value,
+            target.querySelector(".daterangepicker:last-child .drp-calendar.left .hourselect")
+                .value,
             "15",
             "active start date hour should be '15' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child .drp-calendar.left .minuteselect").value,
+            target.querySelector(".daterangepicker:last-child .drp-calendar.left .minuteselect")
+                .value,
             "30",
             "active start date minute should be '30' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child .drp-calendar.right .active.end-date").innerText,
+            target.querySelector(".daterangepicker:last-child .drp-calendar.right .active.end-date")
+                .innerText,
             "13",
             "active end date should be '13' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child .drp-calendar.right .hourselect").value,
+            target.querySelector(".daterangepicker:last-child .drp-calendar.right .hourselect")
+                .value,
             "5",
             "active end date hour should be '5' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child .drp-calendar.right .minuteselect").value,
+            target.querySelector(".daterangepicker:last-child .drp-calendar.right .minuteselect")
+                .value,
             "30",
             "active end date minute should be '30' in date range picker"
         );
@@ -369,18 +389,18 @@ QUnit.module("Fields", (hooks) => {
 
         // Check date display correctly in readonly
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:first-child").innerText,
+            target.querySelector(".o_field_date_range:first-child").innerText,
             "02/03/2017",
             "the start date should be correctly displayed in readonly"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:last-child").innerText,
+            target.querySelector(".o_field_date_range:last-child").innerText,
             "02/08/2017",
             "the end date should be correctly displayed in readonly"
         );
 
         // Edit
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
 
         // Check date range picker initialization
         assert.containsN(
@@ -390,108 +410,124 @@ QUnit.module("Fields", (hooks) => {
             "should initialize 2 date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child").style.display,
+            target.querySelector(".daterangepicker:first-child").style.display,
             "none",
             "first date range picker should be closed initially"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child").style.display,
+            target.querySelector(".daterangepicker:last-child").style.display,
             "none",
             "second date range picker should be closed initially"
         );
 
         // open the first one
-        await click(form.el.querySelector(".o_field_date_range:first-child"));
+        await click(target.querySelector(".o_field_date_range:first-child"));
 
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child").style.display,
+            target.querySelector(".daterangepicker:first-child").style.display,
             "block",
             "first date range picker should be opened"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child .active.start-date").innerText,
+            target.querySelector(".daterangepicker:first-child .active.start-date").innerText,
             "3",
             "active start date should be '3' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child .active.end-date").innerText,
+            target.querySelector(".daterangepicker:first-child .active.end-date").innerText,
             "8",
             "active end date should be '8' in date range picker"
         );
 
         // Change date
-        await triggerEvent(form.el, ".daterangepicker:first-child .drp-calendar.left .available:contains('16')", "mousedown");
-        await triggerEvent(form.el, ".daterangepicker:first-child .drp-calendar.right .available:contains('12')", "mousedown");
-        await click(form.el.querySelector(".daterangepicker:first-child .applyBtn"));
+        await triggerEvent(
+            target,
+            ".daterangepicker:first-child .drp-calendar.left .available:contains('16')",
+            "mousedown"
+        );
+        await triggerEvent(
+            target,
+            ".daterangepicker:first-child .drp-calendar.right .available:contains('12')",
+            "mousedown"
+        );
+        await click(target.querySelector(".daterangepicker:first-child .applyBtn"));
 
         // Check date after change
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child").style.display,
+            target.querySelector(".daterangepicker:first-child").style.display,
             "none",
             "date range picker should be closed"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:first-child").value,
+            target.querySelector(".o_field_date_range:first-child").value,
             "02/16/2017",
             "the date should be '02/16/2017'"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:last-child").value,
+            target.querySelector(".o_field_date_range:last-child").value,
             "03/12/2017",
             "'the date should be '03/12/2017'"
         );
 
         // Try to change range with end date
-        await click(form.el.querySelector(".o_field_date_range:last-child"));
+        await click(target.querySelector(".o_field_date_range:last-child"));
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child").style.display,
+            target.querySelector(".daterangepicker:last-child").style.display,
             "block",
             "date range picker should be opened"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child .active.start-date").innerText,
+            target.querySelector(".daterangepicker:last-child .active.start-date").innerText,
             "16",
             "start date should be a 16 in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child .active.end-date").innerText,
+            target.querySelector(".daterangepicker:last-child .active.end-date").innerText,
             "12",
             "end date should be a 12 in date range picker"
         );
 
         // Change date
-        await triggerEvent(form.el, ".daterangepicker:first-child .drp-calendar.left .available:contains('13')", "mousedown");
-        await triggerEvent(form.el, ".daterangepicker:first-child .drp-calendar.right .available:contains('18')", "mousedown");
-        await click(form.el.querySelector(".daterangepicker:last-child .applyBtn"));
+        await triggerEvent(
+            target,
+            ".daterangepicker:first-child .drp-calendar.left .available:contains('13')",
+            "mousedown"
+        );
+        await triggerEvent(
+            target,
+            ".daterangepicker:first-child .drp-calendar.right .available:contains('18')",
+            "mousedown"
+        );
+        await click(target.querySelector(".daterangepicker:last-child .applyBtn"));
 
         // Check date after change
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child").style.display,
+            target.querySelector(".daterangepicker:last-child").style.display,
             "none",
             "date range picker should be closed"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:first-child").value,
+            target.querySelector(".o_field_date_range:first-child").value,
             "02/13/2017",
             "the start date should be '02/13/2017'"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:last-child").value,
+            target.querySelector(".o_field_date_range:last-child").value,
             "03/18/2017",
             "the end date should be '03/18/2017'"
         );
 
         // Save
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_save"));
 
         // Check date after save
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:first-child").innerText,
+            target.querySelector(".o_field_date_range:first-child").innerText,
             "02/13/2017",
             "the start date should be '02/13/2017' after save"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:last-child").innerText,
+            target.querySelector(".o_field_date_range:last-child").innerText,
             "03/18/2017",
             "the end date should be '03/18/2017' after save"
         );
@@ -517,18 +553,18 @@ QUnit.module("Fields", (hooks) => {
 
         // Check date display correctly in readonly
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:first-child").innerText,
+            target.querySelector(".o_field_date_range:first-child").innerText,
             "02/03/2017",
             "the start date should be correctly displayed in readonly"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:last-child").innerText,
+            target.querySelector(".o_field_date_range:last-child").innerText,
             "02/08/2017",
             "the end date should be correctly displayed in readonly"
         );
 
         // open the first one with quick edit
-        await click(form.el.querySelector(".o_field_date_range:first-child"));
+        await click(target.querySelector(".o_field_date_range:first-child"));
 
         // Check date range picker initialization
         assert.containsN(
@@ -538,99 +574,115 @@ QUnit.module("Fields", (hooks) => {
             "should initialize 2 date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child").style.display,
+            target.querySelector(".daterangepicker:first-child").style.display,
             "block",
             "first date range picker should be opened initially"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child").style.display,
+            target.querySelector(".daterangepicker:last-child").style.display,
             "none",
             "second date range picker should be closed initially"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child .active.start-date").innerText,
+            target.querySelector(".daterangepicker:first-child .active.start-date").innerText,
             "3",
             "active start date should be '3' in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child .active.end-date").innerText,
+            target.querySelector(".daterangepicker:first-child .active.end-date").innerText,
             "8",
             "active end date should be '8' in date range picker"
         );
 
         // Change date
-        await triggerEvent(form.el, ".daterangepicker:first-child .drp-calendar.left .available:contains('16')", "mousedown");
-        await triggerEvent(form.el, ".daterangepicker:first-child .drp-calendar.right .available:contains('12')", "mousedown");
-        await click(form.el.querySelector(".daterangepicker:first-child .applyBtn"));
+        await triggerEvent(
+            target,
+            ".daterangepicker:first-child .drp-calendar.left .available:contains('16')",
+            "mousedown"
+        );
+        await triggerEvent(
+            target,
+            ".daterangepicker:first-child .drp-calendar.right .available:contains('12')",
+            "mousedown"
+        );
+        await click(target.querySelector(".daterangepicker:first-child .applyBtn"));
 
         // Check date after change
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:first-child").style.display,
+            target.querySelector(".daterangepicker:first-child").style.display,
             "none",
             "date range picker should be closed"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:first-child").value,
+            target.querySelector(".o_field_date_range:first-child").value,
             "02/16/2017",
             "the date should be '02/16/2017'"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:last-child").value,
+            target.querySelector(".o_field_date_range:last-child").value,
             "03/12/2017",
             "'the date should be '03/12/2017'"
         );
 
         // Try to change range with end date
-        await click(form.el.querySelector(".o_field_date_range:last-child"));
+        await click(target.querySelector(".o_field_date_range:last-child"));
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child").style.display,
+            target.querySelector(".daterangepicker:last-child").style.display,
             "block",
             "date range picker should be opened"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child .active.start-date").innerText,
+            target.querySelector(".daterangepicker:last-child .active.start-date").innerText,
             "16",
             "start date should be a 16 in date range picker"
         );
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child .active.end-date").innerText,
+            target.querySelector(".daterangepicker:last-child .active.end-date").innerText,
             "12",
             "end date should be a 12 in date range picker"
         );
 
         // Change date
-        await triggerEvent(form.el, ".daterangepicker:first-child .drp-calendar.left .available:contains('13')", "mousedown");
-        await triggerEvent(form.el, ".daterangepicker:first-child .drp-calendar.right .available:contains('18')", "mousedown");
-        await click(form.el.querySelector(".daterangepicker:last-child .applyBtn"));
+        await triggerEvent(
+            target,
+            ".daterangepicker:first-child .drp-calendar.left .available:contains('13')",
+            "mousedown"
+        );
+        await triggerEvent(
+            target,
+            ".daterangepicker:first-child .drp-calendar.right .available:contains('18')",
+            "mousedown"
+        );
+        await click(target.querySelector(".daterangepicker:last-child .applyBtn"));
 
         // Check date after change
         assert.strictEqual(
-            form.el.querySelector(".daterangepicker:last-child").style.display,
+            target.querySelector(".daterangepicker:last-child").style.display,
             "none",
             "date range picker should be closed"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:first-child").value,
+            target.querySelector(".o_field_date_range:first-child").value,
             "02/13/2017",
             "the start date should be '02/13/2017'"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:last-child").value,
+            target.querySelector(".o_field_date_range:last-child").value,
             "03/18/2017",
             "the end date should be '03/18/2017'"
         );
 
         // Save
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_save"));
 
         // Check date after save
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:first-child").innerText,
+            target.querySelector(".o_field_date_range:first-child").innerText,
             "02/13/2017",
             "the start date should be '02/13/2017' after save"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_date_range:last-child").innerText,
+            target.querySelector(".o_field_date_range:last-child").innerText,
             "03/18/2017",
             "the end date should be '03/18/2017' after save"
         );
@@ -641,7 +693,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            serverData.models.partner.fields.datetime_end = { string: "Datetime End", type: "datetime" };
+            serverData.models.partner.fields.datetime_end = {
+                string: "Datetime End",
+                type: "datetime",
+            };
             serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
 
             const form = await makeView({
@@ -656,13 +711,19 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            await click(form.el.querySelector(".o_form_button_edit"));
-            await click(form.el.querySelector(".o_field_date_range:first-child"));
+            await click(target.querySelector(".o_form_button_edit"));
+            await click(target.querySelector(".o_field_date_range:first-child"));
 
-            assert.isVisible(form.el.querySelector(".daterangepicker:first-child"), "date range picker should be opened");
+            assert.isVisible(
+                target.querySelector(".daterangepicker:first-child"),
+                "date range picker should be opened"
+            );
 
-            form.el.dispatchEvent(new Event("scroll"));
-            assert.isNotVisible(form.el.querySelector(".daterangepicker:first-child"), "date range picker should be closed");
+            target.dispatchEvent(new Event("scroll"));
+            assert.isNotVisible(
+                target.querySelector(".daterangepicker:first-child"),
+                "date range picker should be closed"
+            );
         }
     );
 
@@ -671,7 +732,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            serverData.models.partner.fields.datetime_end = { string: "Datetime End", type: "datetime" };
+            serverData.models.partner.fields.datetime_end = {
+                string: "Datetime End",
+                type: "datetime",
+            };
             serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
 
             const form = await makeView({
@@ -693,25 +757,25 @@ QUnit.module("Fields", (hooks) => {
 
             // check date display correctly in readonly
             assert.strictEqual(
-                form.el.querySelector(".o_field_date_range:first-child").innerText,
+                target.querySelector(".o_field_date_range:first-child").innerText,
                 "02/08/2017 15:30:00",
                 "the start date should be correctly displayed in readonly"
             );
             assert.strictEqual(
-                form.el.querySelector(".o_field_date_range:last-child").innerText,
+                target.querySelector(".o_field_date_range:last-child").innerText,
                 "03/13/2017 05:30:00",
                 "the end date should be correctly displayed in readonly"
             );
 
             // edit form
-            await click(form.el.querySelector(".o_form_button_edit"));
+            await click(target.querySelector(".o_form_button_edit"));
             // update input for Datetime
-            await editInput(form.el, ".o_field_date_range:first-child", "02/08/2017 11:30:00");
+            await editInput(target, ".o_field_date_range:first-child", "02/08/2017 11:30:00");
             // save form
-            await click(form.el.querySelector(".o_form_button_save"));
+            await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                form.el.querySelector(".o_field_date_range:first-child").innerText,
+                target.querySelector(".o_field_date_range:first-child").innerText,
                 "02/08/2017 11:30:00",
                 "the start date should be correctly displayed in readonly after manual update"
             );
@@ -749,32 +813,35 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await editInput(form.el, ".o_field_date_range:first-child", "blabla");
+            await editInput(target, ".o_field_date_range:first-child", "blabla");
             // click outside daterange field
-            await click(form.el);
+            await click(target);
             assert.hasClass(
-                form.el.querySelector("input[name=date]"),
+                target.querySelector("input[name=date]"),
                 "o_field_invalid",
                 "date field should be displayed as invalid"
             );
             // update input date with right value
-            await editInput(form.el, ".o_field_date_range:first-child", "02/08/2017");
+            await editInput(target, ".o_field_date_range:first-child", "02/08/2017");
             assert.doesNotHaveClass(
-                form.el.querySelector("input[name=date]"),
+                target.querySelector("input[name=date]"),
                 "o_field_invalid",
                 "date field should not be displayed as invalid now"
             );
 
             // again enter wrong value and try to save should raise invalid fields value
-            await editInput(form.el, ".o_field_date_range:first-child", "blabla");
-            await click(form.el.querySelector(".o_form_button_save"));
+            await editInput(target, ".o_field_date_range:first-child", "blabla");
+            await click(target.querySelector(".o_form_button_save"));
         }
     );
 
     QUnit.skipWOWL("Datetime field with option format type is 'date'", async function (assert) {
         assert.expect(2);
 
-        serverData.models.partner.fields.datetime_end = { string: "Datetime End", type: "datetime" };
+        serverData.models.partner.fields.datetime_end = {
+            string: "Datetime End",
+            type: "datetime",
+        };
         serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
 
         const form = await makeView({
@@ -789,12 +856,12 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector('.o_field_date_range[name="datetime"]').innerText,
+            target.querySelector('.o_field_date_range[name="datetime"]').innerText,
             "02/08/2017",
             "the start date should only show date when option formatType is Date"
         );
         assert.strictEqual(
-            form.el.querySelector('.o_field_date_range[name="datetime_end"]').innerText,
+            target.querySelector('.o_field_date_range[name="datetime_end"]').innerText,
             "03/13/2017",
             "the end date should only show date when option formatType is Date"
         );
@@ -818,12 +885,12 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector('.o_field_date_range[name="date"]').innerText,
+            target.querySelector('.o_field_date_range[name="date"]').innerText,
             "02/03/2017 05:30:00",
             "the start date should show date with time when option format_type is datatime"
         );
         assert.strictEqual(
-            form.el.querySelector('.o_field_date_range[name="date_end"]').innerText,
+            target.querySelector('.o_field_date_range[name="date_end"]').innerText,
             "03/13/2017 05:30:00",
             "the end date should show date with time when option format_type is datatime"
         );

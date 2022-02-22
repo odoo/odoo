@@ -88,15 +88,15 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        assert.containsOnce(form.el, ".o_field_text", "should have a text area");
+        assert.containsOnce(target, ".o_field_text", "should have a text area");
         assert.strictEqual(
-            form.el.querySelector(".o_field_text").textContent,
+            target.querySelector(".o_field_text").textContent,
             "yop",
             "should be 'yop' in readonly"
         );
 
-        await click(form.el, ".o_form_button_edit");
-        const textarea = form.el.querySelector(".o_field_text textarea");
+        await click(target, ".o_form_button_edit");
+        const textarea = target.querySelector(".o_field_text textarea");
         assert.ok(textarea, "should have a text area");
         assert.strictEqual(textarea.value, "yop", "should still be 'yop' in edit");
 
@@ -113,10 +113,10 @@ QUnit.module("Fields", (hooks) => {
             "should be 'hello world' after second edition"
         );
 
-        await click(form.el, ".o_form_button_save");
+        await click(target, ".o_form_button_save");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_text").textContent,
+            target.querySelector(".o_field_text").textContent,
             "hello world",
             "should be 'hello world' after save"
         );
@@ -139,16 +139,16 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        const field = form.el.querySelector(".o_field_text");
+        const field = target.querySelector(".o_field_text");
         assert.strictEqual(
             field.offsetHeight,
             field.scrollHeight,
             "text field should not have a scroll bar"
         );
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
-        const textarea = form.el.querySelector(".o_field_text textarea");
+        const textarea = target.querySelector(".o_field_text textarea");
         assert.strictEqual(
             textarea.clientHeight,
             textarea.scrollHeight - Math.abs(textarea.scrollTop),
@@ -171,10 +171,10 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
-            window.getComputedStyle(form.el.querySelector("textarea")).resize,
+            window.getComputedStyle(target.querySelector("textarea")).resize,
             "none",
             "should not have vertical resize"
         );
@@ -214,9 +214,9 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await click(form.el, ".o_form_button_edit");
+        await click(target, ".o_form_button_edit");
 
-        let textarea = form.el.querySelector(".o_field_widget[name='txt'] textarea");
+        let textarea = target.querySelector(".o_field_widget[name='txt'] textarea");
         const initialHeight = textarea.offsetHeight;
 
         textarea.value = "Short value";
@@ -224,10 +224,10 @@ QUnit.module("Fields", (hooks) => {
 
         assert.ok(textarea.offsetHeight < initialHeight, "Textarea height should have shrank");
 
-        await click(form.el, ".o_field_boolean[name='bar'] input");
-        await click(form.el, ".o_field_boolean[name='bar'] input");
+        await click(target, ".o_field_boolean[name='bar'] input");
+        await click(target, ".o_field_boolean[name='bar'] input");
 
-        textarea = form.el.querySelector(".o_field_widget[name='txt'] textarea");
+        textarea = target.querySelector(".o_field_widget[name='txt'] textarea");
         assert.strictEqual(textarea.offsetHeight, initialHeight, "Textarea height should be reset");
     });
 
@@ -248,8 +248,8 @@ QUnit.module("Fields", (hooks) => {
         // the focus on the textarea by clicking on another column.
         // The main goal is to test the resize is actually triggered in this
         // particular case.
-        await click(list.el.querySelectorAll(".o_data_cell")[1]);
-        const textarea = list.el.querySelector("textarea:first-child");
+        await click(target.querySelectorAll(".o_data_cell")[1]);
+        const textarea = target.querySelector("textarea:first-child");
 
         // make sure the correct data is there
         assert.strictEqual(textarea.value, serverData.models.partner.records[0].txt);
@@ -289,10 +289,10 @@ QUnit.module("Fields", (hooks) => {
         // edit the form
         // trigger a textarea reset (through onchange) by clicking the box
         // then check there is no scroll bar
-        await click(form.el, ".o_form_button_edit");
-        await click(form.el, "div[name='bar'] input");
+        await click(target, ".o_form_button_edit");
+        await click(target, "div[name='bar'] input");
 
-        const textarea = form.el.querySelector("textarea");
+        const textarea = target.querySelector("textarea");
         assert.strictEqual(
             textarea.clientHeight,
             textarea.scrollHeight,
@@ -400,13 +400,13 @@ QUnit.module("Fields", (hooks) => {
                     "</list>",
             });
 
-            await click(list.el.querySelector("tbody tr:first-child .o_list_text"));
-            const textarea = list.el.querySelector("textarea.o_input");
+            await click(target.querySelector("tbody tr:first-child .o_list_text"));
+            const textarea = target.querySelector("textarea.o_input");
             assert.containsOnce(list, textarea, "should have a text area");
             assert.strictEqual(textarea.value, "yop", 'should still be "yop" in edit');
 
             assert.strictEqual(
-                list.el.querySelector("textarea"),
+                target.querySelector("textarea"),
                 document.activeElement,
                 "text area should have the focus"
             );
@@ -416,7 +416,7 @@ QUnit.module("Fields", (hooks) => {
             await triggerEvent(textarea, null, "keyup", { key: "Enter" });
 
             assert.strictEqual(
-                list.el.querySelector("textarea"),
+                target.querySelector("textarea"),
                 document.activeElement,
                 "text area should still have the focus"
             );
@@ -448,7 +448,7 @@ QUnit.module("Fields", (hooks) => {
 
             // Copying from a div tag with white-space:pre-wrap doesn't work in Firefox
             assert.strictEqual(
-                form.el.querySelector('[name="txt"]').firstElementChild.tagName.toLowerCase(),
+                target.querySelector('[name="txt"]').firstElementChild.tagName.toLowerCase(),
                 "span",
                 "the field contents should be surrounded by a span tag"
             );
@@ -477,17 +477,17 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.fields.foo.type = "text";
 
-        var list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
             arch: '<tree string="Phonecalls" editable="top">' + '<field name="foo"/>' + "</tree>",
         });
 
-        await click(list.el.querySelector(".o_list_button_add"));
+        await click(target.querySelector(".o_list_button_add"));
 
         assert.strictEqual(
-            list.el.querySelector("textarea"),
+            target.querySelector("textarea"),
             document.activeElement,
             "text area should have the focus"
         );
