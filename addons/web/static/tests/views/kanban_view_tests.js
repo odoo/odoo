@@ -63,9 +63,28 @@ const getCardTexts = (groupIndex) => {
     return cards.map((card) => card.innerText.trim());
 };
 /**
- * @param {owl.Component} kanban
+ * Helper to perform a full drag & drop sequence.
+ *
+ * - the 'selector' is used to determine the element on which the drag will
+ *  start;
+ * - the second parameter is an object consisting of one of 3 available keys
+ *  along with another selector determining the element on or besides which the
+ *  first element will be dropped. Said key can either be:
+ *
+ *      * 'after': the first element will be dropped *below* the second,
+ *          typically used to move a record after another.
+ *
+ *      * 'before': the first element will be dropped *above* the second,
+ *          typically used to move a record before another.
+ *
+ *      * 'inside': the first element will be dropped *right at the start* of
+ *          the second, typically used to move a record in another group.
+ *
+ * Note that only the last event is awaited, since all the others are
+ * considered to be synchronous.
+ *
  * @param {string} selector
- * @param {Object} param
+ * @param {Object} params
  * @param {string} [params.after]
  * @param {string} [params.before]
  * @param {string} [params.inside]
@@ -82,20 +101,20 @@ const dragAndDrop = async (selector, { after, before, inside }) => {
 
     // Mouse down on main target then move to a far away position to initiate the drag
     const el = target.querySelector(selector);
-    await triggerEvent(el, null, "mousedown", getPos(el));
-    await triggerEvent(window, null, "mousemove", { clientX: -999, clientY: -999 });
+    triggerEvent(el, null, "mousedown", getPos(el));
+    triggerEvent(window, null, "mousemove", { clientX: -999, clientY: -999 });
 
     // Enter the target list (iff other list)
     const initList = el.closest(".o_kanban_group");
     const targetList = targetEl.closest(".o_kanban_group");
     if (initList !== targetList) {
-        await triggerEvent(targetList, null, "mouseenter", getPos(targetList));
+        triggerEvent(targetList, null, "mouseenter", getPos(targetList));
     }
 
     // Move, enter and drop the element on the target
     const targetPos = getPos(targetEl, Boolean(after || inside));
-    await triggerEvent(window, null, "mousemove", targetPos);
-    await triggerEvent(targetEl, null, "mouseenter", targetPos);
+    triggerEvent(window, null, "mousemove", targetPos);
+    triggerEvent(targetEl, null, "mouseenter", targetPos);
     await triggerEvent(el, null, "mouseup", targetPos);
 };
 
