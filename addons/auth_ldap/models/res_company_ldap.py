@@ -74,6 +74,8 @@ class CompanyLDAP(models.Model):
         uri = 'ldap://%s:%d' % (conf['ldap_server'], conf['ldap_server_port'])
 
         connection = ldap.initialize(uri)
+        connection.set_option(ldap.OPT_REFERRALS, 0)
+
         if conf['ldap_tls']:
             connection.start_tls_s()
         return connection
