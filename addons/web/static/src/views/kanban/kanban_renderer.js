@@ -21,6 +21,7 @@ import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { useSortable } from "@web/views/kanban/kanban_sortable";
 import { isAllowedDateField } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { useBounceButton } from "@web/views/helpers/view_hook";
 
 const { Component, useExternalListener, useState, useRef } = owl;
 const { RECORD_COLORS } = ColorPickerField;
@@ -112,6 +113,20 @@ export class KanbanRenderer extends Component {
                 await this.props.list.resequence(dataGroupId, refId);
                 item.classList.add("o_group_draggable");
             },
+        });
+        useBounceButton(rootRef, (clickedEl) => {
+            if (!this.props.list.count || this.props.list.model.useSampleModel) {
+                return clickedEl.matches(
+                    [
+                        ".o_kanban_renderer",
+                        ".o_kanban_group",
+                        ".o_kanban_header",
+                        ".o_column_quick_create",
+                        ".o_view_nocontent_smiling_face",
+                    ].join(", ")
+                );
+            }
+            return false;
         });
     }
 

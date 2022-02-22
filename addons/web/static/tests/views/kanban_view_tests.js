@@ -6369,7 +6369,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("bounce create button when no data and click on empty area", async (assert) => {
+    QUnit.test("bounce create button when no data and click on empty area", async (assert) => {
         assert.expect(2);
 
         const kanban = await makeView({
@@ -6382,11 +6382,7 @@ QUnit.module("Views", (hooks) => {
                         <field name="foo"/>
                     </div>
                 </t></templates></kanban>`,
-            viewOptions: {
-                action: {
-                    help: '<p class="hello">click to add a partner</p>',
-                },
-            },
+            noContentHelp: "click to add a partner",
         });
 
         await click(target, ".o_kanban_view");
@@ -6394,7 +6390,7 @@ QUnit.module("Views", (hooks) => {
 
         await reload(kanban, { domain: [["id", "<", 0]] });
 
-        await click(target, ".o_kanban_view");
+        await click(target, ".o_kanban_renderer");
         assert.hasClass(target.querySelector(".o-kanban-button-new"), "o_catch_attention");
     });
 

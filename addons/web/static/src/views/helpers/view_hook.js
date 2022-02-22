@@ -4,9 +4,10 @@ import { useDebugCategory } from "@web/core/debug/debug_context";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { browser } from "@web/core/browser/browser";
 import { evaluateExpr } from "@web/core/py_js/py";
 
-const { useComponent, xml } = owl;
+const { useComponent, useEffect, xml } = owl;
 
 export function useSetupView(params) {
     const component = useComponent();
@@ -135,4 +136,29 @@ export function useActionLinks({ resModel, reload, actionContext }) {
             handler(ev);
         }
     };
+}
+
+export function useBounceButton(containerRef, shouldBounce) {
+    let timeout;
+    const ui = useService("ui");
+    useEffect(
+        (containerEl) => {
+            if (!containerEl) {
+                return;
+            }
+            const handler = (ev) => {
+                const button = ui.activeElement.querySelector("[data-bounce-button]");
+                if (button && shouldBounce(ev.target)) {
+                    button.classList.add("o_catch_attention");
+                    browser.clearTimeout(timeout);
+                    timeout = browser.setTimeout(() => {
+                        button.classList.remove("o_catch_attention");
+                    }, 400);
+                }
+            };
+            containerEl.addEventListener("click", handler);
+            return () => containerEl.removeEventListener("click", handler);
+        },
+        () => [containerRef.el]
+    );
 }
