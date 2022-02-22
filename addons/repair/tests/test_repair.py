@@ -321,3 +321,25 @@ class TestRepair(AccountTestInvoicingCommon):
         # tax02 should not be present since it belongs to the second company.
         self.assertEqual(repair_order.operations.tax_id, tax01)
         self.assertEqual(repair_order.fees_lines.tax_id, tax01)
+
+    def test_repair_return(self):
+        """Tests functionality of creating a repair directly from a return picking,
+        i.e. repair can be made and defaults to appropriate return values. """
+        # test return
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.stock_warehouse.return_type_id
+        picking_form.partner_id = self.res_partner_1
+        picking_form.location_dest_id = self.stock_location_14
+        return_picking = picking_form.save()
+
+        # create repair
+        res_dict = return_picking.action_repair_return()
+        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']))
+        repair_form.product_id = self.product_product_3
+        repair = repair_form.save()
+
+        # test that the resulting repairs are correctly created
+        self.assertEqual(len(return_picking.repair_ids), 1, "A repair order should have been created and linked to original return.")
+        for repair in return_picking.repair_ids:
+            self.assertEqual(repair.location_id, return_picking.location_dest_id, "Repair location should have defaulted to return destination location")
+            self.assertEqual(repair.partner_id, return_picking.partner_id, "Repair customer should have defaulted to return customer")

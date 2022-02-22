@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="repair_view_picking_type_form" model="ir.ui.view">
+        <field name="name">stock.picking.type.inherit.repair</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='locations']" position="after">
+                <field name="return_type_of_ids" invisible="1"/>
+                <group string="Repairs" attrs="{'invisible': ['|', ('code', '!=', 'incoming'), ('return_type_of_ids', '=', [])]}">
+                    <field name="is_repairable"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="repair_view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.repair</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="after">
+                <field name="is_repairable" invisible="1"/>
+                <button string="Repair" name="action_repair_return" type="object" attrs="{'invisible': [('is_repairable', '=', False)]}" data-hotkey="shift+k"/>
+            </xpath>
+            <xpath expr="//button[@name='action_see_packages']" position="after">
+                <field name="repair_ids" invisible="1"/>
+                <button name="action_view_repairs" type="object"
+                        class="oe_stat_button" icon="fa-wrench"
+                        attrs="{'invisible': [('nbr_repairs', '=', 0)]}">
+                        <field name="nbr_repairs" string="Repair Orders" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
