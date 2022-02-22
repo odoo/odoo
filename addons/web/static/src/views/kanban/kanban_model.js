@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
-import { registry } from "@web/core/registry";
-import { isTruthy } from "@web/core/utils/xml";
 import { isRelational } from "@web/views/helpers/view_utils";
 import {
     DynamicGroupList,
@@ -12,27 +10,6 @@ import {
 } from "@web/views/relational_model";
 
 const { EventBus } = owl;
-
-const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
-const DEFAULT_QUICK_CREATE_VIEW = {
-    form: {
-        // note: the required modifier is written in the format returned by the server
-        arch: /* xml */ `
-            <form>
-                <field name="display_name" placeholder="Title" modifiers='{"required": true}' />
-            </form>`,
-        fields: {
-            display_name: { string: "Display name", type: "char" },
-        },
-    },
-};
-
-export const isAllowedDateField = (groupByField) => {
-    return (
-        ["date", "datetime"].includes(groupByField.type) &&
-        isTruthy(groupByField.attrs.allow_group_range_value)
-    );
-};
 
 const useTransaction = () => {
     const bus = new EventBus();
@@ -107,35 +84,23 @@ class KanbanGroup extends Group {
         this.model.notify();
     }
 
+    /**
+     * @override
+     */
     empty() {
-        this.count = 0;
+        super.empty();
+
         this.activeProgressValue = null;
         this.progressValues = [];
-        this.list.empty();
     }
 }
 
 class KanbanDynamicGroupList extends DynamicGroupList {
-    constructor() {
-        super(...arguments);
-
-        this.quickCreateInfo = null; // Lazy loaded;
-    }
-
     /**
      * @override
      */
     async load() {
         await this._loadWithProgressData(super.load());
-    }
-
-    canQuickCreate() {
-        return (
-            this.groupByField &&
-            this.model.onCreate === "quick_create" &&
-            (isAllowedDateField(this.groupByField) ||
-                QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type))
-        );
     }
 
     /**
@@ -150,26 +115,6 @@ class KanbanDynamicGroupList extends DynamicGroupList {
             color: "muted",
         });
         return group;
-    }
-
-    async quickCreate(group) {
-        if (this.model.useSampleModel) {
-            // Empty the groups because they contain sample data
-            this.groups.map((group) => group.empty());
-        }
-        this.model.useSampleModel = false;
-        if (!this.quickCreateInfo) {
-            this.quickCreateInfo = await this._loadQuickCreateView();
-        }
-        group = group || this.groups[0];
-        if (group.isFolded) {
-            await group.toggle();
-        }
-        await group.list.quickCreate(
-            this.quickCreateInfo.fields,
-            this.groupByField.name,
-            group.getServerValue()
-        );
     }
 
     async moveRecord(dataRecordId, dataGroupId, refId, newGroupId) {
@@ -207,27 +152,6 @@ class KanbanDynamicGroupList extends DynamicGroupList {
     // ------------------------------------------------------------------------
     // Protected
     // ------------------------------------------------------------------------
-
-    async _loadQuickCreateView() {
-        if (this.isLoadingQuickCreate) {
-            return;
-        }
-        this.isLoadingQuickCreate = true;
-        const { quickCreateView: viewRef } = this.model;
-        const { ArchParser } = registry.category("views").get("form");
-        let fieldsView = DEFAULT_QUICK_CREATE_VIEW;
-        if (viewRef) {
-            fieldsView = await this.model.keepLast.add(
-                this.model.viewService.loadViews({
-                    context: { ...this.context, form_view_ref: viewRef },
-                    resModel: this.resModel,
-                    views: [[false, "form"]],
-                })
-            );
-        }
-        this.isLoadingQuickCreate = false;
-        return new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
-    }
 
     async _loadWithProgressData(...loadPromises) {
         // No progress attributes : normal load
@@ -278,74 +202,16 @@ class KanbanDynamicGroupList extends DynamicGroupList {
     }
 }
 
-class KanbanDynamicRecordList extends DynamicRecordList {
-    async loadMore() {
-        this.offset = this.records.length;
-        const nextRecords = await this._loadRecords();
-        for (const record of nextRecords) {
-            this.addRecord(record);
-        }
-    }
-
-    async cancelQuickCreate(force = false) {
-        for (const record of this.records) {
-            if (record.isQuickCreate && (force || !record.isDirty)) {
-                this.removeRecord(record);
-            }
-        }
-    }
-
-    async quickCreate(activeFields, fieldName, value) {
-        this.records = this.records.filter((r) => !r.isQuickCreate);
-        const context = { ...this.context };
-        if (fieldName) {
-            context[`default_${fieldName}`] = value;
-        }
-        const record = await this.createRecord({ activeFields, context }, true);
-        record.isQuickCreate = true;
-    }
-
-    async validateQuickCreate() {
-        const record = this.records.find((r) => r.isQuickCreate);
-        await record.save();
-        record.isQuickCreate = false;
-        await this.quickCreate(record.activeFields, null, record.context);
-        return record;
-    }
-
-    empty() {
-        this.records = [];
-        this.count = 0;
-    }
-}
+class KanbanDynamicRecordList extends DynamicRecordList {}
 
 KanbanDynamicRecordList.DEFAULT_LIMIT = 40;
 
 export class KanbanModel extends RelationalModel {
-    setup(params, { view }) {
+    setup(params) {
         super.setup(...arguments);
 
-        this.viewService = view;
-
-        this.onCreate = params.onCreate;
-        this.quickCreateView = params.quickCreateView;
         this.progressAttributes = params.progressAttributes;
-        this.defaultGroupBy = params.defaultGroupBy || false;
         this.transaction = useTransaction();
-    }
-
-    /**
-     * Applies the default groupBy defined on the arch when not in a dialog.
-     * @override
-     */
-    async load(params = {}) {
-        /** @type {any} */
-        const actualParams = { ...params };
-        if (this.defaultGroupBy && !this.env.inDialog) {
-            const groupBy = [...(params.groupby || []), this.defaultGroupBy];
-            actualParams.groupBy = groupBy.slice(0, 1);
-        }
-        await super.load(actualParams);
     }
 
     /**

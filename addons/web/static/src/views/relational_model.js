@@ -10,16 +10,30 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
+import { registry } from "@web/core/registry";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { isTruthy } from "@web/core/utils/xml";
 import { session } from "@web/session";
 import { Model } from "@web/views/helpers/model";
 import { isNumeric, isX2Many } from "@web/views/helpers/view_utils";
-import { registry } from "../core/registry";
 
 const { DateTime } = luxon;
 const { xml } = owl;
 
 const preloadedDataRegistry = registry.category("preloadedData");
+const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
+const DEFAULT_QUICK_CREATE_VIEW = {
+    form: {
+        // note: the required modifier is written in the format returned by the server
+        arch: /* xml */ `
+            <form>
+                <field name="display_name" placeholder="Title" modifiers='{"required": true}' />
+            </form>`,
+        fields: {
+            display_name: { string: "Display name", type: "char" },
+        },
+    },
+};
 
 class WarningDialog extends Dialog {
     setup() {
@@ -28,6 +42,13 @@ class WarningDialog extends Dialog {
     }
 }
 WarningDialog.bodyTemplate = xml`<t t-esc="props.message"/>`;
+
+export const isAllowedDateField = (groupByField) => {
+    return (
+        ["date", "datetime"].includes(groupByField.type) &&
+        isTruthy(groupByField.attrs.allow_group_range_value)
+    );
+};
 
 function orderByToString(orderBy) {
     return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
@@ -270,6 +291,7 @@ export class Record extends DataPoint {
         this.preloadedData = {};
         this.preloadedDataCaches = {};
         this.selected = false;
+        this.isInQuickCreation = params.isInQuickCreation || false;
         this._onChangePromise = Promise.resolve({});
         this._domains = {};
 
@@ -530,6 +552,7 @@ export class Record extends DataPoint {
                 await this.load();
                 this.model.notify();
             }
+            this.isInQuickCreation = false;
             if (!options.stayInEdition) {
                 this.switchMode("readonly");
             }
@@ -875,6 +898,10 @@ export class DynamicRecordList extends DynamicList {
         this.type = "record-list";
     }
 
+    get quickCreateRecord() {
+        return this.records.find((r) => r.isInQuickCreation);
+    }
+
     async load() {
         this.records = await this._loadRecords();
     }
@@ -956,6 +983,48 @@ export class DynamicRecordList extends DynamicList {
         return record;
     }
 
+    async loadMore() {
+        this.offset = this.records.length;
+        const nextRecords = await this._loadRecords();
+        for (const record of nextRecords) {
+            this.addRecord(record);
+        }
+    }
+
+    empty() {
+        this.records = [];
+        this.count = 0;
+    }
+
+    async cancelQuickCreate(force = false) {
+        const record = this.quickCreateRecord;
+        if (record && (force || !record.isDirty)) {
+            this.removeRecord(record);
+        }
+    }
+
+    async quickCreate(activeFields, fieldName, value) {
+        const record = this.quickCreateRecord;
+        if (record) {
+            this.removeRecord(record);
+        }
+        const context = { ...this.context };
+        if (fieldName) {
+            context[`default_${fieldName}`] = value;
+        }
+        return this.createRecord({ activeFields, context, isInQuickCreation: true }, true);
+    }
+
+    async validateQuickCreate() {
+        const record = this.quickCreateRecord;
+        if (!record) {
+            return;
+        }
+        await record.save();
+        await this.quickCreate(record.activeFields, null, record.context);
+        return record;
+    }
+
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------
@@ -1013,6 +1082,7 @@ export class DynamicGroupList extends DynamicList {
         this.activeFields = params.activeFields;
         this.type = "group-list";
         this.isGrouped = true;
+        this.quickCreateInfo = null; // Lazy loaded;
     }
 
     get firstGroupBy() {
@@ -1078,6 +1148,15 @@ export class DynamicGroupList extends DynamicList {
         };
     }
 
+    canQuickCreate() {
+        return (
+            this.groupByField &&
+            this.model.onCreate === "quick_create" &&
+            (isAllowedDateField(this.groupByField) ||
+                QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type))
+        );
+    }
+
     async load() {
         this.groups = await this._loadGroups();
         await Promise.all(this.groups.map((group) => group.load()));
@@ -1116,6 +1195,26 @@ export class DynamicGroupList extends DynamicList {
         });
         group.isFolded = false;
         return this.addGroup(group);
+    }
+
+    async quickCreate(group) {
+        if (this.model.useSampleModel) {
+            // Empty the groups because they contain sample data
+            this.groups.map((group) => group.empty());
+        }
+        this.model.useSampleModel = false;
+        if (!this.quickCreateInfo) {
+            this.quickCreateInfo = await this._loadQuickCreateView();
+        }
+        group = group || this.groups[0];
+        if (group.isFolded) {
+            await group.toggle();
+        }
+        await group.list.quickCreate(
+            this.quickCreateInfo.fields,
+            this.groupByField.name,
+            group.getServerValue()
+        );
     }
 
     /**
@@ -1262,6 +1361,27 @@ export class DynamicGroupList extends DynamicList {
             return this.model.createDataPoint("group", groupParams, state);
         });
     }
+
+    async _loadQuickCreateView() {
+        if (this.isLoadingQuickCreate) {
+            return;
+        }
+        this.isLoadingQuickCreate = true;
+        const { quickCreateView: viewRef } = this.model;
+        const { ArchParser } = registry.category("views").get("form");
+        let fieldsView = DEFAULT_QUICK_CREATE_VIEW;
+        if (viewRef) {
+            fieldsView = await this.model.keepLast.add(
+                this.model.viewService.loadViews({
+                    context: { ...this.context, form_view_ref: viewRef },
+                    resModel: this.resModel,
+                    views: [[false, "form"]],
+                })
+            );
+        }
+        this.isLoadingQuickCreate = false;
+        return new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
+    }
 }
 
 DynamicGroupList.DEFAULT_LIMIT = 10;
@@ -1307,6 +1427,11 @@ export class Group extends DataPoint {
             isFolded: this.isFolded,
             listState: this.list.exportState(),
         };
+    }
+
+    empty() {
+        this.count = 0;
+        this.list.empty();
     }
 
     getServerValue() {
@@ -1554,15 +1679,20 @@ export class StaticList extends DataPoint {
 StaticList.DEFAULT_LIMIT = 80;
 
 export class RelationalModel extends Model {
-    setup(params, { action, dialog, notification, rpc, user }) {
+    setup(params, { action, dialog, notification, rpc, user, view }) {
         this.action = action;
         this.dialogService = dialog;
         this.notificationService = notification;
         this.rpc = rpc;
+        this.viewService = view;
         this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();
         this.mutex = new Mutex();
 
+        this.onCreate = params.onCreate;
+        this.quickCreateView = params.quickCreateView;
+        this.defaultGroupBy = params.defaultGroupBy || false;
+        this.defaultOrderBy = params.defaultOrder;
         this.rootType = params.rootType || "list";
         this.rootParams = {
             activeFields: params.activeFields || {},
@@ -1570,7 +1700,6 @@ export class RelationalModel extends Model {
             viewMode: params.viewMode || null,
             resModel: params.resModel,
             groupByInfo: params.groupByInfo,
-            defaultOrder: params.defaultOrder,
         };
         if (this.rootType === "record") {
             this.rootParams.resId = params.resId;
@@ -1592,19 +1721,26 @@ export class RelationalModel extends Model {
     }
 
     /**
-     * @param {object} params
+     * @param {Object} [params={}]
      * @param {Comparison | null} [params.comparison]
      * @param {Context} [params.context]
      * @param {DomainListRepr} [params.domain]
      * @param {string[]} [params.groupBy]
-     * @param {object[]} [params.orderBy]
+     * @param {Object[]} [params.orderBy]
      * @param {number} [params.resId] should not be there
      * @returns {Promise<void>}
      */
-    async load(params) {
-        const rootParams = Object.assign({}, this.rootParams, params);
-        if (params && params.orderBy && !params.orderBy.length) {
-            rootParams.orderBy = this.rootParams.defaultOrder;
+    async load(params = {}) {
+        const rootParams = { ...this.rootParams, ...params };
+        if (this.defaultOrderBy && !(params.orderBy && params.orderBy.length)) {
+            rootParams.orderBy = this.defaultOrderBy;
+        }
+        if (
+            this.defaultGroupBy &&
+            !this.env.inDialog &&
+            !(params.groupBy && params.groupBy.length)
+        ) {
+            rootParams.groupBy = [this.defaultGroupBy];
         }
         const state = this.root ? this.root.exportState() : {};
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
@@ -1677,7 +1813,7 @@ export class RelationalModel extends Model {
     // }
 }
 
-RelationalModel.services = ["action", "dialog", "notification", "rpc", "user"];
+RelationalModel.services = ["action", "dialog", "notification", "rpc", "user", "view"];
 RelationalModel.Record = Record;
 RelationalModel.Group = Group;
 RelationalModel.DynamicRecordList = DynamicRecordList;

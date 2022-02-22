@@ -19,8 +19,8 @@ import { isRelational } from "@web/views/helpers/view_utils";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { useSortable } from "@web/views/kanban/kanban_sortable";
+import { isAllowedDateField } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { isAllowedDateField } from "./kanban_model";
 
 const { Component, useExternalListener, useState, useRef } = owl;
 const { RECORD_COLORS } = ColorPickerField;

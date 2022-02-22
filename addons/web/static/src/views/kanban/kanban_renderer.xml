@@ -82,7 +82,7 @@
                         </div>
                         <t t-if="!group.isFolded">
                             <t t-foreach="group.list.records" t-as="record" t-key="record.id">
-                                <div t-if="record.isQuickCreate and props.list.quickCreateInfo"
+                                <div t-if="record.isInQuickCreation and props.list.quickCreateInfo"
                                     class="o_kanban_quick_create"
                                     t-att-class="{ o_disabled: state.quickCreateDisabled }"
                                     t-on-keydown="(ev) => this.onQuickCreateKeydown(group, ev)"
