@@ -215,7 +215,6 @@ class Web_Editor(http.Controller):
                 return {'error': e.args[0]}
         elif filetype == "video":
             try:
-                data = b64decode(data)
                 mimetype = guess_mimetype(data)
                 max_video_size = 128  # Max video size in MB
                 if len(data) > max_video_size * (1024 ** 2):
@@ -279,12 +278,12 @@ class Web_Editor(http.Controller):
         return removal_blocked_by
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
-    def get_image_info(self, src=''):
+    def get_image_info(self, media_src=''):
         """This route is used to determine the original of an attachment so that
         it can be used as a base to modify it again (crop/optimization/filters).
         """
         attachment = None
-        id_match = re.search('^/web/image/([^/?]+)', src)
+        id_match = re.search('^/web/image/([^/?]+)', media_src)
         if id_match:
             url_segment = id_match.group(1)
             number_match = re.match('^(\d+)', url_segment)
@@ -296,7 +295,7 @@ class Web_Editor(http.Controller):
             # Find attachment by url. There can be multiple matches because of default
             # snippet images referencing the same image in /static/, so we limit to 1
             attachment = request.env['ir.attachment'].search([
-                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
+                '|', ('url', '=like', media_src), ('url', '=like', '%s?%%' % media_src),
                 ('mimetype', 'in', SUPPORTED_IMAGE_MIMETYPES),
             ], limit=1)
         if not attachment:
@@ -306,7 +305,7 @@ class Web_Editor(http.Controller):
             }
         return {
             'attachment': attachment.read(['id'])[0],
-            'original': (attachment.original_id or attachment).read(['id', 'src', 'mimetype'])[0],
+            'original': (attachment.original_id or attachment).read(['id', 'media_src', 'mimetype'])[0],
         }
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, thumbnail=False, res_model='ir.ui.view', mimetype=False):
@@ -517,7 +516,7 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None):
         """
-        Creates a modified copy of an attachment and returns its src to be
+        Creates a modified copy of an attachment and returns its media_src to be
         inserted into the DOM.
         """
         fields = {
@@ -547,9 +546,9 @@ class Web_Editor(http.Controller):
                 url_fragments.insert(-1, str(attachment.id))
                 attachment.url = '/'.join(url_fragments)
         if attachment.public:
-            return attachment.src
+            return attachment.media_src
         attachment.generate_access_token()
-        return '%s?access_token=%s' % (attachment.src, attachment.access_token)
+        return '%s?access_token=%s' % (attachment.media_src, attachment.access_token)
 
     def _get_shape_svg(self, module, *segments):
         shape_path = get_resource_path(module, 'static', *segments)

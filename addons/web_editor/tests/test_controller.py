@@ -21,7 +21,7 @@ class TestController(HttpCase):
             data=json_safe.dumps({'params': {
                 'name': 'test.txt',
                 'data': 'SGVsbG8gd29ybGQ=',  # base64 Hello world
-                'is_image': False,
+                'filetype': "file",
             }})
         ).json()
         self.assertFalse('error' in response, 'Upload failed: %s' % response.get('error', {}).get('message'))

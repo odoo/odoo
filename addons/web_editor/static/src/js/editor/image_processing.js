@@ -425,21 +425,21 @@ async function activateCropper(image, aspectRatio, dataset) {
  * attachment if it can't be found in the 'src' attribute.
  */
 async function loadImageInfo(img, rpc, attachmentSrc = '') {
-    const src = attachmentSrc || img.getAttribute('src');
+    const mediaSrc = attachmentSrc || img.getAttribute('src');
     // If there is a marked originalSrc, the data is already loaded.
-    if (img.dataset.originalSrc || !src) {
+    if (img.dataset.originalSrc || !mediaSrc) {
         return;
     }
 
     const {original} = await rpc({
         route: '/web_editor/get_image_info',
-        params: {src: src.split(/[?#]/)[0]},
+        params: {media_src: mediaSrc.split(/[?#]/)[0]},
     });
     // Check that url is local.
-    const isLocal = original && new URL(original.src, window.location.origin).origin === window.location.origin;
-    if (isLocal && original.src) {
+    const isLocal = original && new URL(original.media_src, window.location.origin).origin === window.location.origin;
+    if (isLocal && original.media_src) {
         img.dataset.originalId = original.id;
-        img.dataset.originalSrc = original.src;
+        img.dataset.originalSrc = original.media_src;
         img.dataset.mimetype = original.mimetype;
     }
 }

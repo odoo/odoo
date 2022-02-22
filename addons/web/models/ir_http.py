@@ -192,11 +192,9 @@ class Http(models.AbstractModel):
         headers.append(('Content-Length', len(content)))
         content_type = guess_mimetype(content)
         if content_type == 'video/mp4':
-            '''
-            Setting CSP required in order to play same origin videos as BG videos.
-            It presents no additional security risk when set to 'self', for more info
-            check https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src.
-            '''
+            # Setting CSP required in order to play same origin videos as BG videos.
+            # It presents no additional security risk when set to 'self', for more info
+            # check https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src.
             try:
                 previous_csp = headers.index(('Content-Security-Policy', "default-src 'none'"))
                 headers[previous_csp] = ('Content-Security-Policy', "media-src 'self'")

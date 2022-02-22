@@ -201,7 +201,7 @@ var FileWidget = SearchableMediaWidget.extend({
             await this._renderThumbnails();
             if (o.url) {
                 self._selectAttachment(_.find(self.attachments, function (attachment) {
-                    return o.url === attachment.src;
+                    return o.url === attachment.media_src;
                 }) || o);
             }
             return def;
@@ -245,7 +245,7 @@ var FileWidget = SearchableMediaWidget.extend({
      */
     fetchAttachments: function (number, offset) {
         const fields = ['name', 'mimetype', 'description', 'checksum', 'url', 'type', 'res_id',
-            'res_model', 'public', 'access_token', 'src', 'width', 'height', 'original_id'];
+            'res_model', 'public', 'access_token', 'media_src', 'media_width', 'media_height', 'original_id'];
         if (this.widgetType === "video") {
             // Thumbnails are binary data, only fetch them if needed
             fields.push("thumbnail");
@@ -451,15 +451,15 @@ var FileWidget = SearchableMediaWidget.extend({
         }
         const selected = this.selectedAttachments.concat(mediaAttachments).map(attachment => {
             // Color-customize dynamic SVGs with the theme colors
-            if (attachment.src && attachment.src.startsWith('/web_editor/shape/')) {
-                const colorCustomizedURL = new URL(attachment.src, window.location.origin);
+            if (attachment.media_src && attachment.media_src.startsWith('/web_editor/shape/')) {
+                const colorCustomizedURL = new URL(attachment.media_src, window.location.origin);
                 colorCustomizedURL.searchParams.forEach((value, key) => {
                     const match = key.match(/^c([1-5])$/);
                     if (match) {
-                        colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`))
+                        colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`));
                     }
-                })
-                attachment.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
+                });
+                attachment.media_src = colorCustomizedURL.pathname + colorCustomizedURL.search;
             }
             return attachment;
         });
@@ -468,7 +468,7 @@ var FileWidget = SearchableMediaWidget.extend({
         }
 
         const img = selected[0];
-        if (!img || !img.id || this.$media.attr('src') === img.src) {
+        if (!img || !img.id || this.$media.attr('src') === img.media_src) {
             return this.media;
         }
 
@@ -482,8 +482,8 @@ var FileWidget = SearchableMediaWidget.extend({
             });
         }
 
-        if (img.src) {
-            var src = img.src;
+        if (img.media_src) {
+            var src = img.media_src;
             if (!img.public && img.access_token) {
                 src += _.str.sprintf('?access_token=%s', img.access_token);
             }
@@ -643,9 +643,7 @@ var FileWidget = SearchableMediaWidget.extend({
                         'data': dataURL.split(',')[1],
                         'res_id': this.options.res_id,
                         'res_model': this.options.res_model,
-                        'filetype': this.widgetType,
-                        'width': 0,
-                        'quality': 0,
+                        'filetype': this.widgetType || "file",
                     }
                 }, index);
                 if (!attachment.error) {
@@ -850,13 +848,13 @@ var ImageWidget = FileWidget.extend({
             if (attachment.media_src && attachment.media_src.startsWith('/')) {
                 const newURL = new URL(attachment.media_src, window.location.origin);
                 // Set the main colors of dynamic SVGs to o-color-1~5
-                if (attachment.src.startsWith('/web_editor/shape/')) {
+                if (attachment.media_src.startsWith('/web_editor/shape/')) {
                     newURL.searchParams.forEach((value, key) => {
                         const match = key.match(/^c([1-5])$/);
                         if (match) {
                             newURL.searchParams.set(key, primaryColors[match[1]]);
                         }
-                    })
+                    });
                 } else {
                     // Set height so that db images load faster
                     newURL.searchParams.set('height', 2 * this.MIN_ROW_HEIGHT);
@@ -936,7 +934,7 @@ var ImageWidget = FileWidget.extend({
             const noLoadMoreButton = noMoreImgToLoad && this.libraryMedia.length <= 15;
             this.$('.o_load_done_msg').toggleClass('d-none', noLoadMoreButton || !noMoreImgToLoad);
             this.$('.o_load_more').toggleClass('d-none', noMoreImgToLoad);
-            this.$('.o_we_load_more').toggleClass('d-none', noMoreImgToLoad);
+            this.$('.o_we_load_more').toggleClass('d-none', noMoreImgToLoad); // TODO: check if this breaks load more
         }
     },
     /**
@@ -1390,7 +1388,7 @@ const VideoWidget = FileWidget.extend({
                 } else if (att.thumbnailText === "dai") {
                     att.thumbnailText += "lymotion";
                 }
-            } else if (att.src) {
+            } else if (att.media_src) {
                 att.thumbnailText = "Uploaded";
             } else {
                 att.thumbnailText = "Unknown";
@@ -1459,7 +1457,7 @@ const VideoWidget = FileWidget.extend({
      */
     async _selectAttachment(attachment, save, {type = 'attachment'} = {}) {
         this._resetVideo();
-        const clickedOnNewUpload = attachment ? !(this.selectedAttachments.length) || this.selectedAttachments[0].src !== attachment.src : false;
+        const clickedOnNewUpload = attachment ? !(this.selectedAttachments.length) || this.selectedAttachments[0].media_src !== attachment.media_src : false;
         const clickedOnNewURL = attachment ? !(this.selectedAttachments.length) || this.selectedAttachments[0].url !== attachment.url : false;
         if (clickedOnNewURL && attachment.mimetype === 'video/url') {
             // Clicked on a saved URL attachment different from the current one
@@ -1486,24 +1484,6 @@ const VideoWidget = FileWidget.extend({
             } else {
                 this.$('#video-preview').show();
             }
-        }
-    },
-    /**
-     * @override
-     */
-    _clear() {
-        if (this.media.dataset.src) {
-            try {
-                delete this.media.dataset.src;
-            } catch (e) {
-                this.media.dataset.src = undefined;
-            }
-        }
-        var allVideoClasses = /(^|\s)media_iframe_video(\s|$)/g;
-        var isVideo = this.media.className && this.media.className.match(allVideoClasses);
-        if (isVideo) {
-            this.media.className = this.media.className.replace(allVideoClasses, ' ');
-            this.media.innerHTML = '';
         }
     },
     /**
@@ -1624,9 +1604,9 @@ const VideoWidget = FileWidget.extend({
         const $uploadedVideo = this.$('.o_we_attachment_selected');
         let query;
         const autoplayChecked = this.$('input#o_video_autoplay').is(':checked');
-        if ($uploadedVideo.length && this.selectedAttachments.length && this.selectedAttachments[0].src) {
+        if ($uploadedVideo.length && this.selectedAttachments.length && this.selectedAttachments[0].media_src) {
             this._showUpload();
-            query = await this._createVideoNode(this.selectedAttachments[0].src, {
+            query = await this._createVideoNode(this.selectedAttachments[0].media_src, {
                 'uploaded': true,
                 'autoplay': this.isForBgVideo || autoplayChecked,
                 'muted': this.isForBgVideo || autoplayChecked,
@@ -1636,7 +1616,7 @@ const VideoWidget = FileWidget.extend({
         } else if (code) {
             if (code.includes('/web/content/')) {
                 for (const attachment of this.attachments) {
-                    if (code.includes(attachment['src'])) {
+                    if (code.includes(attachment['media_src'])) {
                         await this._selectAttachment(attachment, false);
                         await this._renderThumbnails();
                     }
@@ -1656,7 +1636,7 @@ const VideoWidget = FileWidget.extend({
                             kwargs: {
                                 domain: searchDomain,
                                 fields: ['name', 'mimetype', 'description', 'checksum', 'url', 'type', 'res_id',
-                                    'res_model', 'public', 'access_token', 'src', 'width', 'height', 'original_id',
+                                    'res_model', 'public', 'access_token', 'media_src', 'media_width', 'media_height', 'original_id',
                                     'thumbnail'],
                                 order: [{name: 'id', asc: false}],
                                 context: this.options.context,
@@ -1726,7 +1706,7 @@ const VideoWidget = FileWidget.extend({
                                 kwargs: {
                                     domain: searchDomain,
                                     fields: ['name', 'mimetype', 'description', 'checksum', 'url', 'type', 'res_id',
-                                        'res_model', 'public', 'access_token', 'src', 'width', 'height', 'original_id',
+                                        'res_model', 'public', 'access_token', 'media_src', 'media_width', 'media_height', 'original_id',
                                         'thumbnail'],
                                     order: [{name: 'id', asc: false}],
                                     context: this.options.context,

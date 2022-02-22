@@ -252,7 +252,7 @@
         <div t-attf-class="o_existing_attachment_cell position-relative bg-light #{isOptimized and 'o_we_attachment_optimized d-none' or ''} align-items-center justify-content-center" t-att-data-id="attachment.id">
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
             <div class="o_we_media_dialog_img_wrapper">
-                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.thumbnail_src or attachment.src}" t-att-alt="attachment.name" t-att-title="attachment.name"/>
+                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.thumbnail_src or attachment.media_src}" t-att-alt="attachment.name" t-att-title="attachment.name"/>
             </div>
             <span t-if="isOptimized" class="badge badge-success">Optimized</span>
         </div>
