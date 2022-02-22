@@ -34,6 +34,24 @@ var id = 0;
 const faZoomClassRegex = RegExp('fa-[0-9]x');
 const mediaSelector = 'img, .fa, .o_image, .media_iframe_video';
 
+// Time to consider a user offline in ms. This fixes the problem of the
+// navigator closing rtc connection when the mac laptop screen is closed.
+const CONSIDER_OFFLINE_TIME = 1000;
+// Check wether the computer could be offline. This fixes the problem of the
+// navigator closing rtc connection when the mac laptop screen is closed.
+// This case happens on Mac OS on every browser when the user close it's laptop
+// screen. At first, the os/navigator closes all rtc connection, and after some
+// times, the os/navigator internet goes offline without triggering an
+// offline/online event.
+// However, if the laptop screen is open and the connection is properly remove
+// (e.g. disconnect wifi), the event is properly triggered.
+const CHECK_OFFLINE_TIME = 1000;
+const PTP_CLIENT_DISCONNECTED_STATES = [
+    'failed',
+    'closed',
+    'disconnected',
+];
+
 const Wysiwyg = Widget.extend({
     xmlDependencies: [
     ],
@@ -57,6 +75,10 @@ const Wysiwyg = Widget.extend({
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
         this._onBlur = this._onBlur.bind(this);
         this.customizableLinksSelector = 'a:not([data-toggle="tab"]):not([data-toggle="collapse"])';
+        // navigator.onLine is sometimes a false positive, this._isOnline use
+        // more heuristics to bypass the limitation.
+        this._isOnline = true;
+        this._signalOnline = this._signalOnline.bind(this);
     },
     /**
      *
@@ -136,6 +158,14 @@ const Wysiwyg = Widget.extend({
             self.$editable.trigger('content_changed');
             self.trigger_up('wysiwyg_change');
         });
+        document.addEventListener("mousemove", this._signalOnline, true);
+        document.addEventListener("keydown", this._signalOnline, true);
+        document.addEventListener("keyup", this._signalOnline, true);
+        if (this.odooEditor.document !== document) {
+            this.odooEditor.document.addEventListener("mousemove", this._signalOnline, true);
+            this.odooEditor.document.addEventListener("keydown", this._signalOnline, true);
+            this.odooEditor.document.addEventListener("keyup", this._signalOnline, true);
+        }
 
         const $wrapwrap = $('#wrapwrap');
         if ($wrapwrap.length) {
@@ -308,11 +338,6 @@ const Wysiwyg = Widget.extend({
             return;
         }
 
-        const startCollaborationTime = new Date().getTime();
-
-        // No need for secure random number.
-        const currentClientId = Math.floor(Math.random() * Math.pow(2, 52)).toString();
-
         this._collaborationChannelName = channelName;
         Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
@@ -331,9 +356,6 @@ const Wysiwyg = Widget.extend({
         this.call('bus_service', 'addChannel', this._collaborationChannelName);
         this.call('bus_service', 'startPolling');
 
-        // Wether or not the history has been sent or received at least once.
-        let historySyncAtLeastOnce = false;
-        let historySyncFinished = false;
         // const syncHistory = async (fromClientId) => {
         // }
         // Check wether clientA is before clientB.
@@ -346,22 +368,31 @@ const Wysiwyg = Widget.extend({
         };
         const rpcMutex = new Mutex();
 
-        this._peerToPeerLoading = new Promise(async (resolve) => {
-            let iceServers = await this._rpc({route: '/web_editor/get_ice_servers'});
-            if (!iceServers.length) {
-                iceServers = [
-                    {
-                        urls: [
-                            'stun:stun1.l.google.com:19302',
-                            'stun:stun2.l.google.com:19302',
-                        ],
-                    }
-                ];
-            }
+        this._getCurrentRecord = async () => {
+            const records = await this._rpc({
+                model: modelName,
+                method: "read",
+                args: [
+                    [resId],
+                    [fieldName, 'write_date']
+                ],
+            });
+            records[0].body = records[0][fieldName];
+            return records[0];
+        }
+        this._getRecordWriteDate = (record) => {
+            const dateString = record.write_date.replace(/^(\d{4}-\d{2}-\d{2}) ((\d{2}:?){3})$/, '$1T$2Z');
+            return new Date(dateString);
+        }
 
-            this.ptp = new PeerToPeer({
-                peerConnectionConfig: { iceServers },
-                currentClientId: currentClientId,
+        this._getNewPtp = () => {
+            // Wether or not the history has been sent or received at least once.
+            let historySyncAtLeastOnce = false;
+            let historySyncFinished = false;
+
+            return new PeerToPeer({
+                peerConnectionConfig: { iceServers: this._iceServers },
+                currentClientId: this._currentClientId,
                 broadcastAll: (rpcData) => {
                     return rpcMutex.exec(async () => {
                         return this._rpc({
@@ -376,7 +407,7 @@ const Wysiwyg = Widget.extend({
                     });
                 },
                 onRequest: {
-                    get_start_time: () => startCollaborationTime,
+                    get_start_time: () => this._startCollaborationTime,
                     get_client_name: async () => {
                         if (!this._userName) {
                             this._userName = (await this._rpc({
@@ -398,6 +429,12 @@ const Wysiwyg = Widget.extend({
                     switch (notificationName) {
                         case 'ptp_remove':
                             this.odooEditor.multiselectionRemove(notificationPayload);
+                            break;
+                        case 'rtc_signal_description':
+                            const pc = this.ptp.clientsInfos[fromClientId].peerConnection;
+                            if (this._couldBeDisconnected && this._navigatorCheckOnlineWorking && (!pc || pc.connectionState === 'closed')) {
+                                this._signalOnline();
+                            }
                             break;
                         case 'ptp_disconnect':
                             this.ptp.removeClient(fromClientId);
@@ -442,11 +479,65 @@ const Wysiwyg = Widget.extend({
                     }
                 }
             });
+        }
+
+        this._currentClientId = this._generateClientId();
+        this._startCollaborationTime = new Date().getTime();
+
+        this._checkConnectionChange = () => {
+            this._navigatorCheckOnlineWorking = true;
+            if (!this.ptp) {
+                return;
+            }
+            if (!navigator.onLine) {
+                this._signalOffline();
+            } else {
+                this._signalOnline();
+            }
+        };
+
+        window.addEventListener('online', this._checkConnectionChange);
+        window.addEventListener('offline', this._checkConnectionChange);
+
+        this._collaborationInterval = setInterval(async () => {
+            if (this._offlineTimeout || this.preSavePromise || !this.ptp) {
+                return;
+            }
+
+            const clientsInfos = Object.values(this.ptp.clientsInfos);
+            const couldBeDisconnected =
+                Boolean(clientsInfos.length) &&
+                clientsInfos.every((x) => PTP_CLIENT_DISCONNECTED_STATES.includes(x.peerConnection.connectionState));
+
+            if (couldBeDisconnected) {
+                this._offlineTimeout = setTimeout(() => {
+                    this._signalOffline();
+                }, CONSIDER_OFFLINE_TIME);
+            }
+        }, CHECK_OFFLINE_TIME);
+
+        this._peerToPeerLoading = new Promise(async (resolve) => {
+            this._currentRecordWriteDate = this._getRecordWriteDate(await this._getCurrentRecord());
+            let iceServers = await this._rpc({route: '/web_editor/get_ice_servers'});
+            if (!iceServers.length) {
+                iceServers = [
+                    {
+                        urls: [
+                            'stun:stun1.l.google.com:19302',
+                            'stun:stun2.l.google.com:19302',
+                        ],
+                    }
+                ];
+            }
+            this._iceServers = iceServers;
+
+            this.ptp = this._getNewPtp();
+
             resolve();
         });
 
         const editorCollaborationOptions = {
-            collaborationClientId: currentClientId,
+            collaborationClientId: this._currentClientId,
             onHistoryStep: (historyStep) => {
                 if (!this.ptp) return;
                 this.ptp.notifyAllClients('oe_history_step', historyStep, { transport: 'rtc' });
@@ -474,8 +565,8 @@ const Wysiwyg = Widget.extend({
             },
             onHistoryNeedSync: async () => {
                 if (!this.ptp) return;
-                let firstClientId = currentClientId;
-                let firstClientStartTime = startCollaborationTime;
+                let firstClientId = this._currentClientId;
+                let firstClientStartTime = this._startCollaborationTime;
                 const connectedClientIds = this.ptp.getConnectedClientIds();
                 for (const clientId of connectedClientIds) {
                     const clientInfo = this.ptp.clientsInfos[clientId];
@@ -501,7 +592,7 @@ const Wysiwyg = Widget.extend({
                     }
                 }
 
-                if (firstClientId !== currentClientId) {
+                if (firstClientId !== this._currentClientId) {
                     const historySteps = await this.ptp.requestClient(firstClientId, 'get_history_from_snapshot', undefined, { transport: 'rtc' });
                     this.odooEditor.historyResetFromSteps(historySteps);
                     const remoteSelection = await this.ptp.requestClient(firstClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
@@ -521,7 +612,16 @@ const Wysiwyg = Widget.extend({
             Wysiwyg.activeCollaborationChannelNames.delete(this._collaborationChannelName);
         }
 
+        if (this.ptp) {
+            this.ptp.stop();
+        }
+        document.removeEventListener("mousemove", this._signalOnline, true);
+        document.removeEventListener("keydown", this._signalOnline, true);
+        document.removeEventListener("keyup", this._signalOnline, true);
         if (this.odooEditor) {
+            this.odooEditor.document.removeEventListener("mousemove", this._signalOnline, true);
+            this.odooEditor.document.removeEventListener("keydown", this._signalOnline, true);
+            this.odooEditor.document.removeEventListener("keyup", this._signalOnline, true);
             this.odooEditor.document.removeEventListener('selectionchange', this._onSelectionChange);
             this.odooEditor.destroy();
         }
@@ -532,6 +632,7 @@ const Wysiwyg = Widget.extend({
                 this.ptp.closeAllConnections();
             });
         }
+        clearInterval(this._collaborationInterval);
         this.$editable && this.$editable.off('blur', this._onBlur);
         document.removeEventListener('mousedown', this._onDocumentMousedown, true);
         const $body = $(document.body);
@@ -544,6 +645,10 @@ const Wysiwyg = Widget.extend({
         $(this.$root).off('mousedown');
         if (this.linkPopover) {
             this.linkPopover.hide();
+        }
+        if (this._checkConnectionChange) {
+            window.removeEventListener('online', this._checkConnectionChange);
+            window.removeEventListener('offline', this._checkConnectionChange);
         }
         window.removeEventListener('beforeunload', this._onBeforeUnload);
         this._super();
@@ -1865,6 +1970,65 @@ const Wysiwyg = Widget.extend({
             this.trigger_up('wysiwyg_blur');
         }
     },
+    _signalOffline: function () {
+        if (!this._isOnline) {
+            return;
+        }
+        this._isOnline = false;
+
+        this.ptp.stop();
+        this.preSavePromise = new Promise((resolve, reject) => {
+            this.preSavePromiseResolve = resolve;
+            this.preSavePromiseReject = reject;
+        });
+    },
+    _signalOnline: async function () {
+        clearTimeout(this._offlineTimeout);
+        this._offlineTimeout = undefined;
+
+        if (this._isOnline || !this.preSavePromise || !navigator.onLine) {
+            return;
+        }
+        this._isOnline = true;
+
+        if (this._removeSignalDisconnectCallback) {
+            this._removeSignalDisconnectCallback();
+        }
+        const resetPreSavePromise = () => {
+            this.preSavePromise = undefined;
+            this.preSavePromiseResolve = undefined;
+            this.preSavePromiseReject = undefined;
+        }
+        try {
+            const record = await this._getCurrentRecord();
+            const newDate = this._getRecordWriteDate(record);
+            if (newDate !== this._currentRecordWriteDate) {
+                this._resetEditor(record.body);
+            }
+            this.preSavePromiseResolve();
+            resetPreSavePromise();
+        } catch (e) {
+            this.preSavePromiseReject(e);
+            resetPreSavePromise();
+        }
+    },
+    _generateClientId: function () {
+        // No need for secure random number.
+        return Math.floor(Math.random() * Math.pow(2, 52)).toString();
+    },
+    _resetEditor: function (value) {
+        if (!this.ptp) {
+            return;
+        }
+        this.ptp.stop();
+        this._currentClientId = this._generateClientId();
+        this._startCollaborationTime = new Date().getTime();
+        this.ptp = this._getNewPtp();
+        this.odooEditor.collaborationSetClientId(this._currentClientId);
+        this.setValue(value);
+        this.odooEditor.historyReset();
+        this.ptp.notifyAllClients('ptp_join');
+    }
 });
 Wysiwyg.activeCollaborationChannelNames = new Set();
 //--------------------------------------------------------------------------
