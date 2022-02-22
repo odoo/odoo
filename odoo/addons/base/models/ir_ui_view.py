@@ -1322,8 +1322,6 @@ actual arch.
                 )
                 self._raise_view_error(msg, child)
             elif child.tag == "field" and not child.get('string'):
-                # Only case where two same fields has any sense is when they have different labels
-                # TODO needed : and not child.get('position') ?
                 if child.get('name') in fnames:
                     msg = _('Tree view %s contains field %s twice (or more)')
                     self._raise_view_error(msg % (
@@ -1728,7 +1726,7 @@ actual arch.
                 self._log_view_warning(msg, node)
 
             elif attr == "widget" and expr == "monetary" and node.tag == "field":
-                field = name_manager.Model._fields.get(node.get("name"))
+                field = name_manager.model._fields.get(node.get("name"))
                 if field and field.type == "monetary":
                     # If the field is a monetary
                     # the currency should be the field one
@@ -1741,13 +1739,13 @@ actual arch.
             elif attr in ["states", "statusbar_visible"]:
                 states = expr.split(',')
                 fname = node.get("name") if node.tag == "field" and node.get('widget') == 'statusbar' else "state"
-                valid_states = name_manager.Model._fields[fname].get_values(
-                    name_manager.Model.env
+                valid_states = name_manager.model._fields[fname].get_values(
+                    name_manager.model.env
                 )
                 for state in states:
                     if state not in valid_states:
                         msg = "Invalid %s '%s' specified as '%s' attribute" % (fname, state, attr)
-                        self.handle_view_error(msg, raise_exception=False)
+                        self._log_view_warning(msg, node)
                 name_manager.must_have_field(fname, "%s='%s'" % (attr, expr))
 
     def _validate_classes(self, node, expr):
