@@ -8,7 +8,7 @@ const { Component } = owl;
 
 export class LabelSelectionField extends Component {
     get className() {
-        return this.props.classesObj ? this.props.classesObj[this.props.value] : "primary";
+        return this.props.classesObj[this.props.value] || "primary";
     }
     get options() {
         return this.props.record.fields[this.props.name].selection;
@@ -28,6 +28,9 @@ export class LabelSelectionField extends Component {
 }
 
 LabelSelectionField.template = "web.LabelSelectionField";
+LabelSelectionField.defaultProps = {
+    classesObj: {},
+};
 LabelSelectionField.props = {
     ...standardFieldProps,
     classesObj: { type: Object, optional: true },
