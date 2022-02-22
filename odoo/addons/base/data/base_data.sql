@@ -67,7 +67,6 @@ CREATE TABLE ir_module_module (
     to_buy boolean default False,
     primary key(id)
 );
-ALTER TABLE ir_module_module add constraint name_uniq unique (name);
 
 CREATE TABLE ir_module_module_dependency (
     id serial NOT NULL,
