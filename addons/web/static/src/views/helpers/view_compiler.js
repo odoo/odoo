@@ -509,10 +509,11 @@ export class ViewCompiler {
         field.setAttribute("name", `"${fieldName}"`);
         field.setAttribute("record", `record`);
 
-        if ("mode" in node.attributes) {
-            const viewModes = node.getAttribute("mode").split(",");
-            field.setAttribute("viewMode", `${JSON.stringify(viewModes)}`);
-        }
+        // FIXME WOWL: not necessary?
+        // if ("mode" in node.attributes) {
+        //     const viewModes = node.getAttribute("mode").split(",");
+        //     field.setAttribute("viewMode", `${JSON.stringify(viewModes)}`);
+        // }
 
         // FIXME WOWL: only for x2many fields
         field.setAttribute(
