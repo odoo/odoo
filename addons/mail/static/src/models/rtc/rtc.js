@@ -685,6 +685,29 @@ registerModel({
             }
         },
         /**
+         * @param {string} token
+         * @param {string} [reason]
+         */
+        async _onRecoverConnectionTimeout(token, reason) {
+            delete this._fallBackTimeouts[token];
+            const peerConnection = this._peerConnections[token];
+            if (!peerConnection || !this.channel) {
+                return;
+            }
+            if (this._outGoingCallTokens.has(token)) {
+                return;
+            }
+            if (peerConnection.iceConnectionState === 'connected') {
+                return;
+            }
+            this._addLogEntry(token, `calling back to recover ${peerConnection.iceConnectionState} connection, reason: ${reason}`);
+            await this._notifyPeers([token], {
+                event: 'disconnect',
+            });
+            this._removePeer(token);
+            this._callPeer(token);
+        },
+        /**
          * Pings the server to ensure this session is kept alive.
          */
         async _pingServer() {
@@ -715,25 +738,10 @@ registerModel({
             if (this._fallBackTimeouts[token]) {
                 return;
             }
-            this._fallBackTimeouts[token] = browser.setTimeout(async () => {
-                delete this._fallBackTimeouts[token];
-                const peerConnection = this._peerConnections[token];
-                if (!peerConnection || !this.channel) {
-                    return;
-                }
-                if (this._outGoingCallTokens.has(token)) {
-                    return;
-                }
-                if (peerConnection.iceConnectionState === 'connected') {
-                    return;
-                }
-                this._addLogEntry(token, `calling back to recover ${peerConnection.iceConnectionState} connection, reason: ${reason}`);
-                await this._notifyPeers([token], {
-                    event: 'disconnect',
-                });
-                this._removePeer(token);
-                this._callPeer(token);
-            }, delay);
+            this._fallBackTimeouts[token] = browser.setTimeout(
+                this._onRecoverConnectionTimeout.bind(this, token, reason),
+                delay,
+            );
         },
         /**
          * Cleans up a peer by closing all its associated content and the connection.
