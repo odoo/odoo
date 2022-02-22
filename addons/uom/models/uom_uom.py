@@ -30,7 +30,7 @@ class UoMCategory(models.Model):
             else:
                 new_reference = self.uom_ids.filtered(lambda o: o.uom_type == 'reference' and o._origin.uom_type != 'reference')
             if new_reference:
-                other_uoms = self.uom_ids - new_reference
+                other_uoms = self.uom_ids.filtered(lambda u: u._origin.id) - new_reference
                 for uom in other_uoms:
                     uom.factor = uom._origin.factor / (new_reference._origin.factor or 1)
                     if uom.factor > 1:
