@@ -171,7 +171,7 @@ export class MockModels {
                     is_read: { string: "Is Read", type: 'boolean', default: false },
                     mail_message_id: { string: "Message", type: 'many2one', relation: 'mail.message' },
                     notification_status: { string: "Notification Status", type: 'selection', selection: [['ready', 'Ready to Send'], ['sent', 'Sent'], ['bounce', 'Bounced'], ['exception', 'Exception'], ['canceled', 'Canceled']], default: 'ready' },
-                    notification_type: { string: "Notification Type", type: 'selection', selection: [['email', 'Handle by Emails'], ['inbox', 'Handle in Odoo']], default: 'email' },
+                    notification_type: { string: "Notification Type", type: 'selection', selection: [['email', 'Handle by Emails'], ['inbox', 'Handle in Odoo']], default: 'inbox' },
                     res_partner_id: { string: "Needaction Recipient", type: 'many2one', relation: 'res.partner' },
                 },
                 records: [],
