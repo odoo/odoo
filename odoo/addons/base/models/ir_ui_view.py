@@ -1326,10 +1326,10 @@ actual arch.
                 # TODO needed : and not child.get('position') ?
                 if child.get('name') in fnames:
                     msg = _('Tree view %s contains field %s twice (or more)')
-                    self.handle_view_error(msg % (
+                    self._raise_view_error(msg % (
                         self.env.context.get('install_xmlid') or self.xml_id,
                         child.get('name'),
-                    ), raise_exception=False)
+                    ), child)
                 fnames.append(child.get('name'))
 
     def _validate_tag_graph(self, node, name_manager, node_info):
