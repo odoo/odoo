@@ -95,6 +95,9 @@ export class FileUploader extends Component {
         this.props.onRemove();
     }
 }
+FileUploader.defaultProps = {
+    isEmpty: false,
+};
 FileUploader.props = {
     onUploaded: Function,
     onRemove: Function,
@@ -102,6 +105,7 @@ FileUploader.props = {
     fileUploadClass: { type: String, optional: true },
     fileUploadStyle: { type: String, optional: true },
     fileUploadAction: { type: String, optional: true },
+    isEmpty: { type: Boolean, optional: true },
     multiUpload: { type: Boolean, optional: true },
     acceptedFileExtensions: { type: String, optional: true },
     required: { type: Boolean, optional: true },

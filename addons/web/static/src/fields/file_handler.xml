@@ -16,6 +16,7 @@
                             t-on-click="onSelectFileButtonClick"
                         />
                         <button
+                        t-if="!props.isEmpty"
                             class="fa fa-trash-o fa-lg float-right o_clear_file_button"
                             data-tooltip="Clear"
                             aria-label="Clear"

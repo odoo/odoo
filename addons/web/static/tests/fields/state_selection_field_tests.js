@@ -406,8 +406,10 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(list, ".dropdown-menu", "there should not be a dropdown");
 
         // Click on the status button to make the dropdown appear
-        const cell = list.el.querySelector("tbody td.o_state_selection_cell");
-        await click(list.el, ".o_state_selection_cell .o_field_state_selection span.o_status");
+        let cell = list.el.querySelector("tbody td.o_state_selection_cell");
+        await click(
+            list.el.querySelector(".o_state_selection_cell .o_field_state_selection span.o_status")
+        );
         assert.doesNotHaveClass(
             cell.parentElement,
             "o_selected_row",
@@ -494,8 +496,9 @@ QUnit.module("Fields", (hooks) => {
 
         // Click on the last status button to make the dropdown appear
         await click(
-            list.el,
-            ".o_state_selection_cell .o_field_state_selection span.o_status:last-child"
+            list.el.querySelectorAll(
+                ".o_state_selection_cell .o_field_state_selection span.o_status"
+            )[4]
         );
         assert.containsOnce(list, ".dropdown-menu", "there should be a dropdown");
         assert.containsN(
