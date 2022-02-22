@@ -1324,7 +1324,7 @@ actual arch.
             elif child.tag == "field" and not child.get('string'):
                 if child.get('name') in fnames:
                     msg = _('Tree view %s contains field %s twice (or more)')
-                    self._raise_view_error(msg % (
+                    self._log_view_warning(msg % (
                         self.env.context.get('install_xmlid') or self.xml_id,
                         child.get('name'),
                     ), child)
