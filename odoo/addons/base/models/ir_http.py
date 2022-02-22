@@ -383,19 +383,20 @@ class IrHttp(models.AbstractModel):
         field_def = record._fields[field]
         if field_def.type == 'binary' and field_def.attachment and not field_def.related:
             if model != 'ir.attachment':
-                field_attachment = self.env['ir.attachment'].sudo().search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['mimetype', 'checksum'] + ([] if xaccel_header else ['raw']), limit=1)
+                Attachment_sudo = self.env['ir.attachment'].sudo()
+                field_attachment = Attachment_sudo.search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['mimetype', 'checksum', 'id'], limit=1)
                 if field_attachment:
                     mimetype = field_attachment[0]['mimetype']
-                    content = xaccel_header or field_attachment[0]['raw']
+                    content = Attachment_sudo.browse(field_attachment[0]['id']).get_lazy_raw()
                     filehash = field_attachment[0]['checksum']
             else:
                 mimetype = record['mimetype']
-                content = xaccel_header or record['raw']
+                content = record.get_lazy_raw()
                 filehash = record['checksum']
 
         if not content:
             if model == 'ir.attachment':
-                content = xaccel_header or record.raw
+                content = record.get_lazy_raw()
             else:
                 data = record[field] or b''
                 content = xaccel_header or base64.b64decode(data)

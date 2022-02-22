@@ -657,3 +657,35 @@ class IrAttachment(models.Model):
         domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
         fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
         return self.search_read(domain, fieldNames, order=order, limit=1)
+
+    def get_lazy_raw(self):
+        """ Returns lazily fetched raw data.
+            NOT a computed field in order to get a new generator for every call.
+        """
+        self.ensure_one()
+        if self.store_fname:
+            attach = self
+            raw_field = attach._fields['raw']
+            full_path = self._full_path(self.store_fname)
+            class FileContent(object):
+                def __len__(self):
+                    return os.path.getsize(full_path)
+
+                def __iter__(self):
+                    yield b''
+                    # Re-implemented because yielding attach.raw creates a infinite recursion.
+                    try:
+                        value = attach.env.cache.get(attach, raw_field)
+                    except KeyError:
+                        try:
+                            with open(full_path, 'rb') as f:
+                                value = f.read()
+                        except (IOError, OSError):
+                            _logger.info("get_lazy_raw reading %s", full_path, exc_info=True)
+                            value = b''
+                        attach.env.cache.set(attach, raw_field, value)
+                    yield value
+
+            return FileContent()
+        else:
+            return self.db_datas
