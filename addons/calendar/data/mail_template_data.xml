@@ -365,11 +365,11 @@
             <field name="body_html" type="html">
 <div>
     <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}" />
-    <t t-set="is_online = 'appointment_type_id' in object and object.appointment_type_id" />
-    <t t-set="target_responsible = object.partner_id == object.partner_id" />
-    <t t-set="target_customer = object.partner_id == customer" />
-    <t t-set="recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence'" />
-    <t t-set="mail_tz = ctx.get('mail_tz')" />
+    <t t-set="is_online" t-value="'appointment_type_id' in object and object.appointment_type_id" />
+    <t t-set="target_responsible" t-value="object.partner_id == object.partner_id" />
+    <t t-set="target_customer" t-value="object.partner_id == customer" />
+    <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
+    <t t-set="mail_tz" t-value="ctx.get('mail_tz')" />
     <div>
         <table border="0" cellpadding="0" cellspacing="0">
             <tr>
