@@ -80,7 +80,7 @@
                         <t t-if="!callParticipantCard.rtcSession.isOwnSession">
                             <Popover>
                                 <i class="o_RtcCallParticipantCard_volumeMenuAnchor" t-on-click="callParticipantCard.onClickVolumeAnchor" t-ref="volumeMenuAnchor"/>
-                                <t t-set="opened">
+                                <t t-set-slot="opened">
                                     <input type="range" min="0.0" max="1" step="0.01" t-att-value="callParticipantCard.rtcSession.volume" t-on-change="callParticipantCard.onChangeVolume"/>
                                 </t>
                             </Popover>
