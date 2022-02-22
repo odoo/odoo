@@ -122,7 +122,7 @@ Options:
 </template>
 
 <!-- (Option) Sidebar Blog: Follow Us -->
-<template id="opt_sidebar_blog_index_follow_us" name="Follow Us" priority="1" inherit_id="website_blog.sidebar_blog_index" active="True" customize_show="True">
+<template id="opt_sidebar_blog_index_follow_us" name="Follow Us" priority="1" inherit_id="website_blog.sidebar_blog_index" active="True">
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-2 mb-4 border-bottom font-weight-bold">Follow Us</h6>
@@ -147,7 +147,7 @@ Options:
 </template>
 
 <!-- (Option) Sidebar Blog: Archives -->
-<template id="opt_sidebar_blog_index_archives" name="Archives" priority="2" inherit_id="website_blog.sidebar_blog_index" active="True" customize_show="True">
+<template id="opt_sidebar_blog_index_archives" name="Archives" priority="2" inherit_id="website_blog.sidebar_blog_index" active="True">
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-2 mb-4 border-bottom font-weight-bold">Archives</h6>
@@ -159,7 +159,7 @@ Options:
 </template>
 
 <!-- (Option) Sidebar Blog: Show tags -->
-<template id="opt_sidebar_blog_index_tags" name="Tags List" priority="3" inherit_id="website_blog.sidebar_blog_index" active="True" customize_show="True">
+<template id="opt_sidebar_blog_index_tags" name="Tags List" priority="3" inherit_id="website_blog.sidebar_blog_index" active="True">
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
 
         <div t-if="other_tags or tag_category" class="o_wblog_sidebar_block pb-5">
@@ -201,7 +201,7 @@ Display a sidebar beside the post content.
 
 
 <!-- (Option) Post Sidebar: Author avatar -->
-<template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="True" customize_show="True" priority="1">
+<template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="True" priority="1">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <t t-call="website_blog.post_author">
@@ -213,7 +213,7 @@ Display a sidebar beside the post content.
 </template>
 
 <!-- (Option) Post Sidebar: Share Links Display -->
-<template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="True" customize_show="True" priority="2">
+<template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="True" priority="2">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-3 mb-4 border-bottom font-weight-bold">Share this post</h6>
@@ -231,7 +231,7 @@ Display a sidebar beside the post content.
 </template>
 
 <!-- (Option) Post Sidebar: display tags -->
-<template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="True" customize_show="True" priority="3">
+<template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="True" priority="3">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-3 mb-4 border-bottom font-weight-bold">Tags</h6>
@@ -255,7 +255,7 @@ Display a sidebar beside the post content.
 </template>
 
 <!-- (Option) Post Sidebar: display Blogs list -->
-<template id="opt_blog_post_blogs_display" name="Blogs List" inherit_id="website_blog.blog_post_sidebar" active="True" customize_show="True" priority="4">
+<template id="opt_blog_post_blogs_display" name="Blogs List" inherit_id="website_blog.blog_post_sidebar" active="True" priority="4">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-3 mb-4 border-bottom font-weight-bold">Our blogs</h6>
@@ -270,7 +270,7 @@ Display a sidebar beside the post content.
 </template>
 
 <!-- (Option) Post Sidebar: display Archive -->
-<template id="opt_blog_post_archive_display" name="Archive" inherit_id="website_blog.blog_post_sidebar" active="True" customize_show="True" priority="5">
+<template id="opt_blog_post_archive_display" name="Archive" inherit_id="website_blog.blog_post_sidebar" active="True" priority="5">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-3 mb-4 border-bottom font-weight-bold">Archive</h6>
