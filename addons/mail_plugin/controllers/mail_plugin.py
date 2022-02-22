@@ -144,7 +144,7 @@ class MailPluginController(http.Controller):
             return {'error': _('You need to specify at least the partner_id or the name and the email')}
 
         if partner_id:
-            partner = request.env['res.partner'].browse(partner_id)
+            partner = request.env['res.partner'].browse(partner_id).exists()
             return self._get_contact_data(partner)
 
         normalized_email = tools.email_normalize(email)
