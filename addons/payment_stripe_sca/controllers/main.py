@@ -52,7 +52,7 @@ class StripeControllerSCA(StripeController):
         return res.get('client_secret')
 
 
-    @route('/payment/stripe/s2s/process_payment_intent', type='json')
+    @route('/payment/stripe/s2s/process_payment_intent', type='json', auth='public', csrf=False)
     def stripe_s2s_process_payment_intent(self, **post):
         return request.env['payment.transaction'].sudo().form_feedback(post, 'stripe')
 
