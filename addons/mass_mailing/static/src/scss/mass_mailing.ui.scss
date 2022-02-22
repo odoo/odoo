@@ -282,6 +282,9 @@ body.editor_enable.o_basic_theme.o_in_iframe {
         color: #999999;
         margin: 5px;
         height: auto;
+        width: -moz-available;          /* WebKit-based browsers will ignore this. */
+        width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+        width: stretch;
 
         &:before {
             content: attr(data-editor-message);
