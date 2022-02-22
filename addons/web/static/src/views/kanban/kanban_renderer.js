@@ -326,7 +326,7 @@ export class KanbanRenderer extends Component {
             return;
         }
         this.state.quickCreateDisabled = true;
-        const record = await group.list.validateQuickCreate();
+        const record = await group.validateQuickCreate();
         this.state.quickCreateDisabled = false;
         if (editAfterCreate) {
             await this.props.openRecord(record);

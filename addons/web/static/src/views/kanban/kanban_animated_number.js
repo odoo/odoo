@@ -12,7 +12,7 @@ export class KanbanAnimatedNumber extends Component {
         onWillUpdateProps((nextProps) => {
             const { value: from } = this.props;
             const { value: to, duration } = nextProps;
-            if (!duration || to <= from) {
+            if (!this.constructor.enableAnimations || !duration || to <= from) {
                 this.state.value = to;
                 return;
             }
@@ -45,3 +45,4 @@ KanbanAnimatedNumber.props = {
     currency: { type: [Object, false], optional: true },
     title: { type: String, optional: true },
 };
+KanbanAnimatedNumber.enableAnimations = true;

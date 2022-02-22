@@ -93,6 +93,21 @@ class KanbanGroup extends Group {
         this.activeProgressValue = null;
         this.progressValues = [];
     }
+
+    /**
+     * @override
+     */
+    async validateQuickCreate() {
+        const record = await super.validateQuickCreate(...arguments);
+        if (this.model.progressAttributes) {
+            const { fieldName } = this.model.progressAttributes;
+            const recordValue = record.data[fieldName];
+            const value = recordValue === undefined ? false : recordValue;
+            const progressValue = this.progressValues.find((pv) => pv.value === value);
+            progressValue.count++;
+        }
+        return record;
+    }
 }
 
 class KanbanDynamicGroupList extends DynamicGroupList {

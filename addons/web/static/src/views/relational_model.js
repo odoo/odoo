@@ -1015,16 +1015,6 @@ export class DynamicRecordList extends DynamicList {
         return this.createRecord({ activeFields, context, isInQuickCreation: true }, true);
     }
 
-    async validateQuickCreate() {
-        const record = this.quickCreateRecord;
-        if (!record) {
-            return;
-        }
-        await record.save();
-        await this.quickCreate(record.activeFields, null, record.context);
-        return record;
-    }
-
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------
@@ -1519,6 +1509,17 @@ export class Group extends DataPoint {
     removeRecord(record) {
         this.count--;
         return this.list.removeRecord(record);
+    }
+
+    async validateQuickCreate() {
+        const record = this.list.quickCreateRecord;
+        if (!record) {
+            return;
+        }
+        await record.save();
+        this.count++;
+        await this.list.quickCreate(record.activeFields, null, record.context);
+        return record;
     }
 }
 export class StaticList extends DataPoint {

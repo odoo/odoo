@@ -21,6 +21,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
+import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 
 const serviceRegistry = registry.category("services");
 
@@ -168,6 +169,7 @@ let serverData;
 let target;
 QUnit.module("Views", (hooks) => {
     hooks.beforeEach(() => {
+        patchWithCleanup(KanbanAnimatedNumber, { enableAnimations: false });
         serverData = {
             models: {
                 partner: {
@@ -473,11 +475,11 @@ QUnit.module("Views", (hooks) => {
             // check archive/restore all actions in kanban header's config dropdown
             assert.containsOnce(
                 target,
-                ".o_kanban_header:last-child .o_kanban_config .o_column_archive_records"
+                ".o_kanban_group:last-child .o_kanban_header .o_kanban_config .o_column_archive_records"
             );
             assert.containsOnce(
                 target,
-                ".o_kanban_header:last-child .o_kanban_config .o_column_unarchive_records"
+                ".o_kanban_group:last-child .o_kanban_header .o_kanban_config .o_column_unarchive_records"
             );
             assert.containsN(target, ".o_kanban_group", 2);
             assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
@@ -7514,40 +7516,37 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "column progressbars on quick create properly update counter",
-        async (assert) => {
-            assert.expect(2);
+    QUnit.test("column progressbars on quick create properly update counter", async (assert) => {
+        assert.expect(2);
 
-            await makeView({
-                type: "kanban",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<kanban>" +
-                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
-                    '<templates><t t-name="kanban-box">' +
-                    "<div>" +
-                    '<field name="display_name"/>' +
-                    "</div>" +
-                    "</t></templates>" +
-                    "</kanban>",
-                groupBy: ["bar"],
-            });
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                "<kanban>" +
+                '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                '<templates><t t-name="kanban-box">' +
+                "<div>" +
+                '<field name="name"/>' +
+                "</div>" +
+                "</t></templates>" +
+                "</kanban>",
+            groupBy: ["bar"],
+        });
 
-            assert.strictEqual(target.querySelector(".o_kanban_counter_side").innerText, "1");
+        assert.strictEqual(target.querySelector(".o_kanban_counter_side").innerText, "1");
 
-            await quickCreateRecord();
-            await editQuickCreateInput("display_name", "Test");
-            await validateRecord();
+        await quickCreateRecord();
+        await editQuickCreateInput("display_name", "Test");
+        await validateRecord();
 
-            assert.strictEqual(
-                target.querySelector(".o_kanban_counter_side").innerText,
-                "2",
-                "kanban counters should have updated on quick create"
-            );
-        }
-    );
+        assert.strictEqual(
+            target.querySelector(".o_kanban_counter_side").innerText,
+            "2",
+            "kanban counters should have updated on quick create"
+        );
+    });
 
     QUnit.skipWOWL("column progressbars are working with load more", async (assert) => {
         assert.expect(1);
