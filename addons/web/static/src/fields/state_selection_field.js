@@ -21,12 +21,7 @@ export class StateSelectionField extends Component {
         return this.props.record.isReadonly(this.props.name);
     }
     get label() {
-        if (this.props.value === "blocked") {
-            return "Blocked";
-        } else if (this.props.value === "done") {
-            return "Done";
-        }
-        return "Normal";
+        return this.options.find((o) => o[0] === (this.props.value || "normal"))[1];
     }
     get options() {
         return this.props.record.fields[this.props.name].selection;
