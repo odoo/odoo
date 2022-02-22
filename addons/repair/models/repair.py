@@ -110,7 +110,16 @@ class Repair(models.Model):
         'res.company', 'Company',
         readonly=True, required=True, index=True,
         default=lambda self: self.env.company)
-    sale_order_id = fields.Many2one('sale.order', 'Sale Order', copy=False, help="Sale Order from which the product to be repaired comes from.")
+    sale_order_id = fields.Many2one(
+        'sale.order', 'Sale Order', check_company=True,
+        copy=False, help="Sale Order from which the product to be repaired comes from.")
+    picking_id = fields.Many2one(
+        'stock.picking', 'Return', check_company=True,
+        domain="[('is_repairable', '!=', False), ('company_id', '=', company_id)]",
+        copy=False, help="Return Order from which the product to be repaired comes from.")
+    is_returned = fields.Boolean(
+        "Returned", compute='_compute_is_returned',
+        help="True if this repair is linked to a Return Order and the order is 'Done'. False otherwise.")
     tag_ids = fields.Many2many('repair.tags', string="Tags")
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     repaired = fields.Boolean('Repaired', copy=False, readonly=True)
@@ -126,6 +135,12 @@ class Repair(models.Model):
         for order in self:
             if order.partner_id:
                 order.default_address_id = order.partner_id.address_get(['contact'])['contact']
+
+    @api.depends('picking_id', 'picking_id.state')
+    def _compute_is_returned(self):
+        self.is_returned = False
+        returned = self.filtered(lambda r: r.picking_id and r.picking_id.state == 'done')
+        returned.is_returned = True
 
     @api.depends('operations.price_subtotal', 'invoice_method', 'fees_lines.price_subtotal', 'pricelist_id.currency_id')
     def _amount_untaxed(self):
