@@ -75,6 +75,14 @@ odoo.define('website_hr_recruitment.tour', function(require) {
         content: 'Enter in edit mode',
         trigger: 'a[data-action="edit"]',
     }, {
+        content: 'Add a fake default value for the job_id field',
+        trigger: 'button[data-action="save"]',
+        run: () => {
+            // It must be done in this way because the editor does not allow to
+            // put a default value on a field with type="hidden".
+            document.querySelector('input[name="job_id"]').value = 'FAKE_JOB_ID_DEFAULT_VAL';
+        },
+    }, {
         content: 'Edit the form',
         trigger: 'input[type="file"]',
         extra_trigger: '#oe_snippets.o_loaded',
@@ -100,9 +108,21 @@ odoo.define('website_hr_recruitment.tour', function(require) {
         content: 'Check that a job_id has been loaded',
         trigger: 'form',
         run: () => {
-            const selector = 'input[name="job_id"]:not([value=""])';
+            const selector =
+                'input[name="job_id"]:not([value=""]):not([value = "FAKE_JOB_ID_DEFAULT_VAL"])';
             if (!document.querySelector(selector)) {
                 console.error('The job_id field has a wrong value');
+            }
+        }
+    }, {
+        content: 'Enter in edit mode',
+        trigger: 'a[data-action="edit"]',
+    }, {
+        content: 'Verify that the job_id field has kept its default value',
+        trigger: 'button[data-action="save"]',
+        run: () => {
+            if (!document.querySelector('input[name="job_id"][value="FAKE_JOB_ID_DEFAULT_VAL"]')) {
+                console.error('The job_id field has lost its default value');
             }
         }
     },
