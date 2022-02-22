@@ -136,8 +136,10 @@
                             <div class="flex-grow-1 position-relative">
                                 <div class="o_scroll_view">
                                     <!-- Article body -->
-                                    <div class="o_knowledge_editor d-flex px-2">
-                                        <field name="body" widget="html" no_label="1" attrs="{'readonly': ['|', ('is_locked', '=', True), ('user_can_write', '=', False)]}"/>
+                                    <div class="o_knowledge_editor d-flex border-bottom">
+                                        <field name="body" widget="html" no_label="1"
+                                            options="{'resizable': False}"
+                                            attrs="{'readonly': ['|', ('is_locked', '=', True), ('user_can_write', '=', False)]}"/>
                                     </div>
                                     <!-- Chatter -->
                                     <div class="o_knowledge_chatter_container">
