@@ -117,7 +117,7 @@
 <!-- Event - Registration -->
 <template id="registration_template" name="Registration">
     <div t-if="request.env.user.has_group('event.group_event_manager')" class="alert alert-info rounded-0 o_website_event_configuration o_not_editable" role="status">
-        <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
+        <a t-attf-href="/web#id=#{event.id}&amp;menu_id=#{backend_menu_id}&amp;view_type=form&amp;model=event.event">
             <i class="fa fa-pencil mr-2" role="img" aria-label="Edit" title="Edit event registration in backend"/><em>Configure Event Tickets</em>
         </a>
     </div>
