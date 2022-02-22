@@ -27,7 +27,7 @@ import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import * as cpHelpers from "@web/../tests/search/helpers";
 
-const { markup, onMounted } = owl;
+const { onMounted } = owl;
 let serverData;
 let target;
 const serviceRegistry = registry.category("services");
@@ -891,12 +891,13 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("execute smart button and back", async function (assert) {
-        assert.expect(8);
         const mockRPC = async (route, args) => {
             if (args.method === "read") {
+                assert.step("read");
                 assert.notOk("default_partner" in args.kwargs.context);
             }
             if (args.method === "web_search_read") {
+                assert.step("web_search_read");
                 assert.strictEqual(args.kwargs.context.default_partner, 2);
             }
         };
@@ -911,6 +912,7 @@ QUnit.module("ActionManager", (hooks) => {
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.containsN(target, ".o_form_buttons_view button:not([disabled])", 2);
+        assert.verifySteps(["read", "web_search_read", "read"]);
     });
 
     QUnit.test("execute smart button and fails", async function (assert) {

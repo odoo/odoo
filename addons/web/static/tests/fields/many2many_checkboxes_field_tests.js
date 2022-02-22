@@ -315,7 +315,7 @@ QUnit.module("Fields", (hooks) => {
         // 100 records in the co-model, and all values in the many2many relationship aren't
         // displayed in the widget (due to the limit). If the user (un)selects a checkbox, we don't
         // want to remove all values that aren't displayed from the relation.
-        assert.expect(5);
+        assert.expect(8);
 
         const records = [];
         for (let id = 1; id < 150; id++) {
@@ -328,7 +328,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner_type.records = records;
         serverData.models.partner.records[0].timmy = records.map((r) => r.id);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -343,6 +343,7 @@ QUnit.module("Fields", (hooks) => {
                     const expectedIds = records.map((r) => r.id);
                     expectedIds.shift();
                     assert.deepEqual(args[1].timmy, [[6, false, expectedIds]]);
+                    assert.step("write");
                 }
                 const result = await performRPC(...arguments);
                 if (method === "name_search") {
@@ -351,6 +352,7 @@ QUnit.module("Fields", (hooks) => {
                         100,
                         "sanity check: name_search automatically sets the limit to 100"
                     );
+                    assert.step("name_search");
                 }
                 return result;
             },
@@ -375,5 +377,6 @@ QUnit.module("Fields", (hooks) => {
         assert.notOk(
             target.querySelector(".o_field_widget[name='timmy'] input[type='checkbox']").checked
         );
+        assert.verifySteps(["name_search", "write"]);
     });
 });

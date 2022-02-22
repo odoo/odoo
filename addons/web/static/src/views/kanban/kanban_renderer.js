@@ -30,6 +30,8 @@ const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2o
 const GLOBAL_CLICK_CANCEL_SELECTORS = ["a", ".dropdown", ".oe_kanban_action"];
 const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
 
+const formatterRegistry = registry.category("formatters");
+
 export class KanbanRenderer extends Component {
     setup() {
         const { arch, cards, className, fields, xmlDoc, examples } = this.props.info;
@@ -127,6 +129,21 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
     // Getters
     // ------------------------------------------------------------------------
+
+    getRawValue(record, fieldName) {
+        const field = record.fields[fieldName];
+        let value = record.data[fieldName];
+        if (["one2many", "many2many"].includes(field.type)) {
+            value = value.resIds;
+        }
+        return value;
+    }
+
+    getValue(record, fieldName) {
+        const field = record.fields[fieldName];
+        const formatter = formatterRegistry.get(field.type);
+        return formatter(this.getRawValue(record, fieldName), { field });
+    }
 
     get canMoveRecords() {
         if (!this.canResequenceRecords) {

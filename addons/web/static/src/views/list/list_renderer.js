@@ -31,7 +31,6 @@ export class ListRenderer extends Component {
         this.allColumns = this.props.info.columns;
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
-        this.activeActions = this.props.info.activeActions;
         this.cellClassByColumn = {};
         this.groupByButtons = this.props.info.groupBy.buttons;
         this.state = useState({
@@ -41,6 +40,8 @@ export class ListRenderer extends Component {
         });
         useExternalListener(document, "click", this.onGlobalClick.bind(this)); // capture ?
         this.tableRef = useRef("table");
+
+        this.creates = [{ description: this.env._t("Add a line") }];
 
         this.cellToFocus = null;
         this.activeRowId = null;
@@ -464,21 +465,18 @@ export class ListRenderer extends Component {
         }
         this.unselectRow();
     }
-
-    delete(record) {
-        throw new Error("To implement");
-    }
 }
 
 ListRenderer.template = "web.ListRenderer";
 ListRenderer.components = { CheckBoxDropdownItem, Field, ViewButton, CheckBox, Dropdown };
 ListRenderer.props = [
+    "activeActions?",
     "list",
     "fields",
     "info",
     "openRecord",
+    "onAdd?",
     "creates?",
     "hasSelectors?",
-    "hasTrashIcon?",
 ];
 ListRenderer.defaultProps = { hasSelectors: false };

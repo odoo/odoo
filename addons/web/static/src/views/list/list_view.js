@@ -18,7 +18,6 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { getActiveActions, getDecoration, processButton } from "../helpers/view_utils";
 import { RelationalModel, stringToOrderBy } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
-import { archParseBoolean } from "@web/views/helpers/utils";
 
 const { Component, onWillStart, useSubEnv } = owl;
 
@@ -79,7 +78,6 @@ export class ListArchParser extends XMLParser {
             fields: {},
         };
         let headerButtons = [];
-        let creates = { create: true };
         const groupListArchParser = new GroupListArchParser();
         let buttonGroup;
         let limit;
@@ -166,15 +164,11 @@ export class ListArchParser extends XMLParser {
             } else if (node.tagName === "tree") {
                 const limitAttr = node.getAttribute("limit");
                 limit = limitAttr && parseInt(limitAttr, 10);
-                if (node.hasAttribute("create") && !archParseBoolean(node.getAttribute("create"))) {
-                    delete creates.create; // WOWL creates.create hu? bof!
-                }
             }
         });
 
         return {
             activeActions,
-            creates,
             editable,
             limit,
             headerButtons,

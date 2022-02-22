@@ -38,7 +38,6 @@ export class FormViewDialog extends Dialog {
     }
 
     save() {
-        console.log("TODO: savepoint");
         this.close();
     }
 

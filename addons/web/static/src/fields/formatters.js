@@ -362,8 +362,8 @@ export const formatPercentage = (value, options = {}) => {
  * @returns {string}
  */
 export const formatSelection = (value, options = {}) => {
-    if (!value || !options.selection) return "";
-    return Object.fromEntries(options.selection)[value] || "";
+    if (!value || !options.field) return "";
+    return Object.fromEntries(options.field.selection)[value] || "";
 };
 
 /**
