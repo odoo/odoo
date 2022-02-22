@@ -58,7 +58,7 @@ class Channel(models.Model):
         ('chat', 'Chat'),
         ('channel', 'Channel'),
         ('group', 'Group')],
-        string='Channel Type', required=True, default='channel', help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
+        string='Channel Type', required=True, default='channel', readonly=True, help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
     is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
     default_display_mode = fields.Selection(string="Default Display Mode", selection=[('video_full_screen', "Full screen video")], help="Determines how the channel will be displayed by default when opening it from its invitation link. No value means display text (no voice/video).")
     description = fields.Text('Description')
@@ -240,6 +240,10 @@ class Channel(models.Model):
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
 
     def write(self, vals):
+        if 'channel_type' in vals:
+            failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
+            if failing_channels:
+                raise UserError(_('Cannot change the channel type of: %(channel_names)s'), channel_names=', '.join(failing_channels.mapped('name')))
         result = super(Channel, self).write(vals)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
