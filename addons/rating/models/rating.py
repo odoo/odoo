@@ -23,15 +23,6 @@ class Rating(models.Model):
     _description = "Rating"
     _order = 'write_date desc'
     _rec_name = 'res_name'
-    _sql_constraints = [
-        ('rating_range', 'check(rating >= 0 and rating <= 5)', 'Rating should be between 0 and 5'),
-    ]
-
-    @api.depends('res_model', 'res_id')
-    def _compute_res_name(self):
-        for rating in self:
-            name = self.env[rating.res_model].sudo().browse(rating.res_id).name_get()
-            rating.res_name = name and name[0][1] or ('%s/%s') % (rating.res_model, rating.res_id)
 
     @api.model
     def _default_access_token(self):
@@ -70,6 +61,16 @@ class Rating(models.Model):
     is_internal = fields.Boolean('Visible Internally Only', readonly=False, related='message_id.is_internal', store=True)
     access_token = fields.Char('Security Token', default=_default_access_token, help="Access token to set the rating of the value")
     consumed = fields.Boolean(string="Filled Rating", help="Enabled if the rating has been filled.")
+
+    _sql_constraints = [
+        ('rating_range', 'check(rating >= 0 and rating <= 5)', 'Rating should be between 0 and 5'),
+    ]
+
+    @api.depends('res_model', 'res_id')
+    def _compute_res_name(self):
+        for rating in self:
+            name = self.env[rating.res_model].sudo().browse(rating.res_id).name_get()
+            rating.res_name = name and name[0][1] or ('%s/%s') % (rating.res_model, rating.res_id)
 
     @api.depends('res_model', 'res_id')
     def _compute_resource_ref(self):
