@@ -1146,6 +1146,15 @@ class WebsiteSale(http.Controller):
         if {"x", "y"} <= set(options):
             product.write({'website_size_x': options["x"], 'website_size_y': options["y"]})
 
+    @http.route(['/shop/config/attribute'], type='json', auth='user')
+    def change_attribute_config(self, attribute_id, **options):
+        if not request.env.user.has_group('website.group_website_publisher'):
+            raise NotFound()
+
+        attribute = request.env['product.attribute'].browse(attribute_id)
+        if 'display_type' in options:
+            attribute.write({'display_type': options['display_type']})
+
     @http.route(['/shop/config/website'], type='json', auth='user')
     def _change_website_config(self, **options):
         if not request.env.user.has_group('website.group_website_publisher'):
