@@ -179,7 +179,7 @@ var CalendarView = AbstractView.extend({
         this.controllerParams.showUnusualDays = utils.toBoolElse(attrs.show_unusual_days || '', false);
         this.controllerParams.mapping = mapping;
         this.controllerParams.context = params.context || {};
-        this.controllerParams.displayName = params.action && params.action.name;
+        this.controllerParams.displayName = params.displayName;
         this.controllerParams.scales = scales;
 
         this.rendererParams.displayFields = displayFields;
