@@ -140,7 +140,7 @@ class SurveyQuestion(models.Model):
 
     # Conditional display
     is_conditional = fields.Boolean(
-        string='Conditional Display', copy=False, help="""If checked, this question will be displayed only 
+        string='Conditional Display', copy=True, help="""If checked, this question will be displayed only
         if the specified conditional answer have been selected in a previous question""")
     triggering_question_id = fields.Many2one(
         'survey.question', string="Triggering Question", copy=False, compute="_compute_triggering_question_id",

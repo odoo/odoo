@@ -159,3 +159,64 @@ class TestSurveyInternals(common.TestSurveyCommon):
 
         for question in questions:
             self._assert_skipped_question(question, survey_user)
+
+    @users('survey_manager')
+    def test_copy_conditional_question_settings(self):
+        """ Create a survey with conditional layout, clone it and verify that the cloned survey has the same conditional
+        layout as the original survey.
+        The test also check that the cloned survey doesn't reference the original survey.
+        """
+        def get_question_by_title(survey, title):
+            return survey.question_ids.filtered(lambda q: q.title == title)[0]
+
+        # Create the survey questions (! texts of the questions must be unique as they are used to query them)
+        q_is_vegetarian_text = 'Are you vegetarian ?'
+        q_is_vegetarian = self._add_question(
+            self.page_0, q_is_vegetarian_text, 'multiple_choice', survey_id=self.survey.id,
+            sequence=100, labels=[{'value': 'Yes'}, {'value': 'No'}])
+        q_food_vegetarian_text = 'Choose your green meal'
+        self._add_question(self.page_0, q_food_vegetarian_text, 'multiple_choice',
+                           is_conditional=True, sequence=101,
+                           triggering_question_id=q_is_vegetarian.id,
+                           triggering_answer_id=q_is_vegetarian.suggested_answer_ids[0].id,
+                           survey_id=self.survey.id,
+                           labels=[{'value': 'Vegetarian pizza'}, {'value': 'Vegetarian burger'}])
+        q_food_not_vegetarian_text = 'Choose your meal'
+        self._add_question(self.page_0, q_food_not_vegetarian_text, 'multiple_choice',
+                           is_conditional=True, sequence=102,
+                           triggering_question_id=q_is_vegetarian.id,
+                           triggering_answer_id=q_is_vegetarian.suggested_answer_ids[1].id,
+                           survey_id=self.survey.id,
+                           labels=[{'value': 'Steak with french fries'}, {'value': 'Fish'}])
+
+        # Clone the survey
+        survey_clone = self.survey.copy()
+
+        # Verify the conditional layout and that the cloned survey doesn't reference the original survey
+        q_is_vegetarian_cloned = get_question_by_title(survey_clone, q_is_vegetarian_text)
+        q_food_vegetarian_cloned = get_question_by_title(survey_clone, q_food_vegetarian_text)
+        q_food_not_vegetarian_cloned = get_question_by_title(survey_clone, q_food_not_vegetarian_text)
+
+        self.assertFalse(q_is_vegetarian_cloned.is_conditional)
+
+        # Vegetarian choice
+        self.assertTrue(q_food_vegetarian_cloned)
+        # Correct conditional layout
+        self.assertEqual(q_food_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian_cloned.id)
+        self.assertEqual(q_food_vegetarian_cloned.triggering_answer_id.id,
+                         q_is_vegetarian_cloned.suggested_answer_ids[0].id)
+        # Doesn't reference the original survey
+        self.assertNotEqual(q_food_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian.id)
+        self.assertNotEqual(q_food_vegetarian_cloned.triggering_answer_id.id,
+                            q_is_vegetarian.suggested_answer_ids[0].id)
+
+        # Not vegetarian choice
+        self.assertTrue(q_food_not_vegetarian_cloned.is_conditional)
+        # Correct conditional layout
+        self.assertEqual(q_food_not_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian_cloned.id)
+        self.assertEqual(q_food_not_vegetarian_cloned.triggering_answer_id.id,
+                         q_is_vegetarian_cloned.suggested_answer_ids[1].id)
+        # Doesn't reference the original survey
+        self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian.id)
+        self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_answer_id.id,
+                            q_is_vegetarian.suggested_answer_ids[1].id)
