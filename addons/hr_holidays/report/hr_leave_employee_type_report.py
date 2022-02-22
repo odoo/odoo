@@ -11,7 +11,7 @@ class LeaveReport(models.Model):
     _order = "date_from DESC, employee_id"
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
-    active_employee = fields.Boolean(related='employee_id.active', readonly=True)
+    active_employee = fields.Boolean(readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True, group_operator="sum")
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     leave_type = fields.Many2one("hr.leave.type", string="Leave Type", readonly=True)
@@ -39,6 +39,7 @@ class LeaveReport(models.Model):
             CREATE or REPLACE view hr_leave_employee_type_report as (
                 SELECT row_number() over(ORDER BY leaves.employee_id) as id,
                 leaves.employee_id as employee_id,
+                leaves.active_employee as active_employee,
                 leaves.number_of_days as number_of_days,
                 leaves.department_id as department_id,
                 leaves.leave_type as leave_type,
@@ -49,6 +50,7 @@ class LeaveReport(models.Model):
                 leaves.company_id as company_id
                 FROM (SELECT
                     allocation.employee_id as employee_id,
+                    employee.active as active_employee,
                     CASE 
                         WHEN request.number_of_days > 0 THEN allocation.number_of_days - request.number_of_days
                         ELSE allocation.number_of_days 
@@ -61,12 +63,14 @@ class LeaveReport(models.Model):
                     'left' as holiday_status,
                     allocation.employee_company_id as company_id
                 FROM hr_leave_allocation as allocation
+                INNER JOIN hr_employee as employee ON (allocation.employee_id = employee.id)
                 LEFT JOIN 
                     (SELECT holiday_status_id, employee_id, sum(number_of_days) as number_of_days 
                     FROM hr_leave GROUP BY holiday_status_id, employee_id) request 
                 on (allocation.employee_id=request.employee_id and allocation.holiday_status_id = request.holiday_status_id)
                 UNION ALL SELECT
                     request.employee_id as employee_id,
+                    employee.active as active_employee,
                     request.number_of_days as number_of_days,
                     request.department_id as department_id,
                     request.holiday_status_id as leave_type,
@@ -78,7 +82,8 @@ class LeaveReport(models.Model):
                         WHEN request.state = 'confirm' THEN 'planned'
                     END as holiday_status,
                     request.employee_company_id as company_id
-                FROM hr_leave as request) leaves
+                FROM hr_leave as request
+                INNER JOIN hr_employee as employee ON (request.employee_id = employee.id)) leaves
             );
         """)
 
