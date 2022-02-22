@@ -1008,6 +1008,8 @@ const Wysiwyg = Widget.extend({
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
         const $node = $(params.node);
+        // We need to keep track of FA icon because media.js will _clear those classes
+        const wasFontAwesome = $node.hasClass('fa');
         const $editable = $(this.odooEditor.editable);
         const model = $editable.data('oe-model');
         const field = $editable.data('oe-field');
@@ -1031,7 +1033,7 @@ const Wysiwyg = Widget.extend({
                 element.className += " " + params.htmlClass;
             }
             restoreSelection();
-            if (wysiwygUtils.isImg($node[0])) {
+            if (wysiwygUtils.isImg($node[0]) || wasFontAwesome) {
                 $node.replaceWith(element);
                 this.odooEditor.unbreakableStepUnactive();
                 this.odooEditor.historyStep();
