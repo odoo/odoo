@@ -3,7 +3,7 @@
 
 from odoo import fields, models, tools
 
-from odoo.addons.rating.models.rating import RATING_LIMIT_MIN
+from odoo.addons.rating.models.rating_data import RATING_LIMIT_MIN
 
 class ReportProjectTaskUser(models.Model):
     _name = "report.project.task.user"

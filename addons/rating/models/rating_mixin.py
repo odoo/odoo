@@ -1,93 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import operator
-from collections import defaultdict
-from datetime import timedelta
 
 from odoo import api, fields, models, tools
-from odoo.addons.rating.models.rating import RATING_LIMIT_SATISFIED, RATING_LIMIT_OK, RATING_LIMIT_MIN, RATING_TEXT
+from odoo.addons.rating.models import rating_data
 from odoo.osv import expression
-from odoo.tools.float_utils import float_compare
-
-OPERATOR_MAPPING = {
-    '=': operator.eq,
-    '!=': operator.ne,
-    '<': operator.lt,
-    '<=': operator.le,
-    '>': operator.gt,
-    '>=': operator.ge,
-}
-RATING_AVG_TOP = 3.66
-RATING_AVG_OK = 2.33
-RATING_AVG_MIN = RATING_LIMIT_MIN
-
-
-class RatingParentMixin(models.AbstractModel):
-    _name = 'rating.parent.mixin'
-    _description = "Rating Parent Mixin"
-    _rating_satisfaction_days = False  # Number of last days used to compute parent satisfaction. Set to False to include all existing rating.
-
-    rating_ids = fields.One2many(
-        'rating.rating', 'parent_res_id', string='Ratings',
-        auto_join=True, groups='base.group_user',
-        domain=lambda self: [('parent_res_model', '=', self._name)])
-    rating_percentage_satisfaction = fields.Integer(
-        "Rating Satisfaction",
-        compute="_compute_rating_percentage_satisfaction", compute_sudo=True,
-        store=False, help="Percentage of happy ratings")
-    rating_count = fields.Integer(string='# Ratings', compute="_compute_rating_percentage_satisfaction", compute_sudo=True)
-    rating_avg = fields.Float('Average Rating', groups='base.group_user',
-        compute='_compute_rating_percentage_satisfaction', compute_sudo=True, search='_search_rating_avg')
-    rating_avg_percentage = fields.Float('Average Rating (%)', groups='base.group_user',
-        compute='_compute_rating_percentage_satisfaction', compute_sudo=True)
-    rating_last_value = fields.Float('Rating Last Value', groups='base.group_user', related='rating_ids.rating')
-
-    @api.depends('rating_ids.rating', 'rating_ids.consumed')
-    def _compute_rating_percentage_satisfaction(self):
-        # build domain and fetch data
-        domain = [('parent_res_model', '=', self._name), ('parent_res_id', 'in', self.ids), ('rating', '>=', RATING_LIMIT_MIN), ('consumed', '=', True)]
-        if self._rating_satisfaction_days:
-            domain += [('write_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=self._rating_satisfaction_days)))]
-        data = self.env['rating.rating'].read_group(domain, ['parent_res_id', 'rating'], ['parent_res_id', 'rating'], lazy=False)
-
-        # get repartition of grades per parent id
-        default_grades = {'great': 0, 'okay': 0, 'bad': 0}
-        grades_per_parent = dict((parent_id, dict(default_grades)) for parent_id in self.ids)  # map: {parent_id: {'great': 0, 'bad': 0, 'ok': 0}}
-        rating_scores_per_parent = defaultdict(int)  # contains the total of the rating values per record
-        for item in data:
-            parent_id = item['parent_res_id']
-            rating = item['rating']
-            if rating > RATING_LIMIT_OK:
-                grades_per_parent[parent_id]['great'] += item['__count']
-            elif rating > RATING_LIMIT_MIN:
-                grades_per_parent[parent_id]['okay'] += item['__count']
-            else:
-                grades_per_parent[parent_id]['bad'] += item['__count']
-            rating_scores_per_parent[parent_id] += rating * item['__count']
-
-        # compute percentage per parent
-        for record in self:
-            repartition = grades_per_parent.get(record.id, default_grades)
-            rating_count = sum(repartition.values())
-            record.rating_count = rating_count
-            record.rating_percentage_satisfaction = repartition['great'] * 100 / rating_count if rating_count else -1
-            record.rating_avg = rating_scores_per_parent[record.id] / rating_count if rating_count else 0
-            record.rating_avg_percentage = record.rating_avg / 5
-
-    def _search_rating_avg(self, operator, value):
-        if operator not in OPERATOR_MAPPING:
-            raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
-        domain = [('parent_res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', RATING_LIMIT_MIN)]
-        if self._rating_satisfaction_days:
-            min_date = fields.datetime.now() - timedelta(days=self._rating_satisfaction_days)
-            domain = expression.AND([domain, [('write_date', '>=', fields.Datetime.to_string(min_date))]])
-        rating_read_group = self.env['rating.rating'].sudo().read_group(domain, ['parent_res_id', 'rating_avg:avg(rating)'], ['parent_res_id'])
-        parent_res_ids = [
-            res['parent_res_id']
-            for res in rating_read_group
-            if OPERATOR_MAPPING[operator](float_compare(res['rating_avg'], value, 2), 0)
-        ]
-        return [('id', 'in', parent_res_ids)]
+from odoo.tools.float_utils import float_compare, float_round
 
 
 class RatingMixin(models.AbstractModel):
@@ -101,7 +20,7 @@ class RatingMixin(models.AbstractModel):
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
     rating_avg = fields.Float("Average Rating", groups='base.group_user',
         compute='_compute_rating_stats', compute_sudo=True, search='_search_rating_avg')
-    rating_avg_text = fields.Selection(RATING_TEXT, groups='base.group_user',
+    rating_avg_text = fields.Selection(rating_data.RATING_TEXT, groups='base.group_user',
         compute='_compute_rating_avg_text', compute_sudo=True)
     rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute='_compute_rating_satisfaction', compute_sudo=True)
     rating_last_text = fields.Selection(string="Rating Text", groups='base.group_user', related="rating_ids.rating_text")
@@ -115,7 +34,7 @@ class RatingMixin(models.AbstractModel):
     @api.depends('rating_ids.res_id', 'rating_ids.rating')
     def _compute_rating_stats(self):
         """ Compute avg and count in one query, as thoses fields will be used together most of the time. """
-        domain = expression.AND([self._rating_domain(), [('rating', '>=', RATING_LIMIT_MIN)]])
+        domain = expression.AND([self._rating_domain(), [('rating', '>=', rating_data.RATING_LIMIT_MIN)]])
         read_group_res = self.env['rating.rating'].read_group(domain, ['rating:avg'], groupby=['res_id'], lazy=False)  # force average on rating column
         mapping = {item['res_id']: {'rating_count': item['__count'], 'rating_avg': item['rating']} for item in read_group_res}
         for record in self:
@@ -123,48 +42,38 @@ class RatingMixin(models.AbstractModel):
             record.rating_avg = mapping.get(record.id, {}).get('rating_avg', 0)
 
     def _search_rating_avg(self, operator, value):
-        if operator not in OPERATOR_MAPPING:
+        if operator not in rating_data.OPERATOR_MAPPING:
             raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
         rating_read_group = self.env['rating.rating'].sudo().read_group(
-            [('res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', RATING_LIMIT_MIN)],
+            [('res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', rating_data.RATING_LIMIT_MIN)],
             ['res_id', 'rating_avg:avg(rating)'], ['res_id'])
         res_ids = [
             res['res_id']
             for res in rating_read_group
-            if OPERATOR_MAPPING[operator](float_compare(res['rating_avg'], value, 2), 0)
+            if rating_data.OPERATOR_MAPPING[operator](float_compare(res['rating_avg'], value, 2), 0)
         ]
         return [('id', 'in', res_ids)]
 
     @api.depends('rating_avg')
     def _compute_rating_avg_text(self):
         for record in self:
-            if float_compare(record.rating_avg, RATING_AVG_TOP, 2) >= 0:
-                record.rating_avg_text = 'top'
-            elif float_compare(record.rating_avg, RATING_AVG_OK, 2) >= 0:
-                record.rating_avg_text = 'ok'
-            elif float_compare(record.rating_avg, RATING_AVG_MIN, 2) >= 0:
-                record.rating_avg_text = 'ko'
-            else:
-                record.rating_avg_text = 'none'
+            record.rating_avg_text = rating_data._rating_avg_to_text(record.rating_avg)
 
     @api.depends('rating_ids.res_id', 'rating_ids.rating')
     def _compute_rating_satisfaction(self):
         """ Compute the rating satisfaction percentage, this is done separately from rating_count and rating_avg
             since the query is different, to avoid computing if it is not necessary"""
-        domain = expression.AND([self._rating_domain(), [('rating', '>=', RATING_LIMIT_MIN)]])
+        domain = expression.AND([self._rating_domain(), [('rating', '>=', rating_data.RATING_LIMIT_MIN)]])
         # See `_compute_rating_percentage_satisfaction` above
         read_group_res = self.env['rating.rating'].read_group(domain, ['res_id', 'rating'], groupby=['res_id', 'rating'], lazy=False)
         default_grades = {'great': 0, 'okay': 0, 'bad': 0}
         grades_per_record = {record_id: default_grades.copy() for record_id in self.ids}
+
         for group in read_group_res:
             record_id = group['res_id']
-            rating = group['rating']
-            if rating > RATING_LIMIT_OK:
-                grades_per_record[record_id]['great'] += group['__count']
-            elif rating > RATING_LIMIT_MIN:
-                grades_per_record[record_id]['okay'] += group['__count']
-            else:
-                grades_per_record[record_id]['bad'] += group['__count']
+            grade = rating_data._rating_to_grade(group['rating'])
+            grades_per_record[record_id][grade] += group['__count']
+
         for record in self:
             grade_repartition = grades_per_record.get(record.id, default_grades)
             grade_count = sum(grade_repartition.values())
@@ -315,17 +224,19 @@ class RatingMixin(models.AbstractModel):
         base_domain = expression.AND([self._rating_domain(), [('rating', '>=', 1)]])
         if domain:
             base_domain += domain
-        data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
+        rg_data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
         # init dict with all posible rate value, except 0 (no value for the rating)
         values = dict.fromkeys(range(1, 6), 0)
-        values.update((d['rating'], d['rating_count']) for d in data)
+        for rating_rg in rg_data:
+            rating_val_round = float_round(rating_rg['rating'], precision_digits=1)
+            values[rating_val_round] = values.get(rating_val_round, 0) + rating_rg['rating_count']
         # add other stats
         if add_stats:
             rating_number = sum(values.values())
             result = {
                 'repartition': values,
                 'avg': sum(float(key * values[key]) for key in values) / rating_number if rating_number > 0 else 0,
-                'total': sum(it['rating_count'] for it in data),
+                'total': sum(it['rating_count'] for it in rg_data),
             }
             return result
         return values
@@ -341,12 +252,8 @@ class RatingMixin(models.AbstractModel):
         data = self._rating_get_repartition(domain=domain)
         res = dict.fromkeys(['great', 'okay', 'bad'], 0)
         for key in data:
-            if key >= RATING_LIMIT_SATISFIED:
-                res['great'] += data[key]
-            elif key >= RATING_LIMIT_OK:
-                res['okay'] += data[key]
-            else:
-                res['bad'] += data[key]
+            grade = rating_data._rating_to_grade(key)
+            res[grade] += data[key]
         return res
 
     def rating_get_stats(self, domain=None):
