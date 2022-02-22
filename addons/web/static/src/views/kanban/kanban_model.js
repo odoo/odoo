@@ -155,7 +155,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
     async quickCreate(group) {
         if (this.model.useSampleModel) {
             // Empty the groups because they contain sample data
-            await Promise.all(this.groups.map((group) => group.empty()));
+            this.groups.map((group) => group.empty());
         }
         this.model.useSampleModel = false;
         if (!this.quickCreateInfo) {
@@ -182,12 +182,10 @@ class KanbanDynamicGroupList extends DynamicGroupList {
 
         this.model.transaction.start();
 
-        const record = oldGroup.removeRecord(dataRecordId);
-        const refIndex = newGroup.list.records.findIndex((r) => r.id === refId);
-        newGroup.addRecord(record, refIndex >= 0 ? refIndex + 1 : 0);
-
         // Quick update: moves the record at the right position and notifies components
-        this.model.notify();
+        const record = oldGroup.list.records.find((r) => r.id === dataRecordId);
+        const refIndex = newGroup.list.records.findIndex((r) => r.id === refId);
+        newGroup.addRecord(oldGroup.removeRecord(record), refIndex >= 0 ? refIndex + 1 : 0);
 
         // Move from one group to another
         try {
@@ -284,15 +282,16 @@ class KanbanDynamicRecordList extends DynamicRecordList {
     async loadMore() {
         this.offset = this.records.length;
         const nextRecords = await this._loadRecords();
-        this.records.push(...nextRecords);
-        this.model.notify();
+        for (const record of nextRecords) {
+            this.addRecord(record);
+        }
     }
 
     async cancelQuickCreate(force = false) {
-        const previousCount = this.records.length;
-        this.records = this.records.filter((r) => !r.isQuickCreate || (!force && r.isDirty));
-        if (this.records.length !== previousCount) {
-            this.model.notify();
+        for (const record of this.records) {
+            if (record.isQuickCreate && (force || !record.isDirty)) {
+                this.removeRecord(record);
+            }
         }
     }
 
@@ -302,23 +301,15 @@ class KanbanDynamicRecordList extends DynamicRecordList {
         if (fieldName) {
             context[`default_${fieldName}`] = value;
         }
-        const record = this.model.createDataPoint("record", {
-            resModel: this.resModel,
-            fields: this.fields,
-            activeFields,
-            context,
-        });
+        const record = await this.createRecord({ activeFields, context }, true);
         record.isQuickCreate = true;
-        await record.load();
-        this.records.unshift(record);
-        this.model.notify();
     }
 
     async validateQuickCreate() {
         const record = this.records.find((r) => r.isQuickCreate);
         await record.save();
         record.isQuickCreate = false;
-        await this.quickCreate(record.activeFields);
+        await this.quickCreate(record.activeFields, null, record.context);
         return record;
     }
 

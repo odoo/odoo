@@ -17,9 +17,9 @@ import { isNumeric, isX2Many } from "@web/views/helpers/view_utils";
 import { registry } from "../core/registry";
 
 const { DateTime } = luxon;
-const preloadedDataRegistry = registry.category("preloadedData");
-
 const { xml } = owl;
+
+const preloadedDataRegistry = registry.category("preloadedData");
 
 class WarningDialog extends Dialog {
     setup() {
@@ -88,6 +88,7 @@ async function archiveOrUnarchiveRecords(model, resModel, resIds, unarchive) {
 class RequestBatcherORM extends ORM {
     constructor() {
         super(...arguments);
+        this.deleteBatches = {};
         this.searchReadBatchId = 1;
         this.searchReadBatches = {};
         this.readBatches = {};
@@ -103,7 +104,7 @@ class RequestBatcherORM extends ORM {
      * @param {string} resModel
      * @param {number[]} resIds
      * @param {string[]} fields
-     * @returns {Promise<any>}
+     * @returns {Promise<Object[]>}
      */
     async read(resModel, resIds, fields, context) {
         const key = JSON.stringify([resModel, fields, context]);
@@ -130,8 +131,42 @@ class RequestBatcherORM extends ORM {
         }
 
         const records = await batch.deferred;
-        const rec = records.filter((r) => resIds.includes(r.id));
-        return rec;
+        return records.filter((r) => resIds.includes(r.id));
+    }
+
+    /**
+     * Entry point to batch "unlink" calls. If the `resModel` argument has
+     * already been called, the given ids are added to the previous list of ids
+     * to perform a single unlink call.
+     *
+     * @param {string} resModel
+     * @param {number[]} resIds
+     * @returns {Promise<boolean>}
+     */
+    async unlink(resModel, resIds, context) {
+        const key = JSON.stringify([resModel, context]);
+        let batch = this.readBatches[key];
+        if (!batch) {
+            batch = {
+                deferred: new Deferred(),
+                resModel,
+                resIds: [],
+                scheduled: false,
+            };
+            this.readBatches[key] = batch;
+        }
+        const prevIds = this.readBatches[key].resIds;
+        this.readBatches[key].resIds = [...new Set([...prevIds, ...resIds])];
+
+        if (!batch.scheduled) {
+            batch.scheduled = true;
+            await Promise.resolve();
+            delete this.readBatches[key];
+            const result = await super.unlink(resModel, batch.resIds, context);
+            batch.deferred.resolve(result);
+        }
+
+        return batch.deferred;
     }
 
     async webSearchRead(/*model*/) {
@@ -527,7 +562,10 @@ export class Record extends DataPoint {
     }
 
     async delete() {
-        const result = await this.model.orm.unlink(this.resModel, [this.resId], this.context);
+        const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], this.context);
+        if (!unlinked) {
+            return false;
+        }
         const index = this.resIds.indexOf(this.resId);
         this.resIds.splice(index, 1);
         this.resId = this.resIds[Math.min(index, this.resIds.length - 1)] || false;
@@ -540,7 +578,6 @@ export class Record extends DataPoint {
             this._changes = {};
             this.preloadedData = {};
         }
-        return result;
     }
 
     toggleSelection(selected) {
@@ -724,15 +761,18 @@ class DynamicList extends DataPoint {
         };
     }
 
-    get selection() {
-        // FIXME: 'this.records' doesn't exist on DynamicList
-        return this.records.filter((r) => r.selected);
-    }
-
     get isM2MGrouped() {
         return this.groupBy.some((fieldName) => this.fields[fieldName].type === "many2many");
     }
 
+    get selection() {
+        return this.records.filter((r) => r.selected);
+    }
+
+    /**
+     * @param {boolean} [isSelected]
+     * @returns {Promise<number[]>}
+     */
     async getResIds(isSelected) {
         let resIds;
         if (isSelected) {
@@ -744,12 +784,15 @@ class DynamicList extends DataPoint {
                 resIds = this.selection.map((r) => r.resId);
             }
         } else {
-            // FIXME: 'this.records' doesn't exist on DynamicList
             resIds = this.records.map((r) => r.resId);
         }
         return resIds;
     }
 
+    /**
+     * @param {boolean} [isSelected]
+     * @returns {Promise<number[]>}
+     */
     async archive(isSelected) {
         const resIds = await this.getResIds(isSelected);
         await archiveOrUnarchiveRecords(this.model, this.resModel, resIds);
@@ -758,6 +801,10 @@ class DynamicList extends DataPoint {
         //todo fge _invalidateCache
     }
 
+    /**
+     * @param {boolean} [isSelected]
+     * @returns {Promise<number[]>}
+     */
     async unarchive(isSelected) {
         const resIds = await this.getResIds(isSelected);
         await archiveOrUnarchiveRecords(this.model, this.resModel, resIds, true);
@@ -766,18 +813,30 @@ class DynamicList extends DataPoint {
         //todo fge _invalidateCache
     }
 
-    async deleteRecords(isSelected) {
-        // TODO: make more generic
-        const resIds = await this.getResIds(isSelected);
-        await this.model.orm.unlink(this.resModel, resIds, this.context);
-        await this.model.load();
-        return resIds;
-    }
-
     exportState() {
         return {
             limit: this.limit,
         };
+    }
+
+    selectDomain(value) {
+        this.isDomainSelected = value;
+        this.model.notify();
+    }
+
+    async sortBy(fieldName) {
+        if (this.orderBy.length && this.orderBy[0].name === fieldName) {
+            this.orderBy[0].asc = !this.orderBy[0].asc;
+        } else {
+            this.orderBy = this.orderBy.filter((o) => o.name !== fieldName);
+            this.orderBy.unshift({
+                name: fieldName,
+                asc: true,
+            });
+        }
+
+        await this.load();
+        this.model.notify();
     }
 
     /**
@@ -805,26 +864,6 @@ class DynamicList extends DataPoint {
         this.model.notify();
         return list;
     }
-
-    async sortBy(fieldName) {
-        if (this.orderBy.length && this.orderBy[0].name === fieldName) {
-            this.orderBy[0].asc = !this.orderBy[0].asc;
-        } else {
-            this.orderBy = this.orderBy.filter((o) => o.name !== fieldName);
-            this.orderBy.unshift({
-                name: fieldName,
-                asc: true,
-            });
-        }
-
-        await this.load();
-        this.model.notify();
-    }
-
-    selectDomain(value) {
-        this.isDomainSelected = value;
-        this.model.notify();
-    }
 }
 
 export class DynamicRecordList extends DynamicList {
@@ -844,40 +883,73 @@ export class DynamicRecordList extends DynamicList {
         this.records = await this._resequence(this.records, "resId", ...arguments);
     }
 
-    async deleteRecord(record) {
-        const result = await record.delete();
-        if (result) {
-            await this.model.load();
-        }
-    }
-
     /**
+     * @param {Object} [params={}]
      * @param {boolean} [atFirstPosition]
      * @returns {Promise<Record>} the newly created record
      */
-    async addNewRecord(atFirstPosition = false) {
+    async createRecord(params = {}, atFirstPosition = false) {
         const newRecord = this.model.createDataPoint("record", {
             resModel: this.resModel,
             fields: this.fields,
             activeFields: this.activeFields,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
+            ...params,
         });
         await newRecord.load();
-        this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
         this.editedRecord = newRecord;
-        return newRecord;
+        return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
     }
 
+    /**
+     * @param {Record[]} [records=[]]
+     * @returns {Promise<number[]>}
+     */
+    async deleteRecords(records = []) {
+        let deleted = false;
+        let resIds;
+        if (records.length) {
+            resIds = records.map((r) => r.resId);
+        } else {
+            resIds = await this.getResIds(true);
+            records = this.records.filter((r) => resIds.includes(r.resId));
+            if (this.isDomainSelected) {
+                await this.model.orm.unlink(this.resModel, resIds, this.context);
+                deleted = true;
+            }
+        }
+        if (!deleted) {
+            await Promise.all(records.map((record) => record.delete()));
+        }
+        for (const record of records) {
+            this.removeRecord(record);
+        }
+        // Relaod the model only if more records should appear on the current page.
+        if (this.count && !this.records.length) {
+            await this.model.load();
+        }
+        return resIds;
+    }
+
+    /**
+     * @param {Record} record
+     * @param {number} [index]
+     * @returns {Record}
+     */
     addRecord(record, index) {
         this.records.splice(Number.isInteger(index) ? index : this.count, 0, record);
         this.count++;
+        this.model.notify();
+        return record;
     }
 
-    removeRecord(recordOrId) {
-        const index = this.records.findIndex(
-            (record) => record.id === recordOrId || record === recordOrId
-        );
-        const [record] = this.records.splice(index, 1);
+    /**
+     * @param {Record} record
+     * @returns {Record}
+     */
+    removeRecord(record) {
+        const index = this.records.findIndex((r) => r === record);
+        this.records.splice(index, 1);
         this.count--;
         this.editedRecord = this.editedRecord === record ? null : record;
         this.model.notify();
@@ -960,6 +1032,16 @@ export class DynamicGroupList extends DynamicList {
     }
 
     /**
+     * List of loaded records inside groups.
+     */
+    get records() {
+        return this.groups
+            .filter((group) => !group.isFolded)
+            .map((group) => group.list.records)
+            .flat();
+    }
+
+    /**
      * @param {string} shortType
      * @returns {boolean}
      */
@@ -996,19 +1078,6 @@ export class DynamicGroupList extends DynamicList {
         };
     }
 
-    /**
-     * List of loaded records inside groups.
-     */
-    get records() {
-        let recs = [];
-        for (const group of this.groups) {
-            if (!group.isFolded) {
-                recs = recs.concat(group.list.records);
-            }
-        }
-        return recs;
-    }
-
     async load() {
         this.groups = await this._loadGroups();
         await Promise.all(this.groups.map((group) => group.load()));
@@ -1018,6 +1087,10 @@ export class DynamicGroupList extends DynamicList {
         this.groups = await this._resequence(this.groups, "value", ...arguments);
     }
 
+    /**
+     * @param {any} value
+     * @returns {Promise<Group>}
+     */
     async createGroup(value) {
         const [id, displayName] = await this.model.mutex.exec(() =>
             this.model.orm.call(this.groupByField.relation, "name_create", [value], {
@@ -1045,11 +1118,24 @@ export class DynamicGroupList extends DynamicList {
         return this.addGroup(group);
     }
 
-    async deleteGroup(group) {
-        await group.delete();
-        return this.removeGroup(group);
+    /**
+     * @param {Group[]} groups
+     * @returns {Promise<Group[]>}
+     */
+    async deleteGroups(groups) {
+        return Promise.all(
+            groups.map(async (group) => {
+                await group.delete();
+                return this.removeGroup(group);
+            })
+        );
     }
 
+    /**
+     * @param {Group} group
+     * @param {number} [index]
+     * @returns {Group}
+     */
     addGroup(group, index) {
         this.groups.splice(Number.isInteger(index) ? index : this.count, 0, group);
         this.count++;
@@ -1057,15 +1143,16 @@ export class DynamicGroupList extends DynamicList {
         return group;
     }
 
-    removeGroup(groupOrId) {
-        const index = this.groups.findIndex((g) => g === groupOrId || g.id === groupOrId);
-        if (index < 0) {
-            return false;
-        }
-        const [removedGroup] = this.groups.splice(index, 1);
+    /**
+     * @param {Group} group
+     * @returns {Group}
+     */
+    removeGroup(group) {
+        const index = this.groups.findIndex((g) => g === group);
+        this.groups.splice(index, 1);
         this.count--;
         this.model.notify();
-        return removedGroup;
+        return group;
     }
 
     // ------------------------------------------------------------------------
@@ -1130,7 +1217,7 @@ export class DynamicGroupList extends DynamicList {
                                 groupParams.displayName = this.model.env._t("Undefined");
                             }
                             if (this.groupByInfo[this.firstGroupBy]) {
-                                groupParams.recordParam = {
+                                groupParams.recordParams = {
                                     resModel: groupByField.relation,
                                     resId: groupParams.value,
                                     activeFields: this.groupByInfo[this.firstGroupBy].activeFields,
@@ -1159,6 +1246,7 @@ export class DynamicGroupList extends DynamicList {
                     }
                     case "__data": {
                         groupParams.data = value;
+                        break;
                     }
                     default: {
                         // other optional aggregated fields
@@ -1190,7 +1278,7 @@ export class Group extends DataPoint {
         this.count = params.count;
         this.groupByField = params.groupByField;
         this.groupByInfo = params.groupByInfo;
-        this.recordParam = params.recordParam;
+        this.recordParams = params.recordParams;
         if ("isFolded" in state) {
             this.isFolded = state.isFolded;
         } else if ("isFolded" in params) {
@@ -1261,8 +1349,8 @@ export class Group extends DataPoint {
     async load() {
         if (!this.isFolded && this.count) {
             await this.list.load();
-            if (this.recordParam) {
-                this.record = this.model.createDataPoint("record", this.recordParam);
+            if (this.recordParams) {
+                this.record = this.model.createDataPoint("record", this.recordParams);
                 await this.record.load();
             }
         }
@@ -1274,18 +1362,35 @@ export class Group extends DataPoint {
         this.model.notify();
     }
 
-    async addRecord(record, index) {
-        this.count++;
-        this.list.addRecord(record, index);
-        if (this.isFolded) {
-            await this.toggle();
+    async delete() {
+        if (this.record) {
+            return this.record.delete();
+        } else {
+            return this.model.orm.unlink(this.resModel, [this.value], this.context);
         }
     }
 
-    async delete() {
-        return this.model.orm.unlink(this.groupByField.relation, [this.value], this.context);
+    /**
+     * @see DynamicRecordList.deleteRecords
+     */
+    async deleteRecords() {
+        const records = await this.list.deleteRecords(...arguments);
+        this.count -= records.length;
+        return records;
     }
 
+    /**
+     * @see DynamicRecordList.addRecord
+     */
+    addRecord(record, index) {
+        this.count++;
+        this.isFolded = false;
+        return this.list.addRecord(record, index);
+    }
+
+    /**
+     * @see DynamicRecordList.removeRecord
+     */
     removeRecord(record) {
         this.count--;
         return this.list.removeRecord(record);

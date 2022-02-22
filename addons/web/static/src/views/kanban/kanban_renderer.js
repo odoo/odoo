@@ -364,7 +364,7 @@ export class KanbanRenderer extends Component {
         this.dialog.add(ConfirmationDialog, {
             body: this.env._t("Are you sure you want to delete this column?"),
             confirm: async () => {
-                await this.props.list.deleteGroup(group);
+                await this.props.list.deleteGroups([group]);
                 if (this.props.list.groups.length === 0) {
                     this.state.quickCreateGroup = true;
                 }
@@ -377,7 +377,7 @@ export class KanbanRenderer extends Component {
         const { list } = group || this.props;
         this.dialog.add(ConfirmationDialog, {
             body: this.env._t("Are you sure you want to delete this record?"),
-            confirm: () => list.deleteRecord(record),
+            confirm: () => list.deleteRecords([record]),
             cancel: () => {},
         });
     }
