@@ -108,8 +108,7 @@ class IrAttachment(models.Model):
             f = io.BytesIO(bin_data)
             try:
                 resource_manager = PDFResourceManager()
-                with io.StringIO() as content:
-                    device = TextConverter(resource_manager, content)
+                with io.StringIO() as content, TextConverter(resource_manager, content) as device:
                     logging.getLogger("pdfminer").setLevel(logging.CRITICAL)
                     interpreter = PDFPageInterpreter(resource_manager, device)
 
