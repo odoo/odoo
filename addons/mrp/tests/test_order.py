@@ -2375,3 +2375,137 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(workorder.time_ids[1].duration, real_duration_under_expected, "Original time tracking should be unchanged")
         self.assertEqual(workorder.time_ids[0].loss_type, 'productive', "Remaining time tracking should be productive")
         self.assertEqual(workorder.time_ids[0].duration, real_duration_decreased - real_duration_under_expected, "Time tracking duration should have been reduced to reflect new shorter duration")
+
+    def test_propagate_quantity_on_backorders(self):
+        """Create a MO for a product with several work orders.
+        Produce different quantities to test quantity propagation and workorder cancellation.
+        """
+
+        # setup test
+
+        work_center_1 = self.env['mrp.workcenter'].create({"name": "WorkCenter 1"})
+        work_center_2 = self.env['mrp.workcenter'].create({"name": "WorkCenter2"})
+        work_center_3 = self.env['mrp.workcenter'].create({"name": "WorkCenter3"})
+
+        product = self.env['product.template'].create({"name": "Finished Product"})
+        component_1 = self.env['product.template'].create({"name": "Component 1", "type": "product"})
+        component_2 = self.env['product.template'].create({"name": "Component 2", "type": "product"})
+        component_3 = self.env['product.template'].create({"name": "Component 3", "type": "product"})
+
+        self.env['stock.quant'].create({
+            "product_id": component_1.product_variant_id.id,
+            "location_id": 8,
+            "quantity": 100
+        })
+        self.env['stock.quant'].create({
+            "product_id": component_2.product_variant_id.id,
+            "location_id": 8,
+            "quantity": 100
+        })
+        self.env['stock.quant'].create({
+            "product_id": component_3.product_variant_id.id,
+            "location_id": 8,
+            "quantity": 100
+        })
+
+        self.env['mrp.bom'].create({
+            "product_tmpl_id": product.id,
+            "product_id": False,
+            "product_qty": 1,
+            "bom_line_ids": [
+                [0, 0, {"product_id": component_1.product_variant_id.id, "product_qty": 1}],
+                [0, 0, {"product_id": component_2.product_variant_id.id, "product_qty": 1}],
+                [0, 0, {"product_id": component_3.product_variant_id.id, "product_qty": 1}]
+            ],
+            "operation_ids": [
+                [0, 0, {"name": "Operation 1", "workcenter_id": work_center_1.id}],
+                [0, 0, {"name": "Operation 2", "workcenter_id": work_center_2.id}],
+                [0, 0, {"name": "Operation 3", "workcenter_id": work_center_3.id}]
+            ]
+        })
+
+        # create a manufacturing order for 20 products
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product.product_variant_id
+        mo_form.product_qty = 20
+        mo = mo_form.save()
+
+        self.assertEqual(mo.state, 'draft')
+        mo.action_confirm()
+
+        wo_1, wo_2, wo_3 = mo.workorder_ids
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(wo_1.state, 'ready')
+
+        # produce 20 / 10 / 5 on workorders, create backorder
+
+        wo_1.button_start()
+        wo_1.qty_producing = 20
+        self.assertEqual(mo.state, 'progress')
+        wo_1.button_finish()
+
+        wo_2.button_start()
+        wo_2.qty_producing = 10
+        wo_2.button_finish()
+
+        wo_3.button_start()
+        wo_3.qty_producing = 5
+        wo_3.button_finish()
+
+        self.assertEqual(mo.state, 'to_close')
+        mo.button_mark_done()
+
+        bo = self.env['mrp.production.backorder'].create({
+            "mrp_production_backorder_line_ids": [
+                [0, 0, {"mrp_production_id": mo.id, "to_backorder": True}]
+            ]
+        })
+        bo.action_backorder()
+
+        self.assertEqual(mo.state, 'done')
+
+        mo_2 = mo.procurement_group_id.mrp_production_ids - mo
+        wo_4, wo_5, wo_6 = mo_2.workorder_ids
+
+        self.assertEqual(wo_4.state, 'cancel')
+
+        # produce 10 / 5, create backorder
+
+        wo_5.button_start()
+        wo_5.qty_producing = 10
+        self.assertEqual(mo_2.state, 'progress')
+        wo_5.button_finish()
+
+        wo_6.button_start()
+        wo_6.qty_producing = 5
+        wo_6.button_finish()
+
+        self.assertEqual(mo_2.state, 'to_close')
+        mo_2.button_mark_done()
+
+        bo = self.env['mrp.production.backorder'].create({
+            "mrp_production_backorder_line_ids": [
+                [0, 0, {"mrp_production_id": mo_2.id, "to_backorder": True}]
+            ]
+        })
+        bo.action_backorder()
+
+        self.assertEqual(mo_2.state, 'done')
+
+        mo_3 = mo.procurement_group_id.mrp_production_ids - (mo | mo_2)
+        wo_7, wo_8, wo_9 = mo_3.workorder_ids
+
+        self.assertEqual(wo_7.state, 'cancel')
+        self.assertEqual(wo_8.state, 'cancel')
+
+        # produce 10 and finish work
+
+        wo_9.button_start()
+        wo_9.qty_producing = 10
+        self.assertEqual(mo_3.state, 'progress')
+        wo_9.button_finish()
+
+        self.assertEqual(mo_3.state, 'to_close')
+        mo_3.button_mark_done()
+        self.assertEqual(mo_3.state, 'done')
