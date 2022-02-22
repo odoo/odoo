@@ -14,7 +14,7 @@ class LeaveReport(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     leave_id = fields.Many2one('hr.leave', string="Leave Request", readonly=True)
     allocation_id = fields.Many2one('hr.leave.allocation', string="Allocation Request", readonly=True)
-    active_employee = fields.Boolean(related='employee_id.active', readonly=True)
+    active_employee = fields.Boolean(readonly=True)
     name = fields.Char('Description', readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True)
     leave_type = fields.Selection([
@@ -48,6 +48,7 @@ class LeaveReport(models.Model):
                 SELECT row_number() over(ORDER BY leaves.employee_id) as id,
                 leaves.allocation_id as allocation_id, leaves.leave_id as leave_id,
                 leaves.employee_id as employee_id, leaves.name as name,
+                leaves.active_employee as active_employee,
                 leaves.number_of_days as number_of_days, leaves.leave_type as leave_type,
                 leaves.category_id as category_id, leaves.department_id as department_id,
                 leaves.holiday_status_id as holiday_status_id, leaves.state as state,
@@ -57,6 +58,7 @@ class LeaveReport(models.Model):
                     allocation.id as allocation_id,
                     null as leave_id,
                     allocation.employee_id as employee_id,
+                    employee.active as active_employee,
                     allocation.private_name as name,
                     allocation.number_of_days as number_of_days,
                     allocation.category_id as category_id,
@@ -69,10 +71,12 @@ class LeaveReport(models.Model):
                     'allocation' as leave_type,
                     allocation.employee_company_id as company_id
                 from hr_leave_allocation as allocation
+                inner join hr_employee as employee on (allocation.employee_id = employee.id)
                 union all select
                     null as allocation_id,
                     request.id as leave_id,
                     request.employee_id as employee_id,
+                    employee.active as active_employee,
                     request.private_name as name,
                     (request.number_of_days * -1) as number_of_days,
                     request.category_id as category_id,
@@ -84,7 +88,9 @@ class LeaveReport(models.Model):
                     request.date_to as date_to,
                     'request' as leave_type,
                     request.employee_company_id as company_id
-                from hr_leave as request) leaves
+                from hr_leave as request
+                inner join hr_employee as employee on (request.employee_id = employee.id)
+                ) leaves
             );
         """)
 
