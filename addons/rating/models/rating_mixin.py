@@ -4,21 +4,9 @@
 import operator
 
 from odoo import api, fields, models, tools
-from odoo.addons.rating.models.rating import RATING_LIMIT_SATISFIED, RATING_LIMIT_OK, RATING_LIMIT_MIN, RATING_TEXT
+from odoo.addons.rating.models import rating_data
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare
-
-OPERATOR_MAPPING = {
-    '=': operator.eq,
-    '!=': operator.ne,
-    '<': operator.lt,
-    '<=': operator.le,
-    '>': operator.gt,
-    '>=': operator.ge,
-}
-RATING_AVG_TOP = 3.66
-RATING_AVG_OK = 2.33
-RATING_AVG_MIN = RATING_LIMIT_MIN
 
 
 class RatingMixin(models.AbstractModel):
@@ -32,7 +20,7 @@ class RatingMixin(models.AbstractModel):
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
     rating_avg = fields.Float("Average Rating", groups='base.group_user',
         compute='_compute_rating_stats', compute_sudo=True, search='_search_rating_avg')
-    rating_avg_text = fields.Selection(RATING_TEXT, groups='base.group_user',
+    rating_avg_text = fields.Selection(rating_data.RATING_TEXT, groups='base.group_user',
         compute='_compute_rating_avg_text', compute_sudo=True)
     rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute='_compute_rating_satisfaction', compute_sudo=True)
     rating_last_text = fields.Selection(string="Rating Text", groups='base.group_user', related="rating_ids.rating_text")
@@ -46,7 +34,7 @@ class RatingMixin(models.AbstractModel):
     @api.depends('rating_ids.res_id', 'rating_ids.rating')
     def _compute_rating_stats(self):
         """ Compute avg and count in one query, as thoses fields will be used together most of the time. """
-        domain = expression.AND([self._rating_domain(), [('rating', '>=', RATING_LIMIT_MIN)]])
+        domain = expression.AND([self._rating_domain(), [('rating', '>=', rating_data.RATING_LIMIT_MIN)]])
         read_group_res = self.env['rating.rating'].read_group(domain, ['rating:avg'], groupby=['res_id'], lazy=False)  # force average on rating column
         mapping = {item['res_id']: {'rating_count': item['__count'], 'rating_avg': item['rating']} for item in read_group_res}
         for record in self:
@@ -54,48 +42,38 @@ class RatingMixin(models.AbstractModel):
             record.rating_avg = mapping.get(record.id, {}).get('rating_avg', 0)
 
     def _search_rating_avg(self, operator, value):
-        if operator not in OPERATOR_MAPPING:
+        if operator not in rating_data.OPERATOR_MAPPING:
             raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
         rating_read_group = self.env['rating.rating'].sudo().read_group(
-            [('res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', RATING_LIMIT_MIN)],
+            [('res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', rating_data.RATING_LIMIT_MIN)],
             ['res_id', 'rating_avg:avg(rating)'], ['res_id'])
         res_ids = [
             res['res_id']
             for res in rating_read_group
-            if OPERATOR_MAPPING[operator](float_compare(res['rating_avg'], value, 2), 0)
+            if rating_data.OPERATOR_MAPPING[operator](float_compare(res['rating_avg'], value, 2), 0)
         ]
         return [('id', 'in', res_ids)]
 
     @api.depends('rating_avg')
     def _compute_rating_avg_text(self):
         for record in self:
-            if float_compare(record.rating_avg, RATING_AVG_TOP, 2) >= 0:
-                record.rating_avg_text = 'top'
-            elif float_compare(record.rating_avg, RATING_AVG_OK, 2) >= 0:
-                record.rating_avg_text = 'ok'
-            elif float_compare(record.rating_avg, RATING_AVG_MIN, 2) >= 0:
-                record.rating_avg_text = 'ko'
-            else:
-                record.rating_avg_text = 'none'
+            record.rating_avg_text = rating_data._rating_avg_to_text(record.rating_avg)
 
     @api.depends('rating_ids.res_id', 'rating_ids.rating')
     def _compute_rating_satisfaction(self):
         """ Compute the rating satisfaction percentage, this is done separately from rating_count and rating_avg
             since the query is different, to avoid computing if it is not necessary"""
-        domain = expression.AND([self._rating_domain(), [('rating', '>=', RATING_LIMIT_MIN)]])
+        domain = expression.AND([self._rating_domain(), [('rating', '>=', rating_data.RATING_LIMIT_MIN)]])
         # See `_compute_rating_percentage_satisfaction` above
         read_group_res = self.env['rating.rating'].read_group(domain, ['res_id', 'rating'], groupby=['res_id', 'rating'], lazy=False)
         default_grades = {'great': 0, 'okay': 0, 'bad': 0}
         grades_per_record = {record_id: default_grades.copy() for record_id in self.ids}
+
         for group in read_group_res:
             record_id = group['res_id']
-            rating = group['rating']
-            if rating > RATING_LIMIT_OK:
-                grades_per_record[record_id]['great'] += group['__count']
-            elif rating > RATING_LIMIT_MIN:
-                grades_per_record[record_id]['okay'] += group['__count']
-            else:
-                grades_per_record[record_id]['bad'] += group['__count']
+            grade = rating_data._rating_to_grade(group['rating'])
+            grades_per_record[record_id][grade] += group['__count']
+
         for record in self:
             grade_repartition = grades_per_record.get(record.id, default_grades)
             grade_count = sum(grade_repartition.values())
@@ -272,12 +250,8 @@ class RatingMixin(models.AbstractModel):
         data = self._rating_get_repartition(domain=domain)
         res = dict.fromkeys(['great', 'okay', 'bad'], 0)
         for key in data:
-            if key >= RATING_LIMIT_SATISFIED:
-                res['great'] += data[key]
-            elif key >= RATING_LIMIT_OK:
-                res['okay'] += data[key]
-            else:
-                res['bad'] += data[key]
+            grade = rating_data._rating_to_grade(key)
+            res[grade] += data[key]
         return res
 
     def rating_get_stats(self, domain=None):

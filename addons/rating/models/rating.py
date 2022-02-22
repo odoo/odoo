@@ -4,18 +4,8 @@ import base64
 import uuid
 
 from odoo import api, fields, models
-
+from odoo.addons.rating.models import rating_data
 from odoo.modules.module import get_resource_path
-
-RATING_LIMIT_SATISFIED = 4
-RATING_LIMIT_OK = 3
-RATING_LIMIT_MIN = 1
-RATING_TEXT = [
-    ('top', 'Satisfied'),
-    ('ok', 'Okay'),
-    ('ko', 'Dissatisfied'),
-    ('none', 'No Rating yet'),
-]
 
 
 class Rating(models.Model):
@@ -52,7 +42,7 @@ class Rating(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
     rating = fields.Float(string="Rating Value", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 5=Happy")
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
-    rating_text = fields.Selection(RATING_TEXT, string='Rating', store=True, compute='_compute_rating_text', readonly=True)
+    rating_text = fields.Selection(rating_data.RATING_TEXT, string='Rating', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
     message_id = fields.Many2one(
         'mail.message', string="Message",
@@ -99,15 +89,7 @@ class Rating(models.Model):
 
     def _get_rating_image_filename(self):
         self.ensure_one()
-        if self.rating >= RATING_LIMIT_SATISFIED:
-            rating_int = 5
-        elif self.rating >= RATING_LIMIT_OK:
-            rating_int = 3
-        elif self.rating >= RATING_LIMIT_MIN:
-            rating_int = 1
-        else:
-            rating_int = 0
-        return 'rating_%s.png' % rating_int
+        return 'rating_%s.png' % rating_data._rating_to_threshold(self.rating)
 
     def _compute_rating_image(self):
         for rating in self:
@@ -120,14 +102,7 @@ class Rating(models.Model):
     @api.depends('rating')
     def _compute_rating_text(self):
         for rating in self:
-            if rating.rating >= RATING_LIMIT_SATISFIED:
-                rating.rating_text = 'top'
-            elif rating.rating >= RATING_LIMIT_OK:
-                rating.rating_text = 'ok'
-            elif rating.rating >= RATING_LIMIT_MIN:
-                rating.rating_text = 'ko'
-            else:
-                rating.rating_text = 'none'
+            rating.rating_text = rating_data._rating_to_text(rating.rating)
 
     @api.model_create_multi
     def create(self, vals_list):
