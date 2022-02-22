@@ -17,6 +17,132 @@
                 data-set-tags=""
                 data-create-method="createTag"/>
         </div>
+        <!-- Blog Posts page  -->
+        <div data-selector="main:has(#o_wblog_index_content)" data-page-options="true" data-no-check="true" string="Blogs Page">
+            <we-select string="Top Banner" data-no-preview="true" data-reload="/">
+                <we-button data-customize-website-views="website_blog.opt_blog_cover_post"
+                    data-name="blog_cover_opt">Name / Latest Post</we-button>
+                <we-button data-customize-website-views="">Drop Zone for Building Blocks</we-button>
+            </we-select>
+            <we-checkbox string="⌙ Full-Width"
+                         data-customize-website-views="website_blog.opt_blog_cover_post_fullwidth_design"
+                         data-dependencies="blog_cover_opt"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-select string="Layout" data-no-preview="true" data-reload="/">
+                <we-button data-customize-website-views="">Grid</we-button>
+                <we-button data-customize-website-views="website_blog.opt_blog_list_view">List</we-button>
+            </we-select>
+            <we-checkbox string="⌙ Cards"
+                         data-customize-website-views="website_blog.opt_blog_cards_design"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Increase Readability"
+                         data-customize-website-views="website_blog.opt_blog_readable"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Sidebar"
+                         data-name="blog_posts_sidebar_opt"
+                         data-customize-website-views="website_blog.opt_blog_sidebar_show"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Archives"
+                         data-dependencies="blog_posts_sidebar_opt"
+                         data-customize-website-views="website_blog.opt_sidebar_blog_index_archives"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Follow us"
+                         data-dependencies="blog_posts_sidebar_opt"
+                         data-customize-website-views="website_blog.opt_sidebar_blog_index_follow_us"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Tags List"
+                         data-dependencies="blog_posts_sidebar_opt"
+                         data-customize-website-views="website_blog.opt_sidebar_blog_index_tags"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-select string="Posts List" data-no-preview="true" data-reload="/">
+                <we-button data-customize-website-views="">No Cover</we-button>
+                <we-button data-customize-website-views="website_blog.opt_posts_loop_show_cover">Cover</we-button>
+            </we-select>
+            <we-checkbox string="⌙ Author"
+                         data-customize-website-views="website_blog.opt_posts_loop_show_author"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Comments/Views Stats"
+                         data-customize-website-views="website_blog.opt_posts_loop_show_stats"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Teaser &amp; Tags"
+                         data-customize-website-views="website_blog.opt_posts_loop_show_teaser"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+        <!-- Blog Post page  -->
+        <div data-selector="main:has(#o_wblog_post_main)" data-page-options="true" data-no-check="true" string="Blog Page">
+            <we-select string="Layout" data-no-preview="true" data-reload="/">
+                <we-button data-customize-website-views="website_blog.opt_blog_post_regular_cover">Title Above Cover</we-button>
+                <we-button data-customize-website-views="">Title Inside Cover</we-button>
+            </we-select>
+            <we-checkbox string="⌙ Increase Readability"
+                         data-customize-website-views="website_blog.opt_blog_post_readable"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Sidebar"
+                         data-name="blog_post_sidebar_opt"
+                         data-customize-website-views="website_blog.opt_blog_post_sidebar"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Archive"
+                         data-dependencies="blog_post_sidebar_opt"
+                         data-customize-website-views="website_blog.opt_blog_post_archive_display"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Author"
+                         data-dependencies="blog_post_sidebar_opt"
+                         data-customize-website-views="website_blog.opt_blog_post_author_avatar_display"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Blogs List"
+                         data-dependencies="blog_post_sidebar_opt"
+                         data-customize-website-views="website_blog.opt_blog_post_blogs_display"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Share Links"
+                         data-dependencies="blog_post_sidebar_opt"
+                         data-customize-website-views="website_blog.opt_blog_post_share_links_display"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="⌙ Tags"
+                         data-dependencies="blog_post_sidebar_opt"
+                         data-customize-website-views="website_blog.opt_blog_post_tags_display"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Breadcrumb"
+                         data-customize-website-views="website_blog.opt_blog_post_breadcrumb"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-row string="Bottom" class="o_we_full_row">
+                <we-button string="Next Article"
+                           data-customize-website-views="website_blog.opt_blog_post_read_next"
+                           data-no-preview="true"
+                           data-reload="/"/>
+                <we-button string="Comments"
+                           data-name="allow_comments_opt"
+                           data-customize-website-views="website_blog.opt_blog_post_comment"
+                           data-no-preview="true"
+                           data-reload="/"/>
+            </we-row>
+            <we-checkbox string="⌙ Select to Comment"
+                         data-dependencies="allow_comments_opt"
+                         data-customize-website-views="website_blog.opt_blog_post_select_to_comment"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Select to Tweet"
+                         data-customize-website-views="website_blog.opt_blog_post_select_to_tweet"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
     </xpath>
     <xpath expr="//*[@data-js='anchor']" position="attributes">
         <attribute name="data-exclude" add=".o_wblog_post_content_field > :not(div, section)" separator=","/>

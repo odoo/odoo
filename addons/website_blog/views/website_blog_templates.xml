@@ -92,7 +92,7 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Show latest-post as top banner
     Replace top-banner content with the latest published post
 -->
-<template id="opt_blog_cover_post" name="Top banner - Name / Latest Post" inherit_id="website_blog.blog_post_short" active="True" customize_show="True">
+<template id="opt_blog_cover_post" name="Top banner - Name / Latest Post" inherit_id="website_blog.blog_post_short" active="True">
     <xpath expr="//div[@id='o_wblog_blog_top_droppable']" position="replace">
         <div t-if="first_post or blog" class="container">
             <div class="row py-4">
@@ -135,7 +135,7 @@ list of filtered posts (by date or tag).
 </template>
 
 <!-- (Option) Blog: Show latest-post as top banner : 'Full Width' design -->
-<template id="opt_blog_cover_post_fullwidth_design" name="Full-Width Cover" inherit_id="website_blog.opt_blog_cover_post" active="True" customize_show="True">
+<template id="opt_blog_cover_post_fullwidth_design" name="Full-Width Cover" inherit_id="website_blog.opt_blog_cover_post" active="True">
     <xpath expr="//div[hasclass('container')]" position="replace">
         <t t-if="blog or first_post" t-call="website.record_cover">
             <t t-set="_record" t-value="blog or first_post"/>
@@ -169,7 +169,7 @@ list of filtered posts (by date or tag).
 
 
 <!-- (Option) Blog: Sidebar : Show -->
-<template id="opt_blog_sidebar_show" name="Show Sidebar" inherit_id="website_blog.blog_post_short" active="False" customize_show="True">
+<template id="opt_blog_sidebar_show" name="Show Sidebar" inherit_id="website_blog.blog_post_short" active="False">
     <xpath expr="//div[@id='o_wblog_posts_loop_container']" position="after">
         <div t-if="opt_blog_list_view" class="border-right d-none d-lg-block" style="opacity: 0.5"/>
         <div t-attf-class="col-12 col-md-3 d-flex #{opt_blog_list_view and 'col-lg-4' or 'ml-lg-5'}">
@@ -181,18 +181,18 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Posts List: Cards design
     Wrap posts in a standard bts cards components
 -->
-<template id="opt_blog_cards_design" name="'Cards' Design" inherit_id="website_blog.blog_post_short" active="False" customize_show="True"/>
+<template id="opt_blog_cards_design" name="'Cards' Design" inherit_id="website_blog.blog_post_short" active="False"/>
 
 
 <!-- (Option) Blog: Show Posts in list-view
     Display post in a list rather than a grid
 -->
-<template id="opt_blog_list_view" name="List View" inherit_id="website_blog.blog_post_short" active="False" customize_show="True"/>
+<template id="opt_blog_list_view" name="List View" inherit_id="website_blog.blog_post_short" active="False"/>
 
 <!-- (Option) Blog: Increase readability
     Increase font-size, adapt layout
 -->
-<template id="opt_blog_readable" name="Increase Readability" inherit_id="website_blog.blog_post_short" active="True" customize_show="True"/>
+<template id="opt_blog_readable" name="Increase Readability" inherit_id="website_blog.blog_post_short" active="True"/>
 
 
 <!-- ====== Blog Post Complete Layout ==========================================
@@ -284,17 +284,17 @@ list of filtered posts (by date or tag).
 <!-- (Option) Post: Increase readability
     Increase font-size, adapt content width
 -->
-<template id="opt_blog_post_readable" name="Increase Readability" inherit_id="website_blog.blog_post_complete" active="True" customize_show="True"/>
+<template id="opt_blog_post_readable" name="Increase Readability" inherit_id="website_blog.blog_post_complete" active="True"/>
 
 <!-- (Option) Post: Show Sidebar
     Show sidebar beside the post content
 -->
-<template id="opt_blog_post_sidebar" name="Show Sidebar" inherit_id="website_blog.blog_post_complete" active="False" customize_show="True"/>
+<template id="opt_blog_post_sidebar" name="Show Sidebar" inherit_id="website_blog.blog_post_complete" active="False"/>
 
 <!-- (Option) Post: Regular Cover
     Use 'regular cover' design rather than the fullwidth one
 -->
-<template id="opt_blog_post_regular_cover" name="'Regular' Cover" inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
+<template id="opt_blog_post_regular_cover" name="'Regular' Cover" inherit_id="website_blog.blog_post_complete" active="False">
     <xpath expr="//div[@id='title']" position="replace">
         <div class="container">
             <t t-set="readableClass" t-if="opt_blog_post_readable and opt_blog_post_sidebar" t-value="'o_wblog_read_with_sidebar mx-auto'"/>
@@ -345,17 +345,17 @@ list of filtered posts (by date or tag).
 <!-- (Option) Post: Show Breadcrumb
     Display navigation breadcrumbs before the post content
 -->
-<template id="opt_blog_post_breadcrumb" name="Show Breadcrumb" inherit_id="website_blog.blog_post_complete" active="True" customize_show="True"/>
+<template id="opt_blog_post_breadcrumb" name="Show Breadcrumb" inherit_id="website_blog.blog_post_complete" active="True"/>
 
 <!-- (Option) Post: Select text to Tweet
     Allow to select text to tweet it
 -->
-<template id="opt_blog_post_select_to_tweet" name="Select to Tweet" inherit_id="website_blog.blog_post_complete" active="False" customize_show="True"/>
+<template id="opt_blog_post_select_to_tweet" name="Select to Tweet" inherit_id="website_blog.blog_post_complete" active="False"/>
 
 <!-- (Option) Post: Comments
     Enable comments
 -->
-<template id="opt_blog_post_comment" name="Allow Comments" inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
+<template id="opt_blog_post_comment" name="Allow Comments" inherit_id="website_blog.blog_post_complete" active="False">
     <xpath expr="//section[@id='o_wblog_post_main']" position="inside">
         <t t-set="readableClass" t-if="opt_blog_post_readable and opt_blog_post_sidebar" t-value="'o_wblog_read_with_sidebar'"/>
         <t t-set="readableClass" t-elif="opt_blog_post_readable" t-value="'o_container_small'"/>
@@ -378,12 +378,12 @@ list of filtered posts (by date or tag).
 <!-- (Option) Post: Comments: Select text to Comment
     Allow to select text to comment it
 -->
-<template id="opt_blog_post_select_to_comment" name="Select to Comment" inherit_id="website_blog.opt_blog_post_comment" active="False" customize_show="True"/>
+<template id="opt_blog_post_select_to_comment" name="Select to Comment" inherit_id="website_blog.opt_blog_post_comment" active="False"/>
 
 <!-- (Option) Post : Read Next Article
     Show 'read next' banner at the bottom of the page
 -->
-<template id="opt_blog_post_read_next" name="Read Next Article" inherit_id="website_blog.blog_post_complete" active="True" customize_show="True">
+<template id="opt_blog_post_read_next" name="Read Next Article" inherit_id="website_blog.blog_post_complete" active="True">
     <xpath expr="//section[@id='o_wblog_post_footer']" position="inside">
         <div t-if="next_post" class="mt-5">
             <t t-if="opt_blog_post_regular_cover">
