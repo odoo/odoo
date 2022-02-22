@@ -192,7 +192,7 @@ def normalize_domain(domain):
     op_arity = {NOT_OPERATOR: 1, AND_OPERATOR: 2, OR_OPERATOR: 2}
     for token in domain:
         if expected == 0:                   # more than expected, like in [A, B]
-            result[0:0] = [AND_OPERATOR]             # put an extra '&' in front
+            result.insert(0, AND_OPERATOR)  # put an extra '&' in front
             expected = 1
         if isinstance(token, (list, tuple)):  # domain term
             expected -= 1
@@ -204,7 +204,7 @@ def normalize_domain(domain):
     return result
 
 
-def is_false(model, domain):
+def is_false(domain):
     """ Return whether ``domain`` is logically equivalent to false. """
     # use three-valued logic: -1 is false, 0 is unknown, +1 is true
     stack = []
@@ -336,13 +336,12 @@ def normalize_leaf(element):
     if not is_leaf(element):
         return element
     left, operator, right = element
-    original = operator
     operator = operator.lower()
     if isinstance(right, bool) and operator in ('in', 'not in'):
-        _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % ((left, original, right),))
+        _logger.warning("The domain term '%s' should use the '=' or '!=' operator.", element)
         operator = '=' if operator == 'in' else '!='
     if isinstance(right, (list, tuple)) and operator in ('=', '!='):
-        _logger.warning("The domain term '%s' should use the 'in' or 'not in' operator." % ((left, original, right),))
+        _logger.warning("The domain term '%s' should use the 'in' or 'not in' operator.", element)
         operator = 'in' if operator == '=' else 'not in'
     return left, operator, right
 
@@ -376,7 +375,7 @@ def is_leaf(element, internal=False):
 
 
 def is_boolean(element):
-    return element == TRUE_LEAF or element == FALSE_LEAF
+    return element in (TRUE_LEAF, FALSE_LEAF)
 
 
 def check_leaf(element, internal=False):
@@ -391,7 +390,7 @@ def check_leaf(element, internal=False):
 def _unaccent_wrapper(x):
     if isinstance(x, Composable):
         return SQL('unaccent({})').format(x)
-    return 'unaccent({})'.format(x)
+    return f'unaccent({x})'
 
 def get_unaccent_wrapper(cr):
     if odoo.registry(cr.dbname).has_unaccent:
@@ -635,19 +634,8 @@ class expression(object):
             field = model._fields.get(path[0])
             comodel = model.env.get(getattr(field, 'comodel_name', None))
 
-            # ----------------------------------------
-            # FIELD NOT FOUND
-            # -> from inherits'd fields -> work on the related model, and add
-            #    a join condition
-            # -> ('id', 'child_of', '..') -> use a 'to_ids'
-            # -> but is one on the _log_access special fields, add directly to
-            #    result
-            #    TODO: make these fields explicitly available in self.columns instead!
-            # -> else: crash
-            # ----------------------------------------
-
             if not field:
-                raise ValueError("Invalid field %s.%s in leaf %s" % (model._name, path[0], str(leaf)))
+                raise ValueError(f"Invalid field {model._name}.{ path[0]} in leaf {leaf}")
 
             elif field.inherited:
                 parent_model = model.env[field.related_field.model_name]
@@ -706,11 +694,12 @@ class expression(object):
                 # Non-stored field should provide an implementation of search.
                 if not field.search:
                     # field does not support search!
-                    _logger.error("Non-stored field %s cannot be searched.", field)
+                    _logger.error("Field %s cannot be searched because it is Non-stored and doesn't implement a search method", field)
                     if _logger.isEnabledFor(logging.DEBUG):
                         _logger.debug(''.join(traceback.format_stack()))
                     # Ignore it: generate a dummy leaf.
                     domain = []
+                    # Should be raise instead ?
                 else:
                     # Let the field generate a domain.
                     if len(path) > 1:
@@ -917,7 +906,7 @@ class expression(object):
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
-                        right = '%%%s%%' % right
+                        right = f'%{right}%'
                     if sql_operator in ('in', 'not in'):
                         right = tuple(right)
 

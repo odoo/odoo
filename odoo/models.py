@@ -4751,7 +4751,7 @@ Fields:
         model = self.with_user(access_rights_uid) if access_rights_uid else self
         model.check_access_rights('read')
 
-        if expression.is_false(self, domain):
+        if expression.is_false(domain):
             # optimization: no need to query, as no record satisfies the domain
             return 0 if count else []
 
@@ -5069,7 +5069,7 @@ Fields:
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
         """Perform a :meth:`search` followed by a :meth:`read`.
 
-        :param domain: Search domain, see ``args`` parameter in :meth:`search`.
+        :param domain: Search domain, see ``domain`` parameter in :meth:`search`.
             Defaults to an empty domain that will match all records.
         :param fields: List of fields to read, see ``fields`` parameter in :meth:`read`.
             Defaults to all fields.
