@@ -58,7 +58,7 @@ class Channel(models.Model):
         ('chat', 'Chat'),
         ('channel', 'Channel'),
         ('group', 'Group')],
-        string='Channel Type', default='channel', help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
+        string='Channel Type', required=True, default='channel', help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
     is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
     default_display_mode = fields.Selection(string="Default Display Mode", selection=[('video_full_screen', "Full screen video")], help="Determines how the channel will be displayed by default when opening it from its invitation link. No value means display text (no voice/video).")
     description = fields.Text('Description')
@@ -92,6 +92,7 @@ class Channel(models.Model):
                                       default=lambda self: self.env.ref('base.group_user'))
 
     _sql_constraints = [
+        ('channel_type_not_null', 'CHECK(channel_type IS NOT NULL)', 'The channel type cannot be empty'),
         ('uuid_unique', 'UNIQUE(uuid)', 'The channel UUID must be unique'),
     ]
 
