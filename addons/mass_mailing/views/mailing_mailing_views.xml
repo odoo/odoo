@@ -385,7 +385,7 @@
                     <xpath expr="//div[hasclass('alert-info')]" position="move"/>
                 </field>
                 <xpath expr="//div[hasclass('alert-info')]" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|',('state', '=', 'draft'),'&amp;','&amp;',('state', '!=', 'in_queue'),('scheduled', '=', 0),('failed', '=', 0)]}</attribute>
+                    <attribute name="attrs">{'invisible': ['|',('state', '=', 'draft'),'&amp;',('state', '!=', 'in_queue'),('failed', '=', 0)]}</attribute>
                 </xpath>
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_canceled')]" position="replace"/>
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_sent')]" position="replace"/>
