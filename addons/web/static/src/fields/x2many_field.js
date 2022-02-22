@@ -20,10 +20,11 @@ export class X2ManyField extends Component {
     setup() {
         this.dialogService = useService("dialog");
         this.fieldInfo = this.props.record.activeFields[this.props.name];
-        // should we readd protection on this.fieldInfo.views?
-        // in rendererProps also then?
-        this.Renderer = X2M_RENDERERS[this.fieldInfo.viewMode];
-        this.viewMode = this.fieldInfo.viewMode;
+        // FIXME WOWL: is it normal to get here without fieldInfo.views?
+        if (this.fieldInfo.views && this.fieldInfo.viewMode in this.fieldInfo.views) {
+            this.Renderer = X2M_RENDERERS[this.fieldInfo.viewMode];
+            this.viewMode = this.fieldInfo.viewMode;
+        }
     }
 
     get rendererProps() {
