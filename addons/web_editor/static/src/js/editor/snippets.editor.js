@@ -2396,7 +2396,7 @@ var SnippetsMenu = Widget.extend({
 
         let dragAndDropResolve;
         let $scrollingElement = $().getScrollingElement(this.ownerDocument);
-        if (!$scrollingElement[0]) {
+        if (!$scrollingElement[0] || $scrollingElement.find('body.o_in_iframe')) {
             $scrollingElement = $(this.ownerDocument).find('.o_editable');
         }
 
