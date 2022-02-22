@@ -379,7 +379,7 @@ QUnit.test('sidebar: inbox with counter', async function (assert) {
     assert.expect(2);
 
     // notification expected to be counted at init_messaging
-    this.data['mail.notification'].records.push({ res_partner_id: this.data.currentPartnerId });
+    this.data['mail.notification'].records.push({  notification_type: 'inbox', res_partner_id: this.data.currentPartnerId });
     await this.start();
     assert.strictEqual(
         document.querySelectorAll(`
@@ -529,6 +529,7 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
     // expected needaction notification
     this.data['mail.notification'].records.push({
         mail_message_id: 100, // id of related message
+        notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId, // must be for current partner
     });
     await this.start();
@@ -2346,11 +2347,13 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
         // notification to have first message in inbox
         {
             mail_message_id: 100, // id of related message
+            notification_type: 'inbox',
             res_partner_id: this.data.currentPartnerId, // must be for current partner
         },
         // notification to have second message in inbox
         {
             mail_message_id: 101, // id of related message
+            notification_type: 'inbox',
             res_partner_id: this.data.currentPartnerId, // must be for current partner
         }
     );
@@ -3209,6 +3212,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     // notification to have message in Inbox
     this.data['mail.notification'].records.push({
         mail_message_id: 100, // id of related message
+        notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId, // must be for current partner
     });
     await this.start({
@@ -3347,11 +3351,13 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
         // notification to have first message in inbox
         {
             mail_message_id: 100, // id of related message
+            notification_type: 'inbox',
             res_partner_id: this.data.currentPartnerId, // must be for current partner
         },
         // notification to have second message in inbox
         {
             mail_message_id: 101, // id of related message
+            notification_type: 'inbox',
             res_partner_id: this.data.currentPartnerId, // must be for current partner
         }
     );
@@ -3466,10 +3472,12 @@ QUnit.test('mark a single message as read should only move this message to "Hist
     this.data['mail.notification'].records.push(
         {
             mail_message_id: 1,
+            notification_type: 'inbox',
             res_partner_id: this.data.currentPartnerId,
         },
         {
             mail_message_id: 2,
+            notification_type: 'inbox',
             res_partner_id: this.data.currentPartnerId,
         }
     );
@@ -3589,6 +3597,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
         // notification to have message in Inbox
         this.data['mail.notification'].records.push({
             mail_message_id: id, // id of related message
+            notification_type: 'inbox',
             res_partner_id: this.data.currentPartnerId, // must be for current partner
         });
 
