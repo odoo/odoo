@@ -509,12 +509,11 @@
                                 <field name="product_uom" groups="uom.group_uom"/>
                                 <field name="price_subtotal"/>
                                 <field name="price_total"/>
-                                <field name="price_tax" invisible="1"/>
-                                <field name="price_total" invisible="1"/>
+                                <field name="price_tax"/>
                                 <field name="price_unit"/>
                                 <field name="display_type"/>
-                                <field name="tax_id" invisible="1"/>
-                                <field name="company_id" invisible="1"/>
+                                <field name="tax_id"/>
+                                <field name="company_id"/>
                                 <templates>
                                     <t t-name="kanban-box">
                                         <div t-attf-class="oe_kanban_card oe_kanban_global_click pl-0 pr-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
