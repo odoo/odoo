@@ -485,22 +485,24 @@ class Article(models.Model):
         return True
 
     def article_create(self, title=False, parent_id=False, private=False):
-        Article = self.env['knowledge.article']
-        parent = Article.browse(parent_id) if parent_id else False
+        parent = self.browse(parent_id) if parent_id else False
         if parent_id and not parent:
             raise UserError(_("The parent in which you want to move your article does not exist"))
 
-        if parent and private:
-            if not parent.owner_id == self.env.user:
-                raise UserError(_("Cannot write under a non-owned private article"))
+        if parent:
+            if not parent.user_can_write:
+                raise AccessError(_("Cannot create an article under a parent article you can't write on"))
+            if private and not parent.owner_id == self.env.user:
+                raise AccessError(_("Cannot create an article under a non-owned private article"))
         values = {
             'internal_permission': 'none' if private else 'write',  # you cannot create an article without parent in shared directly.,
             'parent_id': parent_id,
             'sequence': self._get_max_sequence_inside_parent(parent_id)
         }
-        # User cannot write on members, sudo is needed to allow to create a private article.
-        if private and self.env.user.has_group('base.group_user'):
-            Article = Article.sudo()
+        # User cannot write on members, sudo is needed to allow to create a private article or create under a parent user can write on.
+        # for article without parent or not in private, access to members is not required to create an article
+        if (private or parent) and self.env.user.has_group('base.group_user'):
+            self = self.sudo()
         if not parent and private:
             # To be private, the article need at least one member with write access.
             values.update({
@@ -518,7 +520,7 @@ class Article(models.Model):
                 'body': title
             })
 
-        article = Article.create(values)
+        article = self.create(values)
 
         return article.id
 
