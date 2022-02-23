@@ -6,6 +6,7 @@ from odoo.tests import HttpCase
 
 
 class TestEmbedDetection(HttpCase, common.SlidesCase):
+
     @classmethod
     def setUpClass(cls):
         super(TestEmbedDetection, cls).setUpClass()
