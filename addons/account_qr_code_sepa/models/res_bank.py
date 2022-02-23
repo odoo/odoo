@@ -38,7 +38,7 @@ class ResPartnerBank(models.Model):
             }
         return super()._get_qr_code_generation_params(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
-    def _eligible_for_qr_code(self, qr_method, debtor_partner, currency):
+    def _eligible_for_qr_code(self, qr_method, debtor_partner, currency, raises_error=True):
         if qr_method == 'sct_qr':
 
             # Some countries share the same IBAN country code
