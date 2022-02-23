@@ -44,6 +44,16 @@ MockServer.include({
         this._widget = options.widget;
 
         this._super(...arguments);
+
+        // creation of the ir.model.fields records, required for tracked fields
+        for (const modelName in data) {
+            const fieldNamesToFields = data[modelName].fields;
+            for (const fname in fieldNamesToFields) {
+                if (fieldNamesToFields[fname].tracking) {
+                    this._mockCreate('ir.model.fields', { model: modelName, name: fname });
+                }
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -291,6 +301,17 @@ MockServer.include({
             return this._mockMailThreadMessagePost(args.model, [id], kwargs, context);
         }
         return this._super(route, args);
+    },
+    /**
+     * @override
+     */
+    _mockWrite(model) {
+        const initialTrackedFieldValuesByRecordId = this._mockMailThread_TrackPrepare(model);
+        const mockWriteResult = this._super(...arguments);
+        if (initialTrackedFieldValuesByRecordId) {
+            this._mockMailThread_TrackFinalize(model, initialTrackedFieldValuesByRecordId);
+        }
+        return mockWriteResult;
     },
 
     //--------------------------------------------------------------------------
@@ -656,6 +677,22 @@ MockServer.include({
             }),
             grouped_activities: groupedActivities,
         };
+    },
+    _mockMailBaseModel_MailTrack(model, trackedFieldNamesToField, initialTrackedFieldValues, record) {
+        const trackingValueIds = [];
+        const changedFieldNames = [];
+        for (const fname in trackedFieldNamesToField) {
+            const initialValue = initialTrackedFieldValues[fname];
+            const newValue = record[fname];
+            if (initialValue !== newValue) {
+                const tracking = this._mockMailTrackingValue_CreateTrackingValues(initialValue, newValue, fname, trackedFieldNamesToField[fname], model);
+                if (tracking) {
+                    trackingValueIds.push(tracking);
+                }
+                changedFieldNames.push(fname);
+            }
+        }
+        return { changedFieldNames, trackingValueIds };
     },
     /**
      * Simulates `action_unfollow` on `mail.channel`.
@@ -1431,6 +1468,13 @@ MockServer.include({
             const trackingValueIds = this._getRecords('mail.tracking.value', [
                 ['id', 'in', message.tracking_value_ids],
             ]);
+            const formattedTrackingValues = trackingValueIds.map(tracking => ({
+                changed_field: tracking.field_desc,
+                field_type: tracking.field_type,
+                id: tracking.id,
+                new_value: this._mockMailTrackingValue_GetDisplayValue(tracking, 'new'),
+                old_value: this._mockMailTrackingValue_GetDisplayValue(tracking, 'old'),
+            }));
             const partners = this._getRecords(
                 'res.partner',
                 [['id', 'in', message.partner_ids]],
@@ -1443,7 +1487,7 @@ MockServer.include({
                 notifications,
                 recipients: partners.map(p => ({ id: p.id, name: p.name })),
                 record_name: thread && (thread.name !== undefined ? thread.name : thread.display_name),
-                tracking_value_ids: trackingValueIds,
+                tracking_value_ids: formattedTrackingValues,
             });
             if (message.subtype_id) {
                 const subtype = this._getRecords('mail.message.subtype', [
@@ -1878,6 +1922,158 @@ MockServer.include({
             ['partner_id', 'in', partner_ids || []],
         ]);
         this._mockUnlink(model, [followers.map(follower => follower.id)]);
+    },
+    /**
+     * Simulates `_message_track` on `mail.thread`
+     */
+    _mockMailThread_MessageTrack(modelName, trackedFieldNames, initialTrackedFieldValuesByRecordId) {
+        const trackFieldNamesToField = this._mockFieldsGet(modelName, [trackedFieldNames]);
+        const tracking = {};
+        const records = this.data[modelName].records;
+        for (const record of records) {
+            tracking[record.id] = this._mockMailBaseModel_MailTrack(modelName, trackFieldNamesToField, initialTrackedFieldValuesByRecordId[record.id], record);
+        }
+        for (const record of records) {
+            const { trackingValueIds, changedFieldNames } = tracking[record.id] || {};
+            if (!changedFieldNames || !changedFieldNames.length) {
+                continue;
+            }
+            const changedFieldsInitialValues = {};
+            const initialFieldValues = initialTrackedFieldValuesByRecordId[record.id];
+            for (const fname in changedFieldNames) {
+                changedFieldsInitialValues[fname] = initialFieldValues[fname];
+            }
+            const subtype = this._mockMailThread_TrackSubtype(changedFieldsInitialValues);
+            this._mockMailThreadMessagePost(modelName, [record.id], {
+                subtype_id: subtype.id,
+                tracking_value_ids: trackingValueIds,
+            });
+        }
+        return tracking;
+    },
+    /**
+     * Simulates `_track_finalize` on `mail.thread`
+     */
+    _mockMailThread_TrackFinalize(model, initialTrackedFieldValuesByRecordId) {
+        this._mockMailThread_MessageTrack(
+            model,
+            this._mockMailThread_TrackGetFields(model),
+            initialTrackedFieldValuesByRecordId,
+        );
+    },
+    /**
+     * Simulates `_track_get_fields` on `mail.thread`
+     */
+    _mockMailThread_TrackGetFields(model) {
+        return Object.entries(this.data[model].fields).reduce((prev, next) => {
+            if (next[1].tracking) {
+                prev.push(next[0]);
+            }
+            return prev;
+        }, []);
+    },
+    /**
+     * Simulates `_track_prepare` on `mail.thread`
+     */
+    _mockMailThread_TrackPrepare(model) {
+        const trackedFieldNames = this._mockMailThread_TrackGetFields(model);
+        if (!trackedFieldNames.length) {
+            return;
+        }
+        const initialTrackedFieldValuesByRecordId = {};
+        for (const record of this.data[model].records) {
+            const values = {};
+            initialTrackedFieldValuesByRecordId[record.id] = values;
+            for (const fname of trackedFieldNames) {
+                values[fname] = record[fname];
+            }
+        }
+        return initialTrackedFieldValuesByRecordId;
+    },
+    /**
+     * Simulates `_track_subtype` on `mail.thread`
+     */
+    _mockMailThread_TrackSubtype(initialFieldValuesByRecordId) {
+        return false;
+    },
+    /**
+     * Simulates `create_tracking_values` on `mail.tracking.value`
+     */
+     _mockMailTrackingValue_CreateTrackingValues(initialValue, newValue, fieldName, field, modelName) {
+        let isTracked = true;
+        const irField = this.data['ir.model.fields'].records.find(field => field.model === modelName && field.name === fieldName);
+
+        if (!irField) {
+            return;
+        }
+
+        const values = { field: irField['id'], field_desc: field['string'], field_type: field['type'] };
+        switch (values.field_type) {
+            case 'char':
+            case 'datetime':
+            case 'float':
+            case 'integer':
+            case 'monetary':
+            case 'text':
+                values[`old_value_${values.field_type}`] = initialValue;
+                values[`new_value_${values.field_type}`] = newValue;
+                break;
+            case 'date':
+                values['old_value_datetime'] = initialValue;
+                values['new_value_datetime'] = newValue;
+                break;
+            case 'boolean':
+                values['old_value_integer'] = initialValue ? 1 : 0;
+                values['new_value_integer'] = newValue ? 1 : 0;
+                break;
+            case 'selection':
+                values['old_value_char'] = initialValue;
+                values['new_value_char'] = newValue;
+                break;
+            case 'many2one':
+                initialValue = initialValue ? this._mockSearchRead(field.relation, [[['id', '=', initialValue]]], {})[0] : initialValue;
+                newValue = newValue ? this._mockSearchRead(field.relation, [[['id', '=', newValue]]], {})[0] : newValue;
+                values['old_value_integer'] = initialValue ? initialValue.id : 0;
+                values['new_value_integer'] = newValue ? newValue.id : 0;
+                values['old_value_char'] = initialValue ? initialValue.display_name : '';
+                values['new_value_char'] = newValue ? newValue.display_name : '';
+                break;
+            default:
+                isTracked = false;
+        }
+        if (isTracked) {
+            return this._mockCreate('mail.tracking.value', values);
+        }
+        return false;
+    },
+    /**
+     * Simulates `get_display_value` on `mail.tracking.value`
+     */
+    _mockMailTrackingValue_GetDisplayValue(record, type) {
+        switch (record.field_type) {
+            case 'float':
+            case 'integer':
+            case 'monetary':
+            case 'text':
+                return record[`${type}_value_${record.field_type}`];
+            case 'datetime':
+                if (record[`${type}_value_datetime`]) {
+                    const datetime = record[`${type}_value_datetime`];
+                    return `${datetime}Z`;
+                } else {
+                    return record[`${type}_value_datetime`];
+                }
+            case 'date':
+                if (record[`${type}_value_datetime`]) {
+                    return record[`${type}_value_datetime`];
+                } else {
+                    return record[`${type}_value_datetime`];
+                }
+            case 'boolean':
+                return !!record[`${type}_value_integer`];
+            default:
+                return record[`${type}_value_char`];
+        }
     },
     /**
      * Simulates `_get_channels_as_member` on `res.partner`.
