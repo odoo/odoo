@@ -266,9 +266,18 @@ odoo.define('point_of_sale.Chrome', function(require) {
         }
         __showTempScreen(event) {
             const { name, props, resolve } = event.detail;
+            const Component = this.constructor.components[name];
+            if (!Component) {
+                throw new Error(
+                    `'${name}' is not registered as a PosComponent. Make sure to define it and register with 'Registries.Component.add'.`
+                );
+            }
+            if (!Component.isTempScreen) {
+                throw new Error(`Cannot show '${name}' as a temporary screen. Use TemporaryScreenMixin to declare it.`);
+            }
             this.tempScreen.isShown = true;
             this.tempScreen.name = name;
-            this.tempScreen.component = this.constructor.components[name];
+            this.tempScreen.component = Component;
             this.tempScreenProps = Object.assign({}, props, { resolve });
         }
         __closeTempScreen() {

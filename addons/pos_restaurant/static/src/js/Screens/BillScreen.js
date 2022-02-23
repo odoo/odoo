@@ -2,13 +2,13 @@ odoo.define('pos_restaurant.BillScreen', function (require) {
     'use strict';
 
     const ReceiptScreen = require('point_of_sale.ReceiptScreen');
+    const TemporaryScreenMixin = require('@point_of_sale/js/Misc/TemporaryScreenMixin')[Symbol.for('default')];
     const Registries = require('point_of_sale.Registries');
 
     const BillScreen = (ReceiptScreen) => {
-        class BillScreen extends ReceiptScreen {
+        class BillScreen extends TemporaryScreenMixin(ReceiptScreen) {
             confirm() {
-                this.props.resolve({ confirmed: true, payload: null });
-                this.trigger('close-temp-screen');
+                this.closeWith(true, null);
             }
             whenClosing() {
                 this.confirm();

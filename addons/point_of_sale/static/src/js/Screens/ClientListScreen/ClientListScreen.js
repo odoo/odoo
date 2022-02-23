@@ -3,11 +3,10 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+    const TemporaryScreenMixin = require('@point_of_sale/js/Misc/TemporaryScreenMixin')[Symbol.for('default')];
     const { isConnectionError } = require('point_of_sale.utils');
-
     const { debounce } = require("@web/core/utils/timing");
     const { useListener } = require("@web/core/utils/hooks");
-
     const { onWillUnmount } = owl;
 
     /**
@@ -25,7 +24,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
      *
      * @props client - originally selected client
      */
-    class ClientListScreen extends PosComponent {
+    class ClientListScreen extends TemporaryScreenMixin(PosComponent) {
         setup() {
             super.setup();
             useListener('click-save', () => this.env.bus.trigger('save-customer'));
@@ -58,13 +57,11 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 this.state.detailIsShown = false;
                 this.render();
             } else {
-                this.props.resolve({ confirmed: false, payload: false });
-                this.trigger('close-temp-screen');
+                this.closeWith(false);
             }
         }
         confirm() {
-            this.props.resolve({ confirmed: true, payload: this.state.selectedClient });
-            this.trigger('close-temp-screen');
+            this.closeWith(true, this.state.selectedClient);
         }
         // Getters
 

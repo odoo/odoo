@@ -3,11 +3,12 @@ odoo.define('pos_hr.LoginScreen', function (require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
+    const TemporaryScreenMixin = require('@point_of_sale/js/Misc/TemporaryScreenMixin')[Symbol.for('default')];
     const Registries = require('point_of_sale.Registries');
     const useSelectEmployee = require('pos_hr.useSelectEmployee');
     const { useBarcodeReader } = require('point_of_sale.custom_hooks');
 
-    class LoginScreen extends PosComponent {
+    class LoginScreen extends TemporaryScreenMixin(PosComponent) {
         setup() {
             super.setup();
             const { selectEmployee, askPin } = useSelectEmployee();
@@ -21,14 +22,9 @@ odoo.define('pos_hr.LoginScreen', function (require) {
             );
         }
         back() {
-            this.props.resolve({ confirmed: false, payload: false });
-            this.trigger('close-temp-screen');
+            this.closeWith(false);
             this.env.pos.hasLoggedIn = true;
             this.env.posbus.trigger('start-cash-control');
-        }
-        confirm() {
-            this.props.resolve({ confirmed: true, payload: true });
-            this.trigger('close-temp-screen');
         }
         get shopName() {
             return this.env.pos.config.name;

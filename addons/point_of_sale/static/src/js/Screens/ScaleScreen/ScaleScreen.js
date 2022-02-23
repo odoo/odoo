@@ -2,12 +2,13 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
+    const TemporaryScreenMixin = require('@point_of_sale/js/Misc/TemporaryScreenMixin')[Symbol.for('default')];
     const { round_precision: round_pr } = require('web.utils');
     const Registries = require('point_of_sale.Registries');
 
     const { onMounted, onWillUnmount, useExternalListener, useState } = owl;
 
-    class ScaleScreen extends PosComponent {
+    class ScaleScreen extends TemporaryScreenMixin(PosComponent) {
         /**
          * @param {Object} props
          * @param {Object} props.product The product to weight.
@@ -28,15 +29,13 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
             this.env.proxy_queue.clear();
         }
         back() {
-            this.props.resolve({ confirmed: false, payload: null });
-            this.trigger('close-temp-screen');
+            this.closeWith(false);
         }
         confirm() {
-            this.props.resolve({
+            this.closeWith(true, {
                 confirmed: true,
                 payload: { weight: this.state.weight },
             });
-            this.trigger('close-temp-screen');
         }
         _onHotkeys(event) {
             if (event.key === 'Escape') {
