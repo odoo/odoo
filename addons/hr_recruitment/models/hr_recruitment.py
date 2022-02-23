@@ -416,10 +416,10 @@ class Applicant(models.Model):
         return nocontent_body % nocontent_values
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def view_get(self, view_id=None, view_type='form', **options):
         if view_type == 'form' and self.user_has_groups('hr_recruitment.group_hr_recruitment_interviewer'):
             view_id = self.env.ref('hr_recruitment.hr_applicant_view_form_interviewer').id
-        return super().fields_view_get(view_id, view_type, toolbar, submenu)
+        return super().view_get(view_id, view_type, **options)
 
     def _notify_compute_recipients(self, message, msg_vals):
         """

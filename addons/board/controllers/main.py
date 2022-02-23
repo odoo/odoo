@@ -16,9 +16,9 @@ class Board(Controller):
         if action and action['res_model'] == 'board.board' and action['views'][0][1] == 'form' and action_id:
             # Maybe should check the content instead of model board.board ?
             view_id = action['views'][0][0]
-            board = request.env['board.board'].fields_view_get(view_id, 'form')
-            if board and 'arch' in board:
-                xml = ElementTree.fromstring(board['arch'])
+            board_arch = request.env['board.board'].view_get(view_id, 'form')
+            if board_arch:
+                xml = ElementTree.fromstring(board_arch)
                 column = xml.find('./board/column')
                 if column is not None:
                     new_action = ElementTree.Element('action', {

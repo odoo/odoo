@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { device } from 'web.config';
 
 /**
  * @typedef {Object} IrFilter
@@ -65,14 +66,18 @@ export const viewService = {
         async function loadViews(params, options) {
             const key = JSON.stringify([params.resModel, params.views, params.context, options]);
             if (!cache[key]) {
+                var load_views_options = {
+                    action_id: options.actionId || false,
+                    load_filters: options.loadIrFilters || false,
+                    toolbar: options.loadActionMenus || false,
+                }
+                if (device.isMobile){
+                    load_views_options.mobile = device.isMobile;
+                }
                 cache[key] = orm
                     .call(params.resModel, "load_views", [], {
                         views: params.views,
-                        options: {
-                            action_id: options.actionId || false,
-                            load_filters: options.loadIrFilters || false,
-                            toolbar: options.loadActionMenus || false,
-                        },
+                        options: load_views_options,
                         context: params.context,
                     })
                     .then((result) => {

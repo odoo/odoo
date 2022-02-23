@@ -432,35 +432,33 @@ class Product(models.Model):
         return res
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(Product, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+    def fields_get(self, allfields=None, attributes=None):
+        res = super(Product, self).fields_get(allfields=allfields, attributes=attributes)
         if self._context.get('location') and isinstance(self._context['location'], int):
             location = self.env['stock.location'].browse(self._context['location'])
-            fields = res.get('fields')
-            if fields:
-                if location.usage == 'supplier':
-                    if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Future Receipts')
-                    if fields.get('qty_available'):
-                        res['fields']['qty_available']['string'] = _('Received Qty')
-                elif location.usage == 'internal':
-                    if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Forecasted Quantity')
-                elif location.usage == 'customer':
-                    if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Future Deliveries')
-                    if fields.get('qty_available'):
-                        res['fields']['qty_available']['string'] = _('Delivered Qty')
-                elif location.usage == 'inventory':
-                    if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Future P&L')
-                    if fields.get('qty_available'):
-                        res['fields']['qty_available']['string'] = _('P&L Qty')
-                elif location.usage == 'production':
-                    if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Future Productions')
-                    if fields.get('qty_available'):
-                        res['fields']['qty_available']['string'] = _('Produced Qty')
+            if location.usage == 'supplier':
+                if fields.get('virtual_available'):
+                    res['virtual_available']['string'] = _('Future Receipts')
+                if fields.get('qty_available'):
+                    res['qty_available']['string'] = _('Received Qty')
+            elif location.usage == 'internal':
+                if fields.get('virtual_available'):
+                    res['virtual_available']['string'] = _('Forecasted Quantity')
+            elif location.usage == 'customer':
+                if fields.get('virtual_available'):
+                    res['virtual_available']['string'] = _('Future Deliveries')
+                if fields.get('qty_available'):
+                    res['qty_available']['string'] = _('Delivered Qty')
+            elif location.usage == 'inventory':
+                if fields.get('virtual_available'):
+                    res['virtual_available']['string'] = _('Future P&L')
+                if fields.get('qty_available'):
+                    res['qty_available']['string'] = _('P&L Qty')
+            elif location.usage == 'production':
+                if fields.get('virtual_available'):
+                    res['virtual_available']['string'] = _('Future Productions')
+                if fields.get('qty_available'):
+                    res['qty_available']['string'] = _('Produced Qty')
         return res
 
     def action_view_orderpoints(self):

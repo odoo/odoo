@@ -214,7 +214,7 @@ class IrActionsActWindow(models.Model):
     @api.depends('res_model', 'search_view_id')
     def _compute_search_view(self):
         for act in self:
-            fvg = self.env[act.res_model].fields_view_get(act.search_view_id.id, 'search')
+            fvg = self.env[act.res_model].view_get(act.search_view_id.id, 'search')
             act.search_view = str(fvg)
 
     name = fields.Char(string='Action Name', translate=True)

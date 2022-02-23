@@ -217,10 +217,10 @@ class HrEmployeePrivate(models.Model):
         return self.env['hr.employee.public'].browse(self.ids).read(fields, load=load)
 
     @api.model
-    def load_views(self, views, options=None):
+    def view_get(self, view_id=None, view_type='form', **options):
         if self.check_access_rights('read', raise_exception=False):
-            return super(HrEmployeePrivate, self).load_views(views, options=options)
-        return self.env['hr.employee.public'].load_views(views, options=options)
+            return super(HrEmployeePrivate, self).view_get(view_id=view_id, view_type=view_type, **options)
+        return self.env['hr.employee.public'].view_get(view_id=view_id, view_type=view_type, **options)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):

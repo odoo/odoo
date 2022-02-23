@@ -20,13 +20,13 @@ class Board(models.AbstractModel):
         return self
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def view_get(self, view_id=None, view_type='form', **options):
         """
         Overrides orm field_view_get.
         @return: Dictionary of Fields, arch and toolbar.
         """
 
-        res = super(Board, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        res = super(Board, self).view_get(view_id=view_id, view_type=view_type, **options)
 
         custom_view = self.env['ir.ui.view.custom'].search([('user_id', '=', self.env.uid), ('ref_id', '=', view_id)], limit=1)
         if custom_view:

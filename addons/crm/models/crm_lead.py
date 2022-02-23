@@ -862,16 +862,16 @@ class Lead(models.Model):
         return super(Lead, self.with_context(context)).copy(default=default)
 
     @api.model
-    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def _view_get(self, view_id=None, view_type='form', **options):
         if self._context.get('opportunity_id'):
             opportunity = self.browse(self._context['opportunity_id'])
             action = opportunity.get_formview_action()
             if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
                 view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
-        res = super(Lead, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        arch, view = super(Lead, self)._view_get(view_id=view_id, view_type=view_type, **options)
         if view_type == 'form':
-            res['arch'] = self._fields_view_get_address(res['arch'])
-        return res
+            arch = self._view_get_address(arch)
+        return arch, view
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):

@@ -638,8 +638,8 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(fg['state']['selection'],
                          [('manual', 'Custo'), ('base', 'Pas touche!')])
 
-    def test_fields_view_get(self):
-        """ Test translations of field descriptions in fields_view_get(). """
+    def test_load_views(self):
+        """ Test translations of field descriptions in view_get(). """
         self.env['res.lang']._activate_lang('fr_FR')
 
         # add translation for the string of field ir.model.name
@@ -659,9 +659,9 @@ class TestTranslationWrite(TransactionCase):
         info = model.fields_get(['name'])
         self.assertEqual(info['name']['string'], LABEL)
 
-        # check that fields_view_get() also returns the expected label
-        info = model.fields_view_get()['fields']
-        self.assertEqual(info['name']['string'], LABEL)
+        # check that load_views() also returns the expected label
+        info = model.load_views([(False, 'form')])
+        info['model_fields'][model._name]['name']['string']
 
 
 class TestXMLTranslation(TransactionCase):

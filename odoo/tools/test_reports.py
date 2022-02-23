@@ -10,6 +10,7 @@
 import logging
 import os
 import tempfile
+from lxml import etree
 from subprocess import Popen, PIPE
 
 from .. import api
@@ -170,21 +171,24 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             log_test("will emulate a %s view: %s#%s",
                         view_type, datas['res_model'], view_id or '?')
 
-            view_res = env[datas['res_model']].fields_view_get(view_id, view_type=view_type)
+            model = env[datas['res_model']]
+            view_res = model.view_get(view_id, view_type=view_type)
             assert view_res and view_res.get('arch'), "Did not return any arch for the view"
             view_data = {}
-            if view_res.get('fields'):
-                view_data = env[datas['res_model']].default_get(list(view_res['fields']))
+            arch = etree.fromstring(view_res['arch'])
+            fields = [el.get('name') for el in arch.xpath('//field[not(ancestor::field)]')]
+            if fields:
+                view_data = model.default_get(fields)
             if datas.get('form'):
                 view_data.update(datas.get('form'))
             if wiz_data:
                 view_data.update(wiz_data)
             _logger.debug("View data is: %r", view_data)
 
-            for fk, field in view_res.get('fields',{}).items():
+            for fk in fields:
                 # Default fields returns list of int, while at create()
                 # we need to send a [(6,0,[int,..])]
-                if field['type'] in ('one2many', 'many2many') \
+                if model._fields[fk].type in ('one2many', 'many2many') \
                         and view_data.get(fk, False) \
                         and isinstance(view_data[fk], list) \
                         and not isinstance(view_data[fk][0], tuple) :

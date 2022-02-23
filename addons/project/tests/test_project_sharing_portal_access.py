@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
+from lxml import etree
 from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
@@ -49,10 +50,11 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
 
     def test_readonly_fields(self):
         """ The fields are not writeable should not be editable by the portal user. """
-        view_infos = self.task_portal.fields_view_get(view_id=self.env.ref(self.project_sharing_form_view_xml_id).id)
+        view_infos = self.task_portal.view_get(view_id=self.env.ref(self.project_sharing_form_view_xml_id).id)
+        fields = [el.get('name') for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')]
         project_task_fields = {
             field_name
-            for field_name, field_attrs in view_infos['fields'].items()
+            for field_name in fields
             if field_name not in self.write_protected_fields_task
         }
         with self.get_project_sharing_form_view(self.task_portal, self.user_portal) as form:

@@ -1427,7 +1427,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def fields_get_keys(self):
         warnings.warn(
-            'fields_get_keys() method is deprecated, use `_fields` or `fields_view_get` instead',
+            'fields_get_keys() method is deprecated, use `_fields` or `load_views` instead',
             DeprecationWarning
         )
         return list(self._fields)
@@ -1625,27 +1625,74 @@ class BaseModel(metaclass=MetaModel):
         options = options or {}
         result = {}
 
-        toolbar = options.get('toolbar')
-        result['fields_views'] = {
-            v_type: self.fields_view_get(v_id, v_type if v_type != 'list' else 'tree',
-                                         toolbar=toolbar if v_type != 'search' else False)
+        result['views'] = {
+            v_type: self.view_get(
+                v_id, v_type if v_type != 'list' else 'tree',
+                **dict(options, toolbar=options.get('toolbar') if v_type != 'search' else False)
+            )
             for [v_id, v_type] in views
         }
-        result['fields'] = self.fields_get()
+        models = set(model for view_type, info in result['views'].items() for model in info['models'])
+
+        result['model_fields'] = {model: self.env[model].fields_get() for model in models}
 
         if options.get('load_filters'):
             result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
 
+        # TODO: Remove, this is to simulate the old behavior.
+        # ---------------------------------------------------
+        def collect_fields(node, fields_info):
+            view_fields = set(el.get('name') for el in node.xpath('.//field[not(ancestor::field)]'))
+            view_fields = {fname: dict(fields_info.get(fname) or {}) for fname in view_fields}
+            for el in node.xpath('.//field[not(ancestor::field)][descendant::field]'):
+                fname = el.get('name')
+                if fname not in fields_info:
+                    continue
+                comodel = self.env[fields_info[fname]['relation']]
+                comodel_fields_info = comodel.fields_get()
+                views = {}
+                for child in el.xpath("./*[descendant::field]"):
+                    el.remove(child)
+                    views[child.tag] = {
+                        'arch': etree.tostring(child, encoding='unicode'),
+                        'fields': collect_fields(child, comodel_fields_info)[1],
+                    }
+                view_fields[fname]['views'] = views
+            for el in node.xpath('.//groupby'):
+                fname = el.get('name')
+                comodel = self.env[fields_info[fname]['relation']]
+                comodel_fields_info = comodel.fields_get()
+                view_fields[fname]['views'] = {
+                    'groupby': {
+                        'arch': etree.tostring(el, encoding='unicode'),
+                        'fields': collect_fields(el, comodel_fields_info)[1]
+                    }
+                }
+                for child in el:
+                    el.remove(child)
+            return node, view_fields
+
+        result['fields'] = result['model_fields'][self._name]
+        fields_views = {}
+        for (_view_id, view_type) in views:
+            view_info = result['views'][view_type]
+            node = etree.fromstring(view_info['arch'])
+            node, fields = collect_fields(node, result['fields'])
+            arch = etree.tostring(node, encoding="unicode").replace('\t', '')
+            # TODO: looks the type is only used by the grid view, and I believe this could be removed
+            # Detected with the tour test_01_main_flow_tour_mobile, when trying to open the timsheets
+            # of a task (under the `Recorded` button of the task)
+            # https://github.com/odoo/odoo/blob/master/odoo/addons/test_main_flows/static/tests/tours/main_flow.js#L892
+            fields_views[view_type] = dict(view_info, arch=arch, fields=fields, type=view_type)
+
+        result['fields_views'] = fields_views
+        # ---------------------------------------------------
 
         return result
 
     @api.model
-    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def _view_get(self, view_id=None, view_type='form', **options):
         View = self.env['ir.ui.view'].sudo()
-        result = {
-            'model': self._name,
-            'field_parent': False,
-        }
 
         # try to find a view_id if none provided
         if not view_id:
@@ -1672,26 +1719,19 @@ class BaseModel(metaclass=MetaModel):
         if view_id:
             # read the view with inherited views applied
             view = View.browse(view_id)
-            result['arch'] = view.get_combined_arch()
-            result['name'] = view.name
-            result['type'] = view.type
-            result['view_id'] = view.id
-            result['field_parent'] = view.field_parent
-            result['base_model'] = view.model
+            arch = view._get_combined_arch()
         else:
             # fallback on default views methods if no ir.ui.view could be found
+            view = View.browse()
             try:
-                arch_etree = getattr(self, '_get_default_%s_view' % view_type)()
-                result['arch'] = etree.tostring(arch_etree, encoding='unicode')
-                result['type'] = view_type
-                result['name'] = 'default'
+                arch = getattr(self, '_get_default_%s_view' % view_type)()
             except AttributeError:
                 raise UserError(_("No default view of type '%s' could be found !", view_type))
-        return result
+        return arch, view
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        """ fields_view_get([view_id | view_type='form'])
+    def view_get(self, view_id=None, view_type='form', **options):
+        """ view_get([view_id | view_type='form'])
 
         Get the detailed composition of the requested view like fields, model, view architecture
 
@@ -1709,22 +1749,28 @@ class BaseModel(metaclass=MetaModel):
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc... defined on the structure
         """
         self.check_access_rights('read')
-        view = self.env['ir.ui.view'].sudo().browse(view_id)
 
         # Get the view arch and all other attributes describing the composition of the view
-        result = self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        arch, view = self._view_get(view_id=view_id, view_type=view_type, **options)
 
         # Override context for postprocessing
-        if view_id and result.get('base_model', self._name) != self._name:
-            view = view.with_context(base_model_name=result['base_model'])
+        if view and (view.model or self._name) != self._name:
+            view = view.with_context(base_model_name=view.model)
 
         # Apply post processing, groups and modifiers etc...
-        xarch, xfields = view.postprocess_and_fields(etree.fromstring(result['arch']), model=self._name)
-        result['arch'] = xarch
-        result['fields'] = xfields
+        arch, models = view.postprocess_and_fields(arch, model=self._name, **{'mobile': options.get('mobile')})
+        result = {
+            'arch': arch,
+            # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
+            'view_id': view.id,
+            # TODO: only `web_studio` seems to require this. But this one on the other hand should be eliminated:
+            # you just called `load_views` for that model, so obviously the web client already knows the model.
+            'model': self._name,
+            'models': models,
+        }
 
         # Add related action information if asked
-        if toolbar:
+        if options.get('toolbar'):
             vt = 'list' if view_type == 'tree' else view_type
             bindings = self.env['ir.actions.actions'].get_bindings(self._name)
             resreport = [action
@@ -6218,7 +6264,7 @@ Fields:
     @api.model
     def _onchange_spec(self, view_info=None):
         """ Return the onchange spec from a view description; if not given, the
-            result of ``self.fields_view_get()`` is used.
+            result of ``self.view_get()`` is used.
         """
         result = {}
 
@@ -6230,14 +6276,14 @@ Fields:
                 if not result.get(names):
                     result[names] = node.attrib.get('on_change')
                 # traverse the subviews included in relational fields
-                for subinfo in info['fields'][name].get('views', {}).values():
-                    process(etree.fromstring(subinfo['arch']), subinfo, names)
+                for child_view in node.xpath("./*[descendant::field]"):
+                    process(child_view, None, names)
             else:
                 for child in node:
                     process(child, info, prefix)
 
         if view_info is None:
-            view_info = self.fields_view_get()
+            view_info = self.view_get()
         process(etree.fromstring(view_info['arch']), view_info, '')
         return result
 

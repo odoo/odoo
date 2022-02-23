@@ -3,6 +3,7 @@
 
 from collections import OrderedDict
 from itertools import chain
+from lxml import etree
 
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import new_test_user, tagged, Form
@@ -20,8 +21,8 @@ class TestSelfAccessProfile(TestHrCommon):
             'user_id': james.id,
         })
         view = self.env.ref('hr.res_users_view_form_profile')
-        view_infos = james.fields_view_get(view_id=view.id)
-        fields = view_infos['fields'].keys()
+        view_infos = james.view_get(view_id=view.id)
+        fields = [el.get('name') for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')]
         james.read(fields)
 
     def test_readonly_fields(self):
@@ -35,12 +36,12 @@ class TestSelfAccessProfile(TestHrCommon):
         })
 
         view = self.env.ref('hr.res_users_view_form_profile')
-        view_infos = james.fields_view_get(view_id=view.id)
-
+        fields = james._fields
+        view_infos = james.view_get(view_id=view.id)
         employee_related_fields = {
-            field_name
-            for field_name, field_attrs in view_infos['fields'].items()
-            if field_attrs.get('related', (None,))[0] == 'employee_id'
+            el.get('name')
+            for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')
+            if fields[el.get('name')].related and fields[el.get('name')].related.split('.')[0] == 'employee_id'
         }
 
         form = Form(james, view=view)
@@ -65,16 +66,16 @@ class TestSelfAccessProfile(TestHrCommon):
             all_groups |= self.env.ref(xml_id.strip())
         user_all_groups = new_test_user(self.env, groups='base.group_user', login='hel', name='God')
         user_all_groups.write({'groups_id': [(4, group.id, False) for group in all_groups]})
-        view_infos = self.env['res.users'].with_user(user_all_groups).fields_view_get(view_id=view.id)
-        full_fields = view_infos['fields']
+        view_infos = self.env['res.users'].with_user(user_all_groups).view_get(view_id=view.id)
+        full_fields = [el.get('name') for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')]
 
         # Now check the view for a simple user
         user = new_test_user(self.env, login='gro', name='Grouillot')
-        view_infos = self.env['res.users'].with_user(user).fields_view_get(view_id=view.id)
-        fields = view_infos['fields']
+        view_infos = self.env['res.users'].with_user(user).view_get(view_id=view.id)
+        fields = [el.get('name') for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')]
 
         # Compare both
-        self.assertEqual(full_fields.keys(), fields.keys(), "View fields should not depend on user's groups")
+        self.assertEqual(full_fields, fields, "View fields should not depend on user's groups")
 
     def test_access_my_profile_toolbar(self):
         """ A simple user shouldn't have the possibilities to see the 'Change Password' action"""
@@ -85,7 +86,7 @@ class TestSelfAccessProfile(TestHrCommon):
             'user_id': james.id,
         })
         view = self.env.ref('hr.res_users_view_form_profile')
-        available_actions = james.fields_view_get(view_id=view.id, toolbar=True)['toolbar']['action']
+        available_actions = james.view_get(view_id=view.id, toolbar=True)['toolbar']['action']
         change_password_action = self.env.ref("base.change_password_wizard_action")
 
         self.assertFalse(any(x['id'] == change_password_action.id for x in available_actions))
@@ -98,7 +99,7 @@ class TestSelfAccessProfile(TestHrCommon):
             'user_id': john.id,
         })
         view = self.env.ref('hr.res_users_view_form_profile')
-        available_actions = john.fields_view_get(view_id=view.id, toolbar=True)['toolbar']['action']
+        available_actions = john.view_get(view_id=view.id, toolbar=True)['toolbar']['action']
         self.assertTrue(any(x['id'] == change_password_action.id for x in available_actions))
 
 

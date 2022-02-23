@@ -384,29 +384,26 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         raise UserError(_("Cannot duplicate configuration!"))
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form',
-                        toolbar=False, submenu=False):
-        ret_val = super(ResConfigSettings, self).fields_view_get(
+    def _view_get(self, view_id=None, view_type='form', **options):
+        arch, view = super(ResConfigSettings, self)._view_get(
             view_id=view_id, view_type=view_type,
-            toolbar=toolbar, submenu=submenu)
+            **options)
 
         can_install_modules = self.env['ir.module.module'].check_access_rights(
                                     'write', raise_exception=False)
 
-        doc = etree.XML(ret_val['arch'])
+        doc = arch
 
-        for field in ret_val['fields']:
-            if not field.startswith("module_"):
+        for node in doc.xpath("//field[@name]"):
+            if not node.get('name').startswith("module_"):
                 continue
-            for node in doc.xpath("//field[@name='%s']" % field):
-                if not can_install_modules:
-                    node.set("readonly", "1")
-                    modifiers = json.loads(node.get("modifiers"))
-                    modifiers['readonly'] = True
-                    node.set("modifiers", json.dumps(modifiers))
+            if not can_install_modules:
+                node.set("readonly", "1")
+                modifiers = json.loads(node.get("modifiers"))
+                modifiers['readonly'] = True
+                node.set("modifiers", json.dumps(modifiers))
 
-        ret_val['arch'] = etree.tostring(doc, encoding='unicode')
-        return ret_val
+        return doc, view
 
     def onchange_module(self, field_value, module_name):
         module_sudo = self.env['ir.module.module']._get(module_name[7:])

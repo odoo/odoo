@@ -1257,8 +1257,7 @@ class TestViews(ViewCase):
         })
 
         view = self.View.with_context(check_view_ids=[view2.id, view3.id]) \
-                        .fields_view_get(view2.id, view_type='form')
-        self.assertEqual(view['type'], 'form')
+                        .view_get(view2.id, view_type='form')
         self.assertEqual(
             etree.fromstring(
                 view['arch'],
@@ -1285,8 +1284,7 @@ class TestViews(ViewCase):
             'inherit_id': view1.id,
             'arch': '<div position="inside">a<p/>b<p/>c</div>',
         })
-        view = self.View.with_context(check_view_ids=view2.ids).fields_view_get(view1.id)
-        self.assertEqual(view['type'], 'form')
+        view = self.View.with_context(check_view_ids=view2.ids).view_get(view1.id)
         self.assertEqual(
             view['arch'],
             '<form string="F">(<div>a<p/>b<p/>c</div>)</form>',
@@ -1305,8 +1303,7 @@ class TestViews(ViewCase):
             'inherit_id': view1.id,
             'arch': '<div position="after">a<p/>b<p/>c</div>',
         })
-        view = self.View.with_context(check_view_ids=view2.ids).fields_view_get(view1.id)
-        self.assertEqual(view['type'], 'form')
+        view = self.View.with_context(check_view_ids=view2.ids).view_get(view1.id)
         self.assertEqual(
             view['arch'],
             '<form string="F">(<div/>a<p/>b<p/>c)</form>',
@@ -1325,8 +1322,7 @@ class TestViews(ViewCase):
             'inherit_id': view1.id,
             'arch': '<div position="before">a<p/>b<p/>c</div>',
         })
-        view = self.View.with_context(check_view_ids=view2.ids).fields_view_get(view1.id)
-        self.assertEqual(view['type'], 'form')
+        view = self.View.with_context(check_view_ids=view2.ids).view_get(view1.id)
         self.assertEqual(
             view['arch'],
             '<form string="F">(a<p/>b<p/>c<div/>)</form>',
@@ -1379,8 +1375,7 @@ class TestViews(ViewCase):
         })
 
         view = self.View.with_context(check_view_ids=[view2.id, view3.id]) \
-                        .fields_view_get(view2.id, view_type='form')
-        self.assertEqual(view['type'], 'form')
+                        .view_get(view2.id, view_type='form')
         self.assertEqual(
             etree.fromstring(
                 view['arch'],
@@ -2330,13 +2325,13 @@ class TestViews(ViewCase):
         })
 
         # default view, no address_view defined
-        arch = self.env['res.partner'].fields_view_get(view_id=partner_view.id)['arch']
+        arch = self.env['res.partner'].view_get(view_id=partner_view.id)['arch']
         self.assertIn('"street"', arch)
         self.assertNotIn('"parent_name"', arch)
 
         # custom view, address_view defined
         self.env.company.country_id.address_view_id = address_view
-        arch = self.env['res.partner'].fields_view_get(view_id=partner_view.id)['arch']
+        arch = self.env['res.partner'].view_get(view_id=partner_view.id)['arch']
         self.assertNotIn('"street"', arch)
         self.assertIn('"parent_name"', arch)
         # weird result: <form> inside a <form>
@@ -3110,12 +3105,12 @@ class TestAccessRights(common.TransactionCase):
         with self.assertRaises(AccessError):
             self.env['ir.ui.view'].search([("model", '=', "res.partner"), ('type', '=', 'form')])
 
-        # but can call fields_view_get
-        self.env['res.partner'].fields_view_get(view_type='form')
+        # but can call view_get
+        self.env['res.partner'].view_get(view_type='form')
 
         # unless he does not have access to the model
         with self.assertRaises(AccessError):
-            self.env['ir.ui.view'].fields_view_get(view_type='form')
+            self.env['ir.ui.view'].view_get(view_type='form')
 
 @common.tagged('post_install', '-at_install', '-standard', 'migration')
 class TestAllViews(common.TransactionCase):
@@ -3142,7 +3137,7 @@ class TestRenderAllViews(common.TransactionCase):
                     for _ in range(5):
                         model.invalidate_cache()
                         before = time.perf_counter()
-                        model.fields_view_get()
+                        model.view_get()
                         times.append(time.perf_counter() - before)
                     count += 1
                     elapsed += min(times)

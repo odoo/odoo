@@ -23,8 +23,8 @@ class BaseModuleUpgrade(models.TransientModel):
     module_info = fields.Text('Apps to Update', readonly=True, default=_default_module_info)
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(BaseModuleUpgrade, self).fields_view_get(view_id, view_type, toolbar=toolbar,submenu=False)
+    def view_get(self, view_id=None, view_type='form', **options):
+        res = super(BaseModuleUpgrade, self).view_get(view_id, view_type, **options)
         if view_type != 'form':
             return res
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
@@ -329,7 +330,12 @@ class TestOnChange(SavepointCaseWithUserDemo):
         discussion = self.env.ref('test_new_api.discussion_0')
         demo = self.user_demo
 
-        field_onchange = self.Discussion._onchange_spec()
+        view_info = self.Discussion.view_get()
+        tree = etree.fromstring(view_info['arch'])
+        field_participants = tree.xpath('//field[@name="participants"]')[0]
+        field_participants.remove(field_participants.xpath('./form')[0])
+        view_info['arch'] = etree.tostring(tree)
+        field_onchange = self.Discussion._onchange_spec(view_info=view_info)
         self.assertEqual(field_onchange.get('moderator'), '1')
         self.assertItemsEqual(
             strip_prefix('participants.', field_onchange),
@@ -424,7 +430,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         # mimic UI behaviour, so we get subfields
         # (we need at least subfield: 'important_emails.important')
-        view_info = self.Discussion.fields_view_get(
+        view_info = self.Discussion.view_get(
             view_id=self.env.ref('test_new_api.discussion_form').id,
             view_type='form')
         field_onchange = self.Discussion._onchange_spec(view_info=view_info)

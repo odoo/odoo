@@ -155,26 +155,26 @@ class AccountAnalyticLine(models.Model):
         return result
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def _view_get(self, view_id=None, view_type='form', **options):
         """ Set the correct label for `unit_amount`, depending on company UoM """
-        result = super(AccountAnalyticLine, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        result['arch'] = self._apply_timesheet_label(result['arch'], view_type=view_type)
-        return result
+        arch, view = super(AccountAnalyticLine, self)._view_get(view_id=view_id, view_type=view_type, **options)
+        arch = self._apply_timesheet_label(arch, view_type=view_type)
+        return arch, view
 
     @api.model
     def _apply_timesheet_label(self, view_arch, view_type='form'):
-        doc = etree.XML(view_arch)
+        doc = view_arch
         encoding_uom = self.env.company.timesheet_encode_uom_id
         # Here, we select only the unit_amount field having no string set to give priority to
         # custom inheretied view stored in database. Even if normally, no xpath can be done on
         # 'string' attribute.
         for node in doc.xpath("//field[@name='unit_amount'][@widget='timesheet_uom'][not(@string)]"):
             node.set('string', _('%s Spent') % (re.sub(r'[\(\)]', '', encoding_uom.name or '')))
-        return etree.tostring(doc, encoding='unicode')
+        return doc
 
     @api.model
     def _apply_time_label(self, view_arch, related_model):
-        doc = etree.XML(view_arch)
+        doc = view_arch
         Model = self.env[related_model]
         # Just fetch the name of the uom in `timesheet_encode_uom_id` of the current company
         encoding_uom_name = self.env.company.timesheet_encode_uom_id.with_context(prefetch_fields=False).sudo().name
@@ -182,7 +182,7 @@ class AccountAnalyticLine(models.Model):
             name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom_name or '', Model._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
             node.set('string', name_with_uom)
 
-        return etree.tostring(doc, encoding='unicode')
+        return doc
 
     def _timesheet_get_portal_domain(self):
         if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):

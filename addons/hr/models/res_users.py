@@ -168,7 +168,7 @@ class User(models.Model):
         return super().SELF_WRITEABLE_FIELDS + HR_WRITABLE_FIELDS
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def view_get(self, view_id=None, view_type='form', **options):
         # When the front-end loads the views it gets the list of available fields
         # for the user (according to its access rights). Later, when the front-end wants to
         # populate the view with data, it only asks to read those available fields.
@@ -181,11 +181,11 @@ class User(models.Model):
         original_user = self.env.user
         if profile_view and view_id == profile_view.id:
             self = self.with_user(SUPERUSER_ID)
-        result = super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = super(User, self).view_get(view_id=view_id, view_type=view_type, **options)
         # Due to using the SUPERUSER the result will contain action that the user may not have access too
         # here we filter out actions that requires special implicit rights to avoid having unusable actions
         # in the dropdown menu.
-        if toolbar and self.env.user != original_user:
+        if options.get('toolbar') and self.env.user != original_user:
             self = self.with_user(original_user.id)
             if not self.user_has_groups("base.group_erp_manager"):
                 change_password_action = self.env.ref("base.change_password_wizard_action")
