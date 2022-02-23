@@ -101,9 +101,8 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
     });
     const newCacheKey = result[0]['avatarCacheKey'];
 
-    // FIXME: current test framework does not replace `src` with `data-src` during the re-rendering.
     assert.strictEqual(
-        channelItemAvatar.getAttribute('src'),
+        channelItemAvatar.dataset.src,
         `/web/image/mail.channel/20/avatar_128?unique=${newCacheKey}`,
     );
 });
