@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 export const standardFieldProps = {
-    archs: { type: [Object, false], optional: true },
+    archs: { type: [Object, false], optional: true }, // FIXME WOWL remove this
     id: { type: String, optional: true },
     name: String,
     readonly: Boolean,

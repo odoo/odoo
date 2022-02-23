@@ -136,7 +136,7 @@ export class Field extends Component {
 }
 Field.template = xml/* xml */ `
     <div t-att-name="props.name" t-att-class="classNames" t-att-style="props.style">
-        <t t-component="FieldComponent" t-props="fieldComponentProps" t-key="props.record.id"/>
+        <t t-component="FieldComponent" t-props="fieldComponentProps"/>
     </div>`;
 
 Field.getFieldComponent = function (viewType, fieldType, widget) {
@@ -163,6 +163,7 @@ Field.isEmpty = function (record, fieldName) {
     }
     return !record.data[fieldName];
 };
+// check if useful to expose this
 
 Field.parseFieldNode = function (node, fields, viewType) {
     const name = node.getAttribute("name");
