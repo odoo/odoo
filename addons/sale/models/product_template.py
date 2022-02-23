@@ -139,6 +139,16 @@ class ProductTemplate(models.Model):
             self.service_type = 'manual'
         return res
 
+    @api.onchange('list_price')
+    def _onchange_list_price_product_in_sale_order(self):
+        so_lines = self.env['sale.order.line'].sudo().search_count([('product_template_id', 'in', self.ids), ('state', '=', 'draft')])
+        if so_lines > 0:
+            warning = {
+                    'title': _("Warning"),
+                    'message': _("%s draft SO contain the modified product. The product price of these SO needs to be manually updated.") % (so_lines)
+                }
+            return {'warning': warning}
+
     @api.model
     def get_import_templates(self):
         res = super(ProductTemplate, self).get_import_templates()

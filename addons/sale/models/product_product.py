@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta, time
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round
 
 
@@ -89,6 +89,16 @@ class ProductTemplateAttributeValue(models.Model):
     is_custom = fields.Boolean('Is custom value', related="product_attribute_value_id.is_custom")
     display_type = fields.Selection(related='product_attribute_value_id.display_type', readonly=True)
 
+    @api.onchange('price_extra')
+    def _onchange_price_extra_product_in_sale_order(self):
+        product_id = self.product_tmpl_id._get_variant_for_combination(self)
+        so_lines = self.env['sale.order.line'].sudo().search_count([('product_id', '=', product_id.id), ('state', '=', 'draft')])
+        if so_lines > 0:
+            warning = {
+                    'title': _("Warning"),
+                    'message': _("%s draft SO contain the modified product. The product price of these SO needs to be manually updated.") % (so_lines)
+                }
+            return {'warning': warning}
 
 class ProductAttributeCustomValue(models.Model):
     _name = "product.attribute.custom.value"
