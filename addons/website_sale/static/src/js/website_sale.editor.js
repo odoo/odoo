@@ -766,4 +766,31 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
         return this._super(methodName, params);
     },
 });
+
+// Disable "Shown on Mobile" option if for dynamic product snippets
+options.registry.MobileVisibility.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeVisibility() {
+        return await this._super(...arguments)
+            && !this.$target.hasClass('s_dynamic_snippet_products');
+    },
+});
+
+// Disable save for alternative products snippet
+options.registry.SnippetSave.include({
+    /**
+     * @override
+     */
+    async _computeVisibility() {
+        return await this._super(...arguments)
+            && !this.$target.hasClass('o_wsale_alternative_products');
+    }
+})
 });
