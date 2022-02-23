@@ -295,7 +295,8 @@ export function wrapSuccessOrFail(promise, { on_success, on_fail } = {}) {
         if (on_fail) {
             alreadyThrown = on_fail(reason) === "alreadyThrown";
         }
-        if (reason instanceof Error && !alreadyThrown) {
+        const error = reason instanceof Error && "cause" in reason ? reason.cause : reason;
+        if (error instanceof Error && !alreadyThrown) {
             throw reason;
         }
     });
