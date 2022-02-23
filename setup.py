@@ -54,6 +54,10 @@ setup(
         'werkzeug',
         'xlsxwriter',
         'xlwt',
+        'qrtools',
+        'pikepdf',
+        'imutils',
+        'cv2'
     ],
     python_requires='>=3.7',
     extras_require={

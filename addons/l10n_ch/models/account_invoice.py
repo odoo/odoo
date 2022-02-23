@@ -7,6 +7,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.float_utils import float_split_str
 from odoo.tools.misc import mod10r
+from odoo.addons.l10n_ch.models.qr_bill_reader import QrBillReader
 
 
 l10n_ch_ISR_NUMBER_LENGTH = 27
@@ -318,6 +319,20 @@ class AccountMove(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
+        # If the move is a bill, we can try to extract infos from the QR code if present.
+        if self._context.get('default_move_type') and self._context['default_move_type'] == 'in_invoice' and self.message_main_attachment_id:
+            path = self.message_main_attachment_id._full_path(self.message_main_attachment_id.store_fname)
+            data = QrBillReader.read_qr_content(self, path_to_file=path, file_format=self.message_main_attachment_id.mimetype)
+            if data:
+                self.partner_id = self.env['res.partner'].search([('name', 'ilike', data['creditor_name'])], limit=1)
+                self.payment_reference = data['reference']
+                self.invoice_line_ids = [(0, 0, {
+                    'name': data['communication'],
+                    'display_type': 'line_note',
+                    'account_id': False,
+                })]
+                self.partner_bank_id = self.env['res.partner.bank'].search([('acc_number', '=', data['iban'])], limit=1)
+
         if self.env.context.get('l10n_ch_mark_isr_as_sent'):
             self.filtered(lambda inv: not inv.l10n_ch_isr_sent).write({'l10n_ch_isr_sent': True})
         return super(AccountMove, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)

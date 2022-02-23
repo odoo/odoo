@@ -10,3 +10,4 @@ from . import res_company
 from . import account_bank_statement
 from . import ir_actions_report
 from . import chart_template
+from . import qr_bill_reader
