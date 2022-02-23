@@ -28,7 +28,6 @@ class RatingParentMixin(models.AbstractModel):
         compute='_compute_rating_percentage_satisfaction', compute_sudo=True, search='_search_rating_avg')
     rating_avg_percentage = fields.Float('Average Rating (%)', groups='base.group_user',
         compute='_compute_rating_percentage_satisfaction', compute_sudo=True)
-    rating_last_value = fields.Float('Rating Last Value', groups='base.group_user', related='rating_ids.rating')
 
     @api.depends('rating_ids.rating', 'rating_ids.consumed')
     def _compute_rating_percentage_satisfaction(self):
