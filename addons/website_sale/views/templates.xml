@@ -193,6 +193,7 @@
                             </del>
                         </t>
                         <span class="h6 mb-0" t-if="template_price_vals['price_reduce']" t-esc="template_price_vals['price_reduce']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span class="h6 mb-0" t-else="">&#160;</span>
                         <span itemprop="price" style="display:none;" t-esc="template_price_vals['price_reduce']" />
                         <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                     </div>
@@ -213,7 +214,7 @@
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
-            <t t-if="product_variant_id">
+            <t t-if="product_variant_id and template_price_vals['price_reduce']">
                 <a href="#" role="button" class="btn btn-primary a-submit" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart"/>
                 </a>
@@ -673,7 +674,7 @@
                                         </t>
                                     </t>
                                     <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
-                                    <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center">
+                                    <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center" t-if="combination_info['price']">
                                         <t t-set="hasQuantities" t-value="false"/>
                                         <t t-set="hasBuyNow" t-value="false"/>
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
@@ -841,13 +842,13 @@
     <template id="product_price">
         <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price d-inline-block mt-2 mb-3">
             <h3 class="css_editable_mode_hidden">
-                <span class="oe_price" style="white-space: nowrap;" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
-                <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
+                <span class="oe_price" style="white-space: nowrap;" t-if="combination_info['price']" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                <span itemprop="price" style="display:none;" t-if="combination_info['price']" t-esc="combination_info['price']"/>
+                <span itemprop="priceCurrency" style="display:none;" t-if="combination_info['price']" t-esc="website.currency_id.name"/>
                 <span t-attf-class="text-danger oe_default_price ml-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="text-decoration: line-through; white-space: nowrap;"
-                    t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                    t-if="combination_info['price']" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                 />
-                <del t-if="product.compare_list_price">
+                <del t-if="product.compare_list_price and combination_info['price']">
                     <span t-field="product.compare_list_price"
                         groups="website_sale.group_product_price_comparison"
                         t-options='{
