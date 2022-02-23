@@ -28,60 +28,75 @@
                         <field name="tag_name">Adóalap - Fizetendő ÁFA alanyi adómentes</field>
                         <field name="sequence" eval="4"/>
                     </record>
+                    <record id="tax_report_alap_fiz_koron_kivuli" model="account.tax.report.line">
+                        <field name="name">Adóalap - Fizetendő ÁFA körön kívüli</field>
+                        <field name="tag_name">Adóalap - Fizetendő ÁFA körön kívüli</field>
+                        <field name="sequence" eval="5"/>
+                    </record>
                     <record id="tax_report_alap_fiz_afa_5" model="account.tax.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA 5%</field>
                         <field name="tag_name">Adóalap - Fizetendő ÁFA 5%</field>
-                        <field name="sequence" eval="5"/>
+                        <field name="sequence" eval="6"/>
                     </record>
                     <record id="tax_report_alap_fiz_afa_18" model="account.tax.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA 18%</field>
                         <field name="tag_name">Adóalap - Fizetendő ÁFA 18%</field>
-                        <field name="sequence" eval="6"/>
+                        <field name="sequence" eval="7"/>
                     </record>
                     <record id="tax_report_alap_fiz_afa_27" model="account.tax.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA 27%</field>
                         <field name="tag_name">Adóalap - Fizetendő ÁFA 27%</field>
-                        <field name="sequence" eval="7"/>
+                        <field name="sequence" eval="8"/>
                     </record>
                     <record id="tax_report_alap_viss" model="account.tax.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA EU</field>
                         <field name="tag_name">Adóalap - Visszaigényelhető ÁFA EU</field>
-                        <field name="sequence" eval="8"/>
+                        <field name="sequence" eval="9"/>
                     </record>
                     <record id="tax_report_alap_import" model="account.tax.report.line">
                         <field name="name">Adóalap – Import ÁFA</field>
                         <field name="tag_name">Adóalap – Import ÁFA</field>
-                        <field name="sequence" eval="9"/>
+                        <field name="sequence" eval="10"/>
                     </record>
                     <record id="tax_report_alap_forditott" model="account.tax.report.line">
                         <field name="name">Adóalap – Fordított ÁFA</field>
                         <field name="tag_name">Adóalap – Fordított ÁFA</field>
-                        <field name="sequence" eval="10"/>
+                        <field name="sequence" eval="11"/>
                     </record>
                     <record id="tax_report_alap_viss_alanyi" model="account.tax.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA alanyi adómentes</field>
                         <field name="tag_name">Adóalap - Visszaigényelhető ÁFA alanyi adómentes</field>
-                        <field name="sequence" eval="11"/>
+                        <field name="sequence" eval="12"/>
                     </record>
                     <record id="tax_report_alap_viss_targyi" model="account.tax.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA tárgyi adómentes</field>
                         <field name="tag_name">Adóalap - Visszaigényelhető ÁFA tárgyi adómentes</field>
-                        <field name="sequence" eval="12"/>
+                        <field name="sequence" eval="13"/>
+                    </record>
+                    <record id="tax_report_alap_viss_koron_kivuli" model="account.tax.report.line">
+                        <field name="name">Adóalap - Visszaigényelhető ÁFA körön kívüli</field>
+                        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA körön kívüli</field>
+                        <field name="sequence" eval="14"/>
                     </record>
                     <record id="tax_report_alap_viss_5" model="account.tax.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA 5%</field>
                         <field name="tag_name">Adóalap - Visszaigényelhető ÁFA 5%</field>
-                        <field name="sequence" eval="13"/>
+                        <field name="sequence" eval="15"/>
                     </record>
                     <record id="tax_report_alap_viss_18" model="account.tax.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA 18%</field>
                         <field name="tag_name">Adóalap - Visszaigényelhető ÁFA 18%</field>
-                        <field name="sequence" eval="14"/>
+                        <field name="sequence" eval="16"/>
                     </record>
                     <record id="tax_report_alap_viss_27" model="account.tax.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA 27%</field>
                         <field name="tag_name">Adóalap - Visszaigényelhető ÁFA 27%</field>
-                        <field name="sequence" eval="15"/>
+                        <field name="sequence" eval="17"/>
+                    </record>
+                    <record id="tax_report_alap_komp" model="account.tax.report.line">
+                        <field name="name">Adóalap - Visszaigényelhető kompenzációs felár</field>
+                        <field name="tag_name">Adóalap - Visszaigényelhető kompenzációs felár</field>
+                        <field name="sequence" eval="18"/>
                     </record>
                 </field>
             </record>
@@ -118,6 +133,11 @@
                         <field name="name">Visszaigényelhető ÁFA 27%</field>
                         <field name="tag_name">Visszaigényelhető ÁFA 27%</field>
                         <field name="sequence" eval="6"/>
+                    </record>
+                    <record id="tax_report_fizetndo_viss_komp" model="account.tax.report.line">
+                        <field name="name">Visszaigényelhető kompenzációs felár</field>
+                        <field name="tag_name">Visszaigényelhető kompenzációs felár</field>
+                        <field name="sequence" eval="7"/>
                     </record>
                 </field>
             </record>
