@@ -14,19 +14,21 @@ class TestResources(common.SlidesCase):
     @users('user_officer')
     @mute_logger('odoo')
     def test_constraints(self):
-        self.link = self.env["slide.slide.resource"].create({
+        link = self.env["slide.slide.resource"].create({
             'name': 'Test Link',
             'resource_type': 'url',
             'link': 'https://www.example.com',
             'slide_id': self.slide.id,
         })
+        self.assertFalse(link.data)
 
-        self.resource = self.env["slide.slide.resource"].create({
+        resource = self.env["slide.slide.resource"].create({
             'name': 'Test Resource',
             'resource_type': 'file',
             'data': '1111',
             'slide_id': self.slide.id,
         })
+        self.assertFalse(resource.link)
 
         self.assertEqual(len(self.slide.slide_resource_ids), 2)
         with self.assertRaises(ValidationError, msg="Cannot have a type link with a file"):
