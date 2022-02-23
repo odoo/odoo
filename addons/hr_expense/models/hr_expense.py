@@ -63,7 +63,10 @@ class HrExpense(models.Model):
         default=_default_employee_id, domain=lambda self: self._get_employee_id_domain(), check_company=True)
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
     product_id = fields.Many2one('product.product', string='Product', readonly=True, tracking=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
+<<<<<<< HEAD
     product_description = fields.Html(compute='_compute_product_description')
+=======
+>>>>>>> c5f6e248817... temp
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_from_product_id_company_id',
         store=True, copy=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]},
         default=_default_product_uom_id, domain="[('category_id', '=', product_uom_category_id)]")
@@ -79,9 +82,14 @@ class HrExpense(models.Model):
     amount_tax_company = fields.Monetary('Tax amount', help="Tax amount in company currency", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
     total_amount = fields.Monetary("Total In Currency", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False)
+<<<<<<< HEAD
     untaxed_amount = fields.Monetary("Total Untaxed Amount In Currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='company_id.currency_id', readonly=True)
     total_amount_company = fields.Monetary('Total', compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
+=======
+    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='company_id.currency_id', readonly=True)
+    total_amount_company = fields.Monetary("Total", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
+>>>>>>> c5f6e248817... temp
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=False, store=True, states={'reported': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}, compute='_compute_currency_id', default=lambda self: self.env.company.currency_id)
     currency_rate = fields.Float(compute='_compute_currency_rate')
@@ -208,7 +216,14 @@ class HrExpense(models.Model):
         records_with_diff_currency = self.filtered(lambda x: not x.same_currency and x.currency_id)
         (self - records_with_diff_currency).label_convert_rate = False
         for expense in records_with_diff_currency:
+<<<<<<< HEAD
             rate_txt = _('1 %(exp_cur)s = %(rate)s %(comp_cur)s', exp_cur=expense.currency_id.name, rate=float_repr(expense.currency_rate, 6), comp_cur=expense.company_currency_id.name)
+=======
+            date_expense = expense.date or fields.Date.today()
+            rate = expense.currency_id._get_conversion_rate(
+                expense.currency_id, expense.company_currency_id, expense.company_id, date_expense)
+            rate_txt = _('1 %(exp_cur)s = %(rate)s %(comp_cur)s', exp_cur=expense.currency_id.name, rate=float_repr(rate, 6), comp_cur=expense.company_currency_id.name)
+>>>>>>> c5f6e248817... temp
             expense.label_convert_rate = rate_txt
 
     def _compute_attachment_number(self):
@@ -361,12 +376,19 @@ class HrExpense(models.Model):
             attachment.register_as_main_attachment()
             expenses += expense
         return {
+<<<<<<< HEAD
             'name': _('Generate Expenses'),
+=======
+            'name': _('Generated Expenses'),
+>>>>>>> c5f6e248817... temp
             'res_model': 'hr.expense',
             'type': 'ir.actions.act_window',
             'views': [[False, view_type], [False, "form"]],
             'context': {'search_default_my_expenses': 1, 'search_default_no_report': 1},
         }
+
+    def attach_document(self, **kwargs):
+        pass
 
     # ----------------------------------------
     # ORM Overrides
@@ -912,7 +934,11 @@ class HrExpenseSheet(models.Model):
 
     name = fields.Char('Expense Report Summary', required=True, tracking=True)
     expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', copy=False)
+<<<<<<< HEAD
     expense_number = fields.Integer(compute='_compute_expense_number', string='Number of Expenses')
+=======
+    is_editable = fields.Boolean("Expense Lines Are Editable By Current User", compute='_compute_is_editable')
+>>>>>>> c5f6e248817... temp
     state = fields.Selection([
         ('draft', 'Draft'),
         ('submit', 'Submitted'),
@@ -1003,6 +1029,20 @@ class HrExpenseSheet(models.Model):
             sheet.department_id = sheet.employee_id.department_id
             sheet.user_id = sheet.employee_id.expense_manager_id or sheet.employee_id.parent_id.user_id
 
+    @api.depends_context('uid')
+    @api.depends('employee_id', 'state')
+    def _compute_is_editable(self):
+        is_manager = self.user_has_groups('hr_expense.group_hr_expense_manager')
+        is_approver = self.user_has_groups('hr_expense.group_hr_expense_user')
+        for report in self:
+            # Employee can edit his own expense in draft only
+            is_editable = (report.employee_id.user_id == self.env.user and report.state == 'draft') or (is_manager and report.state in ['draft', 'submit', 'approve'])
+            if not is_editable and report.state in ['draft', 'submit', 'approve']:
+                # expense manager can edit, unless it's own expense
+                current_managers = report.employee_id.expense_manager_id | report.employee_id.parent_id.user_id | report.employee_id.department_id.manager_id.user_id
+                is_editable = (is_approver or self.env.user in current_managers) and report.employee_id.user_id != self.env.user
+            report.is_editable = is_editable
+
     @api.constrains('expense_line_ids')
     def _check_payment_mode(self):
         for sheet in self:
@@ -1092,11 +1132,22 @@ class HrExpenseSheet(models.Model):
         return res
 
     def action_unpost(self):
+<<<<<<< HEAD
         for sheet in self:
             move = sheet.account_move_id
             sheet.account_move_id = False
             move._reverse_moves(cancel=True)
             sheet.write({'state': 'draft'})
+=======
+        moves = self.account_move_id
+        self.write({
+            'account_move_id': False,
+            'state': 'draft',
+        })
+        draft_moves = moves.filtered(lambda m: m.state == 'draft')
+        draft_moves.unlink()
+        (moves - draft_moves)._reverse_moves(cancel=True)
+>>>>>>> c5f6e248817... temp
 
     def action_get_attachment_view(self):
         res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
