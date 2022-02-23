@@ -16,24 +16,37 @@ class TestDisableSnippetsAssets(TransactionCase):
         self.homepage = self.View.create({
             'name': 'Home',
             'type': 'qweb',
-            'arch_db': HOMEPAGE_WITH_OUTDATED_S_WEBSITE_FORM,
+            'arch_db': HOMEPAGE_OUTDATED,
             'key': 'website.homepage',
         })
         self.mega_menu = self.WebsiteMenu.create({
             'name': 'Image Gallery V001',
-            'mega_menu_content': MEGA_MENU_CONTENT_IMAGE_GALLERY_V001,
+            'mega_menu_content': MEGA_MENU_UP_TO_DATE,
         })
 
         self.initial_active_snippets_assets = self._get_active_snippets_assets()
 
-    def test_homepage_with_outdated_s_website_form(self):
+    def test_homepage_outdated_and_mega_menu_up_to_date(self):
         self.Website._disable_unused_snippets_assets()
-        s_website_form_000 = self._get_snippet_asset('s_website_form', '000', 'scss')
-        s_website_form_001 = self._get_snippet_asset('s_website_form', '001', 'scss')
+        # Old snippet with scss and js
+        s_website_form_000_scss = self._get_snippet_asset('s_website_form', '000', 'scss')
+        s_website_form_001_scss = self._get_snippet_asset('s_website_form', '001', 'scss')
+        s_website_form_000_js = self._get_snippet_asset('s_website_form', '000', 'js')
+        self.assertEqual(s_website_form_000_scss.active, True)
+        self.assertEqual(s_website_form_001_scss.active, True)
+        self.assertEqual(s_website_form_000_js.active, True)
+
+        # Old snippet with scss and scss variables
+        s_masonry_block_000_scss = self._get_snippet_asset('s_masonry_block', '000', 'scss')
+        s_masonry_block_000_variables_scss = self._get_snippet_asset('s_masonry_block', '000_variables', 'scss')
+        s_masonry_block_001_scss = self._get_snippet_asset('s_masonry_block', '001', 'scss')
+        self.assertEqual(s_masonry_block_000_scss.active, True)
+        self.assertEqual(s_masonry_block_000_variables_scss.active, True)
+        self.assertEqual(s_masonry_block_001_scss.active, True)
+
+        # New snippet
         s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'scss')
         s_image_gallery_001 = self._get_snippet_asset('s_image_gallery', '001', 'scss')
-        self.assertEqual(s_website_form_000.active, True)
-        self.assertEqual(s_website_form_001.active, True)
         self.assertEqual(s_image_gallery_000.active, False)
         self.assertEqual(s_image_gallery_001.active, True)
 
@@ -46,20 +59,31 @@ class TestDisableSnippetsAssets(TransactionCase):
           'Following snippets are not following the snippet versioning system structure, or their previous assets have not been deactivated:\n'
             + '\n'.join(unwanted_snippets_assets_changes))
 
-    def test_homepage_with_s_website_form_V001(self):
+    def test_homepage_up_to_date_and_mega_menu_outdated(self):
         self.homepage.write({
-            'arch_db': HOMEPAGE_WITH_S_WEBSITE_FORM_V001,
+            'arch_db': HOMEPAGE_UP_TO_DATE,
         })
         self.mega_menu.write({
-            'mega_menu_content': MEGA_MENU_CONTENT_IMAGE_GALLERY_OUTDATED,
+            'mega_menu_content': MEGA_MENU_OUTDATED,
         })
         self.Website._disable_unused_snippets_assets()
-        s_website_form_000 = self._get_snippet_asset('s_website_form', '000', 'scss')
-        s_website_form_001 = self._get_snippet_asset('s_website_form', '001', 'scss')
+
+        s_website_form_000_scss = self._get_snippet_asset('s_website_form', '000', 'scss')
+        s_website_form_001_scss = self._get_snippet_asset('s_website_form', '001', 'scss')
+        s_website_form_000_js = self._get_snippet_asset('s_website_form', '000', 'js')
+        self.assertEqual(s_website_form_000_scss.active, False)
+        self.assertEqual(s_website_form_001_scss.active, True)
+        self.assertEqual(s_website_form_000_js.active, True)
+
+        s_masonry_block_000_scss = self._get_snippet_asset('s_masonry_block', '000', 'scss')
+        s_masonry_block_000_variables_scss = self._get_snippet_asset('s_masonry_block', '000_variables', 'scss')
+        s_masonry_block_001_scss = self._get_snippet_asset('s_masonry_block', '001', 'scss')
+        self.assertEqual(s_masonry_block_000_scss.active, False)
+        self.assertEqual(s_masonry_block_000_variables_scss.active, False)
+        self.assertEqual(s_masonry_block_001_scss.active, True)
+
         s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'scss')
         s_image_gallery_001 = self._get_snippet_asset('s_image_gallery', '001', 'scss')
-        self.assertEqual(s_website_form_000.active, False)
-        self.assertEqual(s_website_form_001.active, True)
         self.assertEqual(s_image_gallery_000.active, True)
         self.assertEqual(s_image_gallery_001.active, True)
 
@@ -69,7 +93,7 @@ class TestDisableSnippetsAssets(TransactionCase):
     def _get_active_snippets_assets(self):
         return self.IrAsset.search([('path', 'like', 'snippets'), ('active', '=', True)]).mapped('path')
 
-HOMEPAGE_WITH_S_WEBSITE_FORM_V001 = """
+HOMEPAGE_UP_TO_DATE = """
 <t name="Homepage" t-name="website.homepage1">
   <t t-call="website.layout">
     <t t-set="pageName" t-value="'homepage'"/>
@@ -80,6 +104,9 @@ HOMEPAGE_WITH_S_WEBSITE_FORM_V001 = """
           </form>
         </div>
       </section>
+      <section class="s_masonry_block" data-vcss="001" data-snippet="s_masonry_block" data-name="Masonry">
+        <div class="container-fluid"/>
+      </section>
       <section class="s_showcase pt48 pb48 o_colored_level" data-vcss="002" data-snippet="s_showcase" data-name="Showcase">
         <div class="container">
         </div>
@@ -89,7 +116,7 @@ HOMEPAGE_WITH_S_WEBSITE_FORM_V001 = """
 </t>
 """
 
-HOMEPAGE_WITH_OUTDATED_S_WEBSITE_FORM = """
+HOMEPAGE_OUTDATED = """
 <t name="Homepage" t-name="website.homepage1">
   <t t-call="website.layout">
     <t t-set="pageName" t-value="'homepage'"/>
@@ -98,6 +125,12 @@ HOMEPAGE_WITH_OUTDATED_S_WEBSITE_FORM = """
         <div class="container">
         </div>
       </form>
+      <section class="s_masonry_block" data-vcss="001" data-snippet="s_masonry_block" data-name="Masonry">
+        <div class="container-fluid"/>
+      </section>
+      <section class="s_masonry_block" data-snippet="s_masonry_block" data-name="Masonry">
+        <div class="container-fluid"/>
+      </section>
       <section class="s_showcase pt48 pb48 o_colored_level" data-vcss="002" data-snippet="s_showcase" data-name="Showcase">
         <div class="container">
         </div>
@@ -107,7 +140,7 @@ HOMEPAGE_WITH_OUTDATED_S_WEBSITE_FORM = """
 </t>
 """
 
-MEGA_MENU_CONTENT_IMAGE_GALLERY_V001 = """
+MEGA_MENU_UP_TO_DATE = """
 <section class="s_mega_menu_multi_menus py-4 o_colored_level" data-name="Multi-Menus">
         <div class="container">
         </div>
@@ -119,7 +152,7 @@ MEGA_MENU_CONTENT_IMAGE_GALLERY_V001 = """
     </section>
 """
 
-MEGA_MENU_CONTENT_IMAGE_GALLERY_OUTDATED = """
+MEGA_MENU_OUTDATED = """
 <section class="s_mega_menu_multi_menus py-4 o_colored_level" data-name="Multi-Menus">
         <div class="container">
         </div>
