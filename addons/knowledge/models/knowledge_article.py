@@ -76,9 +76,10 @@ class Article(models.Model):
         ('read', 'Read'),
         ('write', 'Write'),
     ], required=True, default='write', help="Basic permission for all internal users. External users can still have permissions if they are added to the members.")
-    partner_ids = fields.Many2many("res.partner", "knowledge_article_member_rel", 'article_id', 'partner_id', string="Article Members", copy=False, depends=['article_member_ids'],
-        help="Article members are the partners that have specific access rules on the related article.")
-    article_member_ids = fields.One2many('knowledge.article.member', 'article_id', string='Members Information', depends=['partner_ids'])  # groups ?
+    # partner_ids = fields.Many2many("res.partner", string="Article Members", compute="_compute_partner_ids",
+    #     inverse="_inverse_partner_ids", search="_search_partner_ids", compute_sudo=True,
+    #     help="Article members are the partners that have specific access rules on the related article.")
+    article_member_ids = fields.One2many('knowledge.article.member', 'article_id', string='Members Information')  # groups ?
     user_has_access = fields.Boolean(string='Has Access', compute="_compute_user_has_access", search="_search_user_has_access")
     user_can_write = fields.Boolean(string='Can Write', compute="_compute_user_can_write", search="_search_user_can_write")
     category = fields.Selection([
@@ -102,18 +103,42 @@ class Article(models.Model):
     # Set default=0 to avoid false values and messed up order
     favourite_count = fields.Integer(string="#Is Favourite", copy=False, default=0)
 
-    @api.constrains('internal_permission', 'partner_ids')
+    # @api.constrains('internal_permission', 'partner_ids')
+    @api.constrains('internal_permission', 'article_member_ids')
     def _check_members(self):
         """ If article has no member, the internal_permission must be write. as article must have at least one writer.
         If article has member, the validation is done in article.member model has we cannot trigger constraint depending
         on fields from related model. see _check_members from 'knowledge.article.member' model for more details. """
         for article in self:
-            if article.internal_permission != 'write' and not article.partner_ids:
+            if article.internal_permission != 'write' and not article.article_member_ids:
                 raise ValidationError(_("You must have at least one writer."))
 
     ##############################
     # Computes, Searches, Inverses
     ##############################
+
+    # @api.depends('article_member_ids.partner_id')
+    # def _compute_partner_ids(self):
+    #     for article in self:
+    #         article.partner_ids = article.article_member_ids.partner_id
+    #         print("caca")
+    #
+    # def _inverse_partner_ids(self):
+    #     for article in self:
+    #         # pre-save value to avoid having _compute_member_ids interfering
+    #         # while building membership status
+    #         memberships = article.article_member_ids
+    #         partners_current = article.partner_ids
+    #         partners_new = partners_current - memberships.partner_id
+    #
+    #         # add missing memberships - default permission will be read.
+    #         self.env['knowledge.article.member'].create([{
+    #             'article_id': article.id,
+    #             'partner_id': partner.id
+    #         } for partner in partners_new])
+    #
+    # def _search_partner_ids(self, operator, value):
+    #     return [('article_member_ids.partner_id', operator, value)]
 
     @api.depends_context('uid')
     @api.depends('internal_permission', 'article_member_ids.partner_id', 'article_member_ids.permission')
@@ -162,9 +187,9 @@ class Article(models.Model):
         for article in self:
             if article.internal_permission != 'none':
                 article.category = 'workspace'
-            elif len(article.partner_ids) > 1:
+            elif len(article.article_member_ids) > 1:
                 article.category = 'shared'
-            elif len(article.partner_ids) == 1 and article.article_member_ids.permission == 'write':
+            elif len(article.article_member_ids) == 1 and article.article_member_ids.permission == 'write':
                 article.category = 'private'
             else:  # should never happen. If an article has no category, there is an error in it's access rules.
                 article.category = False
@@ -252,7 +277,7 @@ class Article(models.Model):
         # if value = False and operator = '!=' -> We look for all the private articles.
         domain = [('category', '=' if value or operator == '!=' else '!=', 'private')]
         if value:
-            domain = expression.AND([domain, [('partner_ids.user_ids', 'in' if operator == '=' else 'not in', value)]])
+            domain = expression.AND([domain, [('article_member_ids.partner_id.user_ids', 'in' if operator == '=' else 'not in', value)]])
         return domain
 
     def _compute_is_user_favourite(self):
@@ -638,7 +663,7 @@ class Article(models.Model):
             values['article_member_ids'] = [(0, 0, {
                 'partner_id': member.partner_id.id,
                 'permission': member.permission
-            }) for member in parent.article_member_ids if member.partner_id not in self.partner_ids]
+            }) for member in parent.article_member_ids if member.partner_id not in self.article_member_ids.partner_id]
 
             # Modify article member in case of conflict: use highest permission
             permission_priority = {'none': 0, 'read': 1, 'write': 2}
