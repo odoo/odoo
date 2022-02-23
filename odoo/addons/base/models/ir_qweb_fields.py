@@ -10,7 +10,7 @@ from markupsafe import Markup as M, escape
 from PIL import Image
 from lxml import etree, html
 
-from odoo import api, fields, models, _, _lt
+from odoo import api, fields, models, _, _lt, tools
 from odoo.tools import posix_to_ldml, float_utils, format_date, format_duration, pycompat
 from odoo.tools.mail import safe_attrs
 from odoo.tools.misc import get_lang, babel_locale_parse
@@ -137,7 +137,17 @@ class IntegerConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
+    def get_available_options(self):
+        options = super(IntegerConverter, self).get_available_options()
+        options.update(
+            format_decimalized_number=dict(type='boolean', string=_('Decimalized number')),
+        )
+        return options
+
+    @api.model
     def value_to_html(self, value, options):
+        if options.get('format_decimalized_number'):
+            return tools.format_decimalized_number(value)
         return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}'))
 
 
