@@ -16,7 +16,6 @@ class ArticleMembers(models.Model):
     article_id = fields.Many2one('knowledge.article', 'Article', ondelete='cascade', required=True)
     partner_id = fields.Many2one('res.partner', index=True, ondelete='cascade', required=True)
     permission = fields.Selection([
-        ('none', 'None'),
         ('read', 'Read'),
         ('write', 'Write'),
     ], required=True, default='read')
@@ -125,15 +124,16 @@ class Article(models.Model):
         if not partner_id:
             self.user_has_access = False
             return
-        # TODO DBE: check why it doesn't work with self.env['knowledge.article.member'].sudo()
-        result = self.article_member_ids.sudo().search_read([('partner_id', '=', partner_id.id)], ['article_id', 'permission'])
-        member_permissions = {r["article_id"][0]: r["permission"] for r in result}
+        share_user = self.env.user.share
+        result = self.article_member_ids.sudo().search_read([('partner_id', '=', partner_id.id)], ['article_id'])
+        partner_articles = [r["article_id"][0] for r in result]
         for article in self:
-            if self.env.user.share:
-                article.user_has_access = member_permissions.get(article.id, "none") != "none"
+            # is_member = partner_id in article.partner_ids.sudo() # TODO: Check why it isn't working with demo user - AccessError??
+            is_member = article.id in partner_articles
+            if share_user:
+                article.user_has_access = is_member
             else:
-                article.user_has_access = member_permissions[article.id] != "none" if article.id in member_permissions \
-                    else article.internal_permission != 'none'
+                article.user_has_access = is_member or article.internal_permission != 'none'
 
     @api.depends_context('uid')
     @api.depends('internal_permission', 'article_member_ids.partner_id', 'article_member_ids.permission')
@@ -149,13 +149,13 @@ class Article(models.Model):
         # TODO DBE: check why it doesn't work with self.env['knowledge.article.member'].sudo()
         result = self.article_member_ids.sudo().search_read([('partner_id', '=', partner_id.id)], ['article_id', 'permission'])
         member_permissions = {r["article_id"][0]: r["permission"] for r in result}
+        share_user = self.env.user.share
         for article in self:
-            if self.env.user.share:
-                article.user_can_write = member_permissions.get(article.id, "none") == "write"
+            if share_user:
+                article.user_can_write = member_permissions.get(article.id) == "write"
             else:
                 # You cannot have only one member per article.
-                article.user_can_write = member_permissions[article.id] == "write" if article.id in member_permissions \
-                    else article.internal_permission == 'write'
+                article.user_can_write = member_permissions.get(article.id) == "write" or article.internal_permission == 'write'
 
     @api.depends('internal_permission', 'article_member_ids.permission', 'article_member_ids.partner_id')
     def _compute_category(self):
@@ -189,12 +189,7 @@ class Article(models.Model):
     def _search_user_has_access(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
             raise ValueError("unsupported search operator")
-        user_members = self.env['knowledge.article.member'].search(
-            [('partner_id', '=', self.env.user.partner_id.id)])
-        articles_with_no_access = user_members.filtered(
-            lambda member: member.permission == 'none').mapped('article_id').ids
-        articles_with_access = user_members.filtered(
-            lambda member: member.permission != 'none').mapped('article_id').ids
+        articles_with_access = self.search([('partner_ids', 'in', [self.env.user.partner_id.id])]).ids
 
         # If searching articles for which user has access.
         if (value and operator == '=') or (not value and operator == '!='):
@@ -202,15 +197,13 @@ class Article(models.Model):
                 return expression.TRUE_DOMAIN
             elif self.env.user.share:
                 return [('id', 'in', articles_with_access)]
-            return ['|', '&', ('internal_permission', '!=', 'none'), ('id', 'not in', articles_with_no_access),
-                         ('id', 'in', articles_with_access)]
+            return ['|', ('internal_permission', '!=', 'none'), ('id', 'in', articles_with_access)]
         # If searching articles for which user has NO access.
         if self.env.user.has_group('base.group_system'):
             return expression.FALSE_DOMAIN
         elif self.env.user.share:
             return [('id', 'not in', articles_with_access)]
-        return ['|', '&', ('internal_permission', '=', 'none'), ('id', 'not in', articles_with_access),
-                     ('id', 'in', articles_with_no_access)]
+        return ['&', ('internal_permission', '=', 'none'), ('id', 'not in', articles_with_access)]
 
     def _search_user_can_write(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
@@ -632,7 +625,7 @@ class Article(models.Model):
             }) for member in parent.article_member_ids if member.partner_id not in self.partner_ids]
 
             # Modify article member in case of conflict: use highest permission
-            permission_priority = {'none': 0, 'read': 1, 'write': 2}
+            permission_priority = {'read': 1, 'write': 2}
             for member in self.article_member_ids:
                 parent_member_permission = parent.article_member_ids.filtered(
                     lambda p_member: p_member.partner_id == member.partner_id).permission
