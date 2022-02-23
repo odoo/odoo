@@ -157,3 +157,22 @@ class WebsiteSnippetFilter(models.Model):
                     ])
                     products = self.env['product.product'].with_context(display_default_code=False).search(domain, limit=limit)
         return products
+
+    def _get_products_alternative_products(self, website, limit, domain, context):
+        products = self.env['product.product']
+        current_id = context.get('product_template_id')
+        if not current_id:
+            return products
+        current_template = self.env['product.template'].browse(int(current_id))
+        if current_template.exists():
+            excluded_products = website.sale_get_order().order_line.product_id
+            excluded_products |= current_template.product_variant_ids
+            included_products = current_template.alternative_product_ids.product_variant_ids
+            products = included_products - excluded_products
+            if products:
+                domain = expression.AND([
+                    domain,
+                    [('id', 'in', products.ids)],
+                ])
+                products = self.env['product.product'].with_context(display_default_code=False).search(domain, limit=limit)
+        return products

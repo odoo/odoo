@@ -724,6 +724,28 @@
     </t>
     </template>
 
+    <template id="alternative_products" name="Alternative Products" inherit_id="website_sale.product" active="True">
+        <div itemprop="description" position="after">
+            <div class="oe_structure oe_structure_solo oe_unremovable oe_unmovable" id="oe_structure_website_sale_recommended_products" t-ignore="true" t-if="product.alternative_product_ids">
+                <section data-snippet="s_dynamic_snippet_products"
+                    class="oe_unmovable oe_unremovable s_dynamic_snippet_products o_wsale_alternative_products s_dynamic pt32 pb32 o_colored_level s_product_product_borderless_1 d-none"
+                    data-name="Alternative Products" style="background-image: none;" t-att-data-filter-id="product._get_alternative_product_filter()"
+                    data-template-key="website_sale.dynamic_filter_template_product_product_borderless_1" data-product-category-id="all" data-number-of-elements="4"
+                    data-number-of-elements-small-devices="1" data-number-of-records="16" data-carousel-interval="5000" data-original-title="" title="">
+                    <div class="container o_not_editable">
+                        <div class="css_non_editable_mode_hidden">
+                            <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none o_default_snippet_text">
+                                Your Dynamic Snippet will be displayed here...
+                                This message is displayed because youy did not provide both a filter and a template to use.
+                            </div>
+                        </div>
+                        <div class="dynamic_snippet_template"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </template>
+
     <template id="product_custom_text" inherit_id="website_sale.product" active="True" name="Terms and Conditions" priority="21">
         <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
             <p class="text-muted mb-0">
@@ -758,36 +780,6 @@
             <attribute name="data-ecom-zoom-auto">1</attribute>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
 
-        </xpath>
-    </template>
-
-    <template id="recommended_products" inherit_id="website_sale.product" name="Alternative Products">
-        <xpath expr="//div[@id='product_full_description']" position="after">
-            <t t-set="alternative_products" t-value="product._get_website_alternative_product()"/>
-            <div t-if="alternative_products" class="container mt32">
-                <h3>Alternative Products:</h3>
-                <div class="row mt16" style="">
-                    <t t-foreach="alternative_products" t-as="alt_product">
-                        <div class="col-lg-2" t-att-data-publish="alt_product.website_published and 'on' or 'off'" style="width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;">
-                            <div class="mt16 text-center" style="height: 100%;">
-                                <t t-set="first_combination" t-value="alt_product._get_first_possible_combination(False)"/>
-                                <t t-set="alternative_variant" t-value="alt_product._get_variant_for_combination(combination)"/>
-                                <div t-if="alternative_variant"
-                                    t-field="alternative_variant.image_128"
-                                    t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded shadow o_alternative_product o_image_64_max' }"/>
-                                <div t-else=""
-                                    t-field="alt_product.image_128"
-                                    t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded shadow o_alternative_product o_image_64_max' }"/>
-                                <h6>
-                                    <a t-att-href="alt_product.website_url" style="display: block">
-                                        <span t-att-title="alt_product.name" t-field="alt_product.name" class="o_text_overflow" style="display: block;" />
-                                    </a>
-                                </h6>
-                            </div>
-                        </div>
-                    </t>
-                </div>
-            </div>
         </xpath>
     </template>
 
