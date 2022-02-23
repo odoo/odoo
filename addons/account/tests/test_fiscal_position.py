@@ -136,9 +136,9 @@ class TestFiscalPosition(common.TransactionCase):
 
     def test_20_fp_one_tax_2m(self):
 
-        self.src_tax = self.env['account.tax'].create({'name': "SRC", 'amount': 0.0})
-        self.dst1_tax = self.env['account.tax'].create({'name': "DST1", 'amount': 0.0})
-        self.dst2_tax = self.env['account.tax'].create({'name': "DST2", 'amount': 0.0})
+        self.src_tax = self.env['account.tax'].create({'name': "SRC", 'amount': 0.0, 'country_id': self.be.id})
+        self.dst1_tax = self.env['account.tax'].create({'name': "DST1", 'amount': 0.0, 'country_id': self.be.id})
+        self.dst2_tax = self.env['account.tax'].create({'name': "DST2", 'amount': 0.0, 'country_id': self.be.id})
 
         self.fp2m = self.fp.create({
             'name': "FP-TAX2TAXES",
