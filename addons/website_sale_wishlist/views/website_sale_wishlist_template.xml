@@ -188,7 +188,10 @@
                                             <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>
-                                        <td class="align-middle o_wish_price">
+                                        <td class="align-middle" t-if="combination_info['prevent_zero_price_sale']">
+                                            <span t-field="website.prevent_zero_price_sale_text"/>
+                                        </td>
+                                        <td class="align-middle o_wish_price" t-else="">
                                             <t t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
                                             <small t-if="combination_info['base_unit_price']" class="cart_product_base_unit_price d-block text-muted" groups="website_sale.group_show_uom_price">
                                                 <t t-call='website_sale.base_unit_price'><t t-set='product' t-value='wish.product_id' /></t>
@@ -196,7 +199,8 @@
                                         </td>
                                         <td class='text-center td-wish-btn align-middle'>
                                             <input name="product_id" t-att-value="wish.product_id.id" type="hidden"/>
-                                            <button type="button" role="button" class="btn btn-secondary btn-block o_wish_add mb4" >
+                                            <a t-if="combination_info['prevent_zero_price_sale']" t-att-href="website.contact_us_button_url" class="btn btn-primary btn_cta">Contact Us</a>
+                                            <button t-else="" type="button" role="button" class="btn btn-secondary btn-block o_wish_add mb4" >
                                                 Add <span class='d-none d-md-inline'>to Cart</span>
                                             </button>
                                         </td>
