@@ -26,8 +26,10 @@ class SlidePartnerRelation(models.Model):
     _name = 'slide.slide.partner'
     _description = 'Slide / Partner decorated m2m'
     _table = 'slide_slide_partner'
+    _rec_name = 'partner_id'
 
-    slide_id = fields.Many2one('slide.slide', ondelete="cascade", index=True, required=True)
+    slide_id = fields.Many2one('slide.slide', string="Content", ondelete="cascade", index=True, required=True)
+    slide_category = fields.Selection(related='slide_id.slide_category')
     channel_id = fields.Many2one(
         'slide.channel', string="Channel",
         related="slide_id.channel_id", store=True, index=True, ondelete='cascade')
