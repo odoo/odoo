@@ -12,6 +12,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/slide_channel_views.xml',
+        'views/slide_slide_partner_views.xml',
         'views/slide_slide_views.xml',
         'views/survey_survey_views.xml',
         'views/website_slides_menu_views.xml',
