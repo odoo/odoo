@@ -12,7 +12,7 @@
                         <img class="o_carousel_product_card_img_top card-img-top p-2" loading="lazy" t-att-src="data['image_512']"
                             t-att-alt="record.display_name"/>
                     </a>
-                    <i t-if="data.get('_latest_viewed')" class="fa fa-trash o_carousel_product_remove js_remove"></i>
+                    <i t-if="data.get('_latest_viewed')" class="fa fa-trash o_carousel_product_remove js_remove"/>
                     <div class="o_carousel_product_card_body card-body border-top">
                         <a t-att-href="record.website_url" class="text-decoration-none">
                             <div class="h6 card-title mb-0" t-field="record.display_name"/>
@@ -287,10 +287,17 @@
         </template>
 
         <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
-            <span t-esc="record._get_contextual_price()" class="fw-bold"
-                  t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-            <del t-if="data.get('has_discounted_price')" class="text-danger ms-1 h6" style="white-space: nowrap;"
-                 t-esc="data['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+            <t t-set="record_price" t-value="record._get_contextual_price()"/>
+            <t t-if="not website.prevent_zero_price_sale or record_price">
+                <span t-esc="record_price" class="fw-bold"
+                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                <del t-if="data.get('has_discounted_price')" class="text-danger ms-1 h6" style="white-space: nowrap;"
+                     t-esc="data['list_price']"
+                     t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+            </t>
+            <t t-else="">
+                <span t-field="website.prevent_zero_price_sale_text"/>
+            </t>
         </template>
 
         <!-- Assets -->
