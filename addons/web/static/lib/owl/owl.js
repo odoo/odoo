@@ -212,7 +212,7 @@
     }
     function makePropSetter(name) {
         return function setProp(value) {
-            this[name] = value;
+            this[name] = value || "";
         };
     }
     function isProp(tag, key) {
@@ -1778,8 +1778,7 @@
     function makeChildFiber(node, parent) {
         let current = node.fiber;
         if (current) {
-            let root = parent.root;
-            cancelFibers(root, current.children);
+            cancelFibers(current.children);
             current.root = null;
         }
         return new Fiber(node, parent);
@@ -1788,7 +1787,7 @@
         let current = node.fiber;
         if (current) {
             let root = current.root;
-            root.counter -= cancelFibers(root, current.children);
+            root.counter -= cancelFibers(current.children);
             current.children = [];
             root.counter++;
             current.bdom = null;
@@ -1811,15 +1810,14 @@
     /**
      * @returns number of not-yet rendered fibers cancelled
      */
-    function cancelFibers(root, fibers) {
+    function cancelFibers(fibers) {
         let result = 0;
         for (let fiber of fibers) {
             fiber.node.fiber = null;
-            fiber.root = root;
             if (!fiber.bdom) {
                 result++;
             }
-            result += cancelFibers(root, fiber.children);
+            result += cancelFibers(fiber.children);
         }
         return result;
     }
@@ -2206,53 +2204,86 @@
         }
     }
 
+    function wrapError(fn, hookName) {
+        const error = new Error(`The following error occurred in ${hookName}: `);
+        return (...args) => {
+            try {
+                const result = fn(...args);
+                if (result instanceof Promise) {
+                    return result.catch((cause) => {
+                        error.cause = cause;
+                        if (cause instanceof Error) {
+                            error.message += `"${cause.message}"`;
+                        }
+                        throw error;
+                    });
+                }
+                return result;
+            }
+            catch (cause) {
+                if (cause instanceof Error) {
+                    error.message += `"${cause.message}"`;
+                }
+                throw error;
+            }
+        };
+    }
     // -----------------------------------------------------------------------------
     //  hooks
     // -----------------------------------------------------------------------------
     function onWillStart(fn) {
         const node = getCurrent();
-        node.willStart.push(fn.bind(node.component));
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willStart.push(decorate(fn.bind(node.component), "onWillStart"));
     }
     function onWillUpdateProps(fn) {
         const node = getCurrent();
-        node.willUpdateProps.push(fn.bind(node.component));
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willUpdateProps.push(decorate(fn.bind(node.component), "onWillUpdateProps"));
     }
     function onMounted(fn) {
         const node = getCurrent();
-        node.mounted.push(fn.bind(node.component));
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.mounted.push(decorate(fn.bind(node.component), "onMounted"));
     }
     function onWillPatch(fn) {
         const node = getCurrent();
-        node.willPatch.unshift(fn.bind(node.component));
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willPatch.unshift(decorate(fn.bind(node.component), "onWillPatch"));
     }
     function onPatched(fn) {
         const node = getCurrent();
-        node.patched.push(fn.bind(node.component));
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.patched.push(decorate(fn.bind(node.component), "onPatched"));
     }
     function onWillUnmount(fn) {
         const node = getCurrent();
-        node.willUnmount.unshift(fn.bind(node.component));
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willUnmount.unshift(decorate(fn.bind(node.component), "onWillUnmount"));
     }
     function onWillDestroy(fn) {
         const node = getCurrent();
-        node.willDestroy.push(fn.bind(node.component));
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willDestroy.push(decorate(fn.bind(node.component), "onWillDestroy"));
     }
     function onWillRender(fn) {
         const node = getCurrent();
         const renderFn = node.renderFn;
-        node.renderFn = () => {
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.renderFn = decorate(() => {
             fn.call(node.component);
             return renderFn();
-        };
+        }, "onWillRender");
     }
     function onRendered(fn) {
         const node = getCurrent();
         const renderFn = node.renderFn;
-        node.renderFn = () => {
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.renderFn = decorate(() => {
             const result = renderFn();
             fn.call(node.component);
             return result;
-        };
+        }, "onRendered");
     }
     function onError(callback) {
         const node = getCurrent();
@@ -2859,16 +2890,16 @@
             const mapping = new Map();
             return tokens
                 .map((tok) => {
-                    if (tok.varName && !tok.isLocal) {
-                        if (!mapping.has(tok.varName)) {
-                            const varId = this.generateId("v");
-                            mapping.set(tok.varName, varId);
-                            this.addLine(`const ${varId} = ${tok.value};`);
-                        }
-                        tok.value = mapping.get(tok.varName);
+                if (tok.varName && !tok.isLocal) {
+                    if (!mapping.has(tok.varName)) {
+                        const varId = this.generateId("v");
+                        mapping.set(tok.varName, varId);
+                        this.addLine(`const ${varId} = ${tok.value};`);
                     }
-                    return tok.value;
-                })
+                    tok.value = mapping.get(tok.varName);
+                }
+                return tok.value;
+            })
                 .join("");
         }
         compileAST(ast, ctx) {
@@ -2979,11 +3010,11 @@
                 .split(".")
                 .slice(1)
                 .map((m) => {
-                    if (!MODS.has(m)) {
-                        throw new Error(`Unknown event modifier: '${m}'`);
-                    }
-                    return `"${m}"`;
-                });
+                if (!MODS.has(m)) {
+                    throw new Error(`Unknown event modifier: '${m}'`);
+                }
+                return `"${m}"`;
+            });
             let modifiersCode = "";
             if (modifiers.length) {
                 modifiersCode = `${modifiers.join(",")}, `;
@@ -3768,6 +3799,9 @@
         if (tagName === "t" && !dynamicTag) {
             return null;
         }
+        if (tagName.startsWith("block-")) {
+            throw new Error(`Invalid tag name: '${tagName}'`);
+        }
         ctx = Object.assign({}, ctx);
         if (tagName === "pre") {
             ctx.inPreTag = true;
@@ -3832,6 +3866,9 @@
                     ctx = Object.assign({}, ctx);
                     ctx.tModelInfo = model;
                 }
+            }
+            else if (attr.startsWith("block-")) {
+                throw new Error(`Invalid attribute: '${attr}'`);
             }
             else if (attr !== "t-name") {
                 if (attr.startsWith("t-") && !attr.startsWith("t-att")) {
@@ -4357,7 +4394,7 @@
                         if (line[columnIndex]) {
                             msg +=
                                 `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
                         }
                     }
                 }
@@ -4402,7 +4439,7 @@
                         if (line[columnIndex]) {
                             msg +=
                                 `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
                         }
                     }
                 }
@@ -4450,7 +4487,13 @@
             if (!(name in this.templates)) {
                 const rawTemplate = this.rawTemplates[name];
                 if (rawTemplate === undefined) {
-                    throw new Error(`Missing template: "${name}"`);
+                    let extraInfo = "";
+                    try {
+                        const componentName = getCurrent().component.constructor.name;
+                        extraInfo = ` (for component "${componentName}")`;
+                    }
+                    catch { }
+                    throw new Error(`Missing template: "${name}"${extraInfo}`);
                 }
                 const templateFn = this._compileTemplate(name, rawTemplate);
                 // first add a function to lazily get the template, in case there is a
@@ -4553,7 +4596,7 @@
             });
         }
     }
-    Portal.template = xml`<t t-slot="default"/>`;
+    Portal.template = xml `<t t-slot="default"/>`;
     Portal.props = {
         target: {
             type: String,
@@ -4626,10 +4669,13 @@
     // interactions with other code, such as test frameworks that override them
     Scheduler.requestAnimationFrame = window.requestAnimationFrame.bind(window);
 
-    const DEV_MSG = `Owl is running in 'dev' mode.
+    const DEV_MSG = () => {
+        const hash = window.owl ? window.owl.__info__.hash : "master";
+        return `Owl is running in 'dev' mode.
 
 This is not suitable for production use.
-See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for more information.`;
+See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration for more information.`;
+    };
     class App extends TemplateSet {
         constructor(Root, config = {}) {
             super(config);
@@ -4640,7 +4686,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
                 this.dev = true;
             }
             if (this.dev && !config.test) {
-                console.info(DEV_MSG);
+                console.info(DEV_MSG());
             }
             const descrs = Object.getOwnPropertyDescriptors(config.env || {});
             this.env = Object.freeze(Object.defineProperties({}, descrs));
@@ -4732,7 +4778,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
             };
         }
     }
-    Memo.template = xml`<t t-slot="default"/>`;
+    Memo.template = xml `<t t-slot="default"/>`;
     /**
      * we assume that each object have the same set of keys
      */
@@ -4785,7 +4831,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
      * @returns the underlying value
      */
     function toRaw(value) {
-        return value[TARGET];
+        return value[TARGET] || value;
     }
     const targetToKeysToCallbacks = new WeakMap();
     /**
@@ -5129,9 +5175,9 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-alpha.1';
-    __info__.date = '2022-02-09T09:24:08.644Z';
-    __info__.hash = '67fe89f';
+    __info__.version = '2.0.0-alpha.2';
+    __info__.date = '2022-02-23T07:56:30.264Z';
+    __info__.hash = '0dbd2bd';
     __info__.url = 'https://github.com/odoo/owl';
 
 

@@ -120,11 +120,12 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                     onError((e) => {
                         assert.strictEqual(
                             e.toString(),
-                            `Error: ComponentAdapter has more than 1 argument, 'widgetArgs' must be overriden.`
+                            // eslint-disable-next-line no-useless-escape
+                            `Error: The following error occurred in onWillStart: \"ComponentAdapter has more than 1 argument, 'widgetArgs' must be overriden.\"`
                         );
                         this.error = true;
                         this.render();
-                    })
+                    });
                 }
             }
             Parent.template = xml`
