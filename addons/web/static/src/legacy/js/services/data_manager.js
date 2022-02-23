@@ -89,6 +89,9 @@ return core.Class.extend({
         if (shouldLoadViews) {
             // Views info should be loaded
             options.load_filters = shouldLoadFilters;
+            if (config.device.isMobile) {
+                options.mobile = config.device.isMobile;
+            }
             this._cache.views[viewsKey] = rpc.query({
                 args: [],
                 kwargs: { context, options, views: views_descr },
