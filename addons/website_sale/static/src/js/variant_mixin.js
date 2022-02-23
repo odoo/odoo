@@ -39,7 +39,24 @@ VariantMixin._onChangeCombination = function (ev, $parent, combination) {
         $product.data('product-tracking-info', combination['product_tracking_info']);
         $product.trigger('view_item_event', combination['product_tracking_info']);
     }
-
+    const addToCart = $parent.find('#add_to_cart_wrap');
+    const contactUsButton = $parent.find('#contact_us_wrapper');
+    const productPrice = $parent.find('.product_price');
+    const quantity = $parent.find('.css_quantity');
+    const product_unavailable = $parent.find('#product_unavailable');
+    if (combination.prevent_zero_price_sale) {
+        productPrice.removeClass('d-inline-block').addClass('d-none');
+        quantity.removeClass('d-inline-flex').addClass('d-none');
+        addToCart.removeClass('d-inline-flex').addClass('d-none');
+        contactUsButton.removeClass('d-none').addClass('d-flex');
+        product_unavailable.removeClass('d-none').addClass('d-flex')
+    } else {
+        productPrice.removeClass('d-none').addClass('d-inline-block');
+        quantity.removeClass('d-none').addClass('d-inline-flex');
+        addToCart.removeClass('d-none').addClass('d-inline-flex');
+        contactUsButton.removeClass('d-flex').addClass('d-none');
+        product_unavailable.removeClass('d-flex').addClass('d-none')
+    }
     originalOnChangeCombination.apply(this, [ev, $parent, combination]);
 };
 

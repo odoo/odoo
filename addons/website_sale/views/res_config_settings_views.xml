@@ -216,6 +216,23 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="hide_add_to_cart_setting">
+                          <div class="o_setting_left_pane">
+                            <field name="website_sale_prevent_zero_price_sale"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="website_sale_prevent_zero_price_sale"/>
+                            <div class="text-muted">
+                                If product price equals 0, replace 'Add to Cart' by 'Contact us'.
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('website_sale_prevent_zero_price_sale', '=', False)]}">
+                                <div class="row mt16">
+                                    <label class="o_light_label col-lg-3" string="Button url" for="website_sale_contact_us_button_url"/>
+                                    <field name="website_sale_contact_us_button_url"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <h2>Shipping</h2>

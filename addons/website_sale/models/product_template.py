@@ -255,7 +255,7 @@ class ProductTemplate(models.Model):
                 product, partner
             )
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
-
+            prevent_zero_price_sale = not price and current_website.prevent_zero_price_sale
             combination_info.update(
                 base_unit_name=product.base_unit_name,
                 base_unit_price=product.base_unit_price,
@@ -263,6 +263,7 @@ class ProductTemplate(models.Model):
                 list_price=list_price,
                 price_extra=price_extra,
                 has_discounted_price=has_discounted_price,
+                prevent_zero_price_sale=prevent_zero_price_sale,
             )
 
         return combination_info
@@ -491,9 +492,13 @@ class ProductTemplate(models.Model):
 
     def _search_render_results_prices(self, mapping, combination_info):
         monetary_options = {'display_currency': mapping['detail']['display_currency']}
-        price = self.env['ir.qweb.field.monetary'].value_to_html(
-            combination_info['price'], monetary_options
-        )
+        if combination_info['prevent_zero_price_sale']:
+            website = self.env['website'].get_current_website()
+            price = website.prevent_zero_price_sale_text
+        else:
+            price = self.env['ir.qweb.field.monetary'].value_to_html(
+                combination_info['price'], monetary_options
+            )
         if combination_info['has_discounted_price']:
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(
                 combination_info['list_price'], monetary_options
@@ -524,4 +529,5 @@ class ProductTemplate(models.Model):
         return pricelist
 
     def _website_show_quick_add(self):
-        return self.sale_ok
+        website = self.env['website'].get_current_website()
+        return self.sale_ok and (not website.prevent_zero_price_sale or self._get_contextual_price())

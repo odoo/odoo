@@ -194,7 +194,8 @@
                                 <em class="small" t-esc="template_price_vals['base_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             </del>
                         </t>
-                        <span class="h6 mb-0" t-if="template_price_vals['price_reduce']" t-esc="template_price_vals['price_reduce']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span class="h6 mb-0" t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale" t-esc="template_price_vals['price_reduce']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span class="h6 mb-0" t-else="" t-field="website.prevent_zero_price_sale_text"/>
                         <span itemprop="price" style="display:none;" t-esc="template_price_vals['price_reduce']" />
                         <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                     </div>
@@ -215,7 +216,7 @@
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
-            <t t-if="product_variant_id">
+            <t t-if="product_variant_id and template_price_vals['price_reduce'] or not website.prevent_zero_price_sale">
                 <a t-if="product._website_show_quick_add()"
                    href="#" role="button" class="btn btn-primary a-submit" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart"/>
@@ -649,7 +650,7 @@
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product js_main_product mb-3">
                                     <div>
-                                        <t t-call="website_sale.product_price" />
+                                        <t t-call="website_sale.product_price"/>
                                         <small t-if="combination_info['base_unit_price']"
                                                class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
                                             <t t-call='website_sale.base_unit_price'/>
@@ -674,13 +675,23 @@
                                         <t t-set="hasBuyNow" t-value="false"/>
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
 
-                                        <div id="add_to_cart_wrap" class="d-inline-flex align-items-center mb-2 me-auto">
+                                        <div id="add_to_cart_wrap" t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-auto">
                                             <a role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
                                                 <i class="fa fa-shopping-cart me-2"/>
                                                 <span style="font-weight: bold">ADD TO CART</span>
                                             </a>
                                         </div>
                                         <div id="product_option_block" class="d-flex flex-wrap w-100"/>
+                                    </div>
+                                    <div id="contact_us_wrapper"
+                                         t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}} oe_structure oe_structure_solo #{_div_classes}">
+                                        <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                                            <div class="container">
+                                                <a t-att-href="website.contact_us_button_url"
+                                                   class="btn btn-primary btn_cta">Contact Us
+                                                </a>
+                                            </div>
+                                        </section>
                                     </div>
                                 </div>
                             </form>
@@ -807,7 +818,7 @@
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
       <xpath expr="//div[@id='add_to_cart_wrap']" position="before">
-        <div t-attf-class="css_quantity input-group d-inline-flex me-2 mb-2 align-middle #{'input-group-lg' if ctaSizeBig else ''}" contenteditable="false">
+        <div t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} me-2 mb-2 align-middle #{'input-group-lg' if ctaSizeBig else ''}" contenteditable="false">
             <a t-attf-href="#" class="btn btn-link js_add_cart_json" aria-label="Remove one" title="Remove one">
                 <i class="fa fa-minus"></i>
             </a>
@@ -832,7 +843,7 @@
     </template>
 
     <template id="product_price">
-        <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price d-inline-block mt-2 mb-3">
+        <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}">
             <h3 class="css_editable_mode_hidden">
                 <span class="oe_price" style="white-space: nowrap;" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                 <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
@@ -865,6 +876,9 @@
                         }'/>
                 </del>
             </h3>
+        </div>
+        <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
+            <h3 class="font-italic" t-field="website.prevent_zero_price_sale_text"/>
         </div>
     </template>
 

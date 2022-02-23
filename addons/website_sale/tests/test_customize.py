@@ -191,7 +191,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         product_template = self.env['product.template'].create({
             'name': 'Dynamic Product',
             'website_published': True,
-            'list_price': 0,
+            'list_price': 10,
         })
 
         # set attribute and attribute values on the template
