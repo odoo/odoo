@@ -5957,7 +5957,7 @@ Fields:
             Return at most ``limit`` records.
         """
         ids = expand_ids(self.id, self._prefetch_ids)
-        ids = self.env.cache.get_missing_ids(self.browse(ids), field)
+        ids = self.env.cache.lazy_get_missing_ids(self, field, ids)
         if limit:
             ids = itertools.islice(ids, limit)
         # Those records are aimed at being either fetched, or computed.  But the

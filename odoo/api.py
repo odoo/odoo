@@ -963,6 +963,14 @@ class Cache(object):
             if record_id not in field_cache:
                 yield record_id
 
+    def lazy_get_missing_ids(self, model, field, records_ids):
+        """ Same than `get_missing_ids` but use iterator of ids ``records_ids``
+        instead of records to avoid empty the iterator when it is not needed """
+        field_cache = self._get_field_cache(model, field)
+        for record_id in records_ids:
+            if record_id not in field_cache:
+                yield record_id
+
     def invalidate(self, spec=None):
         """ Invalidate the cache, partially or totally depending on ``spec``. """
         if spec is None:
