@@ -9,7 +9,6 @@ var _t = core._t;
 
 const KnowledgeFormController = FormController.extend({
     events: Object.assign({}, FormController.prototype.events, {
-        'click .btn-delete': '_onDelete',
         'click .btn-duplicate': '_onDuplicate',
         'click .btn-create': '_onCreate',
         'click .btn-move': '_onMove',
@@ -39,10 +38,6 @@ const KnowledgeFormController = FormController.extend({
             return;
         }
         await this._rename(id, e.currentTarget.value);
-    },
-
-    _onDelete: async function () {
-        this._deleteRecords([this.handle]);
     },
 
     /**

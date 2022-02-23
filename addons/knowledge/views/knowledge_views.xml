@@ -102,33 +102,30 @@
                                             </a>
                                             <div class="o_knowledge_more_options_panel dropdown-menu" role="menu">
                                                 <a class="dropdown-item btn-move" href="#" role="button">
-                                                    <i class="fa fa-angle-double-right"/> Move To
+                                                    <i class="fa fa-fw fa-angle-double-right"/> Move To
                                                 </a>
                                                 <button class="dropdown-item btn-lock" href="#" type="object" name="action_set_lock"
                                                     attrs="{'invisible': ['|', ('is_locked', '=', True), ('user_can_write', '=', False)]}">
-                                                    <i class="fa fa-lock"/> Lock
+                                                    <i class="fa fa-fw fa-lock"/> Lock
                                                 </button>
                                                 <button class="dropdown-item btn-lock" href="#" type="object" name="action_set_unlock"
                                                     attrs="{'invisible': ['|', ('is_locked', '=', False), ('user_can_write', '=', False)]}">
-                                                    <i class="fa fa-unlock"/> Unlock
+                                                    <i class="fa fa-fw fa-unlock"/> Unlock
                                                 </button>
                                                 <a class="dropdown-item btn-duplicate" href="#" role="button">
-                                                    <i class="fa fa-copy"/> Duplicate
+                                                    <i class="fa fa-fw fa-copy"/> Duplicate
                                                 </a>
-                                                <a class="dropdown-item btn-delete" href="#" role="button">
-                                                    <i class="fa fa-trash"/> Delete
-                                                </a>
+                                                <button class="dropdown-item btn-archive" type="object" name="action_archive">
+                                                    <i class="fa fa-fw fa-archive"/> Archive
+                                                </button>
                                                 <div class="dropdown-divider"
                                                     attrs="{'invisible': ['&amp;', ('last_edition_id', '=', False), ('last_edition_date', '=', False)]}"/>
-                                                <div class="d-flex flex-column px-3"
+                                                <div class="flex-column px-3 text-muted"
                                                     attrs="{'invisible': [('last_edition_id', '=', False)]}">
-                                                    <label for="last_edition_id" class="font-weight-bold my-0"/>
-                                                    <field name="last_edition_id" widget="many2one_avatar_user" readonly="1"/>
-                                                </div>
-                                                <div class="d-flex flex-column px-3"
-                                                    attrs="{'invisible': [('last_edition_date', '=', False)]}">
-                                                    <label for="last_edition_date" class="font-weight-bold my-0"/>
-                                                    <field name="last_edition_date" widget="date" readonly="1"/>
+                                                    Last Edited: <field name="last_edition_id" readonly="1" class="text-muted"/><br />
+                                                    <field name="last_edition_date" widget="datetime" readonly="1"/><br />
+                                                    Created: <field name="create_uid" readonly="1" class="text-muted"/><br />
+                                                    <field name="create_date" widget="datetime" readonly="1"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -166,7 +163,7 @@
                 <field name="name"/>
                 <field name="is_user_favourite" widget="boolean_favorite" nolabel="1" force_save="1" options="{'allow_order': '1'}"/>
                 <field name="favourite_count" invisible="1"/>
-                <field name="parent_id"/>
+                <field name="main_article_id"/>
                 <field name="author_ids" widget="many2many_avatar_user" options="{'no_open_chat':True}"/>
                 <field name="last_edition_id" widget="many2one_avatar_user"/>
                 <field name="last_edition_date"/>
@@ -224,10 +221,11 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
-                <field name="parent_id"/>
+                <field name="main_article_id"/>
                 <field name="author_ids"/>
                 <field name="last_edition_id"/>
 
+                <filter string="Archived" name="active" domain="[('active', '=' ,False)]"/>
                 <filter name="favourites" string="My Favourites" domain="[('is_user_favourite', '=', True), ('user_has_access', '=', True)]"/>
                 <filter name="own_articles" string="My Articles" domain="[('owner_id', '=', uid), ('user_has_access', '=', True)]"/>
                 <filter name="shared_articles" string="My Shared Articles" domain="[('category', '=', 'shared'), ('user_has_access', '=', True)]"/>

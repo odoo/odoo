@@ -54,6 +54,7 @@ class Article(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "favourite_count, create_date desc"
 
+    active = fields.Boolean(default=True)
     name = fields.Char(string="Title", default="New Article")
     body = fields.Html(string="Article Body")
     icon = fields.Char(string='Article Icon', default='fa-file')
@@ -66,6 +67,8 @@ class Article(models.Model):
     # Set default=0 to avoid false values and messed up sequence order inside same parent
     sequence = fields.Integer(string="Article Sequence", default=0,
                               help="The sequence is computed only among the articles that have the same parent.")
+    main_article_id = fields.Many2one('knowledge.article', string="Subject", compute="_compute_main_article_id",
+                                        search="_search_main_article_id", recursive=True)
 
     # Access rules and members + implied category
     internal_permission = fields.Selection([
@@ -178,6 +181,11 @@ class Article(models.Model):
             else:
                 article.owner_id = False
 
+    @api.depends('parent_id')
+    def _compute_main_article_id(self):
+        for article in self:
+            article.main_article_id = article._get_highest_parent()
+
     def _search_user_has_access(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
             raise ValueError("unsupported search operator")
@@ -275,6 +283,20 @@ class Article(models.Model):
             return [('favourite_user_ids', 'in', [self.env.user.id])]
         else:
             return [('favourite_user_ids', 'not in', [self.env.user.id])]
+
+    def _search_main_article_id(self, operator, value):
+        if isinstance(value, str):
+            value = self.search([('name', operator, value)]).ids
+            if not value:
+                return expression.FALSE_DOMAIN
+            operator = '='  # now we will search for articles that match the retrieved users.
+        elif operator not in ('=', '!='):
+            raise NotImplementedError()
+        articles = self
+        for article in self.search([('id', 'in' if operator == '=' else 'not in', value)]):
+            articles |= article._get_descendants()
+            articles |= article
+        return [('id', 'in', articles.ids)]
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -405,6 +427,9 @@ class Article(models.Model):
     def action_set_unlock(self):
         for article in self:
             article.is_locked = False
+
+    def action_archive(self):
+        return super(Article, self | self._get_descendants()).action_archive()
 
     #####################
     #  Business methods
@@ -632,6 +657,14 @@ class Article(models.Model):
             return self.parent_id._get_highest_parent()
         else:
             return self
+
+    def _get_descendants(self):
+        """ Returns the descendants recordset of the current article. """
+        descendants = self.env['knowledge.article']
+        for child in self.child_ids:
+            descendants |= child
+            descendants |= child._get_descendants()
+        return descendants
 
     def _resequence(self):
         """ This method re-order the children of the same parent (brotherhood) if needed.
