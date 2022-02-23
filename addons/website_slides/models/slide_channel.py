@@ -39,6 +39,10 @@ class ChannelUsersRelation(models.Model):
          'unique(channel_id, partner_id)',
          'A partner membership to a channel must be unique!'
         ),
+        ('check_completion',
+         'check(completion >= 0 and completion <= 100)',
+         'The completion of a channel is a percentage and should be between 0% and 100.'
+        )
     ]
 
     def _recompute_completion(self):
