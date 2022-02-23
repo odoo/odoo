@@ -30,36 +30,36 @@ msgstr ""
 #: code:addons/sale_coupon/models/sale_coupon_reward.py:0
 #, python-format
 msgid "%s %s discount on total amount"
-msgstr "%s %s chiết khấu theo tổng tiền"
+msgstr "%s %s chiết khấu trên tổng số tiền"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on %s"
-msgstr "%s%% chiết khấu theo %s"
+msgstr "%s%% chiết khấu trên %s"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on cheapest product"
-msgstr "%s%% chiết khấu theo sản phẩm rẻ nhất"
+msgstr "%s%% chiết khấu trên sản phẩm rẻ nhất"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on products"
-msgstr "%s%% theo sản phẩm"
+msgstr "%s%% chiết khấu sản phẩm"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on total amount"
-msgstr "%s%% chiết khấu theo tổng tiền"
+msgstr "%s%% chiết khấu trên tổng số tiền"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "*Valid for following products:"
-msgstr "*Hợp lệ cho sản phẩm sau:"
+msgstr "*Có giá trị cho các sản phẩm sau:"
 
 #. module: sale_coupon
 #: model:sale.coupon.program,name:sale_coupon.10_percent_coupon
@@ -76,7 +76,7 @@ msgstr "%s, một phiếu giảm giá đã được tạo cho bạn"
 #: model:product.product,name:sale_coupon.product_product_10_percent_discount
 #: model:product.template,name:sale_coupon.product_product_10_percent_discount_product_template
 msgid "10.0% discount on total amount"
-msgstr "10.0% chiết khấu theo tổng tiền"
+msgstr "10.0% chiết khấu trên tổng số tiền"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form
@@ -85,7 +85,7 @@ msgid ""
 "class=\"oe_grey\">if 0, infinite use</span>"
 msgstr ""
 "<span class=\"o_form_label oe_inline\"> Ngày</span> <span "
-"class=\"oe_grey\">nếu là 0, không giới hạn thời gian sử dụng</span>"
+"class=\"oe_grey\">nếu 0, sử dụng vô hạn</span>"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_form
@@ -111,8 +111,8 @@ msgid ""
 "<span> Orders</span>\n"
 "                    <span class=\"oe_grey\"> if 0, infinite use</span>"
 msgstr ""
-"<span> Đơn hàng</span>\n"
-"                    <span class=\"oe_grey\"> nếu là 0, không giới hạn thời gian sử dụng</span>"
+"<span> Đơn đầu tiên</span>\n"
+"                    <span class=\"oe_grey\"> nếu 0, sử dụng vô hạn</span>"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.view_sale_coupon_program_kanban
@@ -223,7 +223,7 @@ msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
 "    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        % if object.partner_id.name:\n"
-"        Chúc mừng ${object.partner_id.name},<br/>\n"
+"        Xin chúc mừng ${object.partner_id.name},<br/>\n"
 "        % endif\n"
 "\n"
 "        Đây là phần thưởng của bạn từ ${object.program_id.company_id.name}.<br/>\n"
@@ -233,7 +233,7 @@ msgstr ""
 "            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
 "                ${'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id)}\n"
 "            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">không áp dụng với đơn hàng tiếp theo</strong><br/>\n"
+"            <strong style=\"font-size: 24px;\">dừng đơn đặt hàng tiếp theo</strong><br/>\n"
 "            %else\n"
 "            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
 "                ${object.program_id.discount_percentage} %\n"
@@ -243,7 +243,7 @@ msgstr ""
 "                % if len(object.program_id.discount_specific_product_ids) != 1\n"
 "                % set display_specific_products = True\n"
 "                <strong style=\"font-size: 24px;\">\n"
-"                    đối với một số sản phẩm*\n"
+"                    trên một số sản phẩm*\n"
 "                </strong>\n"
 "                % else\n"
 "                <strong style=\"font-size: 24px;\">\n"
@@ -252,11 +252,11 @@ msgstr ""
 "                % endif\n"
 "            % elif object.program_id.discount_apply_on == 'cheapest_product':\n"
 "            <br/><strong style=\"font-size: 24px;\">\n"
-"                không áp dụng với sản phẩm rẻ nhất\n"
+"                giảm giá sản phẩm rẻ nhất\n"
 "            </strong>\n"
 "            % else\n"
 "            <br/><strong style=\"font-size: 24px;\">\n"
-"                không áp dụng với đơn hàng tiếp theo của bạn\n"
+"                dừng đơn đặt hàng tiếp theo\n"
 "            </strong>\n"
 "            % endif\n"
 "            <br/>\n"
@@ -265,16 +265,16 @@ msgstr ""
 "            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
 "                ${'nhận %s %s miễn phí' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name)}\n"
 "            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">đối với đơn hàng tiếp theo của bạn</strong><br/>\n"
+"            <strong style=\"font-size: 24px;\">trên đơn hàng tiếp theo của bạn</strong><br/>\n"
 "        % elif object.program_id.reward_type == 'free_shipping':\n"
 "            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
-"                nhận miễn phí giao hàng\n"
+"                nhận miễn phí vận chuyển\n"
 "            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">đối với đơn hàng tiếp theo của bạn</strong><br/>\n"
+"            <strong style=\"font-size: 24px;\">trên đơn hàng tiếp theo của bạn</strong><br/>\n"
 "        % endif\n"
 "    </td></tr>\n"
 "    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        Sử dụng mã giảm giá này\n"
+"        Sử dụng mã khuyến mãi này\n"
 "        % if object.expiration_date:\n"
 "            trước ${object.expiration_date}\n"
 "        % endif\n"
@@ -285,7 +285,7 @@ msgstr ""
 "        </p>\n"
 "        % if object.program_id.rule_min_quantity not in [0, 1]\n"
 "        <span style=\"font-size: 14px;\">\n"
-"            Mua tối thiểu ${object.program_id.rule_min_quantity} các sản phẩm\n"
+"            Số tiền mua tối thiểu ${object.program_id.rule_min_quantity} các sản phẩm\n"
 "        </span><br/>\n"
 "        % endif\n"
 "        % if object.program_id.rule_minimum_amount != 0.00\n"
@@ -299,7 +299,7 @@ msgstr ""
 "        </span><br/>\n"
 "        % endif\n"
 "        <br/>\n"
-"        Cảm ơn,\n"
+"        Xin cảm ơn,\n"
 "        <br/>\n"
 "        % if object.order_id.user_id:\n"
 "            ${object.order_id.user_id.signature | safe}\n"
@@ -319,12 +319,12 @@ msgstr "Một phiếu giảm giá đã được áp dụng cho cùng một phầ
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
 #, python-format
 msgid "A minimum of %s %s should be purchased to get the reward"
-msgstr "Tối thiểu %s %s cần mua để nhận thưởng"
+msgstr "Giá trị tối thiểu %s %s nên mua để nhận phần thưởng"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__active
 msgid "A program is available for the customers when active"
-msgstr "Một chương trình có sẵn cho khách hàng khi hoạt động"
+msgstr "Một chương trình khả dụng cho khách hàng khi kích hoạt"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__promo_code
@@ -332,10 +332,10 @@ msgid ""
 "A promotion code is a code that is associated with a marketing discount. For"
 " example, a retailer might tell frequent customers to enter the promotion "
 "code 'THX001' to receive a 10%% discount on their whole order."
-msgstr ""
-"Mã khuyến mại là mã được kết hợp với chiết khấu tiếp thị. Ví dụ, "
-"Một nhà bán lẻ có thể yêu cầu khách hàng nhập mã giảm giá 'THX001' để nhận 10%% "
-"chiết khấu cho toàn bộ đơn hàng của họ."
+msgstr ""               
+"Một mã khuyến mãi là mã được kết hợp với một chiết khấu."
+" Ví dụ: một đơn vị bán lẻ có thể yêu cầu khách hàng thân thiết nhập mã khuyến mãi 'THX001' để được giảm giá 10 %% cho toàn bộ "
+"đơn đặt hàng của họ."
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__program_type
@@ -347,12 +347,12 @@ msgid ""
 "                A coupon program generates coupons with a code that can be used to generate a discount on the current\n"
 "                order or create a coupon for a next order."
 msgstr ""
-"Một chương trình khuyến mãi có thể là khuyến mãi có giới hạn không có mã (áp dụng tự động)\n"
-"                hoặc với một mã (ví dụ được hiển thị trên tạp chí) có thể tạo giảm giá cho đơn hàng hiện tại\n"
-"                hoặc tạo mã giảm giá cho đơn hàng tiếp theo.\n"
+"Chương trình khuyến mãi có thể là một khuyến mãi có giới hạn không có mã (áp dụng tự động)\n"
+"                hoặc với một mã (ví dụ được hiển thị trên tạp chí) có thể tạo ra giảm giá cho đơn đặt hàng hiện tại \n"
+"                hoặc tạo phiếu giảm giá cho đơn đặt hàng tiếp theo.\n"
 "\n"
-"                Chương trình khuyến mãi tạo phiếu khuyến mãi với mã có thể được sử dụng trên đơn hàng hiện tại\n"
-"                hoặc tạo mã giảm giá cho đơn hàng tiếp theo."
+"                Chương trình phiếu giảm giá tạo phiếu giảm giá với mã có thể được sử dụng để giảm giá cho đơn đặt hàng hiện tại \n"
+"                hoặc tạo phiếu giảm giá cho đơn hàng tiếp theo."
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__active
@@ -384,7 +384,7 @@ msgstr "Chương trình khuyến mãi áp dụng"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__sales_order_id
 msgid "Applied on order"
-msgstr "Áp dụng theo đơn hàng"
+msgstr "Áp dụng trên đơn hàng"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_order__promo_code
@@ -419,7 +419,7 @@ msgstr "Áp dụng phiếu giảm giá"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_form
 msgid "Apply on First"
-msgstr "Áp dụng cho lần đầu"
+msgstr "Áp dụng cho"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
@@ -446,9 +446,8 @@ msgid ""
 "Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulative)\n"
 "Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
 msgstr ""
-"Tự động áp dụng - Không cần mã, nếu đáp ứng các quy tắc của chương trình, phần thưởng sẽ được áp dụng "
-"(Ngoại trừ phần thưởng giảm giá toàn hệ thống hoặc phần thưởng miễn phí vận chuyển không được tích lũy)\n"
-"Sử dụng mã - Nếu đáp ứng các quy tắc của chương trình, thì bắt buộc phải có mã hợp lệ để áp dụng phần thưởng\n"
+"Tự động áp dụng - Không cần mã, nếu đáp ứng các quy tắc của chương trình, phần thưởng sẽ được áp dụng (Ngoại trừ phần thưởng giảm giá toàn cầu hoặc phần thưởng giao hàng miễn phí không cộng dồn)\n"
+"Sử dụng mã - Nếu các quy tắc của chương trình được đáp ứng, mã hợp lệ là bắt buộc để áp dụng phần thưởng\n"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
@@ -465,7 +464,7 @@ msgstr "Dựa trên khách hàng"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_products_domain
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_rule__rule_products_domain
 msgid "Based on Products"
-msgstr "Dựa trên các sản phẩm"
+msgstr "Dựa trên sản phẩm"
 
 #. module: sale_coupon
 #: model_terms:ir.actions.act_window,help:sale_coupon.sale_coupon_program_action_promo_program
@@ -473,8 +472,8 @@ msgid ""
 "Build up promotion programs to attract more customers with discounts, free products, free delivery, etc.\n"
 "                You can share promotion codes or grant the promotions automatically if some conditions are met."
 msgstr ""
-"Xây dựng các chương trình khuyến mãi để thu hút nhiều khách hàng hơn với chiết khấu, sản phẩm miễn phí, miễn phí vận chuyển, v.v\n"
-"                Bạn có thể chia sẻ mã khuyến mại hoặc tự động cấp các chương trình khuyến mại nếu đáp ứng một số điều kiện."
+"Xây dựng các chương trình khuyến mãi để thu hút nhiều khách hàng với chiết khấu, sản phẩm miễn phí, giao hàng miễn phí, v.v.\n"
+"                Bạn có thể chia sẻ mã khuyến mãi hoặc tự động cấp các chương trình khuyến mãi nếu đáp ứng một số điều kiện."
 
 #. module: sale_coupon
 #: model:sale.coupon.program,name:sale_coupon.3_cabinets_plus_1_free
@@ -565,7 +564,7 @@ msgstr "Chương trình phiếu khuyến mãi"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form
 msgid "Coupon Program Name..."
-msgstr "Tên chương trình phiếu khuyến mãi"
+msgstr "Tên chương trình phiếu khuyến mãi..."
 
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_coupon_program_action_coupon_program
@@ -577,19 +576,19 @@ msgstr "Chương trình phiếu giảm giá"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_id
 msgid "Coupon Rule"
-msgstr "Quy tắc phiếu khuyến mãi"
+msgstr "Quy tắc phiếu giảm giá"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__rule_date_to
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_rule__rule_date_to
 msgid "Coupon program end date"
-msgstr "Ngày kết thúc chương trình phiếu khuyến mãi"
+msgstr "Ngày kết thúc chương trình khuyến mãi"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__rule_date_from
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_rule__rule_date_from
 msgid "Coupon program start date"
-msgstr "Ngày bắt đầu chương trình phiếu khuyến mãi"
+msgstr "Ngày bắt đầu chương trình khuyến mãi"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__sequence
@@ -597,14 +596,14 @@ msgid ""
 "Coupon program will be applied based on given sequence if multiple programs "
 "are defined on same condition(For minimum amount)"
 msgstr ""
-"Chương trình khuyến mãi sẽ được áp dụng dựa trên trình tự đã cho nếu có nhiều chương trình "
-"được xác định với cùng một điều kiện (Đối với số tiền tối thiểu)"
+"Chương trình phiếu thưởng sẽ được áp dụng dựa trên trình tự nhất định nếu nhiều chương trình được xác định với cùng một điều kiện "
+"(Với số tiền tối thiểu)"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__rule_partners_domain
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_rule__rule_partners_domain
 msgid "Coupon program will work for selected customers only"
-msgstr "Chương trình khuyến mãi chỉ áp dụng với những khách hàng đã chọn"
+msgstr "Chương trình khuyến mãi sẽ chỉ áp dụng cho một số khách hàng được chọn"
 
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_coupon_action
@@ -676,9 +675,9 @@ msgid ""
 "Free Product - Free product will be provide as reward \n"
 "Free Shipping - Free shipping will be provided as reward (Need delivery module)"
 msgstr ""
-"Giảm giá - Phần thưởng sẽ được cung cấp dưới dạng chiết khấu.\n"
-"Miễn phí sản phẩm - Sản phẩm miễn phí sẽ được cung cấp dưới dạng phần thưởng \n"
-"Giao hàng miễn phí - Giao hàng miễn phí sẽ được cung cấp dưới dạng phần thưởng (Cần mô-đun giao hàng)"
+"Chiếu khấu - Phần thưởng sẽ được cung cấp dưới dạng chiết khấu.\n"
+"Sản phẩm miễn phí - Sản phẩm miễn phí sẽ được cung cấp như một phần thưởng \n"
+"Giao hàng miễn phí - Giao hàng miễn phí sẽ được cung cấp như một phần thưởng (Cần mô-đun giao hàng)"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__discount_apply_on
@@ -690,13 +689,13 @@ msgstr "Giảm giá áp dụng vào"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__discount_max_amount
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_reward__discount_max_amount
 msgid "Discount Max Amount"
-msgstr "Giảm số tiền tối đa"
+msgstr "Số tiền chiết khấu tối đa"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__discount_type
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_reward__discount_type
 msgid "Discount Type"
-msgstr "Loại giảm giá"
+msgstr "Loại chiết khấu"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_reward.py:0
@@ -748,7 +747,7 @@ msgstr "Đã hết hạn"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_search
 msgid "Expired Programs"
-msgstr "Các chương trình đã hết hạn"
+msgstr "Chương trình đã hết hạn"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__discount_fixed_amount
@@ -826,7 +825,8 @@ msgstr "Tạo phiếu giảm giá bán hàng"
 msgid ""
 "Generate and share coupon codes with your customers to get discounts or free"
 " products."
-msgstr "Tạo và chia sẻ mã phiếu giảm giá với khách hàng của bạn để khách hàng nhận được chiết khấu hoặc sản phẩm miễn phí."
+msgstr "Tạo và chia sẻ mã giảm giá với khách hàng của bạn để nhận được chiết khấu hoặc"
+" sản phẩm miễn phí."
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__coupon_ids
@@ -836,7 +836,7 @@ msgstr "Phiếu giảm giá đã tạo"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_generate__generation_type
 msgid "Generation Type"
-msgstr ""
+msgstr "Kiểu tạo"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:0
@@ -922,17 +922,17 @@ msgstr "Số lượng sử dụng tối đa"
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__discount_max_amount
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_reward__discount_max_amount
 msgid "Maximum amount of discount that can be provided"
-msgstr "Số tiền chiết khấu tối đa có thể được cung cấp"
+msgstr "Số tiền giảm giá tối đa có thể được cung cấp"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__maximum_use_number
 msgid "Maximum number of sales orders in which reward can be provided"
-msgstr "Số lượng đơn đặt hàng tối đa có thể cung cấp phần thưởng"
+msgstr "Số lượng đơn hàng bán tối đa mà phần thưởng có thể được cung cấp"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
 msgid "Minimum Purchase Of"
-msgstr "Mua tối thiểu"
+msgstr "Số tiền mua tối thiểu"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_min_quantity
@@ -943,7 +943,7 @@ msgstr "Số lượng tối thiểu"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "Minimum purchase of"
-msgstr "Mua tối thiểu"
+msgstr "Số tiền mua tối thiểu"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_rules.py:0
@@ -961,7 +961,7 @@ msgstr "Số lượng tối thiểu phải lớn hơn 0"
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__rule_minimum_amount
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_rule__rule_minimum_amount
 msgid "Minimum required amount to get the reward"
-msgstr "Số tiền yêu cầu tối thiểu để nhận phần thưởng"
+msgstr Số tiền yêu cầu tối thiểu để nhận phần thưởng"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__rule_min_quantity
@@ -998,22 +998,22 @@ msgstr "Số phiếu giảm giá"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "OFF ON %s"
-msgstr "KHÔNG ÁP DỤNG VỚI %s"
+msgstr "GIẢM GIÁ TRÊN %s"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "OFF ON SOME PRODUCTS*"
-msgstr "KHÔNG ÁP DỤNG VỚI MỘT SỐ SẢN PHẨM"
+msgstr "GIẢM GIÁ TRÊN MỘT SỐ SẢN PHẨM"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "OFF ON THE CHEAPEST PRODUCT"
-msgstr "KHÔNG ÁP DỤNG VỚI SẢN PHẨM RẺ NHẤT"
+msgstr "GIẢM GIÁ TRÊN SẢN PHẨM RẺ NHẤT"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "OFF ON YOUR NEXT ORDER!"
-msgstr "KHÔNG ÁP DỤNG VỚI ĐƠN HÀNG TIẾP THEO CỦA BẠN"
+msgstr "GIẢM GIÁ TRÊN ĐƠN HÀNG TIẾP THEO CỦA BẠN"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__generated_coupon_ids
@@ -1023,12 +1023,12 @@ msgstr "Phiếu giảm giá được đề nghị"
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_reward__discount_apply_on__cheapest_product
 msgid "On Cheapest Product"
-msgstr "Sản phẩm rẻ nhất"
+msgstr "Trên sản phẩm rẻ nhất"
 
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_reward__discount_apply_on__on_order
 msgid "On Order"
-msgstr "Đơn hàng"
+msgstr "Theo đơn đặt hàng"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__discount_apply_on
@@ -1038,8 +1038,8 @@ msgid ""
 "Cheapest product - Discount on cheapest product of the order\n"
 "Specific products - Discount on selected specific products"
 msgstr ""
-"Đơn hàng - Giảm giá trên toàn bộ đơn hàng\n"
-"Sản phẩm rẻ nhất - Giảm giá với sản phẩm rẻ nhất trên đơn hàng\n"
+"Theo đơn đặt hàng - Giảm giá cho toàn bộ đơn đặt hàng\n"
+"Sản phẩm rẻ nhất - Giảm giá cho sản phẩm rẻ nhất của đơn đặt hàng\n"
 "Sản phẩm cụ thể - Giảm giá cho các sản phẩm cụ thể đã chọn"
 
 #. module: sale_coupon
@@ -1051,19 +1051,19 @@ msgstr "Khi mua sản phẩm đã chọn, phần thưởng sẽ được trao"
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_reward__discount_apply_on__specific_products
 msgid "On Specific Products"
-msgstr "Các sản phẩm cụ thể"
+msgstr "Trên các sản phẩm cụ thể"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "On product with following tax: "
-msgstr "Đối với sản phẩm có thuế sau: "
+msgstr "Trên sản phẩm có thuế: "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "On product with following taxes: "
-msgstr "Đối với các sản phẩm có các thuế sau: "
+msgstr "Trên các sản phẩm có các thuế: "
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_search
@@ -1094,7 +1094,7 @@ msgid ""
 "Amount - Entered fixed amount discount will be provided"
 msgstr ""
 "Phần trăm - Phần trăm chiết khấu đã nhập sẽ được cung cấp\n"
-"Số tiền - Giảm giá số tiền cố định đã nhập sẽ được cung cấp"
+"Số tiền - Số tiền giảm giá cố định đã nhập sẽ được cung cấp"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon__discount_line_product_id
@@ -1108,8 +1108,8 @@ msgid ""
 "Product used in the sales order to apply the discount. Each coupon program "
 "has its own reward product for reporting purpose"
 msgstr ""
-"Sản phẩm dùng trong đơn hàng áp dụng chiết khấu. Mỗi chương trình phiếu giảm giá"
-"có sản phẩm thưởng riêng cho mục đích báo cáo"
+"Sản phẩm được sử dụng trong đơn đặt hàng để áp dụng chiết khấu. "
+"Mỗi chương trình phiếu thưởng có sản phẩm phần thưởng riêng cho mục đích báo cáo"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__discount_specific_product_ids
@@ -1123,7 +1123,9 @@ msgstr "Sản phẩm"
 msgid ""
 "Products that will be discounted if the discount is applied on specific "
 "products"
-msgstr "Các sản phẩm sẽ được giảm giá nếu chiết khấu được áp dụng cho các sản phẩm cụ thể"
+msgstr ""
+"Các sản phẩm sẽ được giảm giá nếu chiết khấu được áp dụng cho "
+"từng sản phẩm cụ thể"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__program_id
@@ -1138,7 +1140,7 @@ msgstr "Tên chương trình"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__program_type
 msgid "Program Type"
-msgstr "Loại chương trình"
+msgstr "Kiểu chương trình"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__promo_code_usage
@@ -1172,7 +1174,7 @@ msgstr "Mã khuyến mãi"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_form
 msgid "Promotion Program Name..."
-msgstr "Tên chương trình khuyến mại..."
+msgstr "Tên chương trình khuyến mãi..."
 
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_coupon_program_action_promo_program
@@ -1231,25 +1233,25 @@ msgstr "Mô tả phần thưởng"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__discount_line_product_id
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_reward__discount_line_product_id
 msgid "Reward Line Product"
-msgstr "Dòng sản phẩm thưởng"
+msgstr "Dòng phần thưởng sản phẩm"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__reward_product_id
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_reward__reward_product_id
 msgid "Reward Product"
-msgstr "Sản phẩm thưởng"
+msgstr "Phần thưởng sản phẩm"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__reward_type
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr "Loại phần thưởng"
+msgstr "Kiểu phần thưởng"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__reward_product_quantity
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_reward__reward_product_quantity
 msgid "Reward product quantity"
-msgstr "Số lượng sản phẩm thưởng"
+msgstr "Số lượng phần thưởng sản phẩm"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
@@ -1260,13 +1262,13 @@ msgstr "Phần thưởng"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_minimum_amount
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_rule__rule_minimum_amount
 msgid "Rule Minimum Amount"
-msgstr "Số tiền tối thiểu của quy tắc"
+msgstr "Quy tắc số tiền tối thiểu"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_minimum_amount_tax_inclusion
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_rule__rule_minimum_amount_tax_inclusion
 msgid "Rule Minimum Amount Tax Inclusion"
-msgstr "Quy tắc bao gồm số tiền thuế tối thiểu"
+msgstr "Quy tắc số tiền thuế tối thiểu"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
@@ -1338,7 +1340,7 @@ msgstr "Chọn sản phẩm"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
 msgid "Select products"
-msgstr "Chọn các sản phẩm"
+msgstr "Chọn nhiều sản phẩm"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
@@ -1500,7 +1502,7 @@ msgstr "Hợp lệ"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "Valid for purchase above"
-msgstr "Hợp lệ để mua trước"
+msgstr "Hợp lệ để mua ở trên"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
