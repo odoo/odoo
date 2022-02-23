@@ -1424,7 +1424,7 @@ class Website(models.Model):
 
         # As well as every snippet dropped in html fields
         self.env.cr.execute(sql.SQL(" UNION ").join(
-            sql.SQL('SELECT regexp_matches({}, {}) FROM {}').format(
+            sql.SQL("SELECT regexp_matches({}, {}, 'g') FROM {}").format(
                 sql.Identifier(column),
                 sql.Placeholder('snippet_regex'),
                 sql.Identifier(table)
@@ -1449,16 +1449,17 @@ class Website(models.Model):
 
         for snippet_module, snippet_id, asset_version, asset_type, _ in snippets_assets:
             is_snippet_used = self._is_snippet_used(snippet_module, snippet_id, asset_version, asset_type, html_fields)
-            filename_type = 'scss' if asset_type == 'css' else asset_type
-            assets_path = f'{snippet_id}/{asset_version}.{filename_type}'
+
+            # The regex catches XXX.scss, XXX.js and XXX_variables.scss
+            assets_regex = f'{snippet_id}/{asset_version}.+{asset_type}'
 
             # The query will also set to active or inactive assets overrides, as they
             # share the same snippet_id, asset_version and filename_type as their parents
             self.env.cr.execute("""
                 UPDATE ir_asset
                 SET active = %(active)s
-                WHERE path ~ %(assets_path)s
-            """, {"active": is_snippet_used, "assets_path": assets_path})
+                WHERE path ~ %(assets_regex)s
+            """, {"active": is_snippet_used, "assets_regex": assets_regex})
 
     def _search_build_domain(self, domain, search, fields, extra=None):
         """
