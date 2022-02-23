@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.image.comparison.modal">
+        <div role="dialog" class="modal o_technical_modal fade s_lightbox p-0">
+            <div class="modal-dialog m-0">
+                <div class="modal-content bg-transparent">
+                    <main class="modal-body bg-transparent" style="height:100vh;">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 10px; top: 10px;"></button>
+                        <section class="s_image_comparison" style="height: 100%; width:fit-content; max-width:80%; margin:0 auto;">
+                            <figure class="figure" style="height: auto;">
+                                <t t-foreach="images" t-as="image">
+                                    <img t-att-class="image.className" t-att-src="image.src" t-att-alt="image.alt" t-att-title="image.title" style="max-height: 95vh;"/>
+                                </t>
+                                <input type="range" min="0" max="100" value="50"/>
+                                <div class="o_description o_right_description">
+                                    <span class="o_default_snippet_text"><t t-esc="descriptions[0]"/></span>
+                                </div>
+                                <div class="o_description o_left_description">
+                                    <span class="o_default_snippet_text"><t t-esc="descriptions[1]"/></span>
+                                </div>
+                            </figure>
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

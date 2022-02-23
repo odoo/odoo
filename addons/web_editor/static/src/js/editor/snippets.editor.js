@@ -2954,6 +2954,9 @@ var SnippetsMenu = Widget.extend({
         }
 
         return Promise.resolve(def).then(function (parentEditor) {
+            if ($snippet[0].closest('.o_not_customizable')) {
+                return;
+            }
             // When reaching this position, after the Promise resolution, the
             // snippet editor instance might have been created by another call
             // to _createSnippetEditor... the whole logic should be improved
