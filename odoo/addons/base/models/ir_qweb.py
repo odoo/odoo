@@ -772,7 +772,7 @@ class IrQWeb(models.AbstractModel):
         :rtype: Tuple[Union[etree, str], Optional[str, int]]
         """
         IrUIView = self.env['ir.ui.view'].sudo()
-        view = IrUIView._get_view(ref)
+        view = IrUIView._get(ref)
         template = IrUIView._read_template(view.id)
         etree_view = etree.fromstring(template)
 

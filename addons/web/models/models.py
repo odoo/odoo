@@ -237,15 +237,15 @@ class Base(models.AbstractModel):
             })
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        r = super().fields_view_get(view_id, view_type, toolbar, submenu)
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
         # avoid leaking the raw (un-rendered) template, also avoids bloating
         # the response payload for no reason. Only send the root node,
         # to send attributes such as `js_class`.
-        if r['type'] == 'qweb':
-            root = etree.fromstring(r['arch'])
-            r['arch'] = etree.tostring(etree.Element('qweb', root.attrib))
-        return r
+        if view_type == 'qweb':
+            root = arch
+            arch = etree.Element('qweb', root.attrib)
+        return arch, view
 
     @api.model
     def _search_panel_field_image(self, field_name, **kwargs):
