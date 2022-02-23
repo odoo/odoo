@@ -319,11 +319,11 @@ class AccountMoveLine(models.Model):
                     sub.src_line_id,
 
                     ROUND(
-                        COALESCE(sub.total_tax_amount * ABS(sub.cumulated_base_amount) / ABS(NULLIF(sub.total_base_amount, 0.0)), 0.0),
+                        COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
                         sub.comp_curr_prec
                     )
                     - LAG(ROUND(
-                        COALESCE(sub.total_tax_amount * ABS(sub.cumulated_base_amount) / ABS(NULLIF(sub.total_base_amount, 0.0)), 0.0),
+                        COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
                         sub.comp_curr_prec
                     ), 1, 0.0)
                     OVER (
@@ -331,11 +331,11 @@ class AccountMoveLine(models.Model):
                     ) AS base_amount,
 
                     ROUND(
-                        COALESCE(sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / ABS(NULLIF(sub.total_base_amount_currency, 0.0)), 0.0),
+                        COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
                         sub.curr_prec
                     )
                     - LAG(ROUND(
-                        COALESCE(sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / ABS(NULLIF(sub.total_base_amount_currency, 0.0)), 0.0),
+                        COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
                         sub.curr_prec
                     ), 1, 0.0)
                     OVER (
@@ -459,11 +459,11 @@ class AccountMoveLine(models.Model):
 
                 sub.base_amount,
                 ROUND(
-                    COALESCE(sub.total_tax_amount * ABS(sub.cumulated_base_amount) / ABS(NULLIF(sub.total_base_amount, 0.0)), 0.0),
+                    COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
                     sub.comp_curr_prec
                 )
                 - LAG(ROUND(
-                    COALESCE(sub.total_tax_amount * ABS(sub.cumulated_base_amount) / ABS(NULLIF(sub.total_base_amount, 0.0)), 0.0),
+                    COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
                     sub.comp_curr_prec
                 ), 1, 0.0)
                 OVER (
@@ -472,11 +472,11 @@ class AccountMoveLine(models.Model):
 
                 sub.base_amount_currency,
                 ROUND(
-                    COALESCE(sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / ABS(NULLIF(sub.total_base_amount_currency, 0.0)), 0.0),
+                    COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
                     sub.curr_prec
                 )
                 - LAG(ROUND(
-                    COALESCE(sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / ABS(NULLIF(sub.total_base_amount_currency, 0.0)), 0.0),
+                    COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
                     sub.curr_prec
                 ), 1, 0.0)
                 OVER (
