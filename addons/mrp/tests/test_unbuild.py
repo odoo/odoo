@@ -631,3 +631,59 @@ class TestUnbuild(TestMrpCommon):
         uo = uo_form.save()
         uo.action_unbuild()
         self.assertEqual(uo.state, 'done')
+
+    def test_unbuild_similar_tracked_components(self):
+        """
+        Suppose a MO with, in the components, two lines for the same tracked-by-usn product
+        When unbuilding such an MO, all SN used in the MO should be back in stock
+        """
+        compo, finished = self.env['product.product'].create([{
+            'name': 'compo',
+            'type': 'product',
+            'tracking': 'serial',
+        }, {
+            'name': 'finished',
+            'type': 'product',
+        }])
+
+        lot01, lot02 = self.env['stock.lot'].create([{
+            'name': n,
+            'product_id': compo.id,
+            'company_id': self.env.company.id,
+        } for n in ['lot01', 'lot02']])
+        self.env['stock.quant']._update_available_quantity(compo, self.stock_location, 1, lot_id=lot01)
+        self.env['stock.quant']._update_available_quantity(compo, self.stock_location, 1, lot_id=lot02)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = compo
+            line.product_uom_qty = 1
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = compo
+            line.product_uom_qty = 1
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        mo.action_assign()
+
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 1
+        details_operation_form.save()
+        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 1
+        details_operation_form.save()
+        mo.button_mark_done()
+
+        uo_form = Form(self.env['mrp.unbuild'])
+        uo_form.mo_id = mo
+        uo_form.product_qty = 1
+        uo = uo_form.save()
+        uo.action_unbuild()
+
+        self.assertEqual(uo.produce_line_ids.filtered(lambda sm: sm.product_id == compo).lot_ids, lot01 + lot02)
