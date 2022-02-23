@@ -36,7 +36,7 @@ class TaxAdjustments(models.TransientModel):
         for record in self:
             fiscal_position_country_ids = record.env['account.fiscal.position'].search(
                 [('company_id', '=', record.journal_id.company_id.id), ('foreign_vat', '!=', False)]).country_id
-            record.fiscal_country_ids = record.journal_id.company_id.country_id + fiscal_position_country_ids
+            record.fiscal_country_ids = record.journal_id.company_id.account_fiscal_country_id + fiscal_position_country_ids
 
     def create_move(self):
         move_line_vals = []
