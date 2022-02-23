@@ -1428,7 +1428,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def fields_get_keys(self):
         warnings.warn(
-            'fields_get_keys() method is deprecated, use `_fields` or `fields_view_get` instead',
+            'fields_get_keys() method is deprecated, use `_fields` or `get_views` instead',
             DeprecationWarning
         )
         return list(self._fields)
@@ -1606,7 +1606,7 @@ class BaseModel(metaclass=MetaModel):
         return view
 
     @api.model
-    def load_views(self, views, options=None):
+    def get_views(self, views, options=None):
         """ Returns the fields_views of given views, along with the fields of
         the current model, and optionally its filters for the given action.
 
@@ -1626,27 +1626,40 @@ class BaseModel(metaclass=MetaModel):
         options = options or {}
         result = {}
 
-        toolbar = options.get('toolbar')
-        result['fields_views'] = {
-            v_type: self.fields_view_get(v_id, v_type if v_type != 'list' else 'tree',
-                                         toolbar=toolbar if v_type != 'search' else False)
+        result['views'] = {
+            v_type: self.get_view(
+                v_id, v_type if v_type != 'list' else 'tree',
+                **options
+            )
             for [v_id, v_type] in views
         }
-        result['fields'] = self.fields_get()
+        models = set(model for info in result['views'].values() for model in info.pop('models'))
 
-        if options.get('load_filters'):
-            result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
-
+        result['models'] = {model: self.env[model].fields_get() for model in models}
 
         return result
 
     @api.model
-    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def _get_view(self, view_id=None, view_type='form', **options):
+        """_get_view([view_id | view_type='form'])
+
+        Get the model view combined architecture (the view along all its inheriting views).
+
+        :param int view_id: id of the view or None
+        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
+        :param dict options: bool options to return additional features:
+            - bool load_filters: returns the model's filters (for search views)
+            - bool mobile: true if the web client is currently using the responsive mobile view
+              (to use kanban views instead of list views for x2many fields)
+            - bool toolbar: true to include contextual actions
+        :return: architecture of the view as an etree node, and the browse record of the view used
+        :rtype: tuple
+        :raise AttributeError:
+
+            * if no view exists for that model, and no method `_get_default_[view_type]_view` exists for the view type
+
+        """
         View = self.env['ir.ui.view'].sudo()
-        result = {
-            'model': self._name,
-            'field_parent': False,
-        }
 
         # try to find a view_id if none provided
         if not view_id:
@@ -1654,6 +1667,11 @@ class BaseModel(metaclass=MetaModel):
             view_ref_key = view_type + '_view_ref'
             view_ref = self._context.get(view_ref_key)
             if view_ref:
+                # Do not propagate <view_type>_view_ref
+                # so these context keys are not used when fetching the subviews of one2many/many2many fields
+                context = dict(self._context)
+                context.pop(view_ref_key)
+                View = View.with_context(context)
                 if '.' in view_ref:
                     module, view_ref = view_ref.split('.', 1)
                     query = "SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s"
@@ -1673,33 +1691,29 @@ class BaseModel(metaclass=MetaModel):
         if view_id:
             # read the view with inherited views applied
             view = View.browse(view_id)
-            result['arch'] = view.get_combined_arch()
-            result['name'] = view.name
-            result['type'] = view.type
-            result['view_id'] = view.id
-            result['field_parent'] = view.field_parent
-            result['base_model'] = view.model
+            arch = view._get_combined_arch()
         else:
             # fallback on default views methods if no ir.ui.view could be found
+            view = View.browse()
             try:
-                arch_etree = getattr(self, '_get_default_%s_view' % view_type)()
-                result['arch'] = etree.tostring(arch_etree, encoding='unicode')
-                result['type'] = view_type
-                result['name'] = 'default'
+                arch = getattr(self, '_get_default_%s_view' % view_type)()
             except AttributeError:
                 raise UserError(_("No default view of type '%s' could be found !", view_type))
-        return result
+        return arch, view
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        """ fields_view_get([view_id | view_type='form'])
+    def get_view(self, view_id=None, view_type='form', **options):
+        """ get_view([view_id | view_type='form'])
 
-        Get the detailed composition of the requested view like fields, model, view architecture
+        Get the detailed composition of the requested view like model, view architecture
 
         :param int view_id: id of the view or None
         :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
-        :param bool toolbar: true to include contextual actions
-        :param submenu: deprecated
+        :param dict options: bool options to return additional features:
+            - bool load_filters: returns the model's filters (for search views)
+            - bool mobile: true if the web client is currently using the responsive mobile view
+              (to use kanban views instead of list views for x2many fields)
+            - bool toolbar: true to include contextual actions
         :return: composition of the requested view (including inherited views and extensions)
         :rtype: dict
         :raise AttributeError:
@@ -1710,22 +1724,28 @@ class BaseModel(metaclass=MetaModel):
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc... defined on the structure
         """
         self.check_access_rights('read')
-        view = self.env['ir.ui.view'].sudo().browse(view_id)
 
         # Get the view arch and all other attributes describing the composition of the view
-        result = self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        arch, view = self._get_view(view_id, view_type, **options)
 
         # Override context for postprocessing
-        if view_id and result.get('base_model', self._name) != self._name:
-            view = view.with_context(base_model_name=result['base_model'])
+        if view and (view.model or self._name) != self._name:
+            view = view.with_context(base_model_name=view.model)
 
         # Apply post processing, groups and modifiers etc...
-        xarch, xfields = view.postprocess_and_fields(etree.fromstring(result['arch']), model=self._name)
-        result['arch'] = xarch
-        result['fields'] = xfields
+        arch, models = view.postprocess_and_fields(arch, model=self._name, **options)
+        result = {
+            'arch': arch,
+            # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
+            'id': view.id,
+            # TODO: only `web_studio` seems to require this. But this one on the other hand should be eliminated:
+            # you just called `get_views` for that model, so obviously the web client already knows the model.
+            'model': self._name,
+            'models': models,
+        }
 
         # Add related action information if asked
-        if toolbar:
+        if options.get('toolbar') and view_type != 'search':
             vt = 'list' if view_type == 'tree' else view_type
             bindings = self.env['ir.actions.actions'].get_bindings(self._name)
             resreport = [action
@@ -1739,6 +1759,56 @@ class BaseModel(metaclass=MetaModel):
                 'print': resreport,
                 'action': resaction,
             }
+
+        if options.get('load_filters') and view_type == 'search':
+            result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
+
+        return result
+
+    @api.model
+    def load_views(self, views, options=None):
+        warnings.warn('`load_views` method is deprecated, use `get_views` instead', DeprecationWarning)
+        return self.get_views(views, options=options)
+
+    @api.model
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        warnings.warn('Method `_fields_view_get` is deprecated, use `_get_view` instead', DeprecationWarning)
+        arch, view = self._get_view(view_id, view_type, toolbar=toolbar, submenu=submenu)
+        result = {
+            'arch': etree.tostring(arch, encoding='unicode'),
+            'model': self._name,
+            'field_parent': False,
+        }
+        if view:
+            result['name'] = view.name
+            result['type'] = view.type
+            result['view_id'] = view.id
+            result['field_parent'] = view.field_parent
+            result['base_model'] = view.model
+        else:
+            result['type'] = view_type
+            result['name'] = 'default'
+        return result
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        warnings.warn('Method `fields_view_get` is deprecated, use `get_view` instead', DeprecationWarning)
+        result = self.get_view(view_id, view_type, toolbar=toolbar, submenu=submenu)
+        node = etree.fromstring(result['arch'])
+        view_fields = set(el.get('name') for el in node.xpath('.//field[not(ancestor::field)]'))
+        result['fields'] = self.fields_get(view_fields)
+        result.pop('models', None)
+        if 'id' in result:
+            view = self.env['ir.ui.view'].sudo(result.pop('id'))
+            result['name'] = view.name
+            result['type'] = view.type
+            result['view_id'] = view.id
+            result['field_parent'] = view.field_parent
+            result['base_model'] = view.model
+        else:
+            result['type'] = view_type
+            result['name'] = 'default'
+            result['field_parent'] = False
         return result
 
     def get_formview_id(self, access_uid=None):
@@ -6223,7 +6293,7 @@ Fields:
     @api.model
     def _onchange_spec(self, view_info=None):
         """ Return the onchange spec from a view description; if not given, the
-            result of ``self.fields_view_get()`` is used.
+            result of ``self.get_view()`` is used.
         """
         result = {}
 
@@ -6235,14 +6305,14 @@ Fields:
                 if not result.get(names):
                     result[names] = node.attrib.get('on_change')
                 # traverse the subviews included in relational fields
-                for subinfo in info['fields'][name].get('views', {}).values():
-                    process(etree.fromstring(subinfo['arch']), subinfo, names)
+                for child_view in node.xpath("./*[descendant::field]"):
+                    process(child_view, None, names)
             else:
                 for child in node:
                     process(child, info, prefix)
 
         if view_info is None:
-            view_info = self.fields_view_get()
+            view_info = self.get_view()
         process(etree.fromstring(view_info['arch']), view_info, '')
         return result
 
