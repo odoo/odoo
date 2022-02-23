@@ -156,7 +156,7 @@ class SaleOrder(models.Model):
 
         for order in self:
             if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
-                self.sale_order_template_id.mail_template_id.send_mail(order.id)
+                order.sale_order_template_id.mail_template_id.send_mail(order.id)
         return res
 
     def get_access_action(self, access_uid=None):
