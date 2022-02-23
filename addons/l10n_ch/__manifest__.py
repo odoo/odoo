@@ -36,6 +36,7 @@ Here is how it works:
     'depends': ['account', 'l10n_multilang', 'base_iban', 'l10n_din5008'],
 
     'data': [
+        'security/ir.model.access.csv',
         'data/l10n_ch_chart_data.xml',
         'data/account.account.template.csv',
         'data/l10n_ch_chart_post_data.xml',
@@ -50,6 +51,7 @@ Here is how it works:
         'views/account_invoice_view.xml',
         'views/res_config_settings_views.xml',
         'views/setup_wizard_views.xml',
+        'views/qr_invoice_wizard_view.xml'
     ],
 
     'demo': [

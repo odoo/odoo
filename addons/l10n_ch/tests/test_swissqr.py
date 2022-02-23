@@ -3,6 +3,7 @@
 import time
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 CH_IBAN = 'CH15 3881 5158 3845 3843 7'
@@ -164,8 +165,9 @@ class TestSwissQR(AccountTestInvoicingCommon):
     def test_swissQR_missing_bank(self):
         # Let us test the generation of a SwissQR for an invoice, first by showing an
         # QR is included in the invoice is only generated when Odoo has all the data it needs.
-        self.invoice1.action_post()
-        self.swissqr_not_generated(self.invoice1)
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.invoice1.action_post()
+            self.swissqr_not_generated(self.invoice1)
 
     def test_swissQR_iban(self):
         # Now we add an account for payment to our invoice

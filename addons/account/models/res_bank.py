@@ -151,7 +151,7 @@ class ResPartnerBank(models.Model):
         return [(code, name) for (code, name, sequence) in all_available]
 
 
-    def _eligible_for_qr_code(self, qr_method, debtor_partner, currency):
+    def _eligible_for_qr_code(self, qr_method, debtor_partner, currency, raises_error=True):
         """ Tells whether or not the criteria to apply QR-generation
         method qr_method are met for a payment on this account, in the
         given currency, by debtor_partner. This does not impeach generation errors,

@@ -6,9 +6,8 @@ import re
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.addons.base_iban.models.res_partner_bank import normalize_iban, pretty_iban, validate_iban
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools.misc import mod10r
-
 
 ISR_SUBSCRIPTION_CODE = {'CHF': '01', 'EUR': '03'}
 CLEARING = "09000"
@@ -332,15 +331,23 @@ class ResPartnerBank(models.Model):
                and re.match('\d+$', reference) \
                and reference == mod10r(reference[:-1])
 
-    def _eligible_for_qr_code(self, qr_method, debtor_partner, currency):
+    def _eligible_for_qr_code(self, qr_method, debtor_partner, currency, raises_error=True):
         if qr_method == 'ch_qr':
-
-            return self.acc_type == 'iban' and \
-                   self.partner_id.country_id.code == 'CH' and \
-                   (not debtor_partner or debtor_partner.country_id.code == 'CH') \
-                   and currency.name in ('EUR', 'CHF')
-
-        return super()._eligible_for_qr_code(qr_method, debtor_partner, currency)
+            error_messages = [_("The QR code could not be generated for the following reason(s):")]
+            if self.acc_type != 'iban':
+                error_messages.append(_("The account type isn't QR-IBAN."))
+            if self.partner_id.country_id.code != 'CH':
+                error_messages.append(_("Your company isn't located in Switzerland."))
+            if not debtor_partner or debtor_partner.country_id.code != 'CH':
+                error_messages.append(_("The debtor partner's address isn't located in Switzerland."))
+            if currency.id not in (self.env.ref('base.EUR').id, self.env.ref('base.CHF').id):
+                error_messages.append(_("The currency isn't EUR nor CHF. \r\n"))
+            if len(error_messages) != 1:
+                if raises_error:
+                    raise UserError(' '.join(error_messages))
+                return False
+            return True
+        return super()._eligible_for_qr_code(qr_method, debtor_partner, currency, raises_error)
 
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         def _partner_fields_set(partner):

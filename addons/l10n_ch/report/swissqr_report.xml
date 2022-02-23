@@ -10,7 +10,6 @@
             <field name="report_file">l10n_ch.qr_report_main</field>
             <field name="print_report_name">'QR-bill-%s' % object.name</field>
             <field name="paperformat_id" ref="l10n_ch.paperformat_euro_no_margin"/>
-            <field name="attachment">'QR-bill-' + object.name + '.pdf'</field>
         </record>
 
         <template id="l10n_ch_swissqr_template">
