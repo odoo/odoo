@@ -1631,6 +1631,65 @@ class TestOne2many(TransactionCase):
         ''']):
             self.Partner.search([('bank_ids', 'like', '12')])
 
+    def test_falsy_one2many(self):
+        # Partner without child
+        self.Partner.search([('child_ids', '=', False)])
+        # Partner having at least one child without child
+        self.Partner.search([('child_ids.child_ids', '=', False)])
+
+        '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM "res_partner" AS "sub_res_partner"
+                WHERE "res_partner"."id" = "sub_res_partner"."parent_id"
+            )
+            ORDER BY "res_partner"."display_name", "res_partner"."id"
+        '''
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" NOT IN (
+                SELECT "parent_id"
+                FROM "res_partner"
+                WHERE "parent_id" IS NOT NULL
+            ))
+            ORDER BY "res_partner"."display_name", "res_partner"."id"
+        ''']):
+            self.Partner.search([('child_ids', '=', False)])
+
+        '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE EXISTS (
+                SELECT 1
+                FROM "res_partner" AS "sub_res_partner"
+                WHERE "res_partner"."id" = "sub_res_partner"."parent_id"
+                AND NOT EXISTS(
+                    SELECT 1
+                    FROM "res_partner" AS "sub_sub_res_partner"
+                    WHERE "sub_res_partner"."id" = "sub_sub_res_partner"."parent_id"
+                )
+            )
+            ORDER BY "res_partner"."display_name", "res_partner"."id"
+        '''
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" IN (
+                SELECT "res_partner"."parent_id"
+                FROM "res_partner"
+                WHERE ("res_partner"."id" NOT IN (
+                    SELECT "parent_id"
+                    FROM "res_partner"
+                    WHERE "parent_id" IS NOT NULL
+                ))
+            ))
+            ORDER BY "res_partner"."display_name", "res_partner"."id"
+        ''']):
+            self.Partner.search([('child_ids.child_ids', '=', False)])
+
 
 class TestMany2many(TransactionCase):
     def setUp(self):
