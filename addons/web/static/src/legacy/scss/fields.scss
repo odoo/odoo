@@ -88,7 +88,7 @@
     }
 
     // Flex fields (inline)
-    &.o_field_many2one, &.o_field_radio > div, &.o_field_many2manytags, &.o_field_percent_pie, &.o_field_monetary, &.o_field_binary_file, &.o_field_float_percentage {
+    &.o_field_many2one, &.o_field_radio > div, &.o_field_many2many_tags, &.o_field_percent_pie, &.o_field_monetary, &.o_field_binary_file, &.o_field_float_percentage {
         display: inline-flex;
         > span, > button {
             flex: 0 0 auto;
@@ -159,7 +159,7 @@
     }
 
     // Many2many tags
-    &.o_field_many2manytags {
+    &.o_field_many2many_tags {
         flex-flow: row wrap;
         align-items: stretch;
         max-width: 100%;
@@ -299,7 +299,7 @@
                 }
             }
         }
-        &.o_field_many2manytags_multi {
+        &.o_field_many2many_tags_multi {
             margin-bottom: 0px;
             > span {
                 display: inline-block;

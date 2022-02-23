@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { getFixture } from "../helpers/utils";
-import { setupViewRegistries } from "../views/helpers";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 let target;
@@ -206,7 +206,7 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 17,
                             name: "Partner",
-                            model: "partner",
+                            resModel: "partner",
                         },
                         {
                             id: 20,
@@ -232,15 +232,15 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("fieldmany2many tags with and without color", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.fields.partner_ids = {
+        serverData.models.partner.fields.partner_ids = {
             string: "Partner",
             type: "many2many",
             relation: "partner",
         };
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="partner_ids" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
@@ -260,7 +260,6 @@ QUnit.module("Fields", (hooks) => {
                         "should read color field"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -296,17 +295,17 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(28);
 
-            this.data.partner.records[0].timmy = [12, 14];
-            this.data.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            serverData.models.partner.records[0].timmy = [12, 14];
+            serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
+            var form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_create_edit': True}\"/>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 mockRPC: function (route, args) {
                     if (route === "/web/dataset/call_kw/partner/write") {
                         var commands = args.args[1].timmy;
@@ -328,7 +327,6 @@ QUnit.module("Fields", (hooks) => {
                             "should read the color field"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
             assert.containsN(
@@ -475,11 +473,11 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("fieldmany2many tags in tree view", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.records[0].timmy = [12, 14];
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        serverData.models.partner.records[0].timmy = [12, 14];
+        var list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
             arch:
                 '<tree string="Partners">' +
                 '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
@@ -500,19 +498,19 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("fieldmany2many tags view a domain", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.fields.timmy.domain = [["id", "<", 50]];
-        this.data.partner.records[0].timmy = [12];
-        this.data.partner_type.records.push({ id: 99, display_name: "red", color: 8 });
+        serverData.models.partner.fields.timmy.domain = [["id", "<", 50]];
+        serverData.models.partner.records[0].timmy = [12];
+        serverData.models.partner_type.records.push({ id: 99, display_name: "red", color: 8 });
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy" widget="many2many_tags" options="{\'no_create_edit\': True}"/>' +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC: function (route, args) {
                 if (args.method === "name_search") {
                     assert.deepEqual(
@@ -525,7 +523,6 @@ QUnit.module("Fields", (hooks) => {
                     );
                     return Promise.resolve([[14, "silver"]]);
                 }
-                return this._super.apply(this, arguments);
             },
         });
         assert.containsOnce(form, ".o_field_many2manytags .badge", "should contain 1 tag");
@@ -562,10 +559,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("fieldmany2many tags in a new record", async function (assert) {
         assert.expect(7);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy" widget="many2many_tags"/>' +
@@ -581,7 +578,6 @@ QUnit.module("Fields", (hooks) => {
                     );
                     assert.ok(_.isEqual(commands[0][2], [12]), "new value should be [12]");
                 }
-                return this._super.apply(this, arguments);
             },
         });
         assert.hasClass(form.$(".o_form_view"), "o_form_editable", "form should be in edit mode");
@@ -608,14 +604,14 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("fieldmany2many tags: update color", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records[0].timmy = [12, 14];
-        this.data.partner_type.records[0].color = 0;
+        serverData.models.partner.records[0].timmy = [12, 14];
+        serverData.models.partner_type.records[0].color = 0;
 
         var color;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
@@ -624,9 +620,8 @@ QUnit.module("Fields", (hooks) => {
                 if (args.method === "write") {
                     assert.deepEqual(args.args[1], { color: color }, "shoud write the new color");
                 }
-                return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
         });
 
         // First checks that default color 0 is rendered as 0 color
@@ -668,17 +663,17 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("fieldmany2many tags with no_edit_color option", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].timmy = [12];
+        serverData.models.partner.records[0].timmy = [12];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_edit_color': 1}\"/>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         // Click to try to open colorpicker
@@ -691,12 +686,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("fieldmany2many tags in editable list", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.records[0].timmy = [12];
+        serverData.models.partner.records[0].timmy = [12];
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        var list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
             context: { take: "five" },
             arch:
                 '<tree editable="bottom">' +
@@ -711,7 +706,6 @@ QUnit.module("Fields", (hooks) => {
                         "The context should be passed to the RPC"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -754,7 +748,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("search more in many2one: group and use the pager", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records.push(
+        serverData.models.partner.records.push(
             {
                 id: 5,
                 display_name: "Partner 4",
@@ -780,11 +774,11 @@ QUnit.module("Fields", (hooks) => {
                 display_name: "Partner 9",
             }
         );
-        this.data.partner.fields.datetime.searchable = true;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.models.partner.fields.datetime.searchable = true;
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -794,7 +788,7 @@ QUnit.module("Fields", (hooks) => {
                 "</sheet>" +
                 "</form>",
 
-            res_id: 1,
+            resId: 1,
             archs: {
                 "partner,false,list": '<tree limit="7"><field name="display_name"/></tree>',
                 "partner,false,search":
@@ -832,25 +826,25 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("many2many_tags can load more than 40 records", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.partner_ids = {
+        serverData.models.partner.fields.partner_ids = {
             string: "Partner",
             type: "many2many",
             relation: "partner",
         };
-        this.data.partner.records[0].partner_ids = [];
+        serverData.models.partner.records[0].partner_ids = [];
         for (var i = 15; i < 115; i++) {
-            this.data.partner.records.push({ id: i, display_name: "walter" + i });
-            this.data.partner.records[0].partner_ids.push(i);
+            serverData.models.partner.records.push({ id: i, display_name: "walter" + i });
+            serverData.models.partner.records[0].partner_ids.push(i);
         }
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="partner_ids" widget="many2many_tags"/>' +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
         assert.containsN(
             form,
@@ -868,22 +862,22 @@ QUnit.module("Fields", (hooks) => {
 
             const M2M_LIMIT = relationalFields.FieldMany2ManyTags.prototype.limit;
             relationalFields.FieldMany2ManyTags.prototype.limit = 30;
-            this.data.partner.fields.partner_ids = {
+            serverData.models.partner.fields.partner_ids = {
                 string: "Partner",
                 type: "many2many",
                 relation: "partner",
             };
-            this.data.partner.records[0].partner_ids = [];
+            serverData.models.partner.records[0].partner_ids = [];
             for (var i = 15; i < 50; i++) {
-                this.data.partner.records.push({ id: i, display_name: "walter" + i });
-                this.data.partner.records[0].partner_ids.push(i);
+                serverData.models.partner.records.push({ id: i, display_name: "walter" + i });
+                serverData.models.partner.records[0].partner_ids.push(i);
             }
-            const form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
                 arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
-                res_id: 1,
+                resId: 1,
             });
 
             assert.strictEqual(
@@ -900,21 +894,21 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("field many2many_tags keeps focus when being edited", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.records[0].timmy = [12];
-        this.data.partner.onchanges.foo = function (obj) {
+        serverData.models.partner.records[0].timmy = [12];
+        serverData.models.partner.onchanges.foo = function (obj) {
             obj.timmy = [[5]]; // DELETE command
         };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="foo"/>' +
                 '<field name="timmy" widget="many2many_tags"/>' +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         await testUtils.form.clickEdit(form);
@@ -958,10 +952,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(4);
         this.data.turtle.records[0].partner_ids = [2];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -980,7 +974,7 @@ QUnit.module("Fields", (hooks) => {
             archs: {
                 "partner,false,list": '<tree><field name="foo"/></tree>',
             },
-            res_id: 1,
+            resId: 1,
         });
 
         assert.strictEqual(
@@ -1037,10 +1031,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(1);
         this.data.turtle.records[0].partner_ids = [2];
 
-        var form = await createView({
-            View: FormView,
+        var form = await makeView({
+            type: "form",
             model: "turtle",
-            data: this.data,
+            serverData,
             arch:
                 '<form string="Turtles">' +
                 "<sheet>" +
@@ -1048,7 +1042,7 @@ QUnit.module("Fields", (hooks) => {
                 '<field name="partner_ids" widget="many2many_tags"/>' +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.deepEqual(
@@ -1065,18 +1059,18 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(11);
 
-            this.data.partner.records[0].timmy = [12];
-            this.data.partner_type.records[0].color = 0;
+            serverData.models.partner.records[0].timmy = [12];
+            serverData.models.partner_type.records[0].color = 0;
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            var form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -1158,17 +1152,17 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("widget many2many_tags_avatar", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
+        var form = await makeView({
+            type: "form",
             model: "turtle",
-            data: this.data,
+            serverData,
             arch:
                 "<form>" +
                 "<sheet>" +
                 '<field name="partner_ids" widget="many2many_tags_avatar"/>' +
                 "</sheet>" +
                 "</form>",
-            res_id: 2,
+            resId: 2,
         });
 
         assert.containsN(
@@ -1196,7 +1190,7 @@ QUnit.module("Fields", (hooks) => {
                 display_name: `record ${id}`,
             });
         }
-        this.data.partner.records = this.data.partner.records.concat(records);
+        serverData.models.partner.records = serverData.models.partner.records.concat(records);
 
         this.data.turtle.records.push({
             id: 4,
@@ -1209,10 +1203,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.turtle.records[1].partner_ids = [1, 2, 4, 5, 6, 7];
         this.data.turtle.records[2].partner_ids = [1, 2, 4, 5, 7];
 
-        const list = await createView({
-            View: ListView,
+        const list = await makeView({
+            type: "list",
             model: "turtle",
-            data: this.data,
+            serverData,
             arch:
                 '<tree editable="bottom"><field name="partner_ids" widget="many2many_tags_avatar"/></tree>',
         });
@@ -1337,7 +1331,7 @@ QUnit.module("Fields", (hooks) => {
                 display_name: `record ${id}`,
             });
         }
-        this.data.partner.records = this.data.partner.records.concat(records);
+        serverData.models.partner.records = serverData.models.partner.records.concat(records);
 
         this.data.turtle.records.push({
             id: 4,
@@ -1350,10 +1344,10 @@ QUnit.module("Fields", (hooks) => {
         this.data.turtle.records[1].partner_ids = [1, 2, 4];
         this.data.turtle.records[2].partner_ids = [1, 2, 4, 5];
 
-        const kanban = await createView({
+        const kanban = await makeView({
             View: KanbanView,
             model: "turtle",
-            data: this.data,
+            serverData,
             arch: `
                 <kanban>
                     <templates>
@@ -1376,13 +1370,13 @@ QUnit.module("Fields", (hooks) => {
             },
             intercepts: {
                 switch_view: function (event) {
-                    const { mode, model, res_id, view_type } = event.data;
+                    const { mode, model, resId, view_type } = event.data;
                     assert.deepEqual(
-                        { mode, model, res_id, view_type },
+                        { mode, model, resId, view_type },
                         {
                             mode: "readonly",
                             model: "turtle",
-                            res_id: 1,
+                            resId: 1,
                             view_type: "form",
                         },
                         "should trigger an event to open the clicked record in a form view"
@@ -1481,10 +1475,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("fieldmany2many tags: quick create a new record", async function (assert) {
         assert.expect(3);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
         });
 
@@ -1507,10 +1501,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("select a many2many value by focusing out", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
         });
 
