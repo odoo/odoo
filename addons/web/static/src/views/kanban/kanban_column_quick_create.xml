@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanColumnQuickCreate" owl="1">
+        <div class="o_column_quick_create" t-ref="root">
+            <div t-if="props.folded" class="o_quick_create_folded" t-on-click="unfold">
+                <span class="o_kanban_add_column">
+                    <i class="fa fa-plus" role="img" aria-label="Add column" title="Add column" />
+                </span>
+                <span class="o_kanban_title">Add a Column</span>
+            </div>
+            <div t-else="" class="o_quick_create_unfolded">
+                <div class="o_kanban_header">
+                    <div class="input-group">
+                        <input type="text"
+                            class="form-control o_input"
+                            placeholder="Column title"
+                            t-ref="autofocus"
+                            t-model.trim="state.columnTitle"
+                            t-on-focus="() => state.hasInputFocused = true"
+                            t-on-blur="() => state.hasInputFocused = false"
+                        />
+                        <span class="input-group-append">
+                            <button class="btn btn-primary o_kanban_add" type="button" t-on-click="validate">
+                                Add
+                            </button>
+                        </span>
+                    </div>
+                    <span t-if="state.hasInputFocused" class="o_discard_msg text-muted float-right">
+                        Esc to discard
+                    </span>
+                    <t t-if="props.exampleData and !env.isSmall">
+                        <button type="button" class="btn btn-link o_kanban_examples" t-on-click="showExamples">See examples</button>
+                    </t>
+                </div>
+                <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record" />
+            </div>
+        </div>
+    </t>
+
+    <!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
+    <t t-name="web.KanbanColumnExamplesDialog" owl="1">
+        <div class="o_kanban_examples_dialog_nav">
+            <ul class="nav nav-pills flex-column" t-ref="navList">
+                <li t-foreach="props.examples" t-as="example" t-key="example_index" class="nav-item">
+                    <a t-attf-aria-controls="example_{{example_index}}" data-toggle="tab" role="tab" t-att-data-example-index="example_index" t-attf-href="#example_{{example_index}}" t-attf-class="nav-link{{example_index == 0 and ' active' or ''}}" t-esc="example.name"/>
+                </li>
+            </ul>
+        </div>
+        <div class="o_kanban_examples_dialog_content">
+            <div class="tab-content">
+                <div t-foreach="props.examples" t-as="example" t-key="example_index" role="tabpanel" t-attf-id="example_{{example_index}}" t-attf-class="tab-pane {{example_index == 0 and 'active in' or ''}}">
+                    <div t-if="example.description" class="o_kanban_examples_description" t-out="example.description"/>
+                    <div class="o_kanban_examples">
+                        <t t-foreach="example.columns" t-as="column" t-key="column">
+                            <div class="o_kanban_examples_group">
+                                <h6><b t-esc="column"/></h6>
+                                <div t-foreach="random(1,4)" t-as="num" t-key="num_index" class="o_kanban_examples_ghost">
+                                    <div class="o_ghost_content"/>
+                                    <div class="o_ghost_content o_ghost_tag"/>
+                                    <!-- FIXME WOWL random(0, 5 and _.sample) -->
+                                    <t t-if="example.bullets and random(0, 5) > 3" t-out="_.sample(example.bullets)"/>
+                                    <img class="float-right o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="web.KanbanColumnExamplesDialogFooter" owl="1">
+        <button class="btn btn-primary" t-on-click="applyExamples" t-esc="props.applyExamplesText"/>
+        <button class="btn btn-secondary" t-on-click="close">Close</button>
+    </t>
+
+</templates>

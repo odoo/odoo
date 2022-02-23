@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanRecordQuickCreate" owl="1">
+        <div
+            class="o_kanban_quick_create"
+            t-att-class="{ o_disabled: state.disabled }"
+            t-ref="root"
+        >
+            <FormRenderer class="'o_form_view o_xxs_form_view'" record="props.record" fields="props.fields" info="props.info" />
+            <div class="d-flex">
+                <button class="btn btn-primary o_kanban_add mr-1 text_truncate" t-on-click="() => this.validate('add')">
+                    Add
+                </button>
+                <button class="btn btn-primary o_kanban_edit mr-1 text_truncate" t-on-click="() => this.validate('edit')">
+                    Edit
+                </button>
+                <button class="btn btn-secondary o_kanban_cancel ml-auto" t-on-click="() => this.cancel(true)">
+                    <i class="fa fa-trash" />
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

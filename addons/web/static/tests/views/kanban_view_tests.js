@@ -2101,7 +2101,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(
             target,
             ".o_kanban_quick_create",
-            "the quick create should be destroyed when the user clicks outside"
+            "the quick create should be destroyed when the user discard quick creation"
         );
 
         assert.containsOnce(
