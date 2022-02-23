@@ -382,6 +382,10 @@ class ProductTemplate(models.Model):
             return self.website_ribbon_id
         return self.product_tag_ids.ribbon_id[:1] or self.product_variant_ids.additional_product_tag_ids.ribbon_id[:1]
 
+    @api.model
+    def _get_alternative_product_filter(self):
+        return self.env.ref('website_sale.dynamic_filter_cross_selling_alternative_products').id
+
     # ---------------------------------------------------------
     # Rating Mixin API
     # ---------------------------------------------------------

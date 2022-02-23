@@ -2,7 +2,6 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     'use strict';
 
     var tour = require('web_tour.tour');
-    var rpc = require('web.rpc');
     const tourUtils = require('website_sale.tour_utils');
 
     tour.register('product_comparison', {
@@ -164,80 +163,6 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     {
         content: "check product correctly added to cart",
         trigger: '#cart_products:contains("Conference Chair") .js_quantity[value="1"]',
-        run: function () {},
-    },
-    // test advanced configuration and alternative product
-    {
-        content: "create product with newly created attribute and its values and set alternative product",
-        trigger: 'body',
-        run: function () {
-            rpc.query({
-                model: 'product.attribute',
-                method: 'create',
-                args: [{
-                    'name': 'color',
-                    'display_type': 'color',
-                    'create_variant': 'dynamic',
-                }],
-            }).then(function (attributeId) {
-                rpc.query({
-                    model: 'product.template',
-                    method: 'create',
-                    args: [{
-                        'name': 'Basic Chair',
-                        'is_published': true,
-                        'attribute_line_ids': [[0, 0, {
-                            'attribute_id': attributeId,
-                            'value_ids': [
-                                [0, 0, {'name': 'red', 'attribute_id': attributeId, 'sequence': 1}],
-                                [0, 0, {'name': 'blue', 'attribute_id': attributeId, 'sequence': 2}],
-                            ],
-                        }]],
-                    }],
-                }).then(function (productId) {
-                    rpc.query({
-                        model: 'product.template',
-                        method: 'create',
-                        args: [{
-                            'name': 'Classic Chair',
-                            'is_published': true,
-                            'attribute_line_ids': [[0, 0, {
-                                'attribute_id': attributeId,
-                                'value_ids': [
-                                    [0, 0, {'name': 'green', 'attribute_id': attributeId, 'sequence': 3}],
-                                    [0, 0, {'name': 'yellow', 'attribute_id': attributeId, 'sequence': 4}],
-                                ],
-                            }]],
-                            'alternative_product_ids': [[6, 0, [productId]]],
-                        }],
-                    }).then(function () {
-                        window.location.href = '/shop?search=Classic Chair';
-                    });
-                });
-            });
-        },
-    },
-    {
-        content: "click on product",
-        trigger: '.oe_product_cart a:contains("Classic Chair")',
-    },
-    {
-        content: "click on compare button",
-        trigger: '.btn.btn-primary:not(.btn-block):contains("Compare")',
-    },
-    {
-        content: "check product 'Classic Chair' with first variant (green) is on compare page",
-        trigger: '.o_product_comparison_table:contains("Classic Chair (green)")',
-        run: function () {},
-    },
-    {
-        content: "check alternative product 'Basic Chair' with first variant (red) is on compare page",
-        trigger: '.o_product_comparison_table:contains("Basic Chair (red)")',
-        run: function () {},
-    },
-    {
-        content: "check there is the correct attribute",
-        trigger: '.o_ws_category_0:contains("color"):contains("red")',
         run: function () {},
     },
     ]);

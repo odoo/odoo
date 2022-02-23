@@ -64,24 +64,6 @@
         </xpath>
     </template>
 
-    <template id='recommended_product' inherit_id="website_sale.recommended_products" name="Alternative Products">
-        <xpath expr="//h3" position="replace">
-            <!--
-                Create the first variant if it doesn't exist for the current
-                product and every alternative product because the product
-                comparator need the variants and not the templates.
-            -->
-            <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
-            <t t-set="id_list" t-value="[product_variant.id] if product_variant else []"/>
-            <t t-foreach="product._get_website_alternative_product()" t-as="alt_product">
-                <t t-set="alt_product_variant_id" t-value="alt_product._create_first_product_variant().id"/>
-                <t t-if="alt_product_variant_id" t-set="id_list" t-value="id_list + [alt_product_variant_id]"/>
-            </t>
-            <t t-set="ids" t-value="','.join([str(id) for id in id_list])"/>
-            <div><span class='h3'>Suggested alternatives: </span><a t-if="len(id_list) > 1 and is_view_active('website_sale_comparison.add_to_compare')" role="button" class="btn btn-primary" t-attf-href="/shop/compare?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
-        </xpath>
-    </template>
-
     <template id="product_compare" name="Comparator Page">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop Comparator</t>
