@@ -318,7 +318,8 @@
     // Do not really crash on non-errors rejections
     const qunitUnhandledReject = QUnit.onUnhandledRejection;
     QUnit.onUnhandledRejection = (reason) => {
-        if (reason instanceof Error) {
+        const error = reason instanceof Error && "cause" in reason ? reason.cause : reason;
+        if (error instanceof Error) {
             qunitUnhandledReject(reason);
         }
     };
@@ -327,7 +328,9 @@
     // not due to an actual error
     const windowUnhandledReject = window.onunhandledrejection;
     window.onunhandledrejection = (ev) => {
-        if (!(ev.reason instanceof Error)) {
+        const error =
+            ev.reason instanceof Error && "cause" in ev.reason ? ev.reason.cause : ev.reason;
+        if (!(error instanceof Error)) {
             ev.stopImmediatePropagation();
             ev.preventDefault();
         } else if (windowUnhandledReject) {

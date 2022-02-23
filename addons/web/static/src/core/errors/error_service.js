@@ -101,8 +101,8 @@ export const errorService = {
                 // Ignore some unnecessary "ResizeObserver loop limit exceeded" error in Firefox.
                 "ResizeObserver loop completed with undelivered notifications.",
                 // ignore Chrome video internal error: https://crbug.com/809574
-                "ResizeObserver loop limit exceeded"
-            ]
+                "ResizeObserver loop limit exceeded",
+            ];
             if (!originalError && errorsToIgnore.includes(message)) {
                 return;
             }
@@ -123,7 +123,17 @@ export const errorService = {
         });
 
         browser.addEventListener("unhandledrejection", async (ev) => {
-            const originalError = ev.reason;
+            let originalError = ev.reason;
+            // note: unwrapping error like this means that the error handlers will
+            // only be aware of the cause, not of the current error (which may
+            // show more interesting information, such as the owl lifecycle
+            // method that caused the error.  But doing it in the best way (traceback
+            // from error, and handled by correct error handler requires a small
+            // scale refactoring of the error handling code.
+            originalError =
+                originalError instanceof Error && "cause" in originalError
+                    ? originalError.cause
+                    : originalError;
             const uncaughtError = new UncaughtPromiseError();
             uncaughtError.unhandledRejectionEvent = ev;
             if (originalError instanceof Error) {

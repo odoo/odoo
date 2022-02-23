@@ -11,7 +11,8 @@
     var _catch = Promise.prototype.catch;
     Promise.prototype.guardedCatch = function (onRejected) {
         return _catch.call(this, function (reason) {
-            if (!reason || !(reason instanceof Error)) {
+            const error = (reason instanceof Error && "cause" in reason) ? reason.cause : reason;
+            if (!error || !(error instanceof Error)) {
                 if (onRejected) {
                     onRejected.call(this, reason);
                 }
