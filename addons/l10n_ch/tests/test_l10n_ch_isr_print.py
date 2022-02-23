@@ -14,7 +14,7 @@ class ISRTest(AccountTestInvoicingCommon):
 
     def print_isr(self, invoice):
         try:
-            invoice.isr_print()
+            invoice.action_invoice_sent()
             return True
         except ValidationError:
             return False
@@ -69,4 +69,7 @@ class ISRTest(AccountTestInvoicingCommon):
             'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id})],
         })
         invoice_eur.action_post()
-        self.assertFalse(self.print_isr(invoice_eur))
+        #a normal invoice will still get printed
+        self.assertTrue(self.print_isr(invoice_eur))
+        # However, a isr bill can't be printed with those infos
+        self.assertFalse(invoice_eur.l10n_ch_isr_valid)
