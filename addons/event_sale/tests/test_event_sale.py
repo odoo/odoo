@@ -179,6 +179,11 @@ class TestEventSale(TestEventSaleCommon):
         # ------------------------------------------------------------
 
         ticket2_line.write({'product_uom_qty': 3})
+
+        # Whenever the quantity is modified the price is recomputed in function of the ticket,
+        # so we reapply the wanted price.
+        ticket2_line.write({'price_unit': 50})
+
         editor_action = customer_so.action_confirm()
         self.assertEqual(customer_so.state, 'sale')
         self.assertEqual(customer_so.amount_untaxed, TICKET1_COUNT * 10 + (TICKET2_COUNT + 2) * 50)
