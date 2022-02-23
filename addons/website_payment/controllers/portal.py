@@ -71,10 +71,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
             tx_sudo.update({
                 'partner_name': details['name'],
                 'partner_email': details['email'],
-                'partner_country_id': details['country_id'],
+                'partner_country_id': int(details['country_id']),
             })
         elif not tx_sudo.partner_country_id:
-            tx_sudo.partner_country_id = kwargs['partner_details']['country_id']
+            tx_sudo.partner_country_id = int(kwargs['partner_details']['country_id'])
         self._update_landing_route(tx_sudo, access_token)
 
         # Send a notification to warn that a donation has been made
