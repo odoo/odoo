@@ -1925,12 +1925,6 @@ actual arch.
             for attr in node.attrib
         )
 
-    @tools.ormcache('self.id')
-    def get_view_xmlid(self):
-        domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', self.id)]
-        xmlid = self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name'])[0]
-        return '%s.%s' % (xmlid['module'], xmlid['name'])
-
     @api.model
     def render_public_asset(self, template, values=None):
         template = self.sudo().browse(self.get_view_id(template))
