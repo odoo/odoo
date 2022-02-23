@@ -655,19 +655,6 @@ class IrActionsServer(models.Model):
                 )
         return res or False
 
-    def _neutralize(self):
-        # In some cases, cron neutralization is not enough as modifying records
-        # like `fetchmail.server`, `calendar.alarm` and `base.automation` will
-        # re-enable their cron jobs as a side-effect.
-        super()._neutralize()
-        self.flush()
-        self.invalidate_cache()
-        self.env.cr.execute("""
-            UPDATE ir_act_server
-            SET code = '#' || REPLACE(code, E'\n', E'\n#')
-            WHERE usage = 'ir_cron' AND state = 'code'
-        """)
-
 
 class IrServerObjectLines(models.Model):
     _name = 'ir.server.object.lines'
