@@ -222,4 +222,33 @@ export async function setupTests() {
     const templates = await loadFile(templatesUrl);
     window.__OWL_TEMPLATES__ = processTemplates(templates);
     await Promise.all([whenReady(), legacyProm]);
+
+    // make sure images do not trigger a GET on the server
+    new MutationObserver((mutations) => {
+        const nodes = mutations.flatMap(({ target }) => {
+            if (target.nodeName === "IMG" || target.nodeName === "IFRAME") {
+                return target;
+            }
+            return [
+                ...target.getElementsByTagName("img"),
+                ...target.getElementsByTagName("iframe"),
+            ];
+        });
+        for (const node of nodes) {
+            const src = node.getAttribute("src");
+            if (src && src !== "about:blank") {
+                node.dataset.src = src;
+                if (node.nodeName === "IMG") {
+                    node.removeAttribute("src");
+                } else {
+                    node.setAttribute("src", "about:blank");
+                }
+                node.dispatchEvent(new Event("load"));
+            }
+        }
+    }).observe(document.body, {
+        subtree: true,
+        childList: true,
+        attributeFilter: ["src"],
+    });
 }

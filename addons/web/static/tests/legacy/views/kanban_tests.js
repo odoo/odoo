@@ -7124,13 +7124,6 @@ QUnit.module('Views', {
                           '<img t-att-src="kanban_image(\'partner\', \'image\', record.id.raw_value)"/>' +
                       '</div></t></templates>' +
                   '</kanban>',
-            mockRPC: function (route, args) {
-                if (route === 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==') {
-                    assert.ok("The view's image should have been fetched.");
-                    return Promise.resolve();
-                }
-                return this._super.apply(this, arguments);
-            },
         });
         var images = kanban.el.querySelectorAll('img');
         var placeholders = [];
@@ -7143,6 +7136,8 @@ QUnit.module('Views', {
 
         assert.strictEqual(placeholders.length, this.data.partner.records.length - 1,
             "partner with no image should display the placeholder");
+        assert.strictEqual(images[0].dataset.src, "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==",
+            "The first partners non-placeholder image should be set");
 
         kanban.destroy();
     });
@@ -7161,13 +7156,6 @@ QUnit.module('Views', {
                           '<img t-att-src="kanban_image(\'partner\', \'image\', 1)"/>' +
                       '</div></t></templates>' +
                   '</kanban>',
-            mockRPC: function (route, args) {
-                if (route === 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==') {
-                    assert.ok("The view's image should have been fetched.");
-                    return Promise.resolve();
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         // the field image is set, but we request the image for a specific id
@@ -7176,6 +7164,9 @@ QUnit.module('Views', {
         var imageOnRecord = kanban.$('img[data-src*="/web/image"][data-src*="&id=1"]');
         assert.strictEqual(imageOnRecord.length, this.data.partner.records.length - 1,
             "display image by url when requested for another record");
+        assert.strictEqual(kanban.el.querySelector("img").dataset.src,
+            "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==",
+            "display image as value when requested for the record itself");
 
         kanban.destroy();
     });

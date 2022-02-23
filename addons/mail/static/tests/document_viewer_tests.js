@@ -102,23 +102,16 @@ QUnit.module('document_viewer_tests.js', {
     });
 
     QUnit.test('Document Viewer Youtube', async function (assert) {
-        assert.expect(3);
+        assert.expect(2);
 
-        var youtubeURL = 'https://www.youtube.com/embed/FYqW0Gdwbzk';
         var viewer = await createViewer({
             attachmentID: 2,
             attachments: this.attachments,
-            mockRPC: function (route) {
-                if (route === youtubeURL) {
-                    assert.ok(true, "should have called youtube URL");
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('urlYoutube')").length, 1,
             "the viewer should be on the right attachment");
-        assert.containsOnce(viewer, '.o_viewer_text[data-src="' + youtubeURL + '"]',
+        assert.containsOnce(viewer, '.o_viewer_text[data-src="https://www.youtube.com/embed/FYqW0Gdwbzk"]',
             "there should be a video player");
 
         viewer.destroy();
