@@ -33,6 +33,7 @@ Featuring
         'views/rating_rating_views.xml',
         'views/slide_embed_views.xml',
         'views/slide_question_views.xml',
+        'views/slide_slide_partner_views.xml',
         'views/slide_slide_views.xml',
         'views/slide_channel_partner_views.xml',
         'views/slide_channel_views.xml',
