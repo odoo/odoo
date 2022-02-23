@@ -842,7 +842,7 @@ class PosSession(models.Model):
         rounding_difference = data.get('rounding_difference')
         MoveLine = data.get('MoveLine')
 
-        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount_converted']) for key, amounts in taxes.items() if amounts['amount']]
+        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount_converted']) for key, amounts in taxes.items()]
         # Check if all taxes lines have account_id assigned. If not, there are repartition lines of the tax that have no account_id.
         tax_names_no_account = [line['name'] for line in tax_vals if line['account_id'] == False]
         if len(tax_names_no_account) > 0:
