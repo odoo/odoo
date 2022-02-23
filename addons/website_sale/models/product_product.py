@@ -88,7 +88,8 @@ class Product(models.Model):
         return combination_info['product_type'] == 'product' and combination_info['free_qty'] <= 0
 
     def _website_show_quick_add(self):
-        return self.sale_ok
+        website = self.env['website'].get_current_website()
+        return self.sale_ok and (not website.prevent_zero_price_sale or self._get_contextual_price())
 
     def _is_add_to_cart_allowed(self):
         self.ensure_one()
