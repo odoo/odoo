@@ -183,7 +183,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='color'] select").value,
-            "'red'",
+            `"red"`,
             "should have correct value in color field"
         );
 

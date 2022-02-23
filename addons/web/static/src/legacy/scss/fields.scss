@@ -88,7 +88,7 @@
     }
 
     // Flex fields (inline)
-    &.o_field_many2one, &.o_field_radio, &.o_field_many2manytags, &.o_field_percent_pie, &.o_field_monetary, &.o_field_binary_file, &.o_field_float_percentage {
+    &.o_field_many2one, &.o_field_radio > div, &.o_field_many2manytags, &.o_field_percent_pie, &.o_field_monetary, &.o_field_binary_file, &.o_field_float_percentage {
         display: inline-flex;
         > span, > button {
             flex: 0 0 auto;
@@ -408,13 +408,13 @@
             flex: 0 0 auto;
         }
 
-        &.o_horizontal {
+        .o_horizontal {
             .o_radio_item {
                 margin-right: $o-form-spacing-unit * 2;
             }
         }
 
-        &.o_vertical {
+        .o_vertical {
             flex-flow: column nowrap;
             .o_radio_item {
                 margin-bottom: $o-form-spacing-unit;
