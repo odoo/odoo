@@ -3,10 +3,6 @@
 
 from odoo import api, fields, models
 
-import logging
-
-_logger = logging.getLogger(__name__)
-
 from odoo.addons.account.models.account_payment import synchronize_depends_fields
 
 synchronize_depends_fields.append('tax_ids')
@@ -40,10 +36,10 @@ class AccountPayment(models.Model):
             '''
             if self.partner_type == 'customer':
                 sign = -1 if self.payment_type == 'outbound' else 1
-                is_refund = self.payment_type == 'inbound' and True or False
+                is_refund = self.payment_type == 'inbound'
             else:
                 sign = -1 if self.payment_type == 'outbound' else 1
-                is_refund = self.payment_type == 'outbound' and True or False
+                is_refund = self.payment_type == 'outbound'
 
             return self.tax_ids.with_context(force_sign=sign).compute_all(
                 payment_amount,
@@ -91,7 +87,6 @@ class AccountPayment(models.Model):
                     res[index].update({'credit': line['credit'] + total_tax_amount})
                 if line.get('debit'):
                     res[index].update({'debit': line['debit'] + (total_tax_amount * -1)})
-        _logger.warning(">>>>>>>>>>> %s"%(res))
         return res
     
     def _seek_for_lines(self):
