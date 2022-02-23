@@ -746,6 +746,13 @@ class IrQWeb(models.AbstractModel):
         template = IrUIView.sudo()._read_template(view_id)
         etree_view = etree.fromstring(template)
 
+        xmlid = view.key or ref
+        if isinstance(ref, int):
+            domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', view.id)]
+            model_data = self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name'], limit=1)
+            if model_data:
+                xmlid = f"{model_data[0]['module']}.{model_data[0]['name']}"
+
         # QWeb's ``_read_template`` will check if one of the first children of
         # what we send to it has a "t-name" attribute having ``ref`` as value
         # to consider it has found it. As it'll never be the case when working
@@ -757,7 +764,7 @@ class IrQWeb(models.AbstractModel):
                     node.attrib.pop('id', None)
                     etree_view = node
                     break
-        etree_view.set('t-name', str(view.key or ref))
+        etree_view.set('t-name', str(xmlid))
         return (etree_view, view_id)
 
     # values for running time
