@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="web.CheckBox" owl="1">
-    <div class="custom-control custom-checkbox" t-att-class="props.className">
+    <div class="custom-control custom-checkbox" t-att-class="props.className" t-on-click.stop="">
         <input
             t-att-id="props.id or id"
             type="checkbox"
