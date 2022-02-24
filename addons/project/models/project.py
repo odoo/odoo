@@ -147,7 +147,7 @@ class ProjectTaskType(models.Model):
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.parent.mixin']
+    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.parent.mixin', 'favorite.mixin']
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
     _check_company_auto = True
@@ -204,25 +204,6 @@ class Project(models.Model):
         # Since project stages are order by sequence first, this should fetch the one with the lowest sequence number.
         return self.env['project.project.stage'].search([], limit=1)
 
-    def _compute_is_favorite(self):
-        for project in self:
-            project.is_favorite = self.env.user in project.favorite_user_ids
-
-    def _inverse_is_favorite(self):
-        favorite_projects = not_fav_projects = self.env['project.project'].sudo()
-        for project in self:
-            if self.env.user in project.favorite_user_ids:
-                favorite_projects |= project
-            else:
-                not_fav_projects |= project
-
-        # Project User has no write access for project.
-        not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
-        favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
-
-    def _get_default_favorite_user_ids(self):
-        return [(6, 0, [self.env.uid])]
-
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['project.project.stage'].search([], order=order)
@@ -249,13 +230,6 @@ class Project(models.Model):
     analytic_account_balance = fields.Monetary(related="analytic_account_id.balance")
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
 
-    favorite_user_ids = fields.Many2many(
-        'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
-        default=_get_default_favorite_user_ids,
-        string='Members')
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sudo=True,
-        string='Show Project on Dashboard',
-        help="Whether this project should be displayed on your dashboard.")
     label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for the tasks of the project.", translate=True)
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
@@ -334,6 +308,15 @@ class Project(models.Model):
     milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
     milestone_count = fields.Integer(compute='_compute_milestone_count')
     is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
+
+    # favorite.mixin override
+    favorite_user_ids = fields.Many2many(
+        relation='project_favorite_user_rel',
+        column1='project_id', column2='user_id',
+        string='Members')
+    is_favorite = fields.Boolean(
+        string='Show Project on Dashboard', compute_sudo=True,
+        help="Whether this project should be displayed on your dashboard.")
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', "The project's start date must be before its end date.")
