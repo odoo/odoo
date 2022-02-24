@@ -289,7 +289,6 @@ class SaleOrder(models.Model):
                                                   string='Authorized Transactions', copy=False)
     show_update_pricelist = fields.Boolean(
         string='Has Pricelist Changed',
-        compute='_compute_show_update_pricelist', store=True, readonly=True, precompute=True,
         help="Technical Field, True if the pricelist was changed;\n"
              " this will then display a recomputation button")
     tag_ids = fields.Many2many('crm.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')
@@ -555,10 +554,10 @@ class SaleOrder(models.Model):
                 }
             }
 
-    @api.depends('pricelist_id')
-    def _compute_show_update_pricelist(self):
-        for order in self:
-            order.show_update_pricelist = order.order_line and order.pricelist_id and order._origin.pricelist_id != self.pricelist_id
+    @api.onchange('pricelist_id')
+    def _onchange_pricelist_id_show_update_prices(self):
+        if self.order_line and self.pricelist_id and self._origin.pricelist_id != self.pricelist_id:
+            self.show_update_pricelist = True
 
     def update_prices(self):
         self.ensure_one()
