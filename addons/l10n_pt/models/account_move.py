@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import stdnum
+from stdnum.pt import nif
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -20,7 +20,7 @@ class AccountMove(models.Model):
             if record.company_id.account_fiscal_country_id.code != "PT":
                 continue
 
-            company_vat_not_ok = not record.company_id.vat or not stdnum.pt.vat.is_valid(record.company_id.vat)
+            company_vat_not_ok = not record.company_id.vat or not nif.is_valid(record.company_id.vat)
             partner_country_not_ok = not record.partner_id.country_id
             record_type_not_ok = record.move_type not in {'out_invoice', 'out_refund', 'out_receipt'}
 
