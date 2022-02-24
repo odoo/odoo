@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
   <t t-name="web.ColorPickerDialogBody" owl="1">
-    <ColorPicker color="props.color" t-on-colorSelected="onColorSelected" />
+    <ColorPicker color="props.color" onColorSelected.bind="onColorSelected" />
   </t>
 
   <t t-name="web.ColorPickerDialogFooter" owl="1">

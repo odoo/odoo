@@ -11,8 +11,7 @@ export class ColorPickerDialog extends Dialog {
         this.currentlySelectedColor = this.props.color;
     }
 
-    onColorSelected({ detail }) {
-        const { hex } = detail;
+    onColorSelected({ hex }) {
         this.currentlySelectedColor = hex;
     }
 
@@ -28,8 +27,9 @@ export class ColorPickerDialog extends Dialog {
 
 ColorPickerDialog.components = { ColorPicker };
 ColorPickerDialog.props = {
-    color: String,
+    color: { type: String, optional: true },
     close: Function,
+    isActive: Boolean,
     onColorSelected: Function,
 };
 ColorPickerDialog.defaultProps = {

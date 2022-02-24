@@ -61,7 +61,7 @@ export class ColorPicker extends Component {
             this.state.latentLightness = l;
         }
 
-        this.trigger("colorSelected", {
+        this.props.onColorSelected({
             hue: this.state.hue,
             saturation: this.state.saturation,
             lightness: this.state.lightness,
@@ -294,6 +294,7 @@ export class ColorPicker extends Component {
 ColorPicker.template = "web.ColorPicker";
 ColorPicker.props = {
     color: { type: String, optional: true },
+    onColorSelected: Function,
     transparency: { type: Boolean, optional: true },
     showPreview: { type: Boolean, optional: true },
 };
