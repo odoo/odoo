@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import math
 from base64 import b64encode
-from collections import defaultdict
 from datetime import datetime
 from functools import partial
 from re import sub as regex_sub
@@ -220,47 +218,45 @@ class AccountEdiFormat(models.Model):
             'sender': sender,
         }
         if cancel:
-            return values
+            return values  # cancellation invoices do not specify recipients (they stay the same)
+
+        partner = invoice.commercial_partner_id if invoice.is_sale_document() else invoice.company_id
+        if partner == self.env.ref("l10n_es_edi_tbai.partner_simplified"):
+            return values  # simplified invoices do not specify any recipient
 
         # === RECIPIENTS (DESTINATARIOS) ===
-        xml_recipients = []
-        # TicketBAI accepts up to 100 recipients (but Odoo only supports one)
-        for dest in (1,):
-            eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
-            partner = invoice.commercial_partner_id if invoice.is_sale_document() else invoice.company_id
+        xml_recipients = []  # TicketBAI accepts 1-100 recipients (Odoo only supports one)
 
-            nif = False
-            alt_id_country = False
-            alt_id_number = partner.vat or 'NO_DISPONIBLE'
-            alt_id_type = ""
-            if partner == self.env.ref("l10n_es_edi_tbai.partner_simplified"):
-                # Simplified partner (TODO check id_type and id_country are legal in this case)
-                alt_id_country = 'ES'
-                alt_id_type = '03'
-            elif (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
-                # ES partner with VAT.
-                nif = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
-            elif partner.country_id.code in eu_country_codes:
-                # European partner
-                alt_id_type = '02'
+        eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
+
+        nif = False
+        alt_id_country = False
+        alt_id_number = partner.vat or 'NO_DISPONIBLE'
+        alt_id_type = ""
+        if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
+            # ES partner with VAT.
+            nif = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
+        elif partner.country_id.code in eu_country_codes:
+            # European partner
+            alt_id_type = '02'
+        else:
+            # Non-european partner
+            if partner.vat:
+                alt_id_type = '04'
             else:
-                # Non-european partner
-                if partner.vat:
-                    alt_id_type = '04'
-                else:
-                    alt_id_type = '06'
-                if partner.country_id:
-                    alt_id_country = partner.country_id.code
+                alt_id_type = '06'
+            if partner.country_id:
+                alt_id_country = partner.country_id.code
 
-            values_dest = {
-                'nif': nif,
-                'alt_id_country': alt_id_country,
-                'alt_id_number': alt_id_number,
-                'alt_id_type': alt_id_type,
-                'partner': partner,
-                'partner_address': ', '.join(filter(lambda x: x, [partner.street, partner.street2, partner.city])),
-            }
-            xml_recipients.append(values_dest)
+        values_dest = {
+            'nif': nif,
+            'alt_id_country': alt_id_country,
+            'alt_id_number': alt_id_number,
+            'alt_id_type': alt_id_type,
+            'partner': partner,
+            'partner_address': ', '.join(filter(lambda x: x, [partner.street, partner.street2, partner.city])),
+        }
+        xml_recipients.append(values_dest)
 
         values.update({
             'recipients': xml_recipients,
