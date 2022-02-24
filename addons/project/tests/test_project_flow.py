@@ -235,7 +235,6 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
         # We need to invalidate cache since it is not done automatically by the ORM
         # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse
         first_task.invalidate_cache()
-
         self.assertEqual(rating_good.rating_text, 'top')
         self.assertEqual(rating_average.rating_text, 'ok')
         self.assertEqual(rating_bad.rating_text, 'ko')
@@ -259,7 +258,7 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
 
         rating_avg = (rating_good.rating + rating_bad.rating) / 2
         self.assertEqual(first_task.rating_count, 2, "Task should have two ratings associated with it")
-        self.assertEqual(first_task.rating_avg_text, 'top')
+        self.assertEqual(first_task.rating_avg_text, 'ok')
         self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
         self.assertEqual(self.project_goats.rating_percentage_satisfaction, -1)
         self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 50)

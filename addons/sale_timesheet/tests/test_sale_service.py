@@ -177,36 +177,26 @@ class TestSaleService(TestCommonSaleTimesheet):
             4) Create invoice and Check correct quantity delievered and invoiced
             5) Validate the invoice and make sure it shows correct quantity
         """
-        self.product_delivery_timesheet3.write({'project_template_id': self.project_template.id})
-        product_delivery_timesheet1 = self.env['product.product'].create({
-            'name': "Senior Architect (Invoice on timesheets)",
-            'type': 'service',
-            'service_type': 'timesheet',
-            'service_policy': 'delivered_timesheet',
-            'service_tracking': 'task_in_project',
-            'project_template_id': self.project_template.id,
-        })
-        prepaid_service_product = self.env['product.product'].create({
-            'name': 'Service Product (Prepaid Hours)',
-            'type': 'service',
-            'service_policy': 'ordered_timesheet',
-            'service_tracking': 'task_global_project',
-            'project_id': self.project_global.id,
-        })
+        product_1 = self.product_delivery_timesheet3
+        product_2 = self.product_delivery_timesheet1
+        product_3 = self.product_order_timesheet1
 
+        product_1.write({'project_template_id': self.project_template.id})
+        product_2.write({'service_tracking': 'task_in_project', 'project_template_id': self.project_template.id})
+        product_3.write({'service_policy': 'ordered_timesheet', 'service_tracking': 'task_global_project', 'project_id': self.project_global.id})
         # create SO line and confirm it
         so_line1 = self.env['sale.order.line'].create({
-            'product_id': self.product_delivery_timesheet3.id,
+            'product_id': product_1.id,
             'product_uom_qty': 50,
             'order_id': self.sale_order.id,
         })
         so_line2 = self.env['sale.order.line'].create({
-            'product_id': product_delivery_timesheet1.id,
+            'product_id': product_2.id,
             'product_uom_qty': 50,
             'order_id': self.sale_order.id,
         })
         so_line3 = self.env['sale.order.line'].create({
-            'product_id': prepaid_service_product.id,
+            'product_id': product_3.id,
             'product_uom_qty': 50,
             'order_id': self.sale_order.id,
         })
@@ -254,9 +244,10 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         self.assertEqual(so_line1.qty_delivered, timesheet1.unit_amount, "Delivered quantity should be the same then its only related timesheet.")
         self.assertEqual(so_line2.qty_delivered, timesheet2.unit_amount + timesheet4.unit_amount, "Delivered quantity should be the sum of the 2 timesheets of unit amounts")
-        self.assertEqual(self.sale_order.project_ids[1].total_timesheet_time, 20, "Check the total recorded hours in project")
+        pro = self.sale_order.project_ids.filtered(lambda p: p.id == so_line1.project_id.id)
+        self.assertEqual(pro.total_timesheet_time, 20, "Check the total recorded hours in project")
         self.assertEqual(self.sale_order.timesheet_total_duration, 15, "Check recoreded hours should not consider non billable hours")
-        self.assertEqual(self.sale_order.project_ids[1].total_timesheet_time - self.sale_order.timesheet_total_duration, 5, "Check the number of non billable hours")
+        self.assertEqual(pro.total_timesheet_time - self.sale_order.timesheet_total_duration, 5, "Check the number of non billable hours")
 
         invoice1 = self.sale_order._create_invoices()[0]
 
