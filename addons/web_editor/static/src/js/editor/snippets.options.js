@@ -1791,6 +1791,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
         libObject._getTemplate = function () {
             const $template = oldFunc.call(this, ...arguments);
             $template.addClass('o_we_no_overlay o_we_datetimepicker');
+            $template.find('[title]').tooltip();
             return $template;
         };
     },
