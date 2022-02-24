@@ -51,12 +51,12 @@
                         <div class="o_RtcCallParticipantCard_overlayTop">
                             <t t-if="callParticipantCard.rtcSession.isSelfMuted and !callParticipantCard.rtcSession.isDeaf">
                                 <span class="o_RtcCallParticipantCard_overlayTopElement" t-att-class="{'o-isMinimized': callParticipantCard.isMinimized }" title="muted" aria-label="muted">
-                                    <i class="oi oi-microphone--off--filled"/>
+                                    <i class="fa fa-microphone-slash"/>
                                 </span>
                             </t>
                             <t t-if="callParticipantCard.rtcSession.isDeaf">
                                 <span class="o_RtcCallParticipantCard_overlayTopElement" t-att-class="{'o-isMinimized': callParticipantCard.isMinimized }" title="deaf" aria-label="deaf">
-                                    <i class="oi oi-volume--mute--filled"/>
+                                    <i class="fa fa-deaf"/>
                                 </span>
                             </t>
                             <t t-if="callParticipantCard.rtcSession.channel.rtc and callParticipantCard.rtcSession.isAudioInError">

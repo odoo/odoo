@@ -175,7 +175,7 @@ PivotView.ArchParser = PivotArchParser;
 
 PivotView.type = "pivot";
 PivotView.display_name = _lt("Pivot");
-PivotView.icon = "oi-cross-tab";
+PivotView.icon = "oi oi-view-pivot";
 PivotView.multiRecord = true;
 PivotView.searchMenuTypes = ["filter", "groupBy", "comparison", "favorite"];
 
