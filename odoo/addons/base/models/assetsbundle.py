@@ -257,8 +257,10 @@ class AssetsBundle(object):
 
         if attachments:
             self._unlink_attachments(attachments, env)
+            env.cr.commit()
             # force bundle invalidation on other workers
             self.env['ir.qweb'].clear_caches()
+            env['ir.attachment'].clear_caches()
 
         return True
 
@@ -343,7 +345,7 @@ class AssetsBundle(object):
         print('Saved env', saved_env.cr._readonly)
         print('Env', self.env.cr._readonly)
 
-        self.clean_attachments(type, truc if truc is not None else self.env)
+        self.clean_attachments(type, truc.env if truc is not None else self.env)
 
         # For end-user assets (common and backend), send a message on the bus
         # to invite the user to refresh their browser
