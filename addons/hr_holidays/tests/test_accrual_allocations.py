@@ -522,6 +522,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation.action_confirm()
             allocation.action_validate()
 
+        # Reset the cron's lastcall
+        accrual_cron = self.env['ir.cron'].sudo().env.ref('hr_holidays.hr_leave_allocation_cron_accrual')
+        accrual_cron.lastcall = datetime.date(2021, 9, 1)
         with freeze_time('2022-01-01'):
             allocation._update_accrual()
             self.assertEqual(allocation.number_of_days, 0, 'There number of days should be reset')
@@ -553,9 +556,47 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation.action_confirm()
             allocation.action_validate()
 
+        # Reset the cron's lastcall
+        accrual_cron = self.env['ir.cron'].sudo().env.ref('hr_holidays.hr_leave_allocation_cron_accrual')
+        accrual_cron.lastcall = datetime.date(2021, 9, 1)
         with freeze_time('2022-01-01'):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 25, 'The maximum number of days should be reached and kept.')
+
+    def test_unused_accrual_postponed_limit(self):
+        # 1 accrual with 2 levels and level transition after
+        # This also tests retroactivity
+        with freeze_time('2021-09-01'):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'daily',
+                    'maximum_leave': 25,
+                    'action_with_unused_accruals': 'postponed',
+                    'postpone_max_days': 15,
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 10,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
+
+        # Reset the cron's lastcall
+        accrual_cron = self.env['ir.cron'].sudo().env.ref('hr_holidays.hr_leave_allocation_cron_accrual')
+        accrual_cron.lastcall = datetime.date(2021, 9, 1)
+        with freeze_time('2022-01-01'):
+            allocation._update_accrual()
+        self.assertEqual(allocation.number_of_days, 15, 'The maximum number of days should be reached and kept.')
 
     def test_accrual_skipped_period(self):
         # Test that when an allocation is made in the past and the second level is technically reached
