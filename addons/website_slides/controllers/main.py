@@ -121,7 +121,6 @@ class WebsiteSlides(WebsiteProfile):
         return slide._compute_quiz_info(request.env.user.partner_id, quiz_done=quiz_done)[slide.id]
 
     def _get_slide_quiz_data(self, slide):
-        slide_completed = slide.user_membership_id.sudo().completed
         values = {
             'slide_questions': [{
                 'id': question.id,
@@ -129,7 +128,7 @@ class WebsiteSlides(WebsiteProfile):
                 'answer_ids': [{
                     'id': answer.id,
                     'text_value': answer.text_value,
-                    'is_correct': answer.is_correct if slide_completed or request.website.is_publisher() else None,
+                    'is_correct': answer.is_correct if slide.user_has_completed or request.website.is_publisher() else None,
                     'comment': answer.comment if request.website.is_publisher else None
                 } for answer in question.sudo().answer_ids],
             } for question in slide.question_ids]
@@ -958,7 +957,7 @@ class WebsiteSlides(WebsiteProfile):
             return fetch_res
         slide = fetch_res['slide']
 
-        if slide.user_membership_id.sudo().completed:
+        if slide.user_has_completed:
             self._channel_remove_session_answers(slide.channel_id, slide)
             return {'error': 'slide_quiz_done'}
 
@@ -992,7 +991,7 @@ class WebsiteSlides(WebsiteProfile):
                     'comment': answer.comment
                 } for answer in user_answers
             },
-            'completed': slide.user_membership_id.sudo().completed,
+            'completed': slide.user_has_completed,
             'channel_completion': slide.channel_id.completion,
             'quizKarmaWon': quiz_info['quiz_karma_won'],
             'quizKarmaGain': quiz_info['quiz_karma_gain'],
