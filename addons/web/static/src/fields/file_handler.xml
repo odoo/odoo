@@ -3,7 +3,7 @@
 
     <t t-name="web.FileUploader" owl="1">
         <t t-if="props.type === 'image'">
-            <div class="position-relative" t-att-style="props.fileUploadStyle">
+            <div class="position-relative" aria-atomic="true" t-att-style="props.fileUploadStyle">
                 <t t-if="state.isUploading">
                     <div class="btn btn-primary">Uploading...</div>
                 </t>

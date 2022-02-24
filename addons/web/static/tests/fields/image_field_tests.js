@@ -102,22 +102,22 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".o_field_widget[name='document'] > div > img",
+            ".o_field_widget[name='document'] > img",
             "the widget should contain an image"
         );
         assert.hasClass(
-            target.querySelector(".o_field_widget[name='document'] > div > img"),
+            target.querySelector(".o_field_widget[name='document'] > img"),
             "img-fluid",
             "the image should have the correct class"
         );
         assert.hasAttrValue(
-            target.querySelector(".o_field_widget[name='document'] > div > img"),
+            target.querySelector(".o_field_widget[name='document'] > img"),
             "width",
             "90",
             "the image should correctly set its attributes"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name='document'] > div > img").style.maxWidth,
+            target.querySelector(".o_field_widget[name='document'] > img").style.maxWidth,
             "90px",
             "the image should correctly set its attributes"
         );
@@ -176,22 +176,22 @@ QUnit.module("Fields", (hooks) => {
             );
             assert.containsOnce(
                 form,
-                ".o_field_widget[name='document'] > div > img",
+                ".o_field_widget[name='document'] > img",
                 "the widget should contain an image"
             );
             assert.hasClass(
-                target.querySelector(".o_field_widget[name='document'] > div > img"),
+                target.querySelector(".o_field_widget[name='document'] > img"),
                 "img-fluid",
                 "the image should have the correct class"
             );
             assert.hasAttrValue(
-                target.querySelector(".o_field_widget[name='document'] > div > img"),
+                target.querySelector(".o_field_widget[name='document'] > img"),
                 "width",
                 "90",
                 "the image should correctly set its attributes"
             );
             assert.strictEqual(
-                target.querySelector(".o_field_widget[name='document'] > div > img").style.maxWidth,
+                target.querySelector(".o_field_widget[name='document'] > img").style.maxWidth,
                 "90px",
                 "the image should correctly set its attributes"
             );
