@@ -68,7 +68,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _select_chart_template(self, company=False):
         company = company or self.env.company
-        result = [(ct, string) for ct, string, country, modules in TEMPLATES]
+        result = [(key, template['name']) for key, template in TEMPLATES.items()]
         if self:
             proposed = self._guess_chart_template(company)
             result.sort(key=lambda sel: (sel[0] != proposed, sel[1]))
@@ -260,73 +260,84 @@ class AccountChartTemplate(models.AbstractModel):
     def _post_load_data(self, template_code, company):
         company = (company or self.env.company)
         cid = company.id
-        ref = self.env.ref
+
         template_data = self._get_template_data(template_code, company)
         code_digits = template_data.get('code_digits', 6)
-        # Set default cash difference account on company
-        if not company.account_journal_suspense_account_id:
-            company.account_journal_suspense_account_id = self.env['account.account'].create({
+        bank_prefix = template_data.get('bank_account_code_prefix', '')
+        company.write({key: val for key, val in template_data.items() if not key.startswith("property_")})
+
+        accounts_data = {
+            'account_journal_suspense_account_id': {
+                'company_id': cid,
                 'name': _("Bank Suspense Account"),
-                'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
-                'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+                'prefix': bank_prefix,
+                'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+                'xml_id': "account.{cid}_suspense_account",
+            },
+            'account_journal_payment_debit_account_id': {
                 'company_id': cid,
-            })
-
-        account_type_current_assets = self.env.ref('account.data_account_type_current_assets')
-        if not company.account_journal_payment_debit_account_id:
-            company.account_journal_payment_debit_account_id = self.env['account.account'].create({
                 'name': _("Outstanding Receipts"),
-                'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
+                'prefix': bank_prefix,
+                'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
                 'reconcile': True,
-                'user_type_id': account_type_current_assets.id,
+            },
+            'account_journal_payment_credit_account_id': {
                 'company_id': cid,
-            })
-
-        if not company.account_journal_payment_credit_account_id:
-            company.account_journal_payment_credit_account_id = self.env['account.account'].create({
                 'name': _("Outstanding Payments"),
-                'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
+                'prefix': bank_prefix,
+                'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
                 'reconcile': True,
-                'user_type_id': account_type_current_assets.id,
+            },
+            'default_cash_difference_expense_account_id': {
                 'company_id': cid,
-            })
-
-        if not company.default_cash_difference_expense_account_id:
-            company.default_cash_difference_expense_account_id = self.env['account.account'].create({
-                'name': _('Cash Difference Loss'),
-                'code': self.env['account.account']._search_new_account_code(company, code_digits, '999'),
+                'name': _("Cash Difference Loss"),
+                'prefix': '999',
                 'user_type_id': self.env.ref('account.data_account_type_expenses').id,
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
+            },
+            'default_cash_difference_income_account_id': {
                 'company_id': cid,
-            })
-
-        if not company.default_cash_difference_income_account_id:
-            company.default_cash_difference_income_account_id = self.env['account.account'].create({
-                'name': _('Cash Difference Gain'),
-                'code': self.env['account.account']._search_new_account_code(company, code_digits, '999'),
-                'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+                'name': _("Cash Difference Gain"),
+                'prefix': '999',
+                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
-                'company_id': cid,
-            })
+            }
+        }
 
-        # Set the transfer account on the company
-        transfer_account_code_prefix = template_data['transfer_account_code_prefix']
-        company.transfer_account_id = self.env['account.account'].search([
-            ('code', '=like', transfer_account_code_prefix + '%'), ('company_id', '=', cid)], limit=1)
+        # If the chart_template has no parent, create the single company.transfer_account_id
+        if not TEMPLATES[template_code].get('parent_id'):
+            accounts_data['transfer_account_id'] = {
+                'company_id': cid,
+                'name': _("Liquidity Transfer"),
+                'prefix': company.transfer_account_code_prefix,
+                'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+                'reconcile': True,
+            }
+
+        # Create needed company's bank accounts
+        for company_attr_name, account_data in accounts_data.items():
+            if not getattr(company, company_attr_name, False):
+                if not 'code' in account_data:
+                    account_data['code'] = self.env['account.account']._search_new_account_code(company, code_digits, account_data.pop('prefix'))
+                xml_id = account_data.pop('xml_id', None)
+                account_id = self.env['account.account'].create(account_data)
+                if xml_id:
+                    self.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': account_id}])
+                setattr(company, company_attr_name, account_id)
+
+        # Apply the suspense account to the bank and cash journals
+        for journal in (self.env.ref(xml_id) for xml_id in (f"account.{cid}_bank", f"account.{cid}_cash")):
+            journal.suspense_account_id = company.account_journal_suspense_account_id
 
         # Create the current year earning account if it wasn't present in the CoA
         company.get_unaffected_earnings_account()
 
         if not company.account_sale_tax_id:
             company.account_sale_tax_id = self.env['account.tax'].search([
-                ('type_tax_use', 'in', ('sale', 'all')),
-                ('company_id', '=', cid)
-            ], limit=1).id
+                ('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', cid)], limit=1).id
         if not company.account_purchase_tax_id:
             company.account_purchase_tax_id = self.env['account.tax'].search([
-                ('type_tax_use', 'in', ('purchase', 'all')),
-                ('company_id', '=', cid)
-            ], limit=1).id
+                ('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', cid)], limit=1).id
 
         for field, model in [
             ('property_account_receivable_id', 'res.partner'),
@@ -341,7 +352,7 @@ class AccountChartTemplate(models.AbstractModel):
         ]:
             value = template_data.get(field)
             if value:
-                self.env['ir.property']._set_default(field, model, ref(f"account.{cid}_{value}").id, company=company)
+                self.env['ir.property']._set_default(field, model, self.env.ref(f"account.{cid}_{value}").id, company=company)
 
     ###############################################################################################
     # GENERIC Template                                                                            #
@@ -408,12 +419,12 @@ class AccountChartTemplate(models.AbstractModel):
             f"{cid}_cash": {
                 'name': _('Cash'),
                 'type': 'cash',
-                'suspense_account_id': f"account.{cid}_cash_diff_income",  # TODO
+                'profit_account_id': f'account.{cid}_cash_diff_income',
             },
             f"{cid}_bank": {
                 'name': _('Bank'),
                 'type': 'bank',
-                'suspense_account_id': f"account.{cid}_cash_diff_income",  # TODO
+                'loss_account_id': f'account.{cid}_cash_diff_expense',
             },
         }
 
@@ -457,5 +468,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': f'account.{cid}_cash_diff_income',  # TODO
                 'income_currency_exchange_account_id': f'account.{cid}_income_currency_exchange',
                 'expense_currency_exchange_account_id': f'account.{cid}_expense_currency_exchange',
+                'tax_cash_basis_journal_id': f'account.{cid}_caba',
+                'currency_exchange_journal_id': f'account.{cid}_exch',
             }
         }
