@@ -2547,7 +2547,7 @@ class Reference(Selection):
     """ Pseudo-relational field (no FK in database).
 
     The field value is stored as a :class:`string <str>` following the pattern
-    ``"res_model.res_id"`` in database.
+    ``"res_model,res_id"`` in database.
     """
     type = 'reference'
 
