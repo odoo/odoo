@@ -169,13 +169,13 @@ var Tip = Widget.extend({
             this._setupAnchor($anchor, $altAnchor);
         }
         this._bind_anchor_events();
-        this._delegateEvents();
         if (!this.$el) {
             // Ideally this case should not happen but this is still possible,
             // as update may be called before the `start` method is called.
             // The `start` method is calling _updatePosition too anyway.
             return;
         }
+        this._delegateEvents();
         this._updatePosition(true);
     },
 
