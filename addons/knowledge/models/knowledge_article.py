@@ -47,6 +47,21 @@ class ArticleMembers(models.Model):
         for member in self:
             member.is_current_user = member.partner_id.user_id == self.env.user
 
+    def unlink(self):
+        """ When removing a member, the constraint is not triggered.
+        We need to check manually on article with no write permission that we do not remove the last write member """
+        articles = self.article_id
+        members_by_articles = dict.fromkeys(self.article_id.ids, self.env['knowledge.article.member'])
+        for member in self:
+            members_by_articles[member.article_id.id] |= member
+        for article in articles:
+            if article.internal_permission == 'write':
+                continue
+            remaining_members = article.article_member_ids - members_by_articles[article.id]
+            if not remaining_members.filtered(lambda m: m.permission == 'write'):
+                raise ValidationError(_("You must have at least one writer."))
+
+        return super(ArticleMembers, self).unlink()
 
 class Article(models.Model):
     _name = "knowledge.article"
@@ -110,7 +125,7 @@ class Article(models.Model):
         If article has member, the validation is done in article.member model has we cannot trigger constraint depending
         on fields from related model. see _check_members from 'knowledge.article.member' model for more details. """
         for article in self:
-            if article.internal_permission != 'write' and not article.article_member_ids:
+            if article.internal_permission != 'write' and not any(m.permission == "write" for m in article.article_member_ids):
                 raise ValidationError(_("You must have at least one writer."))
 
     ##############################
@@ -465,13 +480,9 @@ class Article(models.Model):
         if not self.user_can_write:
             raise AccessError(_('You are not allowed to move this article.'))
         parent = self.browse(parent_id) if parent_id else False
-        if parent_id and not parent:
-            raise UserError(_("The parent in which you want to move your article does not exist"))
-        elif parent and not parent.user_can_write:
+        if parent and not parent.user_can_write:
             raise AccessError(_('You are not allowed to move this article under this parent.'))
         before_article = self.browse(before_article_id) if before_article_id else False
-        if before_article_id and not before_article:
-            raise UserError(_("The article before which you want to move your article does not exist"))
 
         # as base user doesn't have access to members, use sudo to allow access it.
         article_sudo = self.sudo()
@@ -492,13 +503,22 @@ class Article(models.Model):
             values['internal_permission'] = 'none' if private else 'write'
 
         if not parent and private:  # If set private without parent, remove all members except current user.
-            article_sudo.article_member_ids.unlink()
-            values.update({
-                'article_member_ids': [(0, 0, {
-                    'partner_id': self.env.user.partner_id.id,
-                    'permission': 'write'
-                })]
-            })
+            member = article_sudo.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
+            if member:
+                article_sudo.article_member_ids.filtered(lambda m: m.id != member.id).unlink()
+                values.update({
+                    'article_member_ids': [(1, member.id, {
+                        'permission': 'write'
+                    })]
+                })
+            else:
+                article_sudo.article_member_ids.unlink()
+                values.update({
+                    'article_member_ids': [(0, 0, {
+                        'partner_id': self.env.user.partner_id.id,
+                        'permission': 'write'
+                    })]
+                })
         elif parent:
             values.update(article_sudo._get_access_values_from_parent(parent))
 
@@ -511,10 +531,12 @@ class Article(models.Model):
 
     def article_create(self, title=False, parent_id=False, private=False):
         parent = self.browse(parent_id) if parent_id else False
-        if parent_id and not parent:
-            raise UserError(_("The parent in which you want to move your article does not exist"))
 
         if parent:
+            if private and parent.category != "private":
+                raise ValidationError(_("Cannot create an article under a non-private parent"))
+            if not private and parent.category == "private":
+                raise ValidationError(_("Cannot create a non-private article under a private parent"))
             if not parent.user_can_write:
                 raise AccessError(_("Cannot create an article under a parent article you can't write on"))
             if private and not parent.owner_id == self.env.user:
@@ -549,18 +571,30 @@ class Article(models.Model):
 
         return article.id
 
-    def set_member_permission(self, member_id, permission):
-        self.ensure_one()
-        if self.user_can_write:
-            member = self.sudo().article_member_ids.filtered(lambda member: member.id == member_id)
-            member.write({'permission': permission})
+    # Permission and members handling methods
+    # ---------------------------------------
 
-    def remove_member(self, member_id):
-        # TODO: Maybe remove member should take partner_id and simply remove it from article.partner_ids
+    def set_article_permission(self, permission):
         self.ensure_one()
         if self.user_can_write:
-            member = self.sudo().article_member_ids.filtered(lambda member: member.id == member_id)
+            self.write({'internal_permission': permission})
+            self._propagate_access_to_children()
+
+    def set_member_permission(self, partner_id, permission):
+        self.ensure_one()
+        if self.user_can_write:
+            member = self.sudo().article_member_ids.filtered(lambda member: member.partner_id.id == partner_id)
+            member.write({'permission': permission})
+            self._propagate_access_to_children()
+
+    def remove_member(self, partner_id):
+        self.ensure_one()
+        if self.user_can_write:
+            member = self.sudo().article_member_ids.filtered(lambda member: member.partner_id.id == partner_id)
             member.unlink()
+            # Propagate the removal of the member to all the children
+            children_members = self._get_descendants().article_member_ids.filtered(lambda member: member.partner_id.id == partner_id)
+            children_members.unlink()
 
     def invite_member(self, access_rule, partner_id=False, email=False):
         self.ensure_one()
@@ -588,6 +622,9 @@ class Article(models.Model):
                 'permission': access_rule
             })]
         })
+        if self.child_ids:
+            self._propagate_access_to_children()
+
         self._send_invite_mail(partner)
 
     def _send_invite_mail(self, partner):
@@ -652,9 +689,6 @@ class Article(models.Model):
         In case of conflict, the highest permission is kept between parent.member and article.member (write > read)
         Called by move_to and _propagate_access_to_children -> when moving an article under a parent
         Directly modifies the given write_values"""
-        if not parent.user_can_write:
-            # When propagating to children, this should never raise.
-            raise AccessError(_("You cannot move articles under an article you can't write on"))
         values = {}
         if parent.internal_permission != self.internal_permission:
             values['internal_permission'] = parent.internal_permission
@@ -671,7 +705,7 @@ class Article(models.Model):
                 parent_member_permission = parent.article_member_ids.filtered(
                     lambda p_member: p_member.partner_id == member.partner_id).permission
                 if parent_member_permission and permission_priority[parent_member_permission] > permission_priority[member.permission]:
-                    values['article_member_ids'].push((1, member.id, {
+                    values['article_member_ids'].append((1, member.id, {
                         'permission': parent_member_permission
                     }))
         return values
