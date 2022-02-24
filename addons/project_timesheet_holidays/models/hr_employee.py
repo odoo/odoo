@@ -10,6 +10,8 @@ class Employee(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         employees = super().create(vals_list)
+        if self.env.context.get('salary_simulation'):
+            return employees
 
         # We need to create timesheet entries for the global time off that are already created
         # and are planned for after this employee creation date

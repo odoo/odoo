@@ -184,6 +184,8 @@ class HrEmployeeBase(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if self.env.context.get('salary_simulation'):
+            return super().create(vals_list)
         approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
         group_updates = []
         for vals in vals_list:
