@@ -54,6 +54,19 @@
             </div>
         </form>
     </t>
+    <t t-name="knowledge.knowledge_article_template_frontend">
+        <li t-att-data-article-id="article.id">
+            <div class="d-flex">
+                <button class="o_article_icon btn btn-link text-secondary p-0" type="button">
+                    <i t-attf-class="fa fa-fw #{article.icon}" />
+                </button>
+                <div class="o_article_name flex-grow-1 text-truncate">
+                    <a t-out="article.name" t-attf-href="/article/{{article.id}}" />
+                </div>
+            </div>
+        </li>
+    </t>
+
     <t t-name="knowledge.knowledge_article_template">
         <li t-attf-id="article_#{article.id}" t-att-data-article-id="article.id">
             <div class="o_article d-flex">

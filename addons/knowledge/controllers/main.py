@@ -39,7 +39,9 @@ class KnowledgeController(http.Controller):
             return werkzeug.exceptions.NotFound()  # (or BadRequest ?)
         # check if user is logged in
         user = request.env.user
-        if user._is_public() or not article.sudo().user_has_access:
+        # for external_users, need to sudo to access article.user_has_access and other fields needed to render the page.
+        article = article.sudo()
+        if user._is_public() or not article.user_has_access:
             raise werkzeug.exceptions.Forbidden()
         if user.has_group('base.group_user'):
             return redirect("/web#id=%s&model=knowledge.article&action=%s&menu_id=%s" % (
@@ -47,15 +49,27 @@ class KnowledgeController(http.Controller):
                 request.env.ref('knowledge.knowledge_article_dashboard_action').id,
                 request.env.ref('knowledge.knowledge_menu_root').id
             ))
-        return request.render('knowledge.article_frontend_template', self._prepare_article_frontend_values(article, **post))
+        return request.render('knowledge.knowledge_article_view_frontend', self._prepare_article_frontend_values(article, **post))
+
+    @http.route('/article/toggle_favourite', type='json', auth='user')
+    def article_toggle_favourite(self, article_id, **post):
+        article = request.env['knowledge.article'].browse(article_id)
+        if not article.exists():
+            return werkzeug.exceptions.NotFound()
+        article = article.sudo()
+        if not article.user_has_access:
+            return werkzeug.exceptions.Forbidden()
+        article.is_user_favourite = not article.is_user_favourite
+        return {
+            'id': article.id,
+            'name': article.display_name,
+            'icon': article.icon,
+            'is_favourite': article.is_user_favourite,
+        }
 
     def _prepare_article_frontend_values(self, article, **post):
-        values = {
-            'article': article,
-            'article_name': article.name,
-            'article_body': article.body,
-        }
-        values.update(self.get_tree_values())
+        values = {'article': article}
+        values.update(self.get_tree_values(article.id))
         return values
 
     # ------------------------
