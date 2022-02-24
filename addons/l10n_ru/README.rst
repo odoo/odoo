@@ -31,7 +31,7 @@ Part 2:
 * http://pravo.gov.ru/proxy/ips/?docbody=&nd=102067058
 * http://www.consultant.ru/document/cons_doc_LAW_28165/
 
-VAT (Rus: Общая система налогооблажения)
+VAT (Rus: Общая система налогообложения)
 ----------------------------------------
 
 Name of the legal doc about VAT Tax Report: Приказ ФНС России от 29.10.2014 №
