@@ -110,7 +110,7 @@ export class ColorPicker extends Component {
     }
     get hex() {
         const rgb = convertHslToRgb(this.state.hue, this.state.saturation, this.state.lightness);
-        return convertRGBToHEX(rgb.red, rgb.green, rgb.blue);
+        return rgb ? convertRGBToHEX(rgb.red, rgb.green, rgb.blue) : this.props.color;
     }
 
     // =============== Color Pick Area ===============

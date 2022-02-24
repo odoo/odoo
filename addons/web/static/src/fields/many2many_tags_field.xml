@@ -4,9 +4,9 @@
     <t t-name="web.Many2ManyTagsField" owl="1">
         <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
             <div class="o_tag badge badge-pill" t-attf-class="o_tag_color_{{ tag.colorIndex }}" t-att-data-color="tag.colorIndex">
-                <span class="o_badge_text" title="tag.name or 'tag' + tag_index">
+                <span class="o_badge_text" title="tag.name or 'tag' + tag_index" t-on-click.prevent.stop="onClick">
                     <span role="img"/>
-                    <span class="o_tag_badge_text" t-esc="tag.name or 'tag' + tag_index" />
+                    <span class="o_tag_badge_text" t-esc="tag.name or 'tag' + tag_index"/>
                 </span>
             </div>
         </t>
