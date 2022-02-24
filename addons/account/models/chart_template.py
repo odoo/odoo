@@ -11,15 +11,13 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-TEMPLATES = [
-    ('generic_coa', 'Generic Chart Template', None, []),
-    ('be', 'BE Belgian PCMN', 'base.be', ['l10n_be']),
-    ('fr', 'FR', 'base.fr', ['l10n_fr']),
-    ('ch', 'CH', 'base.ch', ['l10n_ch']),
-    ('de', 'DE', 'base.de', ['l10n_de']),
-]
-MODULES = {ct: modules for ct, string, country, modules in TEMPLATES}
-COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
+TEMPLATES = {
+    'generic_coa': {'name': 'Generic Chart Template', 'country': None, 'modules': []},
+    'be': {'name': 'BE Belgian PCMN', 'country': 'base.be', 'modules': ['l10n_be']},
+    'fr': {'name': 'FR', 'country': 'base.fr', 'modules': ['l10n_fr']},
+    'ch': {'name': 'CH', 'country': 'base.ch', 'modules': ['l10n_ch']},
+    'de': {'name': 'DE', 'country': 'base.de', 'modules': ['l10n_de']},
+}
 
 
 def migrate_set_tags_and_taxes_updatable(cr, registry, module):
@@ -78,9 +76,11 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _guess_chart_template(self, company=False):
         company = company or self.env.company
+        default = AccountChartTemplate._template_code
         if not company.country_id:
-            return 'generic_coa'
-        return COUNTRIES.get(company.country_id.get_metadata()[0]['xmlid'], 'generic_coa')
+            return default
+        country_code = company.country_id.get_metadata()[0]['xmlid']
+        return next((key for key, template in TEMPLATES.items() if template['country'] == country_code), default)
 
     def try_loading(self, template_code=False, company=False, install_demo=True):
         """ Installs this chart of accounts for the current company if not chart
@@ -95,7 +95,8 @@ class AccountChartTemplate(models.AbstractModel):
         company = company or self.env.company
         template_code = template_code or self._guess_chart_template(company)
 
-        module_ids = self.env['ir.module.module'].search([('name', 'in', MODULES.get(template_code)), ('state', '=', 'uninstalled')])
+        module_names = TEMPLATES[template_code].get('modules', [])
+        module_ids = self.env['ir.module.module'].search([('name', 'in', module_names), ('state', '=', 'uninstalled')])
         if module_ids:
             module_ids.sudo().button_immediate_install()
             self.env.reset()
