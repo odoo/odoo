@@ -1320,6 +1320,18 @@ class AccountBankStatementLine(models.Model):
         self.payment_ids.unlink()
 
         for st_line in self:
+            if st_line.move_id._get_violated_lock_dates(st_line.date, st_line.move_id._affect_tax_report()):
+                partials = st_line.line_ids.matched_debit_ids + st_line.line_ids.matched_credit_ids
+                # if it is in a locked period, we cannot delete the related move's lines
+                if partials:
+                    moves = partials.debit_move_id + partials.credit_move_id - st_line.move_id
+                    raise UserError(_("You cannot unreconcile this line from here because it is in a lock period, "
+                                      "instead, unreconcile it on the related entries: %s"),
+                                    ", ".join(moves.mapped('name'))
+                                    )
+                else:
+                    # there is no reconciliation to undo
+                    continue
             st_line.with_context(force_delete=True).write({
                 'to_check': False,
                 'line_ids': [(5, 0)] + [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals()],

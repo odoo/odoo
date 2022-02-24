@@ -145,13 +145,15 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_out_invoice_onchange_invoice_date(self):
         for tax_date, invoice_date, accounting_date in [
             ('2019-03-31', '2019-05-12', '2019-05-12'),
-            ('2019-03-31', '2019-02-10', '2019-04-1'),
+            ('2019-03-31', '2019-02-10', '2019-04-30'),
             ('2019-05-31', '2019-06-15', '2019-06-15'),
         ]:
             self.invoice.company_id.tax_lock_date = tax_date
-            with Form(self.invoice) as move_form:
+            invoice = self.invoice.copy()
+            with Form(invoice) as move_form:
                 move_form.invoice_date = invoice_date
-            self.assertEqual(self.invoice.date, fields.Date.to_date(accounting_date))
+            invoice.action_post()
+            self.assertEqual(invoice.date, fields.Date.to_date(accounting_date))
 
     def test_out_invoice_line_onchange_product_1(self):
         move_form = Form(self.invoice)
@@ -2472,7 +2474,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             **self.move_vals,
             'payment_reference': move.name,
             'currency_id': self.currency_data['currency'].id,
-            'date': fields.Date.from_string('2017-01-01'),
+            'date': fields.Date.from_string('2017-01-31'),
             'amount_untaxed': 1200.0,
             'amount_tax': 230.0,
             'amount_total': 1430.0,

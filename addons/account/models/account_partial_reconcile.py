@@ -119,7 +119,7 @@ class AccountPartialReconcile(models.Model):
         # Reverse CABA entries.
         today = fields.Date.context_today(self)
         default_values_list = [{
-            'date': move.date if move.date > (move.company_id.period_lock_date or date.min) else today,
+            'date': move._get_accounting_date(move.date, True),
             'ref': _('Reversal of: %s') % move.name,
         } for move in moves_to_reverse]
         moves_to_reverse._reverse_moves(default_values_list, cancel=True)
@@ -197,9 +197,17 @@ class AccountPartialReconcile(models.Model):
                     payment_date = counterpart_line.date
 
                 if move_values['currency'] == move.company_id.currency_id:
+                    # Ignore the exchange difference.
+                    if move.company_currency_id.is_zero(partial_amount):
+                        continue
+
                     # Percentage made on company's currency.
                     percentage = partial_amount / move_values['total_balance']
                 else:
+                    # Ignore the exchange difference.
+                    if move.currency_id.is_zero(partial_amount_currency):
+                        continue
+
                     # Percentage made on foreign currency.
                     percentage = partial_amount_currency / move_values['total_amount_currency']
 

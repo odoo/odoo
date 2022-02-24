@@ -1192,3 +1192,67 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertEqual(move_balance_receiv.full_reconcile_id, inv1_receivable.full_reconcile_id)
 
         self.assertTrue(inv1.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
+
+    # def test_reconciling_invoice_with_caba_in_lock_period(self):
+    #     tax_waiting_account = self.env['account.account'].create({
+    #         'name': 'TAX_WAIT',
+    #         'code': 'TWAIT',
+    #         'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+    #         'reconcile': True,
+    #         'company_id': self.company_data['company'].id,
+    #     })
+    #     tax_final_account = self.env['account.account'].create({
+    #         'name': 'TAX_TO_DEDUCT',
+    #         'code': 'TDEDUCT',
+    #         'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+    #         'company_id': self.company_data['company'].id,
+    #     })
+    #     tax_base_amount_account = self.env['account.account'].create({
+    #         'name': 'TAX_BASE',
+    #         'code': 'TBASE',
+    #         'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+    #         'company_id': self.company_data['company'].id,
+    #     })
+    #     self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+    #     tax_tags = defaultdict(dict)
+    #     for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
+    #         tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
+    #             'name': '%s %s tag' % (line_type, repartition_type),
+    #             'applicability': 'taxes',
+    #             'country_id': self.env.ref('base.us').id,
+    #         })
+    #     tax = self.env['account.tax'].create({
+    #         'name': 'cash basis 10%',
+    #         'type_tax_use': 'sale',
+    #         'amount': 10,
+    #         'tax_exigibility': 'on_payment',
+    #         'cash_basis_transition_account_id': tax_waiting_account.id,
+    #         'invoice_repartition_line_ids': [
+    #             (0, 0, {
+    #                 'factor_percent': 100,
+    #                 'repartition_type': 'base',
+    #                 'tag_ids': [(6, 0, tax_tags['invoice']['base'].ids)],
+    #             }),
+    #             (0, 0, {
+    #                 'factor_percent': 100,
+    #                 'repartition_type': 'tax',
+    #                 'account_id': tax_final_account.id,
+    #                 'tag_ids': [(6, 0, tax_tags['invoice']['tax'].ids)],
+    #             }),
+    #         ],
+    #         'refund_repartition_line_ids': [
+    #             (0, 0, {
+    #                 'factor_percent': 100,
+    #                 'repartition_type': 'base',
+    #                 'tag_ids': [(6, 0, tax_tags['refund']['base'].ids)],
+    #             }),
+    #             (0, 0, {
+    #                 'factor_percent': 100,
+    #                 'repartition_type': 'tax',
+    #                 'account_id': tax_final_account.id,
+    #                 'tag_ids': [(6, 0, tax_tags['refund']['tax'].ids)],
+    #             }),
+    #         ],
+    #     })
+    #
+    #     self.create_invoice()

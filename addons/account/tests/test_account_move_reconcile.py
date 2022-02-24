@@ -2833,3 +2833,102 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ._create_payments()
 
         bill.button_draft()
+
+    def test_caba_reconciliation_in_lock_period(self):
+        """
+        When reconciling a payment and an invoice of past date, the caba
+        moves' date should be earliest of today and first end of month
+        (or year based on  sequence period) after the lock date
+        """
+        # Make the tax account reconcilable
+        # self.tax_account_1.reconcile = True
+
+        # Create an invoice with a CABA tax using the same tax account and pay half of it
+        caba_inv = self.init_invoice('out_invoice', amounts=[130], post=True, invoice_date='2022-01-15',
+                                     taxes=self.cash_basis_tax_a_third_amount)
+
+        payment = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2022-03-03',
+            'line_ids': [
+                (0, 0, {'debit': 0.0, 'credit': 130.0, 'account_id': self.company_data['default_account_receivable'].id}),
+                (0, 0, {'debit': 130.0, 'credit': 0.0, 'account_id': self.company_data['default_account_revenue'].id}),
+            ]
+        })
+        payment.action_post()
+
+        self.company_data['company'].tax_lock_date = '2022-03-31'
+
+        receivable_lines = (caba_inv + payment).line_ids.filtered(
+            lambda line: line.account_id.internal_type == 'receivable')
+
+        reconcile = receivable_lines.reconcile()
+
+        self.assertRecordValues(reconcile['tax_cash_basis_moves'], [{'date': fields.Date.from_string('2022-04-30')}])
+
+        receivable_lines[0].remove_move_reconcile()
+        reversed_caba_move = self.env['account.move'].search([('reversed_entry_id', 'in', reconcile['tax_cash_basis_moves'].ids)])
+        self.assertRecordValues(reversed_caba_move, [{'date': fields.Date.from_string('2022-04-30')}])
+
+    def test_caba_reconciliation_in_lock_period_multi_currency(self):
+        """
+        When reconciling a payment and an invoice of past date, the caba and currency
+        exchange moves' date should be earliest of today and first end of month
+        (or year based on sequence period) after the lock date
+        """
+        # Make the tax account reconcilable
+        # self.tax_account_1.reconcile = True
+
+        # Create an invoice with a CABA tax using the same tax account and pay half of it
+        tax = self.cash_basis_tax_a_third_amount.copy({
+            'name': 'caba_15_included',
+            'amount': 15.0,
+            'price_include': True,
+        })
+
+        self.currency_data['rates'][-1].copy({'name': '2022-01-01', 'rate': 1.1})
+        self.currency_data['rates'][-1].copy({'name': '2022-03-01', 'rate': 1.2})
+
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        invoice_form.partner_id = self.partner_a
+        invoice_form.invoice_date = fields.Date.from_string("2022-01-15")
+        invoice_form.currency_id = self.currency_data['currency']
+        with invoice_form.invoice_line_ids.new() as line:
+            line.name = 'Product1'
+            line.amount_currency = -115.0
+            line.tax_ids.clear()
+            line.tax_ids.add(tax)
+        invoice_move = invoice_form.save()
+
+        invoice_move.action_post()
+
+        self.company_data['default_journal_bank'].write({
+            'currency_id': self.currency_data['currency'].id,
+        })
+
+        payment = self.env['account.payment'].create({
+            'amount': 115.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'date': fields.Date.from_string('2022-03-03'),
+        })
+
+        payment.action_post()
+        payment_move = payment.move_id
+
+        self.company_data['company'].tax_lock_date = fields.Date.from_string("2022-03-31")
+        self.company_data['company'].period_lock_date = fields.Date.from_string("2022-03-31")
+        self.company_data['company'].fiscalyear_lock_date = fields.Date.from_string("2022-03-31")
+
+        receivable_lines = (invoice_move + payment_move).line_ids.filtered(
+            lambda line: line.account_id.internal_type == 'receivable')
+
+        reconcile = receivable_lines.reconcile()
+
+        self.assertRecordValues(reconcile['tax_cash_basis_moves'], [{'date': fields.Date.from_string('2022-04-30')}])
+        receivable_lines[0].remove_move_reconcile()
+        reversed_caba_move = self.env['account.move'].search(
+            [('reversed_entry_id', 'in', reconcile['tax_cash_basis_moves'].ids)])
+        self.assertRecordValues(reversed_caba_move, [{'date': fields.Date.from_string('2022-04-30')}])
