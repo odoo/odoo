@@ -91,7 +91,7 @@ class Project(models.Model):
             return
         group_read = self.env['project.task'].read_group(
             domain=[('planned_hours', '!=', False), ('project_id', 'in', timesheet_projects.ids),
-                     '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
+                     ('is_closed', '=', False)],
             fields=['planned_hours:sum', 'remaining_hours:sum'], groupby='project_id')
         group_per_project_id = {group['project_id'][0]: group for group in group_read}
         for project in self:
