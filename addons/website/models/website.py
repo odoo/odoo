@@ -20,7 +20,7 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, MissingError
 from odoo.http import request
 from odoo.modules.module import get_resource_path, get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
@@ -1310,7 +1310,7 @@ class Website(models.Model):
 
             router = http.root.get_db_router(request.db).bind('')
             path = router.build(rule.endpoint, args)
-        except (NotFound, AccessError):
+        except (NotFound, AccessError, MissingError):
             # The build method returns a quoted URL so convert in this case for consistency.
             path = urls.url_quote_plus(request.httprequest.path, safe='/')
         lang_path = f'/{lang.url_code}' if lang != self.default_lang_id else ''
