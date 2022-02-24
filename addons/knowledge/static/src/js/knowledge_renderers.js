@@ -8,6 +8,7 @@ const KnowledgeFormRenderer = FormRenderer.extend({
         'click .o_article_caret': '_onFold',
         'click .o_article_dropdown i': '_onIconClick',
         'click .o_article_name': '_onOpen',
+        'click .o_article_create, .o_section_create': '_onCreate'
     }),
 
     /**
@@ -159,6 +160,24 @@ const KnowledgeFormRenderer = FormRenderer.extend({
                 const $icon = $(this).find('.o_article_icon:first i');
                 $icon.removeClass();
                 $icon.addClass(`fa fa-fw ${name}`);
+            });
+        }
+    },
+
+    /**
+     * @param {Event} event
+     */
+    _onCreate: function (event) {
+        const $target = $(event.currentTarget);
+        if ($target.hasClass('o_section_create')) {
+            const $section = $target.closest('.o_section');
+            this.trigger_up('create', {
+                category: $section.data('section')
+            });
+        } else if ($target.hasClass('o_article_create')) {
+            const $li = $target.closest('li');
+            this.trigger_up('create', {
+                target_parent_id: $li.data('article-id')
             });
         }
     },

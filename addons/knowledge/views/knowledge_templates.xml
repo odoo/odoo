@@ -21,8 +21,13 @@
             </ul>
         </section>
 
-        <section data-section="workspace">
-            <div class="h4 mb-0">Workspace</div>
+        <section class="o_section" data-section="workspace">
+            <div class="o_section_header d-flex h4 mb-0">
+                <div class="flex-grow-1 text-truncate">Workspace</div>
+                <button class="o_section_create btn btn-link text-secondary rounded p-0" type="button">
+                    <i class="fa fa-fw fa-plus"/>
+                </button>
+            </div>
             <ul class="o_tree m-0 px-0 py-2">
                 <t t-foreach="public_articles.sorted('sequence')" t-as="child">
                     <t t-if="child.user_has_access" t-call="knowledge.article_template">
@@ -32,8 +37,10 @@
             </ul>
         </section>
 
-        <section t-if="shared_articles" data-section="shared">
-            <div class="h4 mb-0">Shared</div>
+        <section t-if="shared_articles" class="o_section mb-3" data-section="shared">
+            <div class="o_section_header d-flex h4 mb-0">
+                <div class="flex-grow-1 text-truncate">Shared</div>
+            </div>
             <ul class="o_tree m-0 px-0 py-2">
                 <t t-foreach="shared_articles.sorted('sequence')" t-as="child">
                     <t t-if="child.user_has_access" t-call="knowledge.article_template">
@@ -43,8 +50,13 @@
             </ul>
         </section>
 
-        <section class="mb-3" data-section="private">
-            <div class="h4 mb-0">Private</div>
+        <section class="o_section mb-3" data-section="private">
+            <div class="o_section_header d-flex h4 mb-0">
+                <div class="flex-grow-1 text-truncate">Private</div>
+                <button class="o_section_create btn btn-link text-secondary rounded p-0" type="button">
+                    <i class="fa fa-fw fa-plus"/>
+                </button>
+            </div>
             <ul class="o_tree m-0 px-0 py-2">
                 <t t-foreach="private_articles.sorted('sequence')" t-as="child">
                     <t t-if="child.user_has_access" t-call="knowledge.article_template">

@@ -14,12 +14,12 @@ const KnowledgeFormController = FormController.extend({
         'click .btn-create': '_onCreate',
         'click .btn-move': '_onOpenMoveToModal',
         'click .btn-share': '_onShare',
-        'click .o_article_create': '_onCreate',
         'click #knowledge_search_bar': '_onSearch',
         'change .o_breadcrumb_article_name': '_onRename',
     }),
 
     custom_events: Object.assign({}, FormController.prototype.custom_events, {
+        create: '_onCreate',
         move: '_onMove',
     }),
 
@@ -68,13 +68,12 @@ const KnowledgeFormController = FormController.extend({
      * @param {Event} event
      */
     _onCreate: async function (event) {
-        const $target = $(event.currentTarget);
-        if ($target.hasClass('o_article_create')) {  // '+' button in side panel
-            const $li = $target.closest('li');
-            const id = $li.data('article-id');
-            await this._create(id);
-        } else {  // main 'Create' button
-            await this._create(false, true);
+        if (event instanceof $.Event) {
+            await this._create({
+                category: 'private'
+            });
+        } else {
+            await this._create(event.data);
         }
     },
 
@@ -152,17 +151,22 @@ const KnowledgeFormController = FormController.extend({
     // API calls:
 
     /**
-     * @param {integer} id - Parent id
+     * @param {Object} data
+     * @param {String} data.category
+     * @param {integer} data.target_parent_id
      */
-    _create: async function (id, setPrivate) {
+    _create: async function (data) {
+        const params = {};
+        if (data.target_parent_id) {
+            params.parent_id = data.target_parent_id;
+        } else {
+            params.private = data.category === 'private';
+        }
         const articleId = await this._rpc({
             model: 'knowledge.article',
             method: 'article_create',
             args: [[]],
-            kwargs: {
-                parent_id: id,
-                private: setPrivate
-            },
+            kwargs: params,
         });
         if (!articleId) {
             return;
