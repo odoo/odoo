@@ -56,7 +56,9 @@ class Registry(Mapping):
                 size = int(config['limit_memory_soft'] / avgsz)
         return LRU(size)
 
-    def __new__(cls, db_name):
+    def __new__(cls, db_name, readonly=False):
+        if readonly:
+            b = 1
         """ Return the registry for the given database name."""
         with cls._lock:
             try:
@@ -107,7 +109,7 @@ class Registry(Mapping):
 
         return registry
 
-    def init(self, db_name):
+    def init(self, db_name, readonly=False):
         self.models = {}    # model name/model instance mapping
         self._sql_constraints = set()
         self._init = True
@@ -123,7 +125,10 @@ class Registry(Mapping):
         self.loaded_xmlids = set()
 
         self.db_name = db_name
+        # if readonly:
+        #     a = 1
         self._db = odoo.sql_db.db_connect(db_name)
+        self._db_readonly = odoo.sql_db.db_connect(db_name, readonly=True)
 
         # cursor for test mode; None means "normal" mode
         self.test_cr = None
@@ -693,7 +698,7 @@ class Registry(Mapping):
         Registry._lock = Registry._saved_lock
         Registry._saved_lock = None
 
-    def cursor(self):
+    def cursor(self, readonly=False):
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
         """
@@ -701,6 +706,8 @@ class Registry(Mapping):
             # When in test mode, we use a proxy object that uses 'self.test_cr'
             # underneath.
             return TestCursor(self.test_cr, self.test_lock)
+        if readonly:
+            return self._db_readonly.cursor()
         return self._db.cursor()
 
 

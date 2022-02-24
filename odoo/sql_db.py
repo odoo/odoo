@@ -23,6 +23,7 @@ import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls
+from psycopg2.errors import ReadOnlySqlTransaction
 
 from odoo.api import Environment
 
@@ -223,7 +224,7 @@ class Cursor(BaseCursor):
     """
     IN_MAX = 1000   # decent limit on size of IN queries - guideline = Oracle limit
 
-    def __init__(self, pool, dbname, dsn, serialized=True):
+    def __init__(self, pool, dbname, dsn, serialized=True, readonly=False):
         super().__init__()
 
         self.sql_from_log = {}
@@ -246,6 +247,10 @@ class Cursor(BaseCursor):
         self._serialized = serialized
 
         self._cnx = pool.borrow(dsn)
+        self._readonly = readonly
+        if self._readonly:
+            print("Cursor is readonly")
+            self._cnx.readonly = self._readonly
         self._obj = self._cnx.cursor()
         if self.sql_log:
             self.__caller = frame_codeinfo(currentframe(), 2)
@@ -296,6 +301,10 @@ class Cursor(BaseCursor):
         try:
             params = params or None
             res = self._obj.execute(query, params)
+        except ReadOnlySqlTransaction as e:
+            if self._default_log_exceptions if log_exceptions is None else log_exceptions:
+                _logger.error("readonly query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
+            raise
         except Exception as e:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
@@ -467,7 +476,6 @@ class Cursor(BaseCursor):
     @property
     def closed(self):
         return self._closed
-
 
 class TestCursor(BaseCursor):
     """ A pseudo-cursor to be used for tests, on top of a real cursor. It keeps
@@ -665,15 +673,16 @@ class ConnectionPool(object):
 class Connection(object):
     """ A lightweight instance of a connection to postgres
     """
-    def __init__(self, pool, dbname, dsn):
+    def __init__(self, pool, dbname, dsn, readonly=False):
         self.dbname = dbname
         self.dsn = dsn
         self.__pool = pool
+        self._readonly = readonly
 
     def cursor(self, serialized=True):
         cursor_type = serialized and 'serialized ' or ''
         _logger.debug('create %scursor to %r', cursor_type, self.dsn)
-        return Cursor(self.__pool, self.dbname, self.dsn, serialized=serialized)
+        return Cursor(self.__pool, self.dbname, self.dsn, serialized=serialized, readonly=self._readonly)
 
     # serialized_cursor is deprecated - cursors are serialized by default
     serialized_cursor = cursor
@@ -714,7 +723,7 @@ def connection_info_for(db_or_uri):
 
 _Pool = None
 
-def db_connect(to, allow_uri=False):
+def db_connect(to, allow_uri=False, readonly=False):
     global _Pool
     if _Pool is None:
         _Pool = ConnectionPool(int(tools.config['db_maxconn']))
@@ -722,7 +731,7 @@ def db_connect(to, allow_uri=False):
     db, info = connection_info_for(to)
     if not allow_uri and db != to:
         raise ValueError('URI connections not allowed')
-    return Connection(_Pool, db, info)
+    return Connection(_Pool, db, info, readonly=readonly)
 
 def close_db(db_name):
     """ You might want to call odoo.modules.registry.Registry.delete(db_name) along this function."""

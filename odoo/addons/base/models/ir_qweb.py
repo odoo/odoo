@@ -52,6 +52,9 @@ class IrQWeb(models.AbstractModel, QWeb):
         context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
 
+        if values.get('env'):
+            print('RENDER', id_or_xml_id, self.env.cr._readonly, values['env'].cr._readonly)
+
         result = super(IrQWeb, self)._render(id_or_xml_id, values=values, **context)
 
         if b'data-pagebreak=' not in result:

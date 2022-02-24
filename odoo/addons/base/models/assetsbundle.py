@@ -17,7 +17,7 @@ from contextlib import closing
 from datetime import datetime
 from subprocess import Popen, PIPE
 from collections import OrderedDict
-from odoo import fields, tools, SUPERUSER_ID
+from odoo import fields, tools, SUPERUSER_ID, registry
 from odoo.tools.pycompat import to_text
 from odoo.tools.misc import file_open
 from odoo.http import request
@@ -219,7 +219,7 @@ class AssetsBundle(object):
             **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, sep=sep, type=type)
         )
 
-    def _unlink_attachments(self, attachments):
+    def _unlink_attachments(self, attachments, env):
         """ Unlinks attachments without actually calling unlink, so that the ORM cache is not cleared.
 
         Specifically, if an attachment is generated while a view is rendered, clearing the ORM cache
@@ -227,11 +227,11 @@ class AssetsBundle(object):
         Such a view would be website.layout when main_object is an ir.ui.view.
         """
         to_delete = set(attach.store_fname for attach in attachments if attach.store_fname)
-        self.env.cr.execute(f"DELETE FROM {attachments._table} WHERE id IN %s", [tuple(attachments.ids)])
+        env.cr.execute(f"DELETE FROM {attachments._table} WHERE id IN %s", [tuple(attachments.ids)])
         for file_path in to_delete:
             attachments._file_delete(file_path)
 
-    def clean_attachments(self, type):
+    def clean_attachments(self, type, env):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
         saving a fresh one.
 
@@ -241,7 +241,7 @@ class AssetsBundle(object):
         of an ir.attachment unlink (because we cannot rollback a removal on the filestore), thus we
         must exclude the current bundle.
         """
-        ira = self.env['ir.attachment']
+        ira = env['ir.attachment']
         url = self.get_asset_url(
             extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
             name=self.name,
@@ -256,7 +256,7 @@ class AssetsBundle(object):
         # avoid to invalidate cache if it's already empty (mainly useful for test)
 
         if attachments:
-            self._unlink_attachments(attachments)
+            self._unlink_attachments(attachments, env)
             # force bundle invalidation on other workers
             self.env['ir.qweb'].clear_caches()
 
@@ -291,7 +291,16 @@ class AssetsBundle(object):
 
     def save_attachment(self, type, content):
         assert type in ('js', 'css')
-        ira = self.env['ir.attachment']
+        cr = None
+        truc = None
+        saved_env = self.env
+        if self.env.cr._readonly:
+            cr = registry(self.env.cr.dbname).cursor()  #, readonly=True
+            truc =self.env['base'].with_env(self.env(cr=cr))
+            self.env = truc.env
+            ira = truc.env['ir.attachment']
+        else:
+            ira = self.env['ir.attachment']
 
         # Set user direction in name to store two bundles
         # 1 for ltr and 1 for rtl, this will help during cleaning of assets bundle
@@ -308,6 +317,7 @@ class AssetsBundle(object):
             'public': True,
             'raw': content.encode('utf8'),
         }
+        print('IRA', ira.env.cr._readonly)
         attachment = ira.with_user(SUPERUSER_ID).create(values)
 
         url = self.get_asset_url(
@@ -326,16 +336,30 @@ class AssetsBundle(object):
         if self.env.context.get('commit_assetsbundle') is True:
             self.env.cr.commit()
 
-        self.clean_attachments(type)
+        attachment_id = attachment.id
+       
+        attachment = saved_env['ir.attachment'].browse(attachment_id)
+        print('ATTACHMENT', attachment.id)
+        print('Saved env', saved_env.cr._readonly)
+        print('Env', self.env.cr._readonly)
+
+        self.clean_attachments(type, truc if truc is not None else self.env)
 
         # For end-user assets (common and backend), send a message on the bus
         # to invite the user to refresh their browser
         if self.env and 'bus.bus' in self.env and self.name in self.TRACKED_BUNDLES:
             channel = (self.env.registry.db_name, 'bundle_changed')
             message = (self.name, self.version)
-            self.env['bus.bus'].sendone(channel, message)
+            if truc is not None:
+                truc.env['bus.bus'].sendone(channel, message)
+            else:
+                self.env['bus.bus'].sendone(channel, message)
             _logger.debug('Asset Changed:  xml_id: %s -- version: %s' % message)
 
+        if cr:
+            cr.commit()
+            cr.close()
+        self.env = saved_env
         return attachment
 
     def js(self):
