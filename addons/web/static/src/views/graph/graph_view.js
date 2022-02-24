@@ -155,7 +155,7 @@ GraphView.props = {
 GraphView.type = "graph";
 
 GraphView.display_name = _lt("Graph");
-GraphView.icon = "oi oi-chart--line-smooth";
+GraphView.icon = "fa fa-area-chart";
 GraphView.multiRecord = true;
 
 GraphView.Model = GraphModel;

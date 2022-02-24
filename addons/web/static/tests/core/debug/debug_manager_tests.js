@@ -175,7 +175,7 @@ QUnit.module("DebugMenu", (hooks) => {
             props: { close: () => {} },
         });
         assert.containsOnce(target, ".o_dialog");
-        assert.containsNone(target, ".o_dialog .o_debug_manager .oi-debug");
+        assert.containsNone(target, ".o_dialog .o_debug_manager .fa-bug");
     });
 
     QUnit.test(
@@ -228,7 +228,7 @@ QUnit.module("DebugMenu", (hooks) => {
                 props: { close: () => {} },
             });
             assert.containsOnce(target, ".o_dialog");
-            assert.containsOnce(target, ".o_dialog .o_debug_manager .oi-debug");
+            assert.containsOnce(target, ".o_dialog .o_debug_manager .fa-bug");
             await click(target, ".o_dialog .o_debug_manager button");
             const debugManagerEl = target.querySelector(".o_debug_manager");
             assert.containsN(debugManagerEl, ".dropdown-menu .dropdown-item", 2);

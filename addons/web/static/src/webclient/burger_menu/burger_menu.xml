@@ -8,7 +8,7 @@
         class="o_mobile_menu_toggle dropdown-toggle o-no-caret d-md-none"
         title="Toggle menu" aria-label="Toggle menu"
         t-on-click="_openBurger">
-        <i class="oi oi-large oi-open-panel--filled--right"/>
+        <i class="oi oi-panel-right"/>
     </a>
     <t t-portal="'body'">
       <Transition name="'burgerslide'" visible="state.isBurgerOpened" leaveDuration="200" t-slot-scope="transition">
@@ -18,7 +18,7 @@
               <span class="dropdown-toggle small d-flex align-items-center justify-content-between o-no-caret" t-att-class="{active: isUserMenuUnfolded}">
                   <img class="o_burger_menu_avatar o_image_24_cover rounded-circle" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
                   <span class="o_burger_menu_username px-2"><t t-esc="user.name"/></span>
-                  <i t-if="isUserMenuTogglable" class="oi" t-att-class="state.isUserMenuOpened ? 'oi-caret--down' : 'oi-caret--left'"/>
+                  <i t-if="isUserMenuTogglable" class="fa" t-att-class="state.isUserMenuOpened ? 'fa-caret-down' : 'fa-caret-left'"/>
               </span>
               <span type="button" class="o_burger_menu_close oi oi-close" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeBurger"/>
           </div>
