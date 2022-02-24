@@ -20,10 +20,11 @@ from lxml import etree
 from lxml.etree import LxmlError
 from lxml.builder import E
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, registry
 from odoo.exceptions import ValidationError, AccessError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
+from odoo.sql_db import Cursor
 from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -1710,10 +1711,24 @@ actual arch.
     def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         assert isinstance(self.id, int)
 
-        qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
+        
+        cr = registry(self._cr.dbname).cursor(readonly=True)  #, readonly=True
+        truc = self.with_env(self.env(cr=cr))
+        qcontext = dict() if minimal_qcontext else truc._prepare_qcontext()
         qcontext.update(values or {})
-
-        return self.env[engine]._render(self.id, qcontext)
+        for key, value in qcontext.items():
+            if isinstance(value, models.BaseModel):
+                qcontext[key] = value.with_env(truc.env)
+            if isinstance(value, api.Environment):
+                qcontext[key] = truc.env
+            if isinstance(value, Cursor):
+                qcontext[key] = cr
+        print('ici', self.name, truc.env.cr._readonly)
+        a = self.env[engine]._render(self.id, qcontext)
+        cr.close()
+        # self.flush()
+        # self.clear_cache()
+        return a
 
     @api.model
     def _prepare_qcontext(self):
