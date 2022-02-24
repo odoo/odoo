@@ -4,6 +4,8 @@ import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
 import { _lt } from "@web/core/l10n/translation";
 
+import { ColorList } from "@web/core/colorlist/colorlist";
+
 const { Component, useState, useExternalListener } = owl;
 
 export class ColorPickerField extends Component {
@@ -43,6 +45,9 @@ export class ColorPickerField extends Component {
 }
 
 ColorPickerField.template = "web.ColorPickerField";
+ColorPickerField.components = {
+    ColorList,
+};
 ColorPickerField.props = {
     ...standardFieldProps,
 };

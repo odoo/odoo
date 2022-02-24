@@ -64,7 +64,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_form_button_edit");
 
         // click on the only element (because it's closed) to open the field component
-        await click(target, "a");
+        await click(target, "button");
 
         await triggerEvent(document.activeElement, null, "keydown", {
             which: 13, // tab
@@ -99,26 +99,26 @@ QUnit.module("Fields", (hooks) => {
             await click(target, ".o_form_button_edit");
 
             assert.hasClass(
-                target.querySelectorAll("a:first-child"),
-                "o_field_color_picker_color_0",
-                "The no color item doesn't have the right class"
+                target.querySelectorAll(".o_field_color_picker button"),
+                "o_colorlist_item_color_0",
+                "The default no color value does have the right class"
             );
 
-            await click(target, "a");
+            await click(target, ".o_field_color_picker button");
 
             assert.hasClass(
-                target.querySelectorAll("a:first-child"),
-                "o_field_color_picker_color_0",
-                "The no color item doesn't have the right class"
+                target.querySelectorAll(".o_field_color_picker button"),
+                "o_colorlist_item_color_0",
+                "The no color item does have the right class in the list"
             );
 
-            await click(target, ".o_field_color_picker_color_3");
-            await click(target, "a");
+            await click(target, ".o_field_color_picker .o_colorlist_item_color_3");
+            await click(target, ".o_field_color_picker button");
 
             assert.hasClass(
-                target.querySelectorAll("a:first-child"),
-                "o_field_color_picker_color_0",
-                "The no color item doesn't have the right class"
+                target.querySelectorAll(".o_field_color_picker button"),
+                "o_colorlist_item_color_0",
+                "The no color item still have the right class in the list"
             );
         }
     );
@@ -143,28 +143,28 @@ QUnit.module("Fields", (hooks) => {
         // switch to edit mode
         await click(target, ".o_form_button_edit");
 
-        await click(target, "a");
+        await click(target, ".o_field_color_picker button");
 
         assert.strictEqual(
-            target.querySelectorAll("a").length > 1,
+            target.querySelectorAll(".o_field_color_picker button").length > 1,
             true,
             "there should be more color elements when the component is opened"
         );
 
-        await click(target, ".o_field_color_picker_color_3");
+        await click(target, ".o_field_color_picker .o_colorlist_item_color_3");
 
         assert.strictEqual(
-            target.querySelectorAll("a").length,
+            target.querySelectorAll(".o_field_color_picker button").length,
             1,
             "there should be one color element when the component is closed"
         );
 
-        await click(target, "a");
+        await click(target, ".o_field_color_picker button");
 
         await click(target.querySelector('.o_field_widget[name="foo"] input'));
 
         assert.strictEqual(
-            target.querySelectorAll("a").length,
+            target.querySelectorAll(".o_field_color_picker button").length,
             1,
             "there should be one color element when the component is closed"
         );
@@ -185,7 +185,7 @@ QUnit.module("Fields", (hooks) => {
                 </tree>`,
             });
 
-            await click(target, ".o_field_color_picker a");
+            await click(target, ".o_field_color_picker button");
 
             assert.strictEqual(
                 document.querySelectorAll(".o_list_renderer").length,
@@ -193,7 +193,7 @@ QUnit.module("Fields", (hooks) => {
                 "The current view should still be a list view"
             );
 
-            await click(target, ".o_field_color_picker_color_6");
+            await click(target, ".o_field_color_picker .o_colorlist_item_color_6");
 
             assert.strictEqual(
                 document.querySelectorAll(".o_list_renderer").length,

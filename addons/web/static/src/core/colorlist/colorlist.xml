@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ColorList" owl="1">
+        <div class="o_colorlist" aria-atomic="true">
+            <t t-foreach="props.colors" t-as="color" t-key="color">
+                <button t-on-click.prevent.stop="() => this.onColorSelected(color_index)" role="menuitem" t-att-title="color" t-att-aria-label="color" t-attf-class="{{'btn o_colorlist_item_color_' + color_index }}"/>
+            </t>
+        </div>
+    </t>
+
+</templates>
