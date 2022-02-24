@@ -1691,6 +1691,7 @@ var SnippetsMenu = Widget.extend({
         this.$('we-collapse-area > we-toggler').not($hierarchyTogglers).removeClass('active');
         $hierarchyTogglers.not(ev.currentTarget).addClass('active');
         ev.currentTarget.classList.toggle('active');
+        $('[title]').tooltip();
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.
@@ -1780,6 +1781,7 @@ var SnippetsMenu = Widget.extend({
         this.$('.o_we_add_snippet_btn').toggleClass('active', !customize);
         this.customizePanel.classList.toggle('d-none', !customize);
         this.$('.o_we_customize_snippet_btn').toggleClass('active', customize);
+        $('[title]').tooltip();
     },
 });
 
