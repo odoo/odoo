@@ -26,9 +26,8 @@ class HrEmployeeBase(models.AbstractModel):
         indirect_subordinates = self.env[self._name]
         parents |= self
         direct_subordinates = self.child_ids - parents
-        for child in direct_subordinates:
-            child_subordinate = child._get_subordinates(parents=parents)
-            indirect_subordinates |= child_subordinate
+        child_subordinates = direct_subordinates._get_subordinates(parents=parents) if direct_subordinates else self.browse()
+        indirect_subordinates |= child_subordinates
         return indirect_subordinates | direct_subordinates
 
 
