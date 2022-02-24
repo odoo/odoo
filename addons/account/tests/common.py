@@ -33,10 +33,6 @@ class AccountTestInvoicingCommon(TransactionCase):
         assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
 
         chart_template = chart_template_ref or 'generic_coa'
-        if not chart_template:
-            cls.tearDownClass()
-            # skipTest raises exception
-            cls.skipTest(cls, "User's company has no chart of accounts.")
 
         # Create user.
         user = cls.env['res.users'].create({
@@ -56,8 +52,8 @@ class AccountTestInvoicingCommon(TransactionCase):
         cls.env = cls.env(user=user)
         cls.cr = cls.env.cr
 
-        cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template)
-        cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template)
+        cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template_ref)
+        cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template_ref)
 
         user.write({
             'company_ids': [(6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
@@ -192,13 +188,14 @@ class AccountTestInvoicingCommon(TransactionCase):
         :return: A dictionary will be returned containing all relevant accounting data for testing.
         '''
 
-        chart_template = chart_template or cls.env.company.chart_template
         company = cls.env['res.company'].create({
             'name': company_name,
             **kwargs,
         })
         cls.env.user.company_ids |= company
 
+        # Install the chart template
+        chart_template = chart_template_ref or cls.env['account.chart.template']._guess_chart_template(company)
         cls.env['account.chart.template'].try_loading(chart_template, company=company, install_demo=False)
 
         # The currency could be different after the installation of the chart template.
