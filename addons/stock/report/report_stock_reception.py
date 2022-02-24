@@ -310,7 +310,7 @@ class ReceptionReport(models.AbstractModel):
                             break
                         else:
                             move_line_id.move_id = out
-                            reserved_amount_to_remain -= move_line_id.product_qty
+                            reserved_amount_to_remain -= move_line_id.reserved_qty
                     (out | new_out)._compute_reserved_availability()
                 out.move_orig_ids = False
                 new_out._recompute_state()
