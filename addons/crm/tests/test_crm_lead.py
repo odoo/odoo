@@ -368,8 +368,10 @@ class TestCRMLead(TestCrmCommon):
         self.assertFalse(lead.mobile)
         self.assertFalse(lead.phone_sanitized)
         self.assertEqual(partner.mobile, partner_mobile)
-        self.assertEqual(partner.phone_sanitized, partner_mobile_sanitized,
-                         'Partner sanitized should be computed on mobile')
+        # if SMS is uninstalled, phone_sanitized is not available on partner
+        if 'phone_sanitized' in partner:
+            self.assertEqual(partner.phone_sanitized, partner_mobile_sanitized,
+                             'Partner sanitized should be computed on mobile')
 
     @users('user_sales_manager')
     def test_crm_lead_partner_sync_email_phone_corner_cases(self):
