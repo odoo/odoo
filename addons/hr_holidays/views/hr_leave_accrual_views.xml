@@ -108,10 +108,10 @@
                             class="o_hr_holidays_plan_level_container o_hr_holidays_plan_level_hierarchy"
                             add-label="Add a new level"
                             >
-                            <kanban default_order="level">
+                            <kanban default_order="sequence">
+                                <field name="sequence"/>
                                 <field name="start_count"/>
                                 <field name="start_type"/>
-                                <field name="level"/>
                                 <field name="added_value"/>
                                 <field name="added_value_type"/>
                                 <field name="frequency"/>
@@ -131,7 +131,7 @@
                                     <div t-name="kanban-box">
                                         <div class="o_hr_holidays_body oe_kanban_global_click">
                                             <div class="o_hr_holidays_timeline text-center">
-                                                Level <field name="level"/>
+                                                Level <span class="o_hr_holidays_plan_level_level"/>
                                             </div>
                                             <t t-if="!read_only_mode">
                                                 <a type="edit" t-attf-class="oe_kanban_action oe_kanban_action_a text-black">
