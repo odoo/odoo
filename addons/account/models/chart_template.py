@@ -186,9 +186,9 @@ class AccountChartTemplate(models.AbstractModel):
                     'values': deref(record, self.env[model]),
                     'noupdate': True,
                 })
-            _logger.info('Loading model %s', model)
+            _logger.debug('Loading model %s', model)
             created = self.env[model].sudo()._load_records(create_vals)
-            _logger.info('Loaded model %s', model)
+            _logger.debug('Loaded model %s', model)
             for vals, record in zip(create_vals, created):
                 for translation in translate_vals[vals['xml_id']]:
                     irt_cursor.push({**translation, 'res_id': record.id})
@@ -229,7 +229,7 @@ class AccountChartTemplate(models.AbstractModel):
             if path:
                 _logger.info("Error reading CSV file %s: %s", path, e)
             else:
-                _logger.info("No file %s found for template '%s'", file_name, module)
+                _logger.debug("No file %s found for template '%s'", file_name, module)
             return {}
 
     def _get_chart_template_data(self, template_code, company):
