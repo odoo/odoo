@@ -370,7 +370,7 @@ class account_payment(models.Model):
     def _compute_destination_account_id(self):
         self.destination_account_id = False
         for payment in self:
-            if payment.invoice_ids:
+            if payment.invoice_ids and payment.invoice_ids[0].line_ids:
                 payment.destination_account_id = payment.invoice_ids[0].mapped(
                     'line_ids.account_id').filtered(
                         lambda account: account.user_type_id.type in ('receivable', 'payable'))[0]
