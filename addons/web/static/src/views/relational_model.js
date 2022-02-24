@@ -896,6 +896,7 @@ export class DynamicRecordList extends DynamicList {
         this.records = [];
         this.data = params.data;
         this.type = "record-list";
+        this.onRecordDeleted = params.onRecordDeleted || (() => {});
     }
 
     get quickCreateRecord() {
@@ -950,6 +951,7 @@ export class DynamicRecordList extends DynamicList {
         }
         for (const record of records) {
             this.removeRecord(record);
+            this.onRecordDeleted(record);
         }
         // Relaod the model only if more records should appear on the current page.
         if (this.count && !this.records.length) {
@@ -1271,6 +1273,7 @@ export class DynamicGroupList extends DynamicList {
             groupBy: this.groupBy.slice(1),
             context: this.context,
             orderBy: this.orderBy,
+            limit: this.limit,
             groupByInfo: this.groupByInfo,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
         };
@@ -1396,7 +1399,6 @@ export class Group extends DataPoint {
         } else {
             this.isFolded = true;
         }
-
         const listParams = {
             data: params.data,
             domain: Domain.and([params.domain, this.groupDomain]).toList(),
@@ -1406,8 +1408,10 @@ export class Group extends DataPoint {
             resModel: params.resModel,
             activeFields: params.activeFields,
             fields: params.fields,
+            limit: params.limit,
             groupByInfo: params.groupByInfo,
             onRecordWillSwitchMode: params.onRecordWillSwitchMode,
+            onRecordDeleted: this.onRecordDeleted.bind(this),
         };
         this.list = this.model.createDataPoint("list", listParams, state.listState);
     }
@@ -1520,6 +1524,10 @@ export class Group extends DataPoint {
         this.count++;
         await this.list.quickCreate(record.activeFields, null, record.context);
         return record;
+    }
+
+    onRecordDeleted() {
+        this.count--;
     }
 }
 export class StaticList extends DataPoint {

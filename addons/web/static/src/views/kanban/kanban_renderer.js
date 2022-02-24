@@ -224,7 +224,7 @@ export class KanbanRenderer extends Component {
             );
             total = progressValue.count;
         }
-        return total - group.list.count;
+        return total - group.list.records.length;
     }
 
     getRecordClasses(record, group) {
@@ -232,8 +232,8 @@ export class KanbanRenderer extends Component {
         const { fieldName } = this.props.list.model.progressAttributes || {};
         if (group && record.data[fieldName]) {
             const value = record.data[fieldName];
-            const { color } = group.progressValues.find((p) => p.value === value);
-            classes.push(`oe_kanban_card_${color}`);
+            const progressValue = group.progressValues.find((p) => p.value === value);
+            classes.push(`oe_kanban_card_${progressValue ? progressValue.color : "muted"}`);
         }
         if (this.canResequenceRecords) {
             classes.push("o_record_draggable");

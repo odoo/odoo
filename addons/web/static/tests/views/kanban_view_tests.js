@@ -150,7 +150,7 @@ const validateColumn = async () => {
     await click(target, ".o_column_quick_create .o_kanban_add");
 };
 const toggleColumnActions = async (columnIndex) => {
-    const group = target.querySelector(`.o_kanban_group:nth-child(${columnIndex + 1})`);
+    const group = target.querySelectorAll(`.o_kanban_group`)[columnIndex];
     await click(group, ".o_kanban_config .dropdown-toggle");
     const buttons = group.querySelectorAll(".o_kanban_config .dropdown-menu .dropdown-item");
     return (buttonText) => {
@@ -158,6 +158,10 @@ const toggleColumnActions = async (columnIndex) => {
         const button = [...buttons].find((b) => re.test(b.innerText));
         return click(button);
     };
+};
+const loadMore = async (columnIndex) => {
+    const group = target.querySelectorAll(`.o_kanban_group`)[columnIndex];
+    await click(group, ".o_kanban_load_more a");
 };
 
 // /!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\
@@ -7544,8 +7548,8 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("column progressbars are working with load more", async (assert) => {
-        assert.expect(1);
+    QUnit.test("column progressbars are working with load more", async (assert) => {
+        assert.expect(2);
 
         await makeView({
             type: "kanban",
@@ -7564,16 +7568,15 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
 
-        // we have 1 record shown, load 2 more and check it worked
-        await click(target, ".o_kanban_group".find(".o_kanban_load_more"));
-        await click(target, ".o_kanban_group".find(".o_kanban_load_more"));
-        const shownIDs = _.map(target.querySelector(".o_kanban_record"), function (record) {
-            return Number(record.innerText);
-        });
-        assert.deepEqual(shownIDs, [1, 2, 3], "intended records are loaded");
+        assert.deepEqual(getCardTexts(0), ["1"]);
+
+        await loadMore(0);
+        await loadMore(0);
+
+        assert.deepEqual(getCardTexts(0), ["1", "2", "3"], "intended records are loaded");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "column progressbars with an active filter are working with load more",
         async (assert) => {
             assert.expect(2);
@@ -7599,25 +7602,14 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            await click(
-                target.querySelector(
-                    '.o_kanban_counter_progress .progress-bar[data-filter="blork"]'
-                )
-            );
+            await click(target, ".o_kanban_counter_progress .progress-bar.bg-success");
 
-            // we should have 1 record shown
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_record")].map((el) => Number(el.innerText)),
-                [5]
-            );
+            assert.deepEqual(getCardTexts(), ["5"], "we should have 1 record shown");
 
-            // load 2 more and check it worked
-            await click(target, ".o_kanban_group .o_kanban_load_more");
-            await click(target, ".o_kanban_group .o_kanban_load_more");
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_record")].map((el) => Number(el.innerText)),
-                [5, 6, 7]
-            );
+            await loadMore(0);
+            await loadMore(0);
+
+            assert.deepEqual(getCardTexts(), ["5", "6", "7"]);
         }
     );
 

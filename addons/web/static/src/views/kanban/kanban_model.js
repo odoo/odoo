@@ -11,6 +11,8 @@ import {
 
 const { EventBus } = owl;
 
+const FALSE = Symbol("false");
+
 const useTransaction = () => {
     const bus = new EventBus();
     let started = false;
@@ -76,7 +78,14 @@ class KanbanGroup extends Group {
         const domains = [this.groupDomain];
         this.activeProgressValue = this.activeProgressValue === value ? null : value;
         if (this.hasActiveProgressValue) {
-            domains.push([[fieldName, "=", this.activeProgressValue]]);
+            if (value === FALSE) {
+                const values = this.progressValues
+                    .map((pv) => pv.value)
+                    .filter((val) => val !== value);
+                domains.push(["!", [fieldName, "in", values]]);
+            } else {
+                domains.push([[fieldName, "=", this.activeProgressValue]]);
+            }
         }
         this.list.domain = Domain.and(domains).toList();
 
@@ -92,21 +101,6 @@ class KanbanGroup extends Group {
 
         this.activeProgressValue = null;
         this.progressValues = [];
-    }
-
-    /**
-     * @override
-     */
-    async validateQuickCreate() {
-        const record = await super.validateQuickCreate(...arguments);
-        if (this.model.progressAttributes) {
-            const { fieldName } = this.model.progressAttributes;
-            const recordValue = record.data[fieldName];
-            const value = recordValue === undefined ? false : recordValue;
-            const progressValue = this.progressValues.find((pv) => pv.value === value);
-            progressValue.count++;
-        }
-        return record;
     }
 }
 
@@ -125,7 +119,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         const group = await super.createGroup(...arguments);
         group.progressValues.push({
             count: 0,
-            value: false,
+            value: FALSE,
             string: this.model.env._t("Other"),
             color: "muted",
         });
@@ -191,23 +185,22 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         const [progressData] = await Promise.all([progressPromise, ...loadPromises]);
 
         const progressField = this.fields[fieldName];
-        /** @type {[string | false, string][]} */
-        const colorEntries = Object.entries(colors);
+        const colorMap = new Map(Object.entries(colors));
         const selection = Object.fromEntries(progressField.selection || []);
 
-        if (!colorEntries.some((e) => e[1] === "muted")) {
-            colorEntries.push([false, "muted"]);
+        if (![...colorMap.values()].some((v) => v === "muted")) {
+            colorMap.set(FALSE, "muted");
         }
 
         for (const group of this.groups) {
             group.progressValues = [];
-            const groupKey = group.displayName || group.value;
-            const counts = progressData[groupKey] || { false: group.count };
-            const remaining = group.count - Object.values(counts).reduce((acc, c) => acc + c, 0);
-            for (const [key, color] of colorEntries) {
-                const count = key === false ? remaining : counts[key];
+            const groupData = progressData[group.displayName || group.value] || {};
+            const counts = new Map(groupData ? Object.entries(groupData) : [[FALSE, group.count]]);
+            const total = [...counts.values()].reduce((acc, c) => acc + c, 0);
+            counts.set(FALSE, group.count - total);
+            for (const [key, color] of colorMap) {
                 group.progressValues.push({
-                    count: count || 0,
+                    count: counts.get(key) || 0,
                     value: key,
                     string: selection[String(key)] || this.model.env._t("Other"),
                     color,
