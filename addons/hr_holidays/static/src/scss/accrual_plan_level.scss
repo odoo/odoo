@@ -22,6 +22,8 @@ $o-hr-holidays-border-color: gray('300');
     }
 
     .o_hr_holidays_plan_level_container {
+        counter-reset: o-hr-holidays-accrual-plan-level-counter;
+
         .o-kanban-button-new {
             padding: 2px 12px;
             margin: 0px 0px 0px 44px;
@@ -29,6 +31,7 @@ $o-hr-holidays-border-color: gray('300');
         }
 
         .o_kanban_view.o_kanban_ungrouped .o_kanban_record {
+            counter-increment: o-hr-holidays-accrual-plan-level-counter;
             display: flex;
             flex: 0 0 100%;
             border: 0px;
@@ -44,6 +47,10 @@ $o-hr-holidays-border-color: gray('300');
                 height: 100%;
                 margin-left: 8px;
                 border-left: 1px dashed darken($o-hr-holidays-border-color, 10%);
+            }
+
+            .o_hr_holidays_plan_level_level::before {
+                content: counter(o-hr-holidays-accrual-plan-level-counter);
             }
 
             // Whole record

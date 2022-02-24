@@ -27,7 +27,6 @@ class AccrualPlanLevel(models.Model):
     sequence = fields.Integer(
         string='sequence', compute='_compute_sequence', store=True,
         help='Sequence is generated automatically by start time delta.')
-    level = fields.Integer(compute='_compute_level', help='Level computed through the sequence.')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True)
     start_count = fields.Integer(
         "Start after",
@@ -146,19 +145,6 @@ class AccrualPlanLevel(models.Model):
         }
         for level in self:
             level.sequence = level.start_count * start_type_multipliers[level.start_type]
-
-    @api.depends('sequence', 'accrual_plan_id')
-    def _compute_level(self):
-        #Mapped level_ids.ids ordered by sequence per plan
-        mapped_level_ids = {}
-        for plan in self.accrual_plan_id:
-            # We can not use .ids here because we also deal with NewIds
-            mapped_level_ids[plan] = [level.id for level in plan.level_ids.sorted('sequence')]
-        for level in self:
-            if level.accrual_plan_id:
-                level.level = mapped_level_ids[level.accrual_plan_id].index(level.id) + 1
-            else:
-                level.level = 1
 
     @api.depends('first_day', 'second_day', 'first_month_day', 'second_month_day', 'yearly_day')
     def _compute_days_display(self):
