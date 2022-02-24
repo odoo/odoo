@@ -489,7 +489,7 @@ registerModel({
          * the active current record is no longer part of the suggestions.
          *
          * @private
-         * @returns {Model}
+         * @returns {Record}
          */
         _computeActiveSuggestedRecord() {
             if (
@@ -545,7 +545,7 @@ registerModel({
          * main list, which is a requirement for the navigation process.
          *
          * @private
-         * @returns {Model[]}
+         * @returns {Record[]}
          */
         _computeExtraSuggestedRecords() {
             if (this.suggestionDelimiterPosition === undefined) {
@@ -564,7 +564,7 @@ registerModel({
          * Clears the main suggested record on closing mentions.
          *
          * @private
-         * @returns {Model[]}
+         * @returns {Record[]}
          */
         _computeMainSuggestedRecords() {
             if (this.suggestionDelimiterPosition === undefined) {
@@ -854,9 +854,9 @@ registerModel({
                 ) {
                     return; // ignore obsolete call
                 }
-                const Model = this.messaging.models[this.suggestionModelName];
+                const model = this.messaging.models[this.suggestionModelName];
                 const searchTerm = this.suggestionSearchTerm;
-                await this.async(() => Model.fetchSuggestions(searchTerm, { thread: this.composer.activeThread }));
+                await this.async(() => model.fetchSuggestions(searchTerm, { thread: this.composer.activeThread }));
                 if (!this.exists()) {
                     return;
                 }
@@ -865,7 +865,7 @@ registerModel({
                     this.suggestionSearchTerm &&
                     this.suggestionSearchTerm === searchTerm &&
                     this.suggestionModelName &&
-                    this.messaging.models[this.suggestionModelName] === Model &&
+                    this.messaging.models[this.suggestionModelName] === model &&
                     !this.hasSuggestions
                 ) {
                     this.closeSuggestions();
@@ -890,12 +890,12 @@ registerModel({
             ) {
                 return;
             }
-            const Model = this.messaging.models[this.suggestionModelName];
+            const model = this.messaging.models[this.suggestionModelName];
             const [
                 mainSuggestedRecords,
                 extraSuggestedRecords = [],
-            ] = Model.searchSuggestions(this.suggestionSearchTerm, { thread: this.composer.activeThread });
-            const sortFunction = Model.getSuggestionSortFunction(this.suggestionSearchTerm, { thread: this.composer.activeThread });
+            ] = model.searchSuggestions(this.suggestionSearchTerm, { thread: this.composer.activeThread });
+            const sortFunction = model.getSuggestionSortFunction(this.suggestionSearchTerm, { thread: this.composer.activeThread });
             mainSuggestedRecords.sort(sortFunction);
             extraSuggestedRecords.sort(sortFunction);
             // arbitrary limit to avoid displaying too many elements at once
@@ -916,7 +916,7 @@ registerModel({
          * is highlighted in the UI and it will be the selected record if the
          * suggestion is confirmed by the user.
          */
-        activeSuggestedRecord: one('Model', {
+        activeSuggestedRecord: one('Record', {
             compute: '_computeActiveSuggestedRecord',
         }),
         /**
@@ -968,7 +968,7 @@ registerModel({
          * process. 2 arbitrary lists can be provided and the second is defined
          * as "extra".
          */
-        extraSuggestedRecords: many('Model', {
+        extraSuggestedRecords: many('Record', {
             compute: '_computeExtraSuggestedRecords',
         }),
         fileUploader: one('FileUploader', {
@@ -1002,7 +1002,7 @@ registerModel({
          * process. 2 arbitrary lists can be provided and the first is defined
          * as "main".
          */
-        mainSuggestedRecords: many('Model', {
+        mainSuggestedRecords: many('Record', {
             compute: '_computeMainSuggestedRecords',
         }),
         /**

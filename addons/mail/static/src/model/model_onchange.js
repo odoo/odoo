@@ -3,7 +3,7 @@
 export class OnChange {
     /**
      * Creates a new "on change" definition. This "on change" should be provided
-     * to "onChanges" attribute of the concerned Model class to be notified of
+     * to "onChanges" attribute of the concerned model to be notified of
      * changes in the given dependencies.
      *
      * @constructor
