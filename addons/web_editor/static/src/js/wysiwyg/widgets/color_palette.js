@@ -150,6 +150,7 @@ const ColorPaletteWidget = Widget.extend({
         if (this.options.excluded.includes('custom')) {
             this.colorPicker.$el.addClass('d-none');
         }
+        $('[title]').tooltip();
 
         return res;
     },

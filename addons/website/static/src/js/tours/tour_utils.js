@@ -106,8 +106,10 @@ function changeImage(snippet, position = "bottom") {
 */
 function changeOption(optionName, weName = '', optionTooltipLabel = '', position = "bottom") {
     const option_block = `we-customizeblock-option[class='snippet-option-${optionName}']`
+    // The trigger is data-original-title because the bootstrap tooltip have to
+    // be initialized.
     return {
-        trigger: `${option_block} ${weName}, ${option_block} [title='${weName}']`,
+        trigger: `${option_block} ${weName}, ${option_block} [data-original-title='${weName}']`,
         content: _.str.sprintf(_t("<b>Click</b> on this option to change the %s of the block."), optionTooltipLabel),
         position: position,
         run: "click",
