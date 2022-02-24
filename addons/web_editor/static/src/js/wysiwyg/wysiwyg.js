@@ -109,7 +109,7 @@ const Wysiwyg = Widget.extend({
             getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
             getPowerboxElement: () => {
-                const selection = document.getSelection();
+                const selection = (this.options.document || document).getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
                     const node = closestElement(selection.anchorNode, 'P, DIV');
                     return !(node && node.hasAttribute && node.hasAttribute('data-oe-model')) && node;
