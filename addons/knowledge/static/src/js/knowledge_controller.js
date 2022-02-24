@@ -3,6 +3,7 @@
 import core from 'web.core';
 import Dialog from 'web.Dialog';
 import FormController from 'web.FormController';
+import { MoveArticleToDialog } from 'knowledge.dialogs';
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -11,11 +12,15 @@ const KnowledgeFormController = FormController.extend({
     events: Object.assign({}, FormController.prototype.events, {
         'click .btn-duplicate': '_onDuplicate',
         'click .btn-create': '_onCreate',
-        'click .btn-move': '_onMove',
+        'click .btn-move': '_onOpenMoveToModal',
         'click .btn-share': '_onShare',
         'click .o_article_create': '_onCreate',
         'click #knowledge_search_bar': '_onSearch',
         'change .o_breadcrumb_article_name': '_onRename',
+    }),
+
+    custom_events: Object.assign({}, FormController.prototype.custom_events, {
+        move: '_onMove',
     }),
 
     // Listeners:
@@ -73,75 +78,42 @@ const KnowledgeFormController = FormController.extend({
         }
     },
 
-    _onMove: function () {
-        // TODO: Add (prepend) 'Workspace' and 'Private' to the dropdown list.
-        // So the article can be moved to the root of workspace or private, without any particular parent.
-        const $content = $(QWeb.render('knowledge.knowledge_move_article_to_modal'));
-        const $input = $content.find('input');
-        $input.select2({
-            ajax: {
-                url: '/knowledge/get_articles',
-                dataType: 'json',
-                /**
-                 * @param {String} term
-                 * @returns {Object}
-                 */
-                data: term => {
-                    return { query: term, limit: 30 };
-                },
-                /**
-                 * @param {Array[Object]} records
-                 * @returns {Object}
-                 */
-                results: records => {
-                    return {
-                        results: records.map(record => {
-                            return {
-                                id: record.id,
-                                icon: record.icon,
-                                text: record.name,
-                            };
-                        })
-                    };
-                }
-            },
+    /**
+     * @param {Event} event
+     */
+    _onMove: async function (event) {
+        await this._move(event.data);
+    },
+
+    /**
+     * Opens the "Move To" modal
+     */
+    _onOpenMoveToModal: function () {
+        const { id } = this.getState();
+        if (typeof id === 'undefined') {
+            return;
+        }
+        const state = this.model.get(this.handle);
+        const dialog = new MoveArticleToDialog(this, {}, {
+            state: state,
             /**
-             * When the user enters a search term, the function will
-             * highlight the part of the string matching with the
-             * search term. (e.g: when the user types 'hello', the
-             * string 'hello world' will be formatted as '<u>hello</u> world').
-             * That way, the user can figure out why a search result appears.
-             * @param {Object} result
-             * @param {integer} result.id
-             * @param {String} result.icon
-             * @param {String} result.text
-             * @returns {String}
+             * @param {String} value
              */
-            formatResult: (result, _target, { term }) => {
-                const { icon, text } = result;
-                const pattern = new RegExp(`(${term})`, 'gi');
-                return `<span class="fa ${icon}"></span> ` + (
-                    term.length > 0 ? text.replaceAll(pattern, '<u>$1</u>') : text
-                );
-            },
-        });
-        const dialog = new Dialog(this, {
-            title: _t('Move Article Under'),
-            $content: $content,
-            buttons: [{
-                text: _t('Save'),
-                classes: 'btn-primary',
-                click: async () => {
-                    const state = this.getState();
-                    const src = state.id;
-                    const dst = parseInt($input.val());
-                    await this._move(src, dst);
-                    dialog.close();
+            onSave: async value => {
+                const params = { article_id: id };
+                if (typeof value === 'number') {
+                    params.target_parent_id = value;
+                } else {
+                    params.category = value;
                 }
-            }, {
-                text: _t('Discard'),
-                close: true
-            }]
+                await this._move({...params,
+                    onSuccess: () => {
+                        dialog.close();
+                        this.reload();
+                    },
+                    onReject: () => {}
+                });
+            }
         });
         dialog.open();
     },
@@ -216,27 +188,34 @@ const KnowledgeFormController = FormController.extend({
     },
 
     /**
-     * @param {integer} src
-     * @param {integer} dst
+     * @param {Object} data
+     * @param {integer} data.article_id
+     * @param {String} data.category
+     * @param {integer} [data.target_parent_id]
+     * @param {integer} [data.before_article_id]
+     * @param {Function} data.onSuccess
+     * @param {Function} data.onReject
      */
-    _move: async function (src, dst) {
+    _move: async function (data) {
+        const params = {
+            private: data.category === 'private'
+        };
+        if (typeof data.target_parent_id !== 'undefined') {
+            params.parent_id = data.target_parent_id;
+        }
+        if (typeof data.before_article_id !== 'undefined') {
+            params.before_article_id = data.before_article_id;
+        }
         const result = await this._rpc({
             model: 'knowledge.article',
             method: 'move_to',
-            args: [
-                src,
-            ],
-            kwargs: {parent_id: dst},
+            args: [data.article_id],
+            kwargs: params
         });
-        const $parent = this.$el.find(`.o_tree [data-article-id="${dst}"]`);
-        if (result && $parent.length !== 0) {
-            let $li = this.$el.find(`.o_tree [data-article-id="${src}"]`);
-            let $ul = $parent.find('ul:first');
-            if ($ul.length === 0) {
-                $ul = $('<ul>');
-                $parent.append($ul);
-            }
-            $ul.append($li);
+        if (result) {
+            data.onSuccess();
+        } else {
+            data.onReject();
         }
     },
 

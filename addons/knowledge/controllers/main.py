@@ -62,7 +62,7 @@ class KnowledgeController(http.Controller):
     # Articles tree generation
     # ------------------------
 
-    def get_tree_values(self):
+    def get_tree_values(self, res_id):
         # sudo article to avoid access error on member or on article for external users.
         # The article the user can see will be based on user_has_access.
         Article = request.env["knowledge.article"].sudo()
@@ -75,6 +75,7 @@ class KnowledgeController(http.Controller):
         shared_articles = main_articles.filtered(lambda article: article.category == 'shared')
 
         values = {
+            "active_article_id": res_id,
             "favourites": favourites,
             "public_articles": public_articles,
             "shared_articles": shared_articles
@@ -88,18 +89,6 @@ class KnowledgeController(http.Controller):
         return values
 
     @http.route('/knowledge/get_tree', type='json', auth='user')
-    def display_tree(self):
-        return request.env.ref('knowledge.knowledge_article_tree_template')._render(self.get_tree_values())
-
-    # ------
-    # Others
-    # ------
-
-    @http.route('/knowledge/get_articles', type='http', auth="public", methods=['GET'], website=True, sitemap=False)
-    def get_articles(self, query='', limit=25, **post):
-        Article = request.env['knowledge.article']
-        return json.dumps(Article.search_read(
-            domain=[('name', '=ilike', '%' + query + '%')],
-            fields=['id', 'icon', 'name'],
-            limit=int(limit)
-        ))
+    def display_tree(self, res_id=False):
+        # TODO: remove res_id and highlight active id after adding the template to the view. ??
+        return request.env.ref('knowledge.knowledge_article_tree_template')._render(self.get_tree_values(res_id))
