@@ -17,6 +17,7 @@ class ReportProjectTaskBurndownChart(models.Model):
     project_id = fields.Many2one('project.project', readonly=True)
     display_project_id = fields.Many2one('project.project', readonly=True)
     stage_id = fields.Many2one('project.task.type', readonly=True)
+    is_closed = fields.Boolean("Closing Stage", readonly=True, help="Folded in Kanban stages are closing stages.")
     date = fields.Datetime('Date', readonly=True)
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
                                 string='Assignees', readonly=True)
