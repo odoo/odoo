@@ -52,6 +52,7 @@
                             </div>
                         </div>
                         <field name="action_with_unused_accruals"/>
+                        <field name="postpone_max_days" attrs="{'invisible': [('action_with_unused_accruals', '!=', 'postponed')]}"/>
                     </group>
                 </sheet>
             </form>
