@@ -260,6 +260,7 @@ class SaleOrder(models.Model):
         compute_sudo=True,
         help="Technical field to filter the available taxes depending on the fiscal country and fiscal position.")
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company)
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
     team_id = fields.Many2one(
         'crm.team', 'Sales Team',
         ondelete="set null", tracking=True,
