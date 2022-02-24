@@ -664,7 +664,7 @@ class Article(models.Model):
 
     # TODO: remove me - for test purpose only
     def invite_test(self):
-        self.invite_member(access_rule='write', email="dbe@odoo.com") # partner=self.env.ref('base.partner_demo'),
+        self.invite_member(access_rule='read', partner_id=self.env.ref('base.partner_demo_portal').id)
 
     ###########
     #  Tools

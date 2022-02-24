@@ -9,58 +9,112 @@
         </xpath>
     </template>
 
-    <template id="article_frontend_template" name="Knowledge Article Frontend Template">
+    <template id="knowledge_article_view_frontend" name="Knowledge Article Frontend Template">
         <t t-call="knowledge.layout">
-        <div class="container-fluid h-100">
-            <div class="row h-100">
-                <div class="col-sm-3 p-0 border-right overflow-auto">
-                    <div class="o_knowledge_aside d-flex flex-column h-100">
-                        <!-- Search bar -->
-                        <div class="p-3" id="knowledge_search_bar">
-                            <input type="text" class="form-control" placeholder="Search an Article..." disabled="True"/>
-                        </div>
-                        <!-- File explorer -->
-                        <div class="flex-grow-1 position-relative">
-                            <div class="o_scroll_view px-3">
-                                <aside class="o_sidebar">
-                                    <div t-call="knowledge.knowledge_article_tree_template"/>
-                                </aside>
+            <div class="container-fluid h-100 o_knowledge_form_view" t-att-data-article-id="article.id">
+                <div class="row h-100">
+                    <t t-set="show_sidebar" t-value="favourites or public_articles"/>
+                    <div class="col-sm-2 p-0 overflow-auto">
+                        <div t-att-class="'o_knowledge_aside border-right flex-column h-100 w-100' + (' d-flex' if show_sidebar else ' d-none')">
+                            <div class="p-3" id="knowledge_search_bar">
+                                <input id="knowledge_search" type="text" class="form-control" placeholder="Search an Article..."/>
+                            </div>
+                            <!-- File explorer -->
+                            <div class="flex-grow-1 position-relative">
+                                <div class="o_scroll_view px-3">
+                                    <aside class="o_sidebar">
+                                        <div t-call="knowledge.knowledge_article_frontend_tree_template" />
+                                    </aside>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-9 p-0 overflow-auto">
-                    <div class="d-flex flex-column h-100">
-                        <!-- Article header -->
-                        <div class="o_knowledge_header d-sm-flex flex-row justify-content-between">
-                            <div class="d-flex align-items-center">
-                                <!-- Title -->
-                                <span t-out="article_name" class="o_breadcrumb_article_name"/>
-                                <!--TODO DBE: Do we need to allow favourting in frontend ?-->
-                                <!--<field name="is_user_favourite" class="m-0 pr-2" widget="boolean_favorite" nolabel="1" force_save="1"/>-->
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 position-relative">
-                            <div class="o_scroll_view">
-                                <!-- Article body -->
-                                <div class="o_knowledge_editor d-flex">
-                                    <!--<field name="body" widget="html" no_label="1" attrs="{'readonly': ['|', ('is_locked', '=', True), ('user_can_write', '=', False)]}"/>-->
-                                    <div t-out="article_body"/>
+                    <div class="col-sm-8 p-0 overflow-auto'">
+                        <div class="d-flex flex-column h-100">
+                            <!-- Article header -->
+                            <div class="o_knowledge_header d-sm-flex flex-row justify-content-between">
+                                <div class="d-flex align-items-center p-3">
+                                    <!-- Title -->
+                                    <span t-out="article.name" class="o_breadcrumb_article_name" />
+                                    <a href="#" class="o_favorites_toggle_button pl-1" t-att-data-article-id="article.id">
+                                        <i t-if="article.is_user_favourite" class="fa fa-star" />
+                                        <i t-else="" class="fa fa-star-o" />
+                                    </a>
                                 </div>
-                                <!-- Chatter -->
-                                <div class="o_knowledge_chatter_container">
-                                    <div class="oe_chatter">
-                                        <field name="message_follower_ids" groups="base.group_user"/>
-                                        <field name="message_ids"/>
+                            </div>
+                            <div class="flex-grow-1 position-relative">
+                                <div class="o_scroll_view">
+                                    <!-- Article body -->
+                                    <div class="o_knowledge_editor d-flex pl-3">
+                                        <div t-out="article.body" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-sm-2"><!--Empty column to center the article body--></div>
                 </div>
             </div>
-        </div>
         </t>
+    </template>
+
+    <template id="knowledge_article_frontend_tree_template" name="Frontend Article Tree">
+        <section t-att-class="'' if favourites else 'd-none'">
+            <div class="h4 mb-0">Favourites</div>
+            <ul class="o_tree_favourite m-0 px-0 py-2">
+                <li t-foreach="favourites" t-as="favourite" t-att-data-article-id="favourite.id">
+                    <div class="d-flex">
+                        <button class="o_article_icon btn btn-link text-secondary p-0" type="button">
+                            <i t-attf-class="fa fa-fw #{favourite.icon}" />
+                        </button>
+                        <div class="o_article_name flex-grow-1 text-truncate">
+                            <a t-out="favourite.name" t-attf-href="/article/{{favourite.id}}" />
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <div class="h4 mb-0">All Documents</div>
+            <ul class="o_tree o_tree_workspace m-0 px-0 py-2">
+                <t t-foreach="public_articles.sorted('sequence')" t-as="child">
+                    <t t-if="child.user_has_access" t-call="knowledge.article_frontend_template">
+                        <t t-set="article" t-value="child" />
+                    </t>
+                </t>
+                <!-- FIXME: is there a better way to merge Workspace and Shared? -->
+                <!-- Should portal users be able to see shared articles?? -->
+                <t t-foreach="shared_articles.sorted('sequence')" t-as="child">
+                    <t t-if="child.user_has_access" t-call="knowledge.article_frontend_template">
+                        <t t-set="article" t-value="child" />
+                    </t>
+                </t>
+            </ul>
+        </section>
+    </template>
+
+    <template id="article_frontend_template">
+        <li t-attf-id="article_#{article.id}" t-att-data-article-id="article.id">
+            <div class="o_article d-flex">
+                <button class="o_article_caret btn btn-link text-secondary p-0" type="button">
+                    <i class="fa fa-fw fa-caret-down align-self-center" />
+                </button>
+                <div class="btn-group dropdown">
+                    <i t-attf-class="fa fa-fw #{article.icon}" />
+                </div>
+                <div class="o_article_name flex-grow-1 text-truncate">
+                    <a t-out="article.name" t-attf-href="/article/{{article.id}}" />
+                </div>
+            </div>
+            <ul t-if="article.child_ids">
+                <t t-foreach="article.child_ids.sorted('sequence')" t-as="child">
+                    <t t-if="child.user_has_access" t-call="knowledge.article_frontend_template">
+                        <t t-set="article" t-value="child" />
+                    </t>
+                </t>
+            </ul>
+        </li>
     </template>
 </data>
 </odoo>
