@@ -5,7 +5,7 @@ from odoo import fields
 from odoo.tests import tagged, Form
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', 'post_install_l10n', '-at_install')
 class PortugalQRCodeTest(AccountTestInvoicingCommon):
 
     @classmethod

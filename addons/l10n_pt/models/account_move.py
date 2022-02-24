@@ -84,10 +84,10 @@ class AccountMove(models.Model):
                 "out_receipt": "FR",
             }
             qr_code_str += f"D:{invoice_type_map[move.move_type]}*"
-            qr_code_str += f"E:N*"
+            qr_code_str += "E:N*"
             qr_code_str += f"F:{format_date(self.env, move.date, date_format='yyyyMMdd')}*"
             qr_code_str += f"G:{(move.move_type + ' ' + move.name)[:60]}*"
-            qr_code_str += f"H:0*"
+            qr_code_str += "H:0*"
             qr_code_str += f"I1:{move.company_id.account_fiscal_country_id.code}*"
 
             base_vat_exempt = get_base_and_vat(move, 'IVA 0%')
@@ -112,8 +112,8 @@ class AccountMove(models.Model):
             tax_amounts = json.loads(move.tax_totals_json)
             qr_code_str += f"N:{format_amount(convert_to_eur(tax_amounts['amount_total'] - tax_amounts['amount_untaxed'], move))}*"
             qr_code_str += f"O:{format_amount(convert_to_eur(tax_amounts['amount_total'], move))}*"
-            qr_code_str += f"Q:TODO*"  # TODO: Fill with Hash
-            qr_code_str += f"R:0*"  # TODO: Fill Certifiate number
+            qr_code_str += "Q:TODO*"  # TODO: Fill with Hash
+            qr_code_str += "R:0*"  # TODO: Fill Certifiate number
 
             if qr_code_str[-1] == "*":
                 qr_code_str = qr_code_str[:-1]
