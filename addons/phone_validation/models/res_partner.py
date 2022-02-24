@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
@@ -30,3 +29,16 @@ class Partner(models.Model):
             force_format='INTERNATIONAL',
             raise_exception=False
         )
+
+    def phone_get_sanitized_number(self, number_fname='mobile', force_format='E164'):
+        """ Stand alone version, allowing to use it on partner model without
+        having any dependency on sms module. To cleanup in master (15.3 +)."""
+        self.ensure_one()
+        country_fname = 'country_id'
+        number = self[number_fname]
+        return phone_validation.phone_sanitize_numbers_w_record([number], self, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']
+
+    def _phone_get_number_fields(self):
+        """ Stand alone version, allowing to use it on partner model without
+        having any dependency on sms module. To cleanup in master (15.3 +)."""
+        return ['mobile', 'phone']
