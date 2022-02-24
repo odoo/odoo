@@ -115,7 +115,12 @@
         <field name="res_model">hr.contract.history</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="hr_contract_history_view_search"/>
-        <field name="context">{'search_default_active_employees': 1}</field>
+        <field name="context">
+            {
+                'search_default_active_employees': 1,
+                'search_default_group_by_state': 1
+            }
+        </field>
     </record>
     <record id="hr_contract_history_to_review_view_list_action" model="ir.actions.act_window">
         <field name="name">Contracts to Review</field>
