@@ -13,6 +13,8 @@ class Employee(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super(Employee, self).create(vals_list)
+        if self.env.context.get('salary_simulation'):
+            return res
         resume_lines_values = []
         for employee in res:
             line_type = self.env.ref('hr_skills.resume_type_experience', raise_if_not_found=False)
