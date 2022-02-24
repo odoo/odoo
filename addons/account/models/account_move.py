@@ -414,19 +414,19 @@ class AccountMove(models.Model):
         :param has_tax (bool): Iff any taxes are involved in the lines of the invoice
         :return (datetime.date):
         """
-        tax_lock_date = self.company_id.tax_lock_date
+        lock_dates = self._get_violated_lock_dates(invoice_date, has_tax)
         today = fields.Date.today()
-        lock_violated = invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date
-        if lock_violated:
-            invoice_date = tax_lock_date + timedelta(days=1)
-
+        highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
+        number_reset = self._deduce_sequence_number_reset(highest_name)
+        if lock_dates:
+            invoice_date = lock_dates[-1][0] + timedelta(days=1)
         if self.is_sale_document(include_receipts=True):
-            if lock_violated:
-                return max(invoice_date, today)
-            return invoice_date
-        elif self.is_purchase_document(include_receipts=True):
-            highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
-            number_reset = self._deduce_sequence_number_reset(highest_name)
+            if lock_dates:
+                if not highest_name or number_reset == 'month':
+                    return min(today, date_utils.get_month(invoice_date)[1])
+                elif number_reset == 'year':
+                    return min(today, date_utils.end_of(invoice_date, 'year'))
+        else:
             if not highest_name or number_reset == 'month':
                 if (today.year, today.month) > (invoice_date.year, invoice_date.month):
                     return date_utils.get_month(invoice_date)[1]
@@ -439,14 +439,32 @@ class AccountMove(models.Model):
                     return max(invoice_date, today)
         return invoice_date
 
+    def _get_violated_lock_dates(self, invoice_date, has_tax):
+        """Get all the lock dates affecting the current invoice_date.
+
+        :param invoice_date: The invoice date
+        :param has_tax: If any taxes are involved in the lines of the invoice
+        :return: a list of tuples containing the lock dates affecting this move, ordered chronologically.
+        """
+        locks = []
+        user_lock_date = self.company_id._get_user_fiscal_lock_date()
+        if invoice_date and user_lock_date and invoice_date <= user_lock_date:
+            locks.append((user_lock_date, _('user')))
+        tax_lock_date = self.company_id.tax_lock_date
+        if invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date:
+            locks.append((tax_lock_date, _('tax')))
+        locks.sort()
+        return locks
+
     @api.onchange('invoice_date', 'highest_name', 'company_id')
     def _onchange_invoice_date(self):
         if self.invoice_date:
             if not self.invoice_payment_term_id and (not self.invoice_date_due or self.invoice_date_due < self.invoice_date):
                 self.invoice_date_due = self.invoice_date
 
-            has_tax = bool(self.line_ids.tax_ids or self.line_ids.tax_tag_ids)
-            accounting_date = self._get_accounting_date(self.invoice_date, has_tax)
+            accounting_date = self.invoice_date
+            if not self.is_sale_document(include_receipts=True):
+                accounting_date = self._get_accounting_date(self.invoice_date, self._affect_tax_report())
             if accounting_date != self.date:
                 self.date = accounting_date
                 self._onchange_currency()
@@ -1878,11 +1896,24 @@ class AccountMove(models.Model):
     @api.depends('date', 'line_ids.debit', 'line_ids.credit', 'line_ids.tax_line_id', 'line_ids.tax_ids', 'line_ids.tax_tag_ids')
     def _compute_tax_lock_date_message(self):
         for move in self:
-            if move._affect_tax_report() and move.company_id.tax_lock_date and move.date and move.date <= move.company_id.tax_lock_date:
-                move.tax_lock_date_message = _(
-                    "The accounting date is set prior to the tax lock date which is set on %s. "
-                    "Hence, the accounting date will be changed to %s.",
-                    format_date(self.env, move.company_id.tax_lock_date), format_date(self.env, fields.Date.context_today(self)))
+            invoice_date = move.invoice_date or fields.Date.context_today(move)
+            accounting_date = move.date or fields.Date.context_today(move)
+            affects_tax_report = move._affect_tax_report()
+            lock_dates = move._get_violated_lock_dates(accounting_date, affects_tax_report)
+            if lock_dates:
+                accounting_date = move._get_accounting_date(invoice_date, affects_tax_report)
+                lock_date, lock_type = lock_dates[-1]
+                tax_lock_date_message = _(
+                    "The accounting date being set prior to the %(lock_type)s lock date %(lock_date)s,"
+                    " it will be changed to %(accounting_date)s upon posting.",
+                    lock_type=lock_type,
+                    lock_date=format_date(move.env, lock_date),
+                    accounting_date=format_date(move.env, accounting_date))
+                for lock_date, lock_type in lock_dates[:-1]:
+                    tax_lock_date_message += _(" The %(lock_type)s lock date is set on %(lock_date)s.",
+                                               lock_type=lock_type,
+                                               lock_date=format_date(move.env, lock_date))
+                move.tax_lock_date_message = tax_lock_date_message
             else:
                 move.tax_lock_date_message = False
 
@@ -2238,7 +2269,7 @@ class AccountMove(models.Model):
                 raise UserError(_('You cannot edit the journal of an account move if it already has a sequence number assigned.'))
 
             # You can't change the date of a move being inside a locked period.
-            if 'date' in vals and move.date != vals['date']:
+            if move.state == "posted" and 'date' in vals and move.date != vals['date']:
                 move._check_fiscalyear_lock_date()
                 move.line_ids._check_tax_lock_date()
 
@@ -2261,8 +2292,9 @@ class AccountMove(models.Model):
         # You can't change the date of a not-locked move to a locked period.
         # You can't post a new journal entry inside a locked period.
         if 'date' in vals or 'state' in vals:
-            self._check_fiscalyear_lock_date()
-            self.mapped('line_ids')._check_tax_lock_date()
+            posted_move = self.filtered(lambda m: m.state == 'posted')
+            posted_move._check_fiscalyear_lock_date()
+            posted_move.line_ids._check_tax_lock_date()
 
         if ('state' in vals and vals.get('state') == 'posted'):
             for move in self.filtered(lambda m: m.restrict_mode_hash_table and not(m.secure_sequence_number or m.inalterable_hash)).sorted(lambda m: (m.date, m.ref or '', m.id)):
@@ -2956,11 +2988,13 @@ class AccountMove(models.Model):
                 elif move.is_purchase_document(include_receipts=True):
                     raise UserError(_("The Bill/Refund date is required to validate this document."))
 
-            # When the accounting date is prior to the tax lock date, move it automatically to today.
+            # When the accounting date is prior to a lock date, change it automatically upon posting.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
-            if (move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date) and (move.line_ids.tax_ids or move.line_ids.tax_tag_ids):
-                move.date = move._get_accounting_date(move.invoice_date or move.date, True)
+            affects_tax_report = move._affect_tax_report()
+            lock_dates = move._get_violated_lock_dates(move.date, affects_tax_report)
+            if lock_dates:
+                move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
                 move.with_context(check_move_validity=False)._onchange_currency()
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
@@ -4543,8 +4577,8 @@ class AccountMoveLine(models.Model):
         moves = lines.mapped('move_id')
         if self._context.get('check_move_validity', True):
             moves._check_balanced()
-        moves._check_fiscalyear_lock_date()
-        lines._check_tax_lock_date()
+        moves.filtered(lambda m: m.state == 'posted')._check_fiscalyear_lock_date()
+        lines.filtered(lambda l: l.parent_state == 'posted')._check_tax_lock_date()
         moves._synchronize_business_models({'line_ids'})
 
         return lines
@@ -4571,11 +4605,11 @@ class AccountMoveLine(models.Model):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
 
             # Check the lock date.
-            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_LOCK_DATE):
+            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_LOCK_DATE):
                 line.move_id._check_fiscalyear_lock_date()
 
             # Check the tax lock date.
-            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_TAX_LOCK_DATE):
+            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_TAX_LOCK_DATE):
                 line._check_tax_lock_date()
 
             # Check the reconciliation.
