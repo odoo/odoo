@@ -11,7 +11,7 @@ Using this application you can manage Sales Teams with CRM and/or Sales
 =======================================================================
  """,
     'website': 'https://www.odoo.com/app/crm',
-    'depends': ['base', 'mail'],
+    'depends': ['mail', 'favorite'],
     'data': [
         'security/sales_team_security.xml',
         'security/ir.model.access.csv',

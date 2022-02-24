@@ -15,7 +15,7 @@ from odoo.release import version
 
 class CrmTeam(models.Model):
     _name = "crm.team"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'favorite.mixin']
     _description = "Sales Team"
     _order = "sequence"
     _check_company_auto = True
@@ -74,9 +74,6 @@ class CrmTeam(models.Model):
 
         return team
 
-    def _get_default_favorite_user_ids(self):
-        return [(6, 0, [self.env.uid])]
-
     # description
     name = fields.Char('Sales Team', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=10)
@@ -109,14 +106,17 @@ class CrmTeam(models.Model):
         context={'active_test': False})
     # UX options
     color = fields.Integer(string='Color Index', help="The color of the channel")
-    favorite_user_ids = fields.Many2many(
-        'res.users', 'team_favorite_user_rel', 'team_id', 'user_id',
-        string='Favorite Members', default=_get_default_favorite_user_ids)
-    is_favorite = fields.Boolean(
-        string='Show on dashboard', compute='_compute_is_favorite', inverse='_inverse_is_favorite',
-        help="Favorite teams to display them in the dashboard and access them easily.")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
     dashboard_graph_data = fields.Text(compute='_compute_dashboard_graph')
+
+    # favorite.mixin override
+    favorite_user_ids = fields.Many2many(
+        relation='team_favorite_user_rel',
+        column1='team_id', column2='user_id',
+        string='Favorite Members')
+    is_favorite = fields.Boolean(
+        string='Show on dashboard',
+        help="Favorite teams to display them in the dashboard and access them easily.")
 
     @api.depends('sequence')  # TDE FIXME: force compute in new mode
     def _compute_is_membership_multi(self):
@@ -182,17 +182,6 @@ class CrmTeam(models.Model):
         all_companies = self.env['res.company'].search([])
         for team in self:
             team.member_company_ids = team.company_id or all_companies
-
-    def _compute_is_favorite(self):
-        for team in self:
-            team.is_favorite = self.env.user in team.favorite_user_ids
-
-    def _inverse_is_favorite(self):
-        sudoed_self = self.sudo()
-        to_fav = sudoed_self.filtered(lambda team: self.env.user not in team.favorite_user_ids)
-        to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
-        (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
-        return True
 
     def _compute_dashboard_button_name(self):
         """ Sets the adequate dashboard button name depending on the Sales Team's options
