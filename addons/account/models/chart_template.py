@@ -272,7 +272,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _("Bank Suspense Account"),
                 'prefix': bank_prefix,
                 'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
-                'xml_id': "account.{cid}_suspense_account",
             },
             'account_journal_payment_debit_account_id': {
                 'company_id': cid,

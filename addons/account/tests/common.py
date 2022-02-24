@@ -195,7 +195,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         cls.env.user.company_ids |= company
 
         # Install the chart template
-        chart_template = chart_template_ref or cls.env['account.chart.template']._guess_chart_template(company)
+        chart_template = chart_template or cls.env['account.chart.template']._guess_chart_template(company)
         cls.env['account.chart.template'].try_loading(chart_template, company=company, install_demo=False)
 
         # The currency could be different after the installation of the chart template.
