@@ -189,9 +189,7 @@ class Project(models.Model):
     def _compute_task_count(self):
         task_data = self.env['project.task']._read_group(
             [('project_id', 'in', self.ids),
-             '|',
-                ('stage_id.fold', '=', False),
-                ('stage_id', '=', False)],
+             ('is_closed', '=', False)],
             ['project_id', 'display_project_id:count'], ['project_id'])
         result_wo_subtask = defaultdict(int)
         result_with_subtasks = defaultdict(int)
@@ -255,7 +253,7 @@ class Project(models.Model):
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
         default=_get_default_favorite_user_ids,
         string='Members')
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite',
+    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sudo=True,
         string='Show Project on Dashboard',
         help="Whether this project should be displayed on your dashboard.")
     label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for the tasks of the project.", translate=True)
@@ -267,7 +265,7 @@ class Project(models.Model):
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
     task_count_with_subtasks = fields.Integer(compute='_compute_task_count')
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
-                               domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
+                               domain=[('is_closed', '=', False)])
     color = fields.Integer(string='Color Index')
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True)
     alias_enabled = fields.Boolean(string='Use Email Alias', compute='_compute_alias_enabled', readonly=False)
@@ -1014,7 +1012,7 @@ class Task(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True, related_sudo=False)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True, related_sudo=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
-    is_closed = fields.Boolean(related="stage_id.fold", string="Closing Stage", related_sudo=False, help="Folded in Kanban stages are closing stages.")
+    is_closed = fields.Boolean(related="stage_id.fold", string="Closing Stage", store=True, index=True, related_sudo=False, help="Folded in Kanban stages are closing stages.")
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     child_text = fields.Char(compute="_compute_child_text")
@@ -1991,7 +1989,7 @@ class Task(models.Model):
 
         project_user_group_id = self.env.ref('project.group_project_user').id
         new_group = ('group_project_user', lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'], {})
-        if not self.user_ids and not self.stage_id.fold:
+        if not self.user_ids and not self.is_closed:
             take_action = self._notify_get_action_link('assign', **local_msg_vals)
             project_actions = [{'url': take_action, 'title': _('I take it')}]
             new_group[2]['actions'] = project_actions
@@ -2098,7 +2096,7 @@ class Task(models.Model):
                 self.search([
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
+                    ('is_closed', '=', False)]).write({'partner_id': new_partner.id})
         return super(Task, self)._message_post_after_hook(message, msg_vals)
 
     def action_assign_to_me(self):
