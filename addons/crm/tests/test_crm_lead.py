@@ -8,9 +8,10 @@ from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDR
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.exceptions import UserError
-from odoo.tests.common import Form, users
+from odoo.tests.common import Form, tagged, users
 
 
+@tagged('lead_internals')
 class TestCRMLead(TestCrmCommon):
 
     @classmethod
@@ -361,8 +362,10 @@ class TestCRMLead(TestCrmCommon):
         self.assertFalse(lead.mobile)
         self.assertFalse(lead.phone_sanitized)
         self.assertEqual(partner.mobile, partner_mobile)
-        self.assertEqual(partner.phone_sanitized, partner_mobile_sanitized,
-                         'Partner sanitized should be computed on mobile')
+        # if SMS is uninstalled, phone_sanitized is not available on partner
+        if 'phone_sanitized' in partner:
+            self.assertEqual(partner.phone_sanitized, partner_mobile_sanitized,
+                             'Partner sanitized should be computed on mobile')
 
     @users('user_sales_manager')
     def test_crm_lead_partner_sync_email_phone_corner_cases(self):
