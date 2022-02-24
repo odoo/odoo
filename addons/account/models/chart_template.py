@@ -107,7 +107,7 @@ class AccountChartTemplate(models.AbstractModel):
             xml_id = company.get_metadata()[0]['xmlid']
             if not xml_id:
                 xml_id = f"base.company_{company.id}"
-                with_company.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': self}])
+                with_company.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': company}])
             data = with_company._get_chart_template_data(template_code, company)
             with_company._load_data(data)
             with_company._post_load_data(template_code, company)
