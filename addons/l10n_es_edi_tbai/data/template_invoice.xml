@@ -51,7 +51,7 @@
                 <NIF t-out="sender_vat"/>
                 <ApellidosNombreRazonSocial t-out="sender.name"/>
             </Emisor>
-            <Destinatarios t-if="is_emission">
+            <Destinatarios t-if="is_emission and not is_simplified">
                 <IDDestinatario t-foreach="recipients" t-as="recipient">
                     <NIF t-if="recipient.get('nif')" t-out="recipient['nif']"/>
                     <IDOtro t-else="">
@@ -154,8 +154,9 @@
                                 <BaseImponible t-out="float_repr(det['BaseImponible'])"/>
                                 <TipoImpositivo t-out="float_repr(det['TipoImpositivo'])"/>
                                 <CuotaImpuesto t-out="float_repr(det['CuotaRepercutida'])"/>
-                                <!-- TODO investigate the Y option below -->
-                                <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
+                                <TipoRecargoEquivalencia t-if="det.get('TipoRecargoEquivalencia')" t-out="float_repr(det['TipoRecargoEquivalencia'])"/>
+                                <CuotaRecargoEquivalencia t-if="det.get('CuotaRecargoEquivalencia')" t-out="float_repr(det['CuotaRecargoEquivalencia'])"/>
+                                <OperacionEnRecargoDeEquivalenciaORegimenSimplificado t-out="'S' if (is_simplified or det.get('TipoRecargoEquivalencia')) else 'N'"/>
                             </DetalleIVA>
                         </DesgloseIVA>
                     </DetalleNoExenta>
