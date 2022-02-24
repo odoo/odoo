@@ -11,13 +11,15 @@
 # Jens Cramer, 2021
 # Raymond Vetter, 2021
 # W. Outz, 2022
+# Robert Förster <hello@suppliot.eu>, 2022
+# Felix Schubert <felix.schubert@go-erp.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -124,13 +126,13 @@ msgstr "%s (Rundung)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
-msgstr ""
+msgstr "%s - %s; %s Abgerechnet, %s Erhalten zu je %s"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
-msgstr ""
+msgstr "%s - %s; %s Abgerechnet, %s Erhalten zu je %s"
 
 #. module: account
 #: code:addons/account/models/product.py:0
@@ -167,6 +169,8 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
+". Die Journalbuchungen müssen von Odoo kalkuliert werden, bevor sie in der "
+"Währung Ihres Unternehmens gebucht werden."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -187,7 +191,7 @@ msgstr "1 Zahlung"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "1 Statement"
-msgstr ""
+msgstr "1 Beleg"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -624,6 +628,11 @@ msgstr ""
 " </span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+msgid "<span class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
+msgstr "<span class=\"o_form_label o_td_label\">Rechnung abgleichen mit</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
 msgid ""
 "<span class=\"o_form_label oe_inline\" "
@@ -710,6 +719,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Post Exchange difference entries in:</span>"
 msgstr ""
+"<span class=\"o_form_label\">Buchung von Wechselkursdifferenzen in:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -741,6 +751,9 @@ msgid ""
 "                                        Balance\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Saldo\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -899,7 +912,7 @@ msgstr "<span>EUR <span class=\"oe_currency_value\">19.250,00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>5.00</span>"
-msgstr ""
+msgstr "<span>5,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1223,6 +1236,8 @@ msgid ""
 "A payment tolerance defined as a percentage should always be between 0 and "
 "100"
 msgstr ""
+"Eine als Prozentsatz definierte Zahlungstoleranz sollte immer zwischen 0 und"
+" 100 liegen."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -1230,6 +1245,7 @@ msgstr ""
 msgid ""
 "A payment tolerance defined as an amount should always be higher than 0"
 msgstr ""
+"Eine als Betrag definierte Zahlungstoleranz sollte immer größer als 0 sein."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1612,7 +1628,7 @@ msgstr "Kontobericht mit Zahlungszeilen"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
 msgid "Account report without payment lines"
-msgstr ""
+msgstr "Kontobericht ohne Zahlungszeilen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
@@ -1857,7 +1873,7 @@ msgstr "Aktiv"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Active Account"
-msgstr ""
+msgstr "Aktiver Account"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__active_domain
@@ -2232,12 +2248,12 @@ msgstr "Zugelassene Journale"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__type_control_ids
 msgid "Allowed account types"
-msgstr ""
+msgstr "Zulässige Kontotypen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
 msgid "Allowed accounts"
-msgstr ""
+msgstr "Zulässige Konten"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2268,7 +2284,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_report_line__carry_over_condition_method__always_carry_over_and_set_to_0
 msgid "Always carry over and set to 0"
-msgstr ""
+msgstr "Immer übertragen und auf 0 setzen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__amount
@@ -2469,6 +2485,9 @@ msgid ""
 "An error occurred when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
 msgstr ""
+"Bei der Berechnung der Unveränderlichkeit ist ein Fehler aufgetreten. Es ist"
+" nicht möglich, den eindeutigen vorherigen gebuchten Journaleintrag zu "
+"erhalten."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2593,6 +2612,8 @@ msgstr "Anwenden"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply VAT of the EU country to which goods and services are delivered."
 msgstr ""
+"Wenden Sie die Mehrwertsteuer des EU-Landes an, in das die Waren und "
+"Dienstleistungen geliefert werden."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -2604,7 +2625,7 @@ msgstr "Steuerzuordnung generell anwenden"
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
 msgid "Apply only if delivery country matches the group."
-msgstr ""
+msgstr "Nur anwenden, wenn das Lieferland mit der Gruppe übereinstimmt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
@@ -2752,7 +2773,7 @@ msgstr "Automatische Währungssätze"
 #. module: account
 #: model:ir.actions.server,name:account.action_automatic_entry
 msgid "Automatic Entries"
-msgstr ""
+msgstr "Automatische Einträge"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__automatic_entry_default_journal_id
@@ -2767,7 +2788,13 @@ msgstr "Automatische Sequenz"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__available_journal_ids
 msgid "Available Journal"
-msgstr ""
+msgstr "Verfügbares Journal"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
+msgid "Available Partner Bank"
+msgstr "Verfügbare Partnerbank"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
@@ -2779,7 +2806,7 @@ msgstr "Verfügbare Zahlungsmethode"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_payment_method_line_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_payment_method_line_ids
 msgid "Available Payment Method Line"
-msgstr ""
+msgstr "Zeile Verfügbare Zahlungsmethode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -2879,7 +2906,7 @@ msgstr "Bank Datenübertragung"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "Bank Identifier Code"
-msgstr "Bankleitzahl"
+msgstr "BIC"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
@@ -2997,6 +3024,9 @@ msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
 msgstr ""
+"Die Transaktionen auf den Kontoauszügen werden bis zum endgültigen Abgleich "
+"auf dem Zwischenkonto verbucht, so dass das richtige Konto gefunden werden "
+"kann."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3108,7 +3138,7 @@ msgstr "Rechnung"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_in_invoice_bill_tree
 msgid "Bill Currency"
-msgstr ""
+msgstr "Rechnungswährung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
@@ -3285,7 +3315,7 @@ msgstr "CUST"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Darf Körper bearbeiten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
@@ -3327,7 +3357,7 @@ msgstr "Abbrechen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr "Abbrechen Buchung"
+msgstr "Eintrag löschen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
@@ -3390,7 +3420,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
 msgid "Carryover"
-msgstr ""
+msgstr "Übertrag"
 
 #. module: account
 #: code:addons/account/models/account_tax_report.py:0
@@ -3402,7 +3432,7 @@ msgstr "Übertragszeilen für %s"
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__carryover_line_ids
 #: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
 msgid "Carryover lines"
-msgstr ""
+msgstr "Übertragszeilen"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -3478,7 +3508,7 @@ msgstr "Bargelddifferenz-Aufwandskonto"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Difference Gain"
-msgstr ""
+msgstr "Bargelddifferenz Gewinn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
@@ -3919,6 +3949,11 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "Company Bank Account"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
 msgid "Company Country"
 msgstr "Land des Unternehmens"
@@ -4057,7 +4092,7 @@ msgstr "Verbinden Sie Ihre Konten in Sekundenschnelle."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr ""
+msgstr "Behandelt Antworten als neuen Thread"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
@@ -4181,7 +4216,7 @@ msgstr "Ländergruppe"
 #: model:ir.model.fields,help:account.field_account_tax_carryover_line__tax_report_country_id
 #: model:ir.model.fields,help:account.field_account_tax_report__country_id
 msgid "Country for which this report is available."
-msgstr ""
+msgstr "Land für das dieser Bericht verfügbar ist."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__country_id
@@ -4205,7 +4240,7 @@ msgstr "Anlegen"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr ""
+msgstr "Automatische Einträge erzeugen"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
@@ -4342,7 +4377,7 @@ msgstr "Kassenbuch öffnen"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_create_invoice
 msgid "Create first invoice"
-msgstr ""
+msgstr "Erste Rechnung erstellen"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -4595,7 +4630,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
 msgid "Cumulated Balance"
-msgstr ""
+msgstr "Kumulierter Saldo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__cumulated_balance
@@ -4669,7 +4704,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_currency_id
 msgid "Currency of the credit journal item."
-msgstr ""
+msgstr "Währung der Kreditjournalposition."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_currency_id
@@ -4719,7 +4754,7 @@ msgstr "Kunde"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Customer Bank Account"
-msgstr ""
+msgstr "Bankkonto des Kunden"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
@@ -4961,7 +4996,7 @@ msgstr "Soll"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_amount_currency
 msgid "Debit Amount Currency"
-msgstr ""
+msgstr "Soll-Betrag Währung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_move_id
@@ -5274,7 +5309,7 @@ msgstr "Differenzenkonto"
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__allow_payment_tolerance
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__allow_payment_tolerance
 msgid "Difference accepted in case of underpayment."
-msgstr ""
+msgstr "Akzeptierte Differenz im Fall einer Unterbezahlung"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__difference
@@ -5399,12 +5434,12 @@ msgstr "Anzeigename"
 #: model:ir.model.fields,field_description:account.field_account_move__display_qr_code
 #: model:ir.model.fields,field_description:account.field_account_payment__display_qr_code
 msgid "Display QR-code"
-msgstr ""
+msgstr "QR-Code anzeigen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__qr_code
 msgid "Display QR-code on invoices"
-msgstr ""
+msgstr "QR-Code auf Rechnungen anzeigen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_currency__display_rounding_warning
@@ -5429,7 +5464,7 @@ msgstr "Verwendung auf Rechnungen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__preview_ready
 msgid "Display preview button"
-msgstr ""
+msgstr "Vorschau anzeigen Button"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -5455,7 +5490,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
 msgid "Distribution when the tax is used on an invoice"
-msgstr ""
+msgstr "Verteilung, wenn die Steuer auf einer Rechnung verwendet wird"
 
 #. module: account
 #: code:addons/account/models/digest.py:0
@@ -5571,7 +5606,7 @@ msgstr "Fällig"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Due Amount for"
-msgstr ""
+msgstr "Fälliger Betrag für"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -5752,7 +5787,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Entries doesn't belong to the same company: %s != %s"
-msgstr ""
+msgstr "Einträge gehören nicht zum gleichen Unternehmen: %s!=%s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_validate_account_move__force_post
@@ -5760,6 +5795,8 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
+"Zukünftige Einträge werden standardmäßig automatisch veröffentlicht. "
+"Aktivieren Sie dieses Kontrollkästchen, um sie jetzt zu veröffentlichen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5770,7 +5807,7 @@ msgstr "Einträge zur Überprüfung"
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "Entries: %(account)s"
-msgstr ""
+msgstr "Einträge: %(account)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__move_line_ids
@@ -5945,7 +5982,7 @@ msgstr "Feld"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Fill in the details of the line."
-msgstr ""
+msgstr "Füllen Sie die Details der Zeile aus."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__copyvalue
@@ -6121,12 +6158,12 @@ msgstr "Sachanlagen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__amount
 msgid "Float Amount"
-msgstr ""
+msgstr "Float-Betrag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Follow Customer Payments"
-msgstr ""
+msgstr "Kundenzahlungen nachverfolgen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_follower_ids
@@ -6203,7 +6240,7 @@ msgstr "Fremdwährung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr ""
+msgstr "Ausländische Steuer-ID"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -6876,7 +6913,7 @@ msgstr "Importieren Sie Ihre Bankauszüge in QIF"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Import your first bill"
-msgstr ""
+msgstr "Importieren Sie Ihre erste Rechnung"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__in_payment
@@ -6888,7 +6925,7 @@ msgstr "In Zahlung"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "In order for it to be admissible,"
-msgstr ""
+msgstr "Um zulässig zu sein,"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -6981,7 +7018,7 @@ msgstr "Erlöskonto für Produktvorlage"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Incoming Payments"
-msgstr ""
+msgstr "Zahlungseingänge"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_payment_debit_account_id
@@ -7328,6 +7365,7 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
 msgstr ""
+"Rechnungen und Gutschriften sollten die gleiche Anzahl von Zeilen haben."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -7371,7 +7409,7 @@ msgstr "Rechnungsdatum"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_invoice
 msgid "Invoice: Send by email"
-msgstr ""
+msgstr "Rechnung: Per E-Mail senden"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -7451,13 +7489,13 @@ msgstr "Rechnungen ohne Zahlung"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Invoices/Bills Partial Match if Underpaid"
-msgstr ""
+msgstr "Rechnungen Teilweise Übereinstimmung bei Unterbezahlung"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Invoices/Bills Perfect Match"
-msgstr ""
+msgstr "Rechnungen Perfekte Übereinstimmung"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -7562,7 +7600,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__is_move_sent
 #: model:ir.model.fields,help:account.field_account_payment__is_move_sent
 msgid "It indicates that the invoice/payment has been sent."
-msgstr ""
+msgstr "Zeigt an, dass die Rechnung/Zahlung übermittelt wurde."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7675,6 +7713,8 @@ msgid ""
 "Journal Entry %s is not valid. In order to proceed, all optional journal "
 "items must share the same account."
 msgstr ""
+"Journalbuchung %s ist nicht gültig. Um fortfahren zu können, müssen alle "
+"optionalen Journalposten dasselbe Konto haben."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -7710,11 +7750,13 @@ msgid ""
 "Journal Entry %s is not valid. In order to proceed, the journal items must "
 "share the same partner."
 msgstr ""
+"Die Journalbuchung %s ist nicht gültig. Um fortfahren zu können, müssen die "
+"Journalposten denselben Partner haben."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__entry
 msgid "Journal Entry Date"
-msgstr ""
+msgstr "Datum der Journalbuchung"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
@@ -7914,7 +7956,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Keep empty for no control"
-msgstr "Kein Eintrag für Kontrollverzicht"
+msgstr "Nicht ausfüllen, wenn nicht benötigt"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__open
@@ -8215,7 +8257,7 @@ msgstr "verspätete Rechnungen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Late Invoices"
-msgstr ""
+msgstr "Verspätete Rechnungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__last_time_entries_checked
@@ -8426,6 +8468,8 @@ msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
 msgstr ""
+"Verwalten Sie Antworten als neue eingehende E-Mails, nicht als Antworten, "
+"die in denselben Thread gehen."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -8444,7 +8488,7 @@ msgstr "Manuell"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Manual entry"
-msgstr ""
+msgstr "Manueller Eintrag"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__inbound_payment_method_line_ids
@@ -8494,11 +8538,6 @@ msgstr "Als gesendet markieren"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
 msgstr "Als vollständig bezahlt markieren"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
-msgid "Match Invoice/bill with"
-msgstr "Zuordnung der Rechnung anhand"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -8787,7 +8826,7 @@ msgstr "Bezeichnung kommt vom verbundenen Dokument"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report__name
 msgid "Name of this tax report"
-msgstr ""
+msgstr "Name dieses Steuerberichts"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8909,7 +8948,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_report_line__carry_over_condition_method__no_negative_amount_carry_over_condition
 msgid "No negative amount"
-msgstr ""
+msgstr "Kein negativer Betrag"
 
 #. module: account
 #: code:addons/account/models/ir_actions_report.py:0
@@ -9244,7 +9283,7 @@ msgstr "Auf der"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "Once done, press continue."
-msgstr ""
+msgstr "Drücken Sie anschließend auf Weiter."
 
 #. module: account
 #. openerp-web
@@ -9312,7 +9351,7 @@ msgstr "Nur Rechnungen konnten gedruckt werden."
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Only new statements can be posted."
-msgstr ""
+msgstr "Nur neue Auszüge können gebucht werden."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__group_payment
@@ -9334,7 +9373,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Only validated statements can be reset to new."
-msgstr ""
+msgstr "Nur validierte Auszüge können auf neu zurückgesetzt werden."
 
 #. module: account
 #: code:addons/account/controllers/terms.py:0
@@ -9377,7 +9416,7 @@ msgstr "Eröffnungsdatum"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_debit
 msgid "Opening Debit"
-msgstr ""
+msgstr "Anfangssoll"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_date
@@ -9594,7 +9633,7 @@ msgstr "Ausgangszahlungsmethoden"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outgoing Payments"
-msgstr "Ausgehende Zahlungen"
+msgstr "Zahlungsausgänge"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_payment_credit_account_id
@@ -9623,7 +9662,7 @@ msgstr "Ausstehendes Konto"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr ""
+msgstr "Ausstehende Zahlungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
@@ -9639,7 +9678,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Outstanding Receipts"
-msgstr ""
+msgstr "Ausstehende Quittungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
@@ -9691,7 +9730,7 @@ msgstr "Bezahlt"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Paid Bills"
-msgstr ""
+msgstr "Bezahlte Rechnungen"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -9710,7 +9749,7 @@ msgstr "Bezahlt am"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__both
 msgid "Paid/Received"
-msgstr ""
+msgstr "Bezahlt/Erhalten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__paired_internal_transfer_payment_id
@@ -9809,7 +9848,7 @@ msgstr "Partner-Kontoauszug"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr ""
+msgstr "Partner Mapping"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
@@ -9830,12 +9869,12 @@ msgstr "Partnertyp"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr ""
+msgstr "Partner Mapping für Kontenabgleich"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
 msgid "Partner should be set"
-msgstr ""
+msgstr "Partner sollte eingestellt sein"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9887,7 +9926,7 @@ msgstr "Zahlungskonto"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Amount:"
-msgstr ""
+msgstr "Zahlungsbetrag:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9908,7 +9947,7 @@ msgstr "Zahlungsdatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Date:"
-msgstr ""
+msgstr "Zahlungsdatum:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_difference
@@ -9963,7 +10002,7 @@ msgstr "Zahlungsmethoden"
 #: model:ir.model.fields,field_description:account.field_account_move__qr_code_method
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code_method
 msgid "Payment QR-code"
-msgstr ""
+msgstr "QR-Code zur Bezahlung"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_payment_receipt
@@ -10022,7 +10061,7 @@ msgstr "Posten Zahlungsbedingungen"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__allow_payment_tolerance
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__allow_payment_tolerance
 msgid "Payment Tolerance"
-msgstr ""
+msgstr "Zahlungstoleranz"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance_type
@@ -10230,6 +10269,8 @@ msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
 msgstr ""
+"Bitte gehen Sie zum %s Journal und definieren Sie ein Gewinnkonto. Dieses "
+"Konto wird für die Erfassung der Bargelddifferenz verwendet."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -10355,7 +10396,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__preceding_subtotal
 msgid "Preceding Subtotal"
-msgstr ""
+msgstr "Vorherige Zwischensumme"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
@@ -10434,7 +10475,7 @@ msgstr "Vorschau der Rechnung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__previous_statement_id
 msgid "Previous Statement"
-msgstr ""
+msgstr "Vorheriger Auszug"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10621,7 +10662,7 @@ msgstr "QIF-Import"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
 msgid "QR Code"
-msgstr ""
+msgstr "QR Code"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10706,7 +10747,7 @@ msgstr "Forderungen"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
 msgid "Receive"
-msgstr "Wareneingang"
+msgstr "Eingehend"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__inbound
@@ -11047,7 +11088,7 @@ msgstr "Zurück auf Neu"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "Reset to Processing"
-msgstr ""
+msgstr "Zurücksetzen auf Verarbeitung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
@@ -11099,6 +11140,8 @@ msgstr "Partner beschränken auf"
 #: model:ir.model.fields,help:account.field_account_tax_template__tax_scope
 msgid "Restrict the use of taxes to a type of product."
 msgstr ""
+"Beschränken Sie die Verwendung von Steuern auf eine bestimmte Art von "
+"Produkten."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
@@ -11178,7 +11221,7 @@ msgstr "Umkehrung von: %s"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Reverse"
-msgstr "Rücklieferung"
+msgstr "Gutschrift erstellen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11276,7 +11319,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
-msgstr ""
+msgstr "Regeln für den Kontenabgleich"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -11666,7 +11709,7 @@ msgstr "Auswahl"
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__outbound
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Send"
-msgstr "Senden"
+msgstr "Ausgehend"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -11721,6 +11764,11 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"Senden Sie für jede Rechnung eine separate E-Mail.\n"
+"\n"
+"Es werden alle Dateierweiterungen akzeptiert.\n"
+"\n"
+"Nur PDF- und XML-Dateien werden von Odoo interpretiert."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -11737,12 +11785,12 @@ msgstr "Sende Quittung/Rechnung per e-Mail."
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Send the invoice and check what the customer will receive."
-msgstr ""
+msgstr "Senden Sie die Rechnung und prüfen Sie, was der Kunde erhält."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "Send your email to"
-msgstr ""
+msgstr "Senden Sie Ihre E-Mail an"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -11839,7 +11887,7 @@ msgstr "Dienstleistungen"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Set a price"
-msgstr ""
+msgstr "Einen Preis festlegen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -11865,7 +11913,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Set as Checked"
-msgstr ""
+msgstr "Als geprüft markieren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
@@ -11944,7 +11992,7 @@ msgstr "Buchhaltungsfunktionen anzeigen - schreibgeschützt"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
 msgid "Show Decimal Separator"
-msgstr ""
+msgstr "Dezimalzeichen anzeigen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
@@ -12065,6 +12113,8 @@ msgid ""
 "Some payment methods supposed to be unique already exists somewhere else.\n"
 "(%s)"
 msgstr ""
+"Einige Zahlungsmethoden, die einzigartig sein sollen, gibt es bereits an anderer Stelle.\n"
+"(%s)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -12344,7 +12394,7 @@ msgstr "Subtyp"
 #: model:ir.model.fields,field_description:account.field_account_move__suitable_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__suitable_journal_ids
 msgid "Suitable Journal"
-msgstr ""
+msgstr "Geeignetes Journal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
@@ -12355,7 +12405,7 @@ msgstr "Rang des Lieferanten"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr ""
+msgstr "Zwischenkonto"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -12658,7 +12708,7 @@ msgstr "Steuervorlagen"
 #: model:ir.model.fields,field_description:account.field_account_tax_template__type_tax_use
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Type"
-msgstr ""
+msgstr "Steuertyp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
@@ -12814,7 +12864,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Taxes set."
-msgstr ""
+msgstr "Steuern festgelegt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_ids
@@ -13059,6 +13109,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__selected_payment_method_codes
 msgid "Technical field used to hide or show payment method options if needed."
 msgstr ""
+"Technisches Feld, mit dem Zahlungsoptionen bei Bedarf ein- oder ausgeblendet"
+" werden können."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method_line
@@ -13188,7 +13240,7 @@ msgstr "Vorlage"
 #. module: account
 #: model:ir.model,name:account.model_account_group_template
 msgid "Template for Account Groups"
-msgstr ""
+msgstr "Vorlage für Kontengruppen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -13198,7 +13250,7 @@ msgstr "Vorlage für die Steuerzuordnung"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
 msgid "Templates Found"
-msgstr ""
+msgstr "Vorlagen gefunden"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -13230,13 +13282,13 @@ msgstr "Geschäftsbedingungen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms_html
 msgid "Terms & Conditions as a Web page"
-msgstr ""
+msgstr "Allgemeine Geschäftsbedingungen als Webseite"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__terms_type
 #: model:ir.model.fields,field_description:account.field_res_config_settings__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Format Allgemeine Geschäftsbedingungen"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13398,7 +13450,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a number"
-msgstr ""
+msgstr "Der Betrag ist keine Zahl"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_residual
@@ -13472,6 +13524,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Der Kunde verzichtet ausdrücklich auf seine eigenen allgemeinen "
+"Geschäftsbedingungen, auch wenn diese nach diesen allgemeinen "
+"Verkaufsbedingungen erstellt wurden. Jede Abweichung muss, um gültig zu "
+"sein, im Voraus ausdrücklich und schriftlich vereinbart werden."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -13488,7 +13544,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
 msgid "The combination code/payment type already exists!"
-msgstr ""
+msgstr "Die Kombination Code/Zahlungsart existiert bereits!"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13527,6 +13583,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id
 msgid "The country this chart of accounts belongs to. None if it's generic."
 msgstr ""
+"Das Land, zu dem dieser Kontenplan gehört. Leer lassen, falls es sich um "
+"eine generische Einstellung handelt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -13703,7 +13761,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr ""
+msgstr "Die Fremdwährung muss eine andere sein als die des Journals: %s"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -13719,6 +13777,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_carryover_line__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this carryover is made."
 msgstr ""
+"Die ausländische Steuerposition, für die dieser Übertrag vorgenommen wird."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__group_tax_id
@@ -13748,6 +13807,8 @@ msgstr ""
 msgid ""
 "The invoice already contains lines, it was not updated from the attachment."
 msgstr ""
+"Die Rechnung enthält bereits Zeilen, sie wurde nicht aus dem Anhang "
+"aktualisiert."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13948,7 +14009,7 @@ msgstr "Die auf Journalposten zu setzende Zahlungsreferenz."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
 msgid "The payment that created this entry"
-msgstr ""
+msgstr "Die Zahlung, die diesen Eintrag erzeugt hat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
@@ -14190,6 +14251,8 @@ msgid ""
 "The starting balance <b>doesn't match</b> with the ending balance of the "
 "previous bank statement."
 msgstr ""
+"Der Anfangssaldo und der Endsaldo des letzten Kontoauszugs <b>stimmen nicht "
+"überein</b>."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14320,6 +14383,9 @@ msgid ""
 "There doesn't appear to be anything to invoice for the selected order. "
 "However, you can use the amount field to force an accrual entry."
 msgstr ""
+"Für den ausgewählten Auftrag scheint es keine Rechnung zu geben. Sie können "
+"jedoch das Betragsfeld verwenden, um eine periodengerechte Abgrenzung zu "
+"erzwingen."
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -14413,6 +14479,8 @@ msgid ""
 "This adds a menu item in the Accounting Configuration menu to import FEC "
 "files."
 msgstr ""
+"Dies fügt einen Menüpunkt in den Buchhaltungskonfiguration hinzu, um FEC-"
+"Dateien zu importieren."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14549,6 +14617,8 @@ msgstr "Diese Bewegung ist so konfiguriert, dass sie automatisch auf %s"
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
 msgstr ""
+"Dieser Vorgang ist so konfiguriert, dass er automatisch zum Buchungsdatum "
+"erfolgt:"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14613,7 +14683,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
-msgstr ""
+msgstr "Für diesen Kontenabgleich existiert bisher kein Eintrag"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -14704,7 +14774,7 @@ msgstr "Gesamtbetrag"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Total Balance"
-msgstr ""
+msgstr "Gesamtsumme"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
@@ -14858,7 +14928,7 @@ msgstr "Bewegungen"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Try a sample vendor bill"
-msgstr ""
+msgstr "Testen Sie es mit einer Musterrechnung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
@@ -14894,6 +14964,9 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
+"Art des QR-Codes, der für die Zahlung dieser Rechnung beim Drucken erzeugt "
+"werden soll. Wenn das Feld leer gelassen wird, wird die erste verfügbare und"
+" verwendbare Methode verwendet."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_exception_decoration
@@ -14924,6 +14997,8 @@ msgstr ""
 msgid ""
 "Unable to create an open balance for a statement line without a partner set."
 msgstr ""
+"Es ist nicht möglich, einen offenen Saldo für eine Kontoauszugszeile ohne "
+"einen Partner festzulegen."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -15255,7 +15330,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Validate."
-msgstr ""
+msgstr "Bestätigen."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__confirm
@@ -15310,7 +15385,7 @@ msgstr "Lieferantenrechnung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__vendor_bill_count
 msgid "Vendor Bill Count"
-msgstr ""
+msgstr "Anzahl Lieferantenrechnungen"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15358,7 +15433,7 @@ msgstr "Zahlungen des Lieferant"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Vendor Reimbursement"
-msgstr ""
+msgstr "Lieferantenerstattung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -15369,7 +15444,7 @@ msgstr "Steuern (Einkauf)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Vendor:"
-msgstr ""
+msgstr "Lieferant:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_supplier
@@ -15531,7 +15606,7 @@ msgstr "Mit Währung"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
 msgid "With Odoo, you won't have to record bills manually"
-msgstr ""
+msgstr "Mit Odoo müssen Sie Rechnungen nicht manuell erfassen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -15621,18 +15696,21 @@ msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
 msgstr ""
+"Sie können die Periode/das Konto nur für Posten ändern, die noch nicht "
+"abgestimmt sind."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
 msgstr ""
+"Sie können die Periode/das Konto nur für gebuchte Journalposten ändern."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "You can only create statement line in open bank statements."
-msgstr ""
+msgstr "Sie können Auszugszeilen nur in offenen Kontoauszügen erstellen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15754,6 +15832,8 @@ msgstr ""
 msgid ""
 "You can't create payments for entries belonging to different companies."
 msgstr ""
+"Sie können keine Zahlungen für Einträge erstellen, die zu verschiedenen "
+"Unternehmen gehören."
 
 #. module: account
 #: code:addons/account/models/account_payment_method.py:0
@@ -15800,6 +15880,8 @@ msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
 msgstr ""
+"Sie können keine Zahlung registrieren, weil für die ausgewählten "
+"Journalposten nichts mehr zu zahlen ist."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -15878,6 +15960,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"Sie können innerhalb Ihres Steuerlandes keine Steuerposition mit "
+"ausländischer Umsatzsteuer anlegen, ohne ihr einen Status zuzuordnen."
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -15894,6 +15978,8 @@ msgid ""
 "You cannot create a fiscal position within your fiscal country with the same"
 " VAT number as the main one set on your company."
 msgstr ""
+"Sie können in Ihrem Steuerland keine Steuerposition mit der gleichen "
+"Umsatzsteuernummer wie die Hauptnummer Ihres Unternehmens anlegen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16064,6 +16150,8 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr ""
+"Sie können die Anzahl der Dezimalstellen einer Währung, die bereits für "
+"Buchungen verwendet wurde, nicht verringern."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -16139,6 +16227,9 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
 msgstr ""
+"Sie können dieses Konto (%s) nicht in diesem Journal benutzen. Prüfen Sie "
+"den Abschnitt \"Zulässige Journale\" auf der Registerkarte \"Erweiterte "
+"Einstellungen\" im entsprechenden Journal."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16175,7 +16266,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot validate an invoice with an inactive currency: %s"
-msgstr ""
+msgstr "Sie können keine Rechnung mit einer inaktiven Währung bestätigen: %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16274,7 +16365,7 @@ msgstr "[FURN_8999] 3-Sitzer-Sofas"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
-msgstr ""
+msgstr "[Nicht gesetzt]"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16314,6 +16405,9 @@ msgid ""
 "third party in the context of any claim for damages filed against the client"
 " by an end consumer."
 msgstr ""
+"kann unter keinen Umständen vom Kunden verpflichtet werden, im Rahmen einer "
+"Schadensersatzklage eines Endverbrauchers gegen den Kunden als Dritter "
+"aufzutreten."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -16324,7 +16418,7 @@ msgstr "Schließen"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__after_invoice_month
 msgid "days after the end of the invoice month"
-msgstr ""
+msgstr "Tage nach Ende des Rechnungsmonats"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_after_invoice_date
@@ -16384,7 +16478,7 @@ msgstr "z.B. ein Telefonat führen, mit anderen abstimmen, ..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. INV"
-msgstr ""
+msgstr "z.B. RG"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16397,6 +16491,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this vendor. You can allocate them to mark this bill as paid."
 msgstr ""
+"für diesen Lieferanten. Sie können diese zuteilen, um die Rechnung als "
+"bezahlt zu kennzeichnen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16420,7 +16516,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__payment_tolerance_type__percentage
 msgid "in percentage"
-msgstr ""
+msgstr "in Prozent"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
@@ -16513,7 +16609,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "the destination journal"
-msgstr ""
+msgstr "das Zieljournal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -16556,7 +16652,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
-msgstr ""
+msgstr "mit dem PDF einer Rechnung als Anhang. "
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt

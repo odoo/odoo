@@ -109,7 +109,7 @@ const Wysiwyg = Widget.extend({
             getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
             getPowerboxElement: () => {
-                const selection = document.getSelection();
+                const selection = (this.options.document || document).getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
                     const node = closestElement(selection.anchorNode, 'P, DIV');
                     return !(node && node.hasAttribute && node.hasAttribute('data-oe-model')) && node;
@@ -1001,7 +1001,9 @@ const Wysiwyg = Widget.extend({
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
         const $node = $(params.node);
-        const $editable = $(OdooEditorLib.closestElement(range.startContainer, '.o_editable'));
+        // We need to keep track of FA icon because media.js will _clear those classes
+        const wasFontAwesome = $node.hasClass('fa');
+        const $editable = $(this.odooEditor.editable);
         const model = $editable.data('oe-model');
         const field = $editable.data('oe-field');
         const type = $editable.data('oe-type');
@@ -1024,7 +1026,7 @@ const Wysiwyg = Widget.extend({
                 element.className += " " + params.htmlClass;
             }
             restoreSelection();
-            if (wysiwygUtils.isImg($node[0])) {
+            if (wysiwygUtils.isImg($node[0]) || wasFontAwesome) {
                 $node.replaceWith(element);
                 this.odooEditor.unbreakableStepUnactive();
                 this.odooEditor.historyStep();
@@ -1059,7 +1061,7 @@ const Wysiwyg = Widget.extend({
     },
     _configureToolbar: function (options) {
         const $toolbar = this.toolbar.$el;
-        $toolbar.on('mousedown', e => e.preventDefault());
+        $toolbar.find('.btn-group').on('mousedown', e => e.preventDefault());
         const openTools = e => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -1265,7 +1267,7 @@ const Wysiwyg = Widget.extend({
                         this._processAndApplyColor(eventName, ev.data.color);
                         this._updateEditorUI();
                     });
-                    colorpicker.on('color_hover color_leave', null, ev => {
+                    colorpicker.on('color_hover', null, ev => {
                         if (hadNonCollapsedSelection) {
                             this.odooEditor.historyResetLatestComputedSelection(true);
                         }
@@ -1275,6 +1277,9 @@ const Wysiwyg = Widget.extend({
                         } finally {
                             this.odooEditor.historyUnpauseSteps();
                         }
+                    });
+                    colorpicker.on('color_leave', null, ev => {
+                        this.odooEditor.historyRevertCurrentStep();
                     });
                     colorpicker.on('enter_key_color_colorpicker', null, () => {
                         $dropdown.children('.dropdown-toggle').dropdown('hide');
@@ -1908,7 +1913,6 @@ const Wysiwyg = Widget.extend({
         // remove ZeroWidthSpace from odoo field value
         // ZeroWidthSpace may be present from OdooEditor edition process
         let escapedHtml = this._getEscapedElement($el).prop('outerHTML');
-        escapedHtml = escapedHtml.replace(/[\u200B-\u200D\uFEFF]/g, '');
 
         return this._rpc({
             model: 'ir.ui.view',

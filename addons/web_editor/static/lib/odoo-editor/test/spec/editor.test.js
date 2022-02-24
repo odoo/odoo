@@ -85,6 +85,81 @@ describe('Editor', () => {
                         contentAfter: '<p>[]abc</p>',
                     });
                 });
+                it('should ignore ZWS', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>ab[]\u200Bc</p>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<p>ab[]</p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>de[]\u200B</p>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<p>de[]</p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>[]\u200Bf</p>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<p>[]<br></p>',
+                    });
+                });
+                it('should delete through ZWS and Empty Inline', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>a[]b<span class="style">c</span>de</p>',
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                            await deleteForward(editor);
+                            await deleteForward(editor);
+                        },
+                        contentAfter: '<p>a[]e</p>',
+                    });
+                });
+                it('ZWS: should delete element content but keep cursor in', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>ab<span class="style">[]cd</span>ef</p>',
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                            await deleteForward(editor);
+                        },
+                        contentAfterEdit: '<p>ab<span class="style" oe-zws-empty-inline="">[]\u200B</span>ef</p>',
+                        contentAfter: '<p>ab<span class="style">[]\u200B</span>ef</p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>ab<span class="style">[]cd</span>ef</p>',
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                            await deleteForward(editor);
+                            await insertText(editor, 'x');
+                        },
+                        contentAfter: '<p>ab<span class="style">x[]</span>ef</p>',
+                    });
+                });
+                it('should ignore ZWS and merge', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><span class="removeme" oe-zws-empty-inline="">[]\u200B</span><b>ab</b></p>',
+                        contentBeforeEdit: '<p><span class="removeme" oe-zws-empty-inline="">[]\u200B</span><b>ab</b></p>',
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                            await insertText(editor, 'x');
+                        },
+                        contentAfter: '<p><b>x[]b</b></p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><span class="removeme" oe-zws-empty-inline="">[]\u200B</span><span>cd</span></p>',
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                            await insertText(editor, 'x');
+                        },
+                        contentAfter: '<p><span>x[]d</span></p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><span class="removeme" oe-zws-empty-inline="">[]\u200B</span><br><b>ef</b></p>',
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                            await insertText(editor, 'x');
+                        },
+                        contentAfter: '<p><b>x[]ef</b></p>',
+                    });
+                });
                 it('should not break unbreakables', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore:
@@ -753,12 +828,62 @@ X[]
                     contentAfter: '<p>ab[]ef</p>',
                 });
             });
-            it('should not delete styling nodes if not selected', async () => {
+            it('should delete empty nodes ', async () => {
                 // Forward selection
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><font>[abcdef]</font></h1>',
                     stepFunction: deleteForward,
-                    contentAfter: '<h1><font>[]</font><br></h1>',
+                    contentAfter: '<h1>[]<br></h1>',
+                });
+            });
+            it('should not delete styling nodes if not selected', async () => {
+                // deleteForward selection
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<span class="style-class">[bcde]</span>f</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>a<span class="style-class">[]\u200B</span>f</p>',
+                });
+                // deleteBackward selection
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<span class="style-class">[bcde]</span>f</p>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<p>a<span class="style-class">[]\u200B</span>f</p>',
+                });
+            });
+            it('should delete styling nodes when delete if empty', async () => {
+                // deleteBackward selection
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab <span class="style-class">[cd]</span> ef</p>',
+                    stepFunction: async editor => {
+                        await deleteBackward(editor);
+                        await deleteBackward(editor);
+                    },
+                    contentAfter: '<p>ab[]&nbsp;ef</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>uv<span class="style-class">[wx]</span>yz</p>',
+                    stepFunction: async editor => {
+                        await deleteBackward(editor);
+                        await deleteBackward(editor);
+                    },
+                    contentAfter: '<p>u[]yz</p>',
+                });
+                // deleteForward selection
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab <span class="style-class">[cd]</span> ef</p>',
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                        await deleteForward(editor);
+                    },
+                    contentAfter: '<p>ab []ef</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>uv<span class="style-class">[wx]</span>yz</p>',
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                        await deleteForward(editor);
+                    },
+                    contentAfter: '<p>uv[]z</p>',
                 });
             });
             it('should delete across two paragraphs', async () => {
@@ -892,7 +1017,7 @@ X[]
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab<b class="oe_unremovable">[cd]</b>ef</p>',
                     stepFunction: deleteForward,
-                    contentAfter: '<p>ab<b class="oe_unremovable">[\u200B]</b>ef</p>',
+                    contentAfter: '<p>ab<b class="oe_unremovable">[]\u200B</b>ef</p>',
                 });
             });
         });
@@ -961,6 +1086,118 @@ X[]
                         contentBefore: '<p><br></p><p>[]abc</p>',
                         stepFunction: deleteBackward,
                         contentAfter: '<p>[]abc</p>',
+                    });
+                });
+                it('should ignore ZWS', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>ab\u200B[]c</p>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<p>a[]c</p>',
+                    });
+                });
+                it('should keep inline block', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><p>ab</p><br><span>c[]</span></div>',
+                        stepFunction: deleteBackward,
+                        contentAfterEdit: '<div><p>ab</p><br><span oe-zws-empty-inline="">[]\u200B</span></div>',
+                        contentAfter: '<div><p>ab</p><br>[]</div>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><p>uv</p><br><span class="style">w[]</span></div>',
+                        stepFunction: deleteBackward,
+                        contentAfterEdit: '<div><p>uv</p><br><span class="style" oe-zws-empty-inline="">[]\u200B</span></div>',
+                        contentAfter: '<div><p>uv</p><br><span class="style">[]\u200B</span></div>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><p>cd</p><br><span>e[]</span></div>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await insertText(editor, 'x');
+                        },
+                        contentAfterEdit: '<div><p>cd</p><br><span>x[]</span></div>',
+                        contentAfter: '<div><p>cd</p><br><span>x[]</span></div>',
+                    });
+                });
+                it('should delete through ZWS and Empty Inline', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>ab<span class="style">c</span>d[]e</p>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: '<p>a[]e</p>',
+                    });
+                });
+                it('ZWS: should delete element content but keep cursor in', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>uv<i style="color:red">w[]</i>xy</p>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await insertText(editor, 'i');
+                        },
+                        contentAfterEdit: '<p>uv<i style="color:red">i[]</i>xy</p>',
+                        contentAfter: '<p>uv<i style="color:red">i[]</i>xy</p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>ab<span class="style">cd[]</span>ef</p>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                        },
+                        contentAfterEdit: '<p>ab<span class="style" oe-zws-empty-inline="">[]\u200B</span>ef</p>',
+                        contentAfter: '<p>ab<span class="style">[]\u200B</span>ef</p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>ab<span class="style">cd[]</span>ef</p>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                            await insertText(editor, 'x');
+                        },
+                        contentAfterEdit: '<p>ab<span class="style">x[]</span>ef</p>',
+                        contentAfter: '<p>ab<span class="style">x[]</span>ef</p>',
+                    });
+                });
+                it('should ignore ZWS and merge', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><b>ab</b><span class="removeme" oe-zws-empty-inline="">[]\u200B</span></p>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await insertText(editor, 'x');
+                        },
+                        contentAfter: '<p><b>ax[]</b></p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><span>cd</span><span class="removeme" oe-zws-empty-inline="">[]\u200B</span></p>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await insertText(editor, 'x');
+                        },
+                        contentAfter: '<p><span>cx[]</span></p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><b>ef</b><br><span class="removeme" oe-zws-empty-inline="">[]\u200B</span></p>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await insertText(editor, 'x');
+                        },
+                        contentAfter: '<p><b>efx[]</b></p>',
+                    });
+                });
+                it('should ignore ZWS and merge', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><p>ab</p><span>[]\u200B</span></div>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<div><p>ab[]</p></div>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><p>cd</p><br><span>[]\u200B</span></div>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await insertText(editor, 'x');
+                        },
+                        contentAfter: '<div><p>cd</p>x[]</div>',
                     });
                 });
                 it('should not break unbreakables', async () => {
@@ -1767,6 +2004,43 @@ X[]
             });
         });
         describe('Selection not collapsed', () => {
+            it('ZWS : should keep inline block', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div><p>ab <span class="style">[c]</span> d</p></div>',
+                    stepFunction: async editor => {
+                        await deleteBackward(editor);
+                    },
+                    contentAfterEdit: '<div><p>ab <span class="style" oe-zws-empty-inline="">[]\u200B</span> d</p></div>',
+                    contentAfter: '<div><p>ab <span class="style">[]\u200B</span> d</p></div>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div><p>ab <span class="style">[c]</span> d</p></div>',
+                    stepFunction: async editor => {
+                        await deleteBackward(editor);
+                        await insertText(editor, 'x');
+                    },
+                    contentAfterEdit: '<div><p>ab <span class="style">x[]</span> d</p></div>',
+                    contentAfter: '<div><p>ab <span class="style">x[]</span> d</p></div>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div><p>ab<span class="style">[c]</span>d</p></div>',
+                    stepFunction: async editor => {
+                        await deleteBackward(editor);
+                        await insertText(editor, 'x');
+                    },
+                    contentAfterEdit: '<div><p>ab<span class="style">x[]</span>d</p></div>',
+                    contentAfter: '<div><p>ab<span class="style">x[]</span>d</p></div>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div><p>ab <span class="style">[cde]</span> f</p></div>',
+                    stepFunction: async editor => {
+                        await deleteBackward(editor);
+                        await insertText(editor, 'x');
+                    },
+                    contentAfterEdit: '<div><p>ab <span class="style">x[]</span> f</p></div>',
+                    contentAfter: '<div><p>ab <span class="style">x[]</span> f</p></div>',
+                });
+            });
             it('should delete part of the text within a paragraph', async () => {
                 // Forward selection
                 await testEditor(BasicEditor, {
@@ -1965,7 +2239,7 @@ X[]
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab<b class="oe_unremovable">[cd]</b>ef</p>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<p>ab<b class="oe_unremovable">[\u200B]</b>ef</p>',
+                    contentAfter: '<p>ab<b class="oe_unremovable">[]\u200B</b>ef</p>',
                 });
             });
         });
@@ -2251,7 +2525,7 @@ X[]
                 it('should insert line breaks outside the edges of an anchor', async () => {
                     const pressEnter = editor => {
                         editor.document.execCommand('insertParagraph');
-                    }
+                    };
                     await testEditor(BasicEditor, {
                         contentBefore: '<div>ab<a>[]cd</a></div>',
                         stepFunction: pressEnter,
@@ -2366,6 +2640,27 @@ X[]
                     contentBefore: '<p>]abcd[</p>',
                     stepFunction: insertParagraphBreak,
                     contentAfter: '<p><br></p><p>[]<br></p>',
+                });
+            });
+        });
+    });
+
+    describe('insertLineBreak', () => {
+        describe('Selection not collapsed', () => {
+            it('should insert a char into an empty span', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab<span>[]\u200B</span>cd</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'x');
+                    },
+                    contentAfter: '<p>ab<span>x[]</span>cd</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>uv <span>[]\u200B</span> wx</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'y');
+                    },
+                    contentAfter: '<p>uv <span>y[]</span> wx</p>',
                 });
             });
         });
@@ -2729,7 +3024,7 @@ X[]
                 contentAfter: '<p>a<span><span style="color: tomato;">[b</span><span><span style="color: tomato;">c]</span>d</span>e</span>f</p>',
             });
         });
-    })
+    });
 
     describe('setTagName', () => {
         describe('to paragraph', () => {
@@ -3091,12 +3386,12 @@ X[]
                 await testEditor(OdooEditor, {
                     contentBefore: '<p>[]</p>',
                     stepFunction: async editor => {
-                        insertText(editor, 'a');
-                        insertText(editor, 'b');
-                        insertText(editor, 'c');
+                        await insertText(editor, 'a');
+                        await insertText(editor, 'b');
+                        await insertText(editor, 'c');
                         undo(editor);
                         undo(editor);
-                        insertText(editor, 'd');
+                        await insertText(editor, 'd');
                         undo(editor);
                         undo(editor);
                         redo(editor);
@@ -3109,17 +3404,37 @@ X[]
                 await testEditor(OdooEditor, {
                     contentBefore: '<p>[]</p>',
                     stepFunction: async editor => {
-                        insertText(editor, 'a');
-                        insertText(editor, 'b');
-                        insertText(editor, 'c');
+                        await insertText(editor, 'a');
+                        await insertText(editor, 'b');
+                        await insertText(editor, 'c');
                         undo(editor);
                         undo(editor);
-                        insertText(editor, 'd');
+                        await insertText(editor, 'd');
                         undo(editor);
                         redo(editor);
                         redo(editor);
                     },
                     contentAfter: '<p>ad[]</p>',
+                });
+            });
+        });
+        describe('revertCurrentStep', () => {
+            it('should not lose initially nested style', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a[b<span style="color: tomato;">c</span>d]e</p>',
+                    stepFunction: async editor => {
+                        // simulate preview
+                        editor.historyPauseSteps();
+                        try {
+                            applyInlineStyle(editor, (el) => el.style.color = 'lime');
+                            // a[bcd]e with bcd in lime
+                        } finally {
+                            editor.historyUnpauseSteps();
+                        }
+                        // simulate preview's reset
+                        editor.historyRevertCurrentStep(); // back to initial state
+                    },
+                    contentAfter: '<p>a[b<span style="color: tomato;">c</span>d]e</p>',
                 });
             });
         });

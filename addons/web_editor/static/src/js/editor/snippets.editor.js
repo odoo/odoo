@@ -333,7 +333,7 @@ var SnippetEditor = Widget.extend({
             return;
         }
 
-        const $modal = this.$target.find('.modal');
+        const $modal = this.$target.find('.modal:visible');
         const $target = $modal.length ? $modal : this.$target;
         const targetEl = $target[0];
 

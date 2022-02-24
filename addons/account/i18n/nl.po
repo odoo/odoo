@@ -5,15 +5,13 @@
 # Translators:
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
 # Martin Trigaux, 2021
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Camille Dantinne <cmd@odoo.com>, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -268,7 +266,7 @@ msgstr ""
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Hier is je\n"
+"        Hierbij ontvang je onze\n"
 "        <t t-if=\"object.name\">\n"
 "            creditfactuur <strong t-out=\"object.name or ''\">RINV/2021/05/0001</strong>\n"
 "        </t>\n"
@@ -345,7 +343,7 @@ msgstr ""
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Hier is je\n"
+"        Hierbij ontvang je onze\n"
 "        <t t-if=\"object.name\">\n"
 "            factuur <strong t-out=\"object.name or ''\">INV/2021/05/0005</strong>\n"
 "        </t>\n"
@@ -361,7 +359,7 @@ msgstr ""
 "            Deze factuur is al betaald.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Graag de factuur zo spoedig mogelijk betalen.\n"
+"            Wij zien de betaling graag zo snel mogelijk tegemoet.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br/><br/>\n"
 "                Gebruik de volgende communicatie voor uw betaling: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>.\n"
@@ -627,6 +625,11 @@ msgstr ""
 "of</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+msgid "<span class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
+msgstr "<span class=\"o_form_label o_td_label\">Factuur afletteren met</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
 msgid ""
 "<span class=\"o_form_label oe_inline\" "
@@ -745,7 +748,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                                        Balans\n"
+"                                        Saldo\n"
 "                                      </span>"
 
 #. module: account
@@ -1954,7 +1957,7 @@ msgstr "Voeg een bankrekening toe"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
 msgid "Add a Note"
-msgstr "Notitie toevoegen"
+msgstr "Als tekst toevoegen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2025,7 +2028,7 @@ msgstr "Sectie toevoegen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add an internal note..."
-msgstr "Voeg interne notitie toe..."
+msgstr "Voeg een interne notitie toe..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -2799,6 +2802,12 @@ msgstr "Automatische reeks"
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__available_journal_ids
 msgid "Available Journal"
 msgstr "Beschikbaar dagboek"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
+msgid "Available Partner Bank"
+msgstr "Beschikbare bank van relatie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
@@ -3955,6 +3964,11 @@ msgstr "Bedrijven die referenen aan relatie"
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Company"
 msgstr "Bedrijf"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "Company Bank Account"
+msgstr "Bedrijfsbankrekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
@@ -7385,8 +7399,8 @@ msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
 msgstr ""
-"De verdeling van facturen en creditnota's moet elk exact één regel voor de "
-"basis bevatten."
+"De verdeling van facturen en creditnota's moet elk precies één regel als "
+"grondslag hebben."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -8589,11 +8603,6 @@ msgstr "Markeer als verzonden"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
 msgstr "Markeer als volledig betaald"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
-msgid "Match Invoice/bill with"
-msgstr "Letter factuur/leveranciersfactuur af met"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -13942,13 +13951,14 @@ msgstr "De rekeninghouder van het bankdagboek moet het bedrijf zijn (%s)."
 msgid ""
 "The invoice already contains lines, it was not updated from the attachment."
 msgstr ""
-"De factuur bevat al regels, deze is niet bijgewerkt vanuit de bijlage."
+"De factuur bevat al regels, deze zijn niet bijgewerkt vanuit de bijlage."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The invoice is not a draft, it was not updated from the attachment."
-msgstr "De factuur is geen concept en is niet bijgewerkt vanuit de bijlage."
+msgstr ""
+"De factuur is niet in concept en is niet bijgewerkt vanuit de bijlage."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -15318,7 +15328,7 @@ msgstr "Maateenheid"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Update Terms"
-msgstr "Termen bijwerken"
+msgstr "Algemene voorwaarden bijwerken"
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0

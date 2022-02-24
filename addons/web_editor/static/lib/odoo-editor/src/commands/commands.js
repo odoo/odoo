@@ -263,12 +263,14 @@ export function applyInlineStyle(editor, applyStyle) {
         }
         applyStyle(textNode.parentElement);
     }
-    const firstNode = selectedTextNodes[0];
-    const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
-    if (direction === DIRECTIONS.RIGHT) {
-        setSelection(firstNode, 0, lastNode, lastNode.length);
-    } else {
-        setSelection(lastNode, lastNode.length, firstNode, 0);
+    if (selectedTextNodes.length) {
+        const firstNode = selectedTextNodes[0];
+        const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
+        if (direction === DIRECTIONS.RIGHT) {
+            setSelection(firstNode, 0, lastNode, lastNode.length);
+        } else {
+            setSelection(lastNode, lastNode.length, firstNode, 0);
+        }
     }
 }
 function addColumn(editor, beforeOrAfter) {

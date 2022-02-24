@@ -17,12 +17,11 @@ const NAV_KEYS = [
     "end",
     "backspace",
     "enter",
-    "escape",
     "tab",
     "delete",
 ];
 const MODIFIERS = new Set(["alt", "control", "shift"]);
-const AUTHORIZED_KEYS = new Set([...ALPHANUM_KEYS, ...NAV_KEYS]);
+const AUTHORIZED_KEYS = new Set([...ALPHANUM_KEYS, ...NAV_KEYS, "escape"]);
 
 export const hotkeyService = {
     dependencies: ["ui"],
@@ -86,9 +85,16 @@ export const hotkeyService = {
                 return;
             }
 
+            const targetIsEditable =
+                (event.target instanceof Element && /input|textarea/i.test(event.target.tagName)) ||
+                (event.target instanceof HTMLElement && event.target.isContentEditable);
+            const shouldProtectEditable =
+                targetIsEditable && [...ALPHANUM_KEYS, ...NAV_KEYS].includes(singleKey);
+
             // Finally, prepare and dispatch.
             const infos = {
                 hotkey,
+                shouldProtectEditable,
                 _originalEvent: event,
             };
             dispatch(infos);
@@ -96,21 +102,25 @@ export const hotkeyService = {
         }
 
         /**
-         * Dispatches an hotkey to all matching registrations and
-         * clicks on all elements having a data-hotkey attribute matching the hotkey.
+         * Dispatches an hotkey to first matching registration.
+         * Registrations are iterated in following order:
+         * - priority to all registrations done through the hotkeyService.add()
+         *   method (NB: in descending order of insertion = newer first)
+         * - then all registrations done through the DOM [data-hotkey] attribute
          *
          * @param {{
          *  hotkey: string,
+         *  shouldProtectEditable: boolean,
          *  _originalEvent: KeyboardEvent
          * }} infos
          */
         function dispatch(infos) {
             let dispatched = false;
-            const { hotkey, _originalEvent: event } = infos;
+            const { hotkey, shouldProtectEditable, _originalEvent: event } = infos;
             const activeElement = ui.activeElement;
 
             // Dispatch actual hotkey to all matching registrations
-            for (const [_, reg] of registrations) {
+            for (const reg of Array.from(registrations.values()).reverse()) {
                 if (!reg.global && reg.activeElement !== activeElement) {
                     continue;
                 }
@@ -123,11 +133,20 @@ export const hotkeyService = {
                     continue;
                 }
 
+                if (!reg.bypassEditableProtection && shouldProtectEditable) {
+                    continue;
+                }
+
                 reg.callback();
                 dispatched = true;
+                break;
             }
             const overlayModParts = hotkeyService.overlayModifier.split("+");
-            if (!event.repeat && overlayModParts.every((el) => hotkey.includes(el))) {
+            if (
+                !dispatched &&
+                !event.repeat &&
+                overlayModParts.every((el) => hotkey.includes(el))
+            ) {
                 // Click on all elements having a data-hotkey attribute matching the actual hotkey without the overlayModifier.
                 const cleanHotkey = hotkey
                     .split("+")
@@ -142,6 +161,7 @@ export const hotkeyService = {
                     el.focus();
                     el.click();
                     dispatched = true;
+                    break;
                 }
             }
 
@@ -245,6 +265,9 @@ export const hotkeyService = {
          * @param {Object} options additional options
          * @param {boolean} [options.allowRepeat=false]
          *  allow registration to perform multiple times when hotkey is held down
+         * @param {boolean} [options.bypassEditableProtection=false]
+         *  if true the hotkey service will call this registration
+         *  even if an editable element is focused
          * @param {boolean} [options.global=false]
          *  allow registration to perform no matter the UI active element
          * @returns {number} registration token
@@ -290,6 +313,7 @@ export const hotkeyService = {
                 callback,
                 activeElement: null,
                 allowRepeat: options && options.allowRepeat,
+                bypassEditableProtection: options && options.bypassEditableProtection,
                 global: options && options.global,
             };
             registrations.set(token, registration);
@@ -318,6 +342,7 @@ export const hotkeyService = {
              * @param {() => void} callback
              * @param {Object} options
              * @param {boolean} [options.allowRepeat=false]
+             * @param {boolean} [options.bypassEditableProtection=false]
              * @param {boolean} [options.global=false]
              * @returns {() => void}
              */

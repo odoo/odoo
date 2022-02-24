@@ -210,3 +210,38 @@ class TestAutoComplete(TransactionCase):
         self.assertEqual(1, suggestions['results_count'], "Text data contains one page with 'long url'")
         self.assertEqual(1, len(suggestions['results']), "Single result must be present")
         self.assertEqual(url, suggestions['results'][0]['website_url'], 'URL must not be truncated')
+
+    def test_06_case_insensitive_results(self):
+        """ Tests an autocomplete with exact match and more than the maximum
+        number of results.
+        """
+        suggestions = self._autocomplete("Many")
+        self.assertEqual(6, suggestions['results_count'], "Test data contains six pages with 'Many'")
+        self.assertEqual(5, len(suggestions['results']), "Results must be limited to 5")
+        self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
+        for result in suggestions['results']:
+            self._check_highlight("many", result['name'])
+            self._check_highlight("many", result['description'])
+
+    def test_07_no_fuzzy_for_mostly_number(self):
+        """ Ensures exact match is used when search contains mostly numbers. """
+        self._create_page('Product P7935432254U7 page', 'Product P7935432254U7', '/numberpage')
+        suggestions = self._autocomplete("54321")
+        self.assertEqual(0, suggestions['results_count'], "Test data contains no exact match")
+        suggestions = self._autocomplete("54322")
+        self.assertEqual(1, suggestions['results_count'], "Test data contains one exact match")
+        suggestions = self._autocomplete("P79355")
+        self.assertEqual(0, suggestions['results_count'], "Test data contains no exact match")
+        suggestions = self._autocomplete("P79354")
+        self.assertEqual(1, suggestions['results_count'], "Test data contains one exact match")
+        self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
+        suggestions = self._autocomplete("produkt")
+        self.assertEqual(1, suggestions['results_count'], "Test data contains one fuzzy match")
+        self.assertTrue(suggestions['fuzzy_search'], "Expects a fuzzy match")
+
+    def test_08_fuzzy_classic_numbers(self):
+        """ Ensures fuzzy match is used when search contains a few numbers. """
+        self._create_page('iPhone 6', 'iPhone6', '/iphone6')
+        suggestions = self._autocomplete("iphone7")
+        self.assertEqual(1, suggestions['results_count'], "Test data contains one fuzzy match")
+        self.assertTrue(suggestions['fuzzy_search'], "Expects an fuzzy match")

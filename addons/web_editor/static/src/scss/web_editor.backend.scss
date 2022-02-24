@@ -56,10 +56,10 @@
         bottom: 0 !important;
         width: 100% !important;
         min-height: 100% !important;
-        z-index: 1001 !important;
+        z-index: $zindex-modal-backdrop + 1 !important;
         border: 0;
     }
-    > :not(.modal):not(.modal-backdrop) {
+    .tooltip-field-info {
         display: none;
     }
     .o_form_fullscreen_ancestor {

@@ -153,13 +153,24 @@ class Project(models.Model):
     def _compute_attached_docs_count(self):
         self.env.cr.execute(
             """
-            SELECT coalesce(task.project_id, project.id), count(*)
-              FROM ir_attachment attachment
-              LEFT JOIN project_task task ON attachment.res_model = 'project.task' AND task.id = attachment.res_id
-              LEFT JOIN project_project project ON attachment.res_model = 'project.project' AND project.id = attachment.res_id
-             WHERE project.id IN %(project_ids)s
-                OR task.project_id IN %(project_ids)s
-             GROUP BY coalesce(task.project_id, project.id)
+            WITH docs AS (
+                 SELECT res_id as id, count(*) as count
+                   FROM ir_attachment
+                  WHERE res_model = 'project.project'
+                    AND res_id IN %(project_ids)s
+               GROUP BY res_id
+
+              UNION ALL
+
+                 SELECT t.project_id as id, count(*) as count
+                   FROM ir_attachment a
+                   JOIN project_task t ON a.res_model = 'project.task' AND a.res_id = t.id
+                  WHERE t.project_id IN %(project_ids)s
+               GROUP BY t.project_id
+            )
+            SELECT id, sum(count)
+              FROM docs
+          GROUP BY id
             """,
             {"project_ids": tuple(self.ids)}
         )
@@ -1683,6 +1694,8 @@ class Task(models.Model):
         if 'active' in vals and not vals.get('active') and any(self.mapped('recurrence_id')):
             # TODO: show a dialog to stop the recurrence
             raise UserError(_('You cannot archive recurring tasks. Please disable the recurrence first.'))
+        if 'recurrence_id' in vals and vals.get('recurrence_id') and any(not task.active for task in self):
+            raise UserError(_('Archived tasks cannot be recurring. Please unarchive the task first.'))
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals.update(self.update_date_end(vals['stage_id']))

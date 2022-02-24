@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.tests import tagged
 
 from odoo.addons.payment.tests.common import PaymentCommon
@@ -115,3 +117,27 @@ class TestPayments(PaymentCommon):
             1,
             msg="The refunds count should only consider transactions with operation 'refund'."
         )
+
+    def test_action_post_calls_send_payment_request_only_once(self):
+        payment_token = self.create_token()
+        payment_without_token = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'amount': 2000.0,
+            'date': '2019-01-01',
+            'currency_id': self.currency.id,
+            'partner_id': self.partner.id,
+            'journal_id': self.acquirer.journal_id.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })
+        payment_with_token = payment_without_token.copy()
+        payment_with_token.payment_token_id = payment_token.id
+
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._send_payment_request'
+        ) as patched:
+            payment_without_token.action_post()
+            patched.assert_not_called()
+            payment_with_token.action_post()
+            patched.assert_called_once()

@@ -176,7 +176,7 @@
                             </group>
                             <group>
                                 <group string="Display" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}">
-                                    <field name="column_nb" string="Number of columns"/>
+                                    <field name="column_nb" string="Number of columns" invisible="1"/>
                                     <field name="allow_value_image"/>
                                 </group>
                                 <group string="Conditional Display" attrs="{'invisible': [('questions_selection', '=', 'random')]}">

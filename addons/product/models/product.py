@@ -778,19 +778,10 @@ class ProductPackaging(models.Model):
         # per package might be a float, leading to incorrect results. For example:
         # 8 % 1.6 = 1.5999999999999996
         # 5.4 % 1.8 = 2.220446049250313e-16
-        if (
-            product_qty
-            and packaging_qty
-            and float_compare(
-                product_qty / packaging_qty,
-                float_round(product_qty / packaging_qty, precision_rounding=1.0),
-                precision_rounding=default_uom.rounding
-            )
-            != 0
-        ):
-            return float_round(
-                product_qty / packaging_qty, precision_rounding=1.0, rounding_method=rounding_method
-            ) * packaging_qty
+        if product_qty and packaging_qty:
+            rounded_qty = float_round(product_qty / packaging_qty, precision_rounding=1.0,
+                                  rounding_method=rounding_method) * packaging_qty
+            return rounded_qty if float_compare(rounded_qty, product_qty, precision_rounding=default_uom.rounding) else product_qty
         return product_qty
 
     def _find_suitable_product_packaging(self, product_qty, uom_id):

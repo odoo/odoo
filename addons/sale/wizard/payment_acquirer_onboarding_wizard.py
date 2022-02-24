@@ -16,8 +16,8 @@ class PaymentWizard(models.TransientModel):
 
     payment_method = fields.Selection(selection_add=[
         ('digital_signature', "Electronic signature"),
+        ('stripe', "Credit & Debit card (via Stripe)"),
         ('paypal', "PayPal"),
-        ('stripe', "Credit card (via Stripe)"),
         ('other', "Other payment acquirer"),
         ('manual', "Custom payment instructions"),
     ], default=_get_default_payment_method)
@@ -35,3 +35,8 @@ class PaymentWizard(models.TransientModel):
             self.env.company.portal_confirmation_pay = True
 
         return super(PaymentWizard, self).add_payment_methods(*args, **kwargs)
+
+    def _start_stripe_onboarding(self):
+        """ Override of payment to set the sale menu as start menu of the payment onboarding. """
+        menu_id = self.env.ref('sale.sale_menu_root').id
+        return self.env.company._run_payment_onboarding_step(menu_id)

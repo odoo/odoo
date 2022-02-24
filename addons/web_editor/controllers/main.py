@@ -57,6 +57,7 @@ class Web_Editor(http.Controller):
 
             :returns PNG image converted from given font
         """
+        size = max(width, height, 1) if width else size
         width = width or size
         height = height or size
         # Make sure we have at least size=1
@@ -75,7 +76,7 @@ class Web_Editor(http.Controller):
             bg = ','.join(bg.split(',')[:-1])+')'
 
         # Determine the dimensions of the icon
-        image = Image.new("RGBA", (width, height), color=(0, 0, 0, 0))
+        image = Image.new("RGBA", (width, height), color)
         draw = ImageDraw.Draw(image)
 
         boxw, boxh = draw.textsize(icon, font=font_obj)

@@ -3,18 +3,19 @@
 # 	* account_edi
 # 
 # Translators:
-# Martin Trigaux, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
 # 深圳市耀影科技有限公司_QQ1006399173, 2021
+# Martin Trigaux, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: 深圳市耀影科技有限公司_QQ1006399173, 2021\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +72,10 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
+"根据错误的严重程度，阻断文档的当前操作。\n"
+"  * 信息：文档没有被封锁，一切都在正常工作。\n"
+"  * 警告：存在一个错误，但不妨碍当前电子发票操作的成功。\n"
+"  * 错误：存在一个错误，阻止了当前的电子发票操作。"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -120,6 +125,12 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "Download"
+msgstr "下载"
+
+#. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 #: model:ir.cron,cron_name:account_edi.ir_cron_edi_network
 #: model:ir.cron,name:account_edi.ir_cron_edi_network
@@ -148,6 +159,11 @@ msgstr "支持在此日志中凭证的 EDI 格式"
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_blocking_level
 msgid "Edi Blocking Level"
 msgstr "Edi故障级别"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
+msgid "Edi Content"
+msgstr ""
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -219,7 +235,7 @@ msgstr "电子开票"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr ""
+msgstr "电子发票状态"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_mail_template
@@ -265,6 +281,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"无效的发票配置:\n"
+"\n"
+"%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
@@ -324,7 +343,7 @@ msgstr "支付"
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Process now"
-msgstr ""
+msgstr "待处理"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
@@ -371,7 +390,7 @@ msgstr "显示 CRON 将处理的文档的技术字段"
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr ""
+msgstr "此举的所有EDI与网络服务的汇总状态"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -385,14 +404,14 @@ msgstr "过帐结算单时edi_format_id生成的文件（并处理此单据）�
 msgid ""
 "The invoice will be processed asynchronously by the following E-invoicing "
 "service :"
-msgstr ""
+msgstr "发票将由以下电子发票服务异步处理。"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid ""
 "The payment will be processed asynchronously by the following E-invoicing "
 "service :"
-msgstr ""
+msgstr "该付款将由以下电子发票服务异步处理。"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error

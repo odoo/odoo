@@ -99,6 +99,9 @@ def export_translation():
         config["translate_out"])
 
     fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
+    # .pot is the same fileformat as .po
+    if fileformat == "pot":
+        fileformat = "po"
 
     with open(config["translate_out"], "wb") as buf:
         registry = odoo.modules.registry.Registry.new(dbname)
