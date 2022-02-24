@@ -220,16 +220,16 @@ var MassMailingFieldHtml = FieldHtml.extend({
                 return;
             }
 
-            var file = m[1];
-            var img_info = themeParams.get_image_info(file);
+            if (themeParams.get_image_info) {
+                const file = m[1];
+                const imgInfo = themeParams.get_image_info(file);
 
-            if (img_info.format) {
-                src = "/" + img_info.module + "/static/src/img/theme_" + themeParams.name + "/s_default_image_" + file + "." + img_info.format;
-            } else {
-                src = "/web/image/" + img_info.module + ".s_default_image_theme_" + themeParams.name + "_" + file;
+                const src = imgInfo.format
+                    ? `/${imgInfo.module}/static/src/img/theme_${themeParams.name}/s_default_image_${file}.${imgInfo.format}`
+                    : `/web/image/${imgInfo.module}.s_default_image_theme_${themeParams.name}_${file}`;
+
+                $img.attr('src', src);
             }
-
-            $img.attr("src", src);
         });
     },
     /**
@@ -353,7 +353,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onSnippetsLoaded: function (ev) {
+    _onSnippetsLoaded: async function (ev) {
         var self = this;
         if (this.wysiwyg.snippetsMenu && $(window.top.document).find('.o_mass_mailing_form_full_width')[0]) {
             // In full width form mode, ensure the snippets menu's scrollable is
@@ -370,6 +370,23 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
 
         this.wysiwyg.$iframeBody.find('.iframe-utils-zone').addClass('d-none');
+
+        // Templates taken from old mailings
+        const result = await this._rpc({
+            model: 'mailing.mailing',
+            method: 'action_fetch_favorites',
+        });
+        const templatesParams = result.map(values => {
+            return {
+                id: values.id,
+                name: `template_${values.id}`,
+                nowrap: true,
+                subject: values.subject,
+                template: values.body_arch,
+                userId: values.user_id[0],
+                userName: values.user_id[1],
+            };
+        });
 
         var $snippetsSideBar = ev.data;
         var $themes = $snippetsSideBar.find("#email_designer_themes").children();
@@ -439,7 +456,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
             themes: themesParams
         }));
         const $themeSelectorNew = $(core.qweb.render("mass_mailing.theme_selector_new", {
-            themes: themesParams
+            themes: themesParams,
+            templates: templatesParams,
         }));
 
 
@@ -497,10 +515,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
             }
         });
 
-        const selectTheme = (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            const themeParams = themesParams[$(e.currentTarget).index()];
+        const selectTheme = (themeParams) => {
             self._switchImages(themeParams, $snippets);
 
             selectedTheme = themeParams;
@@ -513,11 +528,19 @@ var MassMailingFieldHtml = FieldHtml.extend({
             self.$lastContent = undefined;
         };
 
-        $themeSelector.on("click", ".dropdown-item", selectTheme);
-        $themeSelectorNew.on("click", ".dropdown-item", async (e) => {
+        $themeSelector.on('click', '.dropdown-item', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
             const themeParams = themesParams[$(e.currentTarget).index()];
+            selectTheme(themeParams);
+        });
+        $themeSelectorNew.on('click', '.dropdown-item', async (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            const themeName = $(e.currentTarget).attr('id');
+
+            const themeParams = [...themesParams, ...templatesParams].find(theme => theme.name === themeName);
 
             if (themeParams.name === "basic") {
                 await this._restartWysiwygInstance(false);
@@ -531,13 +554,32 @@ var MassMailingFieldHtml = FieldHtml.extend({
                 $snippets_menu.empty();
             }
 
-            selectTheme(e);
+            selectTheme(themeParams);
             this._addEditorMessages();
             // Wait the next tick because some mutation have to be processed by
             // the Odoo editor before resetting the history.
             setTimeout(() => {
                 this.wysiwyg.historyReset();
             }, 0);
+        });
+
+        // Remove the mailing from the favorites list
+        $themeSelectorNew.on('click', '.o_mail_template_preview i.o_mail_template_remove_favorite', async (ev) => {
+            ev.stopPropagation();
+            ev.preventDefault();
+
+            const $target = $(ev.currentTarget);
+            const mailingId = $target.data('id');
+
+            const action = await this._rpc({
+                model: 'mailing.mailing',
+                method: 'action_remove_favorite',
+                args: [mailingId],
+            });
+
+            this.do_action(action);
+
+            $target.parents('.o_mail_template_preview').remove();
         });
 
         /**

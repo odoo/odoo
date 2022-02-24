@@ -96,7 +96,7 @@ html, body {
         float: left;
         clear: none;
         width: 100%;
-        max-width: 25%;
+        max-width: 20%;
         transition: all 0.3s ease 0s;
 
         &:first-child {
@@ -158,6 +158,41 @@ html, body {
                 }
             }
         }
+    }
+
+    .o_mail_template_preview {
+        padding: 10px 1.5rem;
+        width: 20%;
+        div i.o_mail_template_remove_favorite {
+            display: none;
+        }
+        div:hover i.o_mail_template_remove_favorite {
+            display: inline-block;
+            &:hover {
+                color: red;
+            }
+        }
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    // Show 2 columns for the templates on small screen
+    // can not be done with "o_xxs_form_view" because those
+    // elements are inside an iframe (HTML field).
+    .o_mail_theme_selector_new {
+        .dropdown-item {
+            max-width: 50%!important;
+        }
+        h5 {
+            font-size: 1.2rem!important;
+        }
+    }
+    .o_mail_template_preview {
+        width: 50%!important;
     }
 }
 

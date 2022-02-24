@@ -81,6 +81,12 @@ QUnit.test('save arch and html', async function (assert) {
             '   />'+
             '</form>',
         res_id: 1,
+        mockRPC: function (route, args) {
+            if (route.indexOf('/web/dataset/call_kw/mailing.mailing/action_fetch_favorites') >= 0) {
+                return Promise.resolve([]);
+            }
+            return this._super(...arguments);
+        }
     });
     var $fieldReadonly = form.$('.oe_form_field[name="body_html"]');
     var $fieldEdit = form.$('.oe_form_field[name="body_arch"]');

@@ -63,6 +63,11 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         edition: 'community',
         run: 'click',
     }, {
+        trigger: 'button[name="action_set_favorite"]',
+        content: _t('Click on this button to add this mailing to your templates.'),
+        position: 'right',
+        run: 'click',
+    }, {
         trigger: 'button[name="action_test"]',
         content: _t("Test this mailing by sending a copy to yourself."),
         position: 'bottom',
