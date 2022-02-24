@@ -3771,6 +3771,18 @@ exports.Order = Backbone.Model.extend({
         }
         return false;
     },
+    addNewPaymentLine(paymentMethod) {
+        // original function: click_paymentmethods
+        if (this.electronic_payment_in_progress()) {
+            return false;
+        } else {
+            const paymentLine = this.add_paymentline(paymentMethod);
+            if (paymentMethod.payment_terminal) {
+                this.selected_paymentline.set_payment_status('pending');
+            }
+            return paymentLine;
+        }
+    },
 });
 
 var OrderCollection = Backbone.Collection.extend({
