@@ -286,6 +286,8 @@ class HrEmployeePrivate(models.Model):
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
                 vals['name'] = vals.get('name', user.name)
         employees = super().create(vals_list)
+        if self.env.context.get('salary_simulation'):
+            return employees
         for employee in employees:
             if employee.department_id:
                 self.env['mail.channel'].sudo().search([
