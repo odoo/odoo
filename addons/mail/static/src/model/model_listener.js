@@ -55,14 +55,14 @@ export class Listener {
          */
         this.lastObservedFieldsByLocalId = new Map();
         /**
-         * Set of Model that have been accessed with `all()` on model manager
+         * Set of model that have been accessed with `all()` on model manager
          * between the last call to `startListening` and `stopListening` with
          * this listener as parameter.
-         * Each Model has its own way to know the listeners that are observing
+         * Each model has its own way to know the listeners that are observing
          * it (to be able to notify them if it changes). This set holds the
          * inverse of that information, which is useful to be able to remove
-         * this listener (when the need arises) from those Model without having
-         * to verify the presence of this listener on each possible Model one by
+         * this listener (when the need arises) from those model without having
+         * to verify the presence of this listener on each possible model one by
          * one.
          */
         this.lastObservedAllByModel = new Set();

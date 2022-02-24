@@ -172,7 +172,7 @@ registerModel({
         /**
          * Determines the record that is content of this popover view.
          */
-        content: one('Model', {
+        content: one('Record', {
             compute: '_computeContent',
             required: true,
         }),

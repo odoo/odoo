@@ -173,7 +173,7 @@ export class ModelField {
      * default value. Relational fields are always unlinked before the default
      * is applied.
      *
-     * @param {Model} record
+     * @param {Record} record
      * @param {options} [options]
      * @returns {boolean} whether the value changed for the current field
      */
@@ -197,12 +197,12 @@ export class ModelField {
      * Compute method when this field is related.
      *
      * @private
-     * @param {Model} record
+     * @param {Record} record
      */
     computeRelated(record) {
         const [relationName, relatedFieldName] = this.related.split('.');
-        const Model = record.constructor;
-        const relationField = Model.__fieldMap[relationName];
+        const model = record.constructor;
+        const relationField = model.__fieldMap[relationName];
         if (relationField.relationType === 'many') {
             const newVal = [];
             for (const otherRecord of record[relationName]) {
@@ -259,7 +259,7 @@ export class ModelField {
      * Decreases the field value by `amount`
      * for an attribute field holding number value,
      *
-     * @param {Model} record
+     * @param {Record} record
      * @param {number} amount
      */
     decrement(record, amount) {
@@ -271,7 +271,7 @@ export class ModelField {
      * Get the value associated to this field. Relations must convert record
      * local ids to records.
      *
-     * @param {Model} record
+     * @param {Record} record
      * @returns {any}
      */
     get(record) {
@@ -291,7 +291,7 @@ export class ModelField {
      * Increases the field value by `amount`
      * for an attribute field holding number value.
      *
-     * @param {Model} record
+     * @param {Record} record
      * @param {number} amount
      */
     increment(record, amount) {
@@ -302,7 +302,7 @@ export class ModelField {
     /**
      * Parses newVal for command(s) and executes them.
      *
-     * @param {Model} record
+     * @param {Record} record
      * @param {any} newVal
      * @param {Object} [options]
      * @param {boolean} [options.hasToUpdateInverse] whether updating the
@@ -396,7 +396,7 @@ export class ModelField {
      * Get the raw value associated to this field. For relations, this means
      * the local id or list of local ids of records in this relational field.
      *
-     * @param {Model} record
+     * @param {Record} record
      * @returns {any}
      */
     read(record) {
@@ -431,11 +431,11 @@ export class ModelField {
      * an iterable of records.
      *
      * @private
-     * @param {Model|Model[]} newValue
+     * @param {Record|Record[]} newValue
      * @param {Object} [param1={}]
      * @param {boolean} [param1.hasToVerify=true] whether the value has to be
      *  verified @see `_verifyRelationalValue`
-     * @returns {Model[]}
+     * @returns {Record[]}
      */
     _convertX2ManyValue(newValue, { hasToVerify = true } = {}) {
         if (typeof newValue[Symbol.iterator] === 'function') {
@@ -457,13 +457,13 @@ export class ModelField {
      * field based on the given data and the inverse relation value.
      *
      * @private
-     * @param {Model} record
+     * @param {Record} record
      * @param {Object|Object[]} data
-     * @returns {Model|Model[]}
+     * @returns {Record|Record[]}
      */
     _insertOtherRecord(record, data) {
-        const OtherModel = record.models[this.to];
-        const otherField = OtherModel.__fieldMap[this.inverse];
+        const otherModel = record.models[this.to];
+        const otherField = otherModel.__fieldMap[this.inverse];
         const isMulti = typeof data[Symbol.iterator] === 'function';
         const dataList = [];
         for (const recordData of (isMulti ? data : [data])) {
@@ -475,7 +475,7 @@ export class ModelField {
             }
             dataList.push(recordData2);
         }
-        const records = record.modelManager._insert(OtherModel, dataList);
+        const records = record.modelManager._insert(otherModel, dataList);
         return isMulti ? records : records[0];
     }
 
@@ -483,7 +483,7 @@ export class ModelField {
      *  Set a value for this attribute field
      *
      * @private
-     * @param {Model} record
+     * @param {Record} record
      * @param {any} newVal value to be written on the field value.
      * @returns {boolean} whether the value changed for the current field
      */
@@ -503,7 +503,7 @@ export class ModelField {
      * this field.
      *
      * @private
-     * @param {Model} record
+     * @param {Record} record
      * @param {Object|Object[]} data
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
@@ -519,7 +519,7 @@ export class ModelField {
      * records, which themselves must replace value on this field.
      *
      * @private
-     * @param {Model} record
+     * @param {Record} record
      * @param {Object|Object[]} data
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
@@ -535,7 +535,7 @@ export class ModelField {
      * records, which themselves must be unlinked from this field.
      *
      * @private
-     * @param {Model} record
+     * @param {Record} record
      * @param {Object|Object[]} data
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
@@ -549,7 +549,7 @@ export class ModelField {
      * Set a 'link' operation on this relational field.
      *
      * @private
-     * @param {Model|Model[]} newValue
+     * @param {Record|Record[]} newValue
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
@@ -566,8 +566,8 @@ export class ModelField {
      * Handling of a `set` 'link' of a x2many relational field.
      *
      * @private
-     * @param {Model} record
-     * @param {Model|Model[]} newValue
+     * @param {Record} record
+     * @param {Record|Record[]} newValue
      * @param {Object} [param2={}]
      * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
@@ -605,8 +605,8 @@ export class ModelField {
      * Handling of a `set` 'link' of an x2one relational field.
      *
      * @private
-     * @param {Model} record
-     * @param {Model} recordToLink
+     * @param {Record} record
+     * @param {Record} recordToLink
      * @param {Object} [param2={}]
      * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
@@ -642,8 +642,8 @@ export class ModelField {
      * Set a 'replace' operation on this relational field.
      *
      * @private
-     * @param {Model} record
-     * @param {Model|Model[]} newValue
+     * @param {Record} record
+     * @param {Record|Record[]} newValue
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
@@ -707,8 +707,8 @@ export class ModelField {
      * Set an 'unlink' operation on this relational field.
      *
      * @private
-     * @param {Model} record
-     * @param {Model|Model[]} newValue
+     * @param {Record} record
+     * @param {Record|Record[]} newValue
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
@@ -725,8 +725,8 @@ export class ModelField {
      * Handling of a `set` 'unlink' of a x2many relational field.
      *
      * @private
-     * @param {Model} record
-     * @param {Model|Model[]} newValue
+     * @param {Record} record
+     * @param {Record|Record[]} newValue
      * @param {Object} [param2={}]
      * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
@@ -777,7 +777,7 @@ export class ModelField {
      * Handling of a `set` 'unlink' of a x2one relational field.
      *
      * @private
-     * @param {Model} record
+     * @param {Record} record
      * @param {Object} [param1={}]
      * @param {boolean} [param1.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
@@ -822,7 +822,7 @@ export class ModelField {
      * and it must originates from relational `to` model (or its subclasses).
      *
      * @private
-     * @param {Model} record
+     * @param {Record} record
      * @throws {Error} if record does not satisfy related model
      */
     _verifyRelationalValue(record) {
@@ -832,8 +832,8 @@ export class ModelField {
         if (!record.modelManager) {
             throw Error(`${record} is not a record. Did you try to use link() instead of insert() with data?`);
         }
-        const OtherModel = record.modelManager.models[this.to];
-        if (!OtherModel.get(record.localId, { isCheckingInheritance: true })) {
+        const otherModel = record.modelManager.models[this.to];
+        if (!otherModel.get(record.localId, { isCheckingInheritance: true })) {
             throw Error(`Record ${record.localId} is not valid for relational field ${this.fieldName}.`);
         }
     }

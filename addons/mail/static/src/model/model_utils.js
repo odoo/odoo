@@ -5,7 +5,7 @@
  * the resulting value, or undefined if a relation can't be followed because it
  * is undefined.
  *
- * @param {Model} record
+ * @param {Record} record
  * @param {string} relatedPath field names, dot separated to follow relations
  * @returns {any}
  */

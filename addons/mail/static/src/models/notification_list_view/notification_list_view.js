@@ -209,7 +209,7 @@ registerModel({
             inverse: 'notificationListViewOwner',
             isCausal: true,
         }),
-        notificationViews: many('Model', {
+        notificationViews: many('Record', {
             compute: '_computeNotificationViews',
             isCausal: true,
         }),

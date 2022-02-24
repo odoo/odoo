@@ -216,7 +216,7 @@ registerModel({
          * a UI component, such as AttachmentViewer. These records must be
          * created from @see `DialogManager:open()`.
          */
-        record: one('Model', {
+        record: one('Record', {
             compute: '_computeRecord',
             isCausal: true,
             readonly: true,
