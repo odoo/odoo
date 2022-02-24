@@ -43,6 +43,7 @@ class ReportProjectTaskUser(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
+    is_closed = fields.Boolean("Closing Stage", readonly=True, help="Folded in Kanban stages are closing stages.")
     task_id = fields.Many2one('project.task', string='Tasks', readonly=True)
 
     def _select(self):
@@ -62,6 +63,7 @@ class ReportProjectTaskUser(models.Model):
                     t.company_id,
                     t.partner_id,
                     t.stage_id as stage_id,
+                    t.is_closed as is_closed,
                     t.kanban_state as state,
                     NULLIF(t.rating_last_value, 0) as rating_last_value,
                     t.working_days_close as working_days_close,
@@ -87,7 +89,8 @@ class ReportProjectTaskUser(models.Model):
                     t.name,
                     t.company_id,
                     t.partner_id,
-                    t.stage_id
+                    t.stage_id,
+                    t.is_closed
         """
         return group_by_str
 

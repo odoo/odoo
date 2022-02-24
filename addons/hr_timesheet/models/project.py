@@ -85,7 +85,7 @@ class Project(models.Model):
     def _compute_remaining_hours(self):
         group_read = self.env['project.task'].read_group(
             domain=[('planned_hours', '!=', False), ('project_id', 'in', self.filtered('allow_timesheets').ids),
-                     '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
+                     ('is_closed', '=', False)],
             fields=['planned_hours:sum', 'remaining_hours:sum'], groupby='project_id')
         group_per_project_id = {group['project_id'][0]: group for group in group_read}
         for project in self:

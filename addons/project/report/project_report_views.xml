@@ -63,7 +63,7 @@
                     <separator/>
                     <filter string="Unassigned Tasks" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator/>
-                    <filter string="Open tasks" name="open_tasks" domain="[('stage_id.fold', '=', False)]"/>
+                    <filter string="Open tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                     <separator/>
                     <filter name="filter_date_deadline" date="date_deadline"/>
                     <filter name="filter_date_assign" date="date_assign"/>
