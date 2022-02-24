@@ -97,10 +97,9 @@ class HolidaysType(models.Model):
         ('officer', 'Approved by Time Off Officer'),
         ('no', 'No validation needed')], default='officer', string='Approval',
         compute='_compute_allocation_validation_type', store=True, readonly=False,
-        help="""Approved by Time Off Officer: The requested allocation must be validated by the time off approver set on the
-        employee's profile or by a member of the time off officer security group.\n
-        No validation needed: The requested allocation is automatically approved.
-        """)
+        help="""Select the level of approval needed in case of request by employee
+        - No validation needed: The employee's request is automatically approved.
+        - Approved by Time Off Officer: The employee's request need to be manually approved by the Time Off Officer.""")
     has_valid_allocation = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
     time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave', string="Kind of Leave",
                                  help="Whether this should be computed as a holiday or as work time (eg: formation)")
