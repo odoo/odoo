@@ -45,6 +45,7 @@ class ReportProjectTaskUser(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
+    is_closed = fields.Boolean("Closing Stage", readonly=True, help="Folded in Kanban stages are closing stages.")
     task_id = fields.Many2one('project.task', string='Tasks', readonly=True)
     active = fields.Boolean(readonly=True)
     tag_ids = fields.Many2many('project.tags', relation='project_tags_project_task_rel',
@@ -70,6 +71,7 @@ class ReportProjectTaskUser(models.Model):
                 t.partner_id,
                 t.parent_id as parent_id,
                 t.stage_id as stage_id,
+                t.is_closed as is_closed,
                 t.kanban_state as state,
                 NULLIF(t.rating_last_value, 0) as rating_last_value,
                 AVG(rt.rating) as rating_avg,
@@ -96,6 +98,7 @@ class ReportProjectTaskUser(models.Model):
                 t.partner_id,
                 t.parent_id,
                 t.stage_id,
+                t.is_closed,
                 t.kanban_state,
                 t.rating_last_value,
                 t.working_days_close,
