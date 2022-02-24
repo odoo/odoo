@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, _, Command, api, SUPERUSER_ID
-from odoo.modules import get_resource_path
-from odoo.addons.base.models.ir_translation import IrTranslationImport
-import csv
 import ast
+import csv
+import logging
 from collections import defaultdict
 
-import logging
+from odoo import SUPERUSER_ID, Command, _, api, models
+from odoo.addons.base.models.ir_translation import IrTranslationImport
+from odoo.modules import get_resource_path
 
 _logger = logging.getLogger(__name__)
 
 TEMPLATES = {
-    'generic_coa': {'name': 'Generic Chart Template', 'country': None, 'modules': []},
+    'generic_coa': {'name': 'Generic Chart Template', 'country': None, 'modules': ['account']},
     'be': {'name': 'BE Belgian PCMN', 'country': 'base.be', 'modules': ['l10n_be']},
     'fr': {'name': 'FR', 'country': 'base.fr', 'modules': ['l10n_fr']},
     'ch': {'name': 'CH', 'country': 'base.ch', 'modules': ['l10n_ch']},
@@ -21,8 +21,10 @@ TEMPLATES = {
 
 
 def migrate_set_tags_and_taxes_updatable(cr, registry, module):
-    ''' This is a utility function used to manually set the flag noupdate to False on tags and account tax templates on localization modules
-    that need migration (for example in case of VAT report improvements)
+    '''
+        This is a utility function used to manually set the flag noupdate to False on tags
+        and account tax templates on localization modules that need migration
+        (for example in case of VAT report improvements).
     '''
     env = api.Environment(cr, SUPERUSER_ID, {})
     xml_record_ids = env['ir.model.data'].search([
@@ -33,7 +35,9 @@ def migrate_set_tags_and_taxes_updatable(cr, registry, module):
         cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
 
 def preserve_existing_tags_on_taxes(cr, registry, module):
-    ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
+    '''
+        This is a utility function used to preserve existing previous tags during upgrade of the module.
+    '''
     env = api.Environment(cr, SUPERUSER_ID, {})
     xml_records = env['ir.model.data'].search([('model', '=', 'account.account.tag'), ('module', 'like', module)])
     if xml_records:
@@ -44,11 +48,10 @@ def delegate_to_super_if_code_doesnt_match(f):
         This helper decorator helps build localized subclasses which methods
         are only used if the template_code matches their _code, otherwise it delegates
         to the next superclass in the chain.
-        If the company argument is empty, it is defaulted with self.env.company
+        If the company argument is empty, it is defaulted with self.env.company.
     """
     def wrapper(*args, **kwargs):
         self_class, template_code, company, *rest = args
-
         if template_code == self_class._template_code:
             return f(*args, **kwargs)
         for cls in self_class.__class__.__mro__:
@@ -194,11 +197,14 @@ class AccountChartTemplate(models.AbstractModel):
                     irt_cursor.push({**translation, 'res_id': record.id})
         irt_cursor.finish()
 
-    def _load_csv(self, module, company, file_name, post_sanitize=None):
+    def _load_csv(self, template_code, company, file_name, post_sanitize=None):
         cid = (company or self.env.company).id
         Model = self.env[".".join(file_name.split(".")[:-1])]
         model_fields = Model._fields
-        path_parts = [x for x in ('account', 'data', 'template', module, file_name) if x]
+
+        template = TEMPLATES.get(template_code)
+        module = template['modules'][0]
+        path_parts = [x for x in (module, 'data', 'template', file_name) if x]
         # Should the path be False then open(False, 'r') will open STDIN for reading
         path = get_resource_path(*path_parts) or ''
 
@@ -370,7 +376,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_income_id': 'income',
             'property_tax_payable_account_id': 'tax_payable',
             'property_tax_receivable_account_id': 'tax_receivable',
-            'property_advance_tax_payment_account_id': 'cash_diff_income',  # TODO
+            # Only LU -- 'property_advance_tax_payment_account_id': '',
         }
 
     def _get_account_journal(self, template_code, company):
@@ -463,11 +469,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_fiscal_country_id': 'base.us',
                 'default_cash_difference_income_account_id': f'account.{cid}_cash_diff_income',
                 'default_cash_difference_expense_account_id': f'account.{cid}_cash_diff_expense',
-                'account_cash_basis_base_account_id': f'account.{cid}_cash_diff_income',  # TODO
-                'account_default_pos_receivable_account_id': f'account.{cid}_cash_diff_income',  # TODO
+                'account_default_pos_receivable_account_id': f'account.{cid}_pos_receivable',
                 'income_currency_exchange_account_id': f'account.{cid}_income_currency_exchange',
                 'expense_currency_exchange_account_id': f'account.{cid}_expense_currency_exchange',
                 'tax_cash_basis_journal_id': f'account.{cid}_caba',
                 'currency_exchange_journal_id': f'account.{cid}_exch',
+                # only MX ?? -- 'account_cash_basis_base_account_id': f'',
             }
         }
