@@ -419,67 +419,30 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _get_account_tax(self, template_code, company):
         cid = (company or self.env.company).id
+        tax_repartition_lines = [
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': f'account.{cid}_tax_received',
+            }),
+        ]
         return {
-            f"{cid}_sale_tax_template": {
-                "name": _("Tax 15%"),
+            f"{cid}_{kind}_tax_template": {
+                "name": _(f"{name} 15%"),
                 "amount": 15,
-                "type_tax_use": 'sale',
+                "type_tax_use": kind,
                 "tax_group_id": f'account.{cid}_tax_group_15',
-                "invoice_repartition_line_ids": [
-                    Command.clear(),
-                    Command.create({
-                        'factor_percent': 100,
-                        'repartition_type': 'base',
-                    }),
-                    Command.create({
-                        'factor_percent': 100,
-                        'repartition_type': 'tax',
-                        'account_id': f'account.{cid}_tax_received',
-                    }),
-                ],
-                "refund_repartition_line_ids": [
-                    Command.clear(),
-                    Command.create({
-                        'factor_percent': 100,
-                        'repartition_type': 'base',
-                    }),
-                    Command.create({
-                        'factor_percent': 100,
-                        'repartition_type': 'tax',
-                        'account_id': f'account.{cid}_tax_received',
-                    }),
-                ],
-            },
-            f"{cid}_purchase_tax_template": {
-                "name": _("Purchase Tax 15%"),
-                "amount": 15,
-                "type_tax_use": 'purchase',
-                "tax_group_id": f'account.{cid}_tax_group_15',
-                "invoice_repartition_line_ids": [
-                    Command.clear(),
-                    Command.create({
-                        'factor_percent': 100,
-                        'repartition_type': 'base',
-                    }),
-                    Command.create({
-                        'factor_percent': 100,
-                        'repartition_type': 'tax',
-                        'account_id': f'account.{cid}_tax_received',
-                    }),
-                ],
-                "refund_repartition_line_ids": [
-                    Command.clear(),
-                    Command.create({
-                        'factor_percent': 100,
-                        'repartition_type': 'base',
-                    }),
-                    Command.create({
-                        'factor_percent': 100,
-                        'repartition_type': 'tax',
-                        'account_id': f'account.{cid}_tax_received',
-                    }),
-                ],
-            },
+                "invoice_repartition_line_ids": tax_repartition_lines,
+                "refund_repartition_line_ids": tax_repartition_lines,
+            } for kind, name in (
+                ('sale', 'Tax'),
+                ('purchase', 'Purchase Tax')
+            )
         }
 
     def _get_res_company(self, template_code, company):
