@@ -136,6 +136,7 @@ class PurchaseOrder(models.Model):
         'res.users', string='Purchase Representative', index=True, tracking=True,
         default=lambda self: self.env.user, check_company=True)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.company.id)
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='Ratio between the purchase order currency and the company currency')
 
     mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
