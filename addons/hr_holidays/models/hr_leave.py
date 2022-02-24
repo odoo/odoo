@@ -1416,6 +1416,9 @@ class HolidaysRequest(models.Model):
                         if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
                             raise UserError(_('You must be either %s\'s manager or Time off Manager to approve this leave') % (holiday.employee_id.name))
 
+                    if not is_officer and (state == 'validate' and val_type == 'hr') and holiday.holiday_type == 'employee':
+                        raise UserError(_('You must either be a Time off Officer or Time off Manager to approve this leave'))
+
     # ------------------------------------------------------------
     # Activity methods
     # ------------------------------------------------------------
