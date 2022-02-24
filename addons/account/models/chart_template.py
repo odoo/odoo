@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, _, Command
+from odoo import models, _, Command, api, SUPERUSER_ID
 from odoo.modules import get_resource_path
 from odoo.addons.base.models.ir_translation import IrTranslationImport
 import csv
@@ -21,6 +21,25 @@ TEMPLATES = [
 MODULES = {ct: modules for ct, string, country, modules in TEMPLATES}
 COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
 
+
+def migrate_set_tags_and_taxes_updatable(cr, registry, module):
+    ''' This is a utility function used to manually set the flag noupdate to False on tags and account tax templates on localization modules
+    that need migration (for example in case of VAT report improvements)
+    '''
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    xml_record_ids = env['ir.model.data'].search([
+        ('model', 'in', ['account.tax.template', 'account.account.tag']),
+        ('module', 'like', module)
+    ]).ids
+    if xml_record_ids:
+        cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
+
+def preserve_existing_tags_on_taxes(cr, registry, module):
+    ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    xml_records = env['ir.model.data'].search([('model', '=', 'account.account.tag'), ('module', 'like', module)])
+    if xml_records:
+        cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
 
 def delegate_to_super_if_code_doesnt_match(class_code):
     """
