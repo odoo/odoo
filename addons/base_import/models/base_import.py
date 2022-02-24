@@ -43,12 +43,13 @@ BOM_MAP = {
 
 try:
     import xlrd
-    try:
-        from xlrd import xlsx
-    except ImportError:
-        xlsx = None
 except ImportError:
-    xlrd = xlsx = None
+    xlrd = None
+
+try:
+    import openpyxl
+except ImportError:
+    openpyxl = None
 
 try:
     from . import odf_ods_reader
@@ -58,7 +59,8 @@ except ImportError:
 FILE_TYPE_DICT = {
     'text/csv': ('csv', True, None),
     'application/vnd.ms-excel': ('xls', xlrd, 'xlrd'),
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('xlsx', xlsx, 'xlrd >= 1.0.0'),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+    ('xlsx', openpyxl, 'openpyxl'),
     'application/vnd.oasis.opendocument.spreadsheet': ('ods', odf_ods_reader, 'odfpy')
 }
 EXTENSIONS = {
@@ -425,8 +427,65 @@ class Import(models.TransientModel):
         # return the file length as first value
         return sheet.nrows, rows
 
-    # use the same method for xlsx and xls files
-    _read_xlsx = _read_xls
+    def _read_xlsx(self, options):
+        """Read modern excel file using openpyxl."""
+        buffer = io.BytesIO(self.file or b'')
+        book = openpyxl.load_workbook(
+            buffer, read_only=True, keep_vba=False, data_only=True, keep_links=False
+        )
+        sheetname = options.get("sheet", False)
+        sheet = (
+            book.get_sheet_by_name(sheetname)
+            if sheetname and sheetname in  book.sheetnames
+            else book.worksheets[0]
+        )
+        rows = []
+        for row in sheet.rows:
+            values = []
+            for cell in row:
+                if isinstance(cell, openpyxl.cell.read_only.EmptyCell):
+                    values.append("")
+                    continue
+                # Would like to skipp NULL values, but for some incomprehensible
+                # reason TYPE_NULL and TYPE_NUMERIC have the same value in openpyxl.
+                if cell.value is None:
+                    values.append("")
+                    continue
+                if cell.data_type == "d" and isinstance(cell.value, datetime.date):
+                    is_date = (
+                        not isinstance(cell.value, datetime.datetime)
+                        or cell.value.time() == datetime.time(0, 0, 0)
+                    )
+                    # Date, time or datetime.
+                    if is_date:
+                        values.append(cell.value.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                    else:
+                        values.append(
+                            cell.value.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                        )
+                    continue
+                if cell.data_type is openpyxl.cell.cell.TYPE_NUMERIC:
+                    is_float = cell.value % 1 != 0.0
+                    values.append(str(cell.value) if is_float else str(int(cell.value)))
+                    continue
+                if cell.data_type is openpyxl.cell.cell.TYPE_BOOL:
+                    values.append(u"True" if cell.value else u"False")
+                    continue
+                if cell.data_type is openpyxl.cell.cell.TYPE_ERROR:
+                    raise ValueError(
+                        _("Invalid cell value in cell %(coordinate)s: %(cell_value)s")
+                        % {
+                            "coordinate": cell.coordinate,
+                            "cell_value": cell.check_error(),
+                        }
+                    )
+                values.append(cell.value)
+            if any(x for x in values if x.strip()):
+                rows.append(values)
+
+        book.close()
+        # return the file length as first value
+        return len(rows), rows
 
     def _read_ods(self, options):
         doc = odf_ods_reader.ODSReader(file=io.BytesIO(self.file or b''))
