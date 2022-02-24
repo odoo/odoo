@@ -983,14 +983,18 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(delivery_order.move_ids[1].state, 'cancel')
 
     def test_assign_deadline(self):
-        """ Check if similar items with shorter deadline are prioritized.
-        """
+        """ Check if similar items with shorter deadline are prioritized. """
         delivery_order = self.PickingObj.create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
         })
-        self.MoveObj.create({
+        # Avoid to merge move3 and move4 for the test case
+        self.env['ir.config_parameter'].create({
+            'key': 'stock.merge_only_same_date',
+            'value': True
+        })
+        move1 = self.MoveObj.create({
             'name': "move1",
             'product_id': self.productA.id,
             'product_uom_qty': 4,
@@ -1000,7 +1004,7 @@ class TestSinglePicking(TestStockCommon):
             'location_dest_id': self.customer_location,
             'date_deadline': datetime.now() + relativedelta(days=1)
         })
-        self.MoveObj.create({
+        move2 = self.MoveObj.create({
             'name': "move2",
             'product_id': self.productA.id,
             'product_uom_qty': 4,
@@ -1010,6 +1014,26 @@ class TestSinglePicking(TestStockCommon):
             'location_dest_id': self.customer_location,
             'date_deadline': datetime.now() + relativedelta(days=2)
         })
+        move3 = self.MoveObj.create({
+            'name': "move3",
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'date': datetime.now() + relativedelta(days=10)
+        })
+        move4 = self.MoveObj.create({
+            'name': "move4",
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'date': datetime.now() + relativedelta(days=0)
+        })
 
         # make some stock
         pack_location = self.env['stock.location'].browse(self.pack_location)
@@ -1018,27 +1042,29 @@ class TestSinglePicking(TestStockCommon):
         # assign to partially available
         delivery_order.action_confirm()
         delivery_order.action_assign()
-        reservedMove1 = sum([x.reserved_availability for x in delivery_order.move_ids if x.name == "move1"])
-        reservedMove2 = sum([x.reserved_availability for x in delivery_order.move_ids if x.name == "move2"])
 
-        self.assertEqual(reservedMove1, 2, "Earlier deadline should have reserved quantity")
-        self.assertEqual(reservedMove2, 0, "Later deadline should not have reserved quantity")
-
-        delivery_order.move_ids[0].move_line_ids[0].qty_done = 2
-        delivery_order._action_done()
+        self.assertEqual(move1.reserved_availability, 2, "Earlier deadline should have reserved quantity")
+        self.assertEqual(move2.reserved_availability, 0, "Later deadline should not have reserved quantity")
 
         # add new stock
         self.StockQuantObj._update_available_quantity(self.productA, pack_location, 2)
+        delivery_order.action_assign()
+        self.assertEqual(move1.reserved_availability, 4, "Earlier deadline should have reserved quantity")
+        self.assertEqual(move2.reserved_availability, 0, "Later deadline should not have reserved quantity")
 
-        # assign new stock to backorder
-        backorder = delivery_order.backorder_ids
-        backorder.action_assign()
+        self.StockQuantObj._update_available_quantity(self.productA, pack_location, 1)
+        delivery_order.action_assign()
+        self.assertEqual(move1.reserved_availability, 4, "Earlier deadline should have reserved quantity")
+        self.assertEqual(move2.reserved_availability, 1, "Move with deadline should take priority")
+        self.assertEqual(move3.reserved_availability, 0, "Move without deadline should not have reserved quantity")
+        self.assertEqual(move4.reserved_availability, 0, "Move without deadline should not have reserved quantity")
 
-        reservedMove1 = sum([x.reserved_availability for x in backorder.move_ids if x.name == "move1"])
-        reservedMove2 = sum([x.reserved_availability for x in backorder.move_ids if x.name == "move2"])
-
-        self.assertEqual(reservedMove1, 2, "Earlier deadline should have reserved quantity")
-        self.assertEqual(reservedMove2, 0, "Later deadline should not have reserved quantity")
+        self.StockQuantObj._update_available_quantity(self.productA, pack_location, 4)
+        delivery_order.action_assign()
+        self.assertEqual(move1.reserved_availability, 4, "Earlier deadline should have reserved quantity")
+        self.assertEqual(move2.reserved_availability, 4, "Move with deadline should take priority")
+        self.assertEqual(move3.reserved_availability, 0, "Latest move without deadline should not have reserved quantity")
+        self.assertEqual(move4.reserved_availability, 1, "Earlier move without deadline should take the priority")
 
     def test_extra_move_1(self):
         """ Check the good behavior of creating an extra move in a delivery order. This usecase
