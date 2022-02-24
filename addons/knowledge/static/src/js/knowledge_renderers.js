@@ -32,18 +32,22 @@ const KnowledgeFormRenderer = FormRenderer.extend({
         const $container = this.$el.find('.o_knowledge_tree');
         return this._rpc({
             route: '/knowledge/get_tree',
-            params: {}
+            params: {
+                res_id: this.state.res_id
+            }
         }).then(res => {
             $container.empty();
             $container.append(res);
-            this.createTree();
+            // TODO: add active_article class on the article.id == this.state.res_id ??
+            this._setTreeListener();
         }).catch(error => {
             $container.empty();
         });
     },
 
-    createTree: function () {
-        this.$el.find('.o_tree').nestedSortable({
+    _setTreeListener: function () {
+        const $sortable = this.$el.find('.o_tree');
+        $sortable.nestedSortable({
             axis: 'y',
             handle: 'div',
             items: 'li',
@@ -54,74 +58,63 @@ const KnowledgeFormRenderer = FormRenderer.extend({
             placeholder: 'o_placeholder',
             tolerance: 'pointer',
             helper: 'clone',
+            cursor: 'grabbing',
+            start: (event, ui) => {
+                this.$el.find('aside').toggleClass('dragging', true);
+            },
             /**
              * @param {Event} event
              * @param {Object} ui
              */
-            relocate: (event, ui) => this._onArticleMove(event, ui)
+            stop: (event, ui) => {
+                $sortable.sortable('disable');
+                this.$el.find('aside').toggleClass('dragging', false);
+
+                const $li = $(ui.item);
+                const $section = $li.closest('section');
+                const $parent = $li.parentsUntil('.o_tree', 'li');
+
+                const data = {
+                    article_id: $li.data('article-id'),
+                    category: $section.data('section')
+                };
+
+                if ($parent.length > 0) {
+                    data.target_parent_id = $parent.data('article-id');
+                    const $next = $li.next();
+                    if ($next.length > 0) {
+                        data.before_article_id = $next.data('article-id');
+                    }
+                }
+
+                this.trigger_up('move', {...data,
+                    onSuccess: () => {
+                        $sortable.sortable('enable');
+                    },
+                    onReject: () => {
+                        $sortable.sortable('cancel');
+                        $sortable.sortable('enable');
+                    }
+                });
+            },
         });
 
-        // We connect the trees:
+        // Allow drag and drop between sections:
 
-        this.$el.find('.o_tree.o_tree_workspace').nestedSortable(
-            'option',
-            'connectWith',
-            '.o_tree.o_tree_private'
-        );
+        const selectors = [
+            'section[data-section="workspace"] .o_tree',
+            'section[data-section="shared"] .o_tree',
+            'section[data-section="private"] .o_tree'
+        ];
 
-        this.$el.find('.o_tree.o_tree_private').nestedSortable(
-            'option',
-            'connectWith',
-            '.o_tree.o_tree_workspace'
-        );
-
-        // Highlight the active record:
-
-        const $div = this.$el.find(`[data-article-id="${this.state.res_id}"] > div`);
-        if ($div.length === 0) {
-            return
-        }
-        $div.addClass('font-weight-bold');
-        $div.addClass('bg-light');
-    },
-
-    /**
-     * When the user moves an article
-     * @param {Event} event
-     * @param {Object} ui
-     */
-    _onArticleMove: async function (event, ui) {
-        // TODO DBE OR JBN: Dropping an element to the last position in private root does not fire this event, it should
-        const params = {};
-        const key = 'article-id';
-        const $li = $(ui.item);
-        const $parent = $li.parents('li');
-        if ($parent.length !== 0) {
-            params.parent_id = $parent.data(key);
-        } else {
-            params.parent_id = false;
-        }
-        const $sibling = $li.next();
-        if ($sibling.length !== 0) {
-            params.before_article_id = $sibling.data(key);
-        }
-        if ($li.closest('ul.o_tree_private').length !== 0) {
-            params.private = true;
-        }
-
-        const result = await this._rpc({
-            model: 'knowledge.article',
-            method: 'move_to',
-            args: [
-                $li.data(key),
-            ],
-            kwargs: params,
+        selectors.forEach(selector => {
+            // Note: An element can be connected to one selector at most.
+            this.$el.find(selector).nestedSortable(
+                'option',
+                'connectWith',
+                `.o_tree:not(${selector})`
+            );
         });
-
-        if (result) {
-            const $tree = $li.closest('.o_tree');
-            this._refreshIcons($tree);
-        }
     },
 
     /**

@@ -6,7 +6,9 @@
         <section t-if="favourites">
             <div class="h4 mb-0">Favourites</div>
             <ul class="o_tree_favourite m-0 px-0 py-2">
-                <li t-foreach="favourites" t-as="favourite" t-att-data-article-id="favourite.id">
+                <li t-foreach="favourites" t-as="favourite"
+                    t-attf-class="#{ 'bg-light font-weight-bold' if favourite.id == active_article_id else '' }"
+                    t-att-data-article-id="favourite.id">
                     <div class="d-flex">
                         <button class="o_article_icon btn btn-link text-secondary p-0" type="button">
                             <i t-attf-class="fa fa-fw #{favourite.icon}"/>
@@ -19,9 +21,9 @@
             </ul>
         </section>
 
-        <section>
+        <section data-section="workspace">
             <div class="h4 mb-0">Workspace</div>
-            <ul class="o_tree o_tree_workspace m-0 px-0 py-2">
+            <ul class="o_tree m-0 px-0 py-2">
                 <t t-foreach="public_articles.sorted('sequence')" t-as="child">
                     <t t-if="child.user_has_access" t-call="knowledge.article_template">
                         <t t-set="article" t-value="child"/>
@@ -30,9 +32,9 @@
             </ul>
         </section>
 
-        <section t-if="shared_articles">
+        <section t-if="shared_articles" data-section="shared">
             <div class="h4 mb-0">Shared</div>
-            <ul class="o_tree o_tree_workspace m-0 px-0 py-2">
+            <ul class="o_tree m-0 px-0 py-2">
                 <t t-foreach="shared_articles.sorted('sequence')" t-as="child">
                     <t t-if="child.user_has_access" t-call="knowledge.article_template">
                         <t t-set="article" t-value="child"/>
@@ -41,9 +43,9 @@
             </ul>
         </section>
 
-        <section t-if="not hide_private">
+        <section class="mb-3" data-section="private">
             <div class="h4 mb-0">Private</div>
-            <ul class="o_tree o_tree_private m-0 px-0 py-2">
+            <ul class="o_tree m-0 px-0 py-2">
                 <t t-foreach="private_articles.sorted('sequence')" t-as="child">
                     <t t-if="child.user_has_access" t-call="knowledge.article_template">
                         <t t-set="article" t-value="child"/>
@@ -55,7 +57,7 @@
 
     <template id="article_template">
         <li t-attf-id="article_#{article.id}" t-att-data-article-id="article.id">
-            <div class="o_article d-flex">
+            <div t-attf-class="o_article d-flex #{ 'bg-light font-weight-bold' if article.id == active_article_id else '' }">
                 <button class="o_article_caret btn btn-link text-secondary p-0" type="button">
                     <i class="fa fa-fw fa-caret-down align-self-center"/>
                 </button>

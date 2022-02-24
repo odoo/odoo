@@ -2,7 +2,10 @@
 <templates>
     <t t-name="knowledge.knowledge_move_article_to_modal">
         <form class="container">
-            <div class="form-group">
+            <div class="mb-3">
+                Move "<span t-esc="widget.article_name" class="font-weight-bold"/>" under:
+            </div>
+            <div class="form-group m-0">
                 <input class="form-control" type="hidden" placeholder="Search an Article to use as Parent"/>
             </div>
         </form>
