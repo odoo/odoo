@@ -6,8 +6,9 @@ from odoo.addons.account.models.chart_template import delegate_to_super_if_code_
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
+    _template_code = 'be'
 
-    @delegate_to_super_if_code_doesnt_match('be')
+    @delegate_to_super_if_code_doesnt_match
     def _get_template_data(self, template_code, company):
         return {
             'bank_account_code_prefix': '550',
@@ -33,7 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
             res['account.fiscal.position'] = self._get_fiscal_position(template_code, company)
         return res
 
-    @delegate_to_super_if_code_doesnt_match('be')
+    @delegate_to_super_if_code_doesnt_match
     def _get_res_company(self, template_code, company):
         # cid = company.id
         return {
@@ -49,7 +50,7 @@ class AccountChartTemplate(models.AbstractModel):
             }
         }
 
-    @delegate_to_super_if_code_doesnt_match('be')
+    @delegate_to_super_if_code_doesnt_match
     def _get_account_journal(self, template_code, company):
         cid = company.id
         data = super()._get_account_journal(template_code, company)
@@ -65,7 +66,7 @@ class AccountChartTemplate(models.AbstractModel):
         data[f"{cid}_bank"]['suspense_account_id'] = f'account.{cid}_a499'
         return data
 
-    @delegate_to_super_if_code_doesnt_match('be')
+    @delegate_to_super_if_code_doesnt_match
     def _get_fiscal_position(self, template_code, company):
         cid = company.id
         return {
@@ -390,7 +391,7 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    @delegate_to_super_if_code_doesnt_match('be')
+    @delegate_to_super_if_code_doesnt_match
     def _get_reconcile_model(self, template_code, company):
         cid = company.id
         return {
@@ -446,7 +447,7 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    @delegate_to_super_if_code_doesnt_match('be')
+    @delegate_to_super_if_code_doesnt_match
     def _get_account_tax(self, template_code, company):
         cid = company.id
         return {

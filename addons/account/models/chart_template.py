@@ -41,31 +41,32 @@ def preserve_existing_tags_on_taxes(cr, registry, module):
     if xml_records:
         cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
 
-def delegate_to_super_if_code_doesnt_match(class_code):
+def delegate_to_super_if_code_doesnt_match(f):
     """
         This helper decorator helps build localized subclasses which methods
         are only used if the template_code matches their _code, otherwise it delegates
         to the next superclass in the chain.
         If the company argument is empty, it is defaulted with self.env.company
     """
-    def wrapper(f):
-        def wrapper_inner(*args, **kwargs):
-            self, template_code, company, *rest = args
-            if template_code != class_code:
-                super_method = getattr(super(type(self), self), f.__name__)
-                return super_method(template_code, company, **kwargs)
-            else:
-                if not company:
-                    company = self.env.company
-                return f(self, template_code, company, *rest, **kwargs)
-        return wrapper_inner
+    def wrapper(*args, **kwargs):
+        self_class, template_code, company, *rest = args
 
+        if template_code == self_class._template_code:
+            return f(*args, **kwargs)
+        for cls in self_class.__class__.__mro__:
+            if hasattr(cls, '_template_code') and cls._template_code == template_code:
+                if not company:
+                    company = cls.env.company
+                target_method = getattr(cls, f.__name__)
+                return target_method(self_class, template_code, company, *rest, **kwargs)
+        raise ValueError(f"Template code {template_code} is not found in any chart_template.")
     return wrapper
 
 
 class AccountChartTemplate(models.AbstractModel):
     _name = "account.chart.template"
     _description = "Account Chart Template"
+    _template_code = "generic_coa"
 
     def _select_chart_template(self, company=False):
         company = company or self.env.company
