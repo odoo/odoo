@@ -573,6 +573,9 @@ class PricelistItem(models.Model):
                 values.update(dict(categ_id=None))
         return super(PricelistItem, self).write(values)
 
+    def toggle_active(self):
+        raise ValidationError(_("You cannot disable a pricelist rule, please delete it or archive its pricelist instead."))
+
     def _is_applicable_for(self, product, qty_in_product_uom):
         """Check whether the current rule is valid for the given product & qty.
 
