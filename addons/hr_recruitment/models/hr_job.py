@@ -7,15 +7,12 @@ from odoo import api, fields, models, _
 
 class Job(models.Model):
     _name = "hr.job"
-    _inherit = ["mail.alias.mixin", "hr.job"]
+    _inherit = ["mail.alias.mixin", "favorite.mixin", "hr.job"]
     _order = "sequence, state desc, name asc"
 
     @api.model
     def _default_address_id(self):
         return self.env.company.partner_id
-
-    def _get_default_favorite_user_ids(self):
-        return [(6, 0, [self.env.uid])]
 
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
@@ -42,29 +39,16 @@ class Job(models.Model):
         'mail.alias', "Alias", ondelete="restrict", required=True,
         help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
     color = fields.Integer("Color Index")
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
-    favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
     interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
+
+    # favorite.mixin override
+    favorite_user_ids = fields.Many2many(relation='job_favorite_user_rel', column1='job_id', column2='user_id')
 
     @api.depends('application_ids.interviewer_id')
     def _compute_extended_interviewer_ids(self):
         for job in self:
             job.extended_interviewer_ids = job.application_ids.interviewer_id
-
-    def _compute_is_favorite(self):
-        for job in self:
-            job.is_favorite = self.env.user in job.favorite_user_ids
-
-    def _inverse_is_favorite(self):
-        unfavorited_jobs = favorited_jobs = self.env['hr.job']
-        for job in self:
-            if self.env.user in job.favorite_user_ids:
-                unfavorited_jobs |= job
-            else:
-                favorited_jobs |= job
-        favorited_jobs.write({'favorite_user_ids': [(4, self.env.uid)]})
-        unfavorited_jobs.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def _compute_document_ids(self):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.emp_id)
