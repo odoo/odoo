@@ -166,7 +166,7 @@ class Sanitize {
         }
 
         // Sanitize media elements
-        if (isMediaElement(node)) {
+        if (isMediaElement(node) || node.tagName === 'HR') {
             // Ensure all media elements are tagged contenteditable=false.
             // we cannot use the node.isContentEditable because it can wrongly return false
             // when the editor is starting up ( first sanitize )
