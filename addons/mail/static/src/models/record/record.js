@@ -16,7 +16,7 @@ registerModel({
      * Name of the model. Important to refer to appropriate model like in
      * relational fields. Name of models must be unique.
      */
-    name: 'Model',
+    name: 'Record',
      /**
      * Determines which fields are identifying fields for this model. Must be
      * overwritten in actual models. This should be a list of either field name
@@ -66,7 +66,7 @@ registerModel({
          * Returns all records of this model that match provided criteria.
          *
          * @param {function} [filterFunc]
-         * @returns {Model[]}
+         * @returns {Record[]}
          */
         all(filterFunc) {
             return this.modelManager.all(this, filterFunc);
@@ -81,7 +81,7 @@ registerModel({
          * Get the record that has provided criteria, if it exists.
          *
          * @param {function} findFunc
-         * @returns {Model|undefined}
+         * @returns {Record|undefined}
          */
         find(findFunc) {
             return this.modelManager.find(this, findFunc);
@@ -91,7 +91,7 @@ registerModel({
          * exists.
          *
          * @param {Object} data
-         * @returns {Model|undefined}
+         * @returns {Record|undefined}
          */
         findFromIdentifyingData(data) {
             return this.modelManager.findFromIdentifyingData(this, data);
@@ -106,7 +106,7 @@ registerModel({
          * @param {string} localId
          * @param {Object} param1
          * @param {boolean} [param1.isCheckingInheritance]
-         * @returns {Model|undefined}
+         * @returns {Record|undefined}
          */
         get(localId, { isCheckingInheritance } = {}) {
             return this.modelManager.get(this, localId, { isCheckingInheritance });
@@ -119,7 +119,7 @@ registerModel({
          *
          * @param {Object|Object[]} [data={}]
          *  If data is an iterable, multiple records will be created/updated.
-         * @returns {Model|Model[]} created or updated record(s).
+         * @returns {Record|Record[]} created or updated record(s).
          */
         insert(data = {}) {
             return this.modelManager.insert(this, data);

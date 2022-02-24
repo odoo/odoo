@@ -225,7 +225,7 @@ registerModel({
          * Inverse of the messaging field present on all models. This field
          * therefore contains all existing records.
          */
-        allRecords: many('Model', {
+        allRecords: many('Record', {
             inverse: 'messaging',
             isCausal: true,
         }),
