@@ -135,7 +135,7 @@ class HrEmployeePrivate(models.Model):
             record = self.browse(r['id'])
             record._update_cache({k:v for k,v in r.items() if k in fields}, validate=False)
 
-    def read(self, fields, load='_classic_read'):
+    def read(self, fields=None, load='_classic_read'):
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self).read(fields, load=load)
         private_fields = set(fields).difference(self.env['hr.employee.public']._fields.keys())
