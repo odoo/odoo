@@ -103,7 +103,7 @@ odoo.define('web.filter_menu_tests', function (require) {
 
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ['Foo']);
             assert.containsOnce(controlPanel.el.querySelector('.o_searchview .o_searchview_facet'),
-                'span.oi.oi-filter.o_searchview_facet_label');
+                'span.fa.fa-filter.o_searchview_facet_label');
 
             assert.ok(cpHelpers.isItemSelected(controlPanel, "Foo"));
 

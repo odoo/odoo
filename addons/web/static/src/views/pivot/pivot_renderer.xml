@@ -83,7 +83,7 @@
                 />
             </t>
             <span t-if="l10n.direction === 'rtl'" t-esc="cell.title"/>
-            <i t-attf-class="oi oi-{{ cell.isLeaf ? 'add' : 'subtract' }}--thick me-1"/>
+            <i t-attf-class="fa fa-{{ cell.isLeaf ? 'plus-square' : 'minus-square-o' }} me-1"/>
             <span t-if="l10n.direction === 'ltr'" t-esc="cell.title"/>
         </th>
     </t>
@@ -96,7 +96,7 @@
                 o_pivot_sort_order_desc: cell.order === 'desc',
             }" t-on-click.prevent="() => this.onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
             <t t-esc="cell.title"/>
-            <i t-if="cell.order === 'asc' || cell.order ==='desc'" t-attf-class="oi oi-{{ cell.order === 'asc' ? 'caret--up' : 'caret--down' }} ms-1"/>
+            <i t-if="cell.order === 'asc' || cell.order ==='desc'" t-attf-class="fa fa-caret-{{ cell.order === 'asc' ? 'up' : 'down' }} ms-1"/>
         </th>
     </t>
 

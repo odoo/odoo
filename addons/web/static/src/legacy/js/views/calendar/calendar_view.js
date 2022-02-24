@@ -30,7 +30,7 @@ const scalesInfo = {
 
 var CalendarView = AbstractView.extend({
     display_name: _lt('Calendar'),
-    icon: 'oi-calendar',
+    icon: 'fa fa-calendar',
     jsLibs: [
         '/web/static/lib/fullcalendar/core/main.js',
         '/web/static/lib/fullcalendar/interaction/main.js',

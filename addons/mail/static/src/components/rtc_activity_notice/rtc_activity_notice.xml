@@ -9,10 +9,10 @@
                     <t t-set="title">Open conference: <t t-esc="messaging.rtc.channel.displayName"/></t>
                     <a class="o_RtcActivityNotice_button px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="title" role="button" t-on-click="_onClick">
                         <div class="o_RtcActivityNotice_buttonContent d-flex align-items-center">
-                            <i class="o_RtcActivityNotice_outputIndicator oi oi-large" t-att-class="{
-                                'oi-phone--voice': !messaging.rtc.sendDisplay and !messaging.rtc.sendUserVideo,
-                                'oi-video': messaging.rtc.sendUserVideo,
-                                'oi-screen': messaging.rtc.sendDisplay,
+                            <i class="o_RtcActivityNotice_outputIndicator fa fa-lg" t-att-class="{
+                                'fa-microphone': !messaging.rtc.sendDisplay and !messaging.rtc.sendUserVideo,
+                                'fa-video-camera': messaging.rtc.sendUserVideo,
+                                'fa-desktop': messaging.rtc.sendDisplay,
                             }"/>
                             <em class="o_RtcActivityNotice_buttonTitle text-truncate" t-esc="messaging.rtc.channel.displayName"/>
                         </div>

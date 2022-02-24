@@ -7,7 +7,7 @@
             t-props="dropdownProps"
         >
             <t t-set-slot="toggler">
-                <i class="oi-small mr-1" t-att-class="icon"/>
+                <i class="mr-1" t-att-class="icon"/>
                 <span class="o_dropdown_title">Group By<t t-if="props.showCaretDown"> <i class="fa fa-caret-down ml-1"/></t></span>
             </t>
             <t t-set="currentGroup" t-value="null"/>
