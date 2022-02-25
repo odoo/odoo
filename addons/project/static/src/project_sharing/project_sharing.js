@@ -4,7 +4,7 @@ import { useBus, useService } from '@web/core/utils/hooks';
 import { ActionContainer } from '@web/webclient/actions/action_container';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
-import { ErrorHandler, NotUpdatable } from "@web/core/utils/components";
+import { ErrorHandler } from "@web/core/utils/components";
 import { session } from '@web/session';
 
 const { Component, useEffect } = owl;
@@ -59,5 +59,5 @@ export class ProjectSharingWebClient extends Component {
     }
 }
 
-ProjectSharingWebClient.components = { ActionContainer, ErrorHandler, NotUpdatable, MainComponentsContainer };
+ProjectSharingWebClient.components = { ActionContainer, ErrorHandler, MainComponentsContainer };
 ProjectSharingWebClient.template = 'project.ProjectSharingWebClient';

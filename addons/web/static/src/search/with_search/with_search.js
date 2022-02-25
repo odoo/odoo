@@ -4,7 +4,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { SearchModel } from "@web/search/search_model";
 import { CallbackRecorder, useSetupAction } from "@web/webclient/actions/action_hook";
 
-const { Component, onWillStart, onWillUpdateProps, useSubEnv, useChildSubEnv } = owl;
+const { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } = owl;
 
 export const SEARCH_KEYS = ["comparison", "context", "domain", "groupBy", "orderBy"];
 const OTHER_SEARCH_KEYS = ["irFilters", "searchViewArch", "searchViewFields", "searchViewId"];
@@ -36,7 +36,7 @@ export class WithSearch extends Component {
         });
 
         onWillStart(async () => {
-            const config = { ...this.props };
+            const config = { ...toRaw(this.props) };
             if (config.globalState && config.globalState.searchModel) {
                 config.state = JSON.parse(config.globalState.searchModel);
                 delete config.globalState;

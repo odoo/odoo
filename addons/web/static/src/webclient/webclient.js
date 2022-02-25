@@ -5,7 +5,6 @@ import { DebugMenu } from "@web/core/debug/debug_menu";
 import { localization } from "@web/core/l10n/localization";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
-import { NotUpdatable } from "@web/core/utils/components";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
@@ -112,7 +111,6 @@ export class WebClient extends Component {
 WebClient.components = {
     ActionContainer,
     NavBar,
-    NotUpdatable,
     MainComponentsContainer,
 };
 WebClient.template = "web.WebClient";

@@ -13,6 +13,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
     const FAVORITE_SHARED_GROUP = 2;
     const DISABLE_FAVORITE = "search_disable_custom_filters";
 
+    const { toRaw } = owl;
     /**
      * Control panel model
      *
@@ -158,7 +159,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             this.actionContext = Object.assign({}, this.config.context);
             this.searchMenuTypes = this.config.searchMenuTypes || [];
             this.favoriteFilters = this.config.favoriteFilters || [];
-            this.fields = this.config.fields || {};
+            this.fields = toRaw(this.config.fields || {});
             this.searchDefaults = {};
             for (const key in this.actionContext) {
                 const match = /^search_default_(.*)$/.exec(key);

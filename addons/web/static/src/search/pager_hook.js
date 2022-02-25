@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { useEnv, useChildSubEnv } = owl;
+const { useEnv, useChildSubEnv, useState, onWillRender } = owl;
 
 /**
  * @typedef PagerUpdateParams
@@ -23,11 +23,15 @@ const { useEnv, useChildSubEnv } = owl;
  */
 export function usePager(getProps) {
     const env = useEnv();
+    const pagerState = useState(getProps());
 
     useChildSubEnv({
         config: {
             ...env.config,
-            getPagerProps: getProps,
+            pagerProps: pagerState,
         },
+    });
+    onWillRender(() => {
+        Object.assign(pagerState, getProps());
     });
 }

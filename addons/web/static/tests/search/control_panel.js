@@ -107,7 +107,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("pager", async (assert) => {
-        let pagerInfo = {
+        let pagerProps = {
             offset: 0,
             limit: 10,
             total: 50,
@@ -119,15 +119,13 @@ QUnit.module("Search", (hooks) => {
             resModel: "foo",
             Component: ControlPanel,
             config: {
-                getPagerProps() {
-                    return pagerInfo;
-                },
+                pagerProps: pagerProps,
             },
             searchMenuTypes: [],
         });
         assert.containsOnce(controlPanel.el, ".o_pager");
 
-        pagerInfo.total = 0;
+        pagerProps.total = 0;
         controlPanel.render();
         await nextTick();
         assert.containsNone(controlPanel.el, ".o_pager");

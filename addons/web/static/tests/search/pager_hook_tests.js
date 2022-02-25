@@ -2,7 +2,7 @@
 
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { usePager } from "@web/search/pager_hook";
-import { click } from "../helpers/utils";
+import { click, nextTick } from "../helpers/utils";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "./helpers";
 
 const { Component, useState, xml } = owl;
@@ -108,6 +108,23 @@ QUnit.module("Search", (hooks) => {
         );
         assert.deepEqual(comp.state, {
             offset: 10,
+            limit: 10,
+        });
+
+        comp.state.offset = 20;
+        await nextTick();
+
+        assert.containsOnce(comp, ".o_pager");
+        assert.strictEqual(
+            comp.el.querySelector(`.o_pager_counter .o_pager_value`).textContent.trim(),
+            "21-30"
+        );
+        assert.strictEqual(
+            comp.el.querySelector(`.o_pager_counter span.o_pager_limit`).textContent.trim(),
+            "50"
+        );
+        assert.deepEqual(comp.state, {
+            offset: 20,
             limit: 10,
         });
     });

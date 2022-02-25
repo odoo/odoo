@@ -1,41 +1,13 @@
 /** @odoo-module **/
 
-import { NotUpdatable, ErrorHandler } from "@web/core/utils/components";
+import { ErrorHandler } from "@web/core/utils/components";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, mount } from "../../helpers/utils";
 
-const { Component, onMounted, onWillUpdateProps, xml } = owl;
+const { Component, xml } = owl;
 
 QUnit.module("utils", () => {
     QUnit.module("components");
-
-    QUnit.test("NotUpdatable component", async function (assert) {
-        class Child extends Component {
-            setup() {
-                onMounted(() => {
-                    assert.step("mounted");
-                });
-                onWillUpdateProps(() => {
-                    assert.step("willupdateprops");
-                });
-            }
-        }
-        Child.template = xml`<div>hey</div>`;
-        class Parent extends Component {}
-        Parent.template = xml`
-          <div>
-            <Child/>
-            <NotUpdatable><Child/></NotUpdatable>
-          </div>`;
-        Parent.components = { Child, NotUpdatable };
-
-        const target = getFixture();
-        const parent = await mount(Parent, target, { env: makeTestEnv() });
-        assert.verifySteps(["mounted", "mounted"]);
-
-        await parent.render();
-        assert.verifySteps(["willupdateprops"]);
-    });
 
     QUnit.test("ErrorHandler component", async function (assert) {
         class Boom extends Component {}
