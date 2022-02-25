@@ -11,15 +11,15 @@
                 t-att-type="props.isPassword ? 'password' : 'text'"
                 t-att-value="props.value or ''"
                 t-att-autocomplete="props.autocomplete or (props.isPassword ? 'new-password' : 'off')"
-                t-att-maxlength="maxLength > 0 and maxLength"
+                t-att-maxlength="props.maxLength > 0 and props.maxLength"
                 t-att-placeholder="props.placeholder"
                 t-on-change="onChange"
             />
-            <t t-if="isTranslatable">
+            <t t-if="props.isTranslatable">
                 <TranslationButton
                     fieldName="props.name"
-                    resId="props.record.resId"
-                    resModel="props.record.resModel"
+                    resId="props.resId"
+                    resModel="props.resModel"
                     value="props.value"
                     updateField="props.update"
                 />

@@ -72,6 +72,15 @@ export class Field extends Component {
         delete props.style;
         delete props.class;
 
+        let extractedPropsForStandaloneComponent = {};
+        if (this.FieldComponent.extractProps) {
+            extractedPropsForStandaloneComponent = this.FieldComponent.extractProps(
+                this.props.name,
+                record,
+                activeField.attrs
+            );
+        }
+
         return {
             ...activeField.props,
             required: this.props.record.isRequired(this.props.name), // AAB: does the field really need this?
@@ -89,6 +98,7 @@ export class Field extends Component {
             ...props,
             type: field.type,
             readonly: readonlyFromViewMode || readonlyFromModifiers || false,
+            ...extractedPropsForStandaloneComponent,
         };
     }
 
