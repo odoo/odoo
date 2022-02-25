@@ -127,7 +127,11 @@ class AccountEdiDocument(models.Model):
                     if not old_attachment.res_model or not old_attachment.res_id:
                         attachments_to_unlink |= old_attachment
                 if move_result.get('success') is True:
-                    document.state = 'sent'
+                    document.write({
+                        'state': 'sent',
+                        'error': False,
+                        'blocking_level': False,
+                    })
                 else:
                     document.write({
                         'error': move_result.get('error', False),
