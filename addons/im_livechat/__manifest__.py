@@ -82,6 +82,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/owl2_compatibility/*.js',
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
+            'web/static/src/legacy/legacy_component.js',
             'web/static/src/core/assets.js',
             'web/static/src/core/browser/browser.js',
             'web/static/src/core/browser/feature_detection.js',
