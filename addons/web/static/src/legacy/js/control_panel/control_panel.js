@@ -11,7 +11,16 @@ odoo.define('web.ControlPanel', function (require) {
     const SearchBar = require('web.SearchBar');
     const { useModel } = require('web.Model');
 
-    const { Component, onMounted, onPatched, onWillDestroy, onWillUpdateProps, useRef, useSubEnv } = owl;
+    const {
+        Component,
+        onMounted,
+        onPatched,
+        onWillDestroy,
+        onWillUpdateProps,
+        toRaw,
+        useRef,
+        useSubEnv,
+    } = owl;
 
     /**
      * TODO: remove this whole mechanism as soon as `cp_content` is completely removed.
@@ -122,7 +131,7 @@ odoo.define('web.ControlPanel', function (require) {
                 searchViewButtons: useRef('searchViewButtons'),
             };
 
-            this.fields = this._formatFields(this.props.fields);
+            this.fields = this._formatFields(toRaw(this.props.fields || {}));
 
             this.sprintf = _.str.sprintf;
 
@@ -155,7 +164,7 @@ odoo.define('web.ControlPanel', function (require) {
                     subEnvView = nextProps.view;
                 }
                 if ("fields" in nextProps) {
-                    this.fields = this._formatFields(nextProps.fields);
+                    this.fields = this._formatFields(toRaw(nextProps.fields));
                 }
                 this.additionalContent = getAdditionalContent(nextProps);
             });
