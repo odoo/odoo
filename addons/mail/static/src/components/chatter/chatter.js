@@ -3,10 +3,11 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { LegacyComponent } from '@web/legacy/legacy_component';
 
 const { Component, useRef } = owl;
 
-export class Chatter extends Component {
+export class Chatter extends LegacyComponent {
 
     /**
      * @override
