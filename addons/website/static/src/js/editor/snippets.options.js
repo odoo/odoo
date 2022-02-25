@@ -638,11 +638,9 @@ options.Class.include({
      */
     _makeSCSSCusto: async function (url, values, defaultValue = 'null') {
         return this._rpc({
-            route: '/website/make_scss_custo',
-            params: {
-                'url': url,
-                'values': _.mapObject(values, v => v || defaultValue),
-            },
+            model: 'web_editor.assets',
+            method: 'make_scss_customization',
+            args: [url, _.mapObject(values, v => v || defaultValue)],
         });
     },
     /**
