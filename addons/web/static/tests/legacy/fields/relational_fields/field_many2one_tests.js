@@ -3673,7 +3673,7 @@ QUnit.module('fields', {}, function () {
                 "partner,false,search": '<search></search>',
                 'turtle,false,list':`
                         <tree readonly="1">
-                            <field name="product_id" widget="product_configurator"/>
+                            <field name="product_id" widget="many2one"/>
                         </tree>`,
                 "product,false,search": '<search></search>',
                 "product,false,form": '<form></form>',
