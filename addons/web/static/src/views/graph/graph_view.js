@@ -68,10 +68,33 @@ export class GraphView extends Component {
     }
 
     /**
+     * Execute the action to open the view on the current model.
+     *
+     * @param {Array} domain
+     * @param {Array} views
+     * @param {Object} context
+     */
+    openView(domain, views, context) {
+        this.actionService.doAction(
+            {
+                context,
+                domain,
+                name: this.model.metaData.title,
+                res_model: this.model.metaData.resModel,
+                target: "current",
+                type: "ir.actions.act_window",
+                views: views,
+            },
+            {
+                viewType: "list",
+            }
+        );
+    }
+    /**
      * @param {string} domain the domain of the clicked area
      */
     onGraphClicked(domain) {
-        const { context, resModel, title } = this.model.metaData;
+        const { context } = this.model.metaData;
 
         Object.keys(context).forEach((x) => {
             if (x === "group_by" || x.startsWith("search_default_")) {
@@ -87,21 +110,7 @@ export class GraphView extends Component {
             return [views[viewType] || false, viewType];
         }
         const actionViews = [getView("list"), getView("form")];
-
-        this.actionService.doAction(
-            {
-                context,
-                domain,
-                name: title,
-                res_model: resModel,
-                target: "current",
-                type: "ir.actions.act_window",
-                views: actionViews,
-            },
-            {
-                viewType: "list",
-            }
-        );
+        this.openView(domain, actionViews, context);
     }
 
     /**
