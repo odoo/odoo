@@ -20,7 +20,7 @@ class AccountMove(models.Model):
         if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
             self.timesheet_total_duration = 0
             return
-        group_data = self.env['account.analytic.line'].read_group([
+        group_data = self.env['account.analytic.line']._read_group([
             ('timesheet_invoice_id', 'in', self.ids)
         ], ['timesheet_invoice_id', 'unit_amount'], ['timesheet_invoice_id'])
         timesheet_unit_amount_dict = defaultdict(float)
@@ -31,7 +31,7 @@ class AccountMove(models.Model):
 
     @api.depends('timesheet_ids')
     def _compute_timesheet_count(self):
-        timesheet_data = self.env['account.analytic.line'].read_group([('timesheet_invoice_id', 'in', self.ids)], ['timesheet_invoice_id'], ['timesheet_invoice_id'])
+        timesheet_data = self.env['account.analytic.line']._read_group([('timesheet_invoice_id', 'in', self.ids)], ['timesheet_invoice_id'], ['timesheet_invoice_id'])
         mapped_data = dict([(t['timesheet_invoice_id'][0], t['timesheet_invoice_id_count']) for t in timesheet_data])
         for invoice in self:
             invoice.timesheet_count = mapped_data.get(invoice.id, 0)
@@ -110,7 +110,7 @@ class AccountMoveLine(models.Model):
         for move_line in move_line_read_group:
             sale_line_ids_per_move[move_line['move_id'][0]] += self.env['sale.order.line'].browse(move_line['sale_line_ids'])
 
-        timesheet_read_group = self.sudo().env['account.analytic.line'].read_group([
+        timesheet_read_group = self.sudo().env['account.analytic.line']._read_group([
             ('timesheet_invoice_id.move_type', '=', 'out_invoice'),
             ('timesheet_invoice_id.state', '=', 'draft'),
             ('timesheet_invoice_id', 'in', self.move_id.ids)],

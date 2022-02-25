@@ -61,7 +61,7 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.ids),
             ('order_id.date_approve', '>=', date_from)
         ]
-        order_lines = self.env['purchase.order.line'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
+        order_lines = self.env['purchase.order.line']._read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
         purchased_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in order_lines])
         for product in self:
             if not product.id:

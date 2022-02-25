@@ -45,7 +45,7 @@ class SaleOrder(models.Model):
         if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
             self.update({'timesheet_total_duration': 0})
             return
-        group_data = self.env['account.analytic.line'].sudo().read_group([
+        group_data = self.env['account.analytic.line'].sudo()._read_group([
             ('order_id', 'in', self.ids)
         ], ['order_id', 'unit_amount'], ['order_id'])
         timesheet_unit_amount_dict = defaultdict(float)

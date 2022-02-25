@@ -34,7 +34,7 @@ class StockPickingType(models.Model):
             'count_picking_wave': [('is_wave', '=', True)],
         }
         for field in domains:
-            data = self.env['stock.picking.batch'].read_group(domains[field] +
+            data = self.env['stock.picking.batch']._read_group(domains[field] +
                 [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
                 ['picking_type_id'], ['picking_type_id'])
             count = {

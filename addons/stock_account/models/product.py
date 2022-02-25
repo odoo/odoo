@@ -117,7 +117,7 @@ class ProductProduct(models.Model):
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
             domain.append(('create_date', '<=', to_date))
-        groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
+        groups = self.env['stock.valuation.layer']._read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
         products = self.browse()
         for group in groups:
             product = self.browse(group['product_id'][0])

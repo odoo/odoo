@@ -341,7 +341,7 @@ class MrpProduction(models.Model):
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
-        delay_alert_date_data = self.env['stock.move'].read_group([('id', 'in', self.move_raw_ids.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], 'raw_material_production_id')
+        delay_alert_date_data = self.env['stock.move']._read_group([('id', 'in', self.move_raw_ids.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], 'raw_material_production_id')
         delay_alert_date_data = {data['raw_material_production_id'][0]: data['delay_alert_date'] for data in delay_alert_date_data}
         for production in self:
             production.delay_alert_date = delay_alert_date_data.get(production.id, False)
@@ -421,7 +421,7 @@ class MrpProduction(models.Model):
     def _compute_production_location(self):
         if not self.company_id:
             return
-        location_by_company = self.env['stock.location'].read_group([
+        location_by_company = self.env['stock.location']._read_group([
             ('company_id', 'in', self.company_id.ids),
             ('usage', '=', 'production')
         ], ['company_id', 'ids:array_agg(id)'], ['company_id'])
@@ -511,7 +511,7 @@ class MrpProduction(models.Model):
         return True
 
     def _compute_scrap_move_count(self):
-        data = self.env['stock.scrap'].read_group([('production_id', 'in', self.ids)], ['production_id'], ['production_id'])
+        data = self.env['stock.scrap']._read_group([('production_id', 'in', self.ids)], ['production_id'], ['production_id'])
         count_data = dict((item['production_id'][0], item['production_id_count']) for item in data)
         for production in self:
             production.scrap_count = count_data.get(production.id, 0)

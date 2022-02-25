@@ -116,7 +116,7 @@ class PosSession(models.Model):
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
                 total_cash_payment = 0.0
-                result = self.env['pos.payment'].read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], ['amount'], ['session_id'])
+                result = self.env['pos.payment']._read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], ['amount'], ['session_id'])
                 if result:
                     total_cash_payment = result[0]['amount']
                 session.cash_register_total_entry_encoding = session.cash_register_id.total_entry_encoding + (
@@ -131,13 +131,13 @@ class PosSession(models.Model):
 
     @api.depends('order_ids.payment_ids.amount')
     def _compute_total_payments_amount(self):
-        result = self.env['pos.payment'].read_group([('session_id', 'in', self.ids)], ['amount'], ['session_id'])
+        result = self.env['pos.payment']._read_group([('session_id', 'in', self.ids)], ['amount'], ['session_id'])
         session_amount_map = dict((data['session_id'][0], data['amount']) for data in result)
         for session in self:
             session.total_payments_amount = session_amount_map.get(session.id) or 0
 
     def _compute_order_count(self):
-        orders_data = self.env['pos.order'].read_group([('session_id', 'in', self.ids)], ['session_id'], ['session_id'])
+        orders_data = self.env['pos.order']._read_group([('session_id', 'in', self.ids)], ['session_id'], ['session_id'])
         sessions_data = {order_data['session_id'][0]: order_data['session_id_count'] for order_data in orders_data}
         for session in self:
             session.order_count = sessions_data.get(session.id, 0)

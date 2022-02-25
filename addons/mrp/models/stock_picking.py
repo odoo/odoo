@@ -35,7 +35,7 @@ class StockPickingType(models.Model):
             'count_mo_late': [('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
         }
         for field in domains:
-            data = self.env['mrp.production'].read_group(domains[field] +
+            data = self.env['mrp.production']._read_group(domains[field] +
                 [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
                 ['picking_type_id'], ['picking_type_id'])
             count = {x['picking_type_id'] and x['picking_type_id'][0]: x['picking_type_id_count'] for x in data}

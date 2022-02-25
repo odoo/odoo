@@ -78,7 +78,7 @@ class StockLot(models.Model):
                   ('name', 'in', self.mapped('name'))]
         fields = ['company_id', 'product_id', 'name']
         groupby = ['company_id', 'product_id', 'name']
-        records = self.read_group(domain, fields, groupby, lazy=False)
+        records = self._read_group(domain, fields, groupby, lazy=False)
         error_message_lines = []
         for rec in records:
             if rec['__count'] != 1:

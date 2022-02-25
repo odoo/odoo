@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
     @api.depends('event_booth_ids')
     def _compute_event_booth_count(self):
         if self.ids:
-            slot_data = self.env['event.booth'].read_group(
+            slot_data = self.env['event.booth']._read_group(
                 [('sale_order_id', 'in', self.ids)],
                 ['sale_order_id'], ['sale_order_id']
             )

@@ -136,17 +136,17 @@ class WebsiteSaleBackend(WebsiteBackend):
             ('date_order', '<=', date_to)
         ]
 
-        orders_data_groupby_campaign_id = request.env['sale.order'].read_group(
+        orders_data_groupby_campaign_id = request.env['sale.order']._read_group(
             domain=sale_utm_domain + [('campaign_id', '!=', False)],
             fields=['amount_total', 'id', 'campaign_id'],
             groupby='campaign_id')
 
-        orders_data_groupby_medium_id = request.env['sale.order'].read_group(
+        orders_data_groupby_medium_id = request.env['sale.order']._read_group(
             domain=sale_utm_domain + [('medium_id', '!=', False)],
             fields=['amount_total', 'id', 'medium_id'],
             groupby='medium_id')
 
-        orders_data_groupby_source_id = request.env['sale.order'].read_group(
+        orders_data_groupby_source_id = request.env['sale.order']._read_group(
             domain=sale_utm_domain + [('source_id', '!=', False)],
             fields=['amount_total', 'id', 'source_id'],
             groupby='source_id')

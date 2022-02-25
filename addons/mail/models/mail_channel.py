@@ -163,7 +163,7 @@ class Channel(models.Model):
 
     @api.depends('channel_partner_ids')
     def _compute_member_count(self):
-        read_group_res = self.env['mail.channel.partner'].read_group(domain=[('channel_id', 'in', self.ids)], fields=['channel_id'], groupby=['channel_id'])
+        read_group_res = self.env['mail.channel.partner']._read_group(domain=[('channel_id', 'in', self.ids)], fields=['channel_id'], groupby=['channel_id'])
         member_count_by_channel_id = {item['channel_id'][0]: item['channel_id_count'] for item in read_group_res}
         for channel in self:
             channel.member_count = member_count_by_channel_id.get(channel.id, 0)

@@ -45,7 +45,7 @@ class ResPartner(models.Model):
         if not self.ids:
             self.implemented_partner_count = 0
             return
-        rg_result = self.env['res.partner'].read_group(
+        rg_result = self.env['res.partner']._read_group(
             [('assigned_partner_id', 'in', self.ids),
              ('is_published', '=', True)],
             ['assigned_partner_id'],
@@ -64,7 +64,7 @@ class ResPartner(models.Model):
         super()._compute_opportunity_count()
         assign_counts = {}
         if self.ids:
-            opportunity_data = self.env['crm.lead'].with_context(active_test=False).read_group(
+            opportunity_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
                 [('partner_assigned_id', 'in', self.ids)],
                 ['partner_assigned_id'], ['partner_assigned_id']
             )

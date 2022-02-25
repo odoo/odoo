@@ -277,7 +277,7 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints generated when openning the replenish report.
         """
         self = self.filtered(lambda o: not o.route_id)
-        rules_groups = self.env['stock.rule'].read_group([
+        rules_groups = self.env['stock.rule']._read_group([
             ('route_id.product_selectable', '!=', False),
             ('location_dest_id', 'in', self.location_id.ids),
             ('action', 'in', ['pull_push', 'pull'])
@@ -325,7 +325,7 @@ class StockWarehouseOrderpoint(models.Model):
         all_warehouse_ids = []
         # Take 3 months since it's the max for the forecast report
         to_date = add(fields.date.today(), months=3)
-        qty_by_product_warehouse = self.env['report.stock.quantity'].read_group(
+        qty_by_product_warehouse = self.env['report.stock.quantity']._read_group(
             [('date', '=', to_date), ('state', '=', 'forecast')],
             ['product_id', 'product_qty', 'warehouse_id'],
             ['product_id', 'warehouse_id'], lazy=False)
@@ -374,7 +374,7 @@ class StockWarehouseOrderpoint(models.Model):
         dummy, qty_by_product_wh = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(warehouse_ids=warehouse_ids)
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Group orderpoint by product-warehouse
-        orderpoint_by_product_warehouse = self.env['stock.warehouse.orderpoint'].read_group(
+        orderpoint_by_product_warehouse = self.env['stock.warehouse.orderpoint']._read_group(
             [('id', 'in', orderpoints.ids)],
             ['product_id', 'warehouse_id', 'qty_to_order:sum'],
             ['product_id', 'warehouse_id'], lazy=False)
@@ -398,7 +398,7 @@ class StockWarehouseOrderpoint(models.Model):
         lot_stock_id_by_warehouse = {w['id']: w['lot_stock_id'][0] for w in lot_stock_id_by_warehouse}
 
         # With archived ones to avoid `product_location_check` SQL constraints
-        orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).read_group(
+        orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False)._read_group(
             [('id', 'in', orderpoints.ids)],
             ['product_id', 'location_id', 'ids:array_agg(id)'],
             ['product_id', 'location_id'], lazy=False)

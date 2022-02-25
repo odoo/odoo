@@ -32,7 +32,7 @@ class ResourceCalendarLeaves(models.Model):
                     }
                 }
         """
-        leaves_read_group = self.env['resource.calendar.leaves'].read_group(
+        leaves_read_group = self.env['resource.calendar.leaves']._read_group(
             [('id', 'in', self.ids)],
             ['calendar_id', 'ids:array_agg(id)', 'resource_ids:array_agg(resource_id)', 'min_date_from:min(date_from)', 'max_date_to:max(date_to)'],
             ['calendar_id'],
@@ -79,7 +79,7 @@ class ResourceCalendarLeaves(models.Model):
             If the employee has already a time off in the same day then no timesheet should be created.
         """
         work_hours_data = self._work_time_per_day()
-        employees_groups = self.env['hr.employee'].read_group(
+        employees_groups = self.env['hr.employee']._read_group(
             [('resource_calendar_id', 'in', self.calendar_id.ids)],
             ['resource_calendar_id', 'ids:array_agg(id)'],
             ['resource_calendar_id'])
@@ -99,7 +99,7 @@ class ResourceCalendarLeaves(models.Model):
                 elif d > max_date:
                     max_date = d
 
-        holidays_read_group = self.env['hr.leave'].read_group([
+        holidays_read_group = self.env['hr.leave']._read_group([
             ('employee_id', 'in', list(employee_ids_set)),
             ('date_from', '<=', max_date),
             ('date_to', '>=', min_date),

@@ -143,7 +143,7 @@ class PickingType(models.Model):
             'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting'))],
         }
         for field in domains:
-            data = self.env['stock.picking'].read_group(domains[field] +
+            data = self.env['stock.picking']._read_group(domains[field] +
                 [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
                 ['picking_type_id'], ['picking_type_id'])
             count = {
@@ -438,7 +438,7 @@ class Picking(models.Model):
 
     @api.depends('move_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
-        delay_alert_date_data = self.env['stock.move'].read_group([('id', 'in', self.move_ids.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], 'picking_id')
+        delay_alert_date_data = self.env['stock.move']._read_group([('id', 'in', self.move_ids.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], 'picking_id')
         delay_alert_date_data = {data['picking_id'][0]: data['delay_alert_date'] for data in delay_alert_date_data}
         for picking in self:
             picking.delay_alert_date = delay_alert_date_data.get(picking.id, False)
@@ -590,7 +590,7 @@ class Picking(models.Model):
 
     def _compute_has_packages(self):
         domain = [('picking_id', 'in', self.ids), ('result_package_id', '!=', False)]
-        cnt_by_picking = self.env['stock.move.line'].read_group(domain, ['picking_id'], ['picking_id'])
+        cnt_by_picking = self.env['stock.move.line']._read_group(domain, ['picking_id'], ['picking_id'])
         cnt_by_picking = {d['picking_id'][0]: d['picking_id_count'] for d in cnt_by_picking}
         for picking in self:
             picking.has_packages = bool(cnt_by_picking.get(picking.id, False))

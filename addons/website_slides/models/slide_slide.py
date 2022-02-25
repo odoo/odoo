@@ -310,7 +310,7 @@ class Slide(models.Model):
     @api.depends('slide_partner_ids.slide_id')
     def _compute_slide_views(self):
         # TODO awa: tried compute_sudo, for some reason it doesn't work in here...
-        read_group_res = self.env['slide.slide.partner'].sudo().read_group(
+        read_group_res = self.env['slide.slide.partner'].sudo()._read_group(
             [('slide_id', 'in', self.ids)],
             ['slide_id'],
             groupby=['slide_id']
@@ -324,7 +324,7 @@ class Slide(models.Model):
         mapped_data = {}
 
         if self.ids:
-            read_group_res = self.env['slide.embed'].read_group(
+            read_group_res = self.env['slide.embed']._read_group(
                 [('slide_id', 'in', self.ids)],
                 ['count_views'],
                 ['slide_id']
@@ -344,7 +344,7 @@ class Slide(models.Model):
         keys = ['nbr_%s' % slide_category for slide_category in self.env['slide.slide']._fields['slide_category'].get_values(self.env)]
         default_vals = dict((key, 0) for key in keys + ['total_slides'])
 
-        res = self.env['slide.slide'].read_group(
+        res = self.env['slide.slide']._read_group(
             [('is_published', '=', True), ('category_id', 'in', self.ids), ('is_category', '=', False)],
             ['category_id', 'slide_category'], ['category_id', 'slide_category'],
             lazy=False)

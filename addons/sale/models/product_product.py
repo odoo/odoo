@@ -25,7 +25,7 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.ids),
             ('date', '>=', date_from),
         ]
-        for group in self.env['sale.report'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id']):
+        for group in self.env['sale.report']._read_group(domain, ['product_id', 'product_uom_qty'], ['product_id']):
             r[group['product_id'][0]] = group['product_uom_qty']
         for product in self:
             if not product.id:
@@ -58,7 +58,7 @@ class ProductProduct(models.Model):
 
     def _filter_to_unlink(self):
         domain = [('product_id', 'in', self.ids)]
-        lines = self.env['sale.order.line'].read_group(domain, ['product_id'], ['product_id'])
+        lines = self.env['sale.order.line']._read_group(domain, ['product_id'], ['product_id'])
         linked_product_ids = [group['product_id'][0] for group in lines]
         return super(ProductProduct, self - self.browse(linked_product_ids))._filter_to_unlink()
 

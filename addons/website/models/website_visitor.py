@@ -94,7 +94,7 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('website_track_ids')
     def _compute_page_statistics(self):
-        results = self.env['website.track'].read_group(
+        results = self.env['website.track']._read_group(
             [('visitor_id', 'in', self.ids), ('url', '!=', False)], ['visitor_id', 'page_id', 'url'], ['visitor_id', 'page_id', 'url'], lazy=False)
         mapped_data = {}
         for result in results:
@@ -113,7 +113,7 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('website_track_ids.page_id')
     def _compute_last_visited_page_id(self):
-        results = self.env['website.track'].read_group([('visitor_id', 'in', self.ids)],
+        results = self.env['website.track']._read_group([('visitor_id', 'in', self.ids)],
                                                        ['visitor_id', 'page_id', 'visit_datetime:max'],
                                                        ['visitor_id', 'page_id'], lazy=False)
         mapped_data = {result['visitor_id'][0]: result['page_id'][0] for result in results if result['page_id']}

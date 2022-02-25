@@ -83,7 +83,7 @@ class Project(models.Model):
 
     @api.depends('allow_timesheets', 'task_ids.planned_hours', 'task_ids.remaining_hours')
     def _compute_remaining_hours(self):
-        group_read = self.env['project.task'].read_group(
+        group_read = self.env['project.task']._read_group(
             domain=[('planned_hours', '!=', False), ('project_id', 'in', self.filtered('allow_timesheets').ids),
                      '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
             fields=['planned_hours:sum', 'remaining_hours:sum'], groupby='project_id')
@@ -152,7 +152,7 @@ class Project(models.Model):
 
     @api.depends('timesheet_ids')
     def _compute_timesheet_count(self):
-        timesheet_read_group = self.env['account.analytic.line'].read_group(
+        timesheet_read_group = self.env['account.analytic.line']._read_group(
             [('project_id', 'in', self.ids)],
             ['project_id'],
             ['project_id']

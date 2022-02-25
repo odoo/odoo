@@ -329,7 +329,7 @@ class StockMove(models.Model):
             for move in self:
                 move_lines_ids |= set(move._get_move_lines().ids)
 
-            data = self.env['stock.move.line'].read_group(
+            data = self.env['stock.move.line']._read_group(
                 [('id', 'in', list(move_lines_ids))],
                 ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
                 lazy=False
@@ -391,7 +391,7 @@ class StockMove(models.Model):
         else:
             # compute
             result = {data['move_id'][0]: data['reserved_qty'] for data in
-                      self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id', 'reserved_qty'], ['move_id'])}
+                      self.env['stock.move.line']._read_group([('move_id', 'in', self.ids)], ['move_id', 'reserved_qty'], ['move_id'])}
             for move in self:
                 move.reserved_availability = move.product_id.uom_id._compute_quantity(
                     result.get(move.id, 0.0), move.product_uom, rounding_method='HALF-UP')
@@ -493,7 +493,7 @@ class StockMove(models.Model):
         domain_suggest = [('move_id', 'in', self.ids), ('lot_id', '!=', False), ('qty_done', '!=', 0.0)]
         lots_by_move_id_list = []
         for domain in [domain_nosuggest, domain_suggest]:
-            lots_by_move_id = self.env['stock.move.line'].read_group(
+            lots_by_move_id = self.env['stock.move.line']._read_group(
                 domain,
                 ['move_id', 'lot_ids:array_agg(lot_id)'], ['move_id'],
             )

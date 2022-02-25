@@ -38,7 +38,7 @@ class ResPartner(models.Model):
 
     @api.depends('is_company')
     def _compute_slide_channel_count(self):
-        read_group_res = self.env['slide.channel.partner'].sudo().read_group(
+        read_group_res = self.env['slide.channel.partner'].sudo()._read_group(
             [('partner_id', 'in', self.ids)],
             ['partner_id'], 'partner_id'
         )

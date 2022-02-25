@@ -16,7 +16,7 @@ class FleetVehicle(models.Model):
             self.bill_count = 0
             return
 
-        moves = self.env['account.move.line'].read_group(
+        moves = self.env['account.move.line']._read_group(
             domain=[
                 ('vehicle_id', 'in', self.ids),
                 ('move_id.state', '!=', 'cancel'),

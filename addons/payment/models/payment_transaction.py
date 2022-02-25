@@ -144,7 +144,7 @@ class PaymentTransaction(models.Model):
             tx.invoices_count = tx_data.get(tx.id, 0)
 
     def _compute_refunds_count(self):
-        rg_data = self.env['payment.transaction'].read_group(
+        rg_data = self.env['payment.transaction']._read_group(
             domain=[('source_transaction_id', 'in', self.ids), ('operation', '=', 'refund')],
             fields=['source_transaction_id'],
             groupby=['source_transaction_id'],

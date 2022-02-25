@@ -39,7 +39,7 @@ class Partner(models.Model):
         all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
-        opportunity_data = self.env['crm.lead'].with_context(active_test=False).read_group(
+        opportunity_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
             domain=[('partner_id', 'in', all_partners.ids)],
             fields=['partner_id'], groupby=['partner_id']
         )

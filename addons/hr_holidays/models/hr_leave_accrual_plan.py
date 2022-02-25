@@ -32,7 +32,7 @@ class AccrualPlan(models.Model):
 
     @api.depends('level_ids')
     def _compute_level_count(self):
-        level_read_group = self.env['hr.leave.accrual.level'].read_group(
+        level_read_group = self.env['hr.leave.accrual.level']._read_group(
             [('accrual_plan_id', 'in', self.ids)],
             fields=['accrual_plan_id'],
             groupby=['accrual_plan_id'],
@@ -43,7 +43,7 @@ class AccrualPlan(models.Model):
 
     @api.depends('allocation_ids')
     def _compute_employee_count(self):
-        allocations_read_group = self.env['hr.leave.allocation'].read_group(
+        allocations_read_group = self.env['hr.leave.allocation']._read_group(
             [('accrual_plan_id', 'in', self.ids)],
             ['accrual_plan_id', 'employee_count:count_distinct(employee_id)'],
             ['accrual_plan_id'],

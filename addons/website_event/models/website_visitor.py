@@ -24,7 +24,7 @@ class WebsiteVisitor(models.Model):
     @api.depends('event_registration_ids')
     def _compute_event_registration_count(self):
         if self.ids:
-            read_group_res = self.env['event.registration'].read_group(
+            read_group_res = self.env['event.registration']._read_group(
                 [('visitor_id', 'in', self.ids)],
                 ['visitor_id'], ['visitor_id'])
             visitor_mapping = dict(

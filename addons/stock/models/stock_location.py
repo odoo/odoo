@@ -257,11 +257,11 @@ class Location(models.Model):
             qty_by_location = defaultdict(lambda: 0)
             if locations.storage_category_id:
                 if package and package.package_type_id:
-                    move_line_data = self.env['stock.move.line'].read_group([
+                    move_line_data = self.env['stock.move.line']._read_group([
                         ('result_package_id.package_type_id', '=', package_type.id),
                         ('state', 'not in', ['draft', 'cancel', 'done']),
                     ], ['result_package_id:count_distinct'], ['location_dest_id'])
-                    quant_data = self.env['stock.quant'].read_group([
+                    quant_data = self.env['stock.quant']._read_group([
                         ('package_id.package_type_id', '=', package_type.id),
                         ('location_id', 'in', locations.ids),
                     ], ['package_id:count_distinct'], ['location_id'])
@@ -270,12 +270,12 @@ class Location(models.Model):
                     for values in quant_data:
                         qty_by_location[values['location_id'][0]] += values['package_id']
                 else:
-                    move_line_data = self.env['stock.move.line'].read_group([
+                    move_line_data = self.env['stock.move.line']._read_group([
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
                     ], ['location_dest_id', 'product_id', 'reserved_qty:array_agg', 'qty_done:array_agg', 'product_uom_id:array_agg'], ['location_dest_id'])
-                    quant_data = self.env['stock.quant'].read_group([
+                    quant_data = self.env['stock.quant']._read_group([
                         ('product_id', '=', product.id),
                         ('location_id', 'in', locations.ids),
                     ], ['location_id', 'product_id', 'quantity:sum'], ['location_id'])
