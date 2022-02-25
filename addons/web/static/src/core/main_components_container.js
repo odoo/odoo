@@ -1,6 +1,6 @@
 /** @odoo-module */
 import { registry } from "./registry";
-import { NotUpdatable, ErrorHandler } from "./utils/components";
+import { ErrorHandler } from "./utils/components";
 
 const { Component, xml } = owl;
 
@@ -27,12 +27,10 @@ export class MainComponentsContainer extends Component {
 MainComponentsContainer.template = xml`
 <div>
     <t t-foreach="Components" t-as="C" t-key="C[0]">
-        <NotUpdatable>
-            <ErrorHandler onError="error => this.handleComponentError(error, C)">
-                <t t-component="C[1].Component" t-props="C[1].props"/>
-            </ErrorHandler>
-        </NotUpdatable>
+        <ErrorHandler onError="error => this.handleComponentError(error, C)">
+            <t t-component="C[1].Component" t-props="C[1].props"/>
+        </ErrorHandler>
     </t>
 </div>
 `;
-MainComponentsContainer.components = { NotUpdatable, ErrorHandler };
+MainComponentsContainer.components = { ErrorHandler };
