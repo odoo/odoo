@@ -309,8 +309,9 @@
     });
 
     QUnit.debug = (name, cb) => {
-        document.body.classList.add("debug");
+        owl.whenReady(() => document.body.classList.add("debug"));
         QUnit.config.debug = true;
+        QUnit.config.testTimeout = 60 * 60 * 1000;
         QUnit.only(name, cb);
     };
 
