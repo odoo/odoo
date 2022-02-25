@@ -199,6 +199,18 @@
             </field>
         </record>
 
+        <record id="view_users_simple_form_inherit_hr" model="ir.ui.view">
+            <field name="name">view.users.simple.form.inherit.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_simple_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='mobile']" position="after">
+                    <field name="create_employee" force_save="1" string="Create Employee"/>
+                    <field name="create_employee_id" force_save="1" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="res_users_action_my" model="ir.actions.act_window">
             <field name="name">Change my Preferences</field>
             <field name="res_model">res.users</field>
