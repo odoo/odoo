@@ -147,6 +147,10 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         cls.company_data['company'].write({
             'point_of_sale_update_stock_quantities': 'real',
+            'country_id': cls.env['res.country'].create({
+                'name': 'PoS Land',
+                'code': 'WOW',
+            }),
         })
 
         # Set basic defaults
@@ -230,6 +234,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'name': 'Shelf 1',
             'location_id': cls.company_data['default_warehouse'].lot_stock_id.id,
         })
+
 
     #####################
     ## private methods ##
@@ -358,11 +363,57 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         tax7: 7%, excluded in product price
         tax10: 10%, included in product price
+        tax21: 21%, included in product price
         """
-        tax7 = cls.env['account.tax'].create({'name': 'Tax 7%', 'amount': 7})
-        tax10 = cls.env['account.tax'].create({'name': 'Tax 10%', 'amount': 10, 'price_include': True, 'include_base_amount': False})
-        (tax7 | tax10).mapped('invoice_repartition_line_ids').write({'account_id': cls.tax_received_account.id})
-        (tax7 | tax10).mapped('refund_repartition_line_ids').write({'account_id': cls.tax_received_account.id})
+        def create_tag(name):
+            return cls.env['account.account.tag'].create({
+                'name': name,
+                'applicability': 'taxes',
+                'country_id': cls.env.company.country_id.id
+            })
+
+        cls.tax_tag_invoice_base = create_tag('Invoice Base tag')
+        cls.tax_tag_invoice_tax = create_tag('Invoice Tax tag')
+        cls.tax_tag_refund_base = create_tag('Refund Base tag')
+        cls.tax_tag_refund_tax = create_tag('Refund Tax tag')
+
+        def create_tax(percentage, price_include=False):
+            return cls.env['account.tax'].create({
+                'name': f'Tax {percentage}%',
+                'amount': percentage,
+                'price_include': price_include,
+                'include_base_amount': False,
+                'invoice_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, cls.tax_tag_invoice_base.ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': cls.tax_received_account.id,
+                        'tag_ids': [(6, 0, cls.tax_tag_invoice_tax.ids)],
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, cls.tax_tag_refund_base.ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': cls.tax_received_account.id,
+                        'tag_ids': [(6, 0, cls.tax_tag_refund_tax.ids)],
+                    }),
+                ],
+            })
+
+        tax7 = create_tax(7, price_include=False)
+        tax10 = create_tax(10, price_include=True)
+        tax21 = create_tax(21, price_include=True)
 
         tax_group_7_10 = tax7.copy()
         with Form(tax_group_7_10) as tax:
@@ -374,6 +425,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         return {
             'tax7': tax7,
             'tax10': tax10,
+            'tax21': tax21,
             'tax_group_7_10': tax_group_7_10
         }
 
