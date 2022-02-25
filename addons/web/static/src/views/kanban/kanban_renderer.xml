@@ -4,7 +4,7 @@
     <t t-name="web.KanbanRenderer" owl="1">
         <div class="o_kanban_renderer"
             t-att-class="{ o_kanban_sortable: canResequenceRecords }"
-            t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}"
+            t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.archInfo.className or '' }}"
             t-ref="root"
         >
             <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
@@ -90,7 +90,7 @@
                                     <KanbanRecordQuickCreate
                                         record="record"
                                         fields="props.fields"
-                                        info="props.list.quickCreateInfo"
+                                        archInfo="props.list.quickCreateInfo"
                                         onCancel="force => group.list.cancelQuickCreate(force)"
                                         onValidate="mode => this.validateQuickCreate(mode, group)"
                                     />

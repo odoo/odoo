@@ -288,8 +288,8 @@ export class Record extends DataPoint {
             state.resIds ||
             (this.resId ? [this.resId] : []);
         this._values = params.values;
-        this._changes = {};
-        this.data = { ...this._values };
+        this._changes = params.changes || {};
+        this.data = { ...this._values, ...this._changes };
         this._invalidFields = new Set();
         this.preloadedData = {};
         this.preloadedDataCaches = {};

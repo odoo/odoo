@@ -25,7 +25,6 @@ export class FormViewDialog extends Dialog {
                 const archInfo = new FormArchParser().parse(form.arch, form.fields);
                 this.archInfo = {
                     ...archInfo,
-                    activeFields: archInfo.fields,
                     fields: form.fields,
                 };
             }
@@ -38,15 +37,22 @@ export class FormViewDialog extends Dialog {
     }
 
     save() {
+        const { record, relatedRecord } = this.props;
+        Object.assign(relatedRecord._values, record._values);
+        Object.assign(relatedRecord._changes, record._changes); // don't work with x2many inside,...
         this.close();
     }
 
     cancel() {
-        console.log("TODO: go back to savepoint");
-        this.close();
+        this.close(); // if this remains like that put this in template direclty
     }
 }
 FormViewDialog.bodyTemplate = "web.FormViewDialogBody";
 FormViewDialog.footerTemplate = "web.FormViewDialogFooter";
 FormViewDialog.components = { FormRenderer };
 FormViewDialog.contentClass = "o_form_view_dialog";
+FormViewDialog.props = {
+    ...Dialog.props,
+    record: true,
+    archInfo: true,
+};

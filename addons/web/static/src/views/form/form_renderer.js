@@ -10,9 +10,9 @@ const { Component, useSubEnv, useState, useEffect, xml } = owl;
 
 export class FormRenderer extends Component {
     setup() {
-        const { arch, fields, xmlDoc } = this.props.info;
+        const { arch, activeFields, xmlDoc } = this.props.archInfo;
         this.state = useState({}); // Used by Form Compiler
-        this.templateId = useViewCompiler(FormCompiler, arch, fields, xmlDoc);
+        this.templateId = useViewCompiler(FormCompiler, arch, activeFields, xmlDoc);
         useSubEnv({ model: this.props.record.model });
         useEffect(() => {
             if (this.props.class) {

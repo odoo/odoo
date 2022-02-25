@@ -28,11 +28,11 @@ const FIELD_CLASSES = {
 export class ListRenderer extends Component {
     setup() {
         this.fields = this.props.fields;
-        this.allColumns = this.props.info.columns;
+        this.allColumns = this.props.archInfo.columns;
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
         this.cellClassByColumn = {};
-        this.groupByButtons = this.props.info.groupBy.buttons;
+        this.groupByButtons = this.props.archInfo.groupBy.buttons;
         this.state = useState({
             columns: this.allColumns.filter(
                 (col) => !col.optional || this.optionalActiveFields[col.name]
@@ -253,7 +253,7 @@ export class ListRenderer extends Component {
      */
     getRowClass(record) {
         // classnames coming from decorations
-        const classNames = this.props.info.decorations
+        const classNames = this.props.archInfo.decorations
             .filter((decoration) => evaluateExpr(decoration.condition, record.evalContext))
             .map((decoration) => decoration.class);
         // "o_selected_row" classname for the potential row in edition
@@ -398,7 +398,7 @@ export class ListRenderer extends Component {
     }
 
     async onCellClicked(record, column) {
-        if (this.props.info.editable) {
+        if (this.props.archInfo.editable) {
             if (record.isInEdition) {
                 this.focusCell(column);
                 this.cellToFocus = null;
@@ -473,7 +473,7 @@ ListRenderer.props = [
     "activeActions?",
     "list",
     "fields",
-    "info",
+    "archInfo",
     "openRecord",
     "onAdd?",
     "creates?",

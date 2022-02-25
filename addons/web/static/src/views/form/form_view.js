@@ -35,7 +35,7 @@ export class FormArchParser extends XMLParser {
                 return false;
             }
         });
-        return { arch, activeActions, fields: activeFields, xmlDoc };
+        return { arch, activeActions, activeFields, xmlDoc };
     }
 }
 
@@ -49,7 +49,7 @@ export class FormView extends Component {
         this.viewService = useService("view");
 
         this.archInfo = new FormArchParser().parse(this.props.arch, this.props.fields);
-        const activeFields = this.archInfo.fields;
+        const activeFields = this.archInfo.activeFields;
         if (!activeFields.display_name) {
             activeFields.display_name = { name: "display_name", type: "char" };
         }
@@ -126,7 +126,7 @@ export class FormView extends Component {
     }
 
     async loadSubViews() {
-        const activeFields = this.archInfo.fields;
+        const activeFields = this.archInfo.activeFields;
         for (const fieldName in activeFields) {
             const field = this.props.fields[fieldName];
             if (!isX2Many(field)) {
@@ -171,11 +171,7 @@ export class FormView extends Component {
             const subView = views[viewType];
             const { ArchParser } = viewRegistry.get(viewType);
             const archInfo = new ArchParser().parse(subView.arch, subView.fields);
-            fieldInfo.views[viewType] = {
-                ...archInfo,
-                activeFields: archInfo.fields,
-                fields: subView.fields,
-            };
+            fieldInfo.views[viewType] = { ...archInfo, fields: subView.fields };
             fieldInfo.relatedFields = subView.fields;
         }
     }

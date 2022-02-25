@@ -3131,7 +3131,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("one2many list (non editable): edition", async function (assert) {
+    QUnit.debug("one2many list (non editable): edition", async function (assert) {
         assert.expect(12);
 
         let nbWrite = 0;

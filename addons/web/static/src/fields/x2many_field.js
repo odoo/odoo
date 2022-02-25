@@ -35,7 +35,7 @@ export class X2ManyField extends Component {
         const subViewInfo = this.fieldInfo.views[this.viewMode];
         return {
             activeActions: this.activeActions,
-            info: {
+            archInfo: {
                 ...subViewInfo,
                 editable: this.props.record.isInEdition && subViewInfo.editable,
             },
@@ -113,10 +113,23 @@ export class X2ManyField extends Component {
     }
 
     openRecord(record) {
-        record.switchMode("edit");
+        const form = this.list.views.form;
+        const newRecord = this.list.model.createDataPoint("record", {
+            context: record.context,
+            resModel: record.resModel,
+            fields: { ...form.fields, id: { name: "id", type: "integer", readonly: true } },
+            activeFields: form.activeFields,
+            views: { form },
+            mode: "edit",
+            viewMode: "form",
+            values: record._values,
+            changes: record._changes,
+            resId: record.resId,
+        });
         this.dialogService.add(FormViewDialog, {
-            archInfo: this.list.views.form, // FIXME: might not be there
-            record,
+            archInfo: form, // FIXME: might not be there
+            record: newRecord,
+            relatedRecord: record,
             title: this.props.record.activeFields[this.props.name].string,
         });
     }

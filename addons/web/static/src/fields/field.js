@@ -227,7 +227,6 @@ Field.parseFieldNode = function (node, fields, viewType) {
                 const archInfo = new ArchParser().parse(subView.arch, subView.fields);
                 fieldInfo.views[viewType] = {
                     ...archInfo,
-                    activeFields: archInfo.fields,
                     fields: subView.fields,
                 };
             }

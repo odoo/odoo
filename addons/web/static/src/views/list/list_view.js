@@ -57,7 +57,7 @@ export class GroupListArchParser extends XMLParser {
                 activeFields[fieldInfo.name] = fieldInfo;
             }
         });
-        return { activeFields, buttons, fields };
+        return { activeFields, buttons };
     }
 }
 
@@ -143,12 +143,9 @@ export class ListArchParser extends XMLParser {
                     },
                     groupByFields
                 );
-                const { activeFields, buttons, fields: parsedFields } = groupListArchParser.parse(
-                    arch,
-                    groupByFields
-                );
+                const { activeFields, buttons } = groupListArchParser.parse(arch, groupByFields);
                 groupBy.buttons[fieldName] = buttons;
-                groupBy.fields[fieldName] = { activeFields, fields: parsedFields };
+                groupBy.fields[fieldName] = { activeFields, fields: groupByFields };
                 return false;
             } else if (node.tagName === "header") {
                 // AAB: not sure we need to handle invisible="1" button as the usecase seems way
@@ -173,7 +170,7 @@ export class ListArchParser extends XMLParser {
             editable,
             limit,
             headerButtons,
-            fields: activeFields,
+            activeFields,
             columns,
             groupBy,
             defaultOrder,
@@ -196,7 +193,7 @@ export class ListView extends Component {
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             fields: this.props.fields,
-            activeFields: this.archInfo.fields,
+            activeFields: this.archInfo.activeFields,
             viewMode: "list",
             groupByInfo: this.archInfo.groupBy.fields,
             limit: this.archInfo.limit || this.props.limit,
@@ -236,6 +233,7 @@ export class ListView extends Component {
     }
 
     async openRecord(record) {
+        debugger;
         const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
         try {
             await this.actionService.switchView("form", { resId: record.resId, resIds });

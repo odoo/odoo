@@ -34,7 +34,7 @@ const formatterRegistry = registry.category("formatters");
 
 export class KanbanRenderer extends Component {
     setup() {
-        const { arch, cards, className, fields, xmlDoc, examples } = this.props.info;
+        const { arch, cards, className, fields, xmlDoc, examples } = this.props.archInfo;
         this.cards = cards;
         this.className = className;
         this.cardTemplate = useViewCompiler(KanbanCompiler, arch, fields, xmlDoc);
@@ -171,8 +171,8 @@ export class KanbanRenderer extends Component {
 
     get canResequenceRecords() {
         return (
-            (this.props.info.hasHandleWidget || this.props.list.isGrouped) &&
-            this.props.info.recordsDraggable
+            (this.props.archInfo.hasHandleWidget || this.props.list.isGrouped) &&
+            this.props.archInfo.recordsDraggable
         );
     }
 
@@ -302,35 +302,35 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
 
     canArchiveGroup(group) {
-        const { activeActions } = this.props.info;
+        const { activeActions } = this.props.archInfo;
         const hasActiveField = "active" in group.fields;
         return activeActions.groupArchive && hasActiveField && !this.props.list.groupedBy("m2m");
     }
 
     canCreateGroup() {
-        const { activeActions } = this.props.info;
+        const { activeActions } = this.props.archInfo;
         return activeActions.groupCreate && this.props.list.groupedBy("m2o");
     }
 
     canDeleteGroup(group) {
-        const { activeActions } = this.props.info;
+        const { activeActions } = this.props.archInfo;
         const { groupByField } = this.props.list;
         return activeActions.groupDelete && isRelational(groupByField) && group.value;
     }
 
     canDeleteRecord() {
-        const { activeActions } = this.props.info;
+        const { activeActions } = this.props.archInfo;
         return activeActions.delete && !this.props.list.groupedBy("m2m");
     }
 
     canEditGroup(group) {
-        const { activeActions } = this.props.info;
+        const { activeActions } = this.props.archInfo;
         const { groupByField } = this.props.list;
         return activeActions.groupEdit && isRelational(groupByField) && group.value;
     }
 
     canEditRecord() {
-        return this.props.info.activeActions.edit;
+        return this.props.archInfo.activeActions.edit;
     }
 
     // ------------------------------------------------------------------------
@@ -402,7 +402,7 @@ export class KanbanRenderer extends Component {
     selectColor(record, colorIndex) {
         // TODO
         console.warn("TODO: Update record", record.id, {
-            [this.props.info.colorField]: colorIndex,
+            [this.props.archInfo.colorField]: colorIndex,
         });
     }
 
