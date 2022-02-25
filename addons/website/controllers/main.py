@@ -733,25 +733,6 @@ class Website(Home):
             'website.assets_editor': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor'),
         }
 
-    @http.route(['/website/make_scss_custo'], type='json', auth='user', website=True)
-    def make_scss_custo(self, url, values):
-        """
-        Params:
-            url (str):
-                the URL of the scss file to customize (supposed to be a variable
-                file which will appear in the assets_common bundle)
-
-            values (dict):
-                key,value mapping to integrate in the file's map (containing the
-                word hook). If a key is already in the file's map, its value is
-                overridden.
-
-        Returns:
-            boolean
-        """
-        request.env['web_editor.assets'].make_scss_customization(url, values)
-        return True
-
     # ------------------------------------------------------
     # Server actions
     # ------------------------------------------------------
