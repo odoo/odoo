@@ -496,7 +496,7 @@ export class Record extends DataPoint {
                 activeFields,
                 limit,
                 orderBy,
-                field,
+                field: this.fields[fieldName],
                 resIds: this.data[fieldName] || [],
                 views,
                 viewMode,
@@ -1729,11 +1729,12 @@ export class StaticList extends DataPoint {
         if (this.field.type === "one2many") {
             for (const resId of this.resIds) {
                 let record = this._cache[resId];
+                let command;
                 if (record) {
-                    const command = record.getChanges();
-                    if (command) {
-                        commands.push(command);
-                    }
+                    command = record.getChanges();
+                }
+                if (command) {
+                    commands.push(command);
                 } else {
                     commands.push(Commands.linkTo(resId));
                 }

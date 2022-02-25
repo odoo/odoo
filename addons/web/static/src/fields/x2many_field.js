@@ -28,7 +28,7 @@ export class X2ManyField extends Component {
     }
 
     get list() {
-        return this.list;
+        return this.props.value;
     }
 
     get rendererProps() {

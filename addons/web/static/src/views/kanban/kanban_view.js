@@ -28,12 +28,6 @@ const TRANSPILED_EXPRESSIONS = [
     { regex: /\bwidget.isHtmlEmpty\b/g, value: "isHtmlEmpty" },
     // `widget.prop` => `props.prop`
     { regex: /\bwidget\.(\w+)\b/g, value: "props.$1" },
-    // `record.prop.value` => `getValue(record,'prop')`
-    { regex: /\brecord\.(\w+)\.value\b/g, value: `getValue(record, '$1')` },
-    // `record.prop.raw_value` => `getRawValue(record,'prop')`
-    { regex: /\brecord\.(\w+)\.raw_value\b/g, value: `getRawValue(record, '$1')` },
-    // `record.prop` => `record.data.prop`
-    { regex: /\brecord\.(\w+)\b/g, value: `record.data.$1` },
     // `#{expr}` => `{{expr}}`
     { regex: /#{([^}]+)}/g, value: "{{$1}}" },
     // `kanban_image(model, field, idOrIds[, placeholder])` => `imageSrcFromRecordInfo(recordInfo, record)`
@@ -49,6 +43,12 @@ const TRANSPILED_EXPRESSIONS = [
             }, record)`;
         },
     },
+    // `record.prop.value` => `getValue(record,'prop')`
+    { regex: /\brecord\.(\w+)\.value\b/g, value: `getValue(record, '$1')` },
+    // `record.prop.raw_value` => `getRawValue(record,'prop')`
+    { regex: /\brecord\.(\w+)\.raw_value\b/g, value: `getRawValue(record, '$1')` },
+    // `record.prop` => `record.data.prop`
+    { regex: /\brecord\.(\w+)\b/g, value: `record.data.$1` },
 ];
 // These classes determine whether a click on a record should open it.
 const KANBAN_CLICK_CLASSES = ["oe_kanban_global_click", "oe_kanban_global_click_edit"];
