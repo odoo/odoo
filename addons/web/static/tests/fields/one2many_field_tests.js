@@ -3202,7 +3202,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(7);
 
         serverData.models.partner.records[0].p = [2, 4];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3220,44 +3220,23 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        assert.ok(
-            form.$(".o_field_x2many_list_row_add").length,
-            '"Add an item" link should be available in readonly'
-        );
+        assert.containsOnce(target, ".o_field_x2many_list_row_add");
 
-        await click(form.$(".o_list_view tbody td:first()"));
-        assert.ok(form.$(".o_form_view.o_form_editable").length, "should toggle form mode to edit");
+        await click(target.querySelector(".o_list_renderer tbody td"));
+        assert.containsOnce(target, ".o_form_view_dialog .o_form_editable"); // not sure about this
 
-        assert.ok(
-            form.$(".o_field_x2many_list_row_add").length,
-            '"Add an item" link should be available in edit'
-        );
+        assert.containsOnce(target, ".o_field_x2many_list_row_add");
 
         // edit existing subrecord
-        await click(form.$(".o_list_view tbody td:first()"));
-        assert.strictEqual(
-            $(".modal").length,
-            0,
-            "in edit, clicking on a subrecord should not open a dialog"
-        );
-        assert.hasClass(
-            form.$(".o_list_view tbody tr:first()"),
-            "o_selected_row",
-            "first row should be in edition"
-        );
-        await testUtils.fields.editInput(form.$(".o_list_view input:first()"), "new name");
+        await click(target.querySelector(".o_list_renderer tbody td"));
+        assert.containsNone(target, ".modal");
+        assert.hasClass(target.querySelector(".o_list_renderer tbody tr"), "o_selected_row");
+        await editInput(target, ".o_list_renderer input", "new name");
 
-        await click(form.$(".o_list_view tbody tr:nth(1) td:first"));
-        assert.doesNotHaveClass(
-            form.$(".o_list_view tbody tr:first"),
-            "o_selected_row",
-            "first row should not be in edition anymore"
-        );
-        assert.strictEqual(
-            form.$(".o_list_view tbody td:first").text(),
-            "new name",
-            "value of subrecord should have been updated"
-        );
+        const secondRow = target.querySelectorAll(".o_list_renderer tbody tr")[1];
+        await click(secondRow.querySelector("td"));
+        assert.doesNotHaveClass(target, ".o_list_renderer tbody tr", "o_selected_row");
+        assert.strictEqual(target.querySelector(".o_list_renderer tbody td").innerText, "new name");
 
         // create new subrecords
         // TODO when 'Add an item' will be implemented
