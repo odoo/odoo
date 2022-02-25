@@ -36,11 +36,12 @@ class TestRepairTraceability(TestMrpCommon):
         with mo_form.move_raw_ids.new() as move:
             move.product_id = product_to_remove
             move.product_uom_qty = 1
-            move.move_line_ids.lot_id = ptremove_lot  # Set component serial to B2
         mo = mo_form.save()
         mo.action_confirm()
         # Set serial to A1
         mo.lot_producing_id = ptrepair_lot
+        # Set component serial to B2
+        mo.move_raw_ids.move_line_ids.lot_id = ptremove_lot
         mo.button_mark_done()
 
         with Form(self.env['repair.order']) as ro_form:
@@ -61,7 +62,6 @@ class TestRepairTraceability(TestMrpCommon):
         with mo2_form.move_raw_ids.new() as move:
             move.product_id = product_to_remove
             move.product_uom_qty = 1
-            move.move_line_ids.lot_id = ptremove_lot  # Set component serial to B2 again, it is possible
         mo2 = mo2_form.save()
         mo2.action_confirm()
         # Set serial to A2
@@ -70,6 +70,8 @@ class TestRepairTraceability(TestMrpCommon):
             'product_id': product_to_repair.id,
             'company_id': self.env.user.company_id.id
         })
+        # Set component serial to B2 again, it is possible
+        mo2.move_raw_ids.move_line_ids.lot_id = ptremove_lot
         # We are not forbidden to use that serial number, so nothing raised here
         mo2.button_mark_done()
 
