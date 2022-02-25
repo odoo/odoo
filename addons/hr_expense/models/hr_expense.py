@@ -74,9 +74,14 @@ class HrExpense(models.Model):
     quantity = fields.Float(required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'approved': [('readonly', False)], 'refused': [('readonly', False)]}, digits='Product Unit of Measure', default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
         compute='_compute_from_product_id_company_id', store=True, readonly=False,
+<<<<<<< HEAD
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase'), ('price_include', '=', True)]", string='Included taxes')
     amount_tax = fields.Monetary(string='Tax amount in Currency', help="Tax amount in currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     amount_tax_company = fields.Monetary('Tax amount', help="Tax amount in company currency", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
+=======
+        domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase'), ('price_include', '=', True)]", string='Taxes',
+        help="The taxes should be \"Included In Price\"")
+>>>>>>> e312eb7d21e... temp
     amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
     total_amount = fields.Monetary("Total In Currency", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False)
     untaxed_amount = fields.Monetary("Total Untaxed Amount In Currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
@@ -165,6 +170,7 @@ class HrExpense(models.Model):
     @api.depends('quantity', 'unit_amount', 'tax_ids', 'currency_id')
     def _compute_amount(self):
         for expense in self:
+<<<<<<< HEAD
             if expense.product_id and not expense.product_has_cost:
                 continue
             taxes = expense._get_taxes(price=expense.unit_amount, quantity=expense.quantity)
@@ -183,6 +189,11 @@ class HrExpense(models.Model):
     def _get_taxes(self, price, quantity):
         self.ensure_one()
         return self.tax_ids.compute_all(price_unit=price, currency=self.currency_id, quantity=quantity, product=self.product_id, partner=self.employee_id.user_id.partner_id)
+=======
+            if expense.unit_amount:
+                taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
+                expense.total_amount = taxes.get('total_included')
+>>>>>>> e312eb7d21e... temp
 
     @api.depends("sheet_id.account_move_id.line_ids")
     def _compute_amount_residual(self):

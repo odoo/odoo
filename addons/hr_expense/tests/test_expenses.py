@@ -100,6 +100,10 @@ class TestExpenses(TestExpenseCommon):
             ],
         })
 
+<<<<<<< HEAD
+=======
+        # Check expense sheet values.
+>>>>>>> e312eb7d21e... temp
         self.assertRecordValues(expense_sheet, [{'state': 'draft', 'total_amount': 1500.0}])
 
         expense_sheet.action_submit_sheet()
