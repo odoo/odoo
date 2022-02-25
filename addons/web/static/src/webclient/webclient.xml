@@ -2,12 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="web.WebClient" owl="1">
-        <NotUpdatable t-if="!state.fullscreen">
+        <t t-if="!state.fullscreen">
             <NavBar/>
-        </NotUpdatable>
-        <NotUpdatable>
-            <ActionContainer/>
-        </NotUpdatable>
+        </t>
+        <ActionContainer/>
         <MainComponentsContainer/>
     </t>
 
