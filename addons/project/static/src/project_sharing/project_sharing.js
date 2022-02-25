@@ -6,10 +6,11 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ErrorHandler } from "@web/core/utils/components";
 import { session } from '@web/session';
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, useEffect } = owl;
 
-export class ProjectSharingWebClient extends Component {
+export class ProjectSharingWebClient extends LegacyComponent {
     setup() {
         window.parent.document.body.style.margin = "0"; // remove the margin in the parent body
         this.actionService = useService('action');
