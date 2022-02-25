@@ -303,7 +303,7 @@ class Warehouse(models.Model):
 
     def _create_or_update_sequences_and_picking_types(self):
         """ Create or update existing picking types for a warehouse.
-        Pikcing types are stored on the warehouse in a many2one. If the picking
+        Picking types are stored on the warehouse in a many2one. If the picking
         type exist this method will update it. The update values can be found in
         the method _get_picking_type_update_values. If the picking type does not
         exist it will be created with a new sequence associated to it.
@@ -896,8 +896,9 @@ class Warehouse(models.Model):
 
     def _get_picking_type_update_values(self):
         """ Return values in order to update the existing picking type when the
-        warehouse's delivery_steps or reception_steps are modify.
+        warehouse's delivery_steps or reception_steps are modified.
         """
+        self._check_company()
         input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
         return {
             'in_type_id': {
