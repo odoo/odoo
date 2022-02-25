@@ -490,7 +490,7 @@ class Lead(models.Model):
 
     def _compute_calendar_event_count(self):
         if self.ids:
-            meeting_data = self.env['calendar.event'].sudo().read_group([
+            meeting_data = self.env['calendar.event'].sudo()._read_group([
                 ('opportunity_id', 'in', self.ids)
             ], ['opportunity_id'], ['opportunity_id'])
             mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
@@ -762,7 +762,7 @@ class Lead(models.Model):
         # Remember date_deadline is required, we always have a value for it. Only
         # the earliest deadline per lead is kept.
         activity_asc = any('my_activity_date_deadline asc' in item for item in order_items)
-        my_lead_activities = self.env['mail.activity'].read_group(
+        my_lead_activities = self.env['mail.activity']._read_group(
             [('res_model', '=', self._name), ('user_id', '=', self.env.uid)],
             ['res_id', 'date_deadline:min'],
             ['res_id'],

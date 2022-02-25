@@ -46,7 +46,7 @@ class ChannelUsersRelation(models.Model):
     ]
 
     def _recompute_completion(self):
-        read_group_res = self.env['slide.slide.partner'].sudo().read_group(
+        read_group_res = self.env['slide.slide.partner'].sudo()._read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
              ('completed', '=', True),
@@ -286,14 +286,14 @@ class Channel(models.Model):
 
     @api.depends('channel_partner_ids.channel_id')
     def _compute_members_count(self):
-        read_group_res = self.env['slide.channel.partner'].sudo().read_group([('channel_id', 'in', self.ids)], ['channel_id'], 'channel_id')
+        read_group_res = self.env['slide.channel.partner'].sudo()._read_group([('channel_id', 'in', self.ids)], ['channel_id'], 'channel_id')
         data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
         for channel in self:
             channel.members_count = data.get(channel.id, 0)
 
     @api.depends('channel_partner_ids.channel_id', 'channel_partner_ids.completed')
     def _compute_members_done_count(self):
-        read_group_res = self.env['slide.channel.partner'].sudo().read_group(['&', ('channel_id', 'in', self.ids), ('completed', '=', True)], ['channel_id'], 'channel_id')
+        read_group_res = self.env['slide.channel.partner'].sudo()._read_group(['&', ('channel_id', 'in', self.ids), ('completed', '=', True)], ['channel_id'], 'channel_id')
         data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
         for channel in self:
             channel.members_done_count = data.get(channel.id, 0)
@@ -336,7 +336,7 @@ class Channel(models.Model):
         default_vals.update(dict((key, 0) for key in keys))
 
         result = dict((cid, dict(default_vals)) for cid in self.ids)
-        read_group_res = self.env['slide.slide'].read_group(
+        read_group_res = self.env['slide.slide']._read_group(
             [('active', '=', True), ('is_published', '=', True), ('channel_id', 'in', self.ids), ('is_category', '=', False)],
             ['channel_id', 'slide_category', 'likes', 'dislikes', 'total_views', 'completion_time'],
             groupby=['channel_id', 'slide_category'],

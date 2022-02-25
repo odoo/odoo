@@ -193,7 +193,7 @@ class Survey(models.Model):
         UserInput = self.env['survey.user_input']
         base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
-        read_group_res = UserInput.read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'scoring_percentage', 'scoring_success'], lazy=False)
+        read_group_res = UserInput._read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'scoring_percentage', 'scoring_success'], lazy=False)
         for item in read_group_res:
             stat[item['survey_id'][0]]['answer_count'] += item['__count']
             stat[item['survey_id'][0]]['answer_score_avg_total'] += item['scoring_percentage']
@@ -254,7 +254,7 @@ class Survey(models.Model):
 
         for survey in self:
             answer_count = 0
-            input_count = self.env['survey.user_input'].read_group(
+            input_count = self.env['survey.user_input']._read_group(
                 [('survey_id', '=', survey.id),
                  ('is_session_answer', '=', True),
                  ('state', '!=', 'done'),
@@ -275,7 +275,7 @@ class Survey(models.Model):
         context of sessions, so it should not matter too much. """
         for survey in self:
             answer_count = 0
-            input_line_count = self.env['survey.user_input.line'].read_group(
+            input_line_count = self.env['survey.user_input.line']._read_group(
                 [('question_id', '=', survey.session_question_id.id),
                  ('survey_id', '=', survey.id),
                  ('create_date', '>=', survey.session_start_time)],
@@ -1017,7 +1017,7 @@ class Survey(models.Model):
                 ('state', '=', 'done'),
                 ('test_entry', '=', False)
             ]
-        count_data_success = self.env['survey.user_input'].sudo().read_group(user_input_domain, ['scoring_success', 'id:count_distinct'], ['scoring_success'])
+        count_data_success = self.env['survey.user_input'].sudo()._read_group(user_input_domain, ['scoring_success', 'id:count_distinct'], ['scoring_success'])
         completed_count = self.env['survey.user_input'].sudo().search_count(user_input_domain + [('state', "=", "done")])
 
         scoring_success_count = 0

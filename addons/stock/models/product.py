@@ -172,15 +172,15 @@ class Product(models.Model):
         Quant = self.env['stock.quant'].with_context(active_test=False)
         domain_move_in_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_in
         domain_move_out_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_out
-        moves_in_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_in_todo, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
-        moves_out_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_out_todo, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
-        quants_res = dict((item['product_id'][0], (item['quantity'], item['reserved_quantity'])) for item in Quant.read_group(domain_quant, ['product_id', 'quantity', 'reserved_quantity'], ['product_id'], orderby='id'))
+        moves_in_res = dict((item['product_id'][0], item['product_qty']) for item in Move._read_group(domain_move_in_todo, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
+        moves_out_res = dict((item['product_id'][0], item['product_qty']) for item in Move._read_group(domain_move_out_todo, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
+        quants_res = dict((item['product_id'][0], (item['quantity'], item['reserved_quantity'])) for item in Quant._read_group(domain_quant, ['product_id', 'quantity', 'reserved_quantity'], ['product_id'], orderby='id'))
         if dates_in_the_past:
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
-            moves_in_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_in_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
-            moves_out_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_out_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
+            moves_in_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move._read_group(domain_move_in_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
+            moves_out_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move._read_group(domain_move_out_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
@@ -371,7 +371,7 @@ class Product(models.Model):
             domain_quant.append(('owner_id', '=', owner_id))
         if package_id:
             domain_quant.append(('package_id', '=', package_id))
-        quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'quantity'], ['product_id'], orderby='id')
+        quants_groupby = self.env['stock.quant']._read_group(domain_quant, ['product_id', 'quantity'], ['product_id'], orderby='id')
 
         # check if we need include zero values in result
         include_zero = (
@@ -398,7 +398,7 @@ class Product(models.Model):
         return list(product_ids)
 
     def _compute_nbr_reordering_rules(self):
-        read_group_res = self.env['stock.warehouse.orderpoint'].read_group(
+        read_group_res = self.env['stock.warehouse.orderpoint']._read_group(
             [('product_id', 'in', self.ids)],
             ['product_id', 'product_min_qty', 'product_max_qty'],
             ['product_id'])
@@ -593,7 +593,7 @@ class Product(models.Model):
         :rtype: defaultdict(float)
         """
         domain_quant = expression.AND([self._get_domain_locations()[0], [('product_id', 'in', self.ids)]])
-        quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'quantity'], ['product_id'], orderby='id')
+        quants_groupby = self.env['stock.quant']._read_group(domain_quant, ['product_id', 'quantity'], ['product_id'], orderby='id')
         currents = defaultdict(float)
         for c in quants_groupby:
             currents[c['product_id'][0]] = c['quantity']
@@ -601,7 +601,7 @@ class Product(models.Model):
 
     def _filter_to_unlink(self):
         domain = [('product_id', 'in', self.ids)]
-        lines = self.env['stock.lot'].read_group(domain, ['product_id'], ['product_id'])
+        lines = self.env['stock.lot']._read_group(domain, ['product_id'], ['product_id'])
         linked_product_ids = [group['product_id'][0] for group in lines]
         return super(Product, self - self.browse(linked_product_ids))._filter_to_unlink()
 
@@ -730,13 +730,13 @@ class ProductTemplate(models.Model):
 
     def _compute_nbr_moves(self):
         res = defaultdict(lambda: {'moves_in': 0, 'moves_out': 0})
-        incoming_moves = self.env['stock.move.line'].read_group([
+        incoming_moves = self.env['stock.move.line']._read_group([
                 ('product_id.product_tmpl_id', 'in', self.ids),
                 ('state', '=', 'done'),
                 ('picking_code', '=', 'incoming'),
                 ('date', '>=', fields.Datetime.now() - relativedelta(years=1))
             ], ['product_id'], ['product_id'])
-        outgoing_moves = self.env['stock.move.line'].read_group([
+        outgoing_moves = self.env['stock.move.line']._read_group([
                 ('product_id.product_tmpl_id', 'in', self.ids),
                 ('state', '=', 'done'),
                 ('picking_code', '=', 'outgoing'),
@@ -786,7 +786,7 @@ class ProductTemplate(models.Model):
 
     def _compute_nbr_reordering_rules(self):
         res = {k: {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0} for k in self.ids}
-        product_data = self.env['stock.warehouse.orderpoint'].read_group([('product_id.product_tmpl_id', 'in', self.ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'])
+        product_data = self.env['stock.warehouse.orderpoint']._read_group([('product_id.product_tmpl_id', 'in', self.ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'])
         for data in product_data:
             product = self.env['product.product'].browse([data['product_id'][0]])
             product_tmpl_id = product.product_tmpl_id.id

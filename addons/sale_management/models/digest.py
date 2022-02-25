@@ -16,7 +16,7 @@ class Digest(models.Model):
             raise AccessError(_("Do not have access, skip this data for user's digest email"))
         for record in self:
             start, end, company = record._get_kpi_compute_parameters()
-            all_channels_sales = self.env['sale.report'].read_group([
+            all_channels_sales = self.env['sale.report']._read_group([
                 ('date', '>=', start),
                 ('date', '<', end),
                 ('state', 'not in', ['draft', 'cancel', 'sent']),

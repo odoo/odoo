@@ -16,7 +16,7 @@ class MassMailing(models.Model):
         self.use_leads = self.env.user.has_group('crm.group_use_lead')
 
     def _compute_crm_lead_count(self):
-        lead_data = self.env['crm.lead'].with_context(active_test=False).sudo().read_group(
+        lead_data = self.env['crm.lead'].with_context(active_test=False).sudo()._read_group(
             [('source_id', 'in', self.source_id.ids)],
             ['source_id'], ['source_id'],
         )

@@ -80,7 +80,7 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_allocation_count(self):
         # Don't get allocations that are expired
         current_date = datetime.date.today()
-        data = self.env['hr.leave.allocation'].read_group([
+        data = self.env['hr.leave.allocation']._read_group([
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.active', '=', True),
             ('holiday_status_id.requires_allocation', '=', 'yes'),
@@ -98,7 +98,7 @@ class HrEmployeeBase(models.AbstractModel):
 
     def _compute_allocation_remaining_display(self):
         current_date = datetime.date.today()
-        data_leave = self.env['hr.leave'].read_group([
+        data_leave = self.env['hr.leave']._read_group([
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.active', '=', True),
             ('holiday_status_id.requires_allocation', '=', 'yes'),

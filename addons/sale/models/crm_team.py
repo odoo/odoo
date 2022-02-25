@@ -60,7 +60,7 @@ class CrmTeam(models.Model):
         remaining.quotations_count = 0
 
     def _compute_sales_to_invoice(self):
-        sale_order_data = self.env['sale.order'].read_group([
+        sale_order_data = self.env['sale.order']._read_group([
             ('team_id', 'in', self.ids),
             ('invoice_status','=','to invoice'),
         ], ['team_id'], ['team_id'])
@@ -95,7 +95,7 @@ class CrmTeam(models.Model):
     def _compute_sale_order_count(self):
         data_map = {}
         if self.ids:
-            sale_order_data = self.env['sale.order'].read_group([
+            sale_order_data = self.env['sale.order']._read_group([
                 ('team_id', 'in', self.ids),
                 ('state', '!=', 'cancel'),
             ], ['team_id'], ['team_id'])

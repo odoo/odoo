@@ -25,15 +25,15 @@ class Department(models.Model):
         today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
 
-        leave_data = Requests.read_group(
+        leave_data = Requests._read_group(
             [('department_id', 'in', self.ids),
              ('state', '=', 'confirm')],
             ['department_id'], ['department_id'])
-        allocation_data = Allocations.read_group(
+        allocation_data = Allocations._read_group(
             [('department_id', 'in', self.ids),
              ('state', '=', 'confirm')],
             ['department_id'], ['department_id'])
-        absence_data = Requests.read_group(
+        absence_data = Requests._read_group(
             [('department_id', 'in', self.ids), ('state', 'not in', ['cancel', 'refuse']),
              ('date_from', '<=', today_end), ('date_to', '>=', today_start)],
             ['department_id'], ['department_id'])

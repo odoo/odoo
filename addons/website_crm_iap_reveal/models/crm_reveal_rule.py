@@ -67,7 +67,7 @@ class CRMRevealRule(models.Model):
     ]
 
     def _compute_lead_count(self):
-        leads = self.env['crm.lead'].read_group([
+        leads = self.env['crm.lead']._read_group([
             ('reveal_rule_id', 'in', self.ids)
         ], fields=['reveal_rule_id', 'type'], groupby=['reveal_rule_id', 'type'], lazy=False)
         mapping = {(lead['reveal_rule_id'][0], lead['type']): lead['__count'] for lead in leads}

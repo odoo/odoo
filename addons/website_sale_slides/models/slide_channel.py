@@ -34,7 +34,7 @@ class Channel(models.Model):
         ]
         rg_data = dict(
             (item['product_id'][0], item['price_total'])
-            for item in self.env['sale.report'].read_group(domain, ['product_id', 'price_total'], ['product_id'])
+            for item in self.env['sale.report']._read_group(domain, ['product_id', 'price_total'], ['product_id'])
         )
         for channel in self:
             channel.product_sale_revenues = rg_data.get(channel.product_id.id, 0)

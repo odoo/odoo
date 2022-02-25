@@ -19,7 +19,7 @@ class ResPartner(models.Model):
         all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
-        pos_order_data = self.env['pos.order'].read_group(
+        pos_order_data = self.env['pos.order']._read_group(
             domain=[('partner_id', 'in', all_partners.ids)],
             fields=['partner_id'], groupby=['partner_id']
         )

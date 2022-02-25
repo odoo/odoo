@@ -27,7 +27,7 @@ class LunchProductCategory(models.Model):
     image_1920 = fields.Image(default=_default_image)
 
     def _compute_product_count(self):
-        product_data = self.env['lunch.product'].read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
+        product_data = self.env['lunch.product']._read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
         data = {product['category_id'][0]: product['category_id_count'] for product in product_data}
         for category in self:
             category.product_count = data.get(category.id, 0)

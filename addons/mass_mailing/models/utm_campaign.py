@@ -50,7 +50,7 @@ class UtmCampaign(models.Model):
     @api.depends('mailing_mail_ids')
     def _compute_mailing_mail_count(self):
         if self.ids:
-            mailing_data = self.env['mailing.mailing'].read_group(
+            mailing_data = self.env['mailing.mailing']._read_group(
                 [('campaign_id', 'in', self.ids), ('mailing_type', '=', 'mail')],
                 ['campaign_id', 'ab_testing_enabled'],
                 ['campaign_id', 'ab_testing_enabled'],

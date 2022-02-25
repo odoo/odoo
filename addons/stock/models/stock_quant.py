@@ -136,7 +136,7 @@ class StockQuant(models.Model):
         """ We look at the stock move lines associated with every quant to get the last count date.
         """
         self.last_count_date = False
-        groups = self.env['stock.move.line'].read_group(
+        groups = self.env['stock.move.line']._read_group(
             [
                 ('state', '=', 'done'),
                 ('is_inventory', '=', True),
@@ -207,7 +207,7 @@ class StockQuant(models.Model):
     def _compute_sn_duplicated(self):
         self.sn_duplicated = False
         domain = [('tracking', '=', 'serial'), ('lot_id', 'in', self.lot_id.ids), ('location_id.usage', 'in', ['internal', 'transit'])]
-        results = self.read_group(domain, ['lot_id'], ['lot_id'])
+        results = self._read_group(domain, ['lot_id'], ['lot_id'])
         duplicated_sn_ids = [x['lot_id'][0] for x in results if x['lot_id_count'] > 1]
         quants_with_duplicated_sn = self.env['stock.quant'].search([('lot_id', 'in', duplicated_sn_ids)])
         quants_with_duplicated_sn.sn_duplicated = True

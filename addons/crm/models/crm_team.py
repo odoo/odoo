@@ -70,7 +70,7 @@ class Team(models.Model):
         self.assignment_auto_enabled = auto_assign_enabled
 
     def _compute_lead_unassigned_count(self):
-        leads_data = self.env['crm.lead'].read_group([
+        leads_data = self.env['crm.lead']._read_group([
             ('team_id', 'in', self.ids),
             ('type', '=', 'lead'),
             ('user_id', '=', False),
@@ -85,7 +85,7 @@ class Team(models.Model):
             team.lead_all_assigned_month_count = sum(member.lead_month_count for member in team.crm_team_member_ids)
 
     def _compute_opportunities_data(self):
-        opportunity_data = self.env['crm.lead'].read_group([
+        opportunity_data = self.env['crm.lead']._read_group([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
@@ -97,7 +97,7 @@ class Team(models.Model):
             team.opportunities_amount = amounts.get(team.id, 0)
 
     def _compute_opportunities_overdue_data(self):
-        opportunity_data = self.env['crm.lead'].read_group([
+        opportunity_data = self.env['crm.lead']._read_group([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),

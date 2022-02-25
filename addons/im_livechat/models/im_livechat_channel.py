@@ -73,7 +73,7 @@ class ImLivechatChannel(models.Model):
 
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):
-        data = self.env['mail.channel'].read_group([
+        data = self.env['mail.channel']._read_group([
             ('livechat_channel_id', 'in', self._ids),
             ('has_message', '=', True)], ['__count'], ['livechat_channel_id'], lazy=False)
         channel_count = {x['livechat_channel_id'][0]: x['__count'] for x in data}

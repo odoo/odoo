@@ -37,7 +37,7 @@ class Digest(models.Model):
     def _compute_kpi_livechat_response_value(self):
         for record in self:
             start, end, company = record._get_kpi_compute_parameters()
-            response_time = self.env['im_livechat.report.operator'].sudo().read_group([
+            response_time = self.env['im_livechat.report.operator'].sudo()._read_group([
                 ('start_date', '>=', start), ('start_date', '<', end),
                 ('partner_id', '=', self.env.user.partner_id.id)], ['partner_id', 'time_to_answer'], ['partner_id'])
             record.kpi_livechat_response_value = "%.2f" % sum([response['time_to_answer'] for response in response_time]) or 0

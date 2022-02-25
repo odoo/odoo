@@ -14,7 +14,7 @@ class res_partner(models.Model):
         all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
-        purchase_order_groups = self.env['purchase.order'].read_group(
+        purchase_order_groups = self.env['purchase.order']._read_group(
             domain=[('partner_id', 'in', all_partners.ids)],
             fields=['partner_id'], groupby=['partner_id']
         )
@@ -33,7 +33,7 @@ class res_partner(models.Model):
         all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
-        supplier_invoice_groups = self.env['account.move'].read_group(
+        supplier_invoice_groups = self.env['account.move']._read_group(
             domain=[('partner_id', 'in', all_partners.ids),
                     ('move_type', 'in', ('in_invoice', 'in_refund'))],
             fields=['partner_id'], groupby=['partner_id']

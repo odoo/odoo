@@ -212,7 +212,7 @@ class HrExpense(models.Model):
             expense.label_convert_rate = rate_txt
 
     def _compute_attachment_number(self):
-        attachment_data = self.env['ir.attachment'].read_group([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
+        attachment_data = self.env['ir.attachment']._read_group([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
         attachment = dict((data['res_id'], data['res_id_count']) for data in attachment_data)
         for expense in self:
             expense.attachment_number = attachment.get(expense._origin.id, 0)
@@ -991,7 +991,7 @@ class HrExpenseSheet(models.Model):
 
     @api.depends('expense_line_ids')
     def _compute_expense_number(self):
-        read_group_result = self.env['hr.expense'].read_group([('sheet_id', 'in', self.ids)], ['sheet_id'], ['sheet_id'])
+        read_group_result = self.env['hr.expense']._read_group([('sheet_id', 'in', self.ids)], ['sheet_id'], ['sheet_id'])
         result = dict((data['sheet_id'][0], data['sheet_id_count']) for data in read_group_result)
         for sheet in self:
             sheet.expense_number = result.get(sheet.id, 0)

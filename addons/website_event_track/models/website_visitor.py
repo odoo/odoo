@@ -24,7 +24,7 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('event_track_visitor_ids.track_id', 'event_track_visitor_ids.is_wishlisted')
     def _compute_event_track_wishlisted_ids(self):
-        results = self.env['event.track.visitor'].read_group(
+        results = self.env['event.track.visitor']._read_group(
             [('visitor_id', 'in', self.ids), ('is_wishlisted', '=', True)],
             ['visitor_id', 'track_id:array_agg'],
             ['visitor_id']

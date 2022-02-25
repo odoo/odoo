@@ -86,12 +86,12 @@ class MrpWorkcenter(models.Model):
         result = {wid: {} for wid in self._ids}
         result_duration_expected = {wid: 0 for wid in self._ids}
         # Count Late Workorder
-        data = MrpWorkorder.read_group(
+        data = MrpWorkorder._read_group(
             [('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'waiting', 'ready')), ('date_planned_start', '<', datetime.datetime.now().strftime('%Y-%m-%d'))],
             ['workcenter_id'], ['workcenter_id'])
         count_data = dict((item['workcenter_id'][0], item['workcenter_id_count']) for item in data)
         # Count All, Pending, Ready, Progress Workorder
-        res = MrpWorkorder.read_group(
+        res = MrpWorkorder._read_group(
             [('workcenter_id', 'in', self.ids)],
             ['workcenter_id', 'state', 'duration_expected'], ['workcenter_id', 'state'],
             lazy=False)
@@ -129,7 +129,7 @@ class MrpWorkcenter(models.Model):
 
     def _compute_blocked_time(self):
         # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently ??
-        data = self.env['mrp.workcenter.productivity'].read_group([
+        data = self.env['mrp.workcenter.productivity']._read_group([
             ('date_start', '>=', fields.Datetime.to_string(datetime.datetime.now() - relativedelta.relativedelta(months=1))),
             ('workcenter_id', 'in', self.ids),
             ('date_end', '!=', False),
@@ -141,7 +141,7 @@ class MrpWorkcenter(models.Model):
 
     def _compute_productive_time(self):
         # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently
-        data = self.env['mrp.workcenter.productivity'].read_group([
+        data = self.env['mrp.workcenter.productivity']._read_group([
             ('date_start', '>=', fields.Datetime.to_string(datetime.datetime.now() - relativedelta.relativedelta(months=1))),
             ('workcenter_id', 'in', self.ids),
             ('date_end', '!=', False),
@@ -160,7 +160,7 @@ class MrpWorkcenter(models.Model):
                 order.oee = 0.0
 
     def _compute_performance(self):
-        wo_data = self.env['mrp.workorder'].read_group([
+        wo_data = self.env['mrp.workorder']._read_group([
             ('date_start', '>=', fields.Datetime.to_string(datetime.datetime.now() - relativedelta.relativedelta(months=1))),
             ('workcenter_id', 'in', self.ids),
             ('state', '=', 'done')], ['duration_expected', 'workcenter_id', 'duration'], ['workcenter_id'], lazy=False)
