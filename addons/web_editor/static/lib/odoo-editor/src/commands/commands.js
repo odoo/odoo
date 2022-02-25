@@ -19,6 +19,9 @@ import {
     insertText,
     isBlock,
     isBold,
+    isItalic,
+    isUnderline,
+    isStrikeThrough,
     isColorGradient,
     isContentTextNode,
     isShrunkBlock,
@@ -273,6 +276,45 @@ export function applyInlineStyle(editor, applyStyle) {
         }
     }
 }
+const styles = {
+    bold: {
+        is: isBold,
+        name: 'fontWeight',
+        value: 'bolder',
+    },
+    italic: {
+        is: isItalic,
+        name: 'fontStyle',
+        value: 'italic',
+    },
+    underline: {
+        is: isUnderline,
+        name: 'textDecoration',
+        value: 'underline',
+    },
+    strikeThrough: {
+        is: isStrikeThrough,
+        name: 'textDecoration',
+        value: 'line-through',
+    }
+}
+export function toggleFormat(editor, format) {
+    const selection = editor.document.getSelection();
+    if (!selection.rangeCount || selection.getRangeAt(0).collapsed) return;
+    getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
+    const style = styles[format];
+    const isAlreadyFormatted = getSelectedNodes(editor.editable)
+        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length)
+        .find(n => style.is(n.parentElement));
+    applyInlineStyle(editor, el => {
+        if (isAlreadyFormatted) {
+            const block = closestBlock(el);
+            el.style[style.name] = style.is(block) ? 'normal' : getComputedStyle(block)[style.name];
+        } else {
+            el.style[style.name] = style.value;
+        }
+    });
+}
 function addColumn(editor, beforeOrAfter) {
     getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
     const c = getInSelection(editor.document, 'td');
@@ -356,25 +398,10 @@ export const editorCommands = {
 
     // Formats
     // -------------------------------------------------------------------------
-    bold: editor => {
-        const selection = editor.document.getSelection();
-        if (!selection.rangeCount || selection.getRangeAt(0).collapsed) return;
-        getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
-        const isAlreadyBold = getSelectedNodes(editor.editable)
-            .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length)
-            .find(n => isBold(n.parentElement));
-        applyInlineStyle(editor, el => {
-            if (isAlreadyBold) {
-                const block = closestBlock(el);
-                el.style.fontWeight = isBold(block) ? 'normal' : getComputedStyle(block).fontWeight;
-            } else {
-                el.style.fontWeight = 'bolder';
-            }
-        });
-    },
-    italic: editor => editor.document.execCommand('italic'),
-    underline: editor => editor.document.execCommand('underline'),
-    strikeThrough: editor => editor.document.execCommand('strikeThrough'),
+    bold: editor => toggleFormat(editor, 'bold'),
+    italic: editor => toggleFormat(editor, 'italic'),
+    underline: editor => toggleFormat(editor, 'underline'),
+    strikeThrough: editor => toggleFormat(editor, 'strikeThrough'),
     removeFormat: editor => {
         editor.document.execCommand('removeFormat');
         for (const node of getTraversedNodes(editor.editable)) {

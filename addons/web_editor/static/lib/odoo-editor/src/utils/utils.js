@@ -867,6 +867,33 @@ export function isBold(node) {
     const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
     return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
 }
+/**
+ * Return true if the given node appears italic.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isItalic(node) {
+    return getComputedStyle(closestElement(node)).fontStyle === 'italic';
+}
+/**
+ * Return true if the given node appears underlined.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isUnderline(node) {
+    return getComputedStyle(closestElement(node)).textDecoration === 'underline';
+}
+/**
+ * Return true if the given node appears struck through.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isStrikeThrough(node) {
+    return getComputedStyle(closestElement(node)).textDecoration === 'line-through';
+}
 
 export function isUnbreakable(node) {
     if (!node || node.nodeType === Node.TEXT_NODE) {
