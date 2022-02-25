@@ -21,7 +21,9 @@ export class StateSelectionField extends Component {
         return this.props.record.isReadonly(this.props.name);
     }
     get label() {
-        return this.options.find((o) => o[0] === (this.props.value || "normal"))[1];
+        return this.props.value
+            ? this.options.find((o) => o[0] === this.props.value)[1]
+            : this.options[0][1];
     }
     get options() {
         return this.props.record.fields[this.props.name].selection;
