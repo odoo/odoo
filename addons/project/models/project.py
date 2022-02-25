@@ -158,34 +158,6 @@ class Project(models.Model):
     def _default_rating_status_period(self):
         return self.env['ir.config_parameter'].sudo().get_param('project.rating_status_period') or 'monthly'
 
-    def _compute_attached_docs_count(self):
-        self.env.cr.execute(
-            """
-            WITH docs AS (
-                 SELECT res_id as id, count(*) as count
-                   FROM ir_attachment
-                  WHERE res_model = 'project.project'
-                    AND res_id IN %(project_ids)s
-               GROUP BY res_id
-
-              UNION ALL
-
-                 SELECT t.project_id as id, count(*) as count
-                   FROM ir_attachment a
-                   JOIN project_task t ON a.res_model = 'project.task' AND a.res_id = t.id
-                  WHERE t.project_id IN %(project_ids)s
-               GROUP BY t.project_id
-            )
-            SELECT id, sum(count)
-              FROM docs
-          GROUP BY id
-            """,
-            {"project_ids": tuple(self.ids)}
-        )
-        docs_count = dict(self.env.cr.fetchall())
-        for project in self:
-            project.doc_count = docs_count.get(project.id, 0)
-
     def _compute_task_count(self):
         task_data = self.env['project.task'].read_group(
             [('project_id', 'in', self.ids),
@@ -286,7 +258,6 @@ class Project(models.Model):
             "- Invited portal users and all employees: employees may see everything."
             "   Invited portal users may see project and tasks followed by.\n"
             "   them or by someone of their company.")
-    doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
     allow_subtasks = fields.Boolean('Sub-tasks', default=lambda self: self.env.user.has_group('project.group_subtask_project'))
