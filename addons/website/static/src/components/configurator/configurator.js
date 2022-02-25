@@ -275,6 +275,7 @@ class PaletteSelectionScreen extends Component {
         this.router = useRouter();
         this.logoInputRef = useRef('logoSelectionInput');
         this.notification = useService("notification");
+        this.rpc = useService("rpc");
 
         onMounted(() => {
             if (this.state.logo) {
@@ -342,6 +343,7 @@ class FeaturesSelectionScreen extends Component {
     setup() {
         this.state = useStore();
         this.router = useRouter();
+        this.rpc = useService("rpc");
     }
 
     async buildWebsite() {

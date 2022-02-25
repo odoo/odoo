@@ -81,7 +81,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
                 open: false,
             });
 
-            const result = await this.rpc({
+            const result = await this.env.services.rpc({
                 route: '/board/add_to_dashboard',
                 params: {
                     action_id: this.env.action.id || false,

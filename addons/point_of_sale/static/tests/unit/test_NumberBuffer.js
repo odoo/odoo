@@ -5,6 +5,7 @@ odoo.define('point_of_sale.tests.NumberBuffer', function(require) {
     const makeTestEnvironment = require('web.test_env');
     const testUtils = require('web.test_utils');
     const { mount } = require('@web/../tests/helpers/utils');
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component, useState, xml } = owl;
 
@@ -17,7 +18,7 @@ odoo.define('point_of_sale.tests.NumberBuffer', function(require) {
         const target = testUtils.prepareTarget();
         const env = makeTestEnvironment();
 
-        class Root extends Component {
+        class Root extends LegacyComponent {
             setup() {
                 this.state = useState({ buffer: '' });
                 NumberBuffer.activate();

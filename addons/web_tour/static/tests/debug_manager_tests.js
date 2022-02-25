@@ -56,12 +56,12 @@ QUnit.module("Tours", (hooks) => {
         };
         const env = await makeTestEnv({ mockRPC });
 
-        const debugManager = await mount(DebugMenuParent, target, { env });
+        await mount(DebugMenuParent, target, { env });
 
-        await click(debugManager.el.querySelector("button.dropdown-toggle"));
+        await click(target.querySelector("button.dropdown-toggle"));
 
-        assert.containsOnce(debugManager.el, ".dropdown-item");
-        await click(debugManager.el.querySelector(".dropdown-item"));
+        assert.containsOnce(target, ".dropdown-item");
+        await click(target.querySelector(".dropdown-item"));
         assert.verifySteps(["consume"]);
     });
 });

@@ -4,6 +4,7 @@ import { _lt } from 'web.core';
 import fieldUtils from 'web.field_utils';
 import { ComponentAdapter, standaloneAdapter } from 'web.OwlCompatibility';
 import { FormViewDialog } from 'web.view_dialogs';
+import { useService } from "@web/core/utils/hooks";
 
 const { Component, onWillUpdateProps, useRef, useState } = owl;
 
@@ -61,6 +62,7 @@ export class OpenMilestone extends MilestoneComponent {
 
     setup() {
         super.setup();
+        this.rpc = useService("rpc");
         this.milestone = useState(this.props.milestone);
         this.state = useState({
             colorClass: this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "",

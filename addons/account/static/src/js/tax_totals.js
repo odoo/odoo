@@ -5,13 +5,14 @@ import session from 'web.session';
 import AbstractFieldOwl from 'web.AbstractFieldOwl';
 import fieldUtils from 'web.field_utils';
 import field_registry from 'web.field_registry_owl';
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, onPatched, onWillUpdateProps, useRef, useState } = owl;
 
 /**
     A line of some TaxTotalsComponent, giving the values of a tax group.
 **/
-class TaxGroupComponent extends Component {
+class TaxGroupComponent extends LegacyComponent {
     setup() {
         this.inputTax = useRef('taxValueInput');
         this.state = useState({value: 'readonly'});
