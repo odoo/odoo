@@ -3713,6 +3713,73 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+<<<<<<< HEAD
+=======
+        QUnit.test('many2one links form view call', async function (assert) {
+            assert.expect(5);
+
+            let serverData = {};
+            serverData.models = this.data;
+            serverData.models['turtle'].records[1].product_id = 37;
+            serverData.views= {
+                "partner,false,form": '<form string="Partners"> <field name="turtles"/> </form>',
+                "partner,false,search": '<search></search>',
+                'turtle,false,list':`
+                        <tree readonly="1">
+                            <field name="product_id" widget="many2one"/>
+                        </tree>`,
+                "product,false,search": '<search></search>',
+                "product,false,form": '<form></form>',
+            }
+            serverData.actions= {
+                1: {
+                    name: 'Partner',
+                    res_model: 'partner',
+                    res_id: 1,
+                    type: 'ir.actions.act_window',
+                    views: [[false, 'form']],
+                }
+            }
+
+            const webClient = await createWebClient({
+                serverData,
+                legacyParams: { withLegacyMockServer: true },
+                mockRPC: function (route, args){
+                     if (args.method === 'get_formview_action'){
+                        assert.step('get_formview_action')
+                        return {
+                            type: "ir.actions.act_window",
+                            res_model: "product",
+                            view_type: "form",
+                            view_mode: "form",
+                            views: [[false, "form"]],
+                            target: "current",
+                            res_id: args[0],
+                        };
+                     }
+                }
+            });
+            await doAction(webClient, 1);
+
+            assert.containsOnce(webClient, 'a.o_form_uri',
+                "should display 1 m2o link in form");
+
+            assert.containsN(webClient, '.breadcrumb-item', 1,
+                "Should only contain one breadcrumb at the start");
+
+            await testUtils.dom.click($(webClient.el).find('a.o_form_uri'));
+
+            await legacyExtraNextTick();
+
+            assert.verifySteps(['get_formview_action'])
+
+            assert.containsN(webClient, '.breadcrumb-item', 2,
+                "Should contain 2 breadcrumbs after the clicking on the link");
+
+            webClient.destroy();
+        });
+
+>>>>>>> 566167314e2... temp
         QUnit.module('Many2OneAvatar');
 
         QUnit.test('many2one_avatar widget in form view', async function (assert) {
