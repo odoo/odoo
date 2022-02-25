@@ -76,9 +76,9 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'product_quantity_pairs': [(self.product1, 10), (self.product2, 5)], 'uid': '00100-010-0001'},
-                {'product_quantity_pairs': [(self.product2, 7), (self.product3, 4)], 'uid': '00100-010-0002'},
-                {'product_quantity_pairs': [(self.product1, 1), (self.product3, 5), (self.product2, 3)], 'payments': [(self.bank_pm1, 230.25)], 'uid': '00100-010-0003'},
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 5)], 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product2, 7), (self.product3, 4)], 'uid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product1, 1), (self.product3, 5), (self.product2, 3)], 'payments': [(self.bank_pm1, 230.25)], 'uid': '00100-010-0003'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {},
@@ -169,9 +169,9 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'product_quantity_pairs': [(self.product3, 1), (self.product1, 6), (self.product2, 3)], 'uid': '00100-010-0001'},
-                {'product_quantity_pairs': [(self.product2, 20), (self.product1, 1)], 'payments': [(self.bank_pm1, 410.7)], 'uid': '00100-010-0002'},
-                {'product_quantity_pairs': [(self.product1, 10), (self.product3, 10)], 'payments': [(self.bank_pm1, 426.09)], 'customer': self.customer, 'is_invoiced': True, 'uid': '09876-098-0987'},
+                {'pos_order_lines_ui_args': [(self.product3, 1), (self.product1, 6), (self.product2, 3)], 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product2, 20), (self.product1, 1)], 'payments': [(self.bank_pm1, 410.7)], 'uid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product3, 10)], 'payments': [(self.bank_pm1, 426.09)], 'customer': self.customer, 'is_invoiced': True, 'uid': '09876-098-0987'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {
@@ -269,7 +269,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'product_quantity_pairs': [(self.product1, 3), (self.product2, 2), (self.product3, 1)], 'payments': [(self.cash_pm1, 104.01)], 'customer': self.customer, 'is_invoiced': True, 'uid': '12345-123-1234'},
+                {'pos_order_lines_ui_args': [(self.product1, 3), (self.product2, 2), (self.product3, 1)], 'payments': [(self.cash_pm1, 104.01)], 'customer': self.customer, 'is_invoiced': True, 'uid': '12345-123-1234'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {
