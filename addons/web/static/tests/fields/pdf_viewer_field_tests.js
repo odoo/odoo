@@ -73,7 +73,7 @@ QUnit.module("Fields", (hooks) => {
         );
         const iframeFile = target
             .querySelector(".o_field_widget iframe.o_pdfview_iframe")
-            .src.split("%2Fweb%2Fcontent")[1];
+            .dataset.src.split("%2Fweb%2Fcontent")[1];
         assert.strictEqual(
             iframeFile,
             "%3Fmodel%3Dpartner%26id%3D1%26field%3Ddocument#page=1",
@@ -105,7 +105,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(form, ".o_pdfview_iframe", "there is a PDF Viewer");
         const iframeFile = target
             .querySelector(".o_field_widget iframe.o_pdfview_iframe")
-            .src.split("?file=")[1];
+            .dataset.src.split("?file=")[1];
         assert.ok(/^blob%3/.test(iframeFile), "the file starts with 'blob:'");
     });
 });

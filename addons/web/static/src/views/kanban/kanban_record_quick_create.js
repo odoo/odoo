@@ -26,7 +26,7 @@ export class KanbanRecordQuickCreate extends Component {
 
         // Key Navigation
         // FIXME ? Maybe it will also validate even if enter is pressed outside of the quick create machin
-        useHotkey("enter", () => this.validate("add"));
+        useHotkey("enter", () => this.validate("add"), { bypassEditableProtection: true });
         useHotkey("escape", () => this.cancel(true));
     }
 

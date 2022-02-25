@@ -8230,7 +8230,9 @@ QUnit.module("Views", (hooks) => {
         });
 
         // since the field image is not set, kanban_image will generate an URL
-        const imageOnRecord = target.querySelectorAll('img[src*="/web/image"][src*="&id=1"]');
+        const imageOnRecord = target.querySelectorAll(
+            'img[data-src*="/web/image"][data-src*="&id=1"]'
+        );
         assert.strictEqual(imageOnRecord.length, 1, "partner with image display image by url");
     });
 
@@ -8276,7 +8278,7 @@ QUnit.module("Views", (hooks) => {
         const images = target.querySelectorAll("img");
         const placeholders = [];
         for (const [index, img] of images.entries()) {
-            if (img.src.indexOf(serverData.models.partner.records[index].image) === -1) {
+            if (img.dataset.src.indexOf(serverData.models.partner.records[index].image) === -1) {
                 // Then we display a placeholder
                 placeholders.push(img);
             }
@@ -8288,7 +8290,7 @@ QUnit.module("Views", (hooks) => {
             "partner with no image should display the placeholder"
         );
         assert.strictEqual(
-            images[0].src,
+            images[0].dataset.src,
             "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==",
             "The first partners non-placeholder image should be set"
         );
@@ -8314,14 +8316,16 @@ QUnit.module("Views", (hooks) => {
         // the field image is set, but we request the image for a specific id
         // -> for the record matching the ID, the base64 should be returned
         // -> for all the other records, the image should be displayed by url
-        const imageOnRecord = target.querySelectorAll('img[src*="/web/image"][src*="&id=1"]');
+        const imageOnRecord = target.querySelectorAll(
+            'img[data-src*="/web/image"][data-src*="&id=1"]'
+        );
         assert.strictEqual(
             imageOnRecord.length,
             serverData.models.partner.records.length - 1,
             "display image by url when requested for another record"
         );
         assert.strictEqual(
-            target.querySelector("img").src,
+            target.querySelector("img").dataset.src,
             "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==",
             "display image as value when requested for the record itself"
         );
@@ -8357,12 +8361,12 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(
             target,
-            'img[src*="/web/image"][src$="&id=1"]',
+            'img[data-src*="/web/image"][data-src$="&id=1"]',
             "image url should contain id of set partner_id"
         );
         assert.containsOnce(
             target,
-            'img[src*="/web/image"][src$="&id="]',
+            'img[data-src*="/web/image"][data-src$="&id="]',
             "image url should contain an empty id if partner_id is not set"
         );
     });
