@@ -68,7 +68,7 @@ from .tools.lru import LRU
 _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
 
-regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
+regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\.id)?(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
@@ -2246,11 +2246,16 @@ class BaseModel(metaclass=MetaModel):
             for key in ('field', 'groupby')
         }
         for order_part in orderby.split(','):
-            order_split = order_part.split()
+            order_split = order_part.split()  # potentially ["field:group_func", "desc"]
             order_field = order_split[0]
+            is_many2one_id = order_field.endswith(".id")
+            if is_many2one_id:
+                order_field = order_field[:-3]
             if order_field == 'id' or order_field in groupby_fields:
-                if self._fields[order_field.split(':')[0]].type == 'many2one':
-                    order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
+                order_field_name = order_field.split(':')[0]
+                if self._fields[order_field_name].type == 'many2one' and not is_many2one_id:
+                    order_clause = self._generate_order_by(order_part, query)
+                    order_clause = order_clause.replace('ORDER BY ', '')
                     if order_clause:
                         orderby_terms.append(order_clause)
                         groupby_terms += [order_term.split()[0] for order_term in order_clause.split(',')]
@@ -2412,6 +2417,25 @@ class BaseModel(metaclass=MetaModel):
             data['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
         del data['id']
         return data
+
+    @api.model
+    def _read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+        Executes exactly what the public read_group() does, except it doesn't
+        order many2one fields on their comodel's order but on their ID instead.
+        """
+        if not orderby:
+            if isinstance(groupby, str):
+                groupby = [groupby]
+            groupby_list = groupby[:1] if lazy else groupby
+            order_list = []
+            for order_spec in groupby_list:
+                field_name = order_spec.split(":")[0]  # field name could be formatted like "field:group_func"
+                if self._fields[field_name].type == 'many2one':
+                    order_spec = f"{field_name}.id"  # do not order by comodel's order
+                order_list.append(order_spec)
+            orderby = ','.join(order_list)
+        return self.read_group(domain, fields, groupby, offset, limit, orderby, lazy)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
