@@ -2,10 +2,11 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component } = owl;
 
-export class RtcLayoutMenu extends Component {
+export class RtcLayoutMenu extends LegacyComponent {
 
     /**
      * @override

@@ -3,10 +3,11 @@
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, onMounted, useRef } = owl;
 
-export class ActivityMarkDonePopover extends Component {
+export class ActivityMarkDonePopover extends LegacyComponent {
 
     /**
      * @override
