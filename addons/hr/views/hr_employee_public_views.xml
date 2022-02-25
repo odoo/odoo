@@ -10,7 +10,11 @@
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
                     <field name="job_title" string="Job Title"/>
                     <field name="department_id" string="Department"/>
+                    <field name="parent_id" string="Manager"/>
                     <field name="company_id" string="Company"/>
+                    <separator/>
+                    <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
+                    <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
                     <separator/>
                     <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
