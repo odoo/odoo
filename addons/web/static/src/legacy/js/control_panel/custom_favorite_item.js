@@ -6,6 +6,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
     const FavoriteMenu = require('web.FavoriteMenu');
     const { useAutofocus } = require("@web/core/utils/hooks");
     const { useModel } = require('web.Model');
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component, useState } = owl;
 
@@ -30,7 +31,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
      * Finally, there is a 'Save' button used to apply the current configuration
      * and save the context to a new filter.
      */
-    class CustomFavoriteItem extends Component {
+    class CustomFavoriteItem extends LegacyComponent {
         setup() {
             const favId = favoriteId++;
             this.useByDefaultId = `o_favorite_use_by_default_${favId}`;

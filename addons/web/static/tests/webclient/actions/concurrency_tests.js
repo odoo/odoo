@@ -9,6 +9,7 @@ import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import * as cpHelpers from "@web/../tests/search/helpers";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 const actionRegistry = registry.category("actions");
@@ -439,7 +440,7 @@ QUnit.module("ActionManager", (hooks) => {
         async function (assert) {
             assert.expect(3);
             const slowWillStartDef = testUtils.makeTestPromise();
-            class ClientAction extends Component {
+            class ClientAction extends LegacyComponent {
                 setup() {
                     owl.onWillStart(() => slowWillStartDef);
                 }
@@ -587,7 +588,7 @@ QUnit.module("ActionManager", (hooks) => {
         let def = Promise.resolve();
 
         let id = 1;
-        class ToyView extends Component {
+        class ToyView extends LegacyComponent {
             setup() {
                 this.id = id++;
                 assert.step(JSON.stringify(this.props.state || "no state"));

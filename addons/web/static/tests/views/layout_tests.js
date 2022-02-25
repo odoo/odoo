@@ -12,6 +12,7 @@ const { Component, xml, useChildSubEnv } = owl;
 
 const serviceRegistry = registry.category("services");
 
+let target;
 let serverData;
 
 QUnit.module("Views", (hooks) => {
@@ -43,6 +44,8 @@ QUnit.module("Views", (hooks) => {
 
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
+
+        target = getFixture();
     });
 
     QUnit.module("Layout");
@@ -58,13 +61,13 @@ QUnit.module("Views", (hooks) => {
         ToyComponent.components = { Layout };
 
         const env = await makeTestEnv({ config: {} });
-        const comp = await mount(ToyComponent, getFixture(), { env });
+        await mount(ToyComponent, getFixture(), { env });
 
-        assert.hasClass(comp.el, "o_toy_view o_view_sample_data");
-        assert.containsNone(comp, ".o_control_panel");
-        assert.containsNone(comp, ".o_component_with_search_panel");
-        assert.containsNone(comp, ".o_search_panel");
-        assert.containsOnce(comp, ".o_content > .toy_content");
+        assert.containsOnce(target, ".o_toy_view.o_view_sample_data");
+        assert.containsNone(target, ".o_control_panel");
+        assert.containsNone(target, ".o_component_with_search_panel");
+        assert.containsNone(target, ".o_search_panel");
+        assert.containsOnce(target, ".o_content > .toy_content");
     });
 
     QUnit.test("Simple rendering: with search", async (assert) => {
@@ -80,19 +83,19 @@ QUnit.module("Views", (hooks) => {
             </Layout>`;
         ToyComponent.components = { Layout };
 
-        const root = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             Component: ToyComponent,
             resModel: "foo",
             searchViewId: false,
         });
 
-        assert.hasClass(root.el, "o_toy_view");
-        assert.doesNotHaveClass(root.el, "o_view_sample_data");
-        assert.containsOnce(root, ".o_control_panel .o_cp_top_right .toy_search_bar");
-        assert.containsOnce(root, ".o_component_with_search_panel .o_search_panel");
-        assert.containsNone(root, ".o_cp_searchview");
-        assert.containsOnce(root, ".o_content > .toy_content");
+        assert.containsOnce(target, ".o_toy_view");
+        assert.containsNone(target, ".o_view_sample_data");
+        assert.containsOnce(target, ".o_control_panel .o_cp_top_right .toy_search_bar");
+        assert.containsOnce(target, ".o_component_with_search_panel .o_search_panel");
+        assert.containsNone(target, ".o_cp_searchview");
+        assert.containsOnce(target, ".o_content > .toy_content");
     });
 
     QUnit.test("Nested layouts", async (assert) => {
@@ -154,23 +157,23 @@ QUnit.module("Views", (hooks) => {
             </Layout>`;
         ToyA.components = { Layout, ToyB };
 
-        const root = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             Component: ToyA,
             resModel: "foo",
             searchViewId: false,
         });
 
-        assert.hasClass(root.el, "o_toy_a_view");
-        assert.doesNotHaveClass(root.el, "o_view_sample_data");
-        assert.containsOnce(root, ".o_content .o_toy_b_view .o_content .o_toy_c_view .o_content"); // Full chain of contents
-        assert.containsN(root, ".o_control_panel", 2); // Component C has hidden its control panel
-        assert.containsN(root, ".o_content.o_component_with_search_panel", 3);
-        assert.containsOnce(root, ".o_search_panel"); // Standard search panel
-        assert.containsN(root, ".o_toy_search_panel", 2); // Custom search panels
-        assert.containsOnce(root, ".toy_a_search");
-        assert.containsOnce(root, ".toy_b_breadcrumbs");
-        assert.containsOnce(root, ".toy_c_content");
+        assert.containsOnce(target, ".o_toy_a_view");
+        assert.containsNone(target, ".o_view_sample_data");
+        assert.containsOnce(target, ".o_content .o_toy_b_view .o_content .o_toy_c_view .o_content"); // Full chain of contents
+        assert.containsN(target, ".o_control_panel", 2); // Component C has hidden its control panel
+        assert.containsN(target, ".o_content.o_component_with_search_panel", 3);
+        assert.containsOnce(target, ".o_search_panel"); // Standard search panel
+        assert.containsN(target, ".o_toy_search_panel", 2); // Custom search panels
+        assert.containsOnce(target, ".toy_a_search");
+        assert.containsOnce(target, ".toy_b_breadcrumbs");
+        assert.containsOnce(target, ".toy_c_content");
     });
 
     QUnit.test("Custom control panel", async (assert) => {
@@ -186,7 +189,7 @@ QUnit.module("Views", (hooks) => {
         class ControlPanel extends Component {}
         ControlPanel.template = xml`<div class="o_toy_search_panel" />`;
 
-        const root = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             Component: ToyComponent,
             resModel: "foo",
@@ -194,9 +197,9 @@ QUnit.module("Views", (hooks) => {
             config: { ControlPanel },
         });
 
-        assert.containsOnce(root, ".o_toy_content");
-        assert.containsOnce(root, ".o_toy_search_panel");
-        assert.containsNone(root, ".o_control_panel");
+        assert.containsOnce(target, ".o_toy_content");
+        assert.containsOnce(target, ".o_toy_search_panel");
+        assert.containsNone(target, ".o_control_panel");
     });
 
     QUnit.test("Custom search panel", async (assert) => {
@@ -212,7 +215,7 @@ QUnit.module("Views", (hooks) => {
         class SearchPanel extends Component {}
         SearchPanel.template = xml`<div class="o_toy_search_panel" />`;
 
-        const root = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             Component: ToyComponent,
             resModel: "foo",
@@ -220,9 +223,9 @@ QUnit.module("Views", (hooks) => {
             config: { SearchPanel },
         });
 
-        assert.containsOnce(root, ".o_toy_content");
-        assert.containsOnce(root, ".o_toy_search_panel");
-        assert.containsNone(root, ".o_search_panel");
+        assert.containsOnce(target, ".o_toy_content");
+        assert.containsOnce(target, ".o_toy_search_panel");
+        assert.containsNone(target, ".o_search_panel");
     });
 
     QUnit.test("Custom banner: no bannerRoute in env", async (assert) => {
@@ -238,7 +241,7 @@ QUnit.module("Views", (hooks) => {
         class Banner extends Component {}
         Banner.template = xml`<div class="o_toy_banner" />`;
 
-        const root = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             Component: ToyComponent,
             resModel: "foo",
@@ -246,8 +249,8 @@ QUnit.module("Views", (hooks) => {
             config: { Banner },
         });
 
-        assert.containsOnce(root, ".o_toy_content");
-        assert.containsNone(root, ".o_toy_banner");
+        assert.containsOnce(target, ".o_toy_content");
+        assert.containsNone(target, ".o_toy_banner");
     });
 
     QUnit.test("Custom banner: with bannerRoute in env", async (assert) => {
@@ -263,7 +266,7 @@ QUnit.module("Views", (hooks) => {
         class Banner extends Component {}
         Banner.template = xml`<div class="o_toy_banner" />`;
 
-        const root = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             Component: ToyComponent,
             resModel: "foo",
@@ -271,7 +274,7 @@ QUnit.module("Views", (hooks) => {
             config: { Banner, bannerRoute: "toy/banner/route" },
         });
 
-        assert.containsOnce(root, ".o_toy_content");
-        assert.containsOnce(root, ".o_toy_banner");
+        assert.containsOnce(target, ".o_toy_content");
+        assert.containsOnce(target, ".o_toy_banner");
     });
 });

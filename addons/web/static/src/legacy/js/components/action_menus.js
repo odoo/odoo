@@ -4,6 +4,7 @@ odoo.define('web.ActionMenus', function (require) {
     const Context = require('web.Context');
     const DropdownMenu = require('web.DropdownMenu');
     const Registry = require('web.Registry');
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const {
         Component,
@@ -27,7 +28,7 @@ odoo.define('web.ActionMenus', function (require) {
      * Action menu.
      * @extends Component
      */
-    class ActionMenus extends Component {
+    class ActionMenus extends LegacyComponent {
         setup() {
             onWillStart(async () => {
                 this.actionItems = await this._setActionItems(this.props);

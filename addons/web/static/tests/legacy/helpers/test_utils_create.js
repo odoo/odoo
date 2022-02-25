@@ -22,6 +22,7 @@ odoo.define('web.test_utils_create', function (require) {
     const Widget = require('web.Widget');
     const { destroy, getFixture, mount, useChild } = require('@web/../tests/helpers/utils');
     const { registerCleanup } = require("@web/../tests/helpers/cleanup");
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component, onMounted, onWillStart, useState, xml } = owl;
 
@@ -82,7 +83,7 @@ odoo.define('web.test_utils_create', function (require) {
             throw new Error(`Argument "constructor" must be an Owl Component.`);
         }
         const cleanUp = await testUtilsMock.addMockEnvironmentOwl(Component, params);
-        class Parent extends Component {
+        class Parent extends LegacyComponent {
             setup() {
                 this.Component = constructor;
                 this.state = useState(params.props || {});
@@ -157,7 +158,7 @@ odoo.define('web.test_utils_create', function (require) {
             ControlPanel: { archNodes: controlPanelInfo.children, },
         };
 
-        class Parent extends Component {
+        class Parent extends LegacyComponent {
             setup() {
                 this.searchModel = new ActionModel(extensions, globalConfig);
                 this.state = useState(props);

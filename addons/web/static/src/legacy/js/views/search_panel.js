@@ -1,6 +1,7 @@
 /** @odoo-module alias=web.searchPanel **/
 
     import { Model, useModel } from "web.Model";
+    import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { Component, onMounted, onWillStart, onWillUpdateProps, useRef, useState, useSubEnv } = owl;
 
@@ -14,7 +15,7 @@
      * Its state is directly affected by its model (@see SearchPanelModelExtension).
      * @extends Component
      */
-    class SearchPanel extends Component {
+    class SearchPanel extends LegacyComponent {
         setup() {
             useSubEnv({ searchModel: this.props.searchModel });
 

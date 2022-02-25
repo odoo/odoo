@@ -2,11 +2,10 @@
 
 import { throttleForAnimation } from "../utils/timing";
 
-const { onWillUnmount, useComponent, useEffect, useExternalListener, useRef } = owl;
+const { onWillUnmount, useEffect, useExternalListener, useRef } = owl;
 
 /**
  * @typedef {{
- *  popper?: string;
  *  container?: HTMLElement;
  *  margin?: number;
  *  position?: Position;
@@ -233,12 +232,12 @@ function reposition(reference, popper, options) {
  * the original position is used.
  *
  * @param {HTMLElement | (()=>HTMLElement)} reference
+ * @param {string} popper
  * @param {Options} options
  */
-export function usePosition(reference, options) {
+export function usePosition(reference, popper, options) {
     options = { ...DEFAULTS, ...options };
-    const { popper } = options;
-    const popperRef = popper ? useRef(popper) : useComponent();
+    const popperRef = useRef(popper);
     const getReference = reference instanceof HTMLElement ? () => reference : reference;
     const update = () => {
         const ref = getReference();

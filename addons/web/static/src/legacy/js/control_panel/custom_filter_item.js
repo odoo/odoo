@@ -8,6 +8,7 @@ odoo.define('web.CustomFilterItem', function (require) {
     const { FIELD_OPERATORS, FIELD_TYPES } = require('web.searchUtils');
     const field_utils = require('web.field_utils');
     const { useModel } = require('web.Model');
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component, useState } = owl;
 
@@ -43,7 +44,7 @@ odoo.define('web.CustomFilterItem', function (require) {
      *                         [date_field, '<=', y],
      *                     ]
      */
-    class CustomFilterItem extends Component {
+    class CustomFilterItem extends LegacyComponent {
         setup() {
             this.model = useModel('searchModel');
 

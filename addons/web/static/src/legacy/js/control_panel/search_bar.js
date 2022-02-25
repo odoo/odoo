@@ -6,6 +6,7 @@ odoo.define('web.SearchBar', function (require) {
     const { useAutofocus } = require("@web/core/utils/hooks");
     const { useModel } = require('web.Model');
     const { fuzzyTest } = require('@web/core/utils/search');
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component, onMounted, onWillUnmount, toRaw, useExternalListener, useState } = owl;
     const CHAR_FIELDS = ['char', 'html', 'many2many', 'many2one', 'one2many', 'text'];
@@ -36,7 +37,7 @@ odoo.define('web.SearchBar', function (require) {
      *    records having this exact value.
      * @extends Component
      */
-    class SearchBar extends Component {
+    class SearchBar extends LegacyComponent {
         setup() {
             this.inputRef = useAutofocus();
             this.model = useModel('searchModel');

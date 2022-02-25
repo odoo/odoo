@@ -5,6 +5,7 @@ import { useAutofocus, useBus, useListener, useService } from "@web/core/utils/h
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { click, destroy, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, onMounted, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -14,7 +15,7 @@ QUnit.module("utils", () => {
         QUnit.module("useAutofocus");
 
         QUnit.test("useAutofocus: simple usecase", async function (assert) {
-            class MyComponent extends Component {
+            class MyComponent extends LegacyComponent {
                 setup() {
                     this.inputRef = useAutofocus();
                 }
@@ -40,7 +41,7 @@ QUnit.module("utils", () => {
         });
 
         QUnit.test("useAutofocus: conditional autofocus", async function (assert) {
-            class MyComponent extends Component {
+            class MyComponent extends LegacyComponent {
                 setup() {
                     this.inputRef = useAutofocus();
                     this.showInput = true;
@@ -112,7 +113,7 @@ QUnit.module("utils", () => {
         QUnit.module("useBus");
 
         QUnit.test("useBus hook: simple usecase", async function (assert) {
-            class MyComponent extends Component {
+            class MyComponent extends LegacyComponent {
                 setup() {
                     useBus(this.env.bus, "test-event", this.myCallback);
                 }
@@ -138,7 +139,7 @@ QUnit.module("utils", () => {
         QUnit.module("useListener");
 
         QUnit.test("useListener: simple usecase", async function (assert) {
-            class MyComponent extends Component {
+            class MyComponent extends LegacyComponent {
                 setup() {
                     useListener("click", () => assert.step("click"));
                 }
@@ -154,7 +155,7 @@ QUnit.module("utils", () => {
         });
 
         QUnit.test("useListener: event delegation", async function (assert) {
-            class MyComponent extends Component {
+            class MyComponent extends LegacyComponent {
                 setup() {
                     this.flag = true;
                     useListener("click", "button", () => assert.step("click"));
@@ -185,7 +186,7 @@ QUnit.module("utils", () => {
         });
 
         QUnit.test("useListener: event delegation with capture option", async function (assert) {
-            class MyComponent extends Component {
+            class MyComponent extends LegacyComponent {
                 setup() {
                     this.flag = false;
                     useListener("click", "button", () => assert.step("click"), { capture: true });
@@ -217,7 +218,7 @@ QUnit.module("utils", () => {
         QUnit.module("useService");
 
         QUnit.test("useService: unavailable service", async function (assert) {
-            class MyComponent extends Component {
+            class MyComponent extends LegacyComponent {
                 setup() {
                     useService("toy_service");
                 }
@@ -234,7 +235,7 @@ QUnit.module("utils", () => {
         });
 
         QUnit.test("useService: service that returns null", async function (assert) {
-            class MyComponent extends Component {
+            class MyComponent extends LegacyComponent {
                 setup() {
                     this.toyService = useService("toy_service");
                 }

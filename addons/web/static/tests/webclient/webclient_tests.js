@@ -13,6 +13,7 @@ import { WebClient } from "@web/webclient/webclient";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { fakeTitleService } from "../helpers/mock_services";
 import { destroy, getFixture, mount, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 const mainComponentRegistry = registry.category("main_components");
@@ -47,7 +48,7 @@ QUnit.test("can be rendered", async (assert) => {
 
 QUnit.test("can render a main component", async (assert) => {
     assert.expect(1);
-    class MyComponent extends Component {}
+    class MyComponent extends LegacyComponent {}
     MyComponent.template = xml`<span class="chocolate">MyComponent</span>`;
     clearRegistryWithCleanup(mainComponentRegistry);
     mainComponentRegistry.add("mycomponent", { Component: MyComponent });
@@ -74,7 +75,7 @@ QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
         },
     });
 
-    class MyComponent extends Component {
+    class MyComponent extends LegacyComponent {
         /** @param {MouseEvent} ev */
         onclick(ev) {
             assert.step(ev.ctrlKey ? "ctrl-click" : "click");

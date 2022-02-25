@@ -1,5 +1,6 @@
 /** @odoo-module **/
 import { DROPDOWN } from "./dropdown";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component } = owl;
 
@@ -12,7 +13,7 @@ const ParentClosingMode = {
     AllParents: "all",
 };
 
-export class DropdownItem extends Component {
+export class DropdownItem extends LegacyComponent {
     /**
      * Tells the parent dropdown that an item was selected and closes the
      * parent(s) dropdown according the the parentClosingMode prop.

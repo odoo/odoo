@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useService } from "@web/core/utils/hooks";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, useRef } = owl;
 
@@ -22,7 +23,7 @@ const { Component, useRef } = owl;
  * @param {string} [props.multi_upload=false] Whether the input should allow
  *      to upload multiple files at once.
  */
-export class FileInput extends Component {
+export class FileInput extends LegacyComponent {
     setup() {
         this.http = useService("http");
         this.fileInputRef = useRef("file-input");

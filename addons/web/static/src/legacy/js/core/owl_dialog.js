@@ -8,6 +8,7 @@ odoo.define('web.OwlDialog', function (require) {
         'small': 'modal-sm',
     };
     const { renderToString } = require('@web/core/utils/render');
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     /**
      * Dialog (owl version)
@@ -16,7 +17,7 @@ odoo.define('web.OwlDialog', function (require) {
      * is roughly the same as the legacy dialog, the only exception being the buttons.
      * @extends Component
      **/
-    class Dialog extends Component {
+    class Dialog extends LegacyComponent {
         /**
          * @param {Object} [props]
          * @param {(boolean|string)} [props.backdrop='static'] The kind of modal backdrop

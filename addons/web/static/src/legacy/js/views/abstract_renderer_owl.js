@@ -1,5 +1,6 @@
 /** @odoo-module alias=web.AbstractRendererOwl **/
 
+import { LegacyComponent } from "@web/legacy/legacy_component";
 const { Component, onMounted, onPatched } = owl;
 
 // Renderers may display sample data when there is no real data to display. In
@@ -13,7 +14,7 @@ const FOCUSABLE_ELEMENTS = [
     '[tabindex="0"]'
 ].map((sel) => `:scope ${sel}`).join(', ');
 
-class AbstractRenderer extends Component {
+class AbstractRenderer extends LegacyComponent {
 
     setup() {
         // Defines the elements suppressed when in demo data. This must be a list

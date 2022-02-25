@@ -6,10 +6,11 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import { symmetricalDifference } from "@web/core/utils/arrays";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, useState } = owl;
 
-export class SwitchCompanyMenu extends Component {
+export class SwitchCompanyMenu extends LegacyComponent {
     setup() {
         this.companyService = useService("company");
         this.currentCompany = this.companyService.currentCompany;

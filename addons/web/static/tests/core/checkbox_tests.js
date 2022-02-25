@@ -34,9 +34,12 @@ QUnit.module("Components", (hooks) => {
         Parent.template = xml`<CheckBox>ragabadabadaba</CheckBox>`;
         Parent.components = { CheckBox };
 
-        const parent = await mount(Parent, target, { env });
+        await mount(Parent, target, { env });
         assert.containsOnce(target, "div.custom-checkbox");
-        assert.strictEqual(parent.el.innerText, "rugubudubudubu");
+        assert.strictEqual(
+            target.querySelector("div.custom-checkbox").textContent,
+            "rugubudubudubu"
+        );
     });
 
     QUnit.test("call onChange prop when some change occurs", async (assert) => {

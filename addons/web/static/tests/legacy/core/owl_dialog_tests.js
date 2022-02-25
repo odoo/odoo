@@ -15,6 +15,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
         destroy,
     } = require("@web/../tests/helpers/utils");
     const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component, useState, xml } = owl;
     const EscapeKey = { key: 'Escape', keyCode: 27, which: 27 };
@@ -25,7 +26,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
         QUnit.test("Rendering of all props", async function (assert) {
             assert.expect(36);
 
-            class SubComponent extends Component {
+            class SubComponent extends LegacyComponent {
                 // Handlers
                 _onClick() {
                     assert.step('subcomponent_clicked');
@@ -33,7 +34,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             }
             SubComponent.template = xml`<div class="o_subcomponent" t-esc="props.text" t-on-click="_onClick"/>`;
 
-            class Parent extends Component {
+            class Parent extends LegacyComponent {
                 setup() {
                     this.state = useState({ textContent: "sup" });
                 }
@@ -174,7 +175,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             assert.expect(23);
 
             const { legacyEnv } = await makeLegacyDialogMappingTestEnv();
-            class Parent extends Component {
+            class Parent extends LegacyComponent {
                 setup() {
                     this.dialogIds = useState([]);
                 }
@@ -277,7 +278,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             assert.expect(9);
             const { legacyEnv, env } = await makeLegacyDialogMappingTestEnv();
 
-            class OwlDialogWrapper extends Component {
+            class OwlDialogWrapper extends LegacyComponent {
                 setup() {
                     this.env = legacyEnv;
                     this.__owl__.childEnv = legacyEnv;
@@ -295,7 +296,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
                     this.contentClass = this.props.contentClass;
                 }
             }
-            class Parent extends Component {
+            class Parent extends LegacyComponent {
                 setup() {
                     this.dialogs = useState([]);
                 }
@@ -357,7 +358,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 return modal;
             }
 
-            class Parent1 extends Component {
+            class Parent1 extends LegacyComponent {
                 setup() {
                 }
             }
@@ -371,7 +372,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 env: makeTestEnvironment(),
             });
 
-            class Parent2 extends Component {
+            class Parent2 extends LegacyComponent {
                 setup() {
                     this.state = useState({ showSecondDialog: true });
                 }
