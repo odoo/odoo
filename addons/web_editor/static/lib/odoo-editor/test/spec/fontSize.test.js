@@ -22,5 +22,12 @@ describe('FontSize', () => {
                 contentAfter: '<h1><span style="font-size: 36px;">[ab]</span></h1><p>cd</p>',
             });
         });
+        it('should get ready to type with a different font size', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[]cd</p>',
+                stepFunction: setFontSize('36px'),
+                contentAfter: '<p>ab<span style="font-size: 36px;">[]\u200B</span>cd</p>',
+            });
+        });
     });
 });

@@ -883,7 +883,7 @@ export function isItalic(node) {
  * @returns {boolean}
  */
 export function isUnderline(node) {
-    return getComputedStyle(closestElement(node)).textDecoration === 'underline';
+    return getComputedStyle(closestElement(node)).textDecorationLine === 'underline';
 }
 /**
  * Return true if the given node appears struck through.
@@ -892,7 +892,7 @@ export function isUnderline(node) {
  * @returns {boolean}
  */
 export function isStrikeThrough(node) {
-    return getComputedStyle(closestElement(node)).textDecoration === 'line-through';
+    return getComputedStyle(closestElement(node)).textDecorationLine === 'line-through';
 }
 
 export function isUnbreakable(node) {
@@ -1415,6 +1415,7 @@ export function insertText(sel, content) {
     sel.getRangeAt(0).insertNode(txt);
     restore();
     setSelection(...boundariesOut(txt), false);
+    return txt;
 }
 
 /**
@@ -1468,6 +1469,18 @@ export function fillEmpty(el) {
         setSelection(zws, 0, zws, 0);
     }
     return fillers;
+}
+/**
+ * Takes a selection (assumed to be collapsed) and insert a zero-width space at
+ * its anchor point. Then, select that zero-width space.
+ *
+ * @param {Selection} selection
+ */
+export function insertAndSelectZws(selection) {
+    const offset = selection.anchorOffset;
+    const zws = insertText(selection, '\u200B');
+    splitTextNode(zws, offset);
+    selection.getRangeAt(0).selectNode(zws);
 }
 /**
  * Removes the given node if invisible and all its invisible ancestors.
