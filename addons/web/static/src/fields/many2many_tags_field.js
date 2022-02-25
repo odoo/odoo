@@ -46,20 +46,7 @@ Many2ManyTagsField.supportedTypes = ["many2many"];
 Many2ManyTagsField.fieldsToFetch = {
     display_name: { name: "display_name", type: "char" },
 };
-Many2ManyTagsField.RECORD_COLORS = [
-    _lt("No color"),
-    _lt("Red"),
-    _lt("Orange"),
-    _lt("Yellow"),
-    _lt("Light blue"),
-    _lt("Dark purple"),
-    _lt("Salmon pink"),
-    _lt("Medium blue"),
-    _lt("Dark blue"),
-    _lt("Fushia"),
-    _lt("Green"),
-    _lt("Purple"),
-];
+Many2ManyTagsField.RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 Many2ManyTagsField.convertAttrsToProps = (attrs) => {
     return {
         colorField: attrs.options.color_field,

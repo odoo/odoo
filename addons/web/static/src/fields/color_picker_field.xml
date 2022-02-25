@@ -2,14 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ColorPickerField" owl="1">
-        <div>
-            <t t-if="!state.isExpanded">
-                <button t-on-click.prevent.stop="toggle" role="menuitem" t-att-title="color" t-att-aria-label="color" t-attf-class="{{'btn o_colorlist_item_color_' + props.value || 0 }}"/>
-            </t>
-            <t t-else="">
-                <ColorList colors="constructor.RECORD_COLORS" onColorSelected.bind="switchColor"/>
-            </t>
-        </div>
+        <ColorList colors="constructor.RECORD_COLORS" onColorSelected.bind="switchColor" togglerColor="props.value || 0"/>
     </t>
 
 </templates>

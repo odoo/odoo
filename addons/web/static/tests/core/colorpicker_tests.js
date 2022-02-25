@@ -14,7 +14,6 @@ let target;
 /**
  * @param {typeof ColorPicker} Picker
  * @param {Object} props
- * @param {DateTime} props.date
  * @returns {Promise<ColorPicker>}
  */
 const mountPicker = async (Picker, props) => {

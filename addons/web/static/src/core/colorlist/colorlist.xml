@@ -2,9 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ColorList" owl="1">
-        <div class="o_colorlist" aria-atomic="true">
-            <t t-foreach="props.colors" t-as="color" t-key="color">
-                <button t-on-click.prevent.stop="() => this.onColorSelected(color_index)" role="menuitem" t-att-title="color" t-att-aria-label="color" t-attf-class="{{'btn o_colorlist_item_color_' + color_index }}"/>
+        <div class="o_colorlist" aria-atomic="true" t-ref="colorlist">
+            <t t-if="props.togglerColor !== undefined and !state.isExpanded">
+                <button t-on-click.prevent.stop="onToggle" role="menuitem" t-att-title="colors[props.togglerColor]" t-att-aria-label="colors[props.togglerColor]" t-attf-class="{{'btn o_colorlist_toggler o_colorlist_item_color_' + props.togglerColor }}"/>
+            </t>
+            <t t-else="" t-foreach="props.colors" t-as="colorId" t-key="colorId">
+                <button t-on-click.prevent.stop="() => this.onColorSelected(colorId)" role="menuitem" t-att-title="colors[colorId]" t-att-aria-label="colors[colorId]" t-attf-class="{{'btn o_colorlist_item_color_' + colorId }}"/>
             </t>
         </div>
     </t>
