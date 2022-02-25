@@ -114,4 +114,4 @@ class TestTOTP(HttpCase):
         }
         response = self.url_open("/web/session/authenticate", data=json.dumps(payload), headers=headers)
         data = response.json()
-        self.assertEqual(data['error']['data']['message'], "Reniewing an expired session for user that has multi-factor-authentication is not supported. Please use /web/login instead.")
+        self.assertEqual(data['result']['uid'], None)

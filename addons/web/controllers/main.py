@@ -1191,6 +1191,8 @@ class Session(http.Controller):
 
     @http.route('/web/session/get_session_info', type='json', auth="user")
     def get_session_info(self):
+        # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
+        request.session.should_touch = True
         return request.env['ir.http'].session_info()
 
     @http.route('/web/session/authenticate', type='json', auth="none")
@@ -1199,7 +1201,9 @@ class Session(http.Controller):
             raise AccessError("Database not found.")
         pre_uid = request.session.authenticate(db, login, password)
         if pre_uid != request.session.uid:
-            raise AccessError("Reniewing an expired session for user that has multi-factor-authentication is not supported. Please use /web/login instead.")
+            # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@) and Android
+            # Correct behavior should be to raise AccessError("Renewing an expired session for user that has multi-factor-authentication is not supported. Please use /web/login instead.")
+            return {'uid': None}
 
         request.session.db = db
         registry = odoo.modules.registry.Registry(db)
