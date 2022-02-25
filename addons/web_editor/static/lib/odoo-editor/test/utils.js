@@ -412,6 +412,12 @@ export async function click(el, options) {
     await nextTickFrame();
 }
 
+export async function keydown(editable, key, shiftKey) {
+    const ev = new KeyboardEvent('keydown', { key, shiftKey: !!shiftKey });
+    editable.dispatchEvent(ev);
+    await nextTickFrame();
+}
+
 export async function deleteForward(editor) {
     editor.execCommand('oDeleteForward');
 }
