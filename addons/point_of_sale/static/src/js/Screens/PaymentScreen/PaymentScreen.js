@@ -58,20 +58,17 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         }
         addNewPaymentLine({ detail: paymentMethod }) {
             // original function: click_paymentmethods
-            if (this.currentOrder.electronic_payment_in_progress()) {
+            let result = this.currentOrder.add_paymentline(paymentMethod);
+            if (result){
+                NumberBuffer.reset();
+                return true;
+            }
+            else{
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Error'),
                     body: this.env._t('There is already an electronic payment in progress.'),
                 });
                 return false;
-            } else {
-                this.currentOrder.add_paymentline(paymentMethod);
-                NumberBuffer.reset();
-                this.payment_interface = paymentMethod.payment_terminal;
-                if (this.payment_interface) {
-                    this.currentOrder.selected_paymentline.set_payment_status('pending');
-                }
-                return true;
             }
         }
         _updateSelectedPaymentline() {
