@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models, _, _lt
 
 
 class Project(models.Model):
@@ -41,7 +41,7 @@ class Project(models.Model):
         if self.user_has_groups('mrp.group_mrp_user'):
             buttons.extend([{
                 'icon': 'wrench',
-                'text': _('Manufacturing Orders'),
+                'text': _lt('Manufacturing Orders'),
                 'number': self.production_count,
                 'action_type': 'object',
                 'action': 'action_view_mrp_production',
