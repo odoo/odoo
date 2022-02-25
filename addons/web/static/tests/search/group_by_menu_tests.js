@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { patchWithCleanup } from "../helpers/utils";
+import { getFixture, patchWithCleanup } from "../helpers/utils";
 import {
     getFacetTexts,
     isItemSelected,
@@ -15,6 +15,7 @@ import {
     toggleMenuItemOption,
 } from "./helpers";
 
+let target;
 let serverData;
 QUnit.module("Search", (hooks) => {
     hooks.beforeEach(async () => {
@@ -40,6 +41,7 @@ QUnit.module("Search", (hooks) => {
             setTimeout: (fn) => fn(),
             clearTimeout: () => {},
         });
+        target = getFixture();
     });
 
     QUnit.module("GroupByMenu");
@@ -49,7 +51,7 @@ QUnit.module("Search", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            const controlPanel = await makeWithSearch({
+            await makeWithSearch({
                 serverData,
                 resModel: "foo",
                 Component: ControlPanel,
@@ -58,18 +60,18 @@ QUnit.module("Search", (hooks) => {
                 searchViewFields: {},
             });
 
-            await toggleGroupByMenu(controlPanel);
+            await toggleGroupByMenu(target);
 
-            assert.containsNone(controlPanel, ".o_menu_item");
-            assert.containsNone(controlPanel, ".dropdown-divider");
-            assert.containsNone(controlPanel, ".o_add_custom_group_menu");
+            assert.containsNone(target, ".o_menu_item");
+            assert.containsNone(target, ".dropdown-divider");
+            assert.containsNone(target, ".o_add_custom_group_menu");
         }
     );
 
     QUnit.test("simple rendering with no groupby", async function (assert) {
         assert.expect(3);
 
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -77,17 +79,17 @@ QUnit.module("Search", (hooks) => {
             searchViewId: false,
         });
 
-        await toggleGroupByMenu(controlPanel);
+        await toggleGroupByMenu(target);
 
-        assert.containsNone(controlPanel, ".o_menu_item");
-        assert.containsNone(controlPanel, ".dropdown-divider");
-        assert.containsOnce(controlPanel, ".o_add_custom_group_menu");
+        assert.containsNone(target, ".o_menu_item");
+        assert.containsNone(target, ".dropdown-divider");
+        assert.containsOnce(target, ".o_add_custom_group_menu");
     });
 
     QUnit.test("simple rendering with a single groupby", async function (assert) {
         assert.expect(4);
 
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -100,12 +102,12 @@ QUnit.module("Search", (hooks) => {
                 `,
         });
 
-        await toggleGroupByMenu(controlPanel);
+        await toggleGroupByMenu(target);
 
-        assert.containsOnce(controlPanel, ".o_menu_item");
-        assert.strictEqual(controlPanel.el.querySelector(".o_menu_item").innerText.trim(), "Foo");
-        assert.containsOnce(controlPanel, ".dropdown-divider");
-        assert.containsOnce(controlPanel, ".o_add_custom_group_menu");
+        assert.containsOnce(target, ".o_menu_item");
+        assert.strictEqual(target.querySelector(".o_menu_item").innerText.trim(), "Foo");
+        assert.containsOnce(target, ".dropdown-divider");
+        assert.containsOnce(target, ".o_add_custom_group_menu");
     });
 
     QUnit.test('toggle a "simple" groupby in groupby menu works', async function (assert) {
@@ -124,33 +126,33 @@ QUnit.module("Search", (hooks) => {
                 `,
         });
 
-        await toggleGroupByMenu(controlPanel);
+        await toggleGroupByMenu(target);
 
         assert.deepEqual(controlPanel.env.searchModel.groupBy, []);
-        assert.deepEqual(getFacetTexts(controlPanel), []);
-        assert.notOk(isItemSelected(controlPanel, "Foo"));
+        assert.deepEqual(getFacetTexts(target), []);
+        assert.notOk(isItemSelected(target, "Foo"));
 
-        await toggleMenuItem(controlPanel, "Foo");
+        await toggleMenuItem(target, "Foo");
 
         assert.deepEqual(controlPanel.env.searchModel.groupBy, ["foo"]);
-        assert.deepEqual(getFacetTexts(controlPanel), ["Foo"]);
+        assert.deepEqual(getFacetTexts(target), ["Foo"]);
         assert.containsOnce(
-            controlPanel.el.querySelector(".o_searchview .o_searchview_facet"),
+            target.querySelector(".o_searchview .o_searchview_facet"),
             "span.oi.oi-layers.o_searchview_facet_label"
         );
-        assert.ok(isItemSelected(controlPanel, "Foo"));
+        assert.ok(isItemSelected(target, "Foo"));
 
-        await toggleMenuItem(controlPanel, "Foo");
+        await toggleMenuItem(target, "Foo");
 
         assert.deepEqual(controlPanel.env.searchModel.groupBy, []);
-        assert.deepEqual(getFacetTexts(controlPanel), []);
-        assert.notOk(isItemSelected(controlPanel, "Foo"));
+        assert.deepEqual(getFacetTexts(target), []);
+        assert.notOk(isItemSelected(target, "Foo"));
     });
 
     QUnit.test('toggle a "simple" groupby quickly does not crash', async function (assert) {
         assert.expect(1);
 
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -163,10 +165,10 @@ QUnit.module("Search", (hooks) => {
                 `,
         });
 
-        await toggleGroupByMenu(controlPanel);
+        await toggleGroupByMenu(target);
 
-        toggleMenuItem(controlPanel, "Foo");
-        toggleMenuItem(controlPanel, "Foo");
+        toggleMenuItem(target, "Foo");
+        toggleMenuItem(target, "Foo");
 
         assert.ok(true);
     });
@@ -190,20 +192,20 @@ QUnit.module("Search", (hooks) => {
                 context: { search_default_group_by_foo: 1 },
             });
 
-            await toggleGroupByMenu(controlPanel);
+            await toggleGroupByMenu(target);
 
-            assert.deepEqual(getFacetTexts(controlPanel), ["Foo"]);
+            assert.deepEqual(getFacetTexts(target), ["Foo"]);
             assert.deepEqual(controlPanel.env.searchModel.groupBy, ["foo"]);
-            assert.ok(isItemSelected(controlPanel, "Foo"));
+            assert.ok(isItemSelected(target, "Foo"));
 
-            await removeFacet(controlPanel, "Foo");
+            await removeFacet(target, "Foo");
 
-            assert.deepEqual(getFacetTexts(controlPanel), []);
+            assert.deepEqual(getFacetTexts(target), []);
             assert.deepEqual(controlPanel.env.searchModel.groupBy, []);
 
-            await toggleGroupByMenu(controlPanel);
+            await toggleGroupByMenu(target);
 
-            assert.notOk(isItemSelected(controlPanel, "Foo"));
+            assert.notOk(isItemSelected(target, "Foo"));
         }
     );
 
@@ -224,16 +226,16 @@ QUnit.module("Search", (hooks) => {
             context: { search_default_date: 1 },
         });
 
-        await toggleGroupByMenu(controlPanel);
+        await toggleGroupByMenu(target);
 
         assert.deepEqual(controlPanel.env.searchModel.groupBy, ["date_field:week"]);
 
-        await toggleMenuItem(controlPanel, "Date");
+        await toggleMenuItem(target, "Date");
 
-        assert.ok(isOptionSelected(controlPanel, "Date", "Week"));
+        assert.ok(isOptionSelected(target, "Date", "Week"));
 
         assert.deepEqual(
-            [...controlPanel.el.querySelectorAll(".o_item_option")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_item_option")].map((el) => el.innerText),
             ["Year", "Quarter", "Month", "Week", "Day"]
         );
 
@@ -265,12 +267,12 @@ QUnit.module("Search", (hooks) => {
             { description: "Year", facetTexts: [], selectedoptions: [], groupBy: [] },
         ];
         for (const s of steps) {
-            await toggleMenuItemOption(controlPanel, "Date", s.description);
+            await toggleMenuItemOption(target, "Date", s.description);
 
             assert.deepEqual(controlPanel.env.searchModel.groupBy, s.groupBy);
-            assert.deepEqual(getFacetTexts(controlPanel), s.facetTexts);
+            assert.deepEqual(getFacetTexts(target), s.facetTexts);
             s.selectedoptions.forEach((description) => {
-                assert.ok(isOptionSelected(controlPanel, "Date", description));
+                assert.ok(isOptionSelected(target, "Date", description));
             });
         }
     });
@@ -278,7 +280,7 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("interval options are correctly grouped and ordered", async function (assert) {
         assert.expect(8);
 
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -294,53 +296,53 @@ QUnit.module("Search", (hooks) => {
             context: { search_default_bar: 1 },
         });
 
-        assert.deepEqual(getFacetTexts(controlPanel), ["Bar"]);
+        assert.deepEqual(getFacetTexts(target), ["Bar"]);
 
         // open menu 'Group By'
-        await toggleGroupByMenu(controlPanel);
+        await toggleGroupByMenu(target);
 
         // Open the groupby 'Date'
-        await toggleMenuItem(controlPanel, "Date");
+        await toggleMenuItem(target, "Date");
         // select option 'week'
-        await toggleMenuItemOption(controlPanel, "Date", "Week");
+        await toggleMenuItemOption(target, "Date", "Week");
 
-        assert.deepEqual(getFacetTexts(controlPanel), ["Bar>Date: Week"]);
+        assert.deepEqual(getFacetTexts(target), ["Bar>Date: Week"]);
 
         // select option 'day'
-        await toggleMenuItemOption(controlPanel, "Date", "Day");
+        await toggleMenuItemOption(target, "Date", "Day");
 
-        assert.deepEqual(getFacetTexts(controlPanel), ["Bar>Date: Week>Date: Day"]);
+        assert.deepEqual(getFacetTexts(target), ["Bar>Date: Week>Date: Day"]);
 
         // select option 'year'
-        await toggleMenuItemOption(controlPanel, "Date", "Year");
+        await toggleMenuItemOption(target, "Date", "Year");
 
-        assert.deepEqual(getFacetTexts(controlPanel), ["Bar>Date: Year>Date: Week>Date: Day"]);
+        assert.deepEqual(getFacetTexts(target), ["Bar>Date: Year>Date: Week>Date: Day"]);
 
         // select 'Foo'
-        await toggleMenuItem(controlPanel, "Foo");
+        await toggleMenuItem(target, "Foo");
 
-        assert.deepEqual(getFacetTexts(controlPanel), ["Bar>Date: Year>Date: Week>Date: Day>Foo"]);
+        assert.deepEqual(getFacetTexts(target), ["Bar>Date: Year>Date: Week>Date: Day>Foo"]);
 
         // select option 'quarter'
-        await toggleMenuItem(controlPanel, "Date");
-        await toggleMenuItemOption(controlPanel, "Date", "Quarter");
+        await toggleMenuItem(target, "Date");
+        await toggleMenuItemOption(target, "Date", "Quarter");
 
-        assert.deepEqual(getFacetTexts(controlPanel), [
+        assert.deepEqual(getFacetTexts(target), [
             "Bar>Date: Year>Date: Quarter>Date: Week>Date: Day>Foo",
         ]);
 
         // unselect 'Bar'
-        await toggleMenuItem(controlPanel, "Bar");
+        await toggleMenuItem(target, "Bar");
 
-        assert.deepEqual(getFacetTexts(controlPanel), [
+        assert.deepEqual(getFacetTexts(target), [
             "Date: Year>Date: Quarter>Date: Week>Date: Day>Foo",
         ]);
 
         // unselect option 'week'
-        await toggleMenuItem(controlPanel, "Date");
-        await toggleMenuItemOption(controlPanel, "Date", "Week");
+        await toggleMenuItem(target, "Date");
+        await toggleMenuItemOption(target, "Date", "Week");
 
-        assert.deepEqual(getFacetTexts(controlPanel), ["Date: Year>Date: Quarter>Date: Day>Foo"]);
+        assert.deepEqual(getFacetTexts(target), ["Date: Year>Date: Quarter>Date: Day>Foo"]);
     });
 
     QUnit.test("default groupbys can be ordered", async function (assert) {
@@ -366,13 +368,13 @@ QUnit.module("Search", (hooks) => {
             "date_field:week",
             "birthday:month",
         ]);
-        assert.deepEqual(getFacetTexts(controlPanel), ["Date: Week>Birthday: Month"]);
+        assert.deepEqual(getFacetTexts(target), ["Date: Week>Birthday: Month"]);
     });
 
     QUnit.test("a separator in groupbys does not cause problems", async function (assert) {
         assert.expect(23);
 
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -387,51 +389,51 @@ QUnit.module("Search", (hooks) => {
                 `,
         });
 
-        await toggleGroupByMenu(controlPanel);
-        await toggleMenuItem(controlPanel, "Date");
-        await toggleMenuItemOption(controlPanel, "Date", "Day");
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Date");
+        await toggleMenuItemOption(target, "Date", "Day");
 
-        assert.ok(isItemSelected(controlPanel, "Date"));
-        assert.notOk(isItemSelected(controlPanel, "Bar"));
-        assert.ok(isOptionSelected(controlPanel, "Date", "Day"), "selected");
-        assert.deepEqual(getFacetTexts(controlPanel), ["Date: Day"]);
+        assert.ok(isItemSelected(target, "Date"));
+        assert.notOk(isItemSelected(target, "Bar"));
+        assert.ok(isOptionSelected(target, "Date", "Day"), "selected");
+        assert.deepEqual(getFacetTexts(target), ["Date: Day"]);
 
-        await toggleMenuItem(controlPanel, "Bar");
-        await toggleMenuItem(controlPanel, "Date");
+        await toggleMenuItem(target, "Bar");
+        await toggleMenuItem(target, "Date");
 
-        assert.ok(isItemSelected(controlPanel, "Date"));
-        assert.ok(isItemSelected(controlPanel, "Bar"));
-        assert.ok(isOptionSelected(controlPanel, "Date", "Day"), "selected");
-        assert.deepEqual(getFacetTexts(controlPanel), ["Date: Day>Bar"]);
+        assert.ok(isItemSelected(target, "Date"));
+        assert.ok(isItemSelected(target, "Bar"));
+        assert.ok(isOptionSelected(target, "Date", "Day"), "selected");
+        assert.deepEqual(getFacetTexts(target), ["Date: Day>Bar"]);
 
-        await toggleMenuItemOption(controlPanel, "Date", "Quarter");
+        await toggleMenuItemOption(target, "Date", "Quarter");
 
-        assert.ok(isItemSelected(controlPanel, "Date"));
-        assert.ok(isItemSelected(controlPanel, "Bar"));
-        assert.ok(isOptionSelected(controlPanel, "Date", "Quarter"), "selected");
-        assert.ok(isOptionSelected(controlPanel, "Date", "Day"), "selected");
-        assert.deepEqual(getFacetTexts(controlPanel), ["Date: Quarter>Date: Day>Bar"]);
+        assert.ok(isItemSelected(target, "Date"));
+        assert.ok(isItemSelected(target, "Bar"));
+        assert.ok(isOptionSelected(target, "Date", "Quarter"), "selected");
+        assert.ok(isOptionSelected(target, "Date", "Day"), "selected");
+        assert.deepEqual(getFacetTexts(target), ["Date: Quarter>Date: Day>Bar"]);
 
-        await toggleMenuItem(controlPanel, "Bar");
-        await toggleMenuItem(controlPanel, "Date");
+        await toggleMenuItem(target, "Bar");
+        await toggleMenuItem(target, "Date");
 
-        assert.ok(isItemSelected(controlPanel, "Date"));
-        assert.notOk(isItemSelected(controlPanel, "Bar"));
-        assert.ok(isOptionSelected(controlPanel, "Date", "Quarter"), "selected");
-        assert.ok(isOptionSelected(controlPanel, "Date", "Day"), "selected");
-        assert.deepEqual(getFacetTexts(controlPanel), ["Date: Quarter>Date: Day"]);
+        assert.ok(isItemSelected(target, "Date"));
+        assert.notOk(isItemSelected(target, "Bar"));
+        assert.ok(isOptionSelected(target, "Date", "Quarter"), "selected");
+        assert.ok(isOptionSelected(target, "Date", "Day"), "selected");
+        assert.deepEqual(getFacetTexts(target), ["Date: Quarter>Date: Day"]);
 
-        await removeFacet(controlPanel);
+        await removeFacet(target);
 
-        assert.deepEqual(getFacetTexts(controlPanel), []);
+        assert.deepEqual(getFacetTexts(target), []);
 
-        await toggleGroupByMenu(controlPanel);
-        await toggleMenuItem(controlPanel, "Date");
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Date");
 
-        assert.notOk(isItemSelected(controlPanel, "Date"));
-        assert.notOk(isItemSelected(controlPanel, "Bar"));
-        assert.notOk(isOptionSelected(controlPanel, "Date", "Quarter"), "selected");
-        assert.notOk(isOptionSelected(controlPanel, "Date", "Day"), "selected");
+        assert.notOk(isItemSelected(target, "Date"));
+        assert.notOk(isItemSelected(target, "Bar"));
+        assert.notOk(isOptionSelected(target, "Date", "Quarter"), "selected");
+        assert.notOk(isOptionSelected(target, "Date", "Day"), "selected");
     });
 
     QUnit.test("falsy search default groupbys are not activated", async function (assert) {
@@ -453,6 +455,6 @@ QUnit.module("Search", (hooks) => {
         });
 
         assert.deepEqual(controlPanel.env.searchModel.groupBy, []);
-        assert.deepEqual(getFacetTexts(controlPanel), []);
+        assert.deepEqual(getFacetTexts(target), []);
     });
 });

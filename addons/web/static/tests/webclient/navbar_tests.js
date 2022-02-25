@@ -18,12 +18,13 @@ import {
     patchWithCleanup,
     makeDeferred,
 } from "../helpers/utils";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
 
-class MySystrayItem extends Component {}
+class MySystrayItem extends LegacyComponent {}
 MySystrayItem.template = xml`<li class="my-item">my item</li>`;
 let baseConfig;
 
@@ -142,13 +143,13 @@ QUnit.test("navbar can display systray items", async (assert) => {
 });
 
 QUnit.test("navbar can display systray items ordered based on their sequence", async (assert) => {
-    class MyItem1 extends Component {}
+    class MyItem1 extends LegacyComponent {}
     MyItem1.template = xml`<li class="my-item-1">my item 1</li>`;
-    class MyItem2 extends Component {}
+    class MyItem2 extends LegacyComponent {}
     MyItem2.template = xml`<li class="my-item-2">my item 2</li>`;
-    class MyItem3 extends Component {}
+    class MyItem3 extends LegacyComponent {}
     MyItem3.template = xml`<li class="my-item-3">my item 3</li>`;
-    class MyItem4 extends Component {}
+    class MyItem4 extends LegacyComponent {}
     MyItem4.template = xml`<li class="my-item-4">my item 4</li>`;
 
     clearRegistryWithCleanup(systrayRegistry);

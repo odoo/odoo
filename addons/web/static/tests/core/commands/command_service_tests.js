@@ -20,6 +20,7 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "../../helpers/utils";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 
@@ -36,7 +37,7 @@ export async function editSearchBar(searchValue) {
     await nextTick();
 }
 
-class TestComponent extends Component {
+class TestComponent extends LegacyComponent {
     get DialogContainer() {
         return registry.category("main_components").get("DialogContainer");
     }
@@ -136,13 +137,13 @@ QUnit.test("useCommand hook when the activeElement change", async (assert) => {
         }
     }
 
-    class OtherComponent extends Component {
+    class OtherComponent extends LegacyComponent {
         setup() {
-            useActiveElement();
+            useActiveElement("active");
             useCommand("I'm taking the throne", () => {});
         }
     }
-    OtherComponent.template = xml`<div></div>`;
+    OtherComponent.template = xml`<div t-ref="active"></div>`;
 
     await mount(MyComponent, target, { env });
     triggerHotkey("control+k");
@@ -199,12 +200,12 @@ QUnit.test("global command with hotkey", async (assert) => {
     await nextTick();
     assert.verifySteps([globalHotkey, hotkey]);
 
-    class MyComponent extends Component {
+    class MyComponent extends LegacyComponent {
         setup() {
-            useActiveElement();
+            useActiveElement("active");
         }
     }
-    MyComponent.template = xml`<div></div>`;
+    MyComponent.template = xml`<div t-ref="active"></div>`;
     await mount(MyComponent, target, { env });
 
     triggerHotkey("a");
@@ -217,7 +218,7 @@ QUnit.test("global command with hotkey", async (assert) => {
 QUnit.test("data-hotkey added to command palette", async (assert) => {
     assert.expect(8);
 
-    class MyComponent extends Component {
+    class MyComponent extends LegacyComponent {
         onClick() {
             assert.step("Hodor");
         }
@@ -277,7 +278,7 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
         hotkey,
     });
 
-    class MyComponent extends Component {
+    class MyComponent extends LegacyComponent {
         onClickB() {
             assert.step("B");
         }
@@ -762,7 +763,7 @@ QUnit.test("command categories", async (assert) => {
 QUnit.test("data-command-category", async (assert) => {
     assert.expect(3);
 
-    class MyComponent extends Component {}
+    class MyComponent extends LegacyComponent {}
     MyComponent.components = { TestComponent };
     MyComponent.template = xml`
     <div>
@@ -803,7 +804,7 @@ QUnit.test("data-command-category", async (assert) => {
 });
 
 QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
-    class MyComponent extends Component {}
+    class MyComponent extends LegacyComponent {}
     MyComponent.components = { TestComponent };
     MyComponent.template = xml`
     <div>
@@ -844,7 +845,7 @@ QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
         },
     });
 
-    class MyComponent extends Component {}
+    class MyComponent extends LegacyComponent {}
     MyComponent.components = { TestComponent };
     MyComponent.template = xml`
         <div>
@@ -886,7 +887,7 @@ QUnit.test(
             overlayModifier: "alt+control",
         });
 
-        class MyComponent extends Component {}
+        class MyComponent extends LegacyComponent {}
         MyComponent.components = { TestComponent };
         MyComponent.template = xml`
     <div>
@@ -919,7 +920,7 @@ QUnit.test("display shortcuts correctly for MacOS with a new overlayModifier", a
         overlayModifier: "alt+control",
     });
 
-    class MyComponent extends Component {}
+    class MyComponent extends LegacyComponent {}
     MyComponent.components = { TestComponent };
     MyComponent.template = xml`
     <div>

@@ -26,6 +26,7 @@ import {
     setupWebClientRegistries,
 } from "./../helpers";
 import { errorService } from "@web/core/errors/error_service";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 
@@ -181,7 +182,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("properly load client actions", async function (assert) {
         assert.expect(3);
-        class ClientAction extends Component {}
+        class ClientAction extends LegacyComponent {}
         ClientAction.template = xml`<div class="o_client_action_test">Hello World</div>`;
         actionRegistry.add("HelloWorldTest", ClientAction);
         const mockRPC = async function (route, args) {
@@ -1013,7 +1014,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("concurrent hashchange during action mounting -- 1", async (assert) => {
         assert.expect(5);
 
-        class MyAction extends Component {
+        class MyAction extends LegacyComponent {
             setup() {
                 owl.onMounted(() => {
                     assert.step("myAction mounted");
@@ -1044,7 +1045,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         const baseURL = new URL(browser.location.href).toString();
 
-        class MyAction extends Component {
+        class MyAction extends LegacyComponent {
             setup() {
                 owl.onMounted(() => {
                     assert.step("myAction mounted");

@@ -7,6 +7,7 @@ import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
 import { useAssets } from "@web/core/assets";
 import { renderToString } from "@web/core/utils/render";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, onWillUnmount, useEffect, useRef } = owl;
 
@@ -38,7 +39,7 @@ function shortenLabel(label) {
     return shortLabel;
 }
 
-export class GraphRenderer extends Component {
+export class GraphRenderer extends LegacyComponent {
     setup() {
         this.model = this.props.model;
 

@@ -3,10 +3,11 @@
 import { loadAssets } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 import { useActionLinks } from "@web/views/helpers/view_hook";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, markup, onWillStart, xml } = owl;
 
-export class OnboardingBanner extends Component {
+export class OnboardingBanner extends LegacyComponent {
     setup() {
         this.rpc = useService("rpc");
         this.user = useService("user");

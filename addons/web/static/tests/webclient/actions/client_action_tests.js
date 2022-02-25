@@ -8,6 +8,7 @@ import testUtils from "web.test_utils";
 import { registerCleanup } from "../../helpers/cleanup";
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 
@@ -99,7 +100,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("can execute client actions from tag name", async function (assert) {
         assert.expect(4);
-        class ClientAction extends Component {}
+        class ClientAction extends LegacyComponent {}
         ClientAction.template = xml`<div class="o_client_action_test">Hello World</div>`;
         actionRegistry.add("HelloWorldTest", ClientAction);
 
@@ -231,7 +232,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("action can use a custom control panel (legacy)", async function (assert) {
         assert.expect(1);
-        class CustomControlPanel extends Component {}
+        class CustomControlPanel extends LegacyComponent {}
         CustomControlPanel.template = xml`
         <div class="custom-control-panel">My custom control panel</div>
       `;
@@ -327,7 +328,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("ClientAction receives breadcrumbs and exports title (wowl)", async (assert) => {
         assert.expect(4);
-        class ClientAction extends Component {
+        class ClientAction extends LegacyComponent {
             setup() {
                 this.breadcrumbTitle = "myOwlAction";
                 const { breadcrumbs } = this.env.config;
@@ -358,7 +359,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("ClientAction receives arbitrary props from doAction (wowl)", async (assert) => {
         assert.expect(1);
-        class ClientAction extends Component {
+        class ClientAction extends LegacyComponent {
             setup() {
                 assert.strictEqual(this.props.division, "bell");
             }

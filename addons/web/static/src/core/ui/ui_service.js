@@ -6,7 +6,7 @@ import { debounce } from "@web/core/utils/timing";
 import { BlockUI } from "./block_ui";
 import { browser } from "@web/core/browser/browser";
 
-const { EventBus, useComponent, useEffect, useRef } = owl;
+const { EventBus, useEffect, useRef } = owl;
 
 export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
 
@@ -21,9 +21,12 @@ export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
  *
  * @param {string} refName
  */
-export function useActiveElement(refName = null) {
+export function useActiveElement(refName) {
+    if (!refName) {
+        throw new Error("refName not given to useActiveElement");
+    }
     const uiService = useService("ui");
-    const owner = refName ? useRef(refName) : useComponent();
+    const owner = useRef(refName);
     useEffect(
         (el) => {
             if (el) {

@@ -105,18 +105,16 @@ QUnit.module("DebugMenu", (hooks) => {
                 return null;
             });
         const env = await makeTestEnv(testConfig);
-        const debugManager = await mount(DebugMenuParent, target, { env });
-        let debugManagerEl = debugManager.el;
-        await click(debugManager.el.querySelector("button.dropdown-toggle"));
-        debugManagerEl = debugManager.el;
-        assert.containsN(debugManagerEl, ".dropdown-menu .dropdown-item", 3);
-        assert.containsOnce(debugManagerEl, ".dropdown-divider");
-        const children = [...(debugManagerEl.querySelector(".dropdown-menu").children || [])];
+        await mount(DebugMenuParent, target, { env });
+        await click(target.querySelector("button.dropdown-toggle"));
+        assert.containsN(target, ".dropdown-menu .dropdown-item", 3);
+        assert.containsOnce(target, ".dropdown-divider");
+        const children = [...(target.querySelector(".dropdown-menu").children || [])];
         assert.deepEqual(
             children.map((el) => el.tagName),
             ["SPAN", "SPAN", "DIV", "SPAN"]
         );
-        const items = [...debugManagerEl.querySelectorAll(".dropdown-menu .dropdown-item")] || [];
+        const items = [...target.querySelectorAll(".dropdown-menu .dropdown-item")] || [];
         assert.deepEqual(
             items.map((el) => el.textContent),
             ["Item 2", "Item 1", "Item 3"]
@@ -161,9 +159,9 @@ QUnit.module("DebugMenu", (hooks) => {
                 };
             });
         const env = await makeTestEnv(testConfig);
-        const debugManager = await mount(DebugMenuParent, target, { env });
-        await click(debugManager.el.querySelector("button.dropdown-toggle"));
-        const items = [...debugManager.el.querySelectorAll(".dropdown-menu .dropdown-item")];
+        await mount(DebugMenuParent, target, { env });
+        await click(target.querySelector("button.dropdown-toggle"));
+        const items = [...target.querySelectorAll(".dropdown-menu .dropdown-item")];
         assert.deepEqual(
             items.map((el) => el.textContent),
             ["Item 1", "Item 2", "Item 3", "Item 4"]
@@ -270,10 +268,10 @@ QUnit.module("DebugMenu", (hooks) => {
         });
         debugRegistry.category("default").add("regenerateAssets", regenerateAssets);
         const env = await makeTestEnv(testConfig);
-        const debugManager = await mount(DebugMenuParent, target, { env });
-        await click(debugManager.el.querySelector("button.dropdown-toggle"));
-        assert.containsOnce(debugManager.el, ".dropdown-menu .dropdown-item");
-        const item = debugManager.el.querySelector(".dropdown-menu .dropdown-item");
+        await mount(DebugMenuParent, target, { env });
+        await click(target.querySelector("button.dropdown-toggle"));
+        assert.containsOnce(target, ".dropdown-menu .dropdown-item");
+        const item = target.querySelector(".dropdown-menu .dropdown-item");
         assert.strictEqual(item.textContent, "Regenerate Assets Bundles");
         await click(item);
         assert.verifySteps(["ir.attachment/search", "ir.attachment/unlink", "reloadPage"]);

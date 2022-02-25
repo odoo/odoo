@@ -85,25 +85,23 @@ QUnit.test("can be rendered", async (assert) => {
         };
     });
     userMenu = await mount(UserMenu, target, { env });
-    let userMenuEl = userMenu.el;
-    assert.containsOnce(userMenuEl, "img.o_user_avatar");
+    assert.containsOnce(target, "img.o_user_avatar");
     assert.strictEqual(
-        userMenuEl.querySelector("img.o_user_avatar").dataset.src,
+        target.querySelector("img.o_user_avatar").dataset.src,
         "http://lordofthering/web/image?model=res.users&field=avatar_128&id=7"
     );
-    assert.containsOnce(userMenuEl, "span.oe_topbar_name");
-    assert.strictEqual(userMenuEl.querySelector(".oe_topbar_name").textContent, "Sauron");
-    assert.containsNone(userMenuEl, ".dropdown-menu .dropdown-item");
-    await click(userMenu.el.querySelector("button.dropdown-toggle"));
-    userMenuEl = userMenu.el;
-    assert.containsN(userMenuEl, ".dropdown-menu .dropdown-item", 3);
-    assert.containsOnce(userMenuEl, "div.dropdown-divider");
-    const children = [...(userMenuEl.querySelector(".dropdown-menu").children || [])];
+    assert.containsOnce(target, "span.oe_topbar_name");
+    assert.strictEqual(target.querySelector(".oe_topbar_name").textContent, "Sauron");
+    assert.containsNone(target, ".dropdown-menu .dropdown-item");
+    await click(target.querySelector("button.dropdown-toggle"));
+    assert.containsN(target, ".dropdown-menu .dropdown-item", 3);
+    assert.containsOnce(target, "div.dropdown-divider");
+    const children = [...(target.querySelector(".dropdown-menu").children || [])];
     assert.deepEqual(
         children.map((el) => el.tagName),
         ["SPAN", "SPAN", "DIV", "SPAN"]
     );
-    const items = [...userMenuEl.querySelectorAll(".dropdown-menu .dropdown-item")] || [];
+    const items = [...target.querySelectorAll(".dropdown-menu .dropdown-item")] || [];
     assert.deepEqual(
         items.map((el) => el.dataset.menu),
         ["ring", "bad", "eye"]
@@ -122,10 +120,9 @@ QUnit.test("display the correct name in debug mode", async (assert) => {
     patchWithCleanup(odoo, { debug: "1" });
     env = await makeTestEnv();
     userMenu = await mount(UserMenu, target, { env });
-    let userMenuEl = userMenu.el;
-    assert.containsOnce(userMenuEl, "img.o_user_avatar");
-    assert.containsOnce(userMenuEl, "span.oe_topbar_name");
-    assert.strictEqual(userMenuEl.querySelector(".oe_topbar_name").textContent, "Sauron (test)");
+    assert.containsOnce(target, "img.o_user_avatar");
+    assert.containsOnce(target, "span.oe_topbar_name");
+    assert.strictEqual(target.querySelector(".oe_topbar_name").textContent, "Sauron (test)");
 });
 
 QUnit.test("can execute the callback of settings", async (assert) => {
@@ -157,9 +154,9 @@ QUnit.test("can execute the callback of settings", async (assert) => {
     env = await makeTestEnv(testConfig);
     userMenuRegistry.add("profile", preferencesItem);
     userMenu = await mount(UserMenu, target, { env });
-    await click(userMenu.el.querySelector("button.dropdown-toggle"));
-    assert.containsOnce(userMenu.el, ".dropdown-menu .dropdown-item");
-    const item = userMenu.el.querySelector(".dropdown-menu .dropdown-item");
+    await click(target.querySelector("button.dropdown-toggle"));
+    assert.containsOnce(target, ".dropdown-menu .dropdown-item");
+    const item = target.querySelector(".dropdown-menu .dropdown-item");
     assert.strictEqual(item.textContent, "Preferences");
     await click(item);
     assert.verifySteps(["7", "Change My Preferences"]);

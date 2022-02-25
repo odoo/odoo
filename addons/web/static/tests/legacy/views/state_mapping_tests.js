@@ -24,6 +24,7 @@ import ActionModel from "web.ActionModel";
 import { mock } from "web.test_utils";
 import legacyViewRegistry from "web.view_registry";
 import { browser } from "@web/core/browser/browser";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -78,7 +79,7 @@ QUnit.module("Views", (hooks) => {
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
 
-        class ToyView extends Component {}
+        class ToyView extends LegacyComponent {}
         ToyView.components = { ControlPanel };
         ToyView.display_name = _lt("Toy view");
         ToyView.icon = "fab fa-android";
