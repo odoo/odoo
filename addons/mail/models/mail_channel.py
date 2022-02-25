@@ -62,6 +62,7 @@ class Channel(models.Model):
     is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
     default_display_mode = fields.Selection(string="Default Display Mode", selection=[('video_full_screen', "Full screen video")], help="Determines how the channel will be displayed by default when opening it from its invitation link. No value means display text (no voice/video).")
     description = fields.Text('Description')
+<<<<<<< HEAD
     image_128 = fields.Image("Image", max_width=128, max_height=128)
     avatar_128 = fields.Image("Avatar", max_width=128, max_height=128, compute='_compute_avatar_128')
     channel_partner_ids = fields.Many2many(
@@ -80,6 +81,16 @@ class Channel(models.Model):
         help="Members of those groups will automatically added as followers. "
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
+=======
+    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: str(uuid4()), copy=False)
+    email_send = fields.Boolean('Send messages by email', default=False)
+    # multi users channel
+    # depends=['...'] is for `test_mail/tests/common.py`, class Moderation, `setUpClass`
+    channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen', depends=['channel_partner_ids'])
+    channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners', depends=['channel_last_seen_partner_ids'])
+    channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel', copy=False)
+    is_member = fields.Boolean('Is a member', compute='_compute_is_member')
+>>>>>>> b33fff14a81... temp
     # access
     uuid = fields.Char('UUID', size=50, default=_generate_random_token, copy=False)
     public = fields.Selection([
