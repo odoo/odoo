@@ -14,24 +14,6 @@ class PurchaseRequisition(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', required=True, default=_default_picking_type_id,
         domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]")
-    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group')
-
-    def _prepare_tender_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
-        return {
-            'origin': origin,
-            'date_end': values['date_planned'],
-            'user_id': False,
-            'warehouse_id': values.get('warehouse_id') and values['warehouse_id'].id or False,
-            'procurement_group_id': values.get('group_id') and values['group_id'].id or False,
-            'company_id': company_id.id,
-            'line_ids': [(0, 0, {
-                'product_id': product_id.id,
-                'product_uom_id': product_uom.id,
-                'product_qty': product_qty,
-                'product_description_variants': values.get('product_description_variants'),
-                'move_dest_id': values.get('move_dest_ids') and values['move_dest_ids'][0].id or False
-            })],
-        }
 
 
 class PurchaseRequisitionLine(models.Model):

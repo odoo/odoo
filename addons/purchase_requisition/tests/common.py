@@ -53,16 +53,15 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
             'uom_id': cls.product_uom_id.id,
             'uom_po_id': cls.product_uom_id.id,
             'default_code': 'FURN_1118',
-            'purchase_requisition': 'tenders',
         })
 
         # In order to test process of the purchase requisition ,create requisition
-        cls.requisition1 = cls.env['purchase.requisition'].create({
+        cls.bo_requisition = cls.env['purchase.requisition'].create({
             'line_ids': [(0, 0, {
                 'product_id': cls.product_09.id,
                 'product_qty': 10.0,
                 'product_uom_id': cls.product_uom_id.id})]
-            })
+        })
 
         cls.res_partner_1 = cls.env['res.partner'].create({
             'name': 'Wood Corner',
