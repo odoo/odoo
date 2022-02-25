@@ -82,7 +82,7 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             this.state.searchWord = '';
         }
         _updateProductList(event) {
-            this.render();
+            this.render(true);
             this.trigger('switch-category', 0);
         }
     }

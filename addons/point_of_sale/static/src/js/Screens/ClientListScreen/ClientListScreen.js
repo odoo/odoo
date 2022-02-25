@@ -56,7 +56,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         back() {
             if(this.state.detailIsShown) {
                 this.state.detailIsShown = false;
-                this.render();
+                this.render(true);
             } else {
                 this.props.resolve({ confirmed: false, payload: false });
                 this.trigger('close-temp-screen');
@@ -110,7 +110,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 this.state.selectedClient = clients[0];
                 this.clickNext();
             } else {
-                this.render();
+                this.render(true);
             }
         }
         clickClient(partner) {
@@ -119,14 +119,14 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             } else {
                 this.state.selectedClient = partner;
             }
-            this.render();
+            this.render(true);
         }
         editClient() {
             this.state.editModeProps = {
                 partner: this.state.selectedClient,
             };
             this.state.detailIsShown = true;
-            this.render();
+            this.render(true);
         }
         clickNext() {
             this.state.selectedClient = this.nextButton.command === 'set' ? this.state.selectedClient : null;
@@ -142,7 +142,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                     partner: this.state.selectedClient,
                 };
             }
-            this.render();
+            this.render(true);
         }
         async saveChanges(event) {
             try {
@@ -154,7 +154,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 await this.env.pos.load_new_partners();
                 this.state.selectedClient = this.env.pos.db.get_partner_by_id(partnerId);
                 this.state.detailIsShown = false;
-                this.render();
+                this.render(true);
             } catch (error) {
                 if (isConnectionError(error)) {
                     await this.showPopup('OfflineErrorPopup', {
@@ -175,7 +175,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                     body: this.env._t('No customer found'),
                 });
             }
-            this.render();
+            this.render(true);
         }
         async getNewClient() {
             var domain = [];

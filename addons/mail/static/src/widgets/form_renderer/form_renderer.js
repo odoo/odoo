@@ -155,6 +155,13 @@ FormRenderer.include({
      * @override
      */
     _updateView() {
+        /**
+         * The chatter is detached before it's removed on the super._updateView function,
+         * this is done to avoid losing the event handlers.
+         */
+        if (this._hasChatter()) {
+            this._chatterContainerTarget.remove();
+        }
         this._super(...arguments);
         if (this._hasChatter()) {
             this.$chatterContainerHook.replaceWith(this._chatterContainerTarget);
