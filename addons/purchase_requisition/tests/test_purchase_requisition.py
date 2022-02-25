@@ -11,14 +11,13 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertTrue(self.user_purchase_requisition_user, 'User Should be created')
 
     def test_01_cancel_purchase_requisition(self):
-        self.requisition1.with_user(self.user_purchase_requisition_user).action_cancel()
+        self.bo_requisition.with_user(self.user_purchase_requisition_user).action_cancel()
         # Check requisition after cancelled.
-        self.assertEqual(self.requisition1.state, 'cancel', 'Requisition should be in cancelled state.')
+        self.assertEqual(self.bo_requisition.state, 'cancel', 'Requisition should be in cancelled state.')
         # I reset requisition as "New".
-        self.requisition1.with_user(self.user_purchase_requisition_user).action_draft()
+        self.bo_requisition.with_user(self.user_purchase_requisition_user).action_draft()
         # I duplicate requisition.
-        self.requisition1.with_user(self.user_purchase_requisition_user).copy()
-
+        self.bo_requisition.with_user(self.user_purchase_requisition_user).copy()
 
     def test_02_purchase_requisition(self):
         price_product09 = 34
@@ -42,7 +41,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         # confirm the requisition
         requisition_blanket.action_in_progress()
 
-        # Check for both product that the new supplier info(purchase.requisition.vendor_id) is added to the puchase tab
+        # Check for both product that the new supplier info(purchase.requisition.vendor_id) is added to the purchase tab
         # and check the quantity
         seller_partner1 = self.res_partner_1
         supplierinfo09 = self.env['product.supplierinfo'].search([
@@ -50,16 +49,16 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             ('product_id', '=', self.product_09.id),
             ('purchase_requisition_id', '=', requisition_blanket.id),
         ])
-        self.assertEqual(supplierinfo09.partner_id, seller_partner1, 'The supplierinfo is not the good one')
-        self.assertEqual(supplierinfo09.price, price_product09, 'The supplierinfo is not the good one')
+        self.assertEqual(supplierinfo09.partner_id, seller_partner1, 'The supplierinfo is not correct')
+        self.assertEqual(supplierinfo09.price, price_product09, 'The supplierinfo is not correct')
 
         supplierinfo13 = self.env['product.supplierinfo'].search([
             ('partner_id', '=', seller_partner1.id),
             ('product_id', '=', self.product_13.id),
             ('purchase_requisition_id', '=', requisition_blanket.id),
         ])
-        self.assertEqual(supplierinfo13.partner_id, seller_partner1, 'The supplierinfo is not the good one')
-        self.assertEqual(supplierinfo13.price, price_product13, 'The supplierinfo is not the good one')
+        self.assertEqual(supplierinfo13.partner_id, seller_partner1, 'The supplierinfo is not correct')
+        self.assertEqual(supplierinfo13.price, price_product13, 'The supplierinfo is not correct')
 
         # Put the requisition in done Status
         requisition_blanket.action_in_progress()
@@ -69,7 +68,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertFalse(self.env['product.supplierinfo'].search([('id', '=', supplierinfo13.id)]), 'The supplier info should be removed')
 
     def test_06_purchase_requisition(self):
-        """ Create a blanquet order for a product and a vendor already linked via
+        """ Create a blanket order for a product and a vendor already linked via
         a supplier info"""
         product = self.env['product.product'].create({
             'name': 'test6',
@@ -85,7 +84,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             'partner_id': vendor.id,
         })
 
-        # create a empty blanquet order
+        # create an empty blanket order
         requisition_type = self.env['purchase.requisition.type'].create({
             'name': 'Blanket test',
             'quantity_copy': 'none'

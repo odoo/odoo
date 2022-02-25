@@ -1,28 +1,11 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class StockRule(models.Model):
     _inherit = 'stock.rule'
-
-    @api.model
-    def _run_buy(self, procurements):
-        requisitions_values_by_company = defaultdict(list)
-        other_procurements = []
-        for procurement, rule in procurements:
-            if procurement.product_id.purchase_requisition == 'tenders':
-                values = self.env['purchase.requisition']._prepare_tender_values(*procurement)
-                values['picking_type_id'] = rule.picking_type_id.id
-                requisitions_values_by_company[procurement.company_id.id].append(values)
-            else:
-                other_procurements.append((procurement, rule))
-        for company_id, requisitions_values in requisitions_values_by_company.items():
-            self.env['purchase.requisition'].sudo().with_company(company_id).create(requisitions_values)
-        return super(StockRule, self)._run_buy(other_procurements)
 
     def _prepare_purchase_order(self, company_id, origins, values):
         res = super(StockRule, self)._prepare_purchase_order(company_id, origins, values)
