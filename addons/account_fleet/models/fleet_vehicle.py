@@ -23,7 +23,11 @@ class FleetVehicle(models.Model):
         )
         vehicle_move_mapping = {move['vehicle_id'][0]: set(move['move_id']) for move in moves}
         for vehicle in self:
+<<<<<<< HEAD
             vehicle.account_move_ids = [Command.set(vehicle_move_mapping.get(vehicle.id, []))]
+=======
+            vehicle.account_move_ids = [(6, 0, vehicle_move_mapping.get(vehicle.id, []))]
+>>>>>>> 54411e37657... temp
             vehicle.bill_count = len(vehicle.account_move_ids)
 
     def action_view_bills(self):
