@@ -17,11 +17,20 @@ class ResCompany(models.Model):
         self.search([('resource_calendar_id', '=', False)])._create_resource_calendar()
 
     def _create_resource_calendar(self):
-        for company in self:
-            company.resource_calendar_id = self.env['resource.calendar'].create({
-                'name': _('Standard 40 hours/week'),
-                'company_id': company.id
-            }).id
+        vals_list = [
+            company._prepare_resource_calendar_values()
+            for company in self
+        ]
+        resource_calendars = self.env['resource.calendar'].create(vals_list)
+        for company, calendar in zip(self, resource_calendars):
+            company.resource_calendar_id = calendar
+
+    def _prepare_resource_calendar_values(self):
+        self.ensure_one()
+        return {
+            'name': _('Standard 40 hours/week'),
+            'company_id': self.id,
+        }
 
     @api.model_create_multi
     def create(self, vals_list):
