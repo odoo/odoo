@@ -4,7 +4,7 @@ odoo.define('web.FieldWrapper', function (require) {
     const { ComponentWrapper } = require('web.OwlCompatibility');
     const field_utils = require('web.field_utils');
 
-    const { App } = owl;
+    const { App, reactive } = owl;
 
     /**
      * This file defines the FieldWrapper component, an extension of ComponentWrapper,
@@ -178,7 +178,7 @@ odoo.define('web.FieldWrapper', function (require) {
                 const fieldsInfo = this.props.record.fieldsInfo[viewType];
                 fieldsInfo[this.props.fieldName].modifiersValue = modifiers || {};
             }
-            this.componentRef.comp.props = this.props;
+            this.componentRef.comp.props = reactive(this.props);
         }
     }
 

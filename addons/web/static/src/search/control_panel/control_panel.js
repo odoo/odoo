@@ -8,7 +8,7 @@ import { FilterMenu } from "../filter_menu/filter_menu";
 import { GroupByMenu } from "../group_by_menu/group_by_menu";
 import { SearchBar } from "../search_bar/search_bar";
 
-const { Component } = owl;
+const { Component, useState } = owl;
 
 const MAPPING = {
     filter: FilterMenu,
@@ -20,6 +20,9 @@ const MAPPING = {
 export class ControlPanel extends Component {
     setup() {
         this.actionService = useService("action");
+        this.pagerProps = this.env.config.pagerProps
+            ? useState(this.env.config.pagerProps)
+            : undefined;
     }
 
     /**

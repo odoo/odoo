@@ -16,7 +16,7 @@ import { BaseAutomationErrorDialog } from "../src/js/base_automation_error_dialo
 import { patchWithCleanup,getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { DialogContainer } from "@web/core/dialog/dialog_container";
 
-const { onMounted } = owl;
+const { onMounted, toRaw } = owl;
 
 const serviceRegistry = registry.category("services");
 
@@ -72,7 +72,11 @@ QUnit.module("base_automation", {}, function () {
 
         patchWithCleanup(BaseAutomationErrorDialog.prototype, {
             setup() {
-                assert.equal(this.props.data.context, errorContext, "Received the correct error context");
+                assert.equal(
+                    toRaw(this.props.data.context),
+                    errorContext,
+                    "Received the correct error context"
+                );
                 this._super();
             },
         });
