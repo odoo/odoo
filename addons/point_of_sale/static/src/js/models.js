@@ -2619,14 +2619,22 @@ class Order extends PosModel {
     /* ---- Payment Lines --- */
     add_paymentline(payment_method) {
         this.assert_editable();
-        var newPaymentline = Payment.create({},{order: this, payment_method:payment_method, pos: this.pos});
-        this.paymentlines.add(newPaymentline);
-        this.select_paymentline(newPaymentline);
-        if(this.pos.config.cash_rounding){
-          this.selected_paymentline.set_amount(0);
+        if (this.electronic_payment_in_progress()) {
+            return false;
+        } else {
+            var newPaymentline = Payment.create({},{order: this, payment_method:payment_method, pos: this.pos});
+            this.paymentlines.add(newPaymentline);
+            this.select_paymentline(newPaymentline);
+            if(this.pos.config.cash_rounding){
+              this.selected_paymentline.set_amount(0);
+            }
+            newPaymentline.set_amount(this.get_due());
+
+            if (payment_method.payment_terminal) {
+                newPaymentline.set_payment_status('pending');
+            }
+            return newPaymentline;
         }
-        newPaymentline.set_amount(this.get_due());
-        return newPaymentline;
     }
     get_paymentlines(){
         return this.paymentlines;
