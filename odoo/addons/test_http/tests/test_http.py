@@ -392,6 +392,19 @@ class TestHttpMisc(TestHttpBase):
             self.assertEqual(res.json()['REMOTE_ADDR'], client_ip)
             self.assertEqual(res.json()['HTTP_HOST'], host)
 
+    @mute_logger('odoo.http')  # greeting_none called ignoring args {'debug'}
+    def test_misc3_debug_mode(self):
+        session = self.authenticate(None, None)
+        self.assertEqual(session.debug, '')
+        self.db_url_open('/test_http/greeting').raise_for_status()
+        self.assertEqual(session.debug, '')
+        self.db_url_open('/test_http/greeting?debug=1').raise_for_status()
+        self.assertEqual(session.debug, '1')
+        self.db_url_open('/test_http/greeting').raise_for_status()
+        self.assertEqual(session.debug, '1')
+        self.db_url_open('/test_http/greeting?debug=').raise_for_status()
+        self.assertEqual(session.debug, '')
+
 
 @tagged('post_install', '-at_install')
 class TestHttpCors(TestHttpBase):

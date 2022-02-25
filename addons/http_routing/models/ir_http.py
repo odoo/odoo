@@ -637,7 +637,8 @@ class IrHttp(models.AbstractModel):
         # minimal setup to serve frontend pages
         if not request.uid:
             cls._auth_method_public()
-        request.registry['ir.http']._frontend_pre_dispatch()
+        cls._handle_debug()
+        cls._frontend_pre_dispatch()
         request.params = request.get_http_params()
 
         code, values = cls._get_exception_code_values(exception)
@@ -650,7 +651,9 @@ class IrHttp(models.AbstractModel):
         except Exception:
             code, html = 418, request.env['ir.ui.view']._render_template('http_routing.http_error', values)
 
-        return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+        response = werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+        cls._post_dispatch(response)
+        return response
 
     @api.model
     @tools.ormcache('path', 'query_args')
