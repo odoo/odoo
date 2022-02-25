@@ -253,13 +253,23 @@ class WithContext(HttpCase):
             [p['loc'] for p in pages],
         )
 
-    @mute_logger('odoo.addons.http_routing.models.ir_http')
+    @mute_logger('odoo.http')
     def test_03_error_page_debug(self):
         with MockRequest(self.env, website=self.env['website'].browse(1)):
             self.base_view.arch = self.base_view.arch.replace('I am a generic page', '<t t-esc="15/0"/>')
+
+            # first call, no debug, traceback should not be visible
             r = self.url_open(self.page.url)
             self.assertEqual(r.status_code, 500, "15/0 raise a 500 error page")
             self.assertNotIn('ZeroDivisionError: division by zero', r.text, "Error should not be shown when not in debug.")
+
+            # second call, enable debug, traceback should be visible
             r = self.url_open(self.page.url + '?debug=1')
+            self.assertEqual(r.status_code, 500, "15/0 raise a 500 error page (2)")
+            self.assertIn('ZeroDivisionError: division by zero', r.text, "Error should be shown in debug.")
+
+            # third call, no explicit debug but it should be enabled by
+            # the session, traceback should be visible
+            r = self.url_open(self.page.url)
             self.assertEqual(r.status_code, 500, "15/0 raise a 500 error page (2)")
             self.assertIn('ZeroDivisionError: division by zero', r.text, "Error should be shown in debug.")

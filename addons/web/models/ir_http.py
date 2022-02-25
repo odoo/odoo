@@ -45,16 +45,20 @@ class Http(models.AbstractModel):
         return any(bot in user_agent for bot in cls.bots)
 
     @classmethod
-    def _pre_dispatch(cls, rule, args):
-        super()._pre_dispatch(rule, args)
+    def _handle_debug(cls):
         debug = request.httprequest.args.get('debug')
         if debug is not None:
             request.session.debug = ','.join(
                      mode if mode in ALLOWED_DEBUG_MODES
                 else '1' if str2bool(mode, mode)
                 else ''
-                for mode in (debug or '1').split(',')
+                for mode in (debug or '').split(',')
             )
+
+    @classmethod
+    def _pre_dispatch(cls, rule, args):
+        super()._pre_dispatch(rule, args)
+        cls._handle_debug()
 
     def webclient_rendering_context(self):
         return {
