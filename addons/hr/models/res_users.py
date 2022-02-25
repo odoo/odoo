@@ -139,6 +139,9 @@ class User(models.Model):
     employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
 
+    create_employee = fields.Boolean(store=False, default=True, string="Technical field, whether to create an employee")
+    create_employee_id = fields.Many2one('hr.employee', store=False, string="Technical field, bind user to this employee on create")
+
     can_edit = fields.Boolean(compute='_compute_can_edit')
     is_system = fields.Boolean(compute="_compute_is_system")
 
@@ -188,6 +191,25 @@ class User(models.Model):
                 change_password_action = self.env.ref("base.change_password_wizard_action")
                 result['toolbar']['action'] = [act for act in result['toolbar']['action'] if act['id'] != change_password_action.id]
         return result
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        employee_create_vals = []
+        for user, vals in zip(res, vals_list):
+            if not vals.get('create_employee') and not vals.get('create_employee_id'):
+                continue
+            if vals.get('create_employee_id'):
+                self.env['hr.employee'].browse(vals.get('create_employee_id')).user_id = user
+            else:
+                employee_create_vals.append(dict(
+                    name=user.name,
+                    company_id=user.env.company.id,
+                    **self.env['hr.employee']._sync_user(user)
+                ))
+        if employee_create_vals:
+            self.env['hr.employee'].create(employee_create_vals)
+        return res
 
     def write(self, vals):
         """

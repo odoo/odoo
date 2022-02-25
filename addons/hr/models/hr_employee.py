@@ -157,6 +157,22 @@ class HrEmployeePrivate(models.Model):
                     avatar = base64.b64encode(employee._avatar_get_placeholder())
             employee[avatar_field] = avatar
 
+    def action_create_user(self):
+        self.ensure_one()
+        if self.user_id:
+            raise ValidationError(_("This employee already has an user."))
+        return {
+            'name': _('Create User'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users',
+            'view_mode': 'form',
+            'view_id': self.env.ref('base.view_users_simple_form').id,
+            'target': 'new',
+            'context': {
+                'default_create_employee_id': self.id,
+            }
+        }
+
     def name_get(self):
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self).name_get()
