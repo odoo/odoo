@@ -217,7 +217,6 @@ class AccountEdiFormat(models.Model):
                     'error': _('The invoice was successfully transmitted to the Public Administration and we are waiting for confirmation'),
                     'blocking_level': 'info',
                 }
-                proxy_acks.append(id_transaction)
                 continue
             elif state == 'not_found':
                 # Invoice does not exist on proxy. Either it does not belong to this proxy_user or it was not created correctly when
