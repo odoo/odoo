@@ -361,6 +361,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/owl/owl.js',
             'web/static/src/owl2_compatibility/*.js',
             'web/static/src/legacy/js/component_extension.js',
+            'web/static/src/legacy/legacy_component.js',
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery.ui/jquery-ui.js',
             'web/static/lib/jquery/jquery.browser.js',
