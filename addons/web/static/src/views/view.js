@@ -9,7 +9,7 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/helpers/view_hook";
 import { extractLayoutComponents } from "@web/views/layout";
 
-const { Component, onWillUpdateProps, onWillStart, useSubEnv } = owl;
+const { Component, onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config
@@ -282,7 +282,7 @@ export class View extends Component {
 
         // prepare the WithSearch component props
         this.withSearchProps = {
-            ...this.props,
+            ...toRaw(this.props),
             Component: ViewClass,
             componentProps: viewProps,
         };

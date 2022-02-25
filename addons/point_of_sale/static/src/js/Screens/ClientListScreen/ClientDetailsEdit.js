@@ -78,7 +78,7 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
                     const resizedImage = await this._resizeImage(loadedImage, 800, 600);
                     this.changes.image_1920 = resizedImage.toDataURL();
                     // Rerender to reflect the changes in the screen
-                    this.render();
+                    this.render(true);
                 }
             }
         }

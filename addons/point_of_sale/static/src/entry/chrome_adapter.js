@@ -49,7 +49,7 @@ export class ChromeAdapter extends Component {
         const updateUI = debounce(() => {
             if (this.env.isMobile !== currentIsMobile) {
                 currentIsMobile = this.env.isMobile;
-                this.render();
+                this.render(true);
             }
         }, 15);
         useExternalListener(window, "resize", updateUI);

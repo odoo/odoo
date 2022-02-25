@@ -7,7 +7,7 @@ odoo.define('web.SearchBar', function (require) {
     const { useModel } = require('web.Model');
     const { fuzzyTest } = require('@web/core/utils/search');
 
-    const { Component, onMounted, onWillUnmount, useExternalListener, useState } = owl;
+    const { Component, onMounted, onWillUnmount, toRaw, useExternalListener, useState } = owl;
     const CHAR_FIELDS = ['char', 'html', 'many2many', 'many2one', 'one2many', 'text'];
 
     let sourceId = 0;
@@ -91,7 +91,7 @@ odoo.define('web.SearchBar', function (require) {
          * @returns {Object}
          */
         _createSource(filter) {
-            const field = this.props.fields[filter.fieldName];
+            const field = toRaw(this.props.fields)[filter.fieldName];
             const type = field.type === "reference" ? "char" : field.type;
             const source = {
                 active: true,

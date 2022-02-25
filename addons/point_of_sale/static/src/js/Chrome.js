@@ -10,7 +10,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const PopupControllerMixin = require('point_of_sale.PopupControllerMixin');
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
-    const { identifyError } = require('point_of_sale.utils');
+    const { identifyError, batched } = require('point_of_sale.utils');
     const { odooExceptionTitleMap } = require("@web/core/errors/error_dialogs");
     const { ConnectionLostError, ConnectionAbortedError, RPCError } = require('@web/core/network/rpc_service');
     const { useBus } = require("@web/core/utils/hooks");
@@ -26,6 +26,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
         useRef,
         useState,
         useSubEnv,
+        reactive,
     } = owl;
 
     /**
@@ -74,7 +75,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
             this.previous_touch_y_coordinate = -1;
 
-            useSubEnv({ pos: useState(this.env.pos) });
+            const pos = reactive(this.env.pos, batched(() => this.render(true)))
+            useSubEnv({ pos });
 
             onMounted(() => {
                 // remove default webclient handlers that induce click delay
@@ -200,7 +202,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 this.env.pos.loadPartnersBackground();
             }
             if (this.env.pos.config.limited_products_loading && this.env.pos.config.product_load_background) {
-                this.env.pos.loadProductsBackground().then(() => this.render());
+                this.env.pos.loadProductsBackground().then(() => this.render(true));
             }
         }
 
