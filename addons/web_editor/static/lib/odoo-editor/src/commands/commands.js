@@ -16,6 +16,7 @@ import {
     getNormalizedCursorPosition,
     getSelectedNodes,
     getTraversedNodes,
+    insertAndSelectZws,
     insertText,
     isBlock,
     isBold,
@@ -214,6 +215,7 @@ function hasColor(element, mode) {
  * which the wanted style should be applied
  */
 export function applyInlineStyle(editor, applyStyle) {
+    getDeepRange(editor.editable, { splitText: true, select: true });
     const sel = editor.document.getSelection();
     const { startContainer, startOffset, endContainer, endOffset } = sel.getRangeAt(0);
     const { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
@@ -226,7 +228,7 @@ export function applyInlineStyle(editor, applyStyle) {
         normalizedEndContainer,
         normalizedEndOffset
     ] = getNormalizedCursorPosition(endContainer, endOffset)
-    const selectedTextNodes = getTraversedNodes(editor.editable).filter(node => {
+    const selectedTextNodes = getSelectedNodes(editor.editable).filter(node => {
         const atLeastOneCharFromNodeInSelection = !(
             (node === normalizedEndContainer && normalizedEndOffset === 0) ||
             (node === normalizedStartContainer && normalizedStartOffset === node.textContent.length)
@@ -266,7 +268,9 @@ export function applyInlineStyle(editor, applyStyle) {
         }
         applyStyle(textNode.parentElement);
     }
-    if (selectedTextNodes.length) {
+    if (selectedTextNodes[0] && selectedTextNodes[0].textContent === '\u200B') {
+        setSelection(selectedTextNodes[0], 0);
+    } else if (selectedTextNodes.length) {
         const firstNode = selectedTextNodes[0];
         const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
         if (direction === DIRECTIONS.RIGHT) {
@@ -289,21 +293,24 @@ const styles = {
     },
     underline: {
         is: isUnderline,
-        name: 'textDecoration',
+        name: 'textDecorationLine',
         value: 'underline',
     },
     strikeThrough: {
         is: isStrikeThrough,
-        name: 'textDecoration',
+        name: 'textDecorationLine',
         value: 'line-through',
     }
 }
 export function toggleFormat(editor, format) {
     const selection = editor.document.getSelection();
-    if (!selection.rangeCount || selection.getRangeAt(0).collapsed) return;
+    if (!selection.rangeCount) return;
+    if (selection.getRangeAt(0).collapsed) {
+        insertAndSelectZws(selection);
+    }
     getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
     const style = styles[format];
-    const isAlreadyFormatted = getSelectedNodes(editor.editable)
+    const isAlreadyFormatted = !!getSelectedNodes(editor.editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length)
         .find(n => style.is(n.parentElement));
     applyInlineStyle(editor, el => {
@@ -430,7 +437,10 @@ export const editorCommands = {
      */
     setFontSize: (editor, size) => {
         const selection = editor.document.getSelection();
-        if (!selection.rangeCount || selection.getRangeAt(0).collapsed) return;
+        if (!selection.rangeCount) return;
+        if (selection.getRangeAt(0).collapsed) {
+            insertAndSelectZws(selection);
+        }
         applyInlineStyle(editor, element => {
             element.style.fontSize = size;
         });
@@ -545,6 +555,12 @@ export const editorCommands = {
             colorElement(element, color, mode);
             return;
         }
+        const selection = editor.document.getSelection();
+        let wasCollapsed = false;
+        if (selection.getRangeAt(0).collapsed) {
+            insertAndSelectZws(selection);
+            wasCollapsed = true;
+        }
         const range = getDeepRange(editor.editable, { splitText: true, select: true });
         if (!range) return;
         const restoreCursor = preserveCursor(editor.document);
@@ -599,6 +615,14 @@ export const editorCommands = {
             }
         }
         restoreCursor();
+        if (wasCollapsed) {
+            const newSelection = editor.document.getSelection();
+            const range = new Range();
+            range.setStart(newSelection.anchorNode, newSelection.anchorOffset);
+            range.collapse(true);
+            newSelection.removeAllRanges();
+            newSelection.addRange(range);
+        }
     },
     // Table
     insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {
