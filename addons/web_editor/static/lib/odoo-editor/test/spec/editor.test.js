@@ -8,6 +8,7 @@ import {
     insertLineBreak,
     insertParagraphBreak,
     insertText,
+    keydown,
     redo,
     testEditor,
     undo,
@@ -3206,6 +3207,266 @@ X[]
                         editor.historyRevertCurrentStep(); // back to initial state
                     },
                     contentAfter: '<p>a[b<span style="color: tomato;">c</span>d]e</p>',
+                });
+            });
+        });
+    });
+
+    // Note that arrow keys test have a contentAfter that is not reflective of
+    // reality. The browser doesn't apply the selection change after triggering
+    // an event programmatically so what we are testing here is that if a custom
+    // behavior has to happen _before_ the browser's behavior, we do indeed have
+    // it.
+    describe('arrow keys', () => {
+        describe('ArrowRight', () => {
+            it('should move past a zws (collapsed)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab[]<span>\u200B</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight');
+                    },
+                    contentAfter: 'ab<span>\u200B[]</span>cd',
+                    // Final state: 'ab<span>\u200B</span>c[]d'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>[]\u200B</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight');
+                    },
+                    contentAfter: 'ab<span>\u200B[]</span>cd',
+                    // Final state: 'ab<span>\u200B</span>c[]d'
+                });
+            });
+            it('should select a zws', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '[ab]<span>\u200B</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: '[ab<span>\u200B]</span>cd',
+                    // Final state: '[ab<span>\u200B</span>c]d'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '[ab<span>]\u200B</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: '[ab<span>\u200B]</span>cd',
+                    // Final state: '[ab<span>\u200B</span>c]d'
+                });
+            });
+            it('should select a zws (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'a[b]<span>\u200B</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: 'a[b<span>\u200B]</span>cd',
+                    // Final state: 'a[b<span>\u200B</span>c]d'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'a[b<span>]\u200B</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: 'a[b<span>\u200B]</span>cd',
+                    // Final state: 'a[b<span>\u200B</span>c]d'
+                });
+            });
+            it('should select a zws (3)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab[]<span>\u200B</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: 'ab[<span>\u200B]</span>cd',
+                    // Final state: 'ab[<span>\u200B</span>c]d'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>[]\u200B</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: 'ab<span>[\u200B]</span>cd',
+                    // Final state: 'ab<span>[\u200B</span>c]d'
+                });
+            });
+            it('should select a zws backwards', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>]\u200B[</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: 'ab<span>\u200B[]</span>cd',
+                    // Final state: 'ab<span>\u200B</span>[c]d'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>]\u200B</span>[cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: 'ab<span>\u200B[]</span>cd',
+                    // Final state: 'ab<span>\u200B</span>[c]d'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab]<span>\u200B</span>[cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: 'ab<span>\u200B[]</span>cd',
+                    // Final state: 'ab<span>\u200B</span>[c]d'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab]<span>\u200B[</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: 'ab<span>\u200B[]</span>cd',
+                    // Final state: 'ab<span>\u200B</span>[c]d'
+                });
+            });
+            it('should select a zws backwards (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>]\u200B</span>c[d',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: 'ab<span>\u200B]</span>c[d',
+                    // Final state: 'ab<span>\u200B</span>c[]d'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab]<span>\u200B</span>c[d',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowRight', true);
+                    },
+                    contentAfter: 'ab<span>\u200B]</span>c[d',
+                    // Final state: 'ab<span>\u200B</span>c[]d'
+                });
+            });
+        });
+        describe('ArrowLeft', () => {
+            it('should move past a zws (collapsed)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>\u200B[]</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft');
+                    },
+                    contentAfter: 'ab<span>[]\u200B</span>cd',
+                    // Final state: 'a[]b<span>\u200B</span>cd'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>\u200B</span>[]cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft');
+                    },
+                    contentAfter: 'ab<span>[]\u200B</span>cd',
+                    // Final state: 'a[]b<span>\u200B</span>cd'
+                });
+            });
+            it('should select a zws backwards', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>\u200B[]</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'ab<span>]\u200B[</span>cd',
+                    // Final state: 'a]b<span>\u200B[</span>cd'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>\u200B</span>[]cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'ab<span>]\u200B[</span>cd',
+                    // Final state: 'a]b<span>\u200B[</span>cd'
+                });
+            });
+            it('should select a zws backwards (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>\u200B</span>]cd[',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'ab<span>]\u200B</span>cd[',
+                    // Final state: 'a]b<span>\u200B</span>cd['
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>\u200B]</span>cd[',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'ab<span>]\u200B</span>cd[',
+                    // Final state: 'a]b<span>\u200B</span>cd['
+                });
+            });
+            it('should select a zws backwards (3)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>\u200B</span>]c[d',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'ab<span>]\u200B</span>c[d',
+                    // Final state: 'a]b<span>\u200B</span>c[d'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>\u200B]</span>c[d',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'ab<span>]\u200B</span>c[d',
+                    // Final state: 'a]b<span>\u200B</span>c[d'
+                });
+            });
+            it('should deselect a zws', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>[\u200B]</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'ab<span>[]\u200B</span>cd',
+                    // Final state: 'a]b<span>[\u200B</span>cd'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab<span>[\u200B</span>]cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'ab<span>[]\u200B</span>cd',
+                    // Final state: 'a]b<span>[\u200B</span>cd'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab[<span>\u200B]</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'ab[<span>]\u200B</span>cd',
+                    // Final state: 'a]b[<span>\u200B</span>cd'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'ab[<span>\u200B</span>]cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'ab[<span>]\u200B</span>cd',
+                    // Final state: 'a]b[<span>\u200B</span>cd'
+                });
+            });
+            it('should deselect a zws (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'a[b<span>\u200B]</span>cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'a[b<span>]\u200B</span>cd',
+                    // Final state: 'a[]b<span>\u200B</span>cd'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: 'a[b<span>\u200B</span>]cd',
+                    stepFunction: async editor => {
+                        await keydown(editor.editable, 'ArrowLeft', true);
+                    },
+                    contentAfter: 'a[b<span>]\u200B</span>cd',
+                    // Final state: 'a[]b<span>\u200B</span>cd'
                 });
             });
         });
