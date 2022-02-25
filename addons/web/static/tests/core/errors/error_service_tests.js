@@ -20,6 +20,7 @@ import {
     makeFakeRPCService,
 } from "../../helpers/mock_services";
 import { makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 const errorDialogRegistry = registry.category("error_dialogs");
@@ -83,7 +84,7 @@ QUnit.test(
     "handle custom RPC_ERROR of type='server' and associated custom dialog class",
     async (assert) => {
         assert.expect(2);
-        class CustomDialog extends Component {}
+        class CustomDialog extends LegacyComponent {}
         CustomDialog.template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
         CustomDialog.components = { RPCErrorDialog };
         const error = new RPCError();
@@ -119,10 +120,10 @@ QUnit.test(
     "handle normal RPC_ERROR of type='server' and associated custom dialog class",
     async (assert) => {
         assert.expect(2);
-        class CustomDialog extends Component {}
+        class CustomDialog extends LegacyComponent {}
         CustomDialog.template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
         CustomDialog.components = { RPCErrorDialog };
-        class NormalDialog extends Component {}
+        class NormalDialog extends LegacyComponent {}
         NormalDialog.template = xml`<RPCErrorDialog title="'Normal Error'"/>`;
         NormalDialog.components = { RPCErrorDialog };
         const error = new RPCError();

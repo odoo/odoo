@@ -5,6 +5,7 @@ import { uiService, useActiveElement } from "@web/core/ui/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { destroy, getFixture, mount, nextTick } from "../helpers/utils";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -65,25 +66,6 @@ QUnit.test("use block and unblock several times to block ui with ui service", as
     assert.strictEqual(blockUI, null, "ui should not be blocked");
 });
 
-QUnit.test("a component can be the active element", async (assert) => {
-    class MyComponent extends Component {
-        setup() {
-            useActiveElement();
-        }
-    }
-    MyComponent.template = xml`<div/>`;
-
-    const env = await makeTestEnv({ ...baseConfig });
-    const ui = env.services.ui;
-    assert.deepEqual(ui.activeElement, document);
-
-    const comp = await mount(MyComponent, target, { env });
-    assert.deepEqual(ui.activeElement, comp.el);
-
-    destroy(comp);
-    assert.deepEqual(ui.activeElement, document);
-});
-
 QUnit.test("a component can be the  UI active element: with t-ref delegation", async (assert) => {
     class MyComponent extends Component {
         setup() {
@@ -103,7 +85,7 @@ QUnit.test("a component can be the  UI active element: with t-ref delegation", a
     assert.deepEqual(ui.activeElement, document);
 
     const comp = await mount(MyComponent, target, { env });
-    assert.deepEqual(ui.activeElement, comp.el.querySelector("div#owner"));
+    assert.deepEqual(ui.activeElement, document.getElementById("owner"));
     comp.hasRef = false;
     comp.render();
     await nextTick();

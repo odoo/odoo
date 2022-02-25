@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
-import { click, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, getFixture, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { localization } from "@web/core/l10n/localization";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { browser } from "@web/core/browser/browser";
@@ -25,6 +25,7 @@ function getDomain(controlPanel) {
     return controlPanel.env.searchModel.domain;
 }
 
+let target;
 let serverData;
 QUnit.module("Search", (hooks) => {
     hooks.beforeEach(async () => {
@@ -89,6 +90,7 @@ QUnit.module("Search", (hooks) => {
             setTimeout: (fn) => fn(),
             clearTimeout: () => {},
         });
+        target = getFixture();
     });
 
     QUnit.module("CustomFilterItem");
@@ -96,7 +98,7 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("basic rendering", async function (assert) {
         assert.expect(14);
 
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -104,13 +106,13 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["filter"],
         });
 
-        await toggleFilterMenu(controlPanel);
+        await toggleFilterMenu(target);
 
-        const customFilterItem = controlPanel.el.querySelector(".o_add_custom_filter_menu");
+        const customFilterItem = target.querySelector(".o_add_custom_filter_menu");
 
         assert.strictEqual(customFilterItem.innerText.trim(), "Add Custom Filter");
 
-        await toggleAddCustomFilter(controlPanel);
+        await toggleAddCustomFilter(target);
 
         // Single condition
         assert.containsOnce(customFilterItem, ".o_filter_condition");
@@ -147,7 +149,7 @@ QUnit.module("Search", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            const controlPanel = await makeWithSearch({
+            await makeWithSearch({
                 serverData,
                 resModel: "foo",
                 Component: ControlPanel,
@@ -166,9 +168,9 @@ QUnit.module("Search", (hooks) => {
                 },
             });
 
-            await toggleFilterMenu(controlPanel);
-            await toggleAddCustomFilter(controlPanel);
-            const optionEls = controlPanel.el.querySelectorAll(
+            await toggleFilterMenu(target);
+            await toggleAddCustomFilter(target);
+            const optionEls = target.querySelectorAll(
                 ".o_filter_condition > select.o_generator_menu_field option"
             );
             assert.strictEqual(optionEls[0].innerText.trim(), "Date");
@@ -181,7 +183,7 @@ QUnit.module("Search", (hooks) => {
 
         patchDate(2020, 1, 5, 12, 20, 0);
 
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -199,23 +201,23 @@ QUnit.module("Search", (hooks) => {
             },
         });
 
-        await toggleFilterMenu(controlPanel);
-        await toggleAddCustomFilter(controlPanel);
-        await applyFilter(controlPanel);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+        await applyFilter(target);
 
-        assert.ok(isItemSelected(controlPanel, 'Date is equal to "02/05/2020"'));
-        assert.deepEqual(getFacetTexts(controlPanel), ['Date is equal to "02/05/2020"']);
+        assert.ok(isItemSelected(target, 'Date is equal to "02/05/2020"'));
+        assert.deepEqual(getFacetTexts(target), ['Date is equal to "02/05/2020"']);
 
-        await toggleMenuItem(controlPanel, 'Date is equal to "02/05/2020"');
+        await toggleMenuItem(target, 'Date is equal to "02/05/2020"');
 
-        assert.notOk(isItemSelected(controlPanel, 'Date is equal to "02/05/2020"'));
-        assert.deepEqual(getFacetTexts(controlPanel), []);
+        assert.notOk(isItemSelected(target, 'Date is equal to "02/05/2020"'));
+        assert.deepEqual(getFacetTexts(target), []);
     });
 
     QUnit.test("custom OR filter presets new condition from preceding", async function (assert) {
         assert.expect(4);
 
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -223,14 +225,14 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["filter"],
         });
 
-        await toggleFilterMenu(controlPanel);
-        await toggleAddCustomFilter(controlPanel);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
 
         // Retrieve second selectable values for field and operator dropdowns
-        const secondFieldName = controlPanel.el.querySelector(
+        const secondFieldName = target.querySelector(
             ".o_generator_menu_field option:nth-of-type(2)"
         ).value;
-        const secondOperator = controlPanel.el.querySelector(
+        const secondOperator = target.querySelector(
             ".o_generator_menu_operator option:nth-of-type(2)"
         ).value;
 
@@ -239,23 +241,21 @@ QUnit.module("Search", (hooks) => {
         assert.ok(!!secondOperator);
 
         // Add first filter condition
-        await editConditionField(controlPanel, 0, secondFieldName);
-        await editConditionOperator(controlPanel, 0, secondOperator);
+        await editConditionField(target, 0, secondFieldName);
+        await editConditionOperator(target, 0, secondOperator);
 
         // Add a second conditon on the filter being created
-        await addCondition(controlPanel);
+        await addCondition(target);
 
         // Check the defaults for field and operator dropdowns
         assert.strictEqual(
-            controlPanel.el.querySelector(
-                ".o_filter_condition:nth-of-type(2) .o_generator_menu_field"
-            ).value,
+            target.querySelector(".o_filter_condition:nth-of-type(2) .o_generator_menu_field")
+                .value,
             secondFieldName
         );
         assert.strictEqual(
-            controlPanel.el.querySelector(
-                ".o_filter_condition:nth-of-type(2) .o_generator_menu_operator"
-            ).value,
+            target.querySelector(".o_filter_condition:nth-of-type(2) .o_generator_menu_operator")
+                .value,
             secondOperator
         );
     });
@@ -272,15 +272,15 @@ QUnit.module("Search", (hooks) => {
             searchViewFields: {},
         });
 
-        await toggleFilterMenu(controlPanel);
-        await toggleAddCustomFilter(controlPanel);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
         // choose ID field in 'Add Custom filter' menu and value 1
-        await editConditionField(controlPanel, 0, "id");
-        await editConditionValue(controlPanel, 0, 1);
+        await editConditionField(target, 0, "id");
+        await editConditionValue(target, 0, 1);
 
-        await applyFilter(controlPanel);
+        await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(controlPanel), ['ID is "1"']);
+        assert.deepEqual(getFacetTexts(target), ['ID is "1"']);
         assert.deepEqual(getDomain(controlPanel), [["id", "=", 1]]);
     });
 
@@ -304,29 +304,29 @@ QUnit.module("Search", (hooks) => {
             },
         });
 
-        await toggleFilterMenu(controlPanel);
+        await toggleFilterMenu(target);
 
-        assert.deepEqual(getFacetTexts(controlPanel), []);
+        assert.deepEqual(getFacetTexts(target), []);
         assert.deepEqual(getDomain(controlPanel), []);
 
-        assert.containsNone(controlPanel, ".o_menu_item");
-        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu button.dropdown-toggle");
+        assert.containsNone(target, ".o_menu_item");
+        assert.containsOnce(target, ".o_add_custom_filter_menu button.dropdown-toggle");
         // the 'Add Custom Filter' menu should be closed;
-        assert.containsNone(controlPanel, ".o_add_custom_filter_menu .dropdown-menu");
+        assert.containsNone(target, ".o_add_custom_filter_menu .dropdown-menu");
 
-        await toggleAddCustomFilter(controlPanel);
+        await toggleAddCustomFilter(target);
         // the 'Add Custom Filter' menu should be open;
-        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu .dropdown-menu");
+        assert.containsOnce(target, ".o_add_custom_filter_menu .dropdown-menu");
 
-        await applyFilter(controlPanel);
+        await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(controlPanel), ["Boolean Field is Yes"]);
+        assert.deepEqual(getFacetTexts(target), ["Boolean Field is Yes"]);
         assert.deepEqual(getDomain(controlPanel), [["boolean_field", "=", true]]);
 
-        assert.containsOnce(controlPanel, ".o_menu_item");
-        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu button.dropdown-toggle");
+        assert.containsOnce(target, ".o_menu_item");
+        assert.containsOnce(target, ".o_add_custom_filter_menu button.dropdown-toggle");
         // the 'Add Custom Filter' menu should still be opened;
-        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu .dropdown-menu");
+        assert.containsOnce(target, ".o_add_custom_filter_menu .dropdown-menu");
     });
 
     QUnit.test("selection field: default and updated value", async function (assert) {
@@ -341,36 +341,36 @@ QUnit.module("Search", (hooks) => {
         });
 
         // Default value
-        await toggleFilterMenu(controlPanel);
+        await toggleFilterMenu(target);
 
-        assert.containsN(controlPanel, ".o_menu_item", 0);
-        assert.containsN(controlPanel, ".dropdown-divider", 0);
+        assert.containsN(target, ".o_menu_item", 0);
+        assert.containsN(target, ".dropdown-divider", 0);
 
-        await toggleAddCustomFilter(controlPanel);
-        await editConditionField(controlPanel, 0, "color");
-        await applyFilter(controlPanel);
+        await toggleAddCustomFilter(target);
+        await editConditionField(target, 0, "color");
+        await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(controlPanel), ['Color is "black"']);
+        assert.deepEqual(getFacetTexts(target), ['Color is "black"']);
         assert.deepEqual(getDomain(controlPanel), [["color", "=", "black"]]);
 
-        assert.containsN(controlPanel, ".o_menu_item", 1);
-        assert.containsN(controlPanel, ".dropdown-divider", 1);
+        assert.containsN(target, ".o_menu_item", 1);
+        assert.containsN(target, ".dropdown-divider", 1);
 
         // deactivate custom filter
-        await removeFacet(controlPanel);
+        await removeFacet(target);
 
         // Updated value
-        await toggleFilterMenu(controlPanel);
-        await toggleAddCustomFilter(controlPanel);
-        await editConditionField(controlPanel, 0, "color");
-        await editConditionValue(controlPanel, 0, "white");
-        await applyFilter(controlPanel);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+        await editConditionField(target, 0, "color");
+        await editConditionValue(target, 0, "white");
+        await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(controlPanel), ['Color is "white"']);
+        assert.deepEqual(getFacetTexts(target), ['Color is "white"']);
         assert.deepEqual(getDomain(controlPanel), [["color", "=", "white"]]);
 
-        assert.containsN(controlPanel, ".o_menu_item", 2);
-        assert.containsN(controlPanel, ".dropdown-divider", 2);
+        assert.containsN(target, ".o_menu_item", 2);
+        assert.containsN(target, ".dropdown-divider", 2);
     });
 
     QUnit.test(
@@ -428,15 +428,15 @@ QUnit.module("Search", (hooks) => {
             ];
 
             for (const step of steps) {
-                await toggleFilterMenu(controlPanel);
-                await toggleAddCustomFilter(controlPanel);
-                await editConditionValue(controlPanel, 0, step.value);
-                await applyFilter(controlPanel);
+                await toggleFilterMenu(target);
+                await toggleAddCustomFilter(target);
+                await editConditionValue(target, 0, step.value);
+                await applyFilter(target);
 
-                assert.deepEqual(getFacetTexts(controlPanel), [step.facetContent]);
+                assert.deepEqual(getFacetTexts(target), [step.facetContent]);
                 assert.deepEqual(getDomain(controlPanel), step.domain);
 
-                await removeFacet(controlPanel);
+                await removeFacet(target);
             }
         }
     );
@@ -458,26 +458,23 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["filter"],
         });
 
-        await toggleFilterMenu(controlPanel);
-        await toggleAddCustomFilter(controlPanel);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
 
-        await editConditionField(controlPanel, 0, "date_time_field");
+        await editConditionField(target, 0, "date_time_field");
 
         assert.strictEqual(
-            controlPanel.el.querySelector(".o_generator_menu_field").value,
+            target.querySelector(".o_generator_menu_field").value,
             "date_time_field"
         );
-        assert.strictEqual(
-            controlPanel.el.querySelector(".o_generator_menu_operator").value,
-            "between"
-        );
+        assert.strictEqual(target.querySelector(".o_generator_menu_operator").value, "between");
 
-        await editConditionOperator(controlPanel, 0, "=");
-        await editConditionValue(controlPanel, 0, "02/22/2017 11:00:00"); // in TZ
-        await applyFilter(controlPanel);
+        await editConditionOperator(target, 0, "=");
+        await editConditionValue(target, 0, "02/22/2017 11:00:00"); // in TZ
+        await applyFilter(target);
 
         assert.deepEqual(
-            getFacetTexts(controlPanel),
+            getFacetTexts(target),
             ['DateTime is equal to "02/22/2017 11:00:00"'],
             "description should be in localized format"
         );
@@ -505,25 +502,22 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["filter"],
         });
 
-        await toggleFilterMenu(controlPanel);
-        await toggleAddCustomFilter(controlPanel);
-        await editConditionField(controlPanel, 0, "date_time_field");
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+        await editConditionField(target, 0, "date_time_field");
 
         assert.strictEqual(
-            controlPanel.el.querySelector(".o_generator_menu_field").value,
+            target.querySelector(".o_generator_menu_field").value,
             "date_time_field"
         );
-        assert.strictEqual(
-            controlPanel.el.querySelector(".o_generator_menu_operator").value,
-            "between"
-        );
+        assert.strictEqual(target.querySelector(".o_generator_menu_operator").value, "between");
 
-        await editConditionValue(controlPanel, 0, "02/22/2017 11:00:00", 0); // in TZ
-        await editConditionValue(controlPanel, 0, "02-22-2017 17:00:00", 1); // in TZ
-        await applyFilter(controlPanel);
+        await editConditionValue(target, 0, "02/22/2017 11:00:00", 0); // in TZ
+        await editConditionValue(target, 0, "02-22-2017 17:00:00", 1); // in TZ
+        await applyFilter(target);
 
         assert.deepEqual(
-            getFacetTexts(controlPanel),
+            getFacetTexts(target),
             ['DateTime is between "02/22/2017 11:00:00 and 02/22/2017 17:00:00"'],
             "description should be in localized format"
         );
@@ -541,7 +535,7 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("input value parsing", async function (assert) {
         assert.expect(7);
 
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -549,40 +543,38 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["filter"],
         });
 
-        await toggleFilterMenu(controlPanel);
-        await toggleAddCustomFilter(controlPanel);
-        await addCondition(controlPanel);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+        await addCondition(target);
 
-        await editConditionField(controlPanel, 0, "float_field");
-        await editConditionField(controlPanel, 1, "id");
+        await editConditionField(target, 0, "float_field");
+        await editConditionField(target, 1, "id");
 
-        const [floatInput, idInput] = controlPanel.el.querySelectorAll(
-            ".o_generator_menu_value .o_input"
-        );
+        const [floatInput, idInput] = target.querySelectorAll(".o_generator_menu_value .o_input");
 
         // Default values
-        await editConditionValue(controlPanel, 0, "0.0");
+        await editConditionValue(target, 0, "0.0");
         assert.strictEqual(floatInput.value, "0.0");
 
-        await editConditionValue(controlPanel, 1, "0");
+        await editConditionValue(target, 1, "0");
         assert.strictEqual(idInput.value, "0");
 
         // Float parsing
-        await editConditionValue(controlPanel, 0, "4.2");
+        await editConditionValue(target, 0, "4.2");
         assert.strictEqual(floatInput.value, "4.2");
 
-        await editConditionValue(controlPanel, 0, "DefinitelyValidFloat");
+        await editConditionValue(target, 0, "DefinitelyValidFloat");
         // "DefinitelyValidFloat" cannot be entered in a input type number so that the input value is reset to 0
         assert.strictEqual(floatInput.value, "4.2");
 
         // Number parsing
-        await editConditionValue(controlPanel, 1, "4");
+        await editConditionValue(target, 1, "4");
         assert.strictEqual(idInput.value, "4");
 
-        await editConditionValue(controlPanel, 1, "4.2");
+        await editConditionValue(target, 1, "4.2");
         assert.strictEqual(idInput.value, "4");
 
-        await editConditionValue(controlPanel, 1, "DefinitelyValidID");
+        await editConditionValue(target, 1, "DefinitelyValidID");
         // "DefinitelyValidID" cannot be entered in a input type number so that the input value is reset to 0
         assert.strictEqual(idInput.value, "0");
     });
@@ -590,7 +582,7 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("input value parsing with language", async function (assert) {
         assert.expect(5);
 
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -605,27 +597,27 @@ QUnit.module("Search", (hooks) => {
             grouping: [3, 0],
         });
 
-        await toggleFilterMenu(controlPanel);
-        await toggleAddCustomFilter(controlPanel);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
 
-        await editConditionField(controlPanel, 0, "float_field");
+        await editConditionField(target, 0, "float_field");
 
-        const [floatInput] = controlPanel.el.querySelectorAll(".o_generator_menu_value .o_input");
+        const [floatInput] = target.querySelectorAll(".o_generator_menu_value .o_input");
 
         // Default values
         assert.strictEqual(floatInput.value, "0,0");
 
         // Float parsing
-        await editConditionValue(controlPanel, 0, "4,");
+        await editConditionValue(target, 0, "4,");
         assert.strictEqual(floatInput.value, "4,0");
 
-        await editConditionValue(controlPanel, 0, "4,2");
+        await editConditionValue(target, 0, "4,2");
         assert.strictEqual(floatInput.value, "4,2");
 
-        await editConditionValue(controlPanel, 0, "4,2,");
+        await editConditionValue(target, 0, "4,2,");
         assert.strictEqual(floatInput.value, "4,2");
 
-        await editConditionValue(controlPanel, 0, "DefinitelyValidFloat");
+        await editConditionValue(target, 0, "DefinitelyValidFloat");
 
         // The input here is a string, resulting in a parsing error instead of 0
         assert.strictEqual(floatInput.value, "4,2");
@@ -642,34 +634,34 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["filter"],
         });
 
-        await toggleFilterMenu(controlPanel);
-        await toggleAddCustomFilter(controlPanel);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
 
         for (let i = 0; i < 4; i++) {
-            await addCondition(controlPanel);
+            await addCondition(target);
         }
 
-        await editConditionField(controlPanel, 0, "date_field");
-        await editConditionValue(controlPanel, 0, "01/09/1997");
+        await editConditionField(target, 0, "date_field");
+        await editConditionValue(target, 0, "01/09/1997");
 
-        await editConditionField(controlPanel, 1, "boolean_field");
-        await editConditionOperator(controlPanel, 1, "!=");
+        await editConditionField(target, 1, "boolean_field");
+        await editConditionOperator(target, 1, "!=");
 
-        await editConditionField(controlPanel, 2, "char_field");
-        await editConditionValue(controlPanel, 2, "I will be deleted anyway");
+        await editConditionField(target, 2, "char_field");
+        await editConditionValue(target, 2, "I will be deleted anyway");
 
-        await editConditionField(controlPanel, 3, "float_field");
-        await editConditionValue(controlPanel, 3, 7.2);
+        await editConditionField(target, 3, "float_field");
+        await editConditionValue(target, 3, 7.2);
 
-        await editConditionField(controlPanel, 4, "id");
-        await editConditionValue(controlPanel, 4, 9);
+        await editConditionField(target, 4, "id");
+        await editConditionValue(target, 4, 9);
 
-        const thirdcondition = controlPanel.el.querySelectorAll(".o_filter_condition")[2];
+        const thirdcondition = target.querySelectorAll(".o_filter_condition")[2];
 
         await click(thirdcondition, ".o_generator_menu_delete");
-        await applyFilter(controlPanel);
+        await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(controlPanel), [
+        assert.deepEqual(getFacetTexts(target), [
             [
                 'A date is equal to "01/09/1997"',
                 "Boolean Field is No",
@@ -689,7 +681,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("delete button is visible", async function (assert) {
-        const controlPanel = await makeWithSearch({
+        await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
@@ -697,24 +689,24 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["filter"],
         });
 
-        await toggleFilterMenu(controlPanel);
-        await toggleAddCustomFilter(controlPanel);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
 
         assert.containsNone(
-            controlPanel,
+            target,
             ".o_generator_menu_delete",
             "There is no delete button by default"
         );
 
-        await addCondition(controlPanel);
+        await addCondition(target);
         assert.containsN(
-            controlPanel,
+            target,
             ".o_generator_menu_delete",
             2,
             "A delete button has been added to each condition"
         );
         assert.containsN(
-            controlPanel,
+            target,
             "i.o_generator_menu_delete.fa-trash-o",
             2,
             "The delete button is shown as a trash icon"

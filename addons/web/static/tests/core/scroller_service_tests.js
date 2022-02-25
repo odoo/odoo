@@ -35,7 +35,7 @@ QUnit.test("Ignore empty hrefs", async (assert) => {
             </button>
         </div>`;
 
-    const comp = await mount(MyComponent, target, { env });
+    await mount(MyComponent, target, { env });
 
     /**
      * To determine whether the hash changed we need to use a custom hash for
@@ -47,10 +47,10 @@ QUnit.test("Ignore empty hrefs", async (assert) => {
     location.hash = testHash;
     registerCleanup(() => (location.hash = initialHash));
 
-    comp.el.querySelector(".inactive_link").click();
+    target.querySelector(".inactive_link").click();
     await nextTick();
 
-    comp.el.querySelector(".fa.fa-trash").click();
+    target.querySelector(".fa.fa-trash").click();
     await nextTick();
 
     assert.strictEqual(location.hash, testHash);

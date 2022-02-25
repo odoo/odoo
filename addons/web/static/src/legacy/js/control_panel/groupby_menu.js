@@ -6,10 +6,11 @@ odoo.define('web.GroupByMenu', function (require) {
     const { CustomGroupByItem } = require('@web/search/group_by_menu/custom_group_by_item');
     const { FACET_ICONS, GROUPABLE_TYPES } = require('web.searchUtils');
     const { useModel } = require('web.Model');
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component } = owl;
 
-    class GroupByMenu extends Component {
+    class GroupByMenu extends LegacyComponent {
 
         setup() {
             this.icon = FACET_ICONS.groupBy;

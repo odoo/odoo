@@ -4,10 +4,11 @@ odoo.define('web.WeekDays', function (require) {
     const CustomCheckbox = require('web.CustomCheckbox');
     const Registry = require('web.widgetRegistry');
     const utils = require('web.utils');
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component, onWillUpdateProps, useState } = owl;
 
-    class WeekDays extends Component {
+    class WeekDays extends LegacyComponent {
         setup() {
             this.weekdaysShort = [];
             this._sortWeekdays();

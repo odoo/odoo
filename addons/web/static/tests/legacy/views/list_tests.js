@@ -22,6 +22,7 @@ const Widget = require('web.Widget');
 const ControlPanel = require('web.ControlPanel');
 const ListController = require('web.ListController');
 const cpHelpers = require('@web/../tests/search/helpers');
+const { LegacyComponent } = require("@web/legacy/legacy_component");
 var createView = testUtils.createView;
 
 const { getFixture, click, legacyExtraNextTick } = require("@web/../tests/helpers/utils");
@@ -9309,7 +9310,7 @@ QUnit.module('Views', {
     QUnit.test('basic support for widgets (being Owl Components)', async function (assert) {
         assert.expect(1);
 
-        class MyComponent extends Component {
+        class MyComponent extends LegacyComponent {
             get value() {
                 return JSON.stringify(this.props.record.data);
             }

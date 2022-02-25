@@ -17,6 +17,7 @@ import {
     patchWithCleanup,
 } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 
@@ -125,7 +126,7 @@ QUnit.test("rpc with simple routes", async (assert) => {
 });
 
 QUnit.test("rpc coming from destroyed components are left pending", async (assert) => {
-    class MyComponent extends Component {
+    class MyComponent extends LegacyComponent {
         setup() {
             this.rpc = useService("rpc");
         }
@@ -162,7 +163,7 @@ QUnit.test("rpc coming from destroyed components are left pending", async (asser
 
 QUnit.test("rpc initiated from destroyed components throw exception", async (assert) => {
     assert.expect(1);
-    class MyComponent extends Component {
+    class MyComponent extends LegacyComponent {
         setup() {
             this.rpc = useService("rpc");
         }

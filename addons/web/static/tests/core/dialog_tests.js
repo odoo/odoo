@@ -8,6 +8,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, destroy, getFixture, mount } from "../helpers/utils";
 import { makeFakeDialogService } from "../helpers/mock_services";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, useEffect, useState, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -94,7 +95,7 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("simple rendering with two dialogs", async function (assert) {
         assert.expect(3);
-        class Parent extends Component {}
+        class Parent extends LegacyComponent {}
         Parent.template = xml`
               <div>
                   <SimpleDialog title="'First Title'">
@@ -123,7 +124,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(3);
         const env = await makeTestEnv();
         class MyDialog extends SimpleDialog {}
-        class Parent extends Component {
+        class Parent extends LegacyComponent {
             close() {
                 assert.step("close");
             }
@@ -147,7 +148,7 @@ QUnit.module("Components", (hooks) => {
             const env = await makeTestEnv();
             assert.expect(3);
             class MyDialog extends SimpleDialog {}
-            class Parent extends Component {
+            class Parent extends LegacyComponent {
                 close() {
                     assert.step("close");
                 }
@@ -180,7 +181,7 @@ QUnit.module("Components", (hooks) => {
                 <button class="btn btn-primary">The Second Button</button>
             </div>
           `;
-        class Parent extends Component {
+        class Parent extends LegacyComponent {
             setup() {
                 super.setup();
                 this.state = useState({
@@ -202,7 +203,7 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("embed an arbitrary component in a dialog is possible", async function (assert) {
         assert.expect(6);
-        class SubComponent extends Component {
+        class SubComponent extends LegacyComponent {
             _onClick() {
                 assert.step("subcomponent-clicked");
                 this.props.onClicked();
@@ -211,7 +212,7 @@ QUnit.module("Components", (hooks) => {
         SubComponent.template = xml`
               <div class="o_subcomponent" t-esc="props.text" t-on-click="_onClick"/>
           `;
-        class Parent extends Component {
+        class Parent extends LegacyComponent {
             _onSubcomponentClicked() {
                 assert.step("message received by parent");
             }
@@ -233,7 +234,7 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("dialog without header/footer", async function (assert) {
         assert.expect(4);
-        class Parent extends Component {}
+        class Parent extends LegacyComponent {}
         Parent.template = xml`
               <SimpleDialog renderHeader="false" renderFooter="false"/>
           `;
@@ -248,7 +249,7 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("dialog size can be chosen", async function (assert) {
         assert.expect(5);
-        class Parent extends Component {}
+        class Parent extends LegacyComponent {}
         Parent.template = xml`
       <div>
         <SimpleDialog contentClass="'xl'" size="'modal-xl'"/>
@@ -280,7 +281,7 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("dialog can be rendered on fullscreen", async function (assert) {
         assert.expect(2);
-        class Parent extends Component {}
+        class Parent extends LegacyComponent {}
         Parent.template = xml`
               <div><SimpleDialog fullscreen="true"/></div>
           `;
@@ -293,7 +294,7 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("can be the UI active element", async function (assert) {
         assert.expect(3);
-        class Parent extends Component {
+        class Parent extends LegacyComponent {
             setup() {
                 this.ui = useService("ui");
                 this.modal = null;

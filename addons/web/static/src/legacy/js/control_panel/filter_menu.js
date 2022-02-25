@@ -6,6 +6,7 @@ odoo.define('web.FilterMenu', function (require) {
     const CustomFilterItem = require('web.CustomFilterItem');
     const { FACET_ICONS } = require("web.searchUtils");
     const { useModel } = require('web.Model');
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component } = owl;
 
@@ -16,7 +17,7 @@ odoo.define('web.FilterMenu', function (require) {
      * model. It uses most of the behaviours implemented by the dropdown menu Component,
      * with the addition of a filter generator (@see CustomFilterItem).
      */
-    class FilterMenu extends Component {
+    class FilterMenu extends LegacyComponent {
 
         setup() {
             this.icon = FACET_ICONS.filter;

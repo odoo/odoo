@@ -2,6 +2,7 @@ odoo.define('web.CustomCheckbox', function (require) {
     "use strict";
 
     const utils = require('web.utils');
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const { Component } = owl;
 
@@ -19,7 +20,7 @@ odoo.define('web.CustomCheckbox', function (require) {
      * 
      * @extends Component
      */
-    class CustomCheckbox extends Component {
+    class CustomCheckbox extends LegacyComponent {
         /**
          * @param {Object} [props]
          * @param {string | number | null} [props.id]

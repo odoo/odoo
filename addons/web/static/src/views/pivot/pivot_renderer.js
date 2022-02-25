@@ -5,11 +5,12 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { PivotGroupByMenu } from "@web/views/pivot/pivot_group_by_menu";
 import fieldUtils from "web.field_utils";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, onWillUpdateProps } = owl;
 const formatterRegistry = registry.category("formatters");
 
-export class PivotRenderer extends Component {
+export class PivotRenderer extends LegacyComponent {
     setup() {
         this.model = this.props.model;
         this.table = this.model.getTable();
