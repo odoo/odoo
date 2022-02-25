@@ -1158,6 +1158,7 @@ export class DynamicGroupList extends DynamicList {
     canQuickCreate() {
         return (
             this.groupByField &&
+            this.groups.length &&
             this.model.onCreate === "quick_create" &&
             (isAllowedDateField(this.groupByField) ||
                 QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type))

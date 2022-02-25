@@ -34,6 +34,19 @@ const TRANSPILED_EXPRESSIONS = [
     { regex: /(\w+)\.(raw_)?value\b/g, value: "$1" },
     // `#{expr}` => `{{expr}}`
     { regex: /#{([^}]+)}/g, value: "{{$1}}" },
+    // `kanban_image(model, field, idOrIds[, placeholder])` => `imageSrcFromRecordInfo(recordInfo, record)`
+    {
+        regex: /kanban_image\(([^)]*)\)/g,
+        value: (_match, group) => {
+            const args = group.split(",");
+            return `imageSrcFromRecordInfo({
+                model: ${args[0]},
+                field: ${args[1]},
+                idOrIds: ${args[2]},
+                placeholder: ${args[3]},
+            }, record)`;
+        },
+    },
 ];
 // These classes determine whether a click on a record should open it.
 const KANBAN_CLICK_CLASSES = ["oe_kanban_global_click", "oe_kanban_global_click_edit"];
@@ -126,6 +139,17 @@ export class KanbanArchParser extends XMLParser {
                     attrValue = attrValue.replace(regex, value);
                 }
                 node.setAttribute(name, attrValue);
+            }
+            // Keep track of last update so images can be reloaded when they may have changed.
+            if (node.tagName === "img") {
+                const attSrc = node.getAttribute("t-att-src");
+                if (
+                    attSrc &&
+                    attSrc.includes("imageSrcFromRecordInfo") &&
+                    !activeFields.__last_update
+                ) {
+                    activeFields.__last_update = { type: "datetime" };
+                }
             }
         });
 

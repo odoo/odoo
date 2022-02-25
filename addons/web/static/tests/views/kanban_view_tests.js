@@ -102,6 +102,9 @@ const dragAndDrop = async (selector, { after, before, inside }) => {
 
     // Mouse down on main target then move to a far away position to initiate the drag
     const el = target.querySelector(selector);
+    if (!el) {
+        throw new Error(`Couldn't find element to drag for selector "${selector}"`);
+    }
     triggerEvent(el, null, "mousedown", getPos(el));
     triggerEvent(window, null, "mousemove", { clientX: -999, clientY: -999 });
 
@@ -8171,7 +8174,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "keep adding quickcreate in first column after a record from this column was moved",
         async (assert) => {
             assert.expect(2);
@@ -8194,32 +8197,23 @@ QUnit.module("Views", (hooks) => {
                     }
                 },
             });
-
-            let $quickCreateGroup;
-            let $groups;
-            await _quickCreateAndTest();
-            await testUtils.dom.dragAndDrop(
-                $groups.find(".o_kanban_record:first-child"),
-                $groups.eq(1)
+            await createRecord();
+            assert.strictEqual(
+                target.querySelector(".o_kanban_quick_create").closest(".o_kanban_group"),
+                target.querySelector(".o_kanban_group"),
+                "quick create should have been added in the first column"
             );
-            await _quickCreateAndTest();
-
-            const _quickCreateAndTest = async () => {
-                await createRecord();
-                $quickCreateGroup = target
-                    .querySelector(".o_kanban_quick_create")
-                    .closest(".o_kanban_group");
-                $groups = target.querySelector(".o_kanban_group");
-                assert.strictEqual(
-                    $quickCreateGroup[0],
-                    $groups[0],
-                    "quick create should have been added in the first column"
-                );
-            };
+            await dragAndDrop(".o_kanban_record", { inside: ".o_kanban_group:nth-child(2)" });
+            await createRecord();
+            assert.strictEqual(
+                target.querySelector(".o_kanban_quick_create").closest(".o_kanban_group"),
+                target.querySelector(".o_kanban_group"),
+                "quick create should have been added in the first column"
+            );
         }
     );
 
-    QUnit.skipWOWL("test displaying image (URL, image field not set)", async (assert) => {
+    QUnit.test("test displaying image (URL, image field not set)", async (assert) => {
         assert.expect(1);
 
         await makeView({
@@ -8236,13 +8230,11 @@ QUnit.module("Views", (hooks) => {
         });
 
         // since the field image is not set, kanban_image will generate an URL
-        const imageOnRecord = target.querySelector(
-            'img[data-src*="/web/image"][data-src*="&id=1"]'
-        );
+        const imageOnRecord = target.querySelectorAll('img[src*="/web/image"][src*="&id=1"]');
         assert.strictEqual(imageOnRecord.length, 1, "partner with image display image by url");
     });
 
-    QUnit.skipWOWL("test displaying image (__last_update field)", async (assert) => {
+    QUnit.test("test displaying image (__last_update field)", async (assert) => {
         // the presence of __last_update field ensures that the image is reloaded when necessary
         assert.expect(1);
 
@@ -8257,16 +8249,15 @@ QUnit.module("Views", (hooks) => {
                         <img t-att-src="kanban_image('partner', 'image', record.id.raw_value)"/>
                     </div></t></templates>
                 </kanban>`,
-            mockRPC(route, args) {
-                if (route === "web_search_read") {
-                    assert.deepEqual(args.fields, ["id", "__last_update"]);
+            mockRPC(route, { method, kwargs }) {
+                if (method === "web_search_read") {
+                    assert.deepEqual(kwargs.fields, ["id", "__last_update"]);
                 }
-                return this._super(...arguments);
             },
         });
     });
 
-    QUnit.skipWOWL("test displaying image (binary & placeholder)", async (assert) => {
+    QUnit.test("test displaying image (binary & placeholder)", async (assert) => {
         assert.expect(2);
 
         await makeView({
@@ -8281,16 +8272,11 @@ QUnit.module("Views", (hooks) => {
                 "<img t-att-src=\"kanban_image('partner', 'image', record.id.raw_value)\"/>" +
                 "</div></t></templates>" +
                 "</kanban>",
-            async mockRPC(route, args) {
-                if (route === "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==") {
-                    assert.ok("The view's image should have been fetched.");
-                }
-            },
         });
         const images = target.querySelectorAll("img");
         const placeholders = [];
         for (const [index, img] of images.entries()) {
-            if (img.dataset.src.indexOf(serverData.models.partner.records[index].image) === -1) {
+            if (img.src.indexOf(serverData.models.partner.records[index].image) === -1) {
                 // Then we display a placeholder
                 placeholders.push(img);
             }
@@ -8301,9 +8287,14 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.records.length - 1,
             "partner with no image should display the placeholder"
         );
+        assert.strictEqual(
+            images[0].src,
+            "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==",
+            "The first partners non-placeholder image should be set"
+        );
     });
 
-    QUnit.skipWOWL("test displaying image (for another record)", async (assert) => {
+    QUnit.test("test displaying image (for another record)", async (assert) => {
         assert.expect(2);
 
         await makeView({
@@ -8318,27 +8309,25 @@ QUnit.module("Views", (hooks) => {
                 "<img t-att-src=\"kanban_image('partner', 'image', 1)\"/>" +
                 "</div></t></templates>" +
                 "</kanban>",
-            async mockRPC(route, args) {
-                if (route === "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==") {
-                    assert.ok("The view's image should have been fetched.");
-                }
-            },
         });
 
         // the field image is set, but we request the image for a specific id
         // -> for the record matching the ID, the base64 should be returned
         // -> for all the other records, the image should be displayed by url
-        const imageOnRecord = target.querySelector(
-            'img[data-src*="/web/image"][data-src*="&id=1"]'
-        );
+        const imageOnRecord = target.querySelectorAll('img[src*="/web/image"][src*="&id=1"]');
         assert.strictEqual(
             imageOnRecord.length,
             serverData.models.partner.records.length - 1,
             "display image by url when requested for another record"
         );
+        assert.strictEqual(
+            target.querySelector("img").src,
+            "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==",
+            "display image as value when requested for the record itself"
+        );
     });
 
-    QUnit.skipWOWL("test displaying image from m2o field (m2o field not set)", async (assert) => {
+    QUnit.test("test displaying image from m2o field (m2o field not set)", async (assert) => {
         assert.expect(2);
         serverData.models.foo_partner = {
             fields: {
@@ -8353,7 +8342,7 @@ QUnit.module("Views", (hooks) => {
 
         await makeView({
             type: "kanban",
-            model: "foo_partner",
+            resModel: "foo_partner",
             serverData,
             arch: `
                 <kanban>
@@ -8366,63 +8355,19 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>`,
         });
-
         assert.containsOnce(
             target,
-            'img[data-src*="/web/image"][data-src$="&id=1"]',
+            'img[src*="/web/image"][src$="&id=1"]',
             "image url should contain id of set partner_id"
         );
         assert.containsOnce(
             target,
-            'img[data-src*="/web/image"][data-src$="&id="]',
+            'img[src*="/web/image"][src$="&id="]',
             "image url should contain an empty id if partner_id is not set"
         );
     });
 
-    QUnit.skipWOWL("check if the view destroys all widgets and instances", async (assert) => {
-        assert.expect(2);
-
-        const instanceNumber = 0;
-        testUtils.mock.patch(mixins.ParentedMixin, {
-            init: function () {
-                instanceNumber++;
-            },
-            destroy: function () {
-                if (!this.isDestroyed()) {
-                    instanceNumber--;
-                }
-            },
-        });
-
-        const params = {
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban string="Partners">' +
-                '<field name="foo"/>' +
-                '<field name="bar"/>' +
-                '<field name="int_field"/>' +
-                '<field name="qux"/>' +
-                '<field name="product_id"/>' +
-                '<field name="category_ids"/>' +
-                '<field name="state"/>' +
-                '<field name="date"/>' +
-                '<field name="datetime"/>' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
-                "</t></templates>" +
-                "</kanban>",
-        };
-
-        await makeView(params);
-        assert.ok(instanceNumber > 0);
-        assert.strictEqual(instanceNumber, 0);
-
-        testUtils.mock.unpatch(mixins.ParentedMixin);
-    });
-
-    QUnit.skipWOWL(
+    QUnit.test(
         "grouped kanban becomes ungrouped when clearing domain then clearing groupby",
         async (assert) => {
             // in this test, we simulate that clearing the domain is slow, so that
@@ -8444,56 +8389,54 @@ QUnit.module("Views", (hooks) => {
                     "</t></templates></kanban>",
                 domain: [["foo", "=", "norecord"]],
                 groupBy: ["bar"],
-                async mockRPC(route, args) {
-                    const result = this._super(route, args);
+                async mockRPC(route, args, performRpc) {
                     if (args.method === "web_read_group") {
+                        const result = performRpc(route, args);
                         const isFirstUpdate =
-                            _.isEmpty(args.kwargs.domain) &&
+                            args.kwargs.domain.length === 0 &&
                             args.kwargs.groupby &&
                             args.kwargs.groupby[0] === "bar";
                         if (isFirstUpdate) {
-                            return prom.then(function () {
-                                return result;
-                            });
+                            await prom;
                         }
+                        return result;
                     }
-                    return result;
                 },
             });
 
             assert.hasClass(
-                target.querySelector(".o_kanban_view"),
+                target.querySelector(".o_kanban_renderer"),
                 "o_kanban_grouped",
                 "the kanban view should be grouped"
             );
             assert.doesNotHaveClass(
-                target.querySelector(".o_kanban_view"),
+                target.querySelector(".o_kanban_renderer"),
                 "o_kanban_ungrouped",
                 "the kanban view should not be ungrouped"
             );
 
             reload(kanban, { domain: [] }); // 1st update on kanban view
-            reload(kanban, { groupBy: [] }); // 2n update on kanban view
+            reload(kanban, { groupBy: [] }); // 2nd update on kanban view
             prom.resolve(); // simulate slow 1st update of kanban view
 
             await nextTick();
             assert.doesNotHaveClass(
-                target.querySelector(".o_kanban_view"),
+                target.querySelector(".o_kanban_renderer"),
                 "o_kanban_grouped",
                 "the kanban view should not longer be grouped"
             );
             assert.hasClass(
-                target.querySelector(".o_kanban_view"),
+                target.querySelector(".o_kanban_renderer"),
                 "o_kanban_ungrouped",
                 "the kanban view should have become ungrouped"
             );
         }
     );
 
-    QUnit.skipWOWL("quick_create on grouped kanban without column", async (assert) => {
+    QUnit.test("quick_create on grouped kanban without column", async (assert) => {
         assert.expect(1);
         serverData.models.partner.records = [];
-        await makeView({
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -8505,11 +8448,10 @@ QUnit.module("Views", (hooks) => {
                 "</div>" +
                 "</t></templates></kanban>",
             groupBy: ["product_id"],
-
-            intercepts: {
-                switch_view: function (event) {
-                    assert.ok(true, "switch_view was called instead of quick_create");
-                },
+        });
+        patchWithCleanup(kanban.actionService, {
+            switchView() {
+                assert.ok(true, "switchView was called instead of quick_create");
             },
         });
         await createRecord();

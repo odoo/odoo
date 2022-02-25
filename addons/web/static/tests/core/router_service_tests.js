@@ -98,7 +98,7 @@ QUnit.test("routeToUrl encodes URI compatible strings", (assert) => {
     assert.strictEqual(routeToUrl(route), "/asf?a=11&g=summer%20wine");
 
     route.hash = { b: "2", c: "", e: "kloug,gloubi" };
-    assert.strictEqual(routeToUrl(route), "/asf?a=11&g=summer%20wine#b=2&c&e=kloug%2Cgloubi");
+    assert.strictEqual(routeToUrl(route), "/asf?a=11&g=summer%20wine#b=2&c=&e=kloug%2Cgloubi");
 });
 
 QUnit.test("can redirect an URL", async (assert) => {

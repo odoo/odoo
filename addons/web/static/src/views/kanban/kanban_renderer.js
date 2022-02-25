@@ -453,27 +453,35 @@ export class KanbanRenderer extends Component {
     //-------------------------------------------------------------------------
     // KANBAN SPECIAL FUNCTIONS
     //
-    // Note: these are snake_cased with not-so-self-explanatory names for the
-    // sake of compatibility.
+    // Note: some of these are snake_cased with not-so-self-explanatory names
+    // for the sake of compatibility.
+    // WOWL TODO: transpile the function calls in KanbanArchParser to better
+    // names
     //-------------------------------------------------------------------------
 
     /**
-     * Returns the image URL of a given record.
-     * @param {string} model model name
-     * @param {string} field field name
-     * @param {number | number[]} idOrIds
-     * @param {string} placeholder
+     * Returns the image URL of a given field on a record.
+     *
+     * @param {Object} param0
+     * @param {string} [param0.model] model name
+     * @param {string} [param0.field] field name
+     * @param {number | [number, ...any[]]} [param0.idOrIds] id or array
+     *      starting with the id of the desired record.
+     * @param {string} [param0.placeholder] fallback when the image does not
+     *  exist
+     * @param {Object} record the record corresponding to the current card
      * @returns {string}
      */
-    kanban_image(model, field, idOrIds, placeholder) {
+    imageSrcFromRecordInfo({ model, field, idOrIds, placeholder }, record) {
         const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
-        const record = /** this.props.list.model.get({ resId: id }) || */ { data: {} };
-        const value = record.data[field];
-        if (value && !isBinSize(value)) {
+        const isCurrentRecord =
+            record.resModel === model && (record.resId === id || (!record.resId && !id));
+        const fieldVal = record.data[field];
+        if (isCurrentRecord && fieldVal && !isBinSize(fieldVal)) {
             // Use magic-word technique for detecting image type
-            const type = fileTypeMagicWordMap[value[0]];
-            return `data:image/${type};base64,${value}`;
-        } else if (placeholder && (!model || !field || !id || !value)) {
+            const type = fileTypeMagicWordMap[fieldVal[0]];
+            return `data:image/${type};base64,${fieldVal}`;
+        } else if (placeholder && (!model || !field || !id || !fieldVal)) {
             // Placeholder if either the model, field, id or value is missing or null.
             return placeholder;
         } else {
