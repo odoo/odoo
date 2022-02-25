@@ -116,6 +116,25 @@ export class PivotView extends Component {
         this.model.toggleMeasure(measure);
     }
     /**
+     * Execute the action to open the view on the current model.
+     *
+     * @param {Array} domain
+     * @param {Array} views
+     * @param {Object} context
+     */
+    openView(domain, views, context) {
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            name: this.model.metaData.title,
+            res_model: this.props.resModel,
+            views: views,
+            view_mode: "list",
+            target: "current",
+            context,
+            domain,
+        });
+    }
+    /**
      * @param {CustomEvent} ev
      */
     onOpenView(cell) {
@@ -142,18 +161,7 @@ export class PivotView extends Component {
             colValues: cell.groupId[1],
             originIndex: cell.originIndexes[0],
         };
-        const domain = this.model.getGroupDomain(group);
-
-        this.actionService.doAction({
-            type: "ir.actions.act_window",
-            name: this.model.metaData.title,
-            res_model: this.props.resModel,
-            views: this.views,
-            view_mode: "list",
-            target: "current",
-            context,
-            domain,
-        });
+        this.openView(this.model.getGroupDomain(group), this.views, context);
     }
 }
 
