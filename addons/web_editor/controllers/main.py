@@ -407,7 +407,7 @@ class Web_Editor(http.Controller):
                         continue
 
                     # Check if the file is customized and get bundle/path info
-                    file_data = AssetsUtils.get_asset_info(url)
+                    file_data = AssetsUtils._get_data_from_url(url)
                     if not file_data:
                         continue
 
@@ -454,14 +454,14 @@ class Web_Editor(http.Controller):
         urls = []
         for bundle_data in files_data_by_bundle:
             urls += bundle_data[1]
-        custom_attachments = AssetsUtils.get_all_custom_attachments(urls)
+        custom_attachments = AssetsUtils._get_custom_attachment(urls, op='in')
 
         for bundle_data in files_data_by_bundle:
             for i in range(0, len(bundle_data[1])):
                 url = bundle_data[1][i]
                 url_info = url_infos[url]
 
-                content = AssetsUtils.get_asset_content(url, url_info, custom_attachments)
+                content = AssetsUtils._get_content_from_url(url, url_info, custom_attachments)
 
                 bundle_data[1][i] = {
                     'url': "/%s/%s" % (url_info["module"], url_info["resource_path"]),
@@ -470,41 +470,6 @@ class Web_Editor(http.Controller):
                 }
 
         return files_data_by_bundle
-
-    @http.route("/web_editor/save_asset", type="json", auth="user", website=True)
-    def save_asset(self, url, bundle, content, file_type):
-        """
-        Save a given modification of a scss/js file.
-
-        Params:
-            url (str):
-                the original url of the scss/js file which has to be modified
-
-            bundle (str):
-                the name of the bundle in which the scss/js file addition can
-                be found
-
-            content (str): the new content of the scss/js file
-
-            file_type (str): 'scss' or 'js'
-        """
-        request.env['web_editor.assets'].save_asset(url, bundle, content, file_type)
-
-    @http.route("/web_editor/reset_asset", type="json", auth="user", website=True)
-    def reset_asset(self, url, bundle):
-        """
-        The reset_asset route is in charge of reverting all the changes that
-        were done to a scss/js file.
-
-        Params:
-            url (str):
-                the original URL of the scss/js file to reset
-
-            bundle (str):
-                the name of the bundle in which the scss/js file addition can
-                be found
-        """
-        request.env['web_editor.assets'].reset_asset(url, bundle)
 
     @http.route("/web_editor/public_render_template", type="json", auth="public", website=True)
     def public_render_template(self, args, kwargs):  # pylint: disable=unused-argument

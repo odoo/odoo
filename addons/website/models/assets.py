@@ -3,12 +3,13 @@
 
 import re
 
-from odoo import models
+from odoo import api, models
 
 
 class Assets(models.AbstractModel):
     _inherit = 'web_editor.assets'
 
+    @api.model
     def make_scss_customization(self, url, values):
         """
         Makes a scss customization of the given file. That file must
@@ -43,8 +44,8 @@ class Assets(models.AbstractModel):
                 'copyright-gradient': 'null',
             })
 
-        custom_url = self.make_custom_asset_file_url(url, 'web.assets_common')
-        updatedFileContent = self.get_asset_content(custom_url) or self.get_asset_content(url)
+        custom_url = self._make_custom_asset_url(url, 'web.assets_common')
+        updatedFileContent = self._get_content_from_url(custom_url) or self._get_content_from_url(url)
         updatedFileContent = updatedFileContent.decode('utf-8')
         for name, value in values.items():
             pattern = "'%s': %%s,\n" % name
@@ -59,30 +60,33 @@ class Assets(models.AbstractModel):
         # variables scss files
         self.save_asset(url, 'web.assets_common', updatedFileContent, 'scss')
 
+    @api.model
     def _get_custom_attachment(self, custom_url, op='='):
         """
         See web_editor.Assets._get_custom_attachment
         Extend to only return the attachments related to the current website.
         """
         website = self.env['website'].get_current_website()
-        res = super(Assets, self)._get_custom_attachment(custom_url, op=op)
+        res = super()._get_custom_attachment(custom_url, op=op)
         return res.with_context(website_id=website.id).filtered(lambda x: not x.website_id or x.website_id == website)
 
+    @api.model
     def _get_custom_asset(self, custom_url):
         """
         See web_editor.Assets._get_custom_asset
         Extend to only return the views related to the current website.
         """
         website = self.env['website'].get_current_website()
-        res = super(Assets, self)._get_custom_asset(custom_url)
+        res = super()._get_custom_asset(custom_url)
         return res.with_context(website_id=website.id).filter_duplicate()
 
+    @api.model
     def _save_asset_hook(self):
         """
         See web_editor.Assets._save_asset_hook
         Extend to add website ID at attachment creation.
         """
-        res = super(Assets, self)._save_asset_hook()
+        res = super()._save_asset_hook()
 
         website = self.env['website'].get_current_website()
         if website:

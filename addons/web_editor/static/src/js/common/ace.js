@@ -593,11 +593,9 @@ var ViewEditor = Widget.extend({
         } else {
             var resource = type === 'scss' ? this.scss[resID] : this.js[resID];
             return this._rpc({
-                route: '/web_editor/reset_asset',
-                params: {
-                    url: resID,
-                    bundle: resource.bundle,
-                },
+                model: 'web_editor.assets',
+                method: 'reset_asset',
+                args: [resID, resource.bundle],
             });
         }
     },
@@ -616,13 +614,9 @@ var ViewEditor = Widget.extend({
         var bundle = sessionIdEndsWithJS ? this.js[session.id].bundle : this.scss[session.id].bundle;
         var fileType = sessionIdEndsWithJS ? 'js' : 'scss';
         return self._rpc({
-            route: '/web_editor/save_asset',
-            params: {
-                url: session.id,
-                bundle,
-                content: session.text,
-                file_type: fileType,
-            },
+            model: 'web_editor.assets',
+            method: 'save_asset',
+            args: [session.id, bundle, session.text, fileType],
         }).then(function () {
             self._toggleDirtyInfo(session.id, fileType, false);
         });
