@@ -868,24 +868,31 @@ export function isBold(node) {
     return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
 }
 /**
- * Return true if the given node font style equal italic
+ * Return true if the given node appears italic.
  *
  * @param {Node} node
  * @returns {boolean}
  */
 export function isItalic(node) {
-    const fontStyle = getComputedStyle(closestElement(node)).fontStyle;
-    return fontStyle === 'italic';
+    return getComputedStyle(closestElement(node)).fontStyle === 'italic';
 }
 /**
- * Return true if the given node text-decoration style equal underline
+ * Return true if the given node appears underlined.
  *
  * @param {Node} node
  * @returns {boolean}
  */
 export function isUnderline(node) {
-    const textDecoration = getComputedStyle(closestElement(node)).textDecorationLine;
-    return textDecoration === 'underline';
+    return getComputedStyle(closestElement(node)).textDecoration === 'underline';
+}
+/**
+ * Return true if the given node appears struck through.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isStrikeThrough(node) {
+    return getComputedStyle(closestElement(node)).textDecoration === 'line-through';
 }
 
 export function isUnbreakable(node) {
