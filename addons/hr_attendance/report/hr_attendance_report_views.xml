@@ -33,7 +33,7 @@
         <field name="name">hr.attendance.report.view.graph</field>
         <field name="model">hr.attendance.report</field>
         <field name="arch" type="xml">
-            <graph string="Attendance Statistics" stacked="0" disable_linking="1">
+            <graph string="Attendance Statistics" stacked="0" js_class="attendance_report_graph">
                 <field name="employee_id"/>
                 <field name="check_in"/>
                 <field name="overtime_hours" type="measure" />
