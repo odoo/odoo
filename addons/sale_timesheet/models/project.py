@@ -112,7 +112,7 @@ class Project(models.Model):
 
     @api.depends('analytic_account_id', 'timesheet_ids')
     def _compute_billable_percentage(self):
-        timesheets_read_group = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids)], ['project_id', 'so_line', 'unit_amount'], ['project_id', 'so_line'], lazy=False)
+        timesheets_read_group = self.env['account.analytic.line']._read_group([('project_id', 'in', self.ids)], ['project_id', 'so_line', 'unit_amount'], ['project_id', 'so_line'], lazy=False)
         timesheets_by_project = defaultdict(list)
         for res in timesheets_read_group:
             timesheets_by_project[res['project_id'][0]].append((res['unit_amount'], bool(res['so_line'])))
@@ -142,7 +142,7 @@ class Project(models.Model):
     @api.depends('pricing_type', 'allow_timesheets', 'allow_billable', 'sale_line_employee_ids', 'sale_line_employee_ids.employee_id')
     def _compute_warning_employee_rate(self):
         projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.pricing_type == 'employee_rate')
-        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', projects.task_ids.ids)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
+        employees = self.env['account.analytic.line']._read_group([('task_id', 'in', projects.task_ids.ids)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
         dict_project_employee = defaultdict(list)
         for line in employees:
             dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]] if line['employee_id'] else []
@@ -376,7 +376,7 @@ class Project(models.Model):
             'revenues': 0.0
         }
 
-        profitability = self.env['project.profitability.report'].read_group(
+        profitability = self.env['project.profitability.report']._read_group(
             [('project_id', '=', self.id)],
             ['project_id',
                 'amount_untaxed_to_invoice',

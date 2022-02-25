@@ -82,7 +82,7 @@ class MrpRoutingWorkcenter(models.Model):
                 operation.time_cycle = operation.time_cycle_manual
 
     def _compute_workorder_count(self):
-        data = self.env['mrp.workorder'].read_group([
+        data = self.env['mrp.workorder']._read_group([
             ('operation_id', 'in', self.ids),
             ('state', '=', 'done')], ['operation_id'], ['operation_id'])
         count_data = dict((item['operation_id'][0], item['operation_id_count']) for item in data)

@@ -15,7 +15,7 @@ class MassMailing(models.Model):
 
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
-        quotation_data = self.env['sale.order'].sudo().read_group(
+        quotation_data = self.env['sale.order'].sudo()._read_group(
             [('source_id', 'in', self.source_id.ids)],
             ['source_id'], ['source_id'],
         )
@@ -29,7 +29,7 @@ class MassMailing(models.Model):
             [('source_id', 'in', self.source_id.ids)],
             [('state', 'not in', ['draft', 'cancel'])]
         ])
-        moves_data = self.env['account.move'].sudo().read_group(
+        moves_data = self.env['account.move'].sudo()._read_group(
             domain, ['source_id', 'amount_untaxed_signed'], ['source_id'],
         )
         mapped_data = {datum['source_id'][0]: datum['amount_untaxed_signed'] for datum in moves_data}

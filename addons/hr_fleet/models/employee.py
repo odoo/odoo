@@ -28,7 +28,7 @@ class Employee(models.Model):
         }
 
     def _compute_employee_cars_count(self):
-        rg = self.env['fleet.vehicle.assignation.log'].read_group([
+        rg = self.env['fleet.vehicle.assignation.log']._read_group([
             ('driver_employee_id', 'in', self.ids),
         ], ['driver_employee_id'], ['driver_employee_id'])
         cars_count = {r['driver_employee_id'][0]: r['driver_employee_id_count'] for r in rg}

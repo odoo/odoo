@@ -76,7 +76,7 @@ class account_journal(models.Model):
     def _compute_entries_count(self):
         res = {
             r['journal_id'][0]: r['journal_id_count']
-            for r in self.env['account.move'].read_group(
+            for r in self.env['account.move']._read_group(
                 domain=[('journal_id', 'in', self.ids)],
                 fields=['journal_id'],
                 groupby=['journal_id'],

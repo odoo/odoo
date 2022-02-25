@@ -10,7 +10,7 @@ class Project(models.Model):
 
     @api.depends('analytic_account_id')
     def _compute_expenses_count(self):
-        expenses_data = self.env['hr.expense'].read_group([
+        expenses_data = self.env['hr.expense']._read_group([
             ('analytic_account_id', '!=', False),
             ('analytic_account_id', 'in', self.analytic_account_id.ids)
         ],

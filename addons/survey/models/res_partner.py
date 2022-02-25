@@ -12,7 +12,7 @@ class ResPartner(models.Model):
 
     @api.depends('is_company')
     def _compute_certifications_count(self):
-        read_group_res = self.env['survey.user_input'].sudo().read_group(
+        read_group_res = self.env['survey.user_input'].sudo()._read_group(
             [('partner_id', 'in', self.ids), ('scoring_success', '=', True)],
             ['partner_id'], 'partner_id'
         )

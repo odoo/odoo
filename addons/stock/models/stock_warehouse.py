@@ -281,7 +281,7 @@ class Warehouse(models.Model):
         return res
 
     def _check_multiwarehouse_group(self):
-        cnt_by_company = self.env['stock.warehouse'].sudo().read_group([('active', '=', True)], ['company_id'], groupby=['company_id'])
+        cnt_by_company = self.env['stock.warehouse'].sudo()._read_group([('active', '=', True)], ['company_id'], groupby=['company_id'])
         if cnt_by_company:
             max_cnt = max(cnt_by_company, key=lambda k: k['company_id_count'])
             group_user = self.env.ref('base.group_user')

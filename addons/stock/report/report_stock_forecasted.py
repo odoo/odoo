@@ -45,8 +45,8 @@ class ReplenishmentReport(models.AbstractModel):
 
     def _compute_draft_quantity_count(self, product_template_ids, product_variant_ids, wh_location_ids):
         in_domain, out_domain = self._move_draft_domain(product_template_ids, product_variant_ids, wh_location_ids)
-        incoming_moves = self.env['stock.move'].read_group(in_domain, ['product_qty:sum'], 'product_id')
-        outgoing_moves = self.env['stock.move'].read_group(out_domain, ['product_qty:sum'], 'product_id')
+        incoming_moves = self.env['stock.move']._read_group(in_domain, ['product_qty:sum'], 'product_id')
+        outgoing_moves = self.env['stock.move']._read_group(out_domain, ['product_qty:sum'], 'product_id')
         in_sum = sum(move['product_qty'] for move in incoming_moves)
         out_sum = sum(move['product_qty'] for move in outgoing_moves)
         return {

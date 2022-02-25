@@ -63,7 +63,7 @@ class CouponProgram(models.Model):
 
     @api.depends('coupon_ids')
     def _compute_coupon_count(self):
-        coupon_data = self.env['coupon.coupon'].read_group([('program_id', 'in', self.ids)], ['program_id'], ['program_id'])
+        coupon_data = self.env['coupon.coupon']._read_group([('program_id', 'in', self.ids)], ['program_id'], ['program_id'])
         mapped_data = dict([(m['program_id'][0], m['program_id_count']) for m in coupon_data])
         for program in self:
             program.coupon_count = mapped_data.get(program.id, 0)

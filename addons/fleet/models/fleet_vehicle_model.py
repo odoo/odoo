@@ -55,7 +55,7 @@ class FleetVehicleModel(models.Model):
         return res
 
     def _compute_vehicle_count(self):
-        group = self.env['fleet.vehicle'].read_group(
+        group = self.env['fleet.vehicle']._read_group(
             [('model_id', 'in', self.ids)], ['id', 'model_id'], groupby='model_id', lazy=False,
         )
         count_by_model = {entry['model_id'][0]: entry['__count'] for entry in group}

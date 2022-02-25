@@ -59,7 +59,7 @@ class LinkTracker(models.Model):
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
         if self.ids:
-            clicks_data = self.env['link.tracker.click'].read_group(
+            clicks_data = self.env['link.tracker.click']._read_group(
                 [('link_id', 'in', self.ids)],
                 ['link_id'],
                 ['link_id']

@@ -85,13 +85,13 @@ class Job(models.Model):
             job.documents_count = len(job.document_ids)
 
     def _compute_all_application_count(self):
-        read_group_result = self.env['hr.applicant'].with_context(active_test=False).read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
+        read_group_result = self.env['hr.applicant'].with_context(active_test=False)._read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
         result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
         for job in self:
             job.all_application_count = result.get(job.id, 0)
 
     def _compute_application_count(self):
-        read_group_result = self.env['hr.applicant'].read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
+        read_group_result = self.env['hr.applicant']._read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
         result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
         for job in self:
             job.application_count = result.get(job.id, 0)

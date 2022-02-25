@@ -48,7 +48,7 @@ class AccountAccount(models.Model):
     @api.constrains('user_type_id')
     def _check_user_type_id_unique_current_year_earning(self):
         data_unaffected_earnings = self.env.ref('account.data_unaffected_earnings')
-        result = self.read_group([('user_type_id', '=', data_unaffected_earnings.id)], ['company_id'], ['company_id'])
+        result = self._read_group([('user_type_id', '=', data_unaffected_earnings.id)], ['company_id'], ['company_id'])
         for res in result:
             if res.get('company_id_count', 0) >= 2:
                 account_unaffected_earnings = self.search([('company_id', '=', res['company_id'][0]),
@@ -312,7 +312,7 @@ class AccountAccount(models.Model):
     def _compute_current_balance(self):
         balances = {
             read['account_id'][0]: read['balance']
-            for read in self.env['account.move.line'].read_group(
+            for read in self.env['account.move.line']._read_group(
                 domain=[('account_id', 'in', self.ids)],
                 fields=['balance', 'account_id'],
                 groupby=['account_id'],

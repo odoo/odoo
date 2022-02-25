@@ -29,7 +29,7 @@ class ResourceCalendar(models.Model):
         })
 
     def _compute_contracts_count(self):
-        count_data = self.env['hr.contract'].read_group(
+        count_data = self.env['hr.contract']._read_group(
             [('resource_calendar_id', 'in', self.ids)],
             ['resource_calendar_id'],
             ['resource_calendar_id'])

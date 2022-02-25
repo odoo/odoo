@@ -85,7 +85,7 @@ class RecruitmentStage(models.Model):
 
     @api.depends('hired_stage')
     def _compute_is_warning_visible(self):
-        applicant_data = self.env['hr.applicant'].read_group([('stage_id', 'in', self.ids)], ['stage_id'], 'stage_id')
+        applicant_data = self.env['hr.applicant']._read_group([('stage_id', 'in', self.ids)], ['stage_id'], 'stage_id')
         applicants = dict((data['stage_id'][0], data['stage_id_count']) for data in applicant_data)
         for stage in self:
             if stage._origin.hired_stage and not stage.hired_stage and applicants.get(stage._origin.id):
@@ -257,7 +257,7 @@ class Applicant(models.Model):
                 applicant.meeting_display_text = _('Last Meeting')
 
     def _get_attachment_number(self):
-        read_group_res = self.env['ir.attachment'].read_group(
+        read_group_res = self.env['ir.attachment']._read_group(
             [('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.ids)],
             ['res_id'], ['res_id'])
         attach_data = dict((res['res_id'], res['res_id_count']) for res in read_group_res)

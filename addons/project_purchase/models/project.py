@@ -11,7 +11,7 @@ class Project(models.Model):
 
     @api.depends('analytic_account_id')
     def _compute_purchase_orders_count(self):
-        purchase_orders_data = self.env['purchase.order.line'].read_group([
+        purchase_orders_data = self.env['purchase.order.line']._read_group([
             ('account_analytic_id', '!=', False),
             ('account_analytic_id', 'in', self.analytic_account_id.ids)
         ], ['account_analytic_id', 'order_id:count_distinct'], ['account_analytic_id'])

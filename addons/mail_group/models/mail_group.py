@@ -94,7 +94,7 @@ class MailGroup(models.Model):
     @api.depends('mail_group_message_ids.create_date', 'mail_group_message_ids.moderation_status')
     def _compute_mail_group_message_last_month_count(self):
         month_date = datetime.today() - relativedelta.relativedelta(months=1)
-        messages_data = self.env['mail.group.message'].read_group([
+        messages_data = self.env['mail.group.message']._read_group([
             ('mail_group_id', 'in', self.ids),
             ('create_date', '>=', fields.Datetime.to_string(month_date)),
             ('moderation_status', '=', 'accepted'),
@@ -115,7 +115,7 @@ class MailGroup(models.Model):
             self.mail_group_message_count = 0
             return
 
-        results = self.env['mail.group.message'].read_group(
+        results = self.env['mail.group.message']._read_group(
             [('mail_group_id', 'in', self.ids)],
             ['mail_group_id'],
             ['mail_group_id'],
@@ -129,7 +129,7 @@ class MailGroup(models.Model):
 
     @api.depends('mail_group_message_ids.moderation_status')
     def _compute_mail_group_message_moderation_count(self):
-        results = self.env['mail.group.message'].read_group(
+        results = self.env['mail.group.message']._read_group(
             [('mail_group_id', 'in', self.ids), ('moderation_status', '=', 'pending_moderation')],
             ['mail_group_id'],
             ['mail_group_id'],

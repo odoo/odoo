@@ -15,7 +15,7 @@ class UtmCampaign(models.Model):
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string='Currency')
 
     def _compute_quotation_count(self):
-        quotation_data = self.env['sale.order'].read_group([
+        quotation_data = self.env['sale.order']._read_group([
             ('campaign_id', 'in', self.ids)],
             ['campaign_id'], ['campaign_id'])
         data_map = {datum['campaign_id'][0]: datum['campaign_id_count'] for datum in quotation_data}

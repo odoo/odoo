@@ -53,7 +53,7 @@ class Event(models.Model):
             event.event_booth_ids = command
 
     def _get_booth_stat_count(self):
-        elements = self.env['event.booth'].sudo().read_group(
+        elements = self.env['event.booth'].sudo()._read_group(
             [('event_id', 'in', self.ids)],
             ['event_id', 'state'], ['event_id', 'state'], lazy=False
         )

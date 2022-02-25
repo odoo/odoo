@@ -108,7 +108,7 @@ class HrLeave(models.Model):
             # 2. Fetch overlapping work entries, grouped by employees
             start = min(self.mapped('date_from'), default=False)
             stop = max(self.mapped('date_to'), default=False)
-            work_entry_groups = self.env['hr.work.entry'].read_group([
+            work_entry_groups = self.env['hr.work.entry']._read_group([
                 ('date_start', '<', stop),
                 ('date_stop', '>', start),
                 ('employee_id', 'in', self.employee_id.ids),

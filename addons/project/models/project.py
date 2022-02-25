@@ -109,7 +109,7 @@ class ProjectTaskType(models.Model):
         self = self.with_context(active_test=False)
         # retrieves all the projects with a least 1 task in that stage
         # a task can be in a stage even if the project is not assigned to the stage
-        readgroup = self.with_context(active_test=False).env['project.task'].read_group([('stage_id', 'in', self.ids)], ['project_id'], ['project_id'])
+        readgroup = self.with_context(active_test=False).env['project.task']._read_group([('stage_id', 'in', self.ids)], ['project_id'], ['project_id'])
         project_ids = list(set([project['project_id'][0] for project in readgroup] + self.project_ids.ids))
 
         wizard = self.with_context(project_ids=project_ids).env['project.task.type.delete.wizard'].create({
@@ -187,7 +187,7 @@ class Project(models.Model):
             project.doc_count = docs_count.get(project.id, 0)
 
     def _compute_task_count(self):
-        task_data = self.env['project.task'].read_group(
+        task_data = self.env['project.task']._read_group(
             [('project_id', 'in', self.ids),
              '|',
                 ('stage_id.fold', '=', False),
@@ -401,7 +401,7 @@ class Project(models.Model):
 
     @api.depends('milestone_ids')
     def _compute_milestone_count(self):
-        read_group = self.env['project.milestone'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
+        read_group = self.env['project.milestone']._read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
         mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
         for project in self:
             project.milestone_count = mapped_count.get(project.id, 0)
@@ -409,7 +409,7 @@ class Project(models.Model):
     @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
     def _compute_is_milestone_exceeded(self):
         today = fields.Date.context_today(self)
-        read_group = self.env['project.milestone'].read_group([
+        read_group = self.env['project.milestone']._read_group([
             ('project_id', 'in', self.ids),
             ('is_reached', '=', False),
             ('deadline', '<', today)], ['project_id'], ['project_id'])
@@ -448,7 +448,7 @@ class Project(models.Model):
     @api.depends('collaborator_ids', 'privacy_visibility')
     def _compute_collaborator_count(self):
         project_sharings = self.filtered(lambda project: project.privacy_visibility == 'portal')
-        collaborator_read_group = self.env['project.collaborator'].read_group(
+        collaborator_read_group = self.env['project.collaborator']._read_group(
             [('project_id', 'in', project_sharings.ids)],
             ['project_id'],
             ['project_id'],
@@ -548,7 +548,7 @@ class Project(models.Model):
         if vals.get('privacy_visibility'):
             self._change_privacy_visibility()
         if 'name' in vals and self.analytic_account_id:
-            projects_read_group = self.env['project.project'].read_group(
+            projects_read_group = self.env['project.project']._read_group(
                 [('analytic_account_id', 'in', self.analytic_account_id.ids)],
                 ['analytic_account_id'],
                 ['analytic_account_id']
@@ -1306,7 +1306,7 @@ class Task(models.Model):
     def _compute_recurring_count(self):
         self.recurring_count = 0
         recurring_tasks = self.filtered(lambda l: l.recurrence_id)
-        count = self.env['project.task'].read_group([('recurrence_id', 'in', recurring_tasks.recurrence_id.ids)], ['id'], 'recurrence_id')
+        count = self.env['project.task']._read_group([('recurrence_id', 'in', recurring_tasks.recurrence_id.ids)], ['id'], 'recurrence_id')
         tasks_count = {c.get('recurrence_id')[0]: c.get('recurrence_id_count') for c in count}
         for task in recurring_tasks:
             task.recurring_count = tasks_count.get(task.recurrence_id.id, 0)
@@ -1316,7 +1316,7 @@ class Task(models.Model):
         tasks_with_dependency = self.filtered('allow_task_dependencies')
         (self - tasks_with_dependency).dependent_tasks_count = 0
         if tasks_with_dependency:
-            group_dependent = self.env['project.task'].read_group([
+            group_dependent = self.env['project.task']._read_group([
                 ('depend_on_ids', 'in', tasks_with_dependency.ids),
             ], ['depend_on_ids'], ['depend_on_ids'])
             dependent_tasks_count_dict = {

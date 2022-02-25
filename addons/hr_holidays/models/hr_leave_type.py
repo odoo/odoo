@@ -361,7 +361,7 @@ class HolidaysType(models.Model):
             ('state', 'in', ('confirm', 'validate')),
         ]
 
-        grouped_res = self.env['hr.leave.allocation'].read_group(
+        grouped_res = self.env['hr.leave.allocation']._read_group(
             domain,
             ['holiday_status_id'],
             ['holiday_status_id'],
@@ -379,7 +379,7 @@ class HolidaysType(models.Model):
             ('date_from', '<=', max_datetime),
             ('state', 'in', ('validate', 'validate1', 'confirm')),
         ]
-        grouped_res = self.env['hr.leave'].read_group(
+        grouped_res = self.env['hr.leave']._read_group(
             domain,
             ['holiday_status_id'],
             ['holiday_status_id'],
@@ -389,7 +389,7 @@ class HolidaysType(models.Model):
             allocation.group_days_leave = grouped_dict.get(allocation.id, 0)
 
     def _compute_accrual_count(self):
-        accrual_allocations = self.env['hr.leave.accrual.plan'].read_group([('time_off_type_id', 'in', self.ids)], ['time_off_type_id'], ['time_off_type_id'])
+        accrual_allocations = self.env['hr.leave.accrual.plan']._read_group([('time_off_type_id', 'in', self.ids)], ['time_off_type_id'], ['time_off_type_id'])
         mapped_data = dict((data['time_off_type_id'][0], data['time_off_type_id_count']) for data in accrual_allocations)
         for leave_type in self:
             leave_type.accrual_count = mapped_data.get(leave_type.id, 0)
