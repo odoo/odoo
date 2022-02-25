@@ -660,6 +660,9 @@ class Contact(models.AbstractModel):
         if not value:
             return ''
 
+        if not isinstance(value, models.Model) or not value._name == 'res.partner':
+            raise TypeError(_("The contact widget is only allowed on a partner field."))
+
         opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "email"]
         opsep = options and options.get('separator') or "\n"
         value = value.sudo().with_context(show_address=True)
