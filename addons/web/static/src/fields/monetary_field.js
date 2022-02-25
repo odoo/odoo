@@ -36,16 +36,23 @@ export class MonetaryField extends Component {
         return this.props.record.data.currency_id && this.props.record.data.currency_id[0];
     }
 
+    get currency() {
+        if (!isNaN(this.currencyId) && this.currencyId in session.currencies) {
+            return session.currencies[this.currencyId];
+        }
+        return null;
+    }
+
     get currencySymbol() {
-        if (this.currencyId) {
-            return session.currencies[this.currencyId].symbol;
+        if (this.currency) {
+            return this.currency.symbol;
         }
         return "";
     }
 
     get currencyPosition() {
-        if (this.currencyId) {
-            return session.currencies[this.currencyId].position;
+        if (this.currency) {
+            return this.currency.position;
         }
         return null;
     }
@@ -60,7 +67,7 @@ export class MonetaryField extends Component {
 
     get currencyDigits() {
         if (this.props.digits) return this.props.digits;
-        if (!this.currencyId) return null;
+        if (!this.currency) return null;
         return session.currencies[this.currencyId].digits;
     }
 
