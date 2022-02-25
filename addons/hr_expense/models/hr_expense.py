@@ -367,6 +367,9 @@ class HrExpense(models.Model):
             'context': {'search_default_my_expenses': 1, 'search_default_no_report': 1},
         }
 
+    def attach_document(self, **kwargs):
+        pass
+
     # ----------------------------------------
     # ORM Overrides
     # ----------------------------------------
