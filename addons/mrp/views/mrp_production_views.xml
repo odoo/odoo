@@ -36,7 +36,7 @@
                     <field name="production_duration_expected" attrs="{'invisible': [('production_duration_expected', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total expected duration" optional="show"/>
                     <field name="production_real_duration" attrs="{'invisible': [('production_real_duration', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total real duration" optional="show"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
-                    <field name="state" 
+                    <field name="state"
                            decoration-success="state in ('done', 'to_close')"
                            decoration-warning="state == 'progress'"
                            decoration-info="state in ('confirmed', 'draft')"
@@ -277,23 +277,6 @@
                                 <tree default_order="is_done,sequence" editable="bottom">
                                     <field name="product_id" force_save="1" required="1" context="{'default_detailed_type': 'product'}" attrs="{'readonly': ['|', '|', ('move_lines_count', '&gt;', 0), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
                                     <field name="location_id" string="From" readonly="1" groups="stock.group_stock_multi_locations" optional="show"/>
-                                    <field name="move_line_ids" invisible="1">
-                                        <tree>
-                                            <field name="lot_id" invisible="1"/>
-                                            <field name="owner_id" invisible="1"/>
-                                            <field name="package_id" invisible="1"/>
-                                            <field name="result_package_id" invisible="1"/>
-                                            <field name="location_id" invisible="1"/>
-                                            <field name="location_dest_id" invisible="1"/>
-                                            <field name="qty_done" invisible="1"/>
-                                            <field name="product_id" invisible="1"/>
-                                            <field name="product_uom_id" invisible="1"/>
-                                            <field name="reserved_uom_qty" invisible="1"/>
-                                            <field name="state" invisible="1"/>
-                                            <field name="move_id" invisible="1"/>
-                                            <field name="id" invisible="1"/>
-                                        </tree>
-                                    </field>
                                     <field name="propagate_cancel" invisible="1"/>
                                     <field name="price_unit" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
@@ -327,7 +310,6 @@
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible': [('forecast_availability', '&lt;', 0)]}"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible': [('forecast_availability', '&gt;=', 0)]}"/>
                                     <field name="forecast_availability" string="Reserved" attrs="{'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" widget="forecast_widget"/>
-                                    <field name="is_quantity_done_editable" invisible="1"/>
                                     <field name="quantity_done" string="Consumed"
                                         decoration-success="not is_done and (quantity_done - should_consume_qty == 0)"
                                         decoration-warning="not is_done and (quantity_done - should_consume_qty &gt; 0.0001)"
@@ -357,25 +339,6 @@
                                     <field name="byproduct_id" invisible="1"/>
                                     <field name="product_id" context="{'default_detailed_type': 'product'}" domain="[('id', '!=', parent.product_id)]" required="1"/>
                                     <field name="location_dest_id" string="To" readonly="1" groups="stock.group_stock_multi_locations"/>
-
-                                    <field name="move_line_ids" invisible="1">
-                                        <tree>
-                                            <field name="lot_id" invisible="1"/>
-                                            <field name="owner_id" invisible="1"/>
-                                            <field name="package_id" invisible="1"/>
-                                            <field name="result_package_id" invisible="1"/>
-                                            <field name="location_id" invisible="1"/>
-                                            <field name="location_dest_id" invisible="1"/>
-                                            <field name="qty_done" invisible="1"/>
-                                            <field name="product_id" invisible="1"/>
-                                            <field name="product_uom_id" invisible="1"/>
-                                            <field name="reserved_uom_qty" invisible="1"/>
-                                            <field name="state" invisible="1"/>
-                                            <field name="move_id" invisible="1"/>
-                                            <field name="id" invisible="1"/>
-                                        </tree>
-                                    </field>
-
                                     <field name="company_id" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="name" invisible="1"/>
@@ -397,8 +360,7 @@
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="product_uom_qty" string="To Produce" force_save="1" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}"/>
-                                    <field name="is_quantity_done_editable" invisible="1"/>
-                                    <field name="quantity_done" string="Produced" attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('is_quantity_done_editable', '=', False)]}"/>
+                                    <field name="quantity_done" string="Produced" attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('has_tracking', '=', True)]}"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="cost_share" optional="hide"/>
                                     <field name="show_details_visible" invisible="1"/>
