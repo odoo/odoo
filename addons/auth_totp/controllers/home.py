@@ -65,8 +65,12 @@ class Home(odoo.addons.web.controllers.main.Home):
                         httponly=True,
                         samesite='Lax'
                     )
+                # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
+                request.session.should_touch = True
                 return response
 
+        # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
+        request.session.should_touch = True
         return request.render('auth_totp.auth_totp_form', {
             'user': user,
             'error': error,
