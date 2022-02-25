@@ -1219,7 +1219,7 @@ class Task(models.Model):
     @api.constrains('depend_on_ids')
     def _check_no_cyclic_dependencies(self):
         if not self._check_m2m_recursion('depend_on_ids'):
-            raise ValidationError(_("You cannot create cyclic dependency."))
+            raise ValidationError(_("Two tasks cannot depend on each other."))
 
     @api.model
     def _get_recurrence_fields(self):
