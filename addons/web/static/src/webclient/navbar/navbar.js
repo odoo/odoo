@@ -5,7 +5,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { ErrorHandler, NotUpdatable } from "@web/core/utils/components";
+import { ErrorHandler } from "@web/core/utils/components";
 
 const { Component, onWillDestroy, useExternalListener, useEffect, useRef } = owl;
 const systrayRegistry = registry.category("systray");
@@ -185,4 +185,4 @@ export class NavBar extends Component {
     }
 }
 NavBar.template = "web.NavBar";
-NavBar.components = { Dropdown, DropdownItem, MenuDropdown, NotUpdatable, ErrorHandler };
+NavBar.components = { Dropdown, DropdownItem, MenuDropdown, ErrorHandler };
