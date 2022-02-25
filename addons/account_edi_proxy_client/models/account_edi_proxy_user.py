@@ -137,7 +137,7 @@ class AccountEdiProxyClientUser(models.Model):
         )
         if self._get_demo_state() == 'demo':
             # simulate registration
-            response = {'id_client': 'demo', 'refresh_token': 'demo'}
+            response = {'id_client': f'demo{company.id}', 'refresh_token': 'demo'}
         else:
             try:
                 # b64encode returns a bytestring, we need it as a string
