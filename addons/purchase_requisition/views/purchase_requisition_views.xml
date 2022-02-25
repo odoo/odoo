@@ -71,17 +71,6 @@
             </search>
         </field>
     </record>
-    <record id="tender_type_action" model="ir.actions.act_window">
-        <field name="name">Purchase Agreement Types</field>
-        <field name="res_model">purchase.requisition.type</field>
-        <field name="context">{}</field>
-        <field name="view_mode">tree,kanban,form</field>
-    </record>
-    <menuitem
-        id="menu_purchase_requisition_type"
-        sequence="2"
-        parent="purchase.menu_purchase_config"
-        action="tender_type_action"/>
 
     <!-- Purchase Orders -->
 
@@ -163,7 +152,7 @@
                     <page string="Products" name="products">
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
-                                <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"
+                                <field name="product_id"
                                        domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', '=', '')], 'readonly': [('parent.state', '!=', 'draft')]}"/>
                                 <field name="product_qty"/>
@@ -177,7 +166,7 @@
                             </tree>
                             <form string="Products">
                                 <group>
-                                    <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"
+                                    <field name="product_id"
                                            domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
                                     <field name="product_qty"/>
                                     <field name="qty_ordered"/>
@@ -289,7 +278,7 @@
 
 
     <record model="ir.actions.act_window" id="action_purchase_requisition">
-        <field name="name">Purchase Agreements</field>
+        <field name="name">Blanket Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.requisition</field>
         <field name="view_mode">tree,kanban,form</field>
@@ -299,15 +288,10 @@
           <p class="o_view_nocontent_smiling_face">
             Start a new purchase agreement
           </p><p>
-            Example of purchase agreements include call for tenders and blanket orders.
-          </p><p>
-            In a call for tenders, you can record the products you need to buy
-            and generate the creation of RfQs to vendors. Once the tenders have
-            been registered, you can review and compare them and you can
-            validate some and cancel others.
+            An example of a purchase agreement is a blanket order.
           </p><p>
             For a blanket order, you can record an agreement for a specific period
-            (e.g. a year) and you order products within this agreement, benefiting
+            (e.g. a year) and you order products within this agreement to benefit
             from the negotiated prices.
           </p>
         </field>
