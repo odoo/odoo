@@ -22,6 +22,26 @@ const MicrosoftCalendarModel = CalendarModel.include({
         this._super.apply(this, arguments);
         this.microsoft_is_sync = true;
         this.microsoft_pending_sync = false;
+         this.sync_data_call = _.throttle(
+            (shadow) => {
+                var self = this;
+                return this._rpc({
+                    route: '/microsoft_calendar/sync_data',
+                    params: {
+                        model: this.modelName,
+                        fromurl: window.location.href,
+                    }
+                }, {shadow}).then(function (result) {
+                    if (["need_config_from_admin", "need_auth", "sync_stopped"].includes(result.status)) {
+                        self.microsoft_is_sync = false;
+                    } else if (result.status === "no_new_event_from_microsoft" || result.status === "need_refresh") {
+                        self.microsoft_is_sync = true;
+                    }
+                    return result
+                });
+            },
+            10 * 1000
+        );
     },
 
     /**
@@ -59,23 +79,7 @@ const MicrosoftCalendarModel = CalendarModel.include({
     },
 
     _syncMicrosoftCalendar(shadow = false) {
-        var self = this;
-        this.microsoft_pending_sync = true;
-        return this._rpc({
-            route: '/microsoft_calendar/sync_data',
-            params: {
-                model: this.modelName,
-                fromurl: window.location.href,
-            }
-        }, {shadow}).then(function (result) {
-            if (result.status === "need_config_from_admin" || result.status === "need_auth") {
-                self.microsoft_is_sync = false;
-            } else if (result.status === "no_new_event_from_microsoft" || result.status === "need_refresh") {
-                self.microsoft_is_sync = true;
-            }
-            self.microsoft_pending_sync = false;
-            return result
-        });
+        return this.sync_data_call(shadow);
     },
 
     archiveRecords: function (ids, model) {
@@ -133,6 +137,11 @@ const MicrosoftCalendarController = CalendarController.include({
                 }
             } else if (o.status === "need_refresh") {
                 self.reload();
+            } else if (o.status === "parallel_sync" ) {
+                Dialog.alert(self,
+                    _t("A calendar synchronisation is already in progress. Please try again later"), {
+                    title: _t('Parallel synchronisation')
+                });
             }
         }).then(event.data.on_always, event.data.on_always);
     },

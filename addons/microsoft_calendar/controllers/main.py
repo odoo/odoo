@@ -18,6 +18,12 @@ class MicrosoftCalendarController(http.Controller):
             this URL for authorization for example
         """
         if model == 'calendar.event':
+            env = request.env
+            lock_number = 1996
+            env.cr.execute("SELECT pg_try_advisory_xact_lock(%s)", (lock_number,))
+            locked_free = env.cr.fetchone()[0]
+            if not locked_free:
+                return {"status": "parallel_sync"}
             MicrosoftCal = MicrosoftCalendarService(request.env['microsoft.service'])
 
             # Checking that admin have already configured Microsoft API for microsoft synchronization !
