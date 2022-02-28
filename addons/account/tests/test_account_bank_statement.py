@@ -334,11 +334,11 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         cls.expected_bank_line = {
             'name': cls.statement_line.payment_ref,
             'partner_id': cls.statement_line.partner_id.id,
-            'currency_id': cls.currency_2.id,
+            'currency_id': cls.currency_1.id,
             'account_id': cls.statement.journal_id.default_account_id.id,
             'debit': 1250.0,
             'credit': 0.0,
-            'amount_currency': 2500.0,
+            'amount_currency': 1250.0,
         }
 
         cls.expected_counterpart_line = {
@@ -513,9 +513,10 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
     def test_edition_journal_curr_1_statement_curr_2(self):
         self._test_edition_customer_and_supplier_flows(
+            # pylint: disable=C0326
             80.0,               120.0,
             self.currency_1,    self.currency_2,
-            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
+            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
             {'debit': 0.0,      'credit': 80.0,     'amount_currency': -120.0,      'currency_id': self.currency_2.id},
         )
 
@@ -555,7 +556,8 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         })
 
         self.assertRecordValues(statement.line_ids.move_id.line_ids, [
-            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 10.0,        'currency_id': self.currency_2.id},
+            # pylint: disable=C0326
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_1.id},
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': -10.0,       'currency_id': self.currency_2.id},
         ])
 
@@ -579,7 +581,8 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         })
 
         self.assertRecordValues(statement.line_ids.move_id.line_ids, [
-            {'debit': 10.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
+            # pylint: disable=C0326
+            {'debit': 10.0,     'credit': 0.0,      'amount_currency': 10.0,        'currency_id': self.currency_1.id},
             {'debit': 0.0,      'credit': 10.0,     'amount_currency': 0.0,         'currency_id': self.currency_2.id},
         ])
 
@@ -775,8 +778,8 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 **self.expected_bank_line,
                 'debit': 0.0,
                 'credit': 2000.0,
-                'amount_currency': -4000.0,
-                'currency_id': self.currency_3.id,
+                'amount_currency': -2000.0,
+                'currency_id': self.currency_1.id,
             },
             {
                 **self.expected_counterpart_line,
@@ -807,8 +810,8 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 'partner_id': self.statement_line.partner_id.id,
                 'debit': 0.0,
                 'credit': 2000.0,
-                'amount_currency': -4000.0,
-                'currency_id': self.currency_3.id,
+                'amount_currency': -2000.0,
+                'currency_id': self.currency_1.id,
             },
             {
                 **self.expected_counterpart_line,
@@ -1057,17 +1060,19 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
     def test_reconciliation_journal_curr_1_statement_curr_2_counterpart_curr_2(self):
         self._test_reconciliation_customer_and_supplier_flows(
+            # pylint: disable=C0326
             80.0,               120.0,              -120.0,
             self.currency_1,    self.currency_2,    self.currency_2,
-            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
+            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
             {'debit': 0.0,      'credit': 80.0,     'amount_currency': -120.0,      'currency_id': self.currency_2.id},
         )
 
     def test_reconciliation_journal_curr_1_statement_curr_2_counterpart_curr_3(self):
         self._test_reconciliation_customer_and_supplier_flows(
+            # pylint: disable=C0326
             80.0,               120.0,              -480.0,
             self.currency_1,    self.currency_2,    self.currency_3,
-            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
+            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
             {'debit': 0.0,      'credit': 80.0,     'amount_currency': -120.0,      'currency_id': self.currency_2.id},
         )
 
@@ -1113,9 +1118,10 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
     def test_reconciliation_journal_curr_1_statement_curr_2_counterpart_curr_1(self):
         self._test_reconciliation_customer_and_supplier_flows(
+            # pylint: disable=C0326
             80.0,               120.0,              -80.0,
             self.currency_1,    self.currency_2,    self.currency_1,
-            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
+            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
             {'debit': 0.0,      'credit': 80.0,     'amount_currency': -120.0,      'currency_id': self.currency_2.id},
         )
 
@@ -1267,7 +1273,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             {
                 **self.expected_bank_line,
                 'amount_residual': 1250.0,
-                'amount_residual_currency': 2500.0,
+                'amount_residual_currency': 1250.0,
             },
         ])
 
@@ -1309,7 +1315,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             {
                 **self.expected_bank_line,
                 'amount_residual': 1250.0,
-                'amount_residual_currency': 2500.0,
+                'amount_residual_currency': 1250.0,
             },
         ])
 
@@ -1347,7 +1353,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             {
                 **self.expected_bank_line,
                 'amount_residual': 1250.0,
-                'amount_residual_currency': 2500.0,
+                'amount_residual_currency': 1250.0,
             },
         ])
 
