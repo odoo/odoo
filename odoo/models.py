@@ -3635,6 +3635,7 @@ Fields:
             return True
 
         self.check_access_rights('unlink')
+        self.check_access_rule('unlink')
         self._check_concurrency()
 
         from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -3649,8 +3650,6 @@ Fields:
         self.modified(self._fields, before=True)
 
         with self.env.norecompute():
-            self.check_access_rule('unlink')
-
             cr = self._cr
             Data = self.env['ir.model.data'].sudo().with_context({})
             Defaults = self.env['ir.default'].sudo()
