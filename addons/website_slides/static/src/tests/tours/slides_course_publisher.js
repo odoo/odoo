@@ -77,7 +77,7 @@ tour.register('course_publisher', {
     slidesTourTools.addVideoToSection('Introduction'),
     [{
     content: 'eLearning: publish newly added course',
-    trigger: 'span:contains("Dschinghis Khan - Moskau 1979")',  // wait for slide to appear
+    trigger: 'span:contains("Dschinghis Khan - Dschinghis Khan (1979)")',  // wait for slide to appear
     // trigger: 'span.o_wslides_js_slide_toggle_is_preview:first',
     run: function () {
         $('span.o_wslides_js_slide_toggle_is_preview:first').click();
