@@ -252,7 +252,7 @@ class LunchSupplier(models.Model):
             'quantity': order.quantity,
             'price': order.price,
             'toppings': order.display_toppings,
-            'username': order.user_id.name,
+            'username': order.user_id.display_name,
             'site': order.user_id.last_lunch_location_id.name,
         } for order in orders_per_site]
 
