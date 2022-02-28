@@ -5781,7 +5781,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             $select.append(`<we-button data-select-width="${value}">${label}</we-button>`);
         });
 
-        if (this._getImageMimetype(img) !== 'image/jpeg') {
+        if (!['image/jpeg', 'image/webp'].includes(this._getImageMimetype(img))) {
             const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
             if (optQuality) {
                 optQuality.remove();

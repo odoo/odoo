@@ -73,8 +73,8 @@ class ImageProcess():
         self.source = source or False
         self.operationsCount = 0
 
-        if not source or source[:1] == b'<':
-            # don't process empty source or SVG
+        if not source or source[:1] == b'<' or (source[0:4] == b'RIFF' and source[8:15] == b'WEBPVP8'):
+            # don't process empty source or SVG or WEBP
             self.image = False
         else:
             try:
@@ -441,8 +441,13 @@ def is_image_size_above(base64_source_1, base64_source_2):
     if base64_source_1[:1] in (b'P', 'P') or base64_source_2[:1] in (b'P', 'P'):
         # False for SVG
         return False
-    image_source = image_fix_orientation(base64_to_image(base64_source_1))
-    image_target = image_fix_orientation(base64_to_image(base64_source_2))
+    source_1 = base64.b64decode(base64_source_1)
+    source_2 = base64.b64decode(base64_source_2)
+    if (source_1[0:4] == b'RIFF' and source_1[8:15] == b'WEBPVP8') or (source_2[0:4] == b'RIFF' and source_2[8:15] == b'WEBPVP8'):
+        # False for WEBP
+        return False
+    image_source = image_fix_orientation(binary_to_image(source_1))
+    image_target = image_fix_orientation(binary_to_image(source_2))
     return image_source.width > image_target.width or image_source.height > image_target.height
 
 

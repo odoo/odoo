@@ -35,7 +35,10 @@ const ImageCropWidget = Widget.extend({
         const data = Object.assign({}, media.dataset);
         this.initialSrc = src;
         this.aspectRatio = data.aspectRatio || "0/0";
-        const mimetype = data.mimetype || src.endsWith('.png') ? 'image/png' : 'image/jpeg';
+        const mimetype = data.mimetype ||
+                src.endsWith('.png') ? 'image/png' :
+                src.endsWith('.webp') ? 'image/webp' :
+                'image/jpeg';
         this.mimetype = options.mimetype || mimetype;
     },
     /**
