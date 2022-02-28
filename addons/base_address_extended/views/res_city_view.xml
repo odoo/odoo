@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="city_view_tree" model="ir.ui.view">
+        <record id="view_city_tree" model="ir.ui.view">
             <field name="name">res.city.tree</field>
             <field name="model">res.city</field>
             <field name="arch" type="xml">
@@ -13,7 +13,7 @@
                 </tree>
             </field>
         </record>
-        <record id="city_view_search" model="ir.ui.view">
+        <record id="view_city_filter" model="ir.ui.view">
             <field name="model">res.city</field>
             <field name="arch" type="xml">
                 <search string="Search City">
@@ -25,7 +25,7 @@
             </field>
         </record>
 
-        <record id="city_action" model="ir.actions.act_window">
+        <record id="action_res_city_tree" model="ir.actions.act_window">
             <field name="name">Cities</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.city</field>
@@ -38,4 +38,3 @@
         </record>
     </data>
 </odoo>
-

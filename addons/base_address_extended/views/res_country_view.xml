@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <record id="view_res_country_city_extended_form" model="ir.ui.view">
+        <field name="model">res.country</field>
+        <field name="inherit_id" ref="base.view_country_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="%(action_res_city_tree)d"
+                    class="oe_stat_button"
+                    icon="fa-globe"
+                    type="action"
+                    context="{'default_country_id': active_id, 'search_default_country_id': active_id}"
+                    string="Cities">
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='phone_code']" position="after">
+                <field name="enforce_cities"/>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</odoo>
