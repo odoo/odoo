@@ -955,7 +955,7 @@ export class DynamicRecordList extends DynamicList {
         this.records = [];
         this.data = params.data;
         this.type = "record-list";
-        this.onRecordDeleted = params.onRecordDeleted || (() => {});
+        this.isDirty = false;
     }
 
     get quickCreateRecord() {
@@ -1010,7 +1010,6 @@ export class DynamicRecordList extends DynamicList {
         }
         for (const record of records) {
             this.removeRecord(record);
-            this.onRecordDeleted(record);
         }
         // Relaod the model only if more records should appear on the current page.
         if (this.count && !this.records.length) {
@@ -1064,15 +1063,20 @@ export class DynamicRecordList extends DynamicList {
         }
     }
 
-    async quickCreate(activeFields, fieldName, value) {
-        const record = this.quickCreateRecord;
-        if (record) {
-            this.removeRecord(record);
-        }
+    quickCreateContext(fieldName, value) {
         const context = { ...this.context };
         if (fieldName) {
             context[`default_${fieldName}`] = value;
         }
+        return context;
+    }
+
+    async quickCreate(activeFields, context) {
+        const record = this.quickCreateRecord;
+        if (record) {
+            this.removeRecord(record);
+        }
+        this.isDirty = true;
         return this.createRecord({ activeFields, context, isInQuickCreation: true }, true);
     }
 
@@ -1241,11 +1245,7 @@ export class DynamicGroupList extends DynamicList {
         if (group.isFolded) {
             await group.toggle();
         }
-        await group.list.quickCreate(
-            this.quickCreateInfo.fields,
-            this.groupByField.name,
-            group.getServerValue()
-        );
+        await group.quickCreate(this.quickCreateInfo.fields, this.context);
     }
 
     /**
@@ -1450,7 +1450,6 @@ export class Group extends DataPoint {
             limit: params.limit,
             groupByInfo: params.groupByInfo,
             onRecordWillSwitchMode: params.onRecordWillSwitchMode,
-            onRecordDeleted: this.onRecordDeleted.bind(this),
         };
         this.list = this.model.createDataPoint("list", listParams, state.listState);
     }
@@ -1466,6 +1465,21 @@ export class Group extends DataPoint {
         this.count = 0;
         this.aggregates = {};
         this.list.empty();
+    }
+
+    getAggregableRecords() {
+        return this.list.records.filter((r) => !r.isInQuickCreation);
+    }
+
+    getAggregates(fieldName) {
+        if (this.list.isDirty) {
+            const records = this.getAggregableRecords();
+            return fieldName
+                ? records.reduce((acc, r) => acc + r.data[fieldName], 0)
+                : records.length;
+        } else {
+            return fieldName ? this.aggregates[fieldName] || 0 : this.count;
+        }
     }
 
     getServerValue() {
@@ -1555,6 +1569,14 @@ export class Group extends DataPoint {
         return this.list.removeRecord(record);
     }
 
+    quickCreate(fields, context) {
+        const ctx = {
+            ...context,
+            [`default_${this.groupByField.name}`]: this.getServerValue(),
+        };
+        return this.list.quickCreate(fields, ctx);
+    }
+
     async validateQuickCreate() {
         const record = this.list.quickCreateRecord;
         if (!record) {
@@ -1562,12 +1584,7 @@ export class Group extends DataPoint {
         }
         await record.save();
         this.count++;
-        await this.list.quickCreate(record.activeFields, null, record.context);
         return record;
-    }
-
-    onRecordDeleted() {
-        this.count--;
     }
 }
 

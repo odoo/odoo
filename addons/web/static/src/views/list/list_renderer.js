@@ -381,7 +381,7 @@ export class ListRenderer extends Component {
         if (this.fields[fieldName].sortable && column.hasLabel) {
             if (list.isGrouped) {
                 const isSortable =
-                    list.groups[0].aggregates[fieldName] || list.groupBy.includes(fieldName);
+                    list.groups[0].getAggregates(fieldName) || list.groupBy.includes(fieldName);
                 if (isSortable) {
                     list.sortBy(fieldName);
                 }

@@ -44,7 +44,7 @@
                                             </DropdownItem>
                                         </t>
                                     </Dropdown>
-                                    <span t-if="props.list.canQuickCreate()" class="o_kanban_quick_add" t-on-click="() => props.list.quickCreate(group)">
+                                    <span t-if="props.list.canQuickCreate()" class="o_kanban_quick_add" t-on-click="() => this.quickCreate(group)">
                                         <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
                                     </span>
                                 </t>
@@ -55,7 +55,7 @@
                             <div t-if="!group.isFolded and group.progressValues.length" class="o_kanban_counter">
                                 <div class="o_kanban_counter_progress progress">
                                     <t t-foreach="group.progressValues" t-as="progressData" t-key="progressData.color">
-                                        <div t-if="progressData.count or progressData.color === 'muted'"
+                                        <div t-if="progressData.count"
                                             role="progressbar"
                                             class="progress-bar o_bar_has_records"
                                             t-att-class="{ 'progress-bar-animated progress-bar-striped': group.activeProgressValue === progressData.value }"

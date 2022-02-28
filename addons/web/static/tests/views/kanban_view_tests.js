@@ -7377,7 +7377,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_kanban_group:last-child"),
             "o_kanban_group_show_muted"
         );
-        assert.deepEqual(getCounters(), ["1", "4"]);
+        assert.deepEqual(getCounters(), ["1", "1"]);
     });
 
     QUnit.test('column progressbars: "false" bar with sum_field', async (assert) => {
@@ -7618,10 +7618,9 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.deepEqual(getCounters(), ["-4", "36"], "counter should contain the correct value");
-        assert.strictEqual(
-            getColumn(1).querySelector(".o_kanban_counter_progress > .progress-bar:first-child")
-                .dataset.tooltip,
-            "1 yop",
+        assert.deepEqual(
+            [...getColumn(1).querySelectorAll(".progress-bar")].map((el) => el.dataset.tooltip),
+            ["1 yop", "1 gnap", "1 blip"],
             "the counter progressbars should be correctly displayed"
         );
 
@@ -7630,10 +7629,9 @@ QUnit.module("Views", (hooks) => {
         await clickColumnAction("Archive All");
 
         assert.deepEqual(getCounters(), ["-4", "0"], "counter should contain the correct value");
-        assert.strictEqual(
-            getColumn(1).querySelector(".o_kanban_counter_progress > .progress-bar:first-child")
-                .dataset.tooltip,
-            "0 Other",
+        assert.containsNone(
+            getColumn(1),
+            ".progress-bar",
             "the counter progressbars should have been correctly updated"
         );
     });
@@ -7719,7 +7717,7 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("RPCs when (de)activating kanban view progressbar filters", async (assert) => {
+    QUnit.test("RPCs when (de)activating kanban view progressbar filters", async (assert) => {
         assert.expect(8);
 
         await makeView({
@@ -7737,23 +7735,17 @@ QUnit.module("Views", (hooks) => {
                 </kanban>
             `,
             groupBy: ["bar"],
-            mockRPC(route, args) {
-                assert.step(args.method || route);
+            async mockRPC(route, { method }) {
+                assert.step(method || route);
             },
         });
 
         // Activate "yop" on second column
-        await click(
-            target.querySelector('.o_kanban_group:nth-child(2) .progress-bar[data-filter="yop"]')
-        );
+        await click(getColumn(1), ".progress-bar.bg-success");
         // Activate "gnap" on second column
-        await click(
-            target.querySelector('.o_kanban_group:nth-child(2) .progress-bar[data-filter="gnap"]')
-        );
+        await click(getColumn(1), ".progress-bar.bg-warning");
         // Deactivate "gnap" on second column
-        await click(
-            target.querySelector('.o_kanban_group:nth-child(2) .progress-bar[data-filter="gnap"]')
-        );
+        await click(getColumn(1), ".progress-bar.bg-warning");
 
         assert.verifySteps([
             // initial load
@@ -7770,7 +7762,7 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("drag & drop records grouped by m2o with progressbar", async (assert) => {
+    QUnit.test("drag & drop records grouped by m2o with progressbar", async (assert) => {
         assert.expect(4);
 
         serverData.models.partner.records[0].product_id = false;
@@ -7789,38 +7781,30 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
-                if (route === "/web/dataset/resequence") {
-                    return true;
-                }
-            },
         });
 
-        assert.deepEqual(getCounters(), ["1"], "counter should contain the correct value");
+        assert.deepEqual(getCounters(), ["1", "1", "2"]);
 
-        await testUtils.dom.dragAndDrop(
-            target.querySelector(".o_kanban_group:first-child .o_kanban_record:first-child"),
-            target.querySelector(".o_kanban_group:nth-child(2)")
-        );
-        await nextTick(); // wait for update resulting from drag and drop
-        assert.deepEqual(getCounters(), ["0"], "counter should contain the correct value");
+        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:nth-child(2)",
+        });
 
-        await testUtils.dom.dragAndDrop(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record:nth-child(2)"),
-            target.querySelector(".o_kanban_group:first-child")
-        );
-        await nextTick(); // wait for update resulting from drag and drop
-        assert.deepEqual(getCounters(), ["1"], "counter should contain the correct value");
+        assert.deepEqual(getCounters(), ["0", "2", "2"]);
 
-        await testUtils.dom.dragAndDrop(
-            target.querySelector(".o_kanban_group:first-child .o_kanban_record:first-child"),
-            target.querySelector(".o_kanban_group:nth-child(2)")
-        );
-        await nextTick(); // wait for update resulting from drag and drop
-        assert.deepEqual(getCounters(), ["0"], "counter should contain the correct value");
+        await dragAndDrop(".o_kanban_group:nth-child(2) .o_kanban_record", {
+            inside: ".o_kanban_group:first-child",
+        });
+
+        assert.deepEqual(getCounters(), ["1", "1", "2"]);
+
+        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:nth-child(3)",
+        });
+
+        assert.deepEqual(getCounters(), ["0", "1", "3"]);
     });
 
-    QUnit.skipWOWL("progress bar subgroup count recompute", async (assert) => {
+    QUnit.test("progress bar subgroup count recompute", async (assert) => {
         assert.expect(2);
 
         await makeView({
@@ -7838,23 +7822,19 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
 
-        assert.deepEqual(getCounters(), ["3"], "Initial count should be Three");
+        assert.deepEqual(getCounters(), ["1", "3"]);
 
         await click(target, ".o_kanban_group:nth-child(2) .bg-success");
 
-        assert.deepEqual(
-            getCounters(),
-            ["1"],
-            "kanban counters should vary according to what subgroup is selected"
-        );
+        assert.deepEqual(getCounters(), ["1", "1"]);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "progress bar recompute after drag&drop to and from other column",
         async (assert) => {
             assert.expect(4);
 
-            const view = await makeView({
+            await makeView({
                 type: "kanban",
                 resModel: "partner",
                 serverData,
@@ -7870,26 +7850,23 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.deepEqual(
-                [...view.el.querySelectorAll(".progress-bar")].map((el) => el.dataset.tooltip),
-                ["0 yop", "0 gnap", "1 blip", "0 __false", "1 yop", "1 gnap", "1 blip", "0 __false"]
+                [...target.querySelectorAll(".progress-bar")].map((el) => el.dataset.tooltip),
+                ["1 blip", "1 yop", "1 gnap", "1 blip"]
             );
 
             assert.deepEqual(getCounters(), ["1", "3"]);
 
             // Drag the last kanban record to the first column
-            await testUtils.dom.dragAndDrop(
-                [...view.el.querySelectorAll(".o_kanban_record")].pop(),
-                [...view.el.querySelectorAll(".o_kanban_group")].shift()
-            );
+            await dragAndDrop(".o_kanban_group:last-child .o_kanban_record:nth-child(4)", {
+                inside: ".o_kanban_group:first-child",
+            });
 
             assert.deepEqual(
-                [...view.el.querySelectorAll(".progress-bar")].map((el) => el.dataset.tooltip),
-                ["0 yop", "1 gnap", "1 blip", "0 __false", "1 yop", "0 gnap", "1 blip", "0 __false"]
+                [...target.querySelectorAll(".progress-bar")].map((el) => el.dataset.tooltip),
+                ["1 gnap", "1 blip", "1 yop", "1 blip"]
             );
 
             assert.deepEqual(getCounters(), ["2", "2"]);
-
-            view.destroy();
         }
     );
 
@@ -7904,7 +7881,7 @@ QUnit.module("Views", (hooks) => {
                 el.sequence = i;
             });
 
-            const view = await makeView({
+            await makeView({
                 type: "kanban",
                 resModel: "partner",
                 serverData,
@@ -7960,15 +7937,13 @@ QUnit.module("Views", (hooks) => {
                 ].map((el) => Number(el.innerText)),
                 [4, 1, 2, 3]
             );
-
-            view.destroy();
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "column progressbars on quick create with quick_create_view are updated",
         async (assert) => {
-            assert.expect(1);
+            assert.expect(2);
 
             serverData.views = {
                 "partner,some_view_ref,form": `<form><field name="int_field"/></form>`,
@@ -7991,25 +7966,24 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            const initialCount = Number(getCounters()[0]);
+            assert.deepEqual(getCounters(), ["-4", "36"]);
 
             await createRecord();
             await editQuickCreateInput("int_field", 44);
             await validateRecord();
 
-            const lastCount = Number(getCounters()[0]);
-            assert.strictEqual(
-                lastCount,
-                initialCount + 44,
+            assert.deepEqual(
+                getCounters(),
+                ["40", "36"],
                 "kanban counters should have been updated on quick create"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "column progressbars and active filter on quick create with quick_create_view are updated",
         async (assert) => {
-            assert.expect(2);
+            assert.expect(7);
 
             serverData.views = {
                 "partner,some_view_ref,form": `
@@ -8024,41 +7998,44 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch: `
-                <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                    <field name="int_field"/>
-                    <field name="foo"/>
-                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
-                    <templates><t t-name="kanban-box">
-                        <div><field name="name"/></div>
-                    </t></templates>
-                </kanban>
-            `,
+                    <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                        <field name="int_field"/>
+                        <field name="foo"/>
+                        <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                        <templates><t t-name="kanban-box">
+                            <div><field name="name"/></div>
+                        </t></templates>
+                    </kanban>
+                `,
                 groupBy: ["bar"],
             });
 
-            await click(target, '.o_kanban_group:nth-child(2) .progress-bar[data-filter="blip"]');
-            const initialCount = Number(getCounters()[1]);
-            assert.strictEqual(initialCount, -4, "Initial count should be -4");
+            await click(getColumn(0), ".progress-bar.bg-danger");
+
+            assert.containsOnce(getColumn(0), ".o_kanban_record");
+            assert.containsOnce(getColumn(0), ".oe_kanban_card_danger");
+            assert.deepEqual(getCounters(), ["-4", "36"]);
 
             // open the quick create
             await createRecord();
 
-            // fill it with a record that satisfies the activated filter
+            // fill it with a record that satisfies the active filter
             await editQuickCreateInput("int_field", 44);
             await editQuickCreateInput("foo", "blip");
             await validateRecord();
 
-            // fill it again with another record that DOES NOT satisfies the activated filter
+            // fill it again with another record that DOES NOT satisfy the active filter
             await editQuickCreateInput("int_field", 1000);
             await editQuickCreateInput("foo", "yop");
             await validateRecord();
 
-            // check counter
-            const lastCount = Number(getCounters()[1]);
-            assert.strictEqual(
-                lastCount,
-                initialCount + 44,
-                "kanban counters should have been updated on quick create, respecting the activated filter"
+            assert.containsN(getColumn(0), ".o_kanban_record", 3);
+            assert.containsN(getColumn(0), ".oe_kanban_card_danger", 2);
+            assert.containsOnce(getColumn(0), ".oe_kanban_card_success");
+            assert.deepEqual(
+                getCounters(),
+                ["40", "36"],
+                "kanban counters should have been updated on quick create, respecting the active filter"
             );
         }
     );

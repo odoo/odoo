@@ -66,7 +66,7 @@ class KanbanGroup extends Group {
     }
 
     get hasActiveProgressValue() {
-        return this.activeProgressValue !== null;
+        return this.model.progressAttributes && this.activeProgressValue !== null;
     }
 
     exportState() {
@@ -76,12 +76,37 @@ class KanbanGroup extends Group {
         };
     }
 
-    getAggregates(fieldName) {
-        if (this.list.isDirty) {
-            return this.list.records.reduce((acc, r) => acc + r.data[fieldName], 0);
-        } else {
-            return this.aggregates[fieldName];
+    /**
+     * @override
+     */
+    getAggregableRecords() {
+        const records = super.getAggregableRecords();
+        if (!this.hasActiveProgressValue) {
+            return records;
         }
+        const { fieldName } = this.model.progressAttributes;
+        let recordsFilter;
+        if (this.activeProgressValue === FALSE) {
+            const values = this.progressValues
+                .map((pv) => pv.value)
+                .filter((val) => val !== this.activeProgressValue);
+            recordsFilter = (r) => !values.includes(r.data[fieldName]);
+        } else {
+            recordsFilter = (r) => r.data[fieldName] === this.activeProgressValue;
+        }
+        return records.filter(recordsFilter);
+    }
+
+    /**
+     * @override
+     */
+    quickCreate(fields, context) {
+        const ctx = { ...context };
+        if (this.hasActiveProgressValue && this.activeProgressValue !== FALSE) {
+            const { fieldName } = this.model.progressAttributes;
+            ctx[`default_${fieldName}`] = this.activeProgressValue;
+        }
+        return super.quickCreate(fields, ctx);
     }
 
     async filterProgressValue(value) {

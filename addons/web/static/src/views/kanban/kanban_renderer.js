@@ -267,19 +267,14 @@ export class KanbanRenderer extends Component {
     }
 
     getGroupAggregate(group) {
-        let value = group.count;
-        let currency = false;
-        let title = this.env._t("Count");
         const { sumField } = this.props.list.model.progressAttributes;
-        if (sumField) {
-            const { currency_field, name } = sumField;
-            title = sumField.string;
-            value = group.getAggregates(name);
-            if (value && currency_field) {
-                currency = session.currencies[session.company_currency_id];
-            }
+        const value = group.getAggregates(sumField && sumField.name);
+        const title = sumField ? sumField.string : this.env._t("Count");
+        let currency = false;
+        if (sumField && value && sumField.currency_field) {
+            currency = session.currencies[session.company_currency_id];
         }
-        return { value: value || 0, currency, title };
+        return { value, currency, title };
     }
 
     generateGhostColumns() {
@@ -334,10 +329,17 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
     // Edition methods
     // ------------------------------------------------------------------------
+
+    quickCreate(group) {
+        return this.props.list.quickCreate(group);
+    }
+
     async validateQuickCreate(mode, group) {
         const record = await group.validateQuickCreate();
         if (mode === "edit") {
             await this.props.openRecord(record);
+        } else {
+            await this.quickCreate(group);
         }
     }
 
@@ -382,10 +384,10 @@ export class KanbanRenderer extends Component {
     }
 
     deleteRecord(record, group) {
-        const { list } = group || this.props;
+        const listOrGroup = group || this.props.list;
         this.dialog.add(ConfirmationDialog, {
             body: this.env._t("Are you sure you want to delete this record?"),
-            confirm: () => list.deleteRecords([record]),
+            confirm: () => listOrGroup.deleteRecords([record]),
             cancel: () => {},
         });
     }
