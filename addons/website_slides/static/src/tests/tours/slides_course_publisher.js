@@ -15,7 +15,7 @@ tour.register('course_publisher', {
     test: true
 }, [{
     content: 'eLearning: click on New (top-menu)',
-    trigger: 'li.o_new_content_menu a'
+    trigger: 'div.o_new_content_menu a'
 }, {
     content: 'eLearning: click on New Course',
     trigger: 'a:contains("Course")'
@@ -42,7 +42,7 @@ tour.register('course_publisher', {
     trigger: 'button:contains("Create")',
 }, {
     content: 'eLearning: launch course edition',
-    trigger: 'li[id="edit-page-menu"] a',
+    trigger: 'div[id="edit-page-menu"] a',
 }, {
     content: 'eLearning: double click image to edit it',
     trigger: 'img.o_wslides_course_pict',
