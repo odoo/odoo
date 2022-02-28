@@ -32,7 +32,7 @@ tour.register('course_publisher', {
     in_modal: false,
 }, {
     content: 'eLearning: set description',
-    trigger: 'input[name="description"]',
+    trigger: 'textarea[name="description"]',
     run: 'text Déboulonnate is very common at Fleurus',
 }, {
     content: 'eLearning: we want reviews',
