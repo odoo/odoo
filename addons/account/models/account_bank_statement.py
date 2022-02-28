@@ -586,7 +586,7 @@ class AccountBankStatementLine(models.Model):
         statement = self.statement_id
         journal = statement.journal_id
         company_currency = journal.company_id.currency_id
-        journal_currency = journal.currency_id if journal.currency_id != company_currency else False
+        journal_currency = journal.currency_id or company_currency
 
         if self.foreign_currency_id and journal_currency:
             currency_id = journal_currency.id
