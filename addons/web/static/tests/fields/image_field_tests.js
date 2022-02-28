@@ -87,11 +87,6 @@ QUnit.module("Fields", (hooks) => {
                         "The fields document, display_name and __last_update should be present when reading an image"
                     );
                 }
-                if (route === `data:image/png;base64,${MY_IMAGE}`) {
-                    // FIXME: not called?
-                    assert.ok(true, "should called the correct route");
-                    return Promise.resolve("wow");
-                }
             },
         });
 
@@ -104,6 +99,11 @@ QUnit.module("Fields", (hooks) => {
             target,
             ".o_field_widget[name='document'] > img",
             "the widget should contain an image"
+        );
+        assert.strictEqual(
+            target.querySelector('div[name="document"] > img').dataset.src,
+            `data:image/png;base64,${MY_IMAGE}`,
+            "the image should have the correct src"
         );
         assert.hasClass(
             target.querySelector(".o_field_widget[name='document'] > img"),
@@ -134,12 +134,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "ImageField is correctly replaced when given an incorrect value",
         async function (assert) {
-            // assert.expect(7);
-            assert.expect(5);
+            assert.expect(6);
 
             serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
             serverData.models.partner.records[0].document = "incorrect_base64_value";
 
+            // FIXME WOWL patch willStart?
             // testUtils.mock.patch(basicFields.FieldBinaryImage, {
             //     // Delay the _render function: this will ensure that the error triggered
             //     // by the incorrect base64 value is dispatched before the src is replaced
@@ -162,11 +162,6 @@ QUnit.module("Fields", (hooks) => {
                         <field name="document" widget="image" options="{'size': [90, 90]}"/>
                     </form>
                 `,
-                mockRPC(route) {
-                    if (route === "/web/static/img/placeholder.png") {
-                        assert.step("call placeholder route"); // FIXME: not called?
-                    }
-                },
             });
 
             assert.hasClass(
@@ -178,6 +173,11 @@ QUnit.module("Fields", (hooks) => {
                 form,
                 ".o_field_widget[name='document'] > img",
                 "the widget should contain an image"
+            );
+            assert.strictEqual(
+                target.querySelector('div[name="document"] > img')[0].dataset.src,
+                `/web/static/img/placeholder.png`,
+                "the image should have the correct src"
             );
             assert.hasClass(
                 target.querySelector(".o_field_widget[name='document'] > img"),
@@ -195,8 +195,6 @@ QUnit.module("Fields", (hooks) => {
                 "90px",
                 "the image should correctly set its attributes"
             );
-
-            // assert.verifySteps(["call placeholder route"]);
         }
     );
 
@@ -224,8 +222,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("ImageField in subviews is loaded correctly", async function (assert) {
-        assert.expect(2);
-        //assert.expect(6);
+        assert.expect(4);
 
         serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
         serverData.models.partner.records[0].document = MY_IMAGE;
@@ -261,20 +258,12 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>
             `,
-            /*
-            mockRPC(route) {
-                if (route === `data:image/png;base64,${MY_IMAGE}`) {
-                    assert.step("The view's image should have been fetched");
-                    return "wow";
-                }
-                if (route === `data:image/gif;base64,${PRODUCT_IMAGE}`) {
-                    assert.step("The dialog's image should have been fetched");
-                    return;
-                }
-            },*/
         });
-        //assert.verifySteps(["The view's image should have been fetched"]);
 
+        assert.ok(
+            document.querySelector(`img[data-src="data:image/png;base64,${MY_IMAGE}"]`),
+            "The view's image is in the DOM"
+        );
         assert.containsOnce(
             form,
             ".o_kanban_record.oe_kanban_global_click",
@@ -283,8 +272,12 @@ QUnit.module("Fields", (hooks) => {
 
         // Actual flow: click on an element of the m2m to get its form view
         await click(target, ".oe_kanban_global_click");
-        assert.strictEqual($(".modal").length, 1, "The modal should have opened");
-        //assert.verifySteps(["The dialog's image should have been fetched"]);
+        assert.containsOnce(document.body, ".modal", "The modal should have opened");
+
+        assert.ok(
+            document.querySelector(`img[data-src="data:image/gif;base64,${PRODUCT_IMAGE}"]`),
+            "The dialog's image is in the DOM"
+        );
     });
 
     QUnit.skipWOWL("ImageField in x2many list is loaded correctly", async function (assert) {
@@ -308,15 +301,13 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>
             `,
-            mockRPC(route) {
-                if (route === `data:image/gif;base64,${PRODUCT_IMAGE}`) {
-                    assert.ok(true, "The list's image should have been fetched");
-                    return;
-                }
-            },
         });
 
         assert.containsOnce(form, "tr.o_data_row", "There should be one record in the many2many");
+        assert.ok(
+            document.querySelector(`img[data-src="data:image/gif;base64,${PRODUCT_IMAGE}"]`),
+            "The list's image is in the DOM"
+        );
     });
 
     QUnit.skipWOWL("ImageField with required attribute", async function (assert) {

@@ -651,25 +651,35 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("PriorityField with readonly attribute", async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 2,
             serverData,
-            arch: `
-                <form>
-                    <field name="selection" widget="priority" readonly="1" />
-                </form>
-            `,
+            arch: '<form><field name="selection" widget="priority" readonly="1"/></form>',
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    throw new Error("should not save");
+                }
+            },
         });
 
         assert.containsN(
-            form,
-            ".o_field_widget .o_priority span",
+            target,
+            "span.o_priority_star.fa.fa-star-o",
             2,
             "stars of priority widget should rendered with span tag if readonly"
+        );
+
+        await click(target.querySelectorAll(".o_priority_star.fa-star-o")[1]);
+
+        assert.containsN(
+            target,
+            "span.o_priority_star.fa.fa-star-o",
+            2,
+            "should still have two stars"
         );
     });
 

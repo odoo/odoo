@@ -219,23 +219,17 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("image fields are correctly rendered", async function (assert) {
-        //assert.expect(6);
-        assert.expect(5);
+        assert.expect(6);
 
         const form = await makeView({
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/> ' +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="foo" widget="image_url" options="{'size': [90, 90]}"/>
+                </form>`,
             resId: 6,
-            async mockRPC(route) {
-                if (route === FR_FLAG_URL) {
-                    assert.ok(true, "the correct route should have been called."); // WOWL: not called?
-                }
-            },
         });
 
         assert.hasClass(
@@ -244,6 +238,11 @@ QUnit.module("Fields", (hooks) => {
             "the widget should have the correct class"
         );
         assert.containsOnce(form, 'div[name="foo"] > img', "the widget should contain an image");
+        assert.strictEqual(
+            target.querySelector('div[name="foo"] > img')[0].dataset.src,
+            FR_FLAG_URL,
+            "the image should have the correct src"
+        );
         assert.hasClass(
             target.querySelector('div[name="foo"] > img'),
             "img-fluid",
@@ -263,7 +262,61 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.skipWOWL("ImageUrlField in subviews are loaded correctly", async function (assert) {
-        //assert.expect(6);
+        assert.expect(4);
+
+        serverData.models.partner_type.fields.image = { name: "image", type: "char" };
+        serverData.models.partner_type.records[0].image = EN_FLAG_URL;
+        serverData.models.partner.records[5].timmy = [12];
+
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="foo" widget="image_url" options="{'size': [90, 90]}"/>
+                    <field name="timmy" widget="many2many" mode="kanban">
+                    <!-- use kanban view as the tree will trigger edit mode -->
+                    <!-- and thus won't display the field -->
+                        <kanban>
+                            <field name="display_name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <span><t t-esc="record.display_name.value"/></span>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <form>
+                            <field name="image" widget="image_url"/>
+                        </form>
+                    </field>
+                </form>`,
+            resId: 6,
+        });
+
+        assert.ok(
+            document.querySelector(`img[data-src="${FR_FLAG_URL}"]`),
+            "The view's image is in the DOM"
+        );
+        assert.containsOnce(
+            form,
+            ".o_kanban_record.oe_kanban_global_click",
+            "There should be one record in the many2many"
+        );
+
+        // Actual flow: click on an element of the m2m to get its form view
+        await click(target.querySelector(".oe_kanban_global_click"));
+        assert.containsOnce(document.body, ".modal", "The modal should have opened");
+
+        assert.ok(
+            document.querySelector(`img[data-src="${EN_FLAG_URL}"]`),
+            "The dialog's image is in the DOM"
+        );
+    });
+
+    QUnit.test("image fields in x2many list are loaded correctly", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner_type.fields.image = { name: "image", type: "char" };
@@ -274,86 +327,21 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/>' +
-                '<field name="timmy" widget="many2many" mode="kanban">' +
-                // use kanban view as the tree will trigger edit mode
-                // and thus won't display the field
-                "<kanban>" +
-                '<field name="display_name"/>' +
-                "<templates>" +
-                '<t t-name="kanban-box">' +
-                '<div class="oe_kanban_global_click">' +
-                '<span><t t-esc="record.display_name.value"/></span>' +
-                "</div>" +
-                "</t>" +
-                "</templates>" +
-                "</kanban>" +
-                "<form>" +
-                '<field name="image" widget="image_url"/>' +
-                "</form>" +
-                "</field>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="timmy" widget="many2many">
+                        <tree>
+                            <field name="image" widget="image_url"/>
+                        </tree>
+                    </field>
+                </form>`,
             resId: 6,
-            async mockRPC(route) {
-                if (route === FR_FLAG_URL) {
-                    assert.step("The view's image should have been fetched"); // WOWL: not called?
-                    return "wow";
-                }
-                if (route === EN_FLAG_URL) {
-                    assert.step("The dialog's image should have been fetched"); // WOWL: not called?
-                    return;
-                }
-            },
-        });
-        //assert.verifySteps(["The view's image should have been fetched"]);
-
-        assert.containsOnce(
-            form,
-            ".o_kanban_record.oe_kanban_global_click",
-            "There should be one record in the many2many"
-        );
-
-        // Actual flow: click on an element of the m2m to get its form view
-        await click(target.querySelector(".oe_kanban_global_click"));
-        assert.strictEqual(
-            target.querySelector(".modal").length,
-            1,
-            "The modal should have opened"
-        );
-        //assert.verifySteps(["The dialog's image should have been fetched"]);
-    });
-
-    QUnit.test("image fields in x2many list are loaded correctly", async function (assert) {
-        //assert.expect(2);
-        assert.expect(1);
-
-        serverData.models.partner_type.fields.image = { name: "image", type: "char" };
-        serverData.models.partner_type.records[0].image = EN_FLAG_URL;
-        serverData.models.partner.records[5].timmy = [12];
-
-        const form = await makeView({
-            serverData,
-            type: "form",
-            resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                '<field name="timmy" widget="many2many">' +
-                "<tree>" +
-                '<field name="image" widget="image_url"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            resId: 6,
-            async mockRPC(route) {
-                if (route === EN_FLAG_URL) {
-                    assert.ok(true, "The list's image should have been fetched"); // WOWL: not called?
-                    return;
-                }
-            },
         });
 
         assert.containsOnce(form, "tr.o_data_row", "There should be one record in the many2many");
+        assert.ok(
+            document.querySelector(`img[data-src="${EN_FLAG_URL}"]`),
+            "The list's image is in the DOM"
+        );
     });
 });
