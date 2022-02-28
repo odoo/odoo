@@ -131,7 +131,7 @@ class MailController(http.Controller):
         request.env['mail.followers'].check_access_rights("read")
         request.env[res_model].check_access_rights("read")
         request.env[res_model].browse(res_id).check_access_rule("read")
-        follower_recs = request.env['mail.followers'].search([('res_model', '=', res_model), ('res_id', '=', res_id)])
+        follower_recs = request.env['mail.followers'].sudo().search([('res_model', '=', res_model), ('res_id', '=', res_id)])
 
         followers = []
         follower_id = None

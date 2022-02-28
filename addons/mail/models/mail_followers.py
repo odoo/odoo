@@ -35,11 +35,11 @@ class Followers(models.Model):
     subtype_ids = fields.Many2many(
         'mail.message.subtype', string='Subtype',
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")
-    name = fields.Char('Name', compute='_compute_related_fields',
+    name = fields.Char('Name', compute='_compute_related_fields', compute_sudo=True,
                        help="Name of the related partner (if exist) or the related channel")
-    email = fields.Char('Email', compute='_compute_related_fields',
+    email = fields.Char('Email', compute='_compute_related_fields', compute_sudo=True,
                         help="Email of the related partner (if exist) or False")
-    is_active = fields.Boolean('Is Active', compute='_compute_related_fields',
+    is_active = fields.Boolean('Is Active', compute='_compute_related_fields', compute_sudo=True,
                                help="If the related partner is active (if exist) or if related channel exist")
 
     def _invalidate_documents(self, vals_list=None):
