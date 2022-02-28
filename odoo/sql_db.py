@@ -36,11 +36,6 @@ _logger_conn = _logger.getChild("connection")
 
 real_time = time.time.__call__  # ensure we have a non patched time for query times when using freezegun
 
-def unbuffer(symb, cr):
-    if symb is None:
-        return None
-    return str(symb)
-
 def undecimalize(symb, cr):
     if symb is None:
         return None
@@ -50,33 +45,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 
 from . import tools
-
-from .tools import parse_version as pv
-if pv(psycopg2.__version__) < pv('2.7'):
-    from psycopg2._psycopg import QuotedString
-    def adapt_string(adapted):
-        """Python implementation of psycopg/psycopg2#459 from v2.7"""
-        if '\x00' in adapted:
-            raise ValueError("A string literal cannot contain NUL (0x00) characters.")
-        return QuotedString(adapted)
-
-    psycopg2.extensions.register_adapter(str, adapt_string)
-
-
-
-def flush_env(cr, *, clear=True):
-    warnings.warn("Since Odoo 15.0, use cr.flush() instead of flush_env(cr).",
-                  DeprecationWarning, stacklevel=2)
-    cr.flush()
-    if clear:
-        cr.clear()
-
-
-def clear_env(cr):
-    warnings.warn("Since Odoo 15.0, use cr.clear() instead of clear_env(cr).",
-                  DeprecationWarning, stacklevel=2)
-    cr.clear()
-
 
 import re
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
@@ -306,8 +274,9 @@ class Cursor(BaseCursor):
             self.__caller = frame_codeinfo(currentframe(), 2)
         else:
             self.__caller = False
-        self._closed = False   # real initialisation value
-        self.autocommit(False)
+        self._closed = False   # real initialization value
+        # See the docstring of this class.
+        self.connection.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
 
         self._default_log_exceptions = True
 
@@ -471,51 +440,18 @@ class Cursor(BaseCursor):
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     def autocommit(self, on):
+        warnings.warn(
+            f"Deprecated Methods since 16.0, use {'`_cnx.autocommit = True`' if on else '`_cnx.set_isolation_level`'} instead.",
+            DeprecationWarning, stacklevel=2
+        )
         if on:
-            warnings.warn(
-                "Since Odoo 13.0, the ORM delays UPDATE queries for "
-                "performance reasons. Since then, using the ORM with "
-                " autocommit(True) is unsafe, as computed fields may not be "
-                "fully computed at commit.", DeprecationWarning, stacklevel=2)
             isolation_level = ISOLATION_LEVEL_AUTOCOMMIT
         else:
-            # If a serializable cursor was requested, we
-            # use the appropriate PotsgreSQL isolation level
-            # that maps to snapshot isolation.
-            # For all supported PostgreSQL versions (8.3-9.x),
-            # this is currently the ISOLATION_REPEATABLE_READ.
-            # See also the docstring of this class.
-            # NOTE: up to psycopg 2.4.2, repeatable read
-            #       is remapped to serializable before being
-            #       sent to the database, so it is in fact
-            #       unavailable for use with pg 9.1.
             isolation_level = \
                 ISOLATION_LEVEL_REPEATABLE_READ \
                 if self._serialized \
                 else ISOLATION_LEVEL_READ_COMMITTED
         self._cnx.set_isolation_level(isolation_level)
-
-    def after(self, event, func):
-        """ Register an event handler.
-
-            :param event: the event, either `'commit'` or `'rollback'`
-            :param func: a callable object, called with no argument after the
-                event occurs
-
-            Be careful when coding an event handler, since any operation on the
-            cursor that was just committed/rolled back will take place in the
-            next transaction that has already begun, and may still be rolled
-            back or committed independently. You may consider the use of a
-            dedicated temporary cursor to do some database operation.
-        """
-        warnings.warn(
-            "Cursor.after() is deprecated, use Cursor.postcommit.add() instead.",
-            DeprecationWarning,
-        )
-        if event == 'commit':
-            self.postcommit.add(func)
-        elif event == 'rollback':
-            self.postrollback.add(func)
 
     def commit(self):
         """ Perform an SQL `COMMIT` """
@@ -610,7 +546,7 @@ class TestCursor(BaseCursor):
             self._lock.release()
 
     def autocommit(self, on):
-        _logger.debug("TestCursor.autocommit(%r) does nothing", on)
+        warnings.warn("Deprecated method and does nothing since 16.0", DeprecationWarning, 2)
 
     def commit(self):
         """ Perform an SQL `COMMIT` """
