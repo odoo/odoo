@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { getFixture } from "../helpers/utils";
+import { click, editInput, getFixture, nextTick } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -206,7 +206,7 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 17,
                             name: "Partner",
-                            resModel: "partner",
+                            model: "partner",
                         },
                         {
                             id: 20,
@@ -237,25 +237,26 @@ QUnit.module("Fields", (hooks) => {
             type: "many2many",
             relation: "partner",
         };
+
         var form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="partner_ids" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                 '<field name="timmy" widget="many2many_tags"/>' +
                 "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "read" && args.model === "partner_type") {
+            mockRPC: (route, { args, method, model }) => {
+                if (method === "read" && model === "partner_type") {
                     assert.deepEqual(
-                        args.args,
+                        args,
                         [[12], ["display_name"]],
                         "should not read any color field"
                     );
-                } else if (args.method === "read" && args.model === "partner") {
+                } else if (method === "read" && model === "partner") {
                     assert.deepEqual(
-                        args.args,
+                        args,
                         [[1], ["display_name", "color"]],
                         "should read color field"
                     );
@@ -264,30 +265,28 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // add a tag on field partner_ids
-        await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
-        await testUtils.fields.many2one.clickHighlightedItem("partner_ids");
+        //await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
+        //await testUtils.fields.many2one.clickHighlightedItem("partner_ids");
 
         // add a tag on field timmy
-        await testUtils.fields.many2one.clickOpenDropdown("timmy");
-        var $input = form.$('.o_field_many2manytags[name="timmy"] input');
+        //await testUtils.fields.many2one.clickOpenDropdown("timmy");
+        var input = form.el.querySelector('.o_field_many2many_tags[name="timmy"] input');
         assert.strictEqual(
-            $input.autocomplete("widget").find("li").length,
+            input.autocomplete("widget").querySelector("li").length,
             3,
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')"
         );
-        await testUtils.fields.many2one.clickHighlightedItem("timmy");
+        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
         assert.containsOnce(
             form,
-            '.o_field_many2manytags[name="timmy"] .badge',
+            '.o_field_many2many_tags[name="timmy"] .badge',
             "should contain 1 tag"
         );
         assert.containsOnce(
             form,
-            '.o_field_many2manytags[name="timmy"] .badge:contains("gold")',
+            '.o_field_many2many_tags[name="timmy"] .badge:contains("gold")',
             "should contain newly added tag 'gold'"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL(
@@ -302,13 +301,13 @@ QUnit.module("Fields", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_create_edit': True}\"/>" +
                     "</form>",
                 resId: 1,
-                mockRPC: function (route, args) {
+                mockRPC: (route, { args, method, model }) => {
                     if (route === "/web/dataset/call_kw/partner/write") {
-                        var commands = args.args[1].timmy;
+                        var commands = args[1].timmy;
                         assert.strictEqual(commands.length, 1, "should have generated one command");
                         assert.strictEqual(
                             commands[0][0],
@@ -320,179 +319,186 @@ QUnit.module("Fields", (hooks) => {
                             "new value should be [12, 13]"
                         );
                     }
-                    if (args.method === "read" && args.model === "partner_type") {
+                    if (method === "read" && model === "partner_type") {
                         assert.deepEqual(
-                            args.args[1],
+                            args[1],
                             ["display_name", "color"],
                             "should read the color field"
                         );
                     }
                 },
             });
-            assert.containsN(
-                form,
-                ".o_field_many2manytags .badge .dropdown-toggle",
-                2,
-                "should contain 2 tags"
-            );
-            assert.ok(
-                form.$(".badge .dropdown-toggle:contains(gold)").length,
+            assert.containsN(form, ".o_field_many2many_tags .badge", 2, "should contain 2 tags");
+            assert.strictEqual(
+                form.el.querySelector(".badge .o_tag_badge_text").innerText,
+                "gold",
                 "should have fetched and rendered gold partner tag"
             );
-            assert.ok(
-                form.$(".badge .dropdown-toggle:contains(silver)").length,
+            assert.strictEqual(
+                form.el.querySelectorAll(".badge .o_tag_badge_text")[1].innerText,
+                "silver",
                 "should have fetched and rendered silver partner tag"
             );
-            assert.strictEqual(
-                form.$(".badge:first()").data("color"),
-                2,
-                "should have correctly fetched the color"
+            assert.hasClass(
+                form.el.querySelector(".badge"),
+                "o_tag_color_2",
+                "should have correctly set the color"
             );
 
-            await testUtils.form.clickEdit(form);
+            await click(target.querySelector(".o_form_button_edit"));
 
             assert.containsN(
                 form,
-                ".o_field_many2manytags .badge .dropdown-toggle",
+                ".o_field_many2many_tags .badge",
                 2,
                 "should still contain 2 tags in edit mode"
             );
             assert.ok(
-                form.$(".o_tag_color_2 .o_badge_text:contains(gold)").length,
+                form.el.querySelector(".o_tag_color_2 .o_tag_badge_text").innerText === "gold",
                 'first tag should still contain "gold" and be color 2 in edit mode'
             );
             assert.containsN(
                 form,
-                ".o_field_many2manytags .o_delete",
+                ".o_field_many2many_tags .o_delete",
                 2,
                 "tags should contain a delete button"
             );
 
             // add an other existing tag
-            var $input = form.$(".o_field_many2manytags input");
-            await testUtils.fields.many2one.clickOpenDropdown("timmy");
+            var input = form.el.querySelector(".o_field_many2many_tags input");
+            //await testUtils.fields.many2one.clickOpenDropdown("timmy");
             assert.strictEqual(
-                $input.autocomplete("widget").find("li").length,
+                input.autocomplete("widget").querySelector("li").length,
                 2,
                 "autocomplete dropdown should have 2 entry"
             );
             assert.strictEqual(
-                $input.autocomplete("widget").find('li a:contains("red")').length,
+                input.autocomplete("widget").querySelector('li a:contains("red")').length,
                 1,
                 "autocomplete dropdown should contain 'red'"
             );
-            await testUtils.fields.many2one.clickHighlightedItem("timmy");
+            //await testUtils.fields.many2one.clickHighlightedItem("timmy");
             assert.containsN(
                 form,
-                ".o_field_many2manytags .badge .dropdown-toggle",
+                ".o_field_many2many_tags .badge .dropdown-toggle",
                 3,
                 "should contain 3 tags"
             );
             assert.ok(
-                form.$('.o_field_many2manytags .badge .dropdown-toggle:contains("red")').length,
+                form.el.querySelector(
+                    '.o_field_many2many_tags .badge .dropdown-toggle:contains("red")'
+                ).length,
                 "should contain newly added tag 'red'"
             );
             assert.ok(
-                form.$(
-                    '.o_field_many2manytags .badge[data-color=8] .dropdown-toggle:contains("red")'
+                form.el.querySelector(
+                    '.o_field_many2many_tags .badge[data-color=8] .dropdown-toggle:contains("red")'
                 ).length,
                 "should have fetched the color of added tag"
             );
 
             // remove tag with id 14
-            await testUtils.dom.click(
-                form.$(".o_field_many2manytags .badge[data-id=14] .o_delete")
+            await click(
+                form.el.querySelector(".o_field_many2many_tags .badge[data-id=14] .o_delete")
             );
             assert.containsN(
                 form,
-                ".o_field_many2manytags .badge .dropdown-toggle",
+                ".o_field_many2many_tags .badge .dropdown-toggle",
                 2,
                 "should contain 2 tags"
             );
             assert.ok(
-                !form.$('.o_field_many2manytags .badge .dropdown-toggle:contains("silver")').length,
+                !form.el.querySelector(
+                    '.o_field_many2many_tags .badge .dropdown-toggle:contains("silver")'
+                ).length,
                 "should not contain tag 'silver' anymore"
             );
 
             // save the record (should do the write RPC with the correct commands)
-            await testUtils.form.clickSave(form);
+            await click(target.querySelector(".o_form_button_save"));
 
             // checkbox 'Hide in Kanban'
-            $input = form.$(".o_field_many2manytags .badge[data-id=13] .dropdown-toggle"); // selects 'red' tag
-            await testUtils.dom.click($input);
-            var $checkBox = form.$(
-                ".o_field_many2manytags .badge[data-id=13] .custom-checkbox input"
+            input = form.el.querySelector(
+                ".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"
+            ); // selects 'red' tag
+            await click(input);
+            var checkBox = form.el.querySelector(
+                ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
             );
             assert.strictEqual(
-                $checkBox.length,
+                checkBox.length,
                 1,
                 "should have a checkbox in the colorpicker dropdown menu"
             );
             assert.notOk(
-                $checkBox.is(":checked"),
+                checkBox.is(":checked"),
                 "should have unticked checkbox in colorpicker dropdown menu"
             );
 
-            await testUtils.fields.editAndTrigger($checkBox, null, ["mouseenter", "mousedown"]);
+            //await testUtils.fields.editAndTrigger(checkBox, null, ["mouseenter", "mousedown"]);
 
-            $input = form.$(".o_field_many2manytags .badge[data-id=13] .dropdown-toggle"); // refresh
-            await testUtils.dom.click($input);
-            $checkBox = form.$(".o_field_many2manytags .badge[data-id=13] .custom-checkbox input"); // refresh
+            input = form.el.querySelector(
+                ".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"
+            ); // refresh
+            await click(input);
+            checkBox = form.el.querySelector(
+                ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
+            ); // refresh
             assert.equal(
-                $input.parent().data("color"),
+                input.parentElement.data("color"),
                 "0",
                 "should become transparent when toggling on checkbox"
             );
             assert.ok(
-                $checkBox.is(":checked"),
+                checkBox.is(":checked"),
                 "should have a ticked checkbox in colorpicker dropdown menu after mousedown"
             );
 
-            await testUtils.fields.editAndTrigger($checkBox, null, ["mouseenter", "mousedown"]);
+            //await testUtils.fields.editAndTrigger(checkBox, null, ["mouseenter", "mousedown"]);
 
-            $input = form.$(".o_field_many2manytags .badge[data-id=13] .dropdown-toggle"); // refresh
-            await testUtils.dom.click($input);
-            $checkBox = form.$(".o_field_many2manytags .badge[data-id=13] .custom-checkbox input"); // refresh
+            input = form.el.querySelector(
+                ".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"
+            ); // refresh
+            await click(input);
+            checkBox = form.el.querySelector(
+                ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
+            ); // refresh
             assert.equal(
-                $input.parent().data("color"),
+                input.parentElement.data("color"),
                 "8",
                 "should revert to old color when toggling off checkbox"
             );
             assert.notOk(
-                $checkBox.is(":checked"),
+                checkBox.is(":checked"),
                 "should have an unticked checkbox in colorpicker dropdown menu after 2nd click"
             );
 
             // TODO: it would be nice to test the behaviors of the autocomplete dropdown
             // (like refining the research, creating new tags...), but ui-autocomplete
             // makes it difficult to test
-            form.destroy();
         }
     );
 
     QUnit.skipWOWL("fieldmany2many tags in tree view", async function (assert) {
         assert.expect(3);
 
-        serverData.models.partner.records[0].timmy = [12, 14];
         var list = await makeView({
             type: "list",
             resModel: "partner",
             serverData,
             arch:
-                '<tree string="Partners">' +
+                "<tree>" +
                 '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                 "</tree>",
         });
-        assert.containsN(list, ".o_field_many2manytags .badge", 2, "there should be 2 tags");
+        assert.containsN(list, ".o_field_many2many_tags .badge", 2, "there should be 2 tags");
         assert.containsNone(list, ".badge.dropdown-toggle", "the tags should not be dropdowns");
 
-        testUtils.mock.intercept(list, "switch_view", function (event) {
+        /*testUtils.mock.intercept(list, "switch_view", function (event) {
             assert.strictEqual(event.data.view_type, "form", "should switch to form view");
-        });
+        });*/
         // click on the tag: should do nothing and open the form view
-        testUtils.dom.click(list.$(".o_field_many2manytags .badge:first"));
-
-        list.destroy();
+        click(list.el.querySelector(".o_field_many2many_tags .badge:first"));
     });
 
     QUnit.skipWOWL("fieldmany2many tags view a domain", async function (assert) {
@@ -507,14 +513,14 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="timmy" widget="many2many_tags" options="{\'no_create_edit\': True}"/>' +
                 "</form>",
             resId: 1,
-            mockRPC: function (route, args) {
-                if (args.method === "name_search") {
+            mockRPC: (route, { kwargs, method }) => {
+                if (method === "name_search") {
                     assert.deepEqual(
-                        args.kwargs.args,
+                        kwargs.args,
                         [
                             ["id", "<", 50],
                             ["id", "not in", [12]],
@@ -525,35 +531,33 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        assert.containsOnce(form, ".o_field_many2manytags .badge", "should contain 1 tag");
+        assert.containsOnce(form, ".o_field_many2many_tags .badge", "should contain 1 tag");
         assert.ok(
-            form.$(".badge:contains(gold)").length,
+            form.el.querySelectorAll(".badge:contains(gold)").length,
             "should have fetched and rendered gold partner tag"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(target.querySelector(".o_form_button_edit"));
 
         // add an other existing tag
-        var $input = form.$(".o_field_many2manytags input");
-        await testUtils.fields.many2one.clickOpenDropdown("timmy");
+        var input = form.el.querySelector(".o_field_many2many_tags input");
+        //await testUtils.fields.many2one.clickOpenDropdown("timmy");
         assert.strictEqual(
-            $input.autocomplete("widget").find("li").length,
+            input.autocomplete("widget").querySelectorAll("li").length,
             2,
             "autocomplete dropdown should have 2 entry"
         );
         assert.strictEqual(
-            $input.autocomplete("widget").find('li a:contains("silver")').length,
+            input.autocomplete("widget").querySelectorAll('li a:contains("silver")').length,
             1,
             "autocomplete dropdown should contain 'silver'"
         );
-        await testUtils.fields.many2one.clickHighlightedItem("timmy");
-        assert.containsN(form, ".o_field_many2manytags .badge", 2, "should contain 2 tags");
+        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
+        assert.containsN(form, ".o_field_many2many_tags .badge", 2, "should contain 2 tags");
         assert.ok(
-            form.$('.o_field_many2manytags .badge:contains("silver")').length,
+            form.el.querySelectorAll('.o_field_many2many_tags .badge:contains("silver")').length,
             "should contain newly added tag 'silver'"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("fieldmany2many tags in a new record", async function (assert) {
@@ -563,13 +567,10 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="timmy" widget="many2many_tags"/>' +
-                "</form>",
-            mockRPC: function (route, args) {
+            arch: "<form>" + '<field name="timmy" widget="many2many_tags"/>' + "</form>",
+            mockRPC: (route, { args }) => {
                 if (route === "/web/dataset/call_kw/partner/create") {
-                    var commands = args.args[0].timmy;
+                    var commands = args[0].timmy;
                     assert.strictEqual(commands.length, 1, "should have generated one command");
                     assert.strictEqual(
                         commands[0][0],
@@ -580,31 +581,36 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        assert.hasClass(form.$(".o_form_view"), "o_form_editable", "form should be in edit mode");
+        assert.hasClass(
+            form.el.querySelector(".o_form_view"),
+            "o_form_editable",
+            "form should be in edit mode"
+        );
 
-        await testUtils.fields.many2one.clickOpenDropdown("timmy");
+        //await testUtils.fields.many2one.clickOpenDropdown("timmy");
         assert.strictEqual(
-            form.$(".o_field_many2manytags input").autocomplete("widget").find("li").length,
+            form.el
+                .querySelector(".o_field_many2many_tags input")
+                .autocomplete("widget")
+                .querySelectorAll("li").length,
             3,
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')"
         );
-        await testUtils.fields.many2one.clickHighlightedItem("timmy");
+        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
 
-        assert.containsOnce(form, ".o_field_many2manytags .badge", "should contain 1 tag");
+        assert.containsOnce(form, ".o_field_many2many_tags .badge", "should contain 1 tag");
         assert.ok(
-            form.$('.o_field_many2manytags .badge:contains("gold")').length,
+            form.el.querySelectorAll('.o_field_many2many_tags .badge:contains("gold")').length,
             "should contain newly added tag 'gold'"
         );
 
         // save the record (should do the write RPC with the correct commands)
-        await testUtils.form.clickSave(form);
-        form.destroy();
+        await click(target.querySelector(".o_form_button_save"));
     });
 
     QUnit.skipWOWL("fieldmany2many tags: update color", async function (assert) {
         assert.expect(5);
 
-        serverData.models.partner.records[0].timmy = [12, 14];
         serverData.models.partner_type.records[0].color = 0;
 
         var color;
@@ -613,12 +619,12 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                 "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "write") {
-                    assert.deepEqual(args.args[1], { color: color }, "shoud write the new color");
+            mockRPC: (route, { args, method }) => {
+                if (method === "write") {
+                    assert.deepEqual(args[1], { color: color }, "shoud write the new color");
                 }
             },
             resId: 1,
@@ -626,38 +632,35 @@ QUnit.module("Fields", (hooks) => {
 
         // First checks that default color 0 is rendered as 0 color
         assert.ok(
-            form.$(".badge.dropdown:first()").is(".o_tag_color_0"),
+            form.el.querySelector(".badge.dropdown:first()").is(".o_tag_color_0"),
             "first tag color should be 0"
         );
 
         // Update the color in readonly
         color = 1;
-        await testUtils.dom.click(form.$(".badge:first() .dropdown-toggle"));
-        await testUtils.dom.triggerEvents($('.o_colorpicker a[data-color="' + color + '"]'), [
+        await click(form.el.querySelector(".badge:first() .dropdown-toggle"));
+        /*await testUtils.dom.triggerEvents($('.o_colorpicker a[data-color="' + color + '"]'), [
             "mousedown",
-        ]);
-        await testUtils.nextTick();
+        ]);*/
+        await nextTick();
         assert.strictEqual(
-            form.$(".badge:first()").data("color"),
+            form.el.querySelector(".badge:first()").data("color"),
             color,
             "should have correctly updated the color (in readonly)"
         );
 
         // Update the color in edit
         color = 6;
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$(".badge:first() .dropdown-toggle"));
-        await testUtils.dom.triggerEvents($('.o_colorpicker a[data-color="' + color + '"]'), [
+        await click(target.querySelector(".o_form_button_edit"));
+        await click(form.el.querySelector(".badge:first() .dropdown-toggle")); // choose color 6
+        /*await testUtils.dom.triggerEvents($('.o_colorpicker a[data-color="' + color + '"]'), [
             "mousedown",
-        ]); // choose color 6
-        await testUtils.nextTick();
+        ]);*/ await nextTick();
         assert.strictEqual(
-            form.$(".badge:first()").data("color"),
+            form.el.querySelector(".badge:first()").data("color"),
             color,
             "should have correctly updated the color (in edit)"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("fieldmany2many tags with no_edit_color option", async function (assert) {
@@ -670,17 +673,15 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_edit_color': 1}\"/>" +
                 "</form>",
             resId: 1,
         });
 
         // Click to try to open colorpicker
-        await testUtils.dom.click(form.$(".badge:first() .dropdown-toggle"));
+        await click(form.el.querySelector(".badge:first() .dropdown-toggle"));
         assert.containsNone(document.body, ".o_colorpicker");
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("fieldmany2many tags in editable list", async function (assert) {
@@ -698,10 +699,10 @@ QUnit.module("Fields", (hooks) => {
                 '<field name="foo"/>' +
                 '<field name="timmy" widget="many2many_tags"/>' +
                 "</tree>",
-            mockRPC: function (route, args) {
-                if (args.method === "read" && args.model === "partner_type") {
+            mockRPC: (route, { kwargs, method, model }) => {
+                if (method === "read" && model === "partner_type") {
                     assert.deepEqual(
-                        args.kwargs.context,
+                        kwargs.context,
                         { take: "five" },
                         "The context should be passed to the RPC"
                     );
@@ -711,38 +712,38 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             list,
-            ".o_data_row:first .o_field_many2manytags .badge",
+            ".o_data_row:first .o_field_many2many_tags .badge",
             "m2m field should contain one tag"
         );
 
         // edit first row
-        await testUtils.dom.click(list.$(".o_data_row:first td:nth(2)"));
+        await click(list.el.querySelector(".o_data_row:first td:nth(2)"));
 
-        var $m2o = list.$(".o_data_row:first .o_field_many2manytags .o_field_many2one");
-        assert.strictEqual($m2o.length, 1, "a many2one widget should have been instantiated");
+        var m2o = list.el.querySelector(
+            ".o_data_row:first .o_field_many2many_tags .o_field_many2one"
+        );
+        assert.strictEqual(m2o.length, 1, "a many2one widget should have been instantiated");
 
         // add a tag
-        await testUtils.fields.many2one.clickOpenDropdown("timmy");
-        await testUtils.fields.many2one.clickHighlightedItem("timmy");
+        //await testUtils.fields.many2one.clickOpenDropdown("timmy");
+        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
 
         assert.containsN(
             list,
-            ".o_data_row:first .o_field_many2manytags .badge",
+            ".o_data_row:first .o_field_many2many_tags .badge",
             2,
             "m2m field should contain 2 tags"
         );
 
         // leave edition
-        await testUtils.dom.click(list.$(".o_data_row:nth(1) td:nth(2)"));
+        await click(list.el.querySelector(".o_data_row:nth(1) td:nth(2)"));
 
         assert.containsN(
             list,
-            ".o_data_row:first .o_field_many2manytags .badge",
+            ".o_data_row:first .o_field_many2many_tags .badge",
             2,
             "m2m field should contain 2 tags"
         );
-
-        list.destroy();
     });
 
     QUnit.skipWOWL("search more in many2one: group and use the pager", async function (assert) {
@@ -774,13 +775,12 @@ QUnit.module("Fields", (hooks) => {
                 display_name: "Partner 9",
             }
         );
-        serverData.models.partner.fields.datetime.searchable = true;
         var form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 "<group>" +
                 '<field name="trululu"/>' +
@@ -796,31 +796,26 @@ QUnit.module("Fields", (hooks) => {
                     '    <filter name="bar" string="Bar" context="{\'group_by\': \'bar\'}"/>' +
                     "</group></search>",
             },
-            viewOptions: {
-                mode: "edit",
-            },
         });
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
-        await testUtils.fields.many2one.clickItem("trululu", "Search");
+        //await testUtils.fields.many2one.clickOpenDropdown("trululu");
+        //await testUtils.fields.many2one.clickItem("trululu", "Search");
         const modal = document.body.querySelector(".modal");
         await cpHelpers.toggleGroupByMenu(modal);
         await cpHelpers.toggleMenuItem(modal, "Bar");
 
-        await testUtils.dom.click($(".modal .o_group_header:first"));
+        await click($(".modal .o_group_header:first"));
 
         assert.strictEqual(
             $(".modal tbody:nth(1) .o_data_row").length,
             7,
             "should display 7 records in the first page"
         );
-        await testUtils.dom.click($(".modal .o_group_header:first .o_pager_next"));
+        await click($(".modal .o_group_header:first .o_pager_next"));
         assert.strictEqual(
             $(".modal tbody:nth(1) .o_data_row").length,
             1,
             "should display 1 record in the second page"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("many2many_tags can load more than 40 records", async function (assert) {
@@ -840,10 +835,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="partner_ids" widget="many2many_tags"/>' +
-                "</form>",
+            arch: "<form>" + '<field name="partner_ids" widget="many2many_tags"/>' + "</form>",
             resId: 1,
         });
         assert.containsN(
@@ -852,7 +844,6 @@ QUnit.module("Fields", (hooks) => {
             100,
             "should have rendered 100 tags"
         );
-        form.destroy();
     });
 
     QUnit.skipWOWL(
@@ -861,7 +852,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(1);
 
             const M2M_LIMIT = relationalFields.FieldMany2ManyTags.prototype.limit;
-            relationalFields.FieldMany2ManyTags.prototype.limit = 30;
+            //relationalFields.FieldMany2ManyTags.prototype.limit = 30;
             serverData.models.partner.fields.partner_ids = {
                 string: "Partner",
                 type: "many2many",
@@ -881,13 +872,12 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
-                form.$('.o_field_widget[name="partner_ids"] .badge').length,
+                form.el.querySelector('.o_field_widget[name="partner_ids"] .badge').length,
                 30,
                 "should have rendered 30 tags even though 35 records linked"
             );
 
-            relationalFields.FieldMany2ManyTags.prototype.limit = M2M_LIMIT;
-            form.destroy();
+            //relationalFields.FieldMany2ManyTags.prototype.limit = M2M_LIMIT;
         }
     );
 
@@ -904,60 +894,58 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="foo"/>' +
                 '<field name="timmy" widget="many2many_tags"/>' +
                 "</form>",
             resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
-        assert.containsOnce(form, ".o_field_many2manytags .badge", "should contain one tag");
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.containsOnce(form, ".o_field_many2many_tags .badge", "should contain one tag");
 
         // update foo, which will trigger an onchange and update timmy
         // -> m2mtags input should not have taken the focus
-        form.$("input[name=foo]").focus();
-        await testUtils.fields.editInput(form.$("input[name=foo]"), "trigger onchange");
-        assert.containsNone(form, ".o_field_many2manytags .badge", "should contain no tags");
+        form.el.querySelector("input[name=foo]").focus();
+        await editInput(form.el.querySelector("input[name=foo]"), "trigger onchange");
+        assert.containsNone(form, ".o_field_many2many_tags .badge", "should contain no tags");
         assert.strictEqual(
-            form.$("input[name=foo]").get(0),
+            form.el.querySelector("input[name=foo]").get(0),
             document.activeElement,
             "foo input should have kept the focus"
         );
 
         // add a tag -> m2mtags input should still have the focus
-        await testUtils.fields.many2one.clickOpenDropdown("timmy");
-        await testUtils.fields.many2one.clickHighlightedItem("timmy");
+        //await testUtils.fields.many2one.clickOpenDropdown("timmy");
+        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
 
-        assert.containsOnce(form, ".o_field_many2manytags .badge", "should contain a tag");
+        assert.containsOnce(form, ".o_field_many2many_tags .badge", "should contain a tag");
         assert.strictEqual(
-            form.$(".o_field_many2manytags input").get(0),
+            form.el.querySelector(".o_field_many2many_tags input").get(0),
             document.activeElement,
             "m2m tags input should have kept the focus"
         );
 
         // remove a tag -> m2mtags input should still have the focus
-        await testUtils.dom.click(form.$(".o_field_many2manytags .o_delete"));
-        assert.containsNone(form, ".o_field_many2manytags .badge", "should contain no tags");
+        await click(form.el.querySelector(".o_field_many2many_tags .o_delete"));
+        assert.containsNone(form, ".o_field_many2many_tags .badge", "should contain no tags");
         assert.strictEqual(
-            form.$(".o_field_many2manytags input").get(0),
+            form.el.querySelector(".o_field_many2many_tags input").get(0),
             document.activeElement,
             "m2m tags input should have kept the focus"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("widget many2many_tags in one2many with display_name", async function (assert) {
         assert.expect(4);
-        this.data.turtle.records[0].partner_ids = [2];
+        serverData.models.turtle.records[0].partner_ids = [2];
 
         var form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<sheet>" +
                 '<field name="turtles">' +
                 "<tree>" +
@@ -978,58 +966,55 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form
-                .$(
-                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]'
+            form.el
+                .querySelector(
+                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
                 )
-                .text()
-                .replace(/\s/g, ""),
+                .innerText.replace(/\s/g, ""),
             "secondrecordaaa",
             "the tags should be correctly rendered"
         );
 
         // open the x2m form view
-        await testUtils.dom.click(
-            form.$('.o_field_one2many[name="turtles"] .o_list_view td.o_data_cell:first')
+        await click(
+            form.el.querySelector(
+                '.o_field_one2many[name="turtles"] .o_list_view td.o_data_cell:first'
+            )
         );
-        await testUtils.nextTick(); // wait for quick edit
+        await nextTick(); // wait for quick edit
         assert.strictEqual(
             $(
                 '.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_list_view .o_data_cell'
-            ).text(),
+            ).innerText,
             "blipMy little Foo Value",
             "the list view should be correctly rendered with foo"
         );
 
-        await testUtils.dom.click($(".modal button.o_form_button_cancel"));
+        await click($(".modal button.o_form_button_cancel"));
         assert.strictEqual(
-            form
-                .$(
-                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]'
+            form.el
+                .querySelector(
+                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
                 )
-                .text()
-                .replace(/\s/g, ""),
+                .innerText.replace(/\s/g, ""),
             "secondrecordaaa",
             "the tags should still be correctly rendered"
         );
 
         assert.strictEqual(
-            form
-                .$(
-                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]'
+            form.el
+                .querySelector(
+                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
                 )
-                .text()
-                .replace(/\s/g, ""),
+                .innerText.replace(/\s/g, ""),
             "secondrecordaaa",
             "the tags should still be correctly rendered"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("widget many2many_tags: tags title attribute", async function (assert) {
         assert.expect(1);
-        this.data.turtle.records[0].partner_ids = [2];
+        serverData.models.turtle.records[0].partner_ids = [2];
 
         var form = await makeView({
             type: "form",
@@ -1046,12 +1031,12 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.deepEqual(
-            form.$(".o_field_many2manytags.o_field_widget .badge .o_badge_text").attr("title"),
+            form.el
+                .querySelector(".o_field_many2many_tags.o_field_widget .badge .o_badge_text")
+                .attr("title"),
             "second record",
             "the title should be filled in"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL(
@@ -1067,7 +1052,7 @@ QUnit.module("Fields", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                     "</form>",
                 resId: 1,
@@ -1076,76 +1061,62 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            assert.strictEqual($(".o_field_many2manytags .badge").length, 1, "should have one tag");
             assert.strictEqual(
-                $(".o_field_many2manytags .badge").data("color"),
+                form.el.querySelectorAll(".o_field_many2many_tags .badge").length,
+                1,
+                "should have one tag"
+            );
+            assert.strictEqual(
+                form.el.querySelector(".o_field_many2many_tags .badge").data("color"),
                 0,
                 "tag should have color 0"
             );
-            assert.strictEqual(
-                $(".o_colorpicker:visible").length,
-                0,
-                "colorpicker should be closed"
-            );
+            assert.containsNone(form, ".o_colorpicker", "colorpicker should be closed");
 
             // click on the badge to open colorpicker
-            await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
+            await click(form.el.querySelector(".o_field_many2many_tags .badge .dropdown-toggle"));
 
-            assert.strictEqual($(".o_colorpicker:visible").length, 1, "colorpicker should be open");
+            assert.containsOnce(form, ".o_colorpicker", "colorpicker should be open");
 
             // click on the badge again to close colorpicker
-            await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
+            await click(form.el.querySelector(".o_field_many2many_tags .badge .dropdown-toggle"));
 
             assert.strictEqual(
-                $(".o_field_many2manytags .badge").data("color"),
+                form.el.querySelector(".o_field_many2many_tags .badge").data("color"),
                 0,
                 "tag should still have color 0"
             );
-            assert.strictEqual(
-                $(".o_colorpicker:visible").length,
-                0,
-                "colorpicker should be closed"
-            );
+            assert.containsNone(form, ".o_colorpicker", "colorpicker should be closed");
 
             // click on the badge to open colorpicker
-            await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
+            await click(form.el.querySelector(".o_field_many2many_tags .badge .dropdown-toggle"));
 
-            assert.strictEqual($(".o_colorpicker:visible").length, 1, "colorpicker should be open");
+            assert.containsOnce(form, ".o_colorpicker", "colorpicker should be open");
 
             // click on the colorpicker, but not on a color
-            await testUtils.dom.click(form.$(".o_colorpicker"));
+            await click(form.el.querySelector(".o_colorpicker"));
 
             assert.strictEqual(
-                $(".o_field_many2manytags .badge").data("color"),
+                form.el.querySelector(".o_field_many2many_tags .badge").data("color"),
                 0,
                 "tag should still have color 0"
             );
-            assert.strictEqual(
-                $(".o_colorpicker:visible").length,
-                0,
-                "colorpicker should be closed"
-            );
+            assert.containsNone(form, ".o_colorpicker", "colorpicker should be closed");
 
             // click on the badge to open colorpicker
-            await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
+            await click(form.el.querySelector(".o_field_many2many_tags .badge .dropdown-toggle"));
 
             // click on a color in the colorpicker
-            await testUtils.dom.triggerEvents(form.$(".o_colorpicker .o_tag_color_2"), [
+            /*await testUtils.dom.triggerEvents(form.el.querySelector(".o_colorpicker .o_tag_color_2"), [
                 "mousedown",
-            ]);
+            ]);*/
 
             assert.strictEqual(
-                $(".o_field_many2manytags .badge").data("color"),
+                form.el.querySelector(".o_field_many2many_tags .badge").data("color"),
                 2,
                 "tag should have color 2"
             );
-            assert.strictEqual(
-                $(".o_colorpicker:visible").length,
-                0,
-                "colorpicker should be closed"
-            );
-
-            form.destroy();
+            assert.containsNone(form, ".o_colorpicker", "colorpicker should be closed");
         }
     );
 
@@ -1167,17 +1138,17 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             form,
-            ".o_field_many2manytags.avatar.o_field_widget .badge",
+            ".o_field_many2many_tags.avatar.o_field_widget .badge",
             2,
             "should have 2 records"
         );
         assert.strictEqual(
-            form.$(".o_field_many2manytags.avatar.o_field_widget .badge:first img").data("src"),
+            form.el
+                .querySelector(".o_field_many2many_tags.avatar.o_field_widget .badge:first img")
+                .data("src"),
             "/web/image/partner/2/avatar_128",
             "should have correct avatar image"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("widget many2many_tags_avatar in list view", async function (assert) {
@@ -1192,16 +1163,16 @@ QUnit.module("Fields", (hooks) => {
         }
         serverData.models.partner.records = serverData.models.partner.records.concat(records);
 
-        this.data.turtle.records.push({
+        serverData.models.turtle.records.push({
             id: 4,
             display_name: "crime master gogo",
             turtle_bar: true,
             turtle_foo: "yop",
             partner_ids: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
         });
-        this.data.turtle.records[0].partner_ids = [1];
-        this.data.turtle.records[1].partner_ids = [1, 2, 4, 5, 6, 7];
-        this.data.turtle.records[2].partner_ids = [1, 2, 4, 5, 7];
+        serverData.models.turtle.records[0].partner_ids = [1];
+        serverData.models.turtle.records[1].partner_ids = [1, 2, 4, 5, 6, 7];
+        serverData.models.turtle.records[2].partner_ids = [1, 2, 4, 5, 7];
 
         const list = await makeView({
             type: "list",
@@ -1212,95 +1183,110 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            list.$(".o_data_row:first .o_field_many2manytags img.o_m2m_avatar").data("src"),
+            list.el
+                .querySelector(".o_data_row:first .o_field_many2many_tags img.o_m2m_avatar")
+                .data("src"),
             "/web/image/partner/1/avatar_128",
             "should have correct avatar image"
         );
         assert.strictEqual(
-            list
-                .$(".o_data_row:first .o_many2many_tags_avatar_cell .o_field_many2manytags div")
-                .text()
-                .trim(),
+            list.el
+                .querySelector(
+                    ".o_data_row:first .o_many2many_tags_avatar_cell .o_field_many2many_tags div"
+                )
+                .innerText.trim(),
             "first record",
             "should display like many2one avatar if there is only one record"
         );
 
         assert.containsN(
             list,
-            ".o_data_row:eq(1) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)",
+            ".o_data_row:eq(1) .o_field_many2many_tags > span:not(.o_m2m_avatar_empty)",
             4,
             "should have 4 records"
         );
         assert.containsN(
             list,
-            ".o_data_row:eq(2) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)",
+            ".o_data_row:eq(2) .o_field_many2many_tags > span:not(.o_m2m_avatar_empty)",
             5,
             "should have 5 records"
         );
         assert.containsOnce(
             list,
-            ".o_data_row:eq(1) .o_field_many2manytags .o_m2m_avatar_empty",
+            ".o_data_row:eq(1) .o_field_many2many_tags .o_m2m_avatar_empty",
             "should have o_m2m_avatar_empty span"
         );
         assert.strictEqual(
-            list.$(".o_data_row:eq(1) .o_field_many2manytags .o_m2m_avatar_empty").text().trim(),
+            list.el
+                .querySelector(".o_data_row:eq(1) .o_field_many2many_tags .o_m2m_avatar_empty")
+                .innerText.trim(),
             "+2",
             "should have +2 in o_m2m_avatar_empty"
         );
         assert.strictEqual(
-            list.$(".o_data_row:eq(1) .o_field_many2manytags img.o_m2m_avatar:first").data("src"),
+            list.el
+                .querySelector(".o_data_row:eq(1) .o_field_many2many_tags img.o_m2m_avatar:first")
+                .data("src"),
             "/web/image/partner/1/avatar_128",
             "should have correct avatar image"
         );
         assert.strictEqual(
-            list.$(".o_data_row:eq(1) .o_field_many2manytags img.o_m2m_avatar:eq(1)").data("src"),
+            list.el
+                .querySelector(".o_data_row:eq(1) .o_field_many2many_tags img.o_m2m_avatar:eq(1)")
+                .data("src"),
             "/web/image/partner/2/avatar_128",
             "should have correct avatar image"
         );
         assert.strictEqual(
-            list.$(".o_data_row:eq(1) .o_field_many2manytags img.o_m2m_avatar:eq(2)").data("src"),
+            list.el
+                .querySelector(".o_data_row:eq(1) .o_field_many2many_tags img.o_m2m_avatar:eq(2)")
+                .data("src"),
             "/web/image/partner/4/avatar_128",
             "should have correct avatar image"
         );
         assert.strictEqual(
-            list.$(".o_data_row:eq(1) .o_field_many2manytags img.o_m2m_avatar:eq(3)").data("src"),
+            list.el
+                .querySelector(".o_data_row:eq(1) .o_field_many2many_tags img.o_m2m_avatar:eq(3)")
+                .data("src"),
             "/web/image/partner/5/avatar_128",
             "should have correct avatar image"
         );
         assert.containsNone(
             list,
-            ".o_data_row:eq(2) .o_field_many2manytags .o_m2m_avatar_empty",
+            ".o_data_row:eq(2) .o_field_many2many_tags .o_m2m_avatar_empty",
             "should have o_m2m_avatar_empty span"
         );
         assert.containsN(
             list,
-            ".o_data_row:eq(3) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)",
+            ".o_data_row:eq(3) .o_field_many2many_tags > span:not(.o_m2m_avatar_empty)",
             4,
             "should have 4 records"
         );
         assert.containsOnce(
             list,
-            ".o_data_row:eq(3) .o_field_many2manytags .o_m2m_avatar_empty",
+            ".o_data_row:eq(3) .o_field_many2many_tags .o_m2m_avatar_empty",
             "should have o_m2m_avatar_empty span"
         );
         assert.strictEqual(
-            list.$(".o_data_row:eq(3) .o_field_many2manytags .o_m2m_avatar_empty").text().trim(),
+            list.el
+                .querySelector(".o_data_row:eq(3) .o_field_many2many_tags .o_m2m_avatar_empty")
+                .innerText.trim(),
             "+9",
             "should have +9 in o_m2m_avatar_empty"
         );
 
-        list.$(".o_data_row:eq(1) .o_field_many2manytags .o_m2m_avatar_empty").trigger(
-            $.Event("mouseenter")
-        );
-        await testUtils.nextTick();
+        list.el
+            .querySelector(".o_data_row:eq(1) .o_field_many2many_tags .o_m2m_avatar_empty")
+            .trigger($.Event("mouseenter"));
+        await nextTick();
         assert.containsOnce(list, ".popover", "should open a popover hover on o_m2m_avatar_empty");
         assert.strictEqual(
-            list.$(".popover .popover-body > div").text().trim(),
+            list.el.querySelector(".popover .popover-body > div").innerText.trim(),
             "record 6record 7",
             "should have a right text in popover"
         );
 
-        await testUtils.dom.click(list.$(".o_data_row:eq(0) .o_many2many_tags_avatar_cell"));
+        await click(list.el.querySelector(".o_data_row:eq(0) .o_many2many_tags_avatar_cell"));
         assert.containsN(
             list,
             ".o_data_row.o_selected_row .o_many2many_tags_avatar_cell .badge",
@@ -1308,17 +1294,15 @@ QUnit.module("Fields", (hooks) => {
             "should have 1 many2many badges in edit mode"
         );
 
-        await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
-        await testUtils.fields.many2one.clickItem("partner_ids", "second record");
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_save"));
+        //await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
+        //await testUtils.fields.many2one.clickItem("partner_ids", "second record");
+        await click(list.querySelector(".o_list_button_save"));
         assert.containsN(
             list,
-            ".o_data_row:eq(0) .o_field_many2manytags span",
+            ".o_data_row:eq(0) .o_field_many2many_tags span",
             2,
             "should have 2 records"
         );
-
-        list.destroy();
     });
 
     QUnit.skipWOWL("widget many2many_tags_avatar in kanban view", async function (assert) {
@@ -1333,16 +1317,16 @@ QUnit.module("Fields", (hooks) => {
         }
         serverData.models.partner.records = serverData.models.partner.records.concat(records);
 
-        this.data.turtle.records.push({
+        serverData.models.turtle.records.push({
             id: 4,
             display_name: "crime master gogo",
             turtle_bar: true,
             turtle_foo: "yop",
             partner_ids: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
         });
-        this.data.turtle.records[0].partner_ids = [1];
-        this.data.turtle.records[1].partner_ids = [1, 2, 4];
-        this.data.turtle.records[2].partner_ids = [1, 2, 4, 5];
+        serverData.models.turtle.records[0].partner_ids = [1];
+        serverData.models.turtle.records[1].partner_ids = [1, 2, 4];
+        serverData.models.turtle.records[2].partner_ids = [1, 2, 4, 5];
 
         const kanban = await makeView({
             View: KanbanView,
@@ -1386,90 +1370,94 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            kanban.$(".o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar").data("src"),
+            kanban.el
+                .querySelector(".o_kanban_record:first .o_field_many2many_tags img.o_m2m_avatar")
+                .data("src"),
             "/web/image/partner/1/avatar_128",
             "should have correct avatar image"
         );
 
         assert.containsN(
             kanban,
-            ".o_kanban_record:eq(1) .o_field_many2manytags span",
+            ".o_kanban_record:eq(1) .o_field_many2many_tags span",
             3,
             "should have 3 records"
         );
         assert.containsN(
             kanban,
-            ".o_kanban_record:eq(2) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)",
+            ".o_kanban_record:eq(2) .o_field_many2many_tags > span:not(.o_m2m_avatar_empty)",
             2,
             "should have 2 records"
         );
         assert.strictEqual(
-            kanban
-                .$(".o_kanban_record:eq(2) .o_field_many2manytags img.o_m2m_avatar:first")
+            kanban.el
+                .querySelector(
+                    ".o_kanban_record:eq(2) .o_field_many2many_tags img.o_m2m_avatar:first"
+                )
                 .data("src"),
             "/web/image/partner/1/avatar_128",
             "should have correct avatar image"
         );
         assert.strictEqual(
-            kanban
-                .$(".o_kanban_record:eq(2) .o_field_many2manytags img.o_m2m_avatar:eq(1)")
+            kanban.el
+                .querySelector(
+                    ".o_kanban_record:eq(2) .o_field_many2many_tags img.o_m2m_avatar:eq(1)"
+                )
                 .data("src"),
             "/web/image/partner/2/avatar_128",
             "should have correct avatar image"
         );
         assert.containsOnce(
             kanban,
-            ".o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty",
+            ".o_kanban_record:eq(2) .o_field_many2many_tags .o_m2m_avatar_empty",
             "should have o_m2m_avatar_empty span"
         );
         assert.strictEqual(
-            kanban
-                .$(".o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty")
-                .text()
-                .trim(),
+            kanban.el
+                .querySelector(".o_kanban_record:eq(2) .o_field_many2many_tags .o_m2m_avatar_empty")
+                .innerText.trim(),
             "+2",
             "should have +2 in o_m2m_avatar_empty"
         );
 
         assert.containsN(
             kanban,
-            ".o_kanban_record:eq(3) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)",
+            ".o_kanban_record:eq(3) .o_field_many2many_tags > span:not(.o_m2m_avatar_empty)",
             2,
             "should have 2 records"
         );
         assert.containsOnce(
             kanban,
-            ".o_kanban_record:eq(3) .o_field_many2manytags .o_m2m_avatar_empty",
+            ".o_kanban_record:eq(3) .o_field_many2many_tags .o_m2m_avatar_empty",
             "should have o_m2m_avatar_empty span"
         );
         assert.strictEqual(
-            kanban
-                .$(".o_kanban_record:eq(3) .o_field_many2manytags .o_m2m_avatar_empty")
-                .text()
-                .trim(),
+            kanban.el
+                .querySelector(".o_kanban_record:eq(3) .o_field_many2many_tags .o_m2m_avatar_empty")
+                .innerText.trim(),
             "9+",
             "should have 9+ in o_m2m_avatar_empty"
         );
 
-        kanban
-            .$(".o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty")
+        kanban.el
+            .querySelector(".o_kanban_record:eq(2) .o_field_many2many_tags .o_m2m_avatar_empty")
             .trigger($.Event("mouseenter"));
-        await testUtils.nextTick();
+        await nextTick();
         assert.containsOnce(
             kanban,
             ".popover",
             "should open a popover hover on o_m2m_avatar_empty"
         );
         assert.strictEqual(
-            kanban.$(".popover .popover-body > div").text().trim(),
+            kanban.el.querySelector(".popover .popover-body > div").innerText.trim(),
             "aaarecord 5",
             "should have a right text in popover"
         );
-        await testUtils.dom.click(
-            kanban.$(".o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar")
+        await click(
+            kanban.el.querySelector(
+                ".o_kanban_record:first .o_field_many2many_tags img.o_m2m_avatar"
+            )
         );
-
-        kanban.destroy();
     });
 
     QUnit.skipWOWL("fieldmany2many tags: quick create a new record", async function (assert) {
@@ -1482,20 +1470,18 @@ QUnit.module("Fields", (hooks) => {
             arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
         });
 
-        assert.containsNone(form, ".o_field_many2manytags .badge");
+        assert.containsNone(form, ".o_field_many2many_tags .badge");
 
-        await testUtils.fields.many2one.searchAndClickItem("timmy", { search: "new value" });
+        //await testUtils.fields.many2one.searchAndClickItem("timmy", { search: "new value" });
 
-        assert.containsOnce(form, ".o_field_many2manytags .badge");
+        assert.containsOnce(form, ".o_field_many2many_tags .badge");
 
-        await testUtils.form.clickSave(form);
+        await click(target.querySelector(".o_form_button_save"));
 
         assert.strictEqual(
-            target.querySelector(".o_field_many2manytags").innerText.trim(),
+            target.querySelector(".o_field_many2many_tags").innerText.trim(),
             "new value"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("select a many2many value by focusing out", async function (assert) {
@@ -1508,17 +1494,23 @@ QUnit.module("Fields", (hooks) => {
             arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
         });
 
-        assert.containsNone(form, ".o_field_many2manytags .badge");
+        assert.containsNone(form, ".o_field_many2many_tags .badge");
 
-        form.$(".o_field_many2manytags input").focus().val("go").trigger("input").trigger("keyup");
-        await testUtils.nextTick();
-        form.$(".o_field_many2manytags input").trigger("blur");
-        await testUtils.nextTick();
+        form.el
+            .querySelector(".o_field_many2many_tags input")
+            .focus()
+            .val("go")
+            .trigger("input")
+            .trigger("keyup");
+        await nextTick();
+        form.el.querySelector(".o_field_many2many_tags input").trigger("blur");
+        await nextTick();
 
         assert.containsNone(document.body, ".modal");
-        assert.containsOnce(form, ".o_field_many2manytags .badge");
-        assert.strictEqual(form.$(".o_field_many2manytags .badge").text().trim(), "gold");
-
-        form.destroy();
+        assert.containsOnce(form, ".o_field_many2many_tags .badge");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_many2many_tags .badge").innerText.trim(),
+            "gold"
+        );
     });
 });

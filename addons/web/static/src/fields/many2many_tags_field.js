@@ -12,7 +12,11 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 const { Component } = owl;
 
 export class Many2ManyTagsField extends Component {
+    setup() {
+        console.log({ ...this.props.value });
+    }
     get tags() {
+        console.log(this.props.value.records);
         const colorField = this.props.colorField;
         return this.props.value.records
             .filter((record) => !colorField || record.data[colorField])
@@ -36,10 +40,14 @@ Many2ManyTagsField.components = {
     DropdownItem,
 };
 Many2ManyTagsField.template = "web.Many2ManyTagsField";
+Many2ManyTagsField.defaultProps = {
+    canEditColor: true,
+};
 Many2ManyTagsField.props = {
     ...standardFieldProps,
-    placeholder: { type: String, optional: true },
+    canEditColor: { type: Boolean, optional: true },
     colorField: { type: String, optional: true },
+    placeholder: { type: String, optional: true },
 };
 Many2ManyTagsField.displayName = _lt("Tags");
 Many2ManyTagsField.supportedTypes = ["many2many"];
@@ -50,6 +58,7 @@ Many2ManyTagsField.RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 Many2ManyTagsField.convertAttrsToProps = (attrs) => {
     return {
         colorField: attrs.options.color_field,
+        canEditColor: !attrs.options.no_edit_color,
     };
 };
 
