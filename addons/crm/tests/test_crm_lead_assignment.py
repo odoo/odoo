@@ -29,7 +29,9 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
 
         # don't mess with existing leads, unlink those assigned to users used here to make tests
         # repeatable (archive is not sufficient because of lost leads)
-        cls.env['crm.lead'].with_context(active_test=False).search(['|', ('team_id', '=', False), ('user_id', 'in', cls.sales_teams.member_ids.ids)]).unlink()
+
+        with mute_logger('odoo.models.unlink'):
+            cls.env['crm.lead'].with_context(active_test=False).search(['|', ('team_id', '=', False), ('user_id', 'in', cls.sales_teams.member_ids.ids)]).unlink()
         cls.bundle_size = 50
         cls.env['ir.config_parameter'].set_param('crm.assignment.commit.bundle', '%s' % cls.bundle_size)
         cls.env['ir.config_parameter'].set_param('crm.assignment.delay', '0')
