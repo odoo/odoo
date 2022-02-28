@@ -142,7 +142,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                         </ApplicableTradeTax>
                         <SpecifiedTradePaymentTerms>
                             <DueDateDateTime>
-                                <DateTimeString>20170101</DateTimeString>
+                                <DateTimeString format="102">20170101</DateTimeString>
                             </DueDateDateTime>
                         </SpecifiedTradePaymentTerms>
                         <SpecifiedTradeSettlementHeaderMonetarySummation>
@@ -204,7 +204,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                     </ApplicableTradeTax>
                     <SpecifiedTradePaymentTerms>
                         <DueDateDateTime>
-                            <DateTimeString>20170101</DateTimeString>
+                            <DateTimeString format="102">20170101</DateTimeString>
                         </DueDateDateTime>
                     </SpecifiedTradePaymentTerms>
                     <SpecifiedTradeSettlementHeaderMonetarySummation>
