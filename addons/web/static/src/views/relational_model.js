@@ -818,12 +818,37 @@ class DynamicList extends DataPoint {
         };
     }
 
+    get firstGroupBy() {
+        return this.groupBy[0] || false;
+    }
+
+    get groupByField() {
+        if (!this.firstGroupBy) {
+            return false;
+        }
+        const [groupByFieldName] = this.firstGroupBy.split(":");
+        return {
+            attrs: {},
+            ...this.fields[groupByFieldName],
+            ...this.activeFields[groupByFieldName],
+        };
+    }
+
     get isM2MGrouped() {
         return this.groupBy.some((fieldName) => this.fields[fieldName].type === "many2many");
     }
 
     get selection() {
         return this.records.filter((r) => r.selected);
+    }
+
+    canQuickCreate() {
+        return (
+            this.groupByField &&
+            this.model.onCreate === "quick_create" &&
+            (isAllowedDateField(this.groupByField) ||
+                QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type))
+        );
     }
 
     /**
@@ -1111,22 +1136,6 @@ export class DynamicGroupList extends DynamicList {
         this.quickCreateInfo = null; // Lazy loaded;
     }
 
-    get firstGroupBy() {
-        return this.groupBy[0] || false;
-    }
-
-    get groupByField() {
-        if (!this.firstGroupBy) {
-            return false;
-        }
-        const [groupByFieldName] = this.firstGroupBy.split(":");
-        return {
-            attrs: {},
-            ...this.fields[groupByFieldName],
-            ...this.activeFields[groupByFieldName],
-        };
-    }
-
     /**
      * List of loaded records inside groups.
      */
@@ -1170,18 +1179,13 @@ export class DynamicGroupList extends DynamicList {
 
     exportState() {
         return {
+            ...super.exportState(),
             groups: this.groups,
         };
     }
 
     canQuickCreate() {
-        return (
-            this.groupByField &&
-            this.groups.length &&
-            this.model.onCreate === "quick_create" &&
-            (isAllowedDateField(this.groupByField) ||
-                QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type))
-        );
+        return super.canQuickCreate() && this.groups.length;
     }
 
     async load() {
@@ -1460,6 +1464,7 @@ export class Group extends DataPoint {
 
     empty() {
         this.count = 0;
+        this.aggregates = {};
         this.list.empty();
     }
 

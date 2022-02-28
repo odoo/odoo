@@ -200,7 +200,12 @@ export class KanbanRenderer extends Component {
         if (list.isGrouped) {
             return list.groups
                 .sort((a, b) => (a.value && !b.value ? 1 : !a.value && b.value ? -1 : 0))
-                .map((group) => ({ group, key: group.value }));
+                .map((group, i) => ({
+                    group,
+                    key: `group_key_${
+                        [null, undefined].includes(group.value) ? i : String(group.value)
+                    }`,
+                }));
         } else {
             return list.records.map((record) => ({ record, key: record.resId }));
         }
@@ -269,11 +274,7 @@ export class KanbanRenderer extends Component {
         if (sumField) {
             const { currency_field, name } = sumField;
             title = sumField.string;
-            if (group.activeProgressValue !== null) {
-                value = group.list.records.reduce((acc, r) => acc + r.data[name], 0);
-            } else {
-                value = group.aggregates[name];
-            }
+            value = group.getAggregates(name);
             if (value && currency_field) {
                 currency = session.currencies[session.company_currency_id];
             }

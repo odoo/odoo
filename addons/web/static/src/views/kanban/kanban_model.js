@@ -9,9 +9,12 @@ import {
     RelationalModel,
 } from "@web/views/relational_model";
 
+const { DateTime } = luxon;
 const { EventBus } = owl;
 
 const FALSE = Symbol("false");
+
+const isValueEqual = (v1, v2) => (v1 instanceof DateTime ? v1.equals(v2) : v1 === v2);
 
 const useTransaction = () => {
     const bus = new EventBus();
@@ -73,6 +76,14 @@ class KanbanGroup extends Group {
         };
     }
 
+    getAggregates(fieldName) {
+        if (this.list.isDirty) {
+            return this.list.records.reduce((acc, r) => acc + r.data[fieldName], 0);
+        } else {
+            return this.aggregates[fieldName];
+        }
+    }
+
     async filterProgressValue(value) {
         const { fieldName } = this.model.progressAttributes;
         const domains = [this.groupDomain];
@@ -87,6 +98,7 @@ class KanbanGroup extends Group {
                 domains.push([[fieldName, "=", this.activeProgressValue]]);
             }
         }
+        this.list.isDirty = this.hasActiveProgressValue;
         this.list.domain = Domain.and(domains).toList();
 
         await this.list.load();
@@ -100,7 +112,9 @@ class KanbanGroup extends Group {
         super.empty();
 
         this.activeProgressValue = null;
-        this.progressValues = [];
+        for (const progressValue of this.progressValues) {
+            progressValue.count = 0;
+        }
     }
 }
 
@@ -109,7 +123,18 @@ class KanbanDynamicGroupList extends DynamicGroupList {
      * @override
      */
     async load() {
+        const oldGroups = this.groups.map((g, i) => [g, i]);
+        const oldGroupBy = this.groupByField.name;
         await this._loadWithProgressData(super.load());
+        for (const [group, index] of oldGroups) {
+            if (oldGroupBy === group.groupByField.name) {
+                const newGroup = this.groups.find((g) => isValueEqual(g.value, group.value));
+                if (!newGroup) {
+                    group.empty();
+                    this.groups.splice(index, 0, group);
+                }
+            }
+        }
     }
 
     /**
@@ -117,39 +142,45 @@ class KanbanDynamicGroupList extends DynamicGroupList {
      */
     async createGroup() {
         const group = await super.createGroup(...arguments);
-        group.progressValues.push({
-            count: 0,
-            value: FALSE,
-            string: this.model.env._t("Other"),
-            color: "muted",
-        });
+        if (this.model.progressAttributes) {
+            group.progressValues.push({
+                count: 0,
+                value: FALSE,
+                string: this.model.env._t("Other"),
+                color: "muted",
+            });
+        }
         return group;
     }
 
-    async moveRecord(dataRecordId, dataGroupId, refId, newGroupId) {
-        const oldGroup = this.groups.find((g) => g.id === dataGroupId);
-        const newGroup = this.groups.find((g) => g.id === newGroupId);
+    async moveRecord(dataRecordId, dataGroupId, refId, targetGroupId) {
+        const sourceGroup = this.groups.find((g) => g.id === dataGroupId);
+        const targetGroup = this.groups.find((g) => g.id === targetGroupId);
 
-        if (!oldGroup || !newGroup) {
+        if (!sourceGroup || !targetGroup) {
             return; // Groups have been re-rendered, old ids are ignored
         }
 
         this.model.transaction.start();
 
         // Quick update: moves the record at the right position and notifies components
-        const record = oldGroup.list.records.find((r) => r.id === dataRecordId);
-        const refIndex = newGroup.list.records.findIndex((r) => r.id === refId);
-        newGroup.addRecord(oldGroup.removeRecord(record), refIndex >= 0 ? refIndex + 1 : 0);
+        const record = sourceGroup.list.records.find((r) => r.id === dataRecordId);
+        const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
+        targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex >= 0 ? refIndex + 1 : 0);
 
         // Move from one group to another
         try {
-            if (dataGroupId !== newGroupId) {
-                const value = isRelational(this.groupByField) ? [newGroup.value] : newGroup.value;
+            if (dataGroupId !== targetGroupId) {
+                const value = isRelational(this.groupByField)
+                    ? [targetGroup.value]
+                    : targetGroup.value;
                 await record.update(this.groupByField.name, value);
                 await record.save();
-                await this._loadWithProgressData(oldGroup.load(), newGroup.load());
             }
-            await newGroup.list.resequence();
+            await targetGroup.list.resequence();
+            if (dataGroupId !== targetGroupId) {
+                await this.model.load();
+            }
         } catch (err) {
             this.model.transaction.abort();
             this.model.notify();
@@ -184,28 +215,30 @@ class KanbanDynamicGroupList extends DynamicGroupList {
 
         const [progressData] = await Promise.all([progressPromise, ...loadPromises]);
 
-        const progressField = this.fields[fieldName];
-        const colorMap = new Map(Object.entries(colors));
-        const selection = Object.fromEntries(progressField.selection || []);
+        const { selection: fieldSelection } = this.fields[fieldName];
+        const colorEntries = Object.entries(colors);
+        const selection = fieldSelection && Object.fromEntries(fieldSelection);
 
-        if (![...colorMap.values()].some((v) => v === "muted")) {
-            colorMap.set(FALSE, "muted");
+        if (!colorEntries.some((v) => v[1] === "muted")) {
+            colorEntries.push([FALSE, "muted"]);
         }
 
         for (const group of this.groups) {
-            group.progressValues = [];
             const groupData = progressData[group.displayName || group.value] || {};
             const counts = new Map(groupData ? Object.entries(groupData) : [[FALSE, group.count]]);
             const total = [...counts.values()].reduce((acc, c) => acc + c, 0);
             counts.set(FALSE, group.count - total);
-            for (const [key, color] of colorMap) {
-                group.progressValues.push({
-                    count: counts.get(key) || 0,
-                    value: key,
-                    string: selection[String(key)] || this.model.env._t("Other"),
-                    color,
-                });
-            }
+            group.progressValues = colorEntries.map(([value, color]) => {
+                let string;
+                if (value === FALSE) {
+                    string = this.model.env._t("Other");
+                } else if (selection) {
+                    string = selection[value];
+                } else {
+                    string = String(value);
+                }
+                return { count: counts.get(value) || 0, value, string, color };
+            });
         }
     }
 }

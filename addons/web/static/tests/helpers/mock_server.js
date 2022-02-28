@@ -1642,7 +1642,6 @@ export class MockServer {
     }
 
     mockWebSearchRead(modelName, args, kwargs) {
-        console.log(this);
         const result = this.mockSearchReadController({
             model: modelName,
             domain: kwargs.domain || args[0],

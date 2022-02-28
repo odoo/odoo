@@ -3,7 +3,7 @@
 
     <t t-name="web.KanbanRenderer" owl="1">
         <div class="o_kanban_renderer" t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}" t-ref="root">
-            <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key or `empty_${groupOrRecord_index}`"> <!-- FIXME -->
+            <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
                 <t t-if="groupOrRecord.group">
                     <t t-set="group" t-value="groupOrRecord.group" />
                     <div class="o_kanban_group"
@@ -60,7 +60,7 @@
                                             class="progress-bar o_bar_has_records"
                                             t-att-class="{ 'progress-bar-animated progress-bar-striped': group.activeProgressValue === progressData.value }"
                                             t-attf-class="bg-{{ progressData.color }}"
-                                            t-attf-style="width: {{ progressData.count / group.count * 100 }}%;"
+                                            t-attf-style="width: {{ progressData.count / (group.count or 1) * 100 }}%;"
                                             aria-valuemin="0"
                                             t-att-aria-valuemax="group.count"
                                             t-att-aria-valuenow="progressData.count"

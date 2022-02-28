@@ -53,16 +53,25 @@ const reload = async (kanban, params = {}) => {
     kanban.env.searchModel.search();
     await nextTick();
 };
-const getCardTexts = (groupIndex) => {
-    const cards = [];
-    if (groupIndex >= 0) {
-        const group = target.querySelectorAll(".o_kanban_group")[groupIndex];
-        cards.push(...group.querySelectorAll(".o_kanban_record"));
+const getColumn = (groupIndex) => target.querySelectorAll(".o_kanban_group")[groupIndex];
+const getCard = (groupIndex, cardIndex) => {
+    let root = target;
+    if (cardIndex >= 0) {
+        root = getColumn(groupIndex);
     } else {
-        cards.push(...target.querySelectorAll(".o_kanban_record"));
+        cardIndex = groupIndex;
     }
-    return cards.map((card) => card.innerText.trim()).filter(Boolean);
+    return root.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")[cardIndex];
 };
+const getCardTexts = (groupIndex) => {
+    const root = groupIndex >= 0 ? getColumn(groupIndex) : target;
+    return [...root.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")]
+        .map((card) => card.innerText.trim())
+        .filter(Boolean);
+};
+const getCounters = () =>
+    [...target.querySelectorAll(".o_kanban_counter_side")].map((counter) => counter.innerText);
+
 /**
  * Helper to perform a full drag & drop sequence.
  *
@@ -171,7 +180,7 @@ const loadMore = async (columnIndex) => {
 // TODO: do not forget KanbanModel tests
 // /!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\
 
-let addDialog = () => {};
+let addDialog;
 let serverData;
 let target;
 QUnit.module("Views", (hooks) => {
@@ -336,6 +345,7 @@ QUnit.module("Views", (hooks) => {
             },
         };
         target = getFixture();
+        addDialog = (cls, props) => props.confirm();
 
         setupViewRegistries();
         serviceRegistry.add(
@@ -440,7 +450,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "basic grouped rendering with active field (archivable by default)",
         async (assert) => {
-            assert.expect(10);
+            assert.expect(11);
 
             // add active field on partner model and make all records active
             serverData.models.partner.fields.active = {
@@ -495,8 +505,9 @@ QUnit.module("Views", (hooks) => {
 
             await clickColumnAction("Archive All");
 
-            assert.containsOnce(target, ".o_kanban_group");
-            assert.containsOnce(target, ".o_kanban_record");
+            assert.containsN(target, ".o_kanban_group", 2);
+            assert.containsOnce(getColumn(0), ".o_kanban_record");
+            assert.containsNone(getColumn(1), ".o_kanban_record");
             assert.verifySteps(["open-dialog"]);
         }
     );
@@ -504,7 +515,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "basic grouped rendering with active field and archive enabled (archivable true)",
         async (assert) => {
-            assert.expect(10);
+            assert.expect(11);
 
             // add active field on partner model and make all records active
             serverData.models.partner.fields.active = {
@@ -559,8 +570,9 @@ QUnit.module("Views", (hooks) => {
 
             await clickColumnAction("Archive All");
 
-            assert.containsOnce(target, ".o_kanban_group");
-            assert.containsN(target, ".o_kanban_record", 3);
+            assert.containsN(target, ".o_kanban_group", 2);
+            assert.containsNone(getColumn(0), ".o_kanban_record");
+            assert.containsN(getColumn(1), ".o_kanban_record", 3);
             assert.verifySteps(["open-dialog"]);
         }
     );
@@ -1851,8 +1863,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         // fold the first column
-        await toggleColumnActions(0);
-        await click(target, ".o_kanban_group:first-child .o_kanban_toggle_fold");
+        let clickColumnAction = await toggleColumnActions(0);
+        await clickColumnAction("Fold");
 
         assert.hasClass(
             target.querySelector(".o_kanban_group:first-child"),
@@ -1875,8 +1887,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         // fold again the first column
-        await toggleColumnActions(0);
-        await click(target, ".o_kanban_group:first-child .o_kanban_toggle_fold");
+        clickColumnAction = await toggleColumnActions(0);
+        await clickColumnAction("Fold");
 
         assert.hasClass(
             target.querySelector(".o_kanban_group:first-child"),
@@ -3164,8 +3176,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_form_view");
 
         // click to fold the first column
-        await toggleColumnActions(0);
-        await click(target, ".o_kanban_group:first-child .o_kanban_toggle_fold");
+        const clickColumnAction = await toggleColumnActions(0);
+        await clickColumnAction("Fold");
 
         assert.containsOnce(target, ".o_column_folded");
 
@@ -3627,7 +3639,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("drag and drop a record, grouped by selection", async (assert) => {
-        assert.expect(6);
+        assert.expect(7);
 
         await makeView({
             type: "kanban",
@@ -3644,7 +3656,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["state"],
             async mockRPC(route, args) {
                 if (route === "/web/dataset/resequence") {
-                    assert.ok(true, "should call resequence");
+                    assert.step("resequence");
                     return true;
                 }
                 if (args.model === "partner" && args.method === "write") {
@@ -3662,6 +3674,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        assert.verifySteps(["resequence"]);
     });
 
     QUnit.test("prevent drag and drop of record if grouped by readonly", async (assert) => {
@@ -3915,7 +3928,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "drag and drop record if grouped by date/time field with attribute allow_group_range_value: true",
         async (assert) => {
-            assert.expect(14);
+            assert.expect(16);
 
             serverData.models.partner.records[0].date = "2017-01-08";
             serverData.models.partner.records[1].date = "2017-01-09";
@@ -3943,7 +3956,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["date:month"],
                 async mockRPC(route, { model, method, args }) {
                     if (route === "/web/dataset/resequence") {
-                        assert.ok(true, "should call resequence");
+                        assert.step("resequence");
                         return true;
                     }
                     if (model === "partner" && method === "write") {
@@ -3985,6 +3998,7 @@ QUnit.module("Views", (hooks) => {
                 3,
                 "Should now have 3 records"
             );
+            assert.verifySteps(["resequence"]);
 
             await reload(kanban, { groupBy: ["datetime:month"] });
 
@@ -4017,6 +4031,7 @@ QUnit.module("Views", (hooks) => {
                 3,
                 "Should now have 3 records"
             );
+            assert.verifySteps(["resequence"]);
         }
     );
 
@@ -4275,8 +4290,9 @@ QUnit.module("Views", (hooks) => {
         // fold the second group and check that the res_ids it contains are no
         // longer in the environment
         envIDs = [1, 3];
-        await toggleColumnActions(1);
-        await click(target, ".o_kanban_group:last-child .o_kanban_toggle_fold");
+        const clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Fold");
+
         assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         // re-open the second group and check that the res_ids it contains are
@@ -4302,14 +4318,14 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
+            async mockRPC(route, { method }) {
                 nbRPCs++;
-                if (args.method === "name_create") {
-                    assert.ok(true, "should call name_create");
+                if (method === "name_create") {
+                    assert.step("name_create");
                 }
                 //Create column will call resequence to set column order
                 if (route === "/web/dataset/resequence") {
-                    assert.ok(true, "should call resequence");
+                    assert.step("resequence");
                     return true;
                 }
             },
@@ -4354,7 +4370,7 @@ QUnit.module("Views", (hooks) => {
             "the last column should be the newly created one"
         );
         assert.ok(
-            _.isNumber(target.querySelector(".o_kanban_group:last-child").data("id")),
+            !isNaN(target.querySelector(".o_kanban_group:last-child").dataset.id),
             "the created column should have the correct id"
         );
         assert.doesNotHaveClass(
@@ -4365,8 +4381,9 @@ QUnit.module("Views", (hooks) => {
 
         // fold and unfold the created column, and check that no RPC is done (as there is no record)
         nbRPCs = 0;
-        await toggleColumnActions(1);
-        await click(target, ".o_kanban_group:last-child .o_kanban_toggle_fold");
+        const clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Fold");
+
         assert.hasClass(
             target.querySelector(".o_kanban_group:last-child"),
             "o_column_folded",
@@ -4515,7 +4532,7 @@ QUnit.module("Views", (hooks) => {
                 if (route === "/web/dataset/resequence") {
                     resequencedIDs = args.ids;
                     assert.strictEqual(
-                        _.reject(args.ids, _.isNumber).length,
+                        _.reject(args.ids, !isNaN).length,
                         0,
                         "column resequenced should be existing records with IDs"
                     );
@@ -4530,12 +4547,12 @@ QUnit.module("Views", (hooks) => {
         // check the initial rendering
         assert.containsN(target, ".o_kanban_group", 2, "should have two columns");
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:first-child").data("id"),
+            target.querySelector(".o_kanban_group:first-child").dataset.id,
             3,
             'first column should be [3, "hello"]'
         );
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:last-child").data("id"),
+            target.querySelector(".o_kanban_group:last-child").dataset.id,
             5,
             'second column should be [5, "xmo"]'
         );
@@ -4574,27 +4591,33 @@ QUnit.module("Views", (hooks) => {
         );
 
         // delete second column (first cancel the confirm request, then confirm)
-        await toggleColumnActions(1);
-        await click(target, ".o_kanban_group:last-child .o_column_delete");
-        assert.ok($(".modal").length, "a confirm modal should be displayed");
+        let clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Delete");
+
+        assert.containsOnce(target, ".modal", "a confirm modal should be displayed");
+
         await modalCancel(); // click on cancel
+
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:last-child").data("id"),
+            target.querySelector(".o_kanban_group:last-child").dataset.id,
             5,
             'column [5, "xmo"] should still be there'
         );
-        await toggleColumnActions(1);
-        await click(target, ".o_kanban_group:last-child .o_column_delete");
-        assert.ok($(".modal").length, "a confirm modal should be displayed");
+        clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Delete");
+
+        assert.containsOnce(target, ".modal", "a confirm modal should be displayed");
+
         await modalOk(); // click on confirm
+
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:last-child").data("id"),
+            target.querySelector(".o_kanban_group:last-child").dataset.id,
             3,
             'last column should now be [3, "hello"]'
         );
         assert.containsN(target, ".o_kanban_group", 2, "should still have two columns");
         assert.ok(
-            !_.isNumber(target.querySelector(".o_kanban_group:first-child").data("id")),
+            isNaN(target.querySelector(".o_kanban_group:first-child").dataset.id),
             "first column should have no id (Undefined column)"
         );
         // check available actions on 'Undefined' column
@@ -4640,7 +4663,7 @@ QUnit.module("Views", (hooks) => {
         await editColumnName("once third column");
         await validateColumn();
 
-        const newColumnID = target.querySelector(".o_kanban_group:last-child").data("id");
+        const newColumnID = target.querySelector(".o_kanban_group:last-child").dataset.id;
         await testUtils.dom.dragAndDrop(
             target.querySelector(".o_column_title:first-child"),
             target.querySelector(".o_column_title:last"),
@@ -4691,8 +4714,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_kanban_group", 3, "should have two columns");
 
-        await toggleColumnActions(1);
-        await click(target, ".o_kanban_group:last-child .o_column_delete");
+        const clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Delete");
         await modalOk();
 
         assert.containsN(target, ".o_kanban_group", 2, "should have twos columns");
@@ -4741,8 +4764,9 @@ QUnit.module("Views", (hooks) => {
         );
 
         // edit the title of column [5, 'xmo'] and close without saving
-        await toggleColumnActions(4);
-        await click(target, ".o_kanban_group[data-id=5] .o_column_edit");
+        let clickColumnAction = await toggleColumnActions(4);
+        await clickColumnAction("Edit");
+
         assert.containsOnce(
             document.body,
             ".modal .o_form_editable",
@@ -4765,8 +4789,8 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nbRPCs, 0, "no RPC should have been done");
 
         // edit the title of column [5, 'xmo'] and discard
-        await toggleColumnActions(4);
-        await click(target, ".o_kanban_group[data-id=5] .o_column_edit");
+        clickColumnAction = await toggleColumnActions(4);
+        await clickColumnAction("Edit");
         await editInput(document, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
         await click(document, ".model .btn-secondary");
@@ -4779,8 +4803,8 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nbRPCs, 0, "no RPC should have been done");
 
         // edit the title of column [5, 'xmo'] and save
-        await toggleColumnActions(4);
-        await click(target, ".o_kanban_group[data-id=5] .o_column_edit");
+        clickColumnAction = await toggleColumnActions(4);
+        await clickColumnAction("Edit");
         await editInput(document, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
         await click(document, ".modal .btn-primary"); // click on save
@@ -4833,8 +4857,8 @@ QUnit.module("Views", (hooks) => {
                 }
             },
         });
-        await toggleColumnActions(4);
-        await click(target, ".o_kanban_group[data-id=5] .o_column_edit");
+        const clickColumnAction = await toggleColumnActions(4);
+        await clickColumnAction("Edit");
     });
 
     QUnit.test("quick create column should be opened if there is no column", async (assert) => {
@@ -5315,7 +5339,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("no content helper when archive all records in kanban group", async (assert) => {
-        assert.expect(3);
+        assert.expect(4);
 
         // add active field on partner model to have archive option
         serverData.models.partner.fields.active = {
@@ -5325,7 +5349,10 @@ QUnit.module("Views", (hooks) => {
         };
         // remove last records to have only one column
         serverData.models.partner.records = serverData.models.partner.records.slice(0, 3);
-        serviceRegistry.add("dialog", dialogService, { force: true });
+        addDialog = (cls, props) => {
+            assert.step("open-dialog");
+            props.confirm();
+        };
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -5357,12 +5384,12 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:last-child .o_kanban_record", 3);
 
         // archive the records of the last column
-        await toggleColumnActions(0);
-        await click(target, ".o_kanban_group .o_column_archive_records");
-        assert.containsOnce(document.body, ".modal");
-        await click(target, ".modal .btn-primary");
+        const clickColumnAction = await toggleColumnActions(0);
+        await clickColumnAction("Archive All");
+
         // check no content helper is exist
         assert.containsOnce(target, ".o_view_nocontent");
+        assert.verifySteps(["open-dialog"]);
     });
 
     QUnit.test("no content helper when no data", async (assert) => {
@@ -5910,7 +5937,9 @@ QUnit.module("Views", (hooks) => {
 
         // Check keynav is disabled
         assert.hasClass(target.querySelector(".o_kanban_record"), "o_sample_data_disabled");
+
         await toggleColumnActions(0);
+
         assert.hasClass(target.querySelector(".o_kanban_toggle_fold"), "o_sample_data_disabled");
         assert.containsNone(target, '[tabindex]:not([tabindex="-1"])');
 
@@ -6233,8 +6262,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         // Fold the column
-        await toggleColumnActions(0);
-        await click(target, ".dropdown-item.o_kanban_toggle_fold");
+        const clickColumnAction = await toggleColumnActions(0);
+        await clickColumnAction("Fold");
 
         assert.containsOnce(target, ".o_kanban_group");
         assert.hasClass(target.querySelector(".o_kanban_group"), "o_column_folded");
@@ -6255,7 +6284,6 @@ QUnit.module("Views", (hooks) => {
 
         serverData.models.partner.records = [];
 
-        serviceRegistry.add("dialog", dialogService, { force: true });
         let groups = [
             {
                 product_id: [1, "New"],
@@ -6299,9 +6327,8 @@ QUnit.module("Views", (hooks) => {
 
         // Delete the first column
         groups = [];
-        await toggleColumnActions(0);
-        await click(target, ".dropdown-item.o_column_delete");
-        await click(document, ".modal .btn-primary");
+        const clickColumnAction = await toggleColumnActions(0);
+        await clickColumnAction("Delete");
 
         assert.containsNone(target, ".o_kanban_group");
         assert.containsOnce(target, ".o_column_quick_create .o_quick_create_unfolded");
@@ -6312,7 +6339,6 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             assert.expect(9);
 
-            serviceRegistry.add("dialog", dialogService, { force: true });
             await makeView({
                 arch: `
                 <kanban sample="1">
@@ -6363,9 +6389,8 @@ QUnit.module("Views", (hooks) => {
             );
 
             // delete the column we just created
-            await toggleColumnActions(2);
-            await click(target, ".dropdown-item.o_column_delete");
-            await click(document, ".modal .btn-primary");
+            const clickColumnAction = await toggleColumnActions(2);
+            await clickColumnAction("Delete");
 
             assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
             assert.containsN(target, ".o_kanban_group", 2);
@@ -6650,7 +6675,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsN(target, ".o_kanban_group", 2, "should have two columns");
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:first-child").data("id"),
+            target.querySelector(".o_kanban_group:first-child").dataset.id,
             3,
             "first column should be id 3 before resequencing"
         );
@@ -6666,7 +6691,7 @@ QUnit.module("Views", (hooks) => {
         await reload(kanban, {}, { reload: false }); // re-render without reloading
 
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:first-child").data("id"),
+            target.querySelector(".o_kanban_group:first-child").dataset.id,
             5,
             "first column should be id 5 after resequencing"
         );
@@ -6981,9 +7006,8 @@ QUnit.module("Views", (hooks) => {
             "first column should have a default title for when no value is provided"
         );
         assert.ok(
-            !target
-                .querySelector(".o_kanban_group:first-child .o_kanban_header_title")
-                .data("original-title"),
+            !target.querySelector(".o_kanban_group:first-child .o_kanban_header_title").dataset
+                .tooltip,
             "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value"
         );
         assert.ok(
@@ -6992,9 +7016,8 @@ QUnit.module("Views", (hooks) => {
             "second column should have a title with a value from the many2one"
         );
         assert.strictEqual(
-            target
-                .querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title")
-                .data("original-title"),
+            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title").dataset
+                .tooltip,
             "<div>Kikou</br>hello</div>",
             "second column should have a tooltip with the group_by_tooltip title and many2one field value"
         );
@@ -7315,11 +7338,9 @@ QUnit.module("Views", (hooks) => {
             "kanban counters should have been created"
         );
 
-        assert.strictEqual(
-            Number(
-                target.querySelector(".o_kanban_group:last-child .o_kanban_counter_side").innerText
-            ),
-            36,
+        assert.deepEqual(
+            getCounters(),
+            ["-4", "36"],
             "counter should display the sum of int_field values"
         );
     });
@@ -7353,12 +7374,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
-        assert.strictEqual(
-            target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter .o_kanban_counter_side"
-            ).innerText,
-            "4"
-        );
+        assert.deepEqual(getCounters(), ["1", "4"]);
         assert.containsN(
             target,
             ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar",
@@ -7391,10 +7407,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_kanban_group:last-child"),
             "o_kanban_group_show_muted"
         );
-        assert.strictEqual(
-            target.querySelector(".o_kanban_counter:last-child .o_kanban_counter_side").innerText,
-            "1"
-        );
+        assert.deepEqual(getCounters(), ["1", "4"]);
     });
 
     QUnit.test('column progressbars: "false" bar with sum_field', async (assert) => {
@@ -7428,12 +7441,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
-        assert.strictEqual(
-            target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter .o_kanban_counter_side"
-            ).innerText,
-            "51"
-        );
+        assert.deepEqual(getCounters(), ["-4", "51"]);
 
         await click(
             target,
@@ -7446,12 +7454,7 @@ QUnit.module("Views", (hooks) => {
             ),
             "progress-bar-animated"
         );
-        assert.strictEqual(
-            target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter .o_kanban_counter_side"
-            ).innerText,
-            "15"
-        );
+        assert.deepEqual(getCounters(), ["-4", "15"]);
     });
 
     QUnit.test("column progressbars should not crash in non grouped views", async (assert) => {
@@ -7520,7 +7523,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("column progressbars on quick create properly update counter", async (assert) => {
-        assert.expect(2);
+        assert.expect(3);
 
         await makeView({
             type: "kanban",
@@ -7538,15 +7541,18 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
 
-        assert.strictEqual(target.querySelector(".o_kanban_counter_side").innerText, "1");
+        assert.deepEqual(getCounters(), ["1", "3"]);
 
         await quickCreateRecord();
         await editQuickCreateInput("display_name", "Test");
+
+        assert.deepEqual(getCounters(), ["1", "3"]);
+
         await validateRecord();
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_counter_side").innerText,
-            "2",
+        assert.deepEqual(
+            getCounters(),
+            ["2", "3"],
             "kanban counters should have updated on quick create"
         );
     });
@@ -7616,7 +7622,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("column progressbars on archiving records update counter", async (assert) => {
+    QUnit.test("column progressbars on archiving records update counter", async (assert) => {
         assert.expect(4);
 
         // add active field on partner model and make all records active
@@ -7651,38 +7657,23 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
+        assert.deepEqual(getCounters(), ["-4", "36"], "counter should contain the correct value");
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_counter_side").innerText,
-            "36",
-            "counter should contain the correct value"
-        );
-        assert.strictEqual(
-            target
-                .querySelector(
-                    ".o_kanban_group:nth-child(2) .o_kanban_counter_progress > .progress-bar:first-child"
-                )
-                .data("originalTitle"),
+            getColumn(1).querySelector(".o_kanban_counter_progress > .progress-bar:first-child")
+                .dataset.tooltip,
             "1 yop",
             "the counter progressbars should be correctly displayed"
         );
 
         // archive all records of the second columns
-        await toggleColumnActions(1);
-        await click(target, ".o_column_archive_records:visible");
-        await click($(".modal-footer button:first-child"));
+        const clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Archive All");
 
+        assert.deepEqual(getCounters(), ["-4", "0"], "counter should contain the correct value");
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_counter_side").innerText,
-            "0",
-            "counter should contain the correct value"
-        );
-        assert.strictEqual(
-            target
-                .querySelector(
-                    ".o_kanban_group:nth-child(2) .o_kanban_counter_progress > .progress-bar:first-child"
-                )
-                .data("originalTitle"),
-            "0 yop",
+            getColumn(1).querySelector(".o_kanban_counter_progress > .progress-bar:first-child")
+                .dataset.tooltip,
+            "0 Other",
             "the counter progressbars should have been correctly updated"
         );
     });
@@ -7731,9 +7722,9 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(kanban.exportState().resIds, [1, 2, 3, 4]);
 
             // archive all records of the first column
-            await toggleColumnActions(0);
-            await click(target, ".o_column_archive_records:visible");
-            await click($(".modal-footer button:first-child"));
+            const clickColumnAction = await toggleColumnActions(0);
+            await clickColumnAction("Archive All");
+            await click(target, ".modal-footer button:first-child");
 
             assert.deepEqual(kanban.exportState().resIds, [1, 2, 3]);
         }
@@ -7856,44 +7847,28 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:first-child .o_kanban_counter_side").innerText,
-            "1",
-            "counter should contain the correct value"
-        );
+        assert.deepEqual(getCounters(), ["1"], "counter should contain the correct value");
 
         await testUtils.dom.dragAndDrop(
             target.querySelector(".o_kanban_group:first-child .o_kanban_record:first-child"),
             target.querySelector(".o_kanban_group:nth-child(2)")
         );
         await nextTick(); // wait for update resulting from drag and drop
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:first-child .o_kanban_counter_side").innerText,
-            "0",
-            "counter should contain the correct value"
-        );
+        assert.deepEqual(getCounters(), ["0"], "counter should contain the correct value");
 
         await testUtils.dom.dragAndDrop(
             target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record:nth-child(2)"),
             target.querySelector(".o_kanban_group:first-child")
         );
         await nextTick(); // wait for update resulting from drag and drop
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:first-child .o_kanban_counter_side").innerText,
-            "1",
-            "counter should contain the correct value"
-        );
+        assert.deepEqual(getCounters(), ["1"], "counter should contain the correct value");
 
         await testUtils.dom.dragAndDrop(
             target.querySelector(".o_kanban_group:first-child .o_kanban_record:first-child"),
             target.querySelector(".o_kanban_group:nth-child(2)")
         );
         await nextTick(); // wait for update resulting from drag and drop
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:first-child .o_kanban_counter_side").innerText,
-            "0",
-            "counter should contain the correct value"
-        );
+        assert.deepEqual(getCounters(), ["0"], "counter should contain the correct value");
     });
 
     QUnit.skipWOWL("progress bar subgroup count recompute", async (assert) => {
@@ -7914,16 +7889,13 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
 
-        let secondCounter = target.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_counter_side"
-        );
-        assert.strictEqual(Number(secondCounter.innerText), 3, "Initial count should be Three");
+        assert.deepEqual(getCounters(), ["3"], "Initial count should be Three");
+
         await click(target, ".o_kanban_group:nth-child(2) .bg-success");
 
-        secondCounter = target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_counter_side");
-        assert.strictEqual(
-            Number(secondCounter.innerText),
-            1,
+        assert.deepEqual(
+            getCounters(),
+            ["1"],
             "kanban counters should vary according to what subgroup is selected"
         );
     });
@@ -7949,18 +7921,11 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.deepEqual(
-                [...view.el.querySelectorAll(".progress-bar")].map((el) =>
-                    el.getAttribute("data-original-title")
-                ),
+                [...view.el.querySelectorAll(".progress-bar")].map((el) => el.dataset.tooltip),
                 ["0 yop", "0 gnap", "1 blip", "0 __false", "1 yop", "1 gnap", "1 blip", "0 __false"]
             );
 
-            assert.deepEqual(
-                [...view.el.querySelectorAll(".o_kanban_counter_side")].map((el) =>
-                    Number(el.innerText)
-                ),
-                [1, 3]
-            );
+            assert.deepEqual(getCounters(), ["1", "3"]);
 
             // Drag the last kanban record to the first column
             await testUtils.dom.dragAndDrop(
@@ -7969,18 +7934,11 @@ QUnit.module("Views", (hooks) => {
             );
 
             assert.deepEqual(
-                [...view.el.querySelectorAll(".progress-bar")].map((el) =>
-                    el.getAttribute("data-original-title")
-                ),
+                [...view.el.querySelectorAll(".progress-bar")].map((el) => el.dataset.tooltip),
                 ["0 yop", "1 gnap", "1 blip", "0 __false", "1 yop", "0 gnap", "1 blip", "0 __false"]
             );
 
-            assert.deepEqual(
-                [...view.el.querySelectorAll(".o_kanban_counter_side")].map((el) =>
-                    Number(el.innerText)
-                ),
-                [2, 2]
-            );
+            assert.deepEqual(getCounters(), ["2", "2"]);
 
             view.destroy();
         }
@@ -8021,22 +7979,14 @@ QUnit.module("Views", (hooks) => {
                 ],
             });
 
-            assert.deepEqual(
-                [
-                    ...view.el.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_record span"
-                    ),
-                ].map((el) => Number(el.innerText))[0],
-                4,
+            assert.strictEqual(
+                getCard(1, 0).innerText,
+                "4",
                 "first column's first record must be id 4"
             );
 
             assert.deepEqual(
-                [
-                    ...view.el.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_record span"
-                    ),
-                ].map((el) => Number(el.innerText)),
+                getCard(1, 0).innerText,
                 [1],
                 "second column's records should be only the id 1"
             );
@@ -8092,17 +8042,13 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            const initialCount = Number(
-                target.querySelector(".o_kanban_counter_side:first-child").innerText
-            );
+            const initialCount = Number(getCounters()[0]);
 
             await createRecord();
             await editQuickCreateInput("int_field", 44);
             await validateRecord();
 
-            const lastCount = Number(
-                target.querySelector(".o_kanban_counter_side:first-child").innerText
-            );
+            const lastCount = Number(getCounters()[0]);
             assert.strictEqual(
                 lastCount,
                 initialCount + 44,
@@ -8142,10 +8088,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             await click(target, '.o_kanban_group:nth-child(2) .progress-bar[data-filter="blip"]');
-            const initialCount = Number(
-                target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_counter_side")
-                    .innerText
-            );
+            const initialCount = Number(getCounters()[1]);
             assert.strictEqual(initialCount, -4, "Initial count should be -4");
 
             // open the quick create
@@ -8162,10 +8105,7 @@ QUnit.module("Views", (hooks) => {
             await validateRecord();
 
             // check counter
-            const lastCount = Number(
-                target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_counter_side")
-                    .innerText
-            );
+            const lastCount = Number(getCounters()[1]);
             assert.strictEqual(
                 lastCount,
                 initialCount + 44,
@@ -8438,9 +8378,16 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("quick_create on grouped kanban without column", async (assert) => {
-        assert.expect(1);
+        assert.expect(2);
         serverData.models.partner.records = [];
-        const kanban = await makeView({
+
+        makeFakeActionService({
+            async switchView() {
+                assert.step("switch_view");
+            },
+        });
+
+        await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -8453,12 +8400,8 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates></kanban>",
             groupBy: ["product_id"],
         });
-        patchWithCleanup(kanban.actionService, {
-            switchView() {
-                assert.ok(true, "switchView was called instead of quick_create");
-            },
-        });
         await createRecord();
+        assert.verifySteps(["switch_view"]);
     });
 
     QUnit.skipWOWL("keyboard navigation on kanban basic rendering", async (assert) => {
@@ -9293,7 +9236,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["0 yop", "1 blip", "0 __false"]
             );
             assert.deepEqual(
@@ -9301,7 +9244,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["1 yop", "1 blip", "1 __false"]
             );
 
@@ -9325,7 +9268,7 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(target.querySelector(".o_column_title").innerText, "Yes");
             assert.deepEqual(
                 [...target.querySelectorAll(".o_kanban_group .o_kanban_counter .progress-bar")].map(
-                    (el) => el.dataset.originalTitle
+                    (el) => el.dataset.tooltip
                 ),
                 ["1 yop", "0 blip", "0 __false"]
             );
@@ -9345,7 +9288,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["0 yop", "1 blip", "0 __false"]
             );
             assert.deepEqual(
@@ -9353,7 +9296,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["1 yop", "1 blip", "1 __false"]
             );
         }
@@ -9397,7 +9340,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["0 yop", "1 blip", "0 __false"]
             );
             assert.deepEqual(
@@ -9411,7 +9354,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["1 yop", "1 blip", "1 __false"]
             );
             assert.deepEqual(
@@ -9436,7 +9379,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group.o_kanban_group_show .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["1 yop", "1 blip", "1 __false"]
             );
             assert.deepEqual(
@@ -9463,7 +9406,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["0 yop", "1 blip", "0 __false"]
             );
             assert.deepEqual(
@@ -9477,7 +9420,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["0 yop", "1 blip", "0 __false"]
             );
             assert.deepEqual(
@@ -9502,7 +9445,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["0 yop", "1 blip", "0 __false"]
             );
             assert.deepEqual(
@@ -9516,7 +9459,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["1 yop", "1 blip", "1 __false"]
             );
             assert.deepEqual(
@@ -9566,7 +9509,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["0 yop", "1 blip", "0 __false"]
             );
             assert.deepEqual(
@@ -9580,7 +9523,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["1 yop", "1 blip", "1 __false"]
             );
             assert.deepEqual(
@@ -9629,7 +9572,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["0 yop", "0 blip", "0 __false"]
             );
             assert.deepEqual(
@@ -9643,7 +9586,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["1 yop", "2 blip", "1 __false"]
             );
             assert.deepEqual(
@@ -9697,7 +9640,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["0 yop", "1 blip", "0 __false"]
             );
             assert.deepEqual(
@@ -9711,7 +9654,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["1 yop", "1 blip", "1 __false"]
             );
             assert.deepEqual(
@@ -9767,7 +9710,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["1 yop", "1 blip", "0 __false"]
             );
             assert.deepEqual(
@@ -9781,7 +9724,7 @@ QUnit.module("Views", (hooks) => {
                     ...target.querySelectorAll(
                         ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
                     ),
-                ].map((el) => el.dataset.originalTitle),
+                ].map((el) => el.dataset.tooltip),
                 ["0 yop", "1 blip", "1 __false"]
             );
             assert.deepEqual(
