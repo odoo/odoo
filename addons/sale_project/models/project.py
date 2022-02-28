@@ -3,7 +3,7 @@
 
 from ast import literal_eval
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 from odoo.osv.query import Query
@@ -94,7 +94,7 @@ class Project(models.Model):
         self.ensure_one()
         return {
             'icon': 'dollar',
-            'text': _('Sales Order'),
+            'text': _lt('Sales Order'),
             'action_type': 'object',
             'action': 'action_view_so',
             'show': bool(self.sale_order_id),
