@@ -79,6 +79,9 @@ var addArticleToSection = function (sectionName, pageName) {
 	content: 'eLearning: fill article completion time',
 	trigger: 'input[name=duration]',
 	run: 'text 4',
+}, {
+    content: 'eLearning: create and publish slide',
+    trigger: 'footer.modal-footer button:contains("Publish")',
 }];
 };
 
