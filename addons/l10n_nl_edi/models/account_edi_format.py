@@ -32,7 +32,7 @@ class AccountEdiFormat(models.Model):
             if endpoint is not None:
                 scheme = endpoint.attrib['schemeID']
                 if scheme == '0106' and endpoint.text:
-                    return [('l10n_nl_kvk', '=', endpoint.text)]
+                    return [('company_registry', '=', endpoint.text)]
                 elif scheme == '0190' and endpoint.text:
                     return [('l10n_nl_oin', '=', endpoint.text)]
         return super()._bis3_get_extra_partner_domains(tree)
@@ -50,7 +50,7 @@ class AccountEdiFormat(models.Model):
 
         for partner_vals in (values['customer_vals'], values['supplier_vals']):
             partner = partner_vals['partner']
-            endpoint = partner.l10n_nl_oin or partner.l10n_nl_kvk
+            endpoint = partner.l10n_nl_oin or partner.company_registry
             if partner.country_code == 'NL' and endpoint:
                 scheme = '0190' if partner.l10n_nl_oin else '0106'
                 partner_vals.update({
@@ -90,7 +90,7 @@ class AccountEdiFormat(models.Model):
         supplier = invoice.company_id.partner_id.commercial_partner_id
         if not supplier.street or not supplier.zip or not supplier.city:
             errors.append(_("The supplier's address must include street, zip and city (%s).", supplier.display_name))
-        if supplier.country_code == 'NL' and not supplier.l10n_nl_kvk and not supplier.l10n_nl_oin:
+        if supplier.country_code == 'NL' and not supplier.company_registry and not supplier.l10n_nl_oin:
             errors.append(_("The supplier %s must have a KvK-nummer or OIN.", supplier.display_name))
         if not supplier.vat:
             errors.append(_("Please define a VAT number for '%s'.", supplier.display_name))
@@ -98,7 +98,7 @@ class AccountEdiFormat(models.Model):
         customer = invoice.commercial_partner_id
         if customer.country_code == 'NL' and (not customer.street or not customer.zip or not customer.city):
             errors.append(_("Customer's address must include street, zip and city (%s).", customer.display_name))
-        if customer.country_code == 'NL' and not customer.l10n_nl_kvk and not customer.l10n_nl_oin:
+        if customer.country_code == 'NL' and not customer.company_registry and not customer.l10n_nl_oin:
             errors.append(_("The customer %s must have a KvK-nummer or OIN.", customer.display_name))
 
         if not invoice.partner_bank_id:

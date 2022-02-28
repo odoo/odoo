@@ -12,19 +12,21 @@ class TestUBL(AccountEdiTestCommon):
     def setUpClass(cls, chart_template_ref='l10n_nl.l10nnl_chart_template', edi_format_ref='l10n_nl_edi.edi_nlcius_1'):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
+        # supplier: company_1_data
         cls.company_data['company'].partner_id.write({
             'street': 'Archefstraat 42',
             'zip': '1000',
             'city': 'Amsterdam',
             'country_id': cls.env.ref('base.nl').id,
-            'l10n_nl_kvk': '82777822',
+            'company_registry': '82777822',
             'vat': 'NL000099998B57',
         })
 
+        # customer: partner_a
         cls.partner_a.write({
-            'l10n_nl_kvk': '77777677',
             'country_id': cls.env.ref('base.be').id,
             'vat': 'BE0477472701',
+            'company_registry': '77777677',
         })
 
         bank_account = cls.env['res.partner.bank'].create({
