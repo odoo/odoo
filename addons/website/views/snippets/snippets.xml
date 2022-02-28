@@ -363,6 +363,27 @@
         </we-button-group>
     </div>
 
+    <div data-selector=".s_share, .s_social_media">
+        <we-select string="Title Position" data-apply-to=".s_share_title, .s_social_media_title">
+            <we-button data-select-class="d-block">Top</we-button>
+            <we-button data-select-class="">Left</we-button>
+            <we-button data-select-class="d-none">None</we-button>
+        </we-select>
+        <we-select string="Layout" data-apply-to=".fa">
+            <we-button data-select-class="rounded shadow-sm">Square</we-button>
+            <we-button data-select-class="rounded-empty-circle shadow-sm">Circle</we-button>
+            <we-button data-select-class="rounded-circle shadow-sm">Disk</we-button>
+            <we-button data-select-class="m-1">None</we-button>
+        </we-select>
+        <we-select string="Size" data-apply-to=".fa">
+            <we-button data-select-class="">Small</we-button>
+            <we-button data-select-class="fa-2x">Medium</we-button>
+            <we-button data-select-class="fa-3x">Big</we-button>
+        </we-select>
+        <!-- Compatibility, keep reverse logical, don't use `icon_color` -->
+        <we-checkbox string="Color" data-select-class="no_icon_color|"/>
+    </div>
+
     <div id="so_width" data-selector=".s_alert, .s_card, .s_blockquote, .s_text_highlight">
         <we-select string="Width">
             <we-button data-select-class="w-25">25%</we-button>
