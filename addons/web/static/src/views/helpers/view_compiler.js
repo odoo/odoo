@@ -751,9 +751,9 @@ export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc) => {
         const compiledDoc = new ViewCompiler(qweb, fields).compile(xmlDoc);
         templateIds[templateKey] = xml`${compiledDoc.outerHTML}`;
         // DEBUG -- start
-        console.group(`Compiled template (${templateIds[templateKey]}):`);
-        console.dirxml(compiledDoc);
-        console.groupEnd();
+        // console.group(`Compiled template (${templateIds[templateKey]}):`);
+        // console.dirxml(compiledDoc);
+        // console.groupEnd();
         // DEBUG -- end
     }
     return templateIds[templateKey];

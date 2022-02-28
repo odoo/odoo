@@ -2385,7 +2385,7 @@ QUnit.module("Views", (hooks) => {
                 owl.onWillUpdateProps(async () => {
                     assert.step("load " + rpcCount);
                     if (rpcCount === 2) {
-                        return () => {};
+                        return new Promise(() => {});
                     }
                 });
             }

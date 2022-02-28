@@ -23,7 +23,7 @@ const { useEnv, useChildSubEnv, useState, onWillRender } = owl;
  */
 export function usePager(getProps) {
     const env = useEnv();
-    const pagerState = useState(getProps());
+    const pagerState = useState({});
 
     useChildSubEnv({
         config: {

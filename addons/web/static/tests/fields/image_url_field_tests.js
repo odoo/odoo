@@ -239,7 +239,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(form, 'div[name="foo"] > img', "the widget should contain an image");
         assert.strictEqual(
-            target.querySelector('div[name="foo"] > img')[0].dataset.src,
+            target.querySelector('div[name="foo"] > img').dataset.src,
             FR_FLAG_URL,
             "the image should have the correct src"
         );

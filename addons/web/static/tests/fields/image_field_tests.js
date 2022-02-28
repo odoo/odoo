@@ -64,12 +64,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("ImageField");
 
     QUnit.test("ImageField is correctly rendered", async function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
         serverData.models.partner.records[0].document = MY_IMAGE;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -131,7 +131,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.skipWOWL(
         "ImageField is correctly replaced when given an incorrect value",
         async function (assert) {
             assert.expect(6);
@@ -175,7 +175,7 @@ QUnit.module("Fields", (hooks) => {
                 "the widget should contain an image"
             );
             assert.strictEqual(
-                target.querySelector('div[name="document"] > img')[0].dataset.src,
+                target.querySelector('div[name="document"] > img').dataset.src,
                 `/web/static/img/placeholder.png`,
                 "the image should have the correct src"
             );
