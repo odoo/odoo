@@ -167,13 +167,15 @@ registerModel({
             if (!this.messaging) {
                 return;
             }
-            return this.messages.length
-                ? this.messages.some(message => (
+
+            if (this.messages.length && this.originThread && this.originThread.model === 'mail.channel') {
+                return this.messages.some(message => (
                     message.canBeDeleted ||
                     (message.author && message.author === this.messaging.currentPartner) ||
                     (message.guestAuthor && message.guestAuthor === this.messaging.currentGuest)
-                ))
-                : true;
+                ));
+            }
+            return true;
         },
         /**
          * @private
