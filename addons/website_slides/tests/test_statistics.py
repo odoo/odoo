@@ -127,12 +127,12 @@ class TestSlideStatistics(common.SlidesCase):
         self.assertEqual(slide_emp.user_vote, 1)
         slide_emp.action_dislike()
         self.assertEqual(slide_emp.likes, 0)
-        self.assertEqual(slide_emp.dislikes, 0)
-        self.assertEqual(slide_emp.user_vote, 0)
-        slide_emp.action_dislike()
-        self.assertEqual(slide_emp.likes, 0)
         self.assertEqual(slide_emp.dislikes, 1)
         self.assertEqual(slide_emp.user_vote, -1)
+        slide_emp.action_dislike()
+        self.assertEqual(slide_emp.likes, 0)
+        self.assertEqual(slide_emp.dislikes, 0)
+        self.assertEqual(slide_emp.user_vote, 0)
 
     def test_slide_statistics_views(self):
         channel_publisher = self.channel.with_user(self.user_officer)

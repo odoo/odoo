@@ -152,8 +152,29 @@ class TestUi(TestUICommon):
             login=user_demo.login)
 
 
+@tests.common.tagged('post_install', '-at_install')
+class TestUiPublisher(HttpCaseWithUserDemo):
+
+    def test_course_publisher_elearning_manager(self):
+        user_demo = self.user_demo
+        user_demo.flush()
+        user_demo.write({
+            'groups_id': [
+                (5, 0),
+                (4, self.env.ref('base.group_user').id),
+                (4, self.env.ref('website_slides.group_website_slides_manager').id)
+            ],
+        })
+
+        self.browser_js(
+            '/slides',
+            'odoo.__DEBUG__.services["web_tour.tour"].run("course_publisher_standard")',
+            'odoo.__DEBUG__.services["web_tour.tour"].tours.course_publisher_standard.ready',
+            login=user_demo.login)
+
+
 @tests.common.tagged('external', 'post_install', '-standard', '-at_install')
-class TestUiYoutube(HttpCaseWithUserDemo):
+class TestUiPublisherYoutube(HttpCaseWithUserDemo):
 
     def test_course_member_yt_employee(self):
         # remove membership because we need to be able to join the course during the tour

@@ -122,6 +122,11 @@ $truncate-limits: 2, 3, 10;
 
     .o_wslides_js_slide_like_up,
     .o_wslides_js_slide_like_down {
+        user-select: none;
+        min-width: 2rem;
+        > i.fa {
+            min-width: 1rem;
+        }
         &:not(.disabled) {
             cursor: pointer;
             color: $link-color;
