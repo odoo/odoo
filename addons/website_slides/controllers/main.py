@@ -68,7 +68,7 @@ class WebsiteSlides(WebsiteProfile):
     def _set_completed_slide(self, slide):
         # quiz use their specific mechanism to be marked as done
         if slide.slide_type == 'quiz' or slide.question_ids:
-            raise werkzeug.exceptions.Forbidden(_("Slide with questions must be marked as done when submitting all good answers "))
+            raise UserError(_("Slide with questions must be marked as done when submitting all good answers "))
         if slide.website_published and slide.channel_id.is_member:
             slide.action_set_completed()
         return True
