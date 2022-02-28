@@ -4,18 +4,25 @@ odoo.define('pos_restaurant.BackToFloorButton', function (require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
+    /**
+     * Props: {
+     *     onClick: callback
+     * }
+     */
     class BackToFloorButton extends PosComponent {
         get table() {
-            return (this.env.pos && this.env.pos.table) || null;
+            return this.env.pos.table;
         }
         get floor() {
-            const table = this.table;
-            return table ? table.floor : null;
+            return this.table ? this.table.floor : null;
         }
         get hasTable() {
-            return this.table !== null;
+            return this.table != null;
         }
         backToFloorScreen() {
+            if (this.props.onClick) {
+                this.props.onClick();
+            }
             this.showScreen('FloorScreen', { floor: this.floor });
         }
     }

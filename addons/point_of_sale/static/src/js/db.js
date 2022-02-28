@@ -519,14 +519,8 @@ var PosDB = core.Class.extend({
      * @return {array<object>} list of orders.
      */
     get_unpaid_orders_to_sync: function(ids){
-        var saved = this.load('unpaid_orders',[]);
-        var orders = [];
-        saved.forEach(function(o) {
-            if (ids.includes(o.id)){
-                orders.push(o);
-            }
-        });
-        return orders;
+        const savedOrders = this.load('unpaid_orders',[]);
+        return savedOrders.filter(order => ids.includes(order.id));
     },
     /**
      * Add a given order to the orders to be removed from the server.

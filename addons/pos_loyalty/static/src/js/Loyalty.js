@@ -37,6 +37,7 @@ export class PosLoyaltyCard {
 }
 
 const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState extends PosGlobalState {
+    //@override
     async _processData(loadedData) {
         await super._processData(loadedData);
         this.programs = loadedData['loyalty.program'] || []; //TODO: rename to `loyaltyPrograms` etc

@@ -63,15 +63,14 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
                 // order and for the new one. This is not entirely correct
                 // but avoids flooding the kitchen with unnecessary orders.
                 // Not sure what to do in this case.
-
-                if (this.newOrder.saveChanges) {
-                    this.currentOrder.saveChanges();
-                    this.newOrder.saveChanges();
+                if (this.env.pos.config.iface_printers) {
+                    this.currentOrder.updatePrintedResume();
+                    this.newOrder.updatePrintedResume();
                 }
 
-                this.newOrder.set_customer_count(1);
-                const newCustomerCount = this.currentOrder.get_customer_count() - 1;
-                this.currentOrder.set_customer_count(newCustomerCount || 1);
+                this.newOrder.setCustomerCount(1);
+                const newCustomerCount = this.currentOrder.getCustomerCount() - 1;
+                this.currentOrder.setCustomerCount(newCustomerCount || 1);
                 this.currentOrder.set_screen_data({ name: 'ProductScreen' });
 
                 this.env.pos.orders.add(this.newOrder);

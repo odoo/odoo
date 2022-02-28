@@ -4,11 +4,11 @@ odoo.define('pos_restaurant.tour.BillScreenTourMethods', function (require) {
     const { createTourMethods } = require('point_of_sale.tour.utils');
 
     class Do {
-        clickBack() {
+        clickOk() {
             return [
                 {
                     content: `go back`,
-                    trigger: `.receipt-screen .back`,
+                    trigger: `.receipt-screen .button.next`,
                 },
             ];
         }
