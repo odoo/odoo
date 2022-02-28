@@ -51,22 +51,11 @@
                         <field name="channel_type" invisible="1" readonly="1"/>
                         <field name="channel_allow_comment" invisible="1" readonly="1"/>
                         <div class="oe_button_box" name="button_box">
-                            <button disabled="1" class="mx-auto disabled oe_read_only"
-                                attrs="{'invisible': [('slide_views', '=', 0)]}" icon="fa-eye">
+                            <button name="%(slide_slide_partner_action_from_slide)d"
+                                    class="oe_stat_button" type="action" icon="fa-graduation-cap"
+                                    attrs="{'invisible': [('slide_views', '=', 0)]}">
                                 <span class="o_stat_value">
-                                    <field name="slide_views" widget="statinfo" nolabel="1"/> Member Views
-                                </span>
-                            </button>
-                            <button disabled="disabled" class="mx-auto oe_read_only" icon="fa-eye"
-                                attrs="{'invisible': [('public_views', '=', 0)]}">
-                                <span class="o_stat_value">
-                                    <field name="public_views" widget="statinfo" nolabel="1"/> Public Views
-                                </span>
-                            </button>
-                            <button disabled="1" class="mx-auto oe_read_only" icon="fa-eye"
-                                attrs="{'invisible': [('total_views', '=', 0)]}">
-                                <span class="o_stat_value">
-                                    <field name="total_views" widget="statinfo" nolabel="1"/> Total Views
+                                    <field name="slide_views" widget="statinfo" nolabel="1"/> Attendees
                                 </span>
                             </button>
                             <button disabled="1" icon="fa-thumbs-up" class="oe_stat_button oe_read_only"
@@ -158,9 +147,11 @@
                                             <field name="completion_time" widget="float_time" class="oe_inline"/>
                                             <span> hours</span>
                                         </div>
-                                        <field name="is_preview"/>
                                         <field name="slide_resource_downloadable" attrs="{'invisible': ['|', ('slide_category', '!=', 'document'), ('source_type', '!=', 'local_file')]}"/>
                                         <field name="date_published" string="Published Date" attrs="{'invisible': [('date_published', '=', False)]}" groups="base.group_no_one"/>
+                                        <field name="is_preview"/>
+                                        <field name="public_views"/>
+                                        <field name="total_views"/>
                                     </group>
                                 </group>
                             </page>

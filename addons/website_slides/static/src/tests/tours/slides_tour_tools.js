@@ -32,8 +32,8 @@ var addVideoToSection = function (sectionName, saveAsDraft) {
 	trigger: 'a[data-slide-category=video]',
 }, {
 	content: 'eLearning: fill video link',
-	trigger: 'input[name=url]',
-	run: 'text https://www.youtube.com/watch?v=NvS351QKFV4&list=PLtVFNIekBzqIfO4u4n78i43etfw2n1St8&index=2&t=0s',
+	trigger: 'input[name=video_url]',
+	run: 'text https://www.youtube.com/watch?v=pzmI3vAIhbE',
 }, {
     content: 'eLearning: click outside to trigger onchange',
     trigger: 'div.o_w_slide_upload_modal_container',
@@ -79,6 +79,9 @@ var addArticleToSection = function (sectionName, pageName) {
 	content: 'eLearning: fill article completion time',
 	trigger: 'input[name=duration]',
 	run: 'text 4',
+}, {
+    content: 'eLearning: create and publish slide',
+    trigger: 'footer.modal-footer button:contains("Publish")',
 }];
 };
 

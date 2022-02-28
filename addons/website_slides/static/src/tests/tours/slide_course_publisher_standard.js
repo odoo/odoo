@@ -10,7 +10,7 @@ import slidesTourTools from '@website_slides/tests/tours/slides_tour_tools';
  * he creates some lessons in it;
  * he publishes it;
  */
-tour.register('course_publisher', {
+tour.register('course_publisher_standard', {
     url: '/slides',
     test: true
 }, [{
@@ -81,14 +81,18 @@ tour.register('course_publisher', {
     slidesTourTools.addExistingCourseTag(),
     slidesTourTools.addNewCourseTag('The Most Awesome Course'),
     slidesTourTools.addSection('Introduction'),
-    slidesTourTools.addVideoToSection('Introduction'),
+    slidesTourTools.addArticleToSection('Introduction', 'MyArticle'),
     [{
-    content: 'eLearning: publish newly added course',
-    trigger: 'span:contains("Dschinghis Khan - Dschinghis Khan (1979)")',  // wait for slide to appear
-    // trigger: 'span.o_wslides_js_slide_toggle_is_preview:first',
-    run: function () {
-        $('span.o_wslides_js_slide_toggle_is_preview:first').click();
-    }
+    content: "eLearning: check editor is loaded for article",
+    trigger: 'body.editor_enable',
+    timeout: 30000,
+    run: () => null, // it's a check
+}, {
+    content: "eLearning: save article",
+    trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
+}, {
+    content: "eLearning: use breadcrumb to go back to channel",
+    trigger: '.o_wslides_course_nav a:contains("Déboulonnate")',
 }]
 //     [
 // {

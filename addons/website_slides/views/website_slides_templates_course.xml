@@ -731,7 +731,7 @@
                 </div>
                 <div class="row mx-n2">
                     <t t-foreach="category['slides']" t-as="slide">
-                        <div class="col-12 col-sm-6 col-lg-3 px-2 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
+                        <div class="col-12 col-sm-6 col-lg-4 px-2 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
                     </t>
                 </div>
             </div>
@@ -768,7 +768,7 @@
         </t>
         <i t-if="channel_progress[slide.id].get('completed')" class="position-absolute py-1 px-2 h5 fa fa-check-circle text-primary" style="right:0; top:0;"/>
 
-        <div class="card-body p-3">
+        <div class="card-body d-flex flex-column p-3">
             <a t-if="can_access" class="card-title h5 mb-2o_wslides_desc_truncate_2" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-esc="slide.name"/>
             <span t-else="" class="card-title h5 mb-2 o_wslides_desc_truncate_2 text-muted" t-esc="slide.name"/>
             <div class="card-subtitle mb-2 text-muted" t-if="slide.is_preview or (not slide.is_published and user.has_group('website_slides.group_website_slides_officer'))">
@@ -781,29 +781,31 @@
             </div>
             <div class="card-text pt-2">
                 <div class="o_wslides_desc_truncate_3 font-weight-light oe_no_empty" t-field="slide.description"/>
-                <div t-if="slide.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
+            </div>
+            <div class="mt-auto">
+                <div t-if="slide.tag_ids" class="o_wslides_desc_truncate_2 my-2">
                     <t t-foreach="slide.tag_ids" t-as="tag">
                         <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge badge-light" t-esc="tag.name"/>
                     </t>
                 </div>
+                <t t-if="channel.is_member and channel_progress[slide.id].get('completed')">
+                    <span class="badge badge-pill badge-success"><i class="fa fa-check"/> Completed</span>
+                </t>
             </div>
         </div>
         <div class="card-footer bg-white text-600">
             <div class="d-flex align-items-center small">
                 <span class="font-weight-bold mr-auto" t-field="slide.completion_time" t-options='{"widget": "float_time"}'/>
-                <div class="o_wslides_js_slide_like mr-2">
-                    <span t-att-class="'o_wslides_js_slide_like_up %s' % ('disabled' if not channel.can_vote else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
-                        <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
-                        <span t-esc="slide.likes"/>
+                <div class="o_wslides_js_slide_like">
+                    <span t-attf-class="d-inline-block text-center o_wslides_js_slide_like_up #{'disabled' if not channel.can_vote else ''}" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id" t-att-data-user-vote="slide.user_vote">
+                        <i t-attf-class="fa fa-1x #{'fa-thumbs-up' if slide.user_vote == 1 else 'fa-thumbs-o-up'}" role="img" aria-label="Likes" title="Like"></i>
+                        <span t-field="slide.likes" t-options="{'format_decimalized_number': True}"/>
                     </span>
-                    <span t-att-class="'o_wslides_js_slide_like_down %s' % ('disabled' if not channel.can_vote else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
-                        <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
-                        <span t-esc="slide.dislikes"/>
+                    <span t-attf-class="d-inline-block text-center ml-1 o_wslides_js_slide_like_down #{'disabled' if not channel.can_vote else ''}" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id" t-att-data-user-vote="slide.user_vote">
+                        <i t-attf-class="fa fa-1x #{'fa-thumbs-down' if slide.user_vote == -1 else 'fa-thumbs-o-down'}" role="img" aria-label="Dislikes" title="Dislike"></i>
+                        <span t-field="slide.dislikes" t-options="{'format_decimalized_number': True}"/>
                     </span>
                 </div>
-                <t t-if="channel.is_member and channel_progress[slide.id].get('completed')">
-                    <span class="badge badge-pill badge-success"><i class="fa fa-check"/> Done</span>
-                </t>
             </div>
         </div>
     </div>

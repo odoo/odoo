@@ -26,8 +26,10 @@ class SlidePartnerRelation(models.Model):
     _name = 'slide.slide.partner'
     _description = 'Slide / Partner decorated m2m'
     _table = 'slide_slide_partner'
+    _rec_name = 'partner_id'
 
-    slide_id = fields.Many2one('slide.slide', ondelete="cascade", index=True, required=True)
+    slide_id = fields.Many2one('slide.slide', string="Content", ondelete="cascade", index=True, required=True)
+    slide_category = fields.Selection(related='slide_id.slide_category')
     channel_id = fields.Many2one(
         'slide.channel', string="Channel",
         related="slide_id.channel_id", store=True, index=True, ondelete='cascade')
@@ -35,6 +37,17 @@ class SlidePartnerRelation(models.Model):
     vote = fields.Integer('Vote', default=0)
     completed = fields.Boolean('Completed')
     quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
+
+    _sql_constraints = [
+        ('slide_partner_uniq',
+         'unique(slide_id, partner_id)',
+         'A partner membership to a slide must be unique!'
+        ),
+        ('check_vote',
+         'CHECK(vote IN (-1, 0, 1))',
+         'The vote must be 1, 0 or -1.'
+        ),
+    ]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -116,6 +129,9 @@ class Slide(models.Model):
         'slide.slide.partner', string="Subscriber information",
         compute='_compute_user_membership_id', compute_sudo=False,
         help="Subscriber information for the current logged in user")
+    # current user membership
+    user_vote = fields.Integer('User vote', compute='_compute_user_membership_id', compute_sudo=False)
+    user_has_completed = fields.Boolean('Is Member', compute='_compute_user_membership_id', compute_sudo=False)
     # Quiz related fields
     question_ids = fields.One2many("slide.question", "slide_id", string="Questions")
     questions_count = fields.Integer(string="Numbers of Questions", compute='_compute_questions_count')
@@ -183,7 +199,6 @@ class Slide(models.Model):
     date_published = fields.Datetime('Publish Date', readonly=True, tracking=False)
     likes = fields.Integer('Likes', compute='_compute_like_info', store=True, compute_sudo=False)
     dislikes = fields.Integer('Dislikes', compute='_compute_like_info', store=True, compute_sudo=False)
-    user_vote = fields.Integer('User vote', compute='_compute_user_membership_id', compute_sudo=False)
     embed_code = fields.Html('Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False)
     embed_code_external = fields.Html('External Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False,
         help="Same as 'Embed Code' but used to embed the content on an external website.")
@@ -292,36 +307,6 @@ class Slide(models.Model):
             slide.likes = mapped_data_like.get(slide.id, 0)
             slide.dislikes = mapped_data_dislike.get(slide.id, 0)
 
-    @api.depends('slide_partner_ids.vote')
-    @api.depends_context('uid')
-    def _compute_user_info(self):
-        """ Deprecated. Now computed directly by _compute_user_membership_id
-        for user_vote and _compute_like_info for likes / dislikes. Remove me in
-        master. """
-        default_stats = {'likes': 0, 'dislikes': 0, 'user_vote': False}
-
-        if not self.ids:
-            self.update(default_stats)
-            return
-
-        slide_data = dict.fromkeys(self.ids, default_stats)
-        slide_partners = self.env['slide.slide.partner'].sudo().search([
-            ('slide_id', 'in', self.ids)
-        ])
-
-        for slide_partner in slide_partners:
-            if slide_partner.vote == 1:
-                slide_data[slide_partner.slide_id.id]['likes'] += 1
-                if slide_partner.partner_id == self.env.user.partner_id:
-                    slide_data[slide_partner.slide_id.id]['user_vote'] = 1
-            elif slide_partner.vote == -1:
-                slide_data[slide_partner.slide_id.id]['dislikes'] += 1
-                if slide_partner.partner_id == self.env.user.partner_id:
-                    slide_data[slide_partner.slide_id.id]['user_vote'] = -1
-
-        for slide in self:
-            slide.update(slide_data[slide.id])
-
     @api.depends('slide_partner_ids.slide_id')
     def _compute_slide_views(self):
         # TODO awa: tried compute_sudo, for some reason it doesn't work in here...
@@ -412,7 +397,7 @@ class Slide(models.Model):
             else:
                 slide.slide_type = False
 
-    @api.depends('slide_partner_ids.partner_id', 'slide_partner_ids.vote')
+    @api.depends('slide_partner_ids.partner_id', 'slide_partner_ids.vote', 'slide_partner_ids.completed')
     @api.depends('uid')
     def _compute_user_membership_id(self):
         slide_partners = self.env['slide.slide.partner'].sudo().search([
@@ -426,6 +411,7 @@ class Slide(models.Model):
                 self.env['slide.slide.partner']
             )
             record.user_vote = record.user_membership_id.vote
+            record.user_has_completed = record.user_membership_id.completed
 
     @api.depends('slide_category', 'google_drive_id', 'video_source_type', 'youtube_id')
     def _compute_embed_code(self):
@@ -813,13 +799,15 @@ class Slide(models.Model):
 
         for slide_partner in slide_partners:
             if upvote:
-                new_vote = 0 if slide_partner.vote == -1 else 1
-                if slide_partner.vote != 1:
-                    karma_to_add += channel.karma_gen_slide_vote
+                new_vote = 0 if slide_partner.vote == 1 else 1
             else:
-                new_vote = 0 if slide_partner.vote == 1 else -1
-                if slide_partner.vote != -1:
-                    karma_to_add -= channel.karma_gen_slide_vote
+                new_vote = 0 if slide_partner.vote == -1 else -1
+            # 2 if the disliked slide was liked by the user
+            # 1 if the slide was liked OR if the dislike was removed
+            # -1 if the slide was disliked OR if the like was removed
+            # -2 if the liked slide was disliked by the user
+            vote_diff = new_vote - slide_partner.vote
+            karma_to_add += channel.karma_gen_slide_vote * vote_diff
             slide_partner.vote = new_vote
 
         for new_slide in new_slides:

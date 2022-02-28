@@ -34,6 +34,17 @@ class ChannelUsersRelation(models.Model):
     channel_enroll = fields.Selection(related='channel_id.enroll')
     channel_website_id = fields.Many2one('website', string='Website', related='channel_id.website_id')
 
+    _sql_constraints = [
+        ('channel_partner_uniq',
+         'unique(channel_id, partner_id)',
+         'A partner membership to a channel must be unique!'
+        ),
+        ('check_completion',
+         'check(completion >= 0 and completion <= 100)',
+         'The completion of a channel is a percentage and should be between 0% and 100.'
+        )
+    ]
+
     def _recompute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),

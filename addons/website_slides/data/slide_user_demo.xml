@@ -2,6 +2,15 @@
 <odoo><data noupdate="1">
     <!-- CHANNEL 0: Basics of Gardening -->
     <!-- ================================================== -->
+    <!-- Note that admin is already member due to auto subscribe -->
+    <record id="slide_channel_0_partner_demo" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+    </record>
+    <record id="slide_channel_0_partner_demo_portal" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+    </record>
     <record id="slide_slide_0_0_partner_admin" model="slide.slide.partner">
         <field name="slide_id" ref="website_slides.slide_slide_demo_0_0"/>
         <field name="partner_id" ref="base.partner_admin"/>
@@ -78,6 +87,15 @@
 
     <!-- CHANNEL 1: Taking care of Trees -->
     <!-- ================================================== -->
+    <!-- Note that admin is already member due to auto subscribe -->
+    <record id="slide_channel_1_partner_demo" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+    </record>
+    <record id="slide_channel_1_partner_demo_portal" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+    </record>
     <record id="slide_slide_1_0_partner_admin" model="slide.slide.partner">
     	<field name="slide_id" ref="website_slides.slide_slide_demo_1_0"/>
     	<field name="partner_id" ref="base.partner_admin"/>
@@ -187,6 +205,10 @@
 
     <!-- CHANNEL 2: Trees, Wood and Garden -->
     <!-- ================================================== -->
+    <record id="slide_channel_2_partner_admin" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+    </record>
     <record id="slide_slide_2_0_partner_admin" model="slide.slide.partner">
         <field name="slide_id" ref="website_slides.slide_slide_demo_2_0"/>
         <field name="partner_id" ref="base.partner_admin"/>
@@ -199,10 +221,7 @@
         <field name="partner_id" ref="base.partner_admin"/>
         <field name="vote">1</field>
     </record>
-    <record id="slide_channel_2_partner_demo" model="slide.channel.partner">
-        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
-        <field name="partner_id" ref="base.partner_demo"/>
-    </record>
+    <!-- note that partner demo is already member of slide_channel_demo_2_gard2 due to auto subscribe -->
     <record id="slide_slide_2_0_partner_demo" model="slide.slide.partner">
         <field name="slide_id" ref="website_slides.slide_slide_demo_2_0"/>
         <field name="partner_id" ref="base.partner_demo"/>
