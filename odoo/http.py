@@ -499,22 +499,22 @@ def route(route=None, **routing):
         ``'http'``. It describes where to find the request parameters
         and how to serialize the response.
     :param str auth: The authentication method, one of the following:
-         * ``'user'``: The user must be authenticated and the current
-           request will be executed using the rights of the user.
-         * ``'public'``: The user may or may not be authenticated. If he
-           isn't, the current request will be executed using the shared
-           Public user.
-         * ``'none'``: The method is always active, even if there is no
-           database. Mainly used by the framework and authentication
-           modules. There request code will not have any facilities to
-           access the current user.
+
+        * ``'user'``: The user must be authenticated and the current
+          request will be executed using the rights of the user.
+        * ``'public'``: The user may or may not be authenticated. If he
+          isn't, the current request will be executed using the shared
+          Public user.
+        * ``'none'``: The method is always active, even if there is no
+          database. Mainly used by the framework and authentication
+          modules. The request code will not have any facilities to
+          access the current user.
     :param Iterable[str] methods: A list of http methods (verbs) this
         route applies to. If not specified, all methods are allowed.
     :param str cors: The Access-Control-Allow-Origin cors directive value.
     :param bool csrf: Whether CSRF protection should be enabled for the
         route. Enabled by default for ``'http'``-type requests, disabled
-        by default for ``'json'``-type requests. See
-        :ref:`CSRF Protection <csrf>` for more.
+        by default for ``'json'``-type requests.
     """
     def decorator(endpoint):
         fname = f"<function {endpoint.__module__}.{endpoint.__name__}>"
@@ -1062,6 +1062,11 @@ class Request:
         return consteq(hm, hm_expected)
 
     def default_lang(self):
+        """Returns default user language according to request specification
+
+        :returns: Preferred language if specified or 'en_US'
+        :rtype: str
+        """
         lang = self.httprequest.accept_languages.best
         if not lang:
             return DEFAULT_LANG
