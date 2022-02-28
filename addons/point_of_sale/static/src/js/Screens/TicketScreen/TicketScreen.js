@@ -99,6 +99,11 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             this.env.pos.add_new_order();
             this.showScreen('ProductScreen');
         }
+        _selectNextOrder(currentOrder) {
+            const currentOrderIndex = this._getOrderList().indexOf(currentOrder);
+            const orderList = this._getOrderList();
+            this.env.pos.set_order(orderList[currentOrderIndex+1] || orderList[currentOrderIndex-1]);
+        }
         async _onDeleteOrder({ detail: order }) {
             const screen = order.get_screen_data();
             if (['ProductScreen', 'PaymentScreen'].includes(screen.name) && order.get_orderlines().length > 0) {
@@ -112,7 +117,10 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 if (!confirmed) return;
             }
             if (order && (await this._onBeforeDeleteOrder(order))) {
-                order.destroy({ reason: 'abandon' });
+                if (order === this.env.pos.get_order()) {
+                    this._selectNextOrder(order);
+                }
+                this.env.pos.removeOrder(order);
             }
         }
         async _onNextPage() {

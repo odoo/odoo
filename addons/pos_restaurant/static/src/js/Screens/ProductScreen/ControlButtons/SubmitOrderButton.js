@@ -3,7 +3,6 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const ProductScreen = require('point_of_sale.ProductScreen');
-    const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
 
     /**
@@ -15,19 +14,26 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
     class SubmitOrderButton extends PosComponent {
         setup() {
             super.setup();
-            useListener('click', this.onClick);
+            this.clicked = false; //mutex, we don't want to be able to spam the printers
         }
-        async onClick() {
-            const order = this.env.pos.get_order();
-            if (order.hasChangesToPrint()) {
-                const isPrintSuccessful = await order.printChanges();
-                if (isPrintSuccessful) {
-                    order.saveChanges();
-                } else {
-                    await this.showPopup('ErrorPopup', {
-                        title: this.env._t('Printing failed'),
-                        body: this.env._t('Failed in printing the changes in the order'),
-                    });
+        async _onClick() {
+            if (!this.clicked) {
+                try {
+                    this.clicked = true;
+                    const order = this.env.pos.get_order();
+                    if (order.hasChangesToPrint()) {
+                        const isPrintSuccessful = await order.printChanges();
+                        if (isPrintSuccessful) {
+                            order.updatePrintedResume();
+                        } else {
+                            this.showPopup('ErrorPopup', {
+                                title: this.env._t('Printing failed'),
+                                body: this.env._t('Failed in printing the changes in the order'),
+                            });
+                        }
+                    }
+                } finally {
+                    this.clicked = false;
                 }
             }
         }
@@ -36,10 +42,10 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
         }
         get addedClasses() {
             if (!this.currentOrder) return {};
-            const changes = this.currentOrder.hasChangesToPrint();
-            const skipped = changes ? false : this.currentOrder.hasSkippedChanges();
+            const hasChanges = this.currentOrder.hasChangesToPrint();
+            const skipped = hasChanges ? false : this.currentOrder.hasSkippedChanges();
             return {
-                highlight: changes,
+                highlight: hasChanges,
                 altlight: skipped,
             };
         }

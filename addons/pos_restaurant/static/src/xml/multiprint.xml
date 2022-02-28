@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="NameWrapped">
-        <t t-foreach="change.name_wrapped.slice(1)" t-as="wrapped_line">
-            <div style="text-align: right">
-                <span t-esc="wrapped_line"/>
-            </div>
-        </t>
-    </t>
-
     <t t-name="OrderChangeReceipt">
         <div class="pos-receipt">
             <div class="pos-receipt-order-data"><t t-esc="changes.name" /></div>
-            <t t-if="changes.floor || changes.table">
+            <t t-if="changes.floor_name || changes.table_name">
                 <br />
                 <div class="pos-receipt-title">
-                    <t t-esc="changes.floor" /> / <t t-esc="changes.table"/>
+                    <t t-esc="changes.floor_name" /> / <t t-esc="changes.table_name"/>
                 </div>
             </t>
             <br />
@@ -30,10 +22,9 @@
                     <br />
                     <t t-foreach="changes.cancelled" t-as="change">
                         <div class="multiprint-flex">
-                            <t t-esc="change.qty"/>
-                            <span t-esc="change.name_wrapped[0]"/>
+                            <span class="product-quantity" t-esc="change.quantity"/>
+                            <span class="product-name" t-esc="change.name"/>
                         </div>
-                        <t t-call="NameWrapped"/>
                         <t t-if="change.note">
                             <div>
                                 NOTE
@@ -56,10 +47,9 @@
                 <br />
                 <t t-foreach="changes.new" t-as="change">
                     <div class="multiprint-flex">
-                        <t t-esc="change.qty"/>
-                        <span t-esc="change.name_wrapped[0]"/>
+                        <span class="product-quantity" t-esc="change.quantity"/>
+                        <span class="product-name" t-esc="change.name"/>
                     </div>
-                    <t t-call="NameWrapped"/>
                     <t t-if="change.note">
                         <div>
                             NOTE

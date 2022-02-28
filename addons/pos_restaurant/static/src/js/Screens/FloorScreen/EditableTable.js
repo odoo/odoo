@@ -43,14 +43,14 @@ odoo.define('pos_restaurant.EditableTable', function(require) {
             table.height = size.height;
             table.position_v = loc.top;
             table.position_h = loc.left;
-            this.trigger('save-table', this.props.table);
+            this.props.onSaveTable(this.props.table);
         }
         _onDragEnd(event) {
             const { loc } = event.detail;
             const table = this.props.table;
             table.position_v = loc.top;
             table.position_h = loc.left;
-            this.trigger('save-table', this.props.table);
+            this.props.onSaveTable(this.props.table);
         }
     }
     EditableTable.template = 'EditableTable';

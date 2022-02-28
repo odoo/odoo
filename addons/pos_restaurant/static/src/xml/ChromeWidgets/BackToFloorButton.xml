@@ -10,19 +10,10 @@
         >
             <i class="fa fa-angle-double-left" role="img" aria-label="Back to floor" title="Back to floor" />
             <t t-if="env.isMobile">
-                <span class="table-name">
-                    <span t-esc="table.name" />
-                </span>
+                <span class="table-name" t-esc="table.name"/>
             </t>
             <t t-else="">
-                <span> </span>
-                <span t-esc="floor.name" />
-                <span> </span>
-                <span class="table-name">
-                    <span>( </span>
-                    <span t-esc="table.name" />
-                    <span> )</span>
-                </span>
+                <span t-esc="floor.name" /><span class="table-name">(<t t-esc="table.name" />)</span>
             </t>
         </span>
         <span t-else=""></span>

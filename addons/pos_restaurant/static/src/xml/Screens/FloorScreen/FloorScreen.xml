@@ -15,7 +15,7 @@
                 </t>
 
                 <div
-                    t-on-click="() => this.trigger('deselect-table')"
+                    t-on-click="_onDeselectTable"
                     t-on-touchstart="_onPinchStart"
                     t-on-touchmove="_onPinchMove"
                     t-on-touchend="_onPinchEnd"
@@ -29,15 +29,19 @@
                     </div>
                     <div t-else="" class="tables">
                         <t t-foreach="activeTables" t-as="table" t-key="table.id">
-                            <TableWidget t-if="table.id !== state.selectedTableId" table="table" />
-                            <EditableTable t-else="" table="table" />
+                            <TableWidget t-if="table.id !== state.selectedTableId" onClick.bind="onSelectTable" table="table" />
+                            <EditableTable t-else="" table="table" onSaveTable.bind="onSaveTable" />
                         </t>
                     </div>
                     <span t-if="env.pos.user.role == 'manager'" class="edit-button editing" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode"
                           t-attf-style="top:{{state.floorMapScrollTop}}px;">
                         <i class="fa fa-pencil" role="img" aria-label="Edit" title="Edit"></i>
                     </span>
-                    <EditBar t-if="state.isEditMode" selectedTable="selectedTable" floorMapScrollTop="state.floorMapScrollTop"/>
+                    <EditBar t-if="state.isEditMode" selectedTable="selectedTable" floorMapScrollTop="state.floorMapScrollTop"
+                             createTable.bind="createTable" duplicateTable.bind="duplicateTable" renameTable.bind="renameTable"
+                             changeSeatsNum.bind="changeSeatsNum" changeShape.bind="changeShape" setTableColor.bind="setTableColor"
+                             setFloorColor.bind="setFloorColor" deleteTable.bind="deleteTable"
+                    />
                 </div>
             </div>
         </div>

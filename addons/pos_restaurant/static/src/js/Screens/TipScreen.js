@@ -92,7 +92,10 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
             this.goNextScreen();
         }
         goNextScreen() {
-            this.env.pos.get_order().finalize();
+            this.env.pos.removeOrder(this.currentOrder);
+            if (!this.env.pos.config.iface_floorplan) {
+                this.env.pos.add_new_order();
+            }
             const { name, props } = this.nextScreen;
             this.showScreen(name, props);
         }

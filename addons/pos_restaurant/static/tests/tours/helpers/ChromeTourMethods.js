@@ -20,7 +20,7 @@ odoo.define('pos_restaurant.tour.ChromeTourMethods', function (require) {
             return [
                 {
                     content: `back to floor text is '${floor} ( ${table} )'`,
-                    trigger: `.floor-button span:contains("${floor}") ~ .table-name:contains("${table}")`,
+                    trigger: `.floor-button span:contains("${floor}") ~ .table-name:contains("(${table})")`,
                     run: () => {},
                 },
             ];

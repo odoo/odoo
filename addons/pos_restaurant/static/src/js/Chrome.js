@@ -57,6 +57,12 @@ odoo.define('pos_restaurant.chrome', function (require) {
                     this.trigger('close-temp-screen');
                 }
                 const table = this.env.pos.table;
+                const order = this.env.pos.get_order();
+                if (order && order.get_screen_data().name === 'ReceiptScreen') {
+                    // When the order is finalized, we can safely remove it from the memory
+                    // We check that it's in ReceiptScreen because we want to keep the order if it's in a tipping state
+                    this.env.pos.removeOrder(order);
+                }
                 this.showScreen('FloorScreen', { floor: table ? table.floor : null });
             }
             _shouldResetIdleTimer() {

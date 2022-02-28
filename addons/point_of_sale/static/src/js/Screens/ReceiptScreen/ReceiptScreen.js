@@ -38,6 +38,9 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                     }, 0);
                 });
             }
+            _addNewOrder() {
+                this.env.pos.add_new_order();
+            }
             async onSendEmail() {
                 if (!is_email(this.orderUiState.inputEmail)) {
                     this.orderUiState.emailSuccessful = false;
@@ -89,7 +92,8 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 }
             }
             orderDone() {
-                this.currentOrder.finalize();
+                this.env.pos.removeOrder(this.currentOrder);
+                this._addNewOrder();
                 const { name, props } = this.nextScreen;
                 this.showScreen(name, props);
             }
