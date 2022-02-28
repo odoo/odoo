@@ -5,13 +5,9 @@ import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 import { session } from "@web/session";
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 export class MonetaryField extends Component {
-    setup() {
-        this.inputRef = useRef("input");
-    }
-
     onChange(ev) {
         let isValid = true;
         let value = ev.target.value;
@@ -44,17 +40,11 @@ export class MonetaryField extends Component {
     }
 
     get currencySymbol() {
-        if (this.currency) {
-            return this.currency.symbol;
-        }
-        return "";
+        return this.currency ? this.currency.symbol : "";
     }
 
     get currencyPosition() {
-        if (this.currency) {
-            return this.currency.position;
-        }
-        return null;
+        return this.currency && this.currency.position;
     }
 
     get formattedValue() {
@@ -95,12 +85,13 @@ MonetaryField.props = {
 MonetaryField.defaultProps = {
     inputType: "text",
 };
-MonetaryField.convertAttrsToProps = (attrs) => {
+
+MonetaryField.extractProps = function (fieldName, record, attrs) {
     return {
         inputType: attrs.type,
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
-        digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits,
+        digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options && attrs.options.digits,
     };
 };
 

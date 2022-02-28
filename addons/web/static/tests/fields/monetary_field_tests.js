@@ -32,6 +32,10 @@ QUnit.module("Fields", (hooks) => {
                             relation: "currency",
                             searchable: true,
                         },
+                        monetary_field: {
+                            string: "Monetary Field",
+                            type: "monetary",
+                        },
                     },
                     records: [
                         {
@@ -56,6 +60,7 @@ QUnit.module("Fields", (hooks) => {
                         },
                         { id: 3, bar: true, int_field: 80, qux: -3.89859 },
                         { id: 5, bar: false, int_field: -4, qux: 9.1, currency_id: 1 },
+                        { id: 6, qux: 3.9, monetary_field: 4.2, currency_id: 1 },
                     ],
                 },
                 currency: {
@@ -306,7 +311,7 @@ QUnit.module("Fields", (hooks) => {
         const dollarValues = Array.from(list.el.querySelectorAll("td")).filter((x) =>
             x.textContent.includes("$")
         );
-        assert.strictEqual(dollarValues.length, 1, "Only one line has dollar as a currency.");
+        assert.strictEqual(dollarValues.length, 2, "Only 2 line has dollar as a currency.");
 
         const euroValues = Array.from(list.el.querySelectorAll("td")).filter((x) =>
             x.textContent.includes("€")
@@ -356,92 +361,86 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("MonetaryField with real monetary field in model", async function (assert) {
-        assert.expect(7);
-
-        this.data.partner.fields.qux.type = "monetary";
-        this.data.partner.fields.quux = {
-            string: "Quux",
-            type: "monetary",
-            digits: [16, 1],
-            searchable: true,
-            readonly: true,
-        };
-
-        _.find(this.data.partner.records, function (record) {
-            return record.id === 5;
-        }).quux = 4.2;
-
-        this.data.partner.onchanges = {
-            bar: function (obj) {
-                obj.qux = obj.bar ? 100 : obj.qux;
-            },
-        };
-
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="qux"/>' +
-                '<field name="quux"/>' +
-                '<field name="currency_id"/>' +
-                '<field name="bar"/>' +
-                "</sheet>" +
-                "</form>",
-            res_id: 5,
-            session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
-            },
+    QUnit.test("with real monetary field in model", async function (assert) {
+        const form = await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 6,
+            arch: `
+                <form>
+                    <sheet>
+                    <field name="monetary_field"/>
+                    <field name="currency_id" invisible="1"/>
+                    </sheet>
+                </form>`,
         });
 
         assert.strictEqual(
-            form.$(".o_field_monetary").first().html(),
-            "$&nbsp;9.10",
+            form.el.querySelector(".o_field_monetary").textContent,
+            "$\u00a04.20",
+            "value should contain the currency"
+        );
+
+        await clickEdit(form);
+        await editInput(form.el, ".o_field_monetary input", 108.249);
+        assert.strictEqual(
+            form.el.querySelector(".o_field_monetary input").value,
+            "108.25",
+            "The value should be formatted on blur."
+        );
+
+        await clickSave(form);
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(
+            form.el.querySelector(".o_field_monetary").textContent,
+            "$\u00a0108.25",
+            "The new value should be rounded properly."
+        );
+    });
+
+    QUnit.test("changing the currency updates the monetary field", async function (assert) {
+        const form = await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 6,
+            arch: `
+                <form>
+                    <field name="monetary_field"/>
+                    <field name="currency_id"/>
+                </form>`,
+        });
+
+        assert.strictEqual(
+            form.el.querySelector(".o_field_monetary").textContent,
+            "$\u00a04.20",
             "readonly value should contain the currency"
         );
+
+        await clickEdit(form);
+
+        // replace bottom with new helpers when they exist
+        await click(form.el, ".o_field_many2one_selection input");
+        const euroM2OListItem = Array.from(
+            form.el.querySelectorAll(".o_field_many2one_selection li")
+        ).filter((li) => li.textContent === "€")[0];
+        await click(euroM2OListItem);
+
+        // TODO Qunit.skipWOWL => don't we have some kind of blur / event on m2o click ?
+        // assert.strictEqual(
+        //     form.el.querySelector(".o_field_monetary input").value,
+        //     "4.20\u00a0€",
+        //     "The value should be formatted with new currency on blur."
+        // );
+
+        await clickSave(form);
+
         assert.strictEqual(
-            form.$(".o_field_monetary").first().next().html(),
-            "$&nbsp;4.20",
-            "readonly value should contain the currency"
+            form.el.querySelector(".o_field_monetary").textContent,
+            "4.20\u00a0€",
+            "The new value should still be correct."
         );
-
-        await testUtils.form.clickEdit(form);
-
-        assert.strictEqual(
-            form.$(".o_field_monetary > input").val(),
-            "9.10",
-            "input value in edition should only contain the value, without the currency"
-        );
-
-        await testUtils.dom.click(form.$('input[type="checkbox"]'));
-        assert.containsOnce(
-            form,
-            ".o_field_monetary > input",
-            "After the onchange, the monetary <input/> should not have been duplicated"
-        );
-        assert.containsOnce(
-            form,
-            ".o_field_monetary[name=quux]",
-            "After the onchange, the monetary readonly field should not have been duplicated"
-        );
-
-        await testUtils.fields.many2one.clickOpenDropdown("currency_id");
-        await testUtils.fields.many2one.clickItem("currency_id", "€");
-        assert.strictEqual(
-            form.$(".o_field_monetary > span").html(),
-            "€",
-            "After currency change, the monetary field currency should have been updated"
-        );
-        assert.strictEqual(
-            form.$(".o_field_monetary").first().next().html(),
-            "4.20&nbsp;€",
-            "readonly value should contain the updated currency"
-        );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("MonetaryField with monetary field given in options", async function (assert) {

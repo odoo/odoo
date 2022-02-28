@@ -77,7 +77,7 @@ export class Field extends Component {
             extractedPropsForStandaloneComponent = this.FieldComponent.extractProps(
                 this.props.name,
                 record,
-                activeField.attrs
+                activeField.attrs || {}
             );
         }
 
