@@ -12,6 +12,7 @@ SUPPORTED_IMAGE_MIMETYPES = {
     'image/jpg': '.jpg',
     'image/png': '.png',
     'image/svg+xml': '.svg',
+    'image/webp': '.webp',
 }
 
 

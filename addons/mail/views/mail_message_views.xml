@@ -152,7 +152,7 @@
                             <div class="oe_kanban_global_area oe_kanban_global_click o_kanban_attachment">
                                 <div class="o_kanban_image">
                                     <div class="o_kanban_image_wrapper">
-                                        <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                        <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"/>
                                         <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted" aria-label="Image is a link"/>
                                         <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
                                         <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>

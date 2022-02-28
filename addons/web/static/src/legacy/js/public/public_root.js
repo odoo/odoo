@@ -92,7 +92,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
         // Display image thumbnail
         this.$(".o_image[data-mimetype^='image']").each(function () {
             var $img = $(this);
-            if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+            if (/gif|jpe|jpg|png|webp/.test($img.data('mimetype')) && $img.data('src')) {
                 $img.css('background-image', "url('" + $img.data('src') + "')");
             }
         });
