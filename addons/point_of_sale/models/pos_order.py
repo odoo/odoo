@@ -12,7 +12,7 @@ from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round
 from odoo.exceptions import ValidationError, UserError
 from odoo.http import request
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, OR
 import base64
 
 _logger = logging.getLogger(__name__)
@@ -554,9 +554,10 @@ class PosOrder(models.Model):
         """
         order_ids = []
         for order in orders:
-            existing_order = False
+            existing_order_domain = [('pos_reference', '=', order['data']['name'])]
             if 'server_id' in order['data']:
-                existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
+                existing_order_domain = OR([existing_order_domain, ('id', '=', order['data']['server_id'])])
+            existing_order = self.env['pos.order'].search(existing_order_domain, limit=1)
             if (existing_order and existing_order.state == 'draft') or not existing_order:
                 order_ids.append(self._process_order(order, draft, existing_order))
 
