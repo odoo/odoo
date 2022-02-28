@@ -353,21 +353,14 @@ class PosGlobalState extends PosModel {
         this.selectedCategoryId = categoryId;
     }
 
-    // this is called when an order is removed from the order collection. It ensures that there is always an existing
-    // order and a valid selected order
-    on_removed_order(removed_order,index,reason){
-        var order_list = this.get_order_list();
-        if( (reason === 'abandon' || removed_order.temporary) && order_list.length > 0){
-            // when we intentionally remove an unfinished order, and there is another existing one
-            this.set_order(order_list[index] || order_list[order_list.length - 1], { silent: true });
-        }else{
-            // when the order was automatically removed after completion,
-            // or when we intentionally delete the only concurrent order
-            this.add_new_order({ silent: true });
-        }
-        // Remove the link between the refund orderlines when deleting an order
-        // that contains a refund.
-        for (const line of removed_order.get_orderlines()) {
+    /**
+     * Remove the order passed in params from the list of orders
+     * @param order
+     */
+    removeOrder(order) {
+        this.orders.remove(order);
+        this.db.remove_unpaid_order(order);
+        for (const line of order.get_orderlines()) {
             if (line.refunded_orderline_id) {
                 delete this.toRefundLines[line.refunded_orderline_id];
             }
@@ -387,22 +380,25 @@ class PosGlobalState extends PosModel {
     cashierHasPriceControlRights() {
         return !this.config.restrict_price_control || this.get_cashier().role == 'manager';
     }
-    createAutomaticallySavedOrder(json) {
+    _onReactiveOrderUpdated(order) {
+        order.save_to_db();
+    }
+    createReactiveOrder(json) {
         const options = {pos:this};
         if (json) {
             options.json = json;
         }
         let order = Order.create({}, options);
-        const batchedSaveToDb = batched(() => {
-            order.save_to_db();
+        const batchedCallback = batched(() => {
+            this._onReactiveOrderUpdated(order)
         });
-        order = reactive(order, batchedSaveToDb);
+        order = reactive(order, batchedCallback);
         order.save_to_db();
         return order;
     }
     // creates a new empty order and sets it as the current order
-    add_new_order(options){
-        var order = this.createAutomaticallySavedOrder();
+    add_new_order(){
+        const order = this.createReactiveOrder();
         this.orders.add(order);
         this.selectedOrder = order;
         return order;
@@ -422,13 +418,13 @@ class PosGlobalState extends PosModel {
         for (var i = 0; i < jsons.length; i++) {
             var json = jsons[i];
             if (json.pos_session_id === this.pos_session.id) {
-                orders.push(this.createAutomaticallySavedOrder(json));
+                orders.push(this.createReactiveOrder(json));
             }
         }
         for (var i = 0; i < jsons.length; i++) {
             var json = jsons[i];
             if (json.pos_session_id !== this.pos_session.id && (json.lines.length > 0 || json.statement_ids.length > 0)) {
-                orders.push(this.createAutomaticallySavedOrder(json));
+                orders.push(this.createReactiveOrder(json));
             } else if (json.pos_session_id !== this.pos_session.id) {
                 this.db.remove_unpaid_order(jsons[i]);
             }
@@ -521,14 +517,6 @@ class PosGlobalState extends PosModel {
     // return the list of unpaid orders
     get_order_list(){
         return this.orders;
-    }
-
-    //removes the current order
-    delete_current_order(){
-        var order = this.get_order();
-        if (order) {
-            order.destroy({'reason':'abandon'});
-        }
     }
 
     _convert_product_img_to_base64 (product, url) {
@@ -660,21 +648,16 @@ class PosGlobalState extends PosModel {
         });
     }
 
-    // wrapper around the _save_to_server that updates the synch status widget
+    // Send validated orders to the backend.
     // Resolves to the backend ids of the synced orders.
     _flush_orders(orders, options) {
         var self = this;
-        this.set_synch('connecting', orders.length);
 
         return this._save_to_server(orders, options).then(function (server_ids) {
-            self.set_synch('connected');
             for (let i = 0; i < server_ids.length; i++) {
                 self.validated_orders_name_server_id_map[server_ids[i].pos_reference] = server_ids[i].id;
             }
             return server_ids;
-        }).catch(function(error){
-            self.set_synch(self.failed ? 'error' : 'disconnected');
-            throw error;
         }).finally(function() {
             self._after_flush_orders(orders);
         });
@@ -721,7 +704,7 @@ class PosGlobalState extends PosModel {
         if (!orders || !orders.length) {
             return Promise.resolve([]);
         }
-
+        this.set_synch('connecting', orders.length);
         options = options || {};
 
         var self = this;
@@ -753,6 +736,7 @@ class PosGlobalState extends PosModel {
                     self.db.remove_order(order_id);
                 });
                 self.failed = false;
+                self.set_synch('connected');
                 return server_ids;
             }).catch(function (error){
                 console.warn('Failed to send orders:', orders);
@@ -760,59 +744,13 @@ class PosGlobalState extends PosModel {
                     // Hide error if already shown before ...
                     if ((!self.failed || options.show_error) && !options.to_invoice) {
                         self.failed = error;
+                        self.set_synch('error');
                         throw error;
                     }
                 }
+                self.set_synch('disconnected');
                 throw error;
             });
-    }
-
-    /**
-     * Remove orders with given ids from the database.
-     * @param {array<number>} server_ids ids of the orders to be removed.
-     * @param {dict} options.
-     * @param {number} options.timeout optional timeout parameter for the rpc call.
-     * @return {Promise<array<number>>} returns a promise of the ids successfully removed.
-     */
-    _remove_from_server (server_ids, options) {
-        options = options || {};
-        if (!server_ids || !server_ids.length) {
-            return Promise.resolve([]);
-        }
-
-        var self = this;
-        var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * server_ids.length;
-
-        return this.env.services.rpc({
-                model: 'pos.order',
-                method: 'remove_from_ui',
-                args: [server_ids],
-                kwargs: {context: this.env.session.user_context},
-            }, {
-                timeout: timeout,
-                shadow: true,
-            })
-            .then(function (data) {
-                return self._post_remove_from_server(server_ids, data)
-            }).catch(function (reason){
-                var error = reason.message;
-                if(error.code === 200 ){    // Business Logic Error, not a connection problem
-                    //if warning do not need to display traceback!!
-                    if (error.data.exception_type == 'warning') {
-                        delete error.data.debug;
-                    }
-                }
-                // important to throw error here and let the rendering component handle the
-                // error
-                console.warn('Failed to remove orders:', server_ids);
-                throw error;
-            });
-    }
-
-    // to override
-    _post_remove_from_server(server_ids, data) {
-        this.db.set_ids_removed_from_server(server_ids);
-        return server_ids;
     }
 
     // Exports the paid orders (the ones waiting for internet connection)
@@ -883,7 +821,7 @@ class PosGlobalState extends PosModel {
                 } else if (existing_uids[order.uid]) {
                     report.unpaid_skipped_existing += 1;
                 } else {
-                    orders.push(this.createAutomaticallySavedOrder(order));
+                    orders.push(this.createReactiveOrder(order));
                 }
             }
 
@@ -910,7 +848,7 @@ class PosGlobalState extends PosModel {
         for (var i = 0; i < jsons.length; i++) {
             var json = jsons[i];
             if (json.pos_session_id === this.pos_session.id) {
-                orders.push(this.createAutomaticallySavedOrder(json));
+                orders.push(this.createReactiveOrder(json));
             } else {
                 not_loaded_count += 1;
             }
@@ -2552,8 +2490,9 @@ class Order extends PosModel {
 
     add_product(product, options){
         if(this._printed){
-            this.destroy();
-            return this.pos.get_order().add_product(product, options);
+            // when adding product with a barcode while being in receipt screen
+            this.pos.removeOrder(this);
+            return this.pos.add_new_order().add_product(product, options);
         }
         this.assert_editable();
         options = options || {};
@@ -2995,14 +2934,6 @@ class Order extends PosModel {
         return this.orderlines.reduce((function(sum, orderLine) {
             return sum + orderLine.get_total_cost();
         }), 0)
-    }
-    finalize(){
-        this.destroy();
-    }
-    destroy(options){
-        const deletedIndex = this.pos.orders.remove(this);
-        this.pos.db.remove_unpaid_order(this);
-        this.pos.on_removed_order(this, deletedIndex, options && options.reason);
     }
     /* ---- Invoice --- */
     set_to_invoice(to_invoice) {

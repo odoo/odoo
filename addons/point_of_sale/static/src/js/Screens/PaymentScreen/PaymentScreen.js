@@ -233,6 +233,9 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 // Always show the next screen regardless of error since pos has to
                 // continue working even offline.
                 this.showScreen(this.nextScreen);
+                // Remove the order from the local storage so that when we refresh the page, the order
+                // won't be there
+                this.env.pos.db.remove_unpaid_order(this.currentOrder);
 
                 // Ask the user to sync the remaining unsynced orders.
                 if (!hasError && syncOrderResult && this.env.pos.db.get_orders().length) {

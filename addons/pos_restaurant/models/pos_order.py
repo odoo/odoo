@@ -11,8 +11,8 @@ class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
 
     note = fields.Char('Internal Note added by the waiter.')
+    uuid = fields.Char(string='Uuid', readonly=True, copy=False)
     mp_skip = fields.Boolean('Skip line when sending ticket to kitchen printers.')
-    mp_dirty = fields.Boolean()
 
 
 class PosOrder(models.Model):
@@ -20,7 +20,7 @@ class PosOrder(models.Model):
 
     table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served', index='btree_not_null')
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.')
-    multiprint_resume = fields.Char()
+    multiprint_resume = fields.Char(string='Multiprint Resume', help="Last printed state of the order")
 
     def _get_pack_lot_lines(self, order_lines):
         """Add pack_lot_lines to the order_lines.
@@ -57,8 +57,8 @@ class PosOrder(models.Model):
             'order_id',
             'qty',
             'note',
+            'uuid',
             'mp_skip',
-            'mp_dirty',
             'full_product_name',
             'customer_note',
             'price_extra',
@@ -192,6 +192,22 @@ class PosOrder(models.Model):
             del order['create_date']
 
         return table_orders
+
+    @api.model
+    def remove_from_ui(self, server_ids):
+        """ Remove orders from the frontend PoS application
+
+        Remove orders from the server by id.
+        :param server_ids: list of the id's of orders to remove from the server.
+        :type server_ids: list.
+        :returns: list -- list of db-ids for the removed orders.
+        """
+        orders = self.search([('id', 'in', server_ids), ('state', '=', 'draft')])
+        orders.write({'state': 'cancel'})
+        # TODO Looks like delete cascade is a better solution.
+        orders.mapped('payment_ids').sudo().unlink()
+        orders.sudo().unlink()
+        return orders.ids
 
     def set_tip(self, tip_line_vals):
         """Set tip to `self` based on values in `tip_line_vals`."""

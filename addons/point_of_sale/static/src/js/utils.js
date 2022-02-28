@@ -76,14 +76,27 @@ odoo.define('point_of_sale.utils', function (require) {
             await Promise.resolve();
             if (!called) {
                 called = true;
+                // so that only the first call to the batched function calls the original callback.
+                // Schedule this before calling the callback so that calls to the batched function
+                // within the callback will proceed only after resetting called to false, and have
+                // a chance to execute the callback again
+                Promise.resolve().then(() => called = false);
                 callback();
-                // wait for all calls in this microtick to fall through before resetting "called"
-                // so that only the first call to the batched function calls the original callback
-                await Promise.resolve();
-                called = false;
             }
         };
     }
 
-    return { getFileAsText, nextFrame, identifyError, isConnectionError, batched };
+    /*
+     * comes from o_spreadsheet.js
+     * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+     * */
+    function uuidv4() {
+        // mainly for jest and other browsers that do not have the crypto functionality
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+            let r = (Math.random() * 16) | 0, v = c == "x" ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+        });
+    };
+
+    return { getFileAsText, nextFrame, identifyError, isConnectionError, batched, uuidv4 };
 });

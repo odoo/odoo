@@ -104,6 +104,7 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     // settle tips here
     Chrome.do.clickTicketButton();
     TicketScreen.do.selectFilter('Tipping');
+    TicketScreen.check.tipContains('1.00');
     TicketScreen.do.settleTips();
     TicketScreen.do.selectFilter('All active orders');
     TicketScreen.check.nthRowContains(2, 'Ongoing');

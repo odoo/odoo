@@ -15,7 +15,7 @@ odoo.define('pos_restaurant.TableGuestsButton', function(require) {
             return this.env.pos.get_order();
         }
         get nGuests() {
-            return this.currentOrder ? this.currentOrder.get_customer_count() : 0;
+            return this.currentOrder ? this.currentOrder.getCustomerCount() : 0;
         }
         async onClick() {
             const { confirmed, payload: inputNumber } = await this.showPopup('NumberPopup', {
@@ -26,7 +26,7 @@ odoo.define('pos_restaurant.TableGuestsButton', function(require) {
             });
 
             if (confirmed) {
-                this.env.pos.get_order().set_customer_count(parseInt(inputNumber, 10) || 1);
+                this.env.pos.get_order().setCustomerCount(parseInt(inputNumber, 10) || 1);
             }
         }
     }

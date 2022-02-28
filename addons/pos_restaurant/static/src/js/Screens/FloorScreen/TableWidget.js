@@ -4,6 +4,12 @@ odoo.define('pos_restaurant.TableWidget', function(require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
+    /**
+     * props: {
+     *  onClick: callback,
+     *  table: table object,
+     * }
+     */
     class TableWidget extends PosComponent {
         setup() {
             owl.onMounted(this.onMounted);
@@ -33,7 +39,7 @@ odoo.define('pos_restaurant.TableWidget', function(require) {
             Object.assign(tableCover.style, { height: `${Math.ceil(this.fill * 100)}%` });
         }
         get fill() {
-            const customerCount = this.env.pos.get_customer_count(this.props.table);
+            const customerCount = this.env.pos.getCustomerCount(this.props.table.id);
             return Math.min(1, Math.max(0, customerCount / this.props.table.seats));
         }
         get orderCount() {
@@ -41,22 +47,23 @@ odoo.define('pos_restaurant.TableWidget', function(require) {
             return table.order_count !== undefined
                 ? table.order_count
                 : this.env.pos
-                      .get_table_orders(table)
+                      .getTableOrders(table.id)
                       .filter(o => o.orderlines.length !== 0 || o.paymentlines.length !== 0).length;
         }
         get orderCountClass() {
-            const notifications = this._getNotifications();
-            return {
-                'order-count': true,
-                'notify-printing': notifications.printing,
-                'notify-skipped': notifications.skipped,
-            };
+            const countClass = { 'order-count': true }
+            if (this.env.pos.config.iface_printers) {
+                const notifications = this._getNotifications();
+                countClass['notify-printing'] = notifications.printing;
+                countClass['notify-skipped'] = notifications.skipped;
+            }
+            return countClass;
         }
         get customerCountDisplay() {
-            return `${this.env.pos.get_customer_count(this.props.table)}/${this.props.table.seats}`;
+            return `${this.env.pos.getCustomerCount(this.props.table.id)}/${this.props.table.seats}`;
         }
         _getNotifications() {
-            const orders = this.env.pos.get_table_orders(this.props.table);
+            const orders = this.env.pos.getTableOrders(this.props.table.id);
 
             let hasChangesCount = 0;
             let hasSkippedCount = 0;

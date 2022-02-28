@@ -43,7 +43,7 @@ odoo.define('pos_restaurant.tour.ControlButtons', function (require) {
     // Test PrintBillButton
     ProductScreen.do.clickPrintBillButton();
     BillScreen.check.isShown();
-    BillScreen.do.clickBack();
+    BillScreen.do.clickOk();
 
     // Test GuestButton
     ProductScreen.do.clickGuestButton();
