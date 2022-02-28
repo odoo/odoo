@@ -479,7 +479,7 @@ var DomainSelector = DomainTree.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            if (self.invalidDomain) {
+            if (self.invalidDomain && !self.debug) {
                 var msg = _t("This domain is not supported.");
                 self.$el.html(msg);
             }
