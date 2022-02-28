@@ -2184,7 +2184,8 @@ class MailThread(models.AbstractModel):
                     bus_notifications.append([(self._cr.dbname, 'ir.needaction', partner_id), dict(message_format_values)])
             if channel_ids:
                 channels = self.env['mail.channel'].sudo().browse(channel_ids)
-                bus_notifications += channels._channel_message_notifications(message, message_format_values)
+                message_sudo = message.sudo()
+                bus_notifications += channels._channel_message_notifications(message_sudo, message_format_values)
 
         if bus_notifications:
             self.env['bus.bus'].sudo().sendmany(bus_notifications)
