@@ -8,6 +8,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const PopupControllerMixin = require('point_of_sale.PopupControllerMixin');
+    const ScreenControllerMixin = require('@point_of_sale/js/Misc/ScreenControllerMixin')[Symbol.for('default')];
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
     const { identifyError } = require('point_of_sale.utils');
@@ -31,15 +32,12 @@ odoo.define('point_of_sale.Chrome', function(require) {
     /**
      * Chrome is the root component of the PoS App.
      */
-    class Chrome extends PopupControllerMixin(PosComponent) {
+    class Chrome extends ScreenControllerMixin(PopupControllerMixin(PosComponent)) {
         setup() {
             super.setup();
             useExternalListener(window, 'beforeunload', this._onBeforeUnload);
-            useListener('show-main-screen', this.__showScreen);
             useListener('toggle-debug-widget', debounce(this._toggleDebugWidget, 100));
             useListener('toggle-mobile-searchbar', this._toggleMobileSearchBar);
-            useListener('show-temp-screen', this.__showTempScreen);
-            useListener('close-temp-screen', this.__closeTempScreen);
             useListener('close-pos', this._closePos);
             useListener('loading-skip-callback', () => this.env.proxy.stop_searching());
             useListener('play-sound', this._onPlaySound);
@@ -63,12 +61,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 },
                 loadingSkipButtonIsShown: false,
             });
-
-            this.mainScreen = useState({ name: null, component: null });
-            this.mainScreenProps = {};
-
-            this.tempScreen = useState({ isShown: false, name: null, component: null });
-            this.tempScreenProps = {};
 
             this.progressbar = useRef('progressbar');
 
@@ -111,7 +103,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
          * Used to give the `state.mobileSearchBarIsShown` value to main screen props
          */
         get mainScreenPropsFielded() {
-            return Object.assign({}, this.mainScreenProps, {
+            return Object.assign({}, this.mainScreen.props, {
                 mobileSearchBarIsShown: this.state.mobileSearchBarIsShown,
             });
         }
@@ -264,33 +256,13 @@ odoo.define('point_of_sale.Chrome', function(require) {
         _getSavedScreen(order) {
             return order.get_screen_data();
         }
-        __showTempScreen(event) {
-            const { name, props, resolve } = event.detail;
-            const Component = this.constructor.components[name];
-            if (!Component) {
-                throw new Error(
-                    `'${name}' is not registered as a PosComponent. Make sure to define it and register with 'Registries.Component.add'.`
-                );
-            }
-            if (!Component.isTempScreen) {
-                throw new Error(`Cannot show '${name}' as a temporary screen. Use TemporaryScreenMixin to declare it.`);
-            }
-            this.tempScreen.isShown = true;
-            this.tempScreen.name = name;
-            this.tempScreen.component = Component;
-            this.tempScreenProps = Object.assign({}, props, { resolve });
-        }
-        __closeTempScreen() {
-            this.tempScreen.isShown = false;
-        }
-        __showScreen({ detail: { name, props = {} } }) {
-            const component = this.constructor.components[name];
-            // 1. Set the information of the screen to display.
-            this.mainScreen.name = name;
-            this.mainScreen.component = component;
-            this.mainScreenProps = props;
+        /**
+         * @override
+         */
+        _showScreen({ detail: { name, props = {} } }) {
+            super._showScreen(...arguments);
 
-            // 2. Save the screen to the order.
+            // Save the screen to the order.
             //  - This screen is shown when the order is selected.
             if (!(component.prototype instanceof IndependentToOrderScreen) && name !== "ReprintReceiptScreen") {
                 this._setScreenData(name, props);

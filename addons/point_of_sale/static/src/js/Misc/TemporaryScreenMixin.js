@@ -37,8 +37,7 @@ const TemporaryScreenMixin = function (Component) {
          * @param {any} payload - is any information sent to the caller of `showTempScreen`.
          */
         closeWith(confirmed, payload) {
-            this.props.resolve({ confirmed, payload });
-            this.trigger('close-temp-screen');
+            this.trigger('close-temp-screen', { confirmed, payload });
         }
     }
 
