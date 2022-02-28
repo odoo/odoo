@@ -701,7 +701,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
     );
 });
 
-QUnit.test('prevent attachment delete on non-authored message', async function (assert) {
+QUnit.test('prevent attachment delete on non-authored message in channels', async function (assert) {
     assert.expect(2);
 
     const { createMessageComponent } = await this.start();
@@ -711,6 +711,10 @@ QUnit.test('prevent attachment delete on non-authored message', async function (
             id: 10,
             name: "BLAH",
             mimetype: 'image/jpeg',
+            originThread: insertAndReplace({
+                id: 11,
+                model: 'mail.channel',
+            }),
         }),
         author: insert({ id: 11, display_name: "Guy" }),
         body: "<p>Test</p>",
