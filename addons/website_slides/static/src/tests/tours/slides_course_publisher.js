@@ -48,18 +48,25 @@ tour.register('course_publisher', {
     trigger: 'img.o_wslides_course_pict',
     run: 'dblclick',
 }, {
-    content: 'eLearning: click pâtissière',
-    trigger: 'img[title="s_company_team_image_4.png"]',
+    content: 'eLearning: click "Add URL" to trigger URL box',
+    trigger: '.o_upload_media_url_button',
 }, {
-    content: 'eLearning: is the pâtissière set ?',
+    content: 'eLearning: add a bioutifoul URL',
+    trigger: 'input.o_we_url_input',
+    run: 'text https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg/800px-ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg'
+}, {
+    content: 'eLearning: click "Add URL" really adding image',
+    trigger: '.o_upload_media_url_button',
+}, {
+    content: 'eLearning: is the Corgi set ?',
     trigger: 'img.o_wslides_course_pict',
     run: function () {
-        if ($('img.o_wslides_course_pict').attr('src').endsWith('s_team_member_4.png')) {
+        if ($('img.o_wslides_course_pict').attr('src').endsWith('GoldWinnerPembrookeWelshCorgi.jpg')) {
             $('img.o_wslides_course_pict').addClass('o_wslides_tour_success');
         }
     },
 }, {
-    content: 'eLearning: the pâtissière is set !',
+    content: 'eLearning: the Corgi is set !',
     trigger: 'img.o_wslides_course_pict.o_wslides_tour_success',
 }, {
     content: 'eLearning: save course edition',
