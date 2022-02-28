@@ -9,7 +9,7 @@ class CrmTeamMember(models.Model):
     _inherit = ['mail.thread']
     _description = 'Sales Team Member'
     _rec_name = 'user_id'
-    _order = 'create_date ASC'
+    _order = 'create_date ASC, id'
     _check_company_auto = True
 
     crm_team_id = fields.Many2one(
