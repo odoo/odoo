@@ -33,7 +33,7 @@ var addVideoToSection = function (sectionName, saveAsDraft) {
 }, {
 	content: 'eLearning: fill video link',
 	trigger: 'input[name=url]',
-	run: 'text https://www.youtube.com/watch?v=NvS351QKFV4&list=PLtVFNIekBzqIfO4u4n78i43etfw2n1St8&index=2&t=0s',
+	run: 'text https://www.youtube.com/watch?v=pzmI3vAIhbE',
 }, {
     content: 'eLearning: click outside to trigger onchange',
     trigger: 'div.o_w_slide_upload_modal_container',
