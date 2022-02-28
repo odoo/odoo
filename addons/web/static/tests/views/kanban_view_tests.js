@@ -475,16 +475,6 @@ QUnit.module("Views", (hooks) => {
                     '<div><field name="foo"/></div>' +
                     "</t></templates></kanban>",
                 groupBy: ["bar"],
-                async mockRPC(route, args) {
-                    if (route === "/web/dataset/call_kw/partner/action_archive") {
-                        const records = serverData.models.partner.records;
-                        const [resIds] = args.args;
-                        for (const resId of resIds) {
-                            records.find((r) => r.id === resId).active = false;
-                        }
-                        return true;
-                    }
-                },
             });
 
             const clickColumnAction = await toggleColumnActions(1);
@@ -540,16 +530,6 @@ QUnit.module("Views", (hooks) => {
                     '<div><field name="foo"/></div>' +
                     "</t></templates></kanban>",
                 groupBy: ["bar"],
-                async mockRPC(route, args) {
-                    if (route === "/web/dataset/call_kw/partner/action_archive") {
-                        const records = serverData.models.partner.records;
-                        const [resIds] = args.args;
-                        for (const resId of resIds) {
-                            records.find((r) => r.id === resId).active = false;
-                        }
-                        return true;
-                    }
-                },
             });
 
             const clickColumnAction = await toggleColumnActions(0);
@@ -5368,16 +5348,6 @@ QUnit.module("Views", (hooks) => {
                     </kanban>`,
             noContentHelp: '<p class="hello">click to add a partner</p>',
             groupBy: ["bar"],
-            async mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/action_archive") {
-                    const records = serverData.models.partner.records;
-                    const [resIds] = args.args;
-                    for (const resId of resIds) {
-                        records.find((r) => r.id === resId).active = false;
-                    }
-                    return true;
-                }
-            },
         });
 
         // check that the (unique) column contains 3 records
@@ -7645,16 +7615,6 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["bar"],
-            async mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/action_archive") {
-                    const records = serverData.models.partner.records;
-                    const [resIds] = args.args;
-                    for (const resId of resIds) {
-                        records.find((r) => r.id === resId).active = false;
-                    }
-                    return true;
-                }
-            },
         });
 
         assert.deepEqual(getCounters(), ["-4", "36"], "counter should contain the correct value");
@@ -7678,7 +7638,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "kanban with progressbars: correctly update env when archiving records",
         async (assert) => {
             assert.expect(2);
@@ -7702,31 +7662,20 @@ QUnit.module("Views", (hooks) => {
                     '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
                     '<templates><t t-name="kanban-box">' +
                     "<div>" +
-                    '<field name="name"/>' +
+                    '<field name="id"/>' +
                     "</div>" +
                     "</t></templates>" +
                     "</kanban>",
                 groupBy: ["bar"],
-                async mockRPC(route, args) {
-                    if (route === "/web/dataset/call_kw/partner/action_archive") {
-                        const records = serverData.models.partner.records;
-                        const [resIds] = args.args;
-                        for (const resId of resIds) {
-                            records.find((r) => r.id === resId).active = false;
-                        }
-                        return true;
-                    }
-                },
             });
 
-            assert.deepEqual(kanban.exportState().resIds, [1, 2, 3, 4]);
+            assert.deepEqual(getCardTexts(), ["4", "1", "2", "3"]);
 
             // archive all records of the first column
             const clickColumnAction = await toggleColumnActions(0);
             await clickColumnAction("Archive All");
-            await click(target, ".modal-footer button:first-child");
 
-            assert.deepEqual(kanban.exportState().resIds, [1, 2, 3]);
+            assert.deepEqual(getCardTexts(), ["1", "2", "3"]);
         }
     );
 

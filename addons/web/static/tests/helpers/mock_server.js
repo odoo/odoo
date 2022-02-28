@@ -455,6 +455,10 @@ export class MockServer {
             case "render_public_asset": {
                 return true;
             }
+            case "action_archive":
+                return this.mockWrite(args.model, [args.args[0], { active: false }]);
+            case "action_unarchive":
+                return this.mockWrite(args.model, [args.args[0], { active: true }]);
             case "copy":
                 return this.mockCopy(args.model, args.args[0]);
             case "create":

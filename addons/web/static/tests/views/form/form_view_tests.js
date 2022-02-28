@@ -1101,7 +1101,7 @@ QUnit.module("Views", (hooks) => {
                             <notebook>
                                 <page string="Non scrollable page">
                                     <div id="anchor1">No scrollbar!</div>
-                                    <a href="#anchor2" class="link2">TO ANCHOR 2</a> 
+                                    <a href="#anchor2" class="link2">TO ANCHOR 2</a>
                                 </page>
                                 <page string="Other scrollable page">
                                     <p style="font-size: large">
@@ -3101,14 +3101,6 @@ QUnit.module("Views", (hooks) => {
             arch: '<form><field name="active"/><field name="foo"/></form>',
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "action_archive") {
-                    serverData.models.partner.records[0].active = false;
-                    return true;
-                }
-                if (args.method === "action_unarchive") {
-                    serverData.models.partner.records[0].active = true;
-                    return true;
-                }
             },
         });
 

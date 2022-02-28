@@ -4239,10 +4239,6 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: function (route) {
                 assert.step(route);
-                if (route === "/web/dataset/call_kw/foo/action_archive") {
-                    serverData.models.foo.records[0].active = false;
-                    return true;
-                }
             },
         });
 
@@ -4300,7 +4296,6 @@ QUnit.module("Views", (hooks) => {
             mockRPC: function (route, args) {
                 if (args.method === "action_archive") {
                     assert.deepEqual(args.args[0], [1, 2, 3, 5]);
-                    return true;
                 }
             },
             actionMenus: {},
@@ -4349,7 +4344,6 @@ QUnit.module("Views", (hooks) => {
             mockRPC: function (route, args) {
                 if (args.method === "action_archive") {
                     assert.deepEqual(args.args[0], [1, 2, 3, 5]);
-                    return true;
                 }
             },
             actionMenus: {},

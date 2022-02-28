@@ -3,6 +3,7 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { sprintf } from "@web/core/utils/strings";
 import { isFalsy, isTruthy, XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
@@ -375,20 +376,24 @@ export class ListView extends Component {
     async toggleArchiveState(archive) {
         let resIds;
         const isDomainSelected = this.model.root.isDomainSelected;
+        const total = this.model.root.count;
         if (archive) {
             resIds = await this.model.root.archive(true);
         } else {
             resIds = await this.model.root.unarchive(true);
         }
-        const total = this.model.root.count;
         if (
             isDomainSelected &&
             resIds.length === session.active_ids_limit &&
             resIds.length < total
         ) {
             this.notificationService.add(
-                this.env._t(
-                    `Of the ${total} records selected, only the first ${resIds.length} have been archived/unarchived.`
+                sprintf(
+                    this.env._t(
+                        "Of the %d records selected, only the first %d have been archived/unarchived."
+                    ),
+                    total,
+                    resIds.length
                 ),
                 { title: this.env._t("Warning") }
             );
