@@ -138,7 +138,7 @@ class TeamMember(models.Model):
                 ['&', '&', ('user_id', '=', False), ('date_open', '=', False), ('team_id', '=', member.crm_team_id.id)]
             ])
 
-            leads = self.env["crm.lead"].search(lead_domain, order='probability DESC', limit=lead_limit)
+            leads = self.env["crm.lead"].search(lead_domain, order='probability DESC, id', limit=lead_limit)
 
             to_assign = member._get_assignment_quota(work_days=work_days)
             members_data[member.id] = {
