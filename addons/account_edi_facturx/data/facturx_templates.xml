@@ -216,7 +216,7 @@
                         <ram:SpecifiedTradePaymentTerms>
                             <ram:Description t-if="record.invoice_payment_term_id" t-esc="record.invoice_payment_term_id.name"/>
                             <ram:DueDateDateTime t-if="record.invoice_date_due">
-                                <udt:DateTimeString t-esc="format_date(record.invoice_date_due)"/>
+                                <udt:DateTimeString format="102" t-esc="format_date(record.invoice_date_due)"/>
                             </ram:DueDateDateTime>
                         </ram:SpecifiedTradePaymentTerms>
 
