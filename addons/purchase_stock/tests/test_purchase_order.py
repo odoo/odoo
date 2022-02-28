@@ -446,3 +446,40 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             with po_form.order_line.edit(0) as pol_form:
                 pol_form.product_qty = 25
         self.assertEqual(pol.name, "[C02] Name02")
+
+    def test_received_qty_rounding(self):
+        """
+        This test ensures that, when receiving a qty with an UoM different from
+        the SOL's one, the value of the received qty is not bigger than reality
+        """
+        unit = self.env.ref('uom.product_uom_unit')
+        u96 = self.env['uom.uom'].create({
+            'name': '96 units',
+            'category_id': unit.category_id.id,
+            'uom_type': 'bigger',
+            'factor_inv': 96,
+            'rounding': 1,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_qty': 2,
+                'product_uom': u96.id,
+            })]
+        })
+        po.button_confirm()
+
+        picking = po.picking_ids
+        # 2 u96 == 192 units. Receive 144/192 units, so 1.5 u96
+        picking.move_lines.quantity_done = 144
+        action = picking.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+
+        picking = picking.backorder_ids
+        picking.move_lines.quantity_done = 48
+        picking.button_validate()
+        self.assertEqual(po.order_line.qty_received, 2)

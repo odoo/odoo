@@ -408,12 +408,12 @@ class SaleOrderLine(models.Model):
                 for move in outgoing_moves:
                     if move.state != 'done':
                         continue
-                    qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                    qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, round=False)
                 for move in incoming_moves:
                     if move.state != 'done':
                         continue
-                    qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
-                line.qty_delivered = qty
+                    qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, round=False)
+                line.qty_delivered = float_round(qty, precision_rounding=line.product_uom.rounding, rounding_method='HALF-UP')
 
     @api.model_create_multi
     def create(self, vals_list):

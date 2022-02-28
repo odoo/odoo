@@ -1048,6 +1048,43 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         picking.button_validate()
         self.assertEqual(so.order_line.mapped('qty_delivered'), [4.0], 'Sale: no conversion error on delivery in different uom"')
 
+    def test_17_delivered_qty_rounding(self):
+        """
+        This test ensures that, when delivering a qty with an UoM different from
+        the SOL's one, the value of the delivered qty is not bigger than reality
+        """
+        unit = self.env.ref('uom.product_uom_unit')
+        u96 = self.env['uom.uom'].create({
+            'name': '96 units',
+            'category_id': unit.category_id.id,
+            'uom_type': 'bigger',
+            'factor_inv': 96,
+            'rounding': 1,
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 2,
+                'product_uom': u96.id,
+            })],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        # 2 u96 == 192 units. Deliver 144/192 units, so 1.5 u96
+        picking.move_lines.quantity_done = 144
+        action = picking.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+
+        picking = picking.backorder_ids
+        picking.move_lines.quantity_done = 48
+        picking.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 2)
+
 
 class TestSaleStockOnly(TestSaleCommon):
 
