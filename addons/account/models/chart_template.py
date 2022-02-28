@@ -238,31 +238,6 @@ class AccountChartTemplate(models.AbstractModel):
                 _logger.debug("No file %s found for template '%s'", file_name, module)
             return {}
 
-    def _get_chart_template_data(self, template_code, company):
-        company = company or self.env.company
-        return {
-            'account.account': self._get_account_account(template_code, company),
-            'account.group': self._get_account_group(template_code, company),
-            'account.journal': self._get_account_journal(template_code, company),
-            'res.company': self._get_res_company(template_code, company),
-            'account.tax.group': self._get_tax_group(template_code, company),
-            'account.tax': self._get_account_tax(template_code, company),
-        }
-
-    def _get_account_account(self, template_code, company):
-        return self._load_csv(template_code, company, 'account.account.csv')
-
-    def _get_account_group(self, template_code, company):
-        def account_group_sanitize(row):
-            start, end = row['code_prefix_start'], row['code_prefix_end']
-            if not end or end < start:
-                row['code_prefix_end'] = start
-            return row
-        return self._load_csv(template_code, company, 'account.group.csv', post_sanitize=account_group_sanitize)
-
-    def _get_tax_group(self, template_code, company):
-        return self._load_csv(template_code, company, 'account.tax.group.csv')
-
     def _post_load_data(self, template_code, company):
         company = (company or self.env.company)
         cid = company.id
@@ -359,10 +334,6 @@ class AccountChartTemplate(models.AbstractModel):
             if value:
                 self.env['ir.property']._set_default(field, model, self.env.ref(f"account.{cid}_{value}").id, company=company)
 
-    ###############################################################################################
-    # GENERIC Template                                                                            #
-    ###############################################################################################
-
     def _get_template_data(self, template_code, company):
         return {
             'bank_account_code_prefix': '1014',
@@ -378,6 +349,30 @@ class AccountChartTemplate(models.AbstractModel):
             'property_tax_receivable_account_id': 'tax_receivable',
             # Only LU -- 'property_advance_tax_payment_account_id': '',
         }
+
+    # --------------------------------------------------------------------------------
+
+    def _get_chart_template_data(self, template_code, company):
+        company = company or self.env.company
+        return {
+            'account.account': self._get_account_account(template_code, company),
+            'account.group': self._get_account_group(template_code, company),
+            'account.journal': self._get_account_journal(template_code, company),
+            'res.company': self._get_res_company(template_code, company),
+            'account.tax.group': self._get_tax_group(template_code, company),
+            'account.tax': self._get_account_tax(template_code, company),
+        }
+
+    def _get_account_account(self, template_code, company):
+        return self._load_csv(template_code, company, 'account.account.csv')
+
+    def _get_account_group(self, template_code, company):
+        def account_group_sanitize(row):
+            start, end = row['code_prefix_start'], row['code_prefix_end']
+            if not end or end < start:
+                row['code_prefix_end'] = start
+            return row
+        return self._load_csv(template_code, company, 'account.group.csv', post_sanitize=account_group_sanitize)
 
     def _get_account_journal(self, template_code, company):
         cid = (company or self.env.company).id
@@ -433,6 +428,26 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
+    def _get_res_company(self, template_code, company):
+        cid = (company or self.env.company).id
+        return {
+            self.env.company.get_metadata()[0]['xmlid']: {
+                'currency_id': 'base.USD',
+                'account_fiscal_country_id': 'base.us',
+                'default_cash_difference_income_account_id': f'account.{cid}_cash_diff_income',
+                'default_cash_difference_expense_account_id': f'account.{cid}_cash_diff_expense',
+                'account_default_pos_receivable_account_id': f'account.{cid}_pos_receivable',
+                'income_currency_exchange_account_id': f'account.{cid}_income_currency_exchange',
+                'expense_currency_exchange_account_id': f'account.{cid}_expense_currency_exchange',
+                'tax_cash_basis_journal_id': f'account.{cid}_caba',
+                'currency_exchange_journal_id': f'account.{cid}_exch',
+                # only MX ?? -- 'account_cash_basis_base_account_id': f'',
+            }
+        }
+
+    def _get_tax_group(self, template_code, company):
+        return self._load_csv(template_code, company, 'account.tax.group.csv')
+
     def _get_account_tax(self, template_code, company):
         cid = (company or self.env.company).id
         tax_repartition_lines = [
@@ -459,21 +474,4 @@ class AccountChartTemplate(models.AbstractModel):
                 ('sale', 'Tax'),
                 ('purchase', 'Purchase Tax')
             )
-        }
-
-    def _get_res_company(self, template_code, company):
-        cid = (company or self.env.company).id
-        return {
-            self.env.company.get_metadata()[0]['xmlid']: {
-                'currency_id': 'base.USD',
-                'account_fiscal_country_id': 'base.us',
-                'default_cash_difference_income_account_id': f'account.{cid}_cash_diff_income',
-                'default_cash_difference_expense_account_id': f'account.{cid}_cash_diff_expense',
-                'account_default_pos_receivable_account_id': f'account.{cid}_pos_receivable',
-                'income_currency_exchange_account_id': f'account.{cid}_income_currency_exchange',
-                'expense_currency_exchange_account_id': f'account.{cid}_expense_currency_exchange',
-                'tax_cash_basis_journal_id': f'account.{cid}_caba',
-                'currency_exchange_journal_id': f'account.{cid}_exch',
-                # only MX ?? -- 'account_cash_basis_base_account_id': f'',
-            }
         }
