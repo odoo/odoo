@@ -46,7 +46,7 @@ class AccountAnalyticLine(models.Model):
         'project.project', 'Project', compute='_compute_project_id', store=True, readonly=False,
         domain=_domain_project_id)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
-    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id)
+    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False})
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
@@ -121,7 +121,7 @@ class AccountAnalyticLine(models.Model):
         # Although this make a second loop on the vals, we need to wait the preprocess as it could change the company_id in the vals
         # TODO To be refactored in master
         company_ids_in_vals = list({vals['company_id'] for vals in vals_list if vals.get('company_id', False)})
-        employees = self.env['hr.employee'].search([('user_id', 'in', user_ids), ('company_id', 'in', [self.env.company.id] + company_ids_in_vals)])
+        employees = self.env['hr.employee'].with_context(active_test=False).search([('user_id', 'in', user_ids), ('company_id', 'in', [self.env.company.id] + company_ids_in_vals)])
         user_map = defaultdict(dict)
         for employee in employees:
             user_map[employee.company_id.id][employee.user_id.id] = employee.id
