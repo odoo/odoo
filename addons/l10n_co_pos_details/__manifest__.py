@@ -3,7 +3,12 @@
 {
     'name': 'Colombian - Point of Sale Details',
     'version': '1.0',
-    'description': """Colombian - Point of Sale""",
+    'description': """
+Colombian - Point of Sale
+=========================
+
+    Extend POS Sales Details Report for Colombia
+""",
     'category': 'Localization',
     'auto_install': True,
     'depends': [

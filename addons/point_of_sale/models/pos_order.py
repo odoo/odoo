@@ -958,7 +958,7 @@ class ReportSaleDetails(models.AbstractModel):
         payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
         if payment_ids:
             self.env.cr.execute("""
-                SELECT method.name, sum(amount) total, count(DISTINCT payment.pos_order_id)
+                SELECT method.name, sum(amount) total
                 FROM pos_payment AS payment,
                      pos_payment_method AS method
                 WHERE payment.payment_method_id = method.id
