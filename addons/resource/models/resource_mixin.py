@@ -40,18 +40,31 @@ class ResourceMixin(models.AbstractModel):
         calendars_tz = {calendar.id: calendar.tz for calendar in self.env['resource.calendar'].browse(calendar_ids)}
         for vals in vals_list:
             if not vals.get('resource_id'):
-                resource_vals = {'name': vals.get(self._rec_name)}
-                tz = vals.pop('tz', False) or calendars_tz.get(vals.get('resource_calendar_id'))
-                if tz:
-                    resource_vals['tz'] = tz
-                resources_vals_list.append(resource_vals)
+                resources_vals_list.append(
+                    self._prepare_resource_values(
+                        vals,
+                        vals.pop('tz', False) or calendars_tz.get(vals.get('resource_calendar_id'))
+                    )
+                )
         if resources_vals_list:
             resources = self.env['resource.resource'].create(resources_vals_list)
             resources_iter = iter(resources.ids)
             for vals in vals_list:
                 if not vals.get('resource_id'):
                     vals['resource_id'] = next(resources_iter)
-        return super(ResourceMixin, self).create(vals_list)
+        return super(ResourceMixin, self.with_context(check_idempotence=True)).create(vals_list)
+
+    def _prepare_resource_values(self, vals, tz):
+        resource_vals = {'name': vals.get(self._rec_name)}
+        if tz:
+            resource_vals['tz'] = tz
+        company_id = vals.get('company_id', self.env.company.id)
+        if company_id:
+            resource_vals['company_id'] = company_id
+        calendar_id = vals.get('resource_calendar_id')
+        if calendar_id:
+            resource_vals['calendar_id'] = calendar_id
+        return resource_vals
 
     def copy_data(self, default=None):
         if default is None:

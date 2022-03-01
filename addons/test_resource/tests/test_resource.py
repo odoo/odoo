@@ -1207,7 +1207,7 @@ class TestResource(TestResourceCommon):
 
         start = utc.localize(datetime(2021, 7, 7, 12, 0, 0))
         end = utc.localize(datetime(2021, 7, 16, 23, 59, 59))
-        with self.assertQueryCount(12):
+        with self.assertQueryCount(13):
             work_intervals, _ = self.resources_test.resource_id._get_valid_work_intervals(start, end)
 
         self.assertEqual(len(work_intervals), 50)
