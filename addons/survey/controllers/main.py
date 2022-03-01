@@ -38,7 +38,7 @@ class Survey(http.Controller):
             ], limit=1)
         return survey_sudo, answer_sudo
 
-    def _check_validity(self, survey_token, answer_token, ensure_token=True):
+    def _check_validity(self, survey_token, answer_token, ensure_token=True, check_partner=True):
         """ Check survey is open and can be taken. This does not checks for
         security rules, only functional / business rules. It returns a string key
         allowing further manipulation of validity issues
@@ -55,6 +55,9 @@ class Survey(http.Controller):
         :param ensure_token: whether user input existence based on given access token
           should be enforced or not, depending on the route requesting a token or
           allowing external world calls;
+
+        :param check_partner: Whether we must check that the partner associated to the target
+          answer corresponds to the active user.
         """
         survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
 
@@ -78,7 +81,7 @@ class Survey(http.Controller):
         if (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:
             return 'survey_void'
 
-        if answer_sudo:
+        if answer_sudo and check_partner:
             if request.env.user._is_public() and answer_sudo.partner_id:
                 # answers from public user should not have any partner_id; this indicates probably a cookie issue
                 return 'answer_wrong_user'
@@ -91,16 +94,17 @@ class Survey(http.Controller):
 
         return True
 
-    def _get_access_data(self, survey_token, answer_token, ensure_token=True):
+    def _get_access_data(self, survey_token, answer_token, ensure_token=True, check_partner=True):
         """ Get back data related to survey and user input, given the ID and access
         token provided by the route.
 
          : param ensure_token: whether user input existence should be enforced or not(see ``_check_validity``)
+         : param check_partner: whether the partner of the target answer should be checked (see ``_check_validity``)
         """
         survey_sudo, answer_sudo = request.env['survey.survey'].sudo(), request.env['survey.user_input'].sudo()
         has_survey_access, can_answer = False, False
 
-        validity_code = self._check_validity(survey_token, answer_token, ensure_token=ensure_token)
+        validity_code = self._check_validity(survey_token, answer_token, ensure_token=ensure_token, check_partner=check_partner)
         if validity_code != 'survey_wrong':
             survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
             try:
@@ -590,7 +594,7 @@ class Survey(http.Controller):
     def survey_print(self, survey_token, review=False, answer_token=None, **post):
         '''Display an survey in printable view; if <answer_token> is set, it will
         grab the answers of the user_input_id that has <answer_token>.'''
-        access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=False, check_partner=False)
         if access_data['validity_code'] is not True and (
                 access_data['has_survey_access'] or
                 access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void']):
