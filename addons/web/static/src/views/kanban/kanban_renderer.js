@@ -90,6 +90,7 @@ export class KanbanRenderer extends Component {
                     targetGroupId = groupEl.dataset.id;
                 }
                 await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
+                item.classList.add("o_record_draggable");
             },
         });
         useSortable({

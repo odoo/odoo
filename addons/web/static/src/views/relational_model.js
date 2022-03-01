@@ -1598,6 +1598,8 @@ export class Group extends DataPoint {
             return;
         }
         await record.save();
+        this.list.removeRecord(record);
+        this.list.addRecord(record, this.list.length);
         this.count++;
         return record;
     }
