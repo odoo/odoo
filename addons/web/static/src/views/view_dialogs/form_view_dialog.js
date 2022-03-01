@@ -37,9 +37,9 @@ export class FormViewDialog extends Dialog {
     }
 
     save() {
-        const { record, relatedRecord } = this.props;
-        Object.assign(relatedRecord._values, record._values);
-        Object.assign(relatedRecord._changes, record._changes); // don't work with x2many inside,...
+        if (this.props.save) {
+            this.props.save();
+        }
         this.close();
     }
 
@@ -53,6 +53,6 @@ FormViewDialog.components = { FormRenderer };
 FormViewDialog.contentClass = "o_form_view_dialog";
 FormViewDialog.props = {
     ...Dialog.props,
-    record: true,
-    archInfo: true,
+    archInfo: { type: Object, optional: true },
+    record: { type: Object },
 };

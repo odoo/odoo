@@ -129,7 +129,10 @@ export class X2ManyField extends Component {
         this.dialogService.add(FormViewDialog, {
             archInfo: form, // FIXME: might not be there
             record: newRecord,
-            relatedRecord: record,
+            save() {
+                Object.assign(record._values, newRecord._values);
+                Object.assign(record._changes, newRecord._changes); // don't work with x2many inside,...
+            },
             title: this.props.record.activeFields[this.props.name].string,
         });
     }

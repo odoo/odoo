@@ -1,26 +1,27 @@
 /* @odoo-module */
 
-import { makeContext } from "@web/core/context";
-import { Dialog } from "@web/core/dialog/dialog";
-import { Domain } from "@web/core/domain";
+import { Commands, ORM } from "@web/core/orm_service";
+import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
 import {
     deserializeDate,
     deserializeDateTime,
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
-import { Commands, ORM } from "@web/core/orm_service";
-import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
-import { isTruthy } from "@web/core/utils/xml";
-import { session } from "@web/session";
-import { Model } from "@web/views/helpers/model";
+import { Dialog } from "@web/core/dialog/dialog";
+import { Domain } from "@web/core/domain";
 import { isNumeric, isX2Many } from "@web/views/helpers/view_utils";
+import { isTruthy } from "@web/core/utils/xml";
+import { makeContext } from "@web/core/context";
+import { Model } from "@web/views/helpers/model";
+import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
 const { DateTime } = luxon;
 const { toRaw, xml } = owl;
 
 const preloadedDataRegistry = registry.category("preloadedData");
+
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
 const DEFAULT_QUICK_CREATE_VIEW = {
     form: {
@@ -43,6 +44,10 @@ class WarningDialog extends Dialog {
 }
 WarningDialog.bodyTemplate = xml`<t t-esc="props.message"/>`;
 
+/**
+ * @param {Object} groupByField
+ * @returns {boolean}
+ */
 export const isAllowedDateField = (groupByField) => {
     return (
         ["date", "datetime"].includes(groupByField.type) &&
@@ -50,13 +55,23 @@ export const isAllowedDateField = (groupByField) => {
     );
 };
 
+/**
+ * @typedef {Object} OrderTerm ?
+ * @property {string} name
+ * @property {boolean} asc
+ */
+
+/**
+ * @param {OrderTerm[]} orderBy
+ * @returns {string}
+ */
 function orderByToString(orderBy) {
     return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
 }
 
 /**
  * @param {any} string
- * @return {Object[]}
+ * @return {OrderTerm[]}
  */
 export function stringToOrderBy(string) {
     if (!string) {
@@ -77,7 +92,11 @@ export function stringToOrderBy(string) {
         }
     });
 }
-
+/**
+ * @param {any} modifier
+ * @param {Object} evalContext
+ * @returns {boolean}
+ */
 export function evalDomain(modifier, evalContext) {
     if (Array.isArray(modifier)) {
         modifier = new Domain(modifier).contains(evalContext);
