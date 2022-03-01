@@ -57,12 +57,6 @@ var GaugeWidget = AbstractField.extend({
         }
         max_value = Math.max(gauge_value, max_value);
 
-        // label
-        var label = this.nodeOptions.label || "";
-        if (this.nodeOptions.label_field) {
-            label = this.recordData[this.nodeOptions.label_field];
-        }
-
         // title
         var title = this.nodeOptions.title || this.field.string;
 

@@ -4,7 +4,7 @@ import { AddMilestone, OpenMilestone } from '@project/js/right_panel/project_uti
 import { formatFloat } from "@web/fields/formatters";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onWillStart, onWillUpdateProps, useState } = owl;
+const { onWillStart, onWillUpdateProps, useState } = owl;
 
 export default class ProjectRightPanel extends LegacyComponent {
     setup() {

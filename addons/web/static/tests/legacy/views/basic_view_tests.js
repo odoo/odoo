@@ -7,7 +7,7 @@ odoo.define('web.basic_view_tests', function (require) {
     const widgetRegistryOwl = require('web.widgetRegistry');
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, xml } = owl;
+    const { xml } = owl;
 
     const createView = testUtils.createView;
 

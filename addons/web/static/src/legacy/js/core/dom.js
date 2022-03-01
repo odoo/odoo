@@ -20,7 +20,6 @@ odoo.define('web.dom', function (require) {
  */
 
 var concurrency = require('web.concurrency');
-var config = require('web.config');
 var core = require('web.core');
 var _t = core._t;
 

@@ -17,7 +17,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
     const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, useState, xml } = owl;
+    const { useState, xml } = owl;
     const EscapeKey = { key: 'Escape', keyCode: 27, which: 27 };
 
     QUnit.module('core', {}, function () {

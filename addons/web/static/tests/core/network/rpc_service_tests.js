@@ -19,7 +19,7 @@ import {
 import { registerCleanup } from "../../helpers/cleanup";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 
 let isXHRMocked = false;
 const serviceRegistry = registry.category("services");

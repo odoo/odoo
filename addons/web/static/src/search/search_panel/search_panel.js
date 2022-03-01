@@ -2,7 +2,7 @@
 
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onMounted, onWillStart, onWillUpdateProps, useState } = owl;
+const { onMounted, onWillStart, onWillUpdateProps, useState } = owl;
 
 /**
  * Search panel

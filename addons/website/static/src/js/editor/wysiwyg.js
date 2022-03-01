@@ -3,7 +3,6 @@ odoo.define('website.wysiwyg', function (require) {
 
 var Wysiwyg = require('web_editor.wysiwyg');
 var snippetsEditor = require('web_editor.snippet.editor');
-const weWidgets = require('wysiwyg.widgets');
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait

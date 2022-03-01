@@ -2,7 +2,6 @@ odoo.define('web.calendar_tests', function (require) {
 "use strict";
 
 const AbstractField = require('web.AbstractField');
-var AbstractStorageService = require('web.AbstractStorageService');
 const BasicModel = require('web.BasicModel');
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
@@ -503,7 +502,6 @@ QUnit.module('Views', {
     QUnit.test('quickcreate with custom create_name_field', async function (assert) {
         assert.expect(3);
 
-        var event = $.Event();
         this.data.custom_event = {
             fields: {
                 id: {string: "ID", type: "integer"},
@@ -648,7 +646,6 @@ QUnit.module('Views', {
             },
         });
 
-        var event = $.Event();
         var calendar = await createCalendarView({
             View: CalendarView,
             model: 'event',

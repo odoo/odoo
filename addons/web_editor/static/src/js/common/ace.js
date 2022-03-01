@@ -1,7 +1,6 @@
 odoo.define('web_editor.ace', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var config = require('web.config');
 var concurrency = require('web.concurrency');
 var core = require('web.core');

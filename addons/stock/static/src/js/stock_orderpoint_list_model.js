@@ -1,10 +1,7 @@
 odoo.define('stock.StockOrderpointListModel', function (require) {
 "use strict";
 
-var core = require('web.core');
 var ListModel = require('web.ListModel');
-
-var qweb = core.qweb;
 
 
 var StockOrderpointListModel = ListModel.extend({

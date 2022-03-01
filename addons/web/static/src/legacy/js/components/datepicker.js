@@ -7,7 +7,6 @@ odoo.define('web.DatePickerOwl', function (require) {
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const {
-        Component,
         onMounted,
         onPatched,
         onWillUnmount,

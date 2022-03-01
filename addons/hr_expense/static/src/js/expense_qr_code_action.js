@@ -3,7 +3,6 @@ odoo.define('hr_expense.qr_code_action', function (require) {
 
 const AbstractAction = require('web.AbstractAction');
 const core = require('web.core');
-const config = require('web.config');
 
 const QRModalAction = AbstractAction.extend({
     template: 'hr_expense_qr_code',

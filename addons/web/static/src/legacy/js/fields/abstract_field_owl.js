@@ -5,7 +5,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
     const { useListener } = require("@web/core/utils/hooks");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, onWillUpdateProps, useEffect } = owl;
+    const { onWillUpdateProps, useEffect } = owl;
 
     /**
      * This file defines the Owl version of the AbstractField. Specific fields

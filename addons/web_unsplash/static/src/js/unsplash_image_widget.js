@@ -3,7 +3,6 @@ odoo.define('web_unsplash.image_widgets', function (require) {
 
 var core = require('web.core');
 var UnsplashAPI = require('unsplash.api');
-const {UploadProgressToast} = require('@web_editor/js/wysiwyg/widgets/upload_progress_toast');
 var widgetsMedia = require('wysiwyg.widgets.media');
 const {_t} = require('web.core');
 

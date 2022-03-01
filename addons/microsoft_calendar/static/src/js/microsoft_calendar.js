@@ -4,11 +4,9 @@ odoo.define('microsoft_calendar.CalendarView', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
-const CalendarView = require('@calendar/js/calendar_view')[Symbol.for("default")];
 const CalendarRenderer = require('@calendar/js/calendar_renderer')[Symbol.for("default")].AttendeeCalendarRenderer;
 const CalendarController = require('@calendar/js/calendar_controller')[Symbol.for("default")];
 const CalendarModel = require('@calendar/js/calendar_model')[Symbol.for("default")];
-const viewRegistry = require('web.view_registry');
 const session = require('web.session');
 
 var _t = core._t;
@@ -263,7 +261,6 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
      */
     _onSyncMicrosoftCalendar: function () {
         var self = this;
-        var context = this.getSession().user_context;
         this.$microsoftButton.prop('disabled', true);
         this.trigger_up('syncMicrosoftCalendar', {
             on_always: function () {

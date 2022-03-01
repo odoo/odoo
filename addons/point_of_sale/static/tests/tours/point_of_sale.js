@@ -3,7 +3,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     "use strict";
 
     var Tour = require('web_tour.tour');
-    var rpc = require('web.rpc');
     var utils = require('web.utils');
     var round_di = utils.round_decimals;
 
@@ -238,18 +237,6 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
             trigger: '.control-button.o_fiscal_position_button:contains("' + fp_name + '")',
             run: function () {},
         }];
-    }
-
-    function generate_keypad_steps(amount_str, keypad_selector) {
-        var i, steps = [], current_char;
-        for (i = 0; i < amount_str.length; ++i) {
-            current_char = amount_str[i];
-            steps.push({
-                content: 'press ' + current_char + ' on payment keypad',
-                trigger: keypad_selector + ' .input-button:contains("' + current_char + '"):visible'
-            });
-        }
-        return steps;
     }
 
     function press_payment_numpad(val) {

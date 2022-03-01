@@ -42,7 +42,6 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
         async fetch() {
             try {
                 let limit, offset;
-                let start, end;
                 // Show orders from the backend.
                 offset =
                     this.nPerPage +

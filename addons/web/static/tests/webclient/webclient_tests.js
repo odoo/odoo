@@ -15,7 +15,7 @@ import { fakeTitleService } from "../helpers/mock_services";
 import { destroy, getFixture, mount, patchWithCleanup, triggerEvent } from "../helpers/utils";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 const mainComponentRegistry = registry.category("main_components");
 const serviceRegistry = registry.category("services");
 

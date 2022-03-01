@@ -7,7 +7,6 @@ import { TimeOffDashboard } from '@hr_holidays/dashboard/time_off_dashboard';
 import { TimeOffCardMobile } from '@hr_holidays/dashboard/time_off_card';
 
 import config from 'web.config';
-import session from 'web.session';
 
 export const TimeOffCalendarRenderer = TimeOffPopoverRenderer.extend({
     async willStart() {

@@ -8,7 +8,6 @@ odoo.define('web.ChangePassword', function (require) {
 
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
-var Dialog = require('web.Dialog');
 var web_client = require('web.web_client');
 
 var _t = core._t;

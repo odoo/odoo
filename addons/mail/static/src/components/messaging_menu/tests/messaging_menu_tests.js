@@ -4,7 +4,6 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
-    nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
 

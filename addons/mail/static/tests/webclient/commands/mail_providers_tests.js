@@ -42,7 +42,7 @@ QUnit.module('mail', {}, function () {
         );
 
         const target = getFixture();
-        const { widget: webClient } = await start({
+        await start({
                 data: this.data,
                 hasChatWindow: true,
                 hasWebClient: true,
@@ -81,7 +81,7 @@ QUnit.module('mail', {}, function () {
             members: [this.data.currentPartnerId],
         });
         const target = getFixture();
-        const { widget: webClient } = await start({
+        await start({
                 data: this.data,
                 hasChatWindow: true,
                 hasWebClient: true,

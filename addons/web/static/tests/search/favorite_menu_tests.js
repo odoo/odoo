@@ -18,7 +18,6 @@ import {
     toggleFavoriteMenu,
     toggleMenuItem,
 } from "./helpers";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, onWillUpdateProps, xml } = owl;
 const serviceRegistry = registry.category("services");

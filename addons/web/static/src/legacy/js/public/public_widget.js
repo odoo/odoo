@@ -5,7 +5,6 @@
  */
 
 import dom from 'web.dom';
-import session from 'web.session';
 import Widget from 'web.Widget';
 
 /**

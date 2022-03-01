@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { _lt } from 'web.core';
 import fieldUtils from 'web.field_utils';
 import { ComponentAdapter, standaloneAdapter } from 'web.OwlCompatibility';
 import { FormViewDialog } from 'web.view_dialogs';
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillUpdateProps, useRef, useState } = owl;
+const { Component, onWillUpdateProps, useState } = owl;
 
 class MilestoneComponent extends Component {
     setup() {

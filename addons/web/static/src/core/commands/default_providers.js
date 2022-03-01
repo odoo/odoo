@@ -9,8 +9,6 @@ import { getVisibleElements } from "@web/core/utils/ui";
 import { DefaultCommandItem } from "./command_palette";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component } = owl;
-
 const commandSetupRegistry = registry.category("command_setup");
 commandSetupRegistry.add("default", {
     emptyMessage: _lt("No command found"),

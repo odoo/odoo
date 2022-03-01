@@ -1,8 +1,6 @@
 odoo.define('website_event.display_timer_widget', function (require) {
 'use strict';
 
-var core = require('web.core');
-var _t = core._t;
 var publicWidget = require('web.public.widget');
 
 publicWidget.registry.displayTimerWidget = publicWidget.Widget.extend({

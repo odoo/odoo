@@ -4,7 +4,7 @@ odoo.define('web.DropdownMenuItem', function (require) {
     const { useListener } = require("@web/core/utils/hooks");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, useExternalListener, useRef, useState } = owl;
+    const { useExternalListener, useRef, useState } = owl;
 
     /**
      * Dropdown menu item

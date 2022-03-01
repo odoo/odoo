@@ -11,8 +11,8 @@ export const FieldNameWithSubTaskCount = FieldChar.extend({
         this._super(...arguments);
         if (this.viewType === 'kanban') {
             // remove click event handler
-            const {click, ...events} = this.events;
-            this.events = events;
+            this.events = { ...this.events };
+            delete this.events.click;
         }
     },
 

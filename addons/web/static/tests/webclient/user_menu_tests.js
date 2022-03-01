@@ -17,7 +17,6 @@ const serviceRegistry = registry.category("services");
 const userMenuRegistry = registry.category("user_menuitems");
 let target;
 let env;
-let userMenu;
 
 QUnit.module("UserMenu", {
     async beforeEach() {
@@ -84,7 +83,7 @@ QUnit.test("can be rendered", async (assert) => {
             },
         };
     });
-    userMenu = await mount(UserMenu, target, { env });
+    await mount(UserMenu, target, { env });
     assert.containsOnce(target, "img.o_user_avatar");
     assert.strictEqual(
         target.querySelector("img.o_user_avatar").dataset.src,
@@ -119,7 +118,7 @@ QUnit.test("can be rendered", async (assert) => {
 QUnit.test("display the correct name in debug mode", async (assert) => {
     patchWithCleanup(odoo, { debug: "1" });
     env = await makeTestEnv();
-    userMenu = await mount(UserMenu, target, { env });
+    await mount(UserMenu, target, { env });
     assert.containsOnce(target, "img.o_user_avatar");
     assert.containsOnce(target, "span.oe_topbar_name");
     assert.strictEqual(target.querySelector(".oe_topbar_name").textContent, "Sauron (test)");
@@ -153,7 +152,7 @@ QUnit.test("can execute the callback of settings", async (assert) => {
 
     env = await makeTestEnv(testConfig);
     userMenuRegistry.add("profile", preferencesItem);
-    userMenu = await mount(UserMenu, target, { env });
+    await mount(UserMenu, target, { env });
     await click(target.querySelector("button.dropdown-toggle"));
     assert.containsOnce(target, ".dropdown-menu .dropdown-item");
     const item = target.querySelector(".dropdown-menu .dropdown-item");

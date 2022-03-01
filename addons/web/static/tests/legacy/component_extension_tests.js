@@ -6,7 +6,7 @@ odoo.define('web.component_extension_tests', function (require) {
     const { destroy, getFixture, mount } = require("@web/../tests/helpers/utils");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, xml } = owl;
+    const { xml } = owl;
     const { useListener } = require("@web/core/utils/hooks");
 
     let target;

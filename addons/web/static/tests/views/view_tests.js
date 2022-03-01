@@ -532,7 +532,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            const view = await makeView({
+            await makeView({
                 serverData,
                 mockRPC: () => {
                     throw new Error("no RPC expected");

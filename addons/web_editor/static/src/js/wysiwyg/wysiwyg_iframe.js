@@ -7,7 +7,6 @@ var core = require('web.core');
 var config = require('web.config');
 
 var qweb = core.qweb;
-var promiseCommon;
 var promiseWysiwyg;
 
 

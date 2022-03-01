@@ -1,4 +1,3 @@
-/* global Sha1 */
 odoo.define('pos_hr.LoginScreen', function (require) {
     'use strict';
 

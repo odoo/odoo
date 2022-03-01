@@ -3,10 +3,8 @@ odoo.define('website_jitsi.chat_room', function (require) {
 
 const config = require("web.config");
 const core = require('web.core');
-const Dialog = require('web.Dialog');
 const publicWidget = require('web.public.widget');
 const QWeb = core.qweb;
-const _t = core._t;
 
 publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
     selector: '.o_wjitsi_room_widget',

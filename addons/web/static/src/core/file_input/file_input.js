@@ -3,7 +3,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, useRef } = owl;
+const { useRef } = owl;
 
 /**
  * Custom file input

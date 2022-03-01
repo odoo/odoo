@@ -3,15 +3,19 @@
 import { click, getFixture, makeDeferred } from "@web/../tests/helpers/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
-import { isItemSelected, toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
+import {
+    isItemSelected,
+    toggleFilterMenu,
+    toggleMenuItem,
+    switchView,
+} from "@web/../tests/search/helpers";
 import { legacyExtraNextTick, nextTick } from "../../helpers/utils";
 import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import * as cpHelpers from "@web/../tests/search/helpers";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 const actionRegistry = registry.category("actions");
 
 let serverData;
@@ -67,11 +71,11 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 4);
         // kanban view is loaded, switch to list view
-        await cpHelpers.switchView(target, "list");
+        await switchView(target, "list");
         await legacyExtraNextTick();
         // here, list view is not ready yet, because def is not resolved
         // switch back to kanban view
-        await cpHelpers.switchView(target, "kanban");
+        await switchView(target, "kanban");
         await legacyExtraNextTick();
         // here, we want the kanban view to reload itself, regardless of list view
         assert.verifySteps([
@@ -415,7 +419,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_control_panel .o_list_buttons");
         // reload (the search_read RPC will be blocked)
         def = testUtils.makeTestPromise();
-        await cpHelpers.switchView(target, "list");
+        await switchView(target, "list");
         await legacyExtraNextTick();
         assert.containsN(target, ".o_list_view .o_data_row", 5);
         assert.containsOnce(target, ".o_control_panel .o_list_buttons");
@@ -480,7 +484,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should still contain the list view");
-        await cpHelpers.switchView(target, "kanban");
+        await switchView(target, "kanban");
         def.resolve();
         await testUtils.nextTick();
         await legacyExtraNextTick();
@@ -517,7 +521,7 @@ QUnit.module("ActionManager", (hooks) => {
         doAction(webClient, 4, { clearBreadcrumbs: true });
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        await cpHelpers.switchView(target, "kanban");
+        await switchView(target, "kanban");
         def.resolve();
         await testUtils.nextTick();
         await legacyExtraNextTick();

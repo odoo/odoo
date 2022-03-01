@@ -4,8 +4,7 @@ import { registry } from "@web/core/registry";
 import { uiService, useActiveElement } from "@web/core/ui/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { destroy, getFixture, mount, nextTick } from "../helpers/utils";
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { getFixture, mount, nextTick } from "../helpers/utils";
 
 const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");

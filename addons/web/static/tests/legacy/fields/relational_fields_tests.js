@@ -2,7 +2,6 @@ odoo.define('web.relational_fields_tests', function (require) {
 "use strict";
 
 var AbstractStorageService = require('web.AbstractStorageService');
-var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 const KanbanView = require('web.KanbanView');
 var ListView = require('web.ListView');

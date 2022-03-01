@@ -7,7 +7,7 @@ odoo.define('point_of_sale.tests.NumberBuffer', function(require) {
     const { mount } = require('@web/../tests/helpers/utils');
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, useState, xml } = owl;
+    const { useState, xml } = owl;
 
     QUnit.module('unit tests for NumberBuffer', {
         before() {},

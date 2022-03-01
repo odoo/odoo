@@ -247,7 +247,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
         this.$content.closest('body').removeClass(this._allClasses).addClass(themeParams.className);
 
         const old_layout = this.$content.find('.o_layout')[0];
-        const $old_layout = $(old_layout);
 
         var $new_wrapper;
         var $newWrapperContent;

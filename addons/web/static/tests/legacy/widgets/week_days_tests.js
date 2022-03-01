@@ -3,7 +3,6 @@ odoo.define('web.week_days_tests', function (require) {
 
     const FormView = require('web.FormView');
     const testUtils = require('web.test_utils');
-    const { _t } = require('web.core');
 
     QUnit.module('WeeklyRecurrence', {
         beforeEach() {

@@ -18,7 +18,6 @@ const { patch, unpatch } = require('web.utils');
 
 const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
 
-const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 const { FieldOne2Many } = relationalFields;
 const AbstractFieldOwl = require('web.AbstractFieldOwl');

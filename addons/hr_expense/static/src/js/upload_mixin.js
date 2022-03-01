@@ -60,7 +60,6 @@ var DocumentUploadMixin = {
      * @param {Event} event
      */
     _onUpload: function (event) {
-        var self = this;
         // If hidden upload form don't exists, create it
         var $formContainer = this.$('.o_content').find('.o_expense_documents_upload');
         if (!$formContainer.length) {

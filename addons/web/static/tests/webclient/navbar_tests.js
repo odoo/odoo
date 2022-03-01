@@ -20,7 +20,7 @@ import {
 } from "../helpers/utils";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
 

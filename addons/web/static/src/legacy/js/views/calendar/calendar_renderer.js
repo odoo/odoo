@@ -5,7 +5,6 @@ odoo.define('web.CalendarRenderer', function (require) {
 var AbstractRenderer = require('web.AbstractRenderer');
 var CalendarPopover = require('web.CalendarPopover');
 var core = require('web.core');
-var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
 var FieldManagerMixin = require('web.FieldManagerMixin');
 var relational_fields = require('web.relational_fields');
@@ -169,7 +168,6 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
      */
     _onFilterCheckAll: function (e) {
         let $input = $(e.currentTarget);
-        let $filter = $(e.currentTarget).closest('.o_calendar_filter_item');
         this.filter_check_all[this.fieldName] = $input.prop('checked');
         this.trigger_up('changeFilter', {
             'fieldName': this.fieldName,

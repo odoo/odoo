@@ -9,7 +9,7 @@ odoo.define('web.FavoriteMenu', function (require) {
     const { useModel } = require('web.Model');
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, useState } = owl;
+    const { useState } = owl;
 
     /**
      * 'Favorites' menu

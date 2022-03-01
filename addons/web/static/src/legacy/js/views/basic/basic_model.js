@@ -5246,7 +5246,7 @@ var BasicModel = AbstractModel.extend({
      *  representing the same res_id record
      */
     _updateDuplicateRecords(recordID, updateFn) {
-        const { model, res_id } = this.localData[recordID];
+        const { res_id } = this.localData[recordID];
         // Get the topmost groupedby m2m list
         const getTopmostID = () => {
             let element = this.localData[recordID];

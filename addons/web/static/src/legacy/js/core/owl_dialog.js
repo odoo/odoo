@@ -1,7 +1,7 @@
 odoo.define('web.OwlDialog', function (require) {
     "use strict";
 
-    const { Component, useRef, onMounted, onWillUnmount } = owl;
+    const { useRef, onMounted, onWillUnmount } = owl;
     const SIZE_CLASSES = {
         'extra-large': 'modal-xl',
         'large': 'modal-lg',

@@ -6,7 +6,6 @@ var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
-var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
 var ListView = require('web.ListView');
@@ -17,7 +16,7 @@ var field_registry = require('web.field_registry');
 const  makeTestEnvironment = require("web.test_env");
 const { makeLegacyCommandService } = require("@web/legacy/utils");
 const { registry } = require("@web/core/registry");
-const { getFixture, legacyExtraNextTick, patchWithCleanup, triggerHotkey, nextTick, click } = require("@web/../tests/helpers/utils");
+const { getFixture, legacyExtraNextTick, triggerHotkey, nextTick, click } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
 var createView = testUtils.createView;
@@ -6345,7 +6344,6 @@ QUnit.module('basic_fields', {
 
     QUnit.test('phone field in editable list view on normal screens', async function (assert) {
         assert.expect(8);
-        var doActionCount = 0;
 
         var list = await createView({
             View: ListView,

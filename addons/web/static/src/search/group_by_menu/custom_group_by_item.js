@@ -3,7 +3,7 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, useState } = owl;
+const { useState } = owl;
 
 export class CustomGroupByItem extends LegacyComponent {
     setup() {
