@@ -60,18 +60,14 @@ class StockPicking(models.Model):
                 })
                 change_qty.with_context(skip_activity=True).change_prod_qty()
             # Create backorder MO for each move lines
-            for move_line in move.move_line_ids:
+            amounts = [move_line.qty_done for move_line in move.move_line_ids]
+            len_amounts = len(amounts)
+            productions = production._split_productions({production: amounts}, set_consumed_qty=True)
+            for production, move_line in zip(productions, move.move_line_ids):
                 if move_line.lot_id:
                     production.lot_producing_id = move_line.lot_id
-                production.qty_producing = move_line.product_uom_id._compute_quantity(move_line.qty_done, production.product_uom_id)
-                production._set_qty_producing()
-                production.subcontracting_has_been_recorded = True
-                if move_line != move.move_line_ids[-1]:
-                    backorder = production._split_productions()[1:]
-                    # The move_dest_ids won't be set because the _split filter out done move
-                    backorder.move_finished_ids.filtered(lambda mo: mo.product_id == move.product_id).move_dest_ids = production.move_finished_ids.filtered(lambda mo: mo.product_id == move.product_id).move_dest_ids
-                    production.product_qty = production.qty_producing
-                    production = backorder
+                production.qty_producing = production.product_qty
+            productions[:len_amounts].subcontracting_has_been_recorded = True
 
         for picking in self:
             productions_to_done = picking._get_subcontract_production()._subcontracting_filter_to_done()
