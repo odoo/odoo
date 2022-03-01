@@ -142,6 +142,7 @@ QUnit.module("Fields", (hooks) => {
                         display_name: { string: "Displayed name", type: "char" },
                         turtle_foo: { string: "Foo", type: "char" },
                         turtle_bar: { string: "Bar", type: "boolean", default: true },
+                        turtle_description: { string: "Description", type: "text" },
                         turtle_int: { string: "int", type: "integer", sortable: true },
                         turtle_trululu: {
                             string: "Trululu",
@@ -219,6 +220,13 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
+
+        // patchWithCleanup(AutoComplete, {
+        //     delay: 0,
+        // });
+        // patchWithCleanup(browser, {
+        //     setTimeout: (fn) => fn(),
+        // });
     });
 
     QUnit.module("One2ManyField");
@@ -3151,8 +3159,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    // heerererer
-    QUnit.skipWOWL("one2many list (non editable): edition", async function (assert) {
+    QUnit.test("one2many list (non editable): edition", async function (assert) {
         assert.expect(12);
 
         let nbWrite = 0;
@@ -3219,7 +3226,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(nbWrite, 1, "should have write the changes in DB");
     });
 
-    QUnit.skipWOWL("one2many list (editable): edition", async function (assert) {
+    QUnit.test("one2many list (editable): edition", async function (assert) {
         assert.expect(7);
 
         serverData.models.partner.records[0].p = [2, 4];
@@ -3231,7 +3238,8 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="p">
                         <tree editable="top">
-                            <field name="display_name"/><field name="qux"/>
+                            <field name="display_name"/>
+                            <field name="qux"/>
                         </tree>
                         <form>
                             <field name="display_name"/>
@@ -3244,15 +3252,13 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_field_x2many_list_row_add");
 
         await click(target.querySelector(".o_list_renderer tbody td"));
-        assert.containsOnce(target, ".o_form_view_dialog .o_form_editable"); // not sure about this
 
+        assert.containsOnce(target, ".o_form_view .o_form_editable"); // not sure about this
         assert.containsOnce(target, ".o_field_x2many_list_row_add");
-
-        // edit existing subrecord
-        await click(target.querySelector(".o_list_renderer tbody td"));
         assert.containsNone(target, ".modal");
+        // WOWL do we want this or another click?
         assert.hasClass(target.querySelector(".o_list_renderer tbody tr"), "o_selected_row");
-        await editInput(target, ".o_list_renderer input", "new name");
+        await editInput(target, '.o_list_renderer div[name="display_name"] input', "new name");
 
         const secondRow = target.querySelectorAll(".o_list_renderer tbody tr")[1];
         await click(secondRow.querySelector("td"));
@@ -3263,10 +3269,10 @@ QUnit.module("Fields", (hooks) => {
         // TODO when 'Add an item' will be implemented
     });
 
-    QUnit.skipWOWL("one2many list (editable): edition, part 2", async function (assert) {
+    QUnit.test("one2many list (editable): edition, part 2", async function (assert) {
         assert.expect(8);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3281,56 +3287,50 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
-                    assert.strictEqual(
-                        args.args[1].p[0][0],
-                        0,
-                        "should send a 0 command for field p"
-                    );
-                    assert.strictEqual(
-                        args.args[1].p[1][0],
-                        0,
-                        "should send a second 0 command for field p"
-                    );
+                    assert.deepEqual(args.args[1].p, [
+                        [
+                            0,
+                            "virtual_1",
+                            {
+                                foo: "kartoffel",
+                            },
+                        ],
+                        [
+                            0,
+                            "virtual_2",
+                            {
+                                foo: "gemuse",
+                            },
+                        ],
+                    ]);
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         // edit mode, then click on Add an item and enter a value
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.editInput(form.$(".o_selected_row > td input"), "kartoffel");
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await editInput(target, ".o_selected_row > td input", "kartoffel");
+        assert.strictEqual(target.querySelector("td .o_field_char input").value, "kartoffel");
 
         // click again on Add an item
-        await click(form.$(".o_field_x2many_list_row_add a"));
-        assert.strictEqual(
-            form.$("td:contains(kartoffel)").length,
-            1,
-            "should have one td with the new value"
-        );
-        assert.containsOnce(form, ".o_selected_row > td input", "should have one other new td");
-        assert.containsN(form, "tr.o_data_row", 2, "should have 2 data rows");
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        assert.strictEqual(target.querySelector("td .o_field_char").innerText, "kartoffel");
+        assert.containsOnce(target, ".o_selected_row > td input");
+        assert.containsN(target, "tr.o_data_row", 2);
 
         // enter another value and save
-        await testUtils.fields.editInput(form.$(".o_selected_row > td input"), "gemuse");
+        await editInput(target, ".o_selected_row > td input", "gemuse");
         await clickSave(target);
-        assert.containsN(form, "tr.o_data_row", 2, "should have 2 data rows");
-        assert.strictEqual(
-            form.$("td:contains(kartoffel)").length,
-            1,
-            "should have one td with the new value"
-        );
-        assert.strictEqual(
-            form.$("td:contains(gemuse)").length,
-            1,
-            "should have one td with the new value"
-        );
+        assert.containsN(target, "tr.o_data_row", 2);
+        assert.strictEqual(target.querySelector("td .o_field_char").innerText, "kartoffel");
+        assert.strictEqual(target.querySelectorAll("td .o_field_char")[1].innerText, "gemuse");
     });
 
-    QUnit.skipWOWL("one2many list (editable): edition, part 3", async function (assert) {
+    QUnit.test("one2many list (editable): edition, part 3", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3348,23 +3348,22 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // edit mode, then click on Add an item, enter value in turtle_foo and Add an item again
-        assert.containsOnce(form, "tr.o_data_row", "should have 1 data rows");
+        assert.containsOnce(target, "tr.o_data_row", "should have 1 data rows");
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
-        await click(form.$(".o_field_x2many_list_row_add a"));
-        assert.containsN(form, "tr.o_data_row", 3, "should have 3 data rows");
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await editInput(target, 'div[name="turtle_foo"] input', "nora");
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        assert.containsN(target, "tr.o_data_row", 3);
 
         // cancel the edition
         await clickDiscard(target);
-        assert.containsNone(form, ".modal", "should not open modal");
-        assert.containsOnce(form, "tr.o_data_row", "should have 1 data rows");
+        assert.containsNone(target, ".modal");
+        assert.containsOnce(target, "tr.o_data_row");
     });
 
     QUnit.skipWOWL("one2many list (editable): edition, part 4", async function (assert) {
         assert.expect(3);
-        var i = 0;
-
+        let i = 0;
         serverData.models.turtle.onchanges = {
             turtle_trululu: function (obj) {
                 if (i) {
@@ -3373,8 +3372,9 @@ QUnit.module("Fields", (hooks) => {
                 i++;
             },
         };
+        serverData["partner,false,"];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3393,23 +3393,15 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // edit mode, then click on Add an item
-        assert.containsNone(form, "tr.o_data_row", "should have 0 data rows");
+        assert.containsNone(target, "tr.o_data_row");
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
-        assert.strictEqual(
-            form.$("textarea").val(),
-            "",
-            "field turtle_description should be empty"
-        );
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        assert.strictEqual(target.querySelector(".o_data_row textarea").value, "");
 
         // add a value in the turtle_trululu field to trigger an onchange
         await testUtils.fields.many2one.clickOpenDropdown("turtle_trululu");
         await testUtils.fields.many2one.clickHighlightedItem("turtle_trululu");
-        assert.strictEqual(
-            form.$("textarea").val(),
-            "Some Description",
-            "field turtle_description should be set to the result of the onchange"
-        );
+        assert.strictEqual(target.querySelector(".o_data_row textarea").value, "Some Description");
     });
 
     QUnit.skipWOWL(
@@ -3420,7 +3412,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.turtle.fields.turtle_foo.required = true;
             delete serverData.models.turtle.fields.turtle_foo.default;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -3439,21 +3431,20 @@ QUnit.module("Fields", (hooks) => {
                     if (args.method) {
                         assert.step(args.method);
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             // edit mode, then click on Add an item, then click elsewhere
-            assert.containsNone(form, "tr.o_data_row", "should have 0 data rows");
+            assert.containsNone(target, "tr.o_data_row");
             await clickEdit(target);
-            await click(form.$(".o_field_x2many_list_row_add a"));
-            await click(form.$("label.o_form_label").first());
-            assert.containsNone(form, "tr.o_data_row", "should still have 0 data rows");
+            await click(target.querySelector(".o_field_x2many_list_row_add a"));
+            await click(target.querySelector("label.o_form_label"));
+            assert.containsNone(target, "tr.o_data_row");
 
             // click on Add an item again, then click on save
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await click(target.querySelector(".o_field_x2many_list_row_add a"));
             await clickSave(target);
-            assert.containsNone(form, "tr.o_data_row", "should still have 0 data rows");
+            assert.containsNone(target, "tr.o_data_row");
 
             assert.verifySteps(["read", "onchange", "onchange"]);
         }

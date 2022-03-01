@@ -299,8 +299,10 @@ export class Record extends DataPoint {
             this.resId = params.resId;
         } else if (state) {
             this.resId = state.resId;
-        } else {
+        }
+        if (!this.resId) {
             this.resId = false;
+            this.virtualId = `virtual_${this.model.nextVirtualId++}`;
         }
         this.resIds =
             (params.resIds ? toRaw(params.resIds) : null) || // FIXME WOWL reactivity
@@ -320,8 +322,8 @@ export class Record extends DataPoint {
         this._onChangePromise = Promise.resolve({});
         this._domains = {};
 
-        this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
         this.mode = params.mode || (this.resId ? state.mode || "readonly" : "edit");
+        this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
     }
 
     get evalContext() {
@@ -528,6 +530,11 @@ export class Record extends DataPoint {
                 onChanges: () => {
                     // this.onChanges(); wait
                     this._changes[fieldName] = list;
+                },
+                onRecordWillSwitchMode: (record, mode) => {
+                    if (mode === "edit") {
+                        this.switchMode("edit");
+                    }
                 },
             });
             this._values[fieldName] = list;
@@ -1613,10 +1620,12 @@ export class StaticList extends DataPoint {
     constructor(model, params, state) {
         super(...arguments);
 
-        this.isOne2Many = params.field.type === "one2many";
+        this.isOne2Many = params.field.type === "one2many"; // bof
+
         this.resIds = [...params.resIds] || [];
         /** @type {Record[]} */
         this.records = [];
+
         this._cache = {};
         this.views = params.views || {};
         this.viewMode = params.viewMode;
@@ -1629,10 +1638,14 @@ export class StaticList extends DataPoint {
         this.onChanges = params.onChanges || (() => {});
 
         this._commands = [];
-        this._changes = [];
+
+        this.validated = {};
 
         this.editedRecord = null;
         this.onRecordWillSwitchMode = async (record, mode) => {
+            if (params.onRecordWillSwitchMode) {
+                params.onRecordWillSwitchMode(record, mode);
+            }
             const editedRecord = this.editedRecord;
             this.editedRecord = null;
             if (editedRecord) {
@@ -1653,6 +1666,9 @@ export class StaticList extends DataPoint {
         this.resIds.splice(i, 1);
         const j = this.records.findIndex((r) => r.resId === resId);
         this.records.splice(j, 1);
+        if (this.editedRecord === record) {
+            this.editedRecord = null;
+        }
     }
 
     async add(context) {
@@ -1666,10 +1682,13 @@ export class StaticList extends DataPoint {
             views: this.views,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
         });
+        record._onWillSwitchMode(record, "edit"); // bof
         await record.load();
+        this._cache[record.virtualId] = record;
         this.records.push(record);
-        this.resIds.push(record.id);
+        this.resIds.push(record.virtualId);
         this.limit = this.limit + 1; // might be not good
+        this.validated[record.virtualId] = false;
         this.model.notify();
     }
 
@@ -1795,12 +1814,9 @@ export class StaticList extends DataPoint {
     }
 
     /**
-     * @returns {Array[] | null}
+     * @returns {Array[]}
      */
     getCommands() {
-        if (!this._commands.length) {
-            return null;
-        }
         const commands = [];
         if (this.isOne2Many) {
             for (const resId of this.resIds) {
@@ -1808,8 +1824,12 @@ export class StaticList extends DataPoint {
                 let command;
                 if (record) {
                     const changes = record.getChanges();
-                    if (Object.keys(changes).length) {
-                        command = Commands.update(this.resId, changes);
+                    if (resId !== record.virtualId) {
+                        if (Object.keys(changes).length) {
+                            command = Commands.update(resId, changes);
+                        }
+                    } else {
+                        command = Commands.create(record.virtualId, changes);
                     }
                 }
                 if (command) {
@@ -1830,7 +1850,9 @@ export class StaticList extends DataPoint {
         for (const record of this.records) {
             record.discard();
         }
-        this._changes = [];
+        this._commands = [];
+        this.resIds = this.resIds.filter((id) => typeof id === "number");
+        this.records = this.records.filter((r) => r.resId);
     }
 
     // -------------------------------------------------------------------------
@@ -1842,7 +1864,6 @@ export class StaticList extends DataPoint {
             case "REPLACE_WITH": {
                 this.onChanges();
                 this.resIds = command.resIds;
-                this._changes = [[6, false, command.resIds]];
                 this._commands = [[6, false, command.resIds]];
                 await this.load();
                 break;
@@ -1863,6 +1884,8 @@ export class RelationalModel extends Model {
         this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();
         this.mutex = new Mutex();
+
+        this.nextVirtualId = 1;
 
         this.onCreate = params.onCreate;
         this.quickCreateView = params.quickCreateView;

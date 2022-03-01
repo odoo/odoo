@@ -32,14 +32,11 @@ export class X2ManyField extends Component {
     }
 
     get rendererProps() {
-        const subViewInfo = this.fieldInfo.views[this.viewMode];
+        const archInfo = this.fieldInfo.views[this.viewMode];
         return {
             activeActions: this.activeActions,
-            archInfo: {
-                ...subViewInfo,
-                editable: this.props.record.isInEdition && subViewInfo.editable,
-            },
-            fields: Object.assign({}, this.props.fields, subViewInfo.fields), // WOWL is this necessary?
+            archInfo,
+            fields: Object.assign({}, this.props.fields, archInfo.fields), // WOWL is this necessary?
             list: this.list,
             openRecord: this.openRecord.bind(this),
             onAdd: this.onAdd.bind(this),
@@ -129,9 +126,11 @@ export class X2ManyField extends Component {
         this.dialogService.add(FormViewDialog, {
             archInfo: form, // FIXME: might not be there
             record: newRecord,
-            save() {
+            save: () => {
                 Object.assign(record._values, newRecord._values);
                 Object.assign(record._changes, newRecord._changes); // don't work with x2many inside,...
+                record.data = { ...record._values, ...record._changes };
+                record.model.notify();
             },
             title: this.props.record.activeFields[this.props.name].string,
         });

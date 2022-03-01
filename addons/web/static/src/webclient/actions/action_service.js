@@ -463,7 +463,6 @@ function makeActionManager(env) {
             });
         }
         // END LEGACY CODE COMPATIBILITY
-
         return {
             props: viewProps,
             config: {

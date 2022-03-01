@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { Many2OneField } from "@web/fields/many2one_field";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import {
@@ -253,7 +252,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -315,7 +314,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -362,7 +361,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.int_field.default = 14;
         serverData.models.partner.fields.trululu.default = 2;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -397,7 +396,7 @@ QUnit.module("Fields", (hooks) => {
                 `,
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -446,7 +445,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("many2ones in form views with show_address", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -498,7 +497,7 @@ QUnit.module("Fields", (hooks) => {
             "second record": "\nSecond\nRecord",
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -572,7 +571,7 @@ QUnit.module("Fields", (hooks) => {
                 `,
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -632,7 +631,7 @@ QUnit.module("Fields", (hooks) => {
                 `,
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
