@@ -4948,6 +4948,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         await this._super(...arguments);
 
         if (this._filesize === undefined) {
+            this.$weight.addClass('d-none');
             await this._applyOptions(false);
         }
         if (this._filesize !== undefined) {
@@ -5115,6 +5116,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         if (!this._isImageSupportedForProcessing(img)) {
             this.originalId = null;
+            this._filesize = undefined;
             return;
         }
         const dataURL = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
