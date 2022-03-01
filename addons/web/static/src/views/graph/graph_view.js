@@ -15,7 +15,6 @@ import { GraphModel } from "./graph_model";
 import { GraphRenderer } from "./graph_renderer";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component } = owl;
 const viewRegistry = registry.category("views");
 
 export class GraphView extends LegacyComponent {

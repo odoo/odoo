@@ -106,7 +106,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 return;
             }
             var url = '/website/add/' + encodeURIComponent(val);
-            const res = wUtils.sendRequest(url, {
+            wUtils.sendRequest(url, {
                 add_menu: $dialog.find('input[type="checkbox"]').is(':checked') || '',
             });
             return new Promise(function () {});

@@ -4,7 +4,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, useRef, useChildSubEnv, xml } = owl;
+const { useRef, useChildSubEnv, xml } = owl;
 
 export class Dialog extends LegacyComponent {
     setup() {

@@ -8,7 +8,7 @@ import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler } from "@web/core/utils/components";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onWillDestroy, useExternalListener, useEffect, useRef } = owl;
+const { onWillDestroy, useExternalListener, useEffect, useRef } = owl;
 const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;

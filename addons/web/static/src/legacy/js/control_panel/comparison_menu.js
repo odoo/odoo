@@ -7,8 +7,6 @@ odoo.define("web.ComparisonMenu", function (require) {
     const { useModel } = require("web.Model");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component } = owl;
-
     class ComparisonMenu extends LegacyComponent {
         setup() {
             this.icon = FACET_ICONS.comparison;

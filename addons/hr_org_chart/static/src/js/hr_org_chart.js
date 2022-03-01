@@ -38,7 +38,6 @@ var FieldOrgChart = AbstractField.extend({
      * @returns {Promise}
      */
     _getOrgData: function () {
-        var self = this;
         return this.dm.add(this._rpc({
             route: '/hr/get_org_chart',
             params: {
@@ -166,7 +165,6 @@ var FieldOrgChart = AbstractField.extend({
     _onEmployeeSubRedirect: function (event) {
         event.preventDefault();
         var employee_id = parseInt($(event.currentTarget).data('employee-id'));
-        var employee_name = $(event.currentTarget).data('employee-name');
         var type = $(event.currentTarget).data('type') || 'direct';
         var self = this;
         if (employee_id) {

@@ -6,8 +6,6 @@ odoo.define('base_import.ImportMenu', function (require) {
     const { useModel } = require('web.Model');
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component } = owl;
-
     /**
      * Import Records menu
      *

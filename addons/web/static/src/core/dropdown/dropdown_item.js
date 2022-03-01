@@ -2,8 +2,6 @@
 import { DROPDOWN } from "./dropdown";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component } = owl;
-
 /**
  * @enum {string}
  */

@@ -2,8 +2,6 @@
 
 import emojis from '@mail/js/emojis';
 import MailEmojisMixin from '@mail/js/emojis_mixin';
-
-import basicFields from 'web.basic_fields';
 import core from 'web.core';
 
 var _onEmojiClickMixin = MailEmojisMixin._onEmojiClick;

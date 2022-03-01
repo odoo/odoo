@@ -9,8 +9,6 @@ odoo.define('account.hierarchy.selection', function (require) {
 
     var FieldSelection = relational_fields.FieldSelection;
 
-    var qweb = core.qweb;
-
     var HierarchySelection = FieldSelection.extend({
         _renderEdit: function () {
             var self = this;

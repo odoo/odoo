@@ -8,7 +8,7 @@ import { ErrorHandler } from "@web/core/utils/components";
 import { session } from '@web/session';
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, useEffect } = owl;
+const { useEffect } = owl;
 
 export class ProjectSharingWebClient extends LegacyComponent {
     setup() {

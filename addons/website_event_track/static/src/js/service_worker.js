@@ -11,7 +11,7 @@ const MAX_CACHE_QUOTA = 0.5;
 // eslint-disable-next-line no-undef
 const CDN_URL = __ODOO_CDN_URL__; // {string|undefined} the cdn_url configured for the website if activated
 
-const { Store, set, get, del } = idbKeyval;
+const { Store, set, get } = idbKeyval;
 const pendingRequestsQueueName = `${PREFIX}-pending-requests`;
 const cacheName = `${PREFIX}-cache`;
 const syncStore = new Store(`${PREFIX}-sync-db`, `${PREFIX}-sync-store`);

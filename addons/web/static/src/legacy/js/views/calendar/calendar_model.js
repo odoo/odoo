@@ -316,7 +316,6 @@ return AbstractModel.extend({
                 this.data.end_date = this.data.start_date.clone().add(5, 'week').day(this.week_stop).endOf('day');
                 break;
             case 'week':
-                var weekStart = this.data.start_date.clone().startOf('week');
                 var weekStartDay = this.week_start;
                 if (this.data.start_date.day() < this.week_start) {
                     // The week's first day is after our current day

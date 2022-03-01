@@ -1,7 +1,6 @@
 odoo.define('web.KanbanColumn', function (require) {
 "use strict";
 
-var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var Dialog = require('web.Dialog');

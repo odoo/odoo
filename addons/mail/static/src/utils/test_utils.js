@@ -21,7 +21,6 @@ import AbstractStorageService from 'web.AbstractStorageService';
 import RamStorage from 'web.RamStorage';
 import {
     createView,
-    makeTestPromise,
     mock,
 } from 'web.test_utils';
 import Widget from 'web.Widget';

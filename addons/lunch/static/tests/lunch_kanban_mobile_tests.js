@@ -10,8 +10,6 @@ QUnit.module('Views');
 
 QUnit.module('LunchKanbanView Mobile', {
     beforeEach() {
-        const PORTAL_GROUP_ID = 1234;
-
         this.data = {
             'product': {
                 fields: {

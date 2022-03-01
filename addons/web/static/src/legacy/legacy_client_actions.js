@@ -10,7 +10,7 @@ import { breadcrumbsToLegacy } from "./backend_utils";
 import { useLegacyRefs } from "./utils";
 import { LegacyComponent } from "./legacy_component";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 const actionRegistry = registry.category("actions");
 
 const legacyClientActionTemplate = xml`

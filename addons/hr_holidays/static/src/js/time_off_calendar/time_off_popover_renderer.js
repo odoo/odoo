@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { qweb as QWeb }from 'web.core';
-import config from 'web.config';
 import CalendarRenderer from "web.CalendarRenderer";
 import { TimeOffCalendarPopover } from "./time_off_calendar_popover";
 

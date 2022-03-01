@@ -56,7 +56,7 @@ function checkGlobalObjectsIntegrity() {
         const finals = objects.map((obj) => stringifyObjectValues(obj[0], obj[1]));
         for (const index in initials) {
             if (initials[index] !== finals[index]) {
-                const [global, keys] = objects[index];
+                const [, /* global */ keys] = objects[index];
                 throw new Error(
                     `The keys "${keys}" of some global objects (usually session or _t) may have been polluted by the test "${infos.testName}" in module "${infos.moduleName}"`
                 );

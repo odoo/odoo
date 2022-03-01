@@ -14,7 +14,6 @@ odoo.define('web.relational_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
-var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 const ControlPanelX2Many = require('web.ControlPanelX2Many');
 var core = require('web.core');
@@ -2793,7 +2792,8 @@ var FieldMany2ManyTagsAvatar = FieldMany2ManyTags.extend({
 
 // Remove event handlers on this widget to ensure that the kanban 'global
 // click' opens the clicked record
-const { click, ...M2MAvatarMixinEvents } = AbstractField.prototype.events;
+const M2MAvatarMixinEvents = { ...AbstractField.prototype.events };
+delete M2MAvatarMixinEvents.click;
 const M2MAvatarMixin = {
     visibleAvatarCount: 3, // number of visible avatar
     events: M2MAvatarMixinEvents,

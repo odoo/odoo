@@ -22,7 +22,7 @@ import {
 import { makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
 const serviceRegistry = registry.category("services");

@@ -3,7 +3,7 @@
     import { Model, useModel } from "web.Model";
     import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    const { Component, onMounted, onWillStart, onWillUpdateProps, useRef, useState, useSubEnv } = owl;
+    const { onMounted, onWillStart, onWillUpdateProps, useRef, useState, useSubEnv } = owl;
 
     /**
      * Search panel

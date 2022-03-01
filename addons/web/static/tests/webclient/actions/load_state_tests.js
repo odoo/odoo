@@ -28,7 +28,7 @@ import {
 import { errorService } from "@web/core/errors/error_service";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 
 let serverData;
 let target;

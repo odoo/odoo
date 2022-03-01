@@ -22,7 +22,7 @@ import {
 } from "../../helpers/utils";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 
 let env;
 let target;

@@ -3,8 +3,6 @@ odoo.define('point_of_sale.utils', function (require) {
 
     const { ConnectionAbortedError, ConnectionLostError } = require('@web/core/network/rpc_service');
 
-    const { EventBus } = owl;
-
     function getFileAsText(file) {
         return new Promise((resolve, reject) => {
             if (!file) {

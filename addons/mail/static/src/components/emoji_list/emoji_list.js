@@ -5,8 +5,6 @@ import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import emojis from '@mail/js/emojis';
 import { LegacyComponent } from '@web/legacy/legacy_component';
 
-const { Component } = owl;
-
 export class EmojiList extends LegacyComponent {
 
     /**

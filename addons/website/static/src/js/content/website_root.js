@@ -296,7 +296,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
             return;
         }
 
-        var self = this;
         var $data = $(ev.currentTarget).parents(".js_publish_management:first");
         this._rpc({
             route: $data.data('controller') || '/website/publish',

@@ -7,7 +7,7 @@ odoo.define('web.pager_tests', function (require) {
 
     const { createComponent } = testUtils;
 
-    const { Component, xml, useState } = owl;
+    const { xml, useState } = owl;
 
     class PagerController extends LegacyComponent {
         setup() {

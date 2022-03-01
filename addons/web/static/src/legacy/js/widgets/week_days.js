@@ -6,7 +6,7 @@ odoo.define('web.WeekDays', function (require) {
     const utils = require('web.utils');
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, onWillUpdateProps, useState } = owl;
+    const { onWillUpdateProps, useState } = owl;
 
     class WeekDays extends LegacyComponent {
         setup() {

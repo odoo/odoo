@@ -19,7 +19,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ClientErrorDialog } from "@web/core/errors/error_dialogs";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onMounted, xml } = owl;
+const { onMounted, xml } = owl;
 
 let serverData;
 let target;

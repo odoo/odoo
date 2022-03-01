@@ -18,8 +18,6 @@ import { ComponentWrapper } from 'web.OwlCompatibility';
 import mvc from 'web.mvc';
 import session from 'web.session';
 
-const { Component } = owl;
-
 var AbstractController = mvc.Controller.extend(ActionMixin, {
     custom_events: _.extend({}, ActionMixin.custom_events, {
         navigation_move: '_onNavigationMove',

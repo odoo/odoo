@@ -2,7 +2,6 @@ odoo.define('web.CustomFilterItem', function (require) {
     "use strict";
 
     const { Dropdown } = require("@web/core/dropdown/dropdown");
-    const { DropdownItem } = require("@web/core/dropdown/dropdown_item");
     const { DatePicker, DateTimePicker } = require('web.DatePickerOwl');
     const Domain = require('web.Domain');
     const { FIELD_OPERATORS, FIELD_TYPES } = require('web.searchUtils');
@@ -10,7 +9,7 @@ odoo.define('web.CustomFilterItem', function (require) {
     const { useModel } = require('web.Model');
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, useState } = owl;
+    const { useState } = owl;
 
     /**
      * Filter generator menu

@@ -1,7 +1,6 @@
 odoo.define('hr_expense.tests.tours', function (require) {
     "use strict";
 
-    var core = require('web.core');
     var tour = require('web_tour.tour');
 
     tour.register('hr_expense_test_tour', {

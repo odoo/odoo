@@ -20,7 +20,6 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
      */
     _onSendValidationEmailClick: function (ev) {
         ev.preventDefault();
-        var self = this;
         var $element = $(ev.currentTarget);
         this._rpc({
             route: '/profile/send_validation_email',

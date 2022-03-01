@@ -13,7 +13,6 @@ odoo.define('web.ControlPanel', function (require) {
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const {
-        Component,
         onMounted,
         onPatched,
         onWillDestroy,

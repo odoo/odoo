@@ -1,17 +1,8 @@
 odoo.define('l10n_sa_pos.pos', function (require) {
 "use strict";
 
-const { Gui } = require('point_of_sale.Gui');
 var { Order } = require('point_of_sale.models');
-var rpc = require('web.rpc');
-var session = require('web.session');
-var core = require('web.core');
-var utils = require('web.utils');
 var Registries = require('point_of_sale.Registries');
-
-var _t = core._t;
-var round_di = utils.round_decimals;
-
 
 const PosL10nSAOrder = (Order) => class PosL10nSAOrder extends Order {
     export_for_printing() {

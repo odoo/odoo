@@ -134,11 +134,6 @@ var browseTalksSteps = [{
     trigger: 'a:contains("Talks")',
 }];
 
-var browseExhibitorsSteps = [{
-    content: 'Browse Exhibitors',
-    trigger: 'a:contains("Exhibitors")',
-}];
-
 var browseMeetSteps = [{
     content: 'Browse Meet',
     trigger: 'a:contains("Community")',

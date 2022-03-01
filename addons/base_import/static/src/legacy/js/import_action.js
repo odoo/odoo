@@ -2,9 +2,7 @@ odoo.define('base_import.import', function (require) {
 "use strict";
 
 var AbstractAction = require('web.AbstractAction');
-var config = require('web.config');
 var core = require('web.core');
-var Dialog = require('web.Dialog');
 var session = require('web.session');
 var time = require('web.time');
 var fieldUtils = require('web.field_utils');
@@ -386,7 +384,6 @@ var DataImport = AbstractAction.extend({
         this.$('.oe_import_sheet').val('');
 
         this.$form.removeClass('oe_import_preview oe_import_error');
-        var import_toggle = false;
         var file = this.$('input.oe_import_file')[0].files[0];
         // some platforms send text/csv, application/csv, or other things if Excel is prevent
         var isCSV = ((file.type && _.last(file.type.split('/')) === "csv") || ( _.last(file.name.split('.')) === "csv"))

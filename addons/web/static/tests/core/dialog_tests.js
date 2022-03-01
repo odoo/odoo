@@ -10,7 +10,7 @@ import { click, destroy, getFixture, mount } from "../helpers/utils";
 import { makeFakeDialogService } from "../helpers/mock_services";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, useEffect, useState, xml } = owl;
+const { useEffect, useState, xml } = owl;
 const serviceRegistry = registry.category("services");
 let parent;
 let target;
