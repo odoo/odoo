@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models
 
-
+from odoo.tools.sql import column_exists, create_column
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
@@ -16,6 +16,17 @@ class StockMove(models.Model):
         for move in moves_with_weight:
             move.weight = (move.product_qty * move.product_id.weight)
         (self - moves_with_weight).weight = 0
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, 'stock_move', 'weight'):
+            create_column(self.env.cr, 'stock_move', 'weight', 'float')
+            self.env.cr.execute("""
+                UPDATE stock_move move
+                SET weight = COALESCE(product_qty, 0) * GREATEST(product.weight , 0)
+                FROM product_product as product
+                WHERE product.id = move.product_id
+            """)
+        return super()._auto_init()
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()

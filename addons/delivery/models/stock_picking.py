@@ -5,7 +5,7 @@ import json
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-
+from odoo.tools.sql import column_exists, create_column
 
 
 class StockQuantPackage(models.Model):
@@ -121,6 +121,31 @@ class StockPicking(models.Model):
     def _cal_weight(self):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, 'stock_picking', 'weight'):
+            create_column(self.env.cr, 'stock_picking', 'weight', 'float')
+            if not column_exists(self.env.cr, 'stock_move', 'weight'):
+                create_column(self.env.cr, 'stock_move', 'weight', 'float')
+                self.env.cr.execute("""
+                    UPDATE stock_move move
+                    SET weight = COALESCE(product_qty, 0) * GREATEST(product.weight , 0)
+                    FROM product_product as product
+                    WHERE product.id = move.product_id
+                """)
+            self.env.cr.execute("""
+                WITH move_weight as (
+                    SELECT SUM(move.weight) as weight, move.picking_id as picking_id
+                    FROM stock_move as move
+                    WHERE move.state != 'cancel'
+                    GROUP BY picking_id
+                )
+                UPDATE stock_picking picking
+                SET weight = move_weight.weight
+                FROM move_weight
+                WHERE move_weight.picking_id = picking.id
+            """)
+        return super()._auto_init()
 
     def _send_confirmation_email(self):
         for pick in self:
