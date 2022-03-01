@@ -181,6 +181,78 @@ QUnit.test("custom debounce delay", async (assert) => {
     assert.verifySteps(["0", "200", "100", "0"]);
 });
 
+QUnit.test("concurrency with custom debounce delay", async (assert) => {
+    const def = makeDeferred();
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: async (later, delay) => {
+            if (delay === 200) {
+                await def;
+            }
+            later();
+        },
+    });
+
+    await mount(TestComponent, target, { env });
+    const configByNamespace = {
+        "@": {
+            debounceDelay: 200,
+        },
+        "#": {
+            debounceDelay: 100,
+        },
+    };
+    const action = () => {};
+    const providers = [
+        {
+            namespace: "@",
+            provide: () => [
+                {
+                    name: "Command@",
+                    action,
+                },
+            ],
+        },
+        {
+            namespace: "#",
+            provide: () => [
+                {
+                    name: "Command#",
+                    action,
+                },
+            ],
+        },
+    ];
+    const config = {
+        configByNamespace,
+        providers,
+    };
+    env.services.dialog.add(CommandPaletteDialog, {
+        config,
+    });
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsNone(target, ".o_command");
+    await editSearchBar("@");
+    await nextTick();
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        []
+    );
+    await editSearchBar("#");
+    await nextTick();
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["Command#"]
+    );
+    def.resolve();
+    await nextTick();
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["Command#"]
+    );
+});
+
 QUnit.test("custom placeholder", async (assert) => {
     await mount(TestComponent, target, { env });
     const config = {
