@@ -677,7 +677,7 @@ class AccountMove(models.Model):
             self.line_ids -= to_remove
 
         # ==== Mount base lines ====
-        for line in self.line_ids.filtered(lambda line: not line.tax_repartition_line_id):
+        for line in self.line_ids.filtered(lambda line: not line.tax_repartition_line_id and not line.display_type):
             # Don't call compute_all if there is no tax.
             if not line.tax_ids:
                 if not recompute_tax_base_amount:
