@@ -3,7 +3,7 @@
 
 from ast import literal_eval
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, UserError
 
 
@@ -133,7 +133,7 @@ class Project(models.Model):
         if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
             buttons.append({
                 'icon': 'dollar',
-                'text': _('Sales Orders'),
+                'text': _lt('Sales Orders'),
                 'number': self.sale_order_count,
                 'action_type': 'object',
                 'action': 'action_view_sos',

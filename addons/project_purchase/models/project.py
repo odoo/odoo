@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 
 
 class Project(models.Model):
@@ -52,7 +52,7 @@ class Project(models.Model):
         if self.user_has_groups('purchase.group_purchase_user'):
             buttons.append({
                 'icon': 'credit-card',
-                'text': _('Purchase Orders'),
+                'text': _lt('Purchase Orders'),
                 'number': self.purchase_orders_count,
                 'action_type': 'object',
                 'action': 'action_open_project_purchase_orders',
