@@ -37,7 +37,7 @@
       </div>
 
       <div t-if="state.FooterComponent" class="o_command_palette_footer">
-        <t t-component="state.FooterComponent"/>
+        <t t-component="state.FooterComponent" switchNamespace="(namespace) => this.switchNamespace(namespace)"/>
       </div>
 
     </div>
