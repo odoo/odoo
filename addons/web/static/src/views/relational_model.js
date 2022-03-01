@@ -1249,7 +1249,7 @@ export class DynamicGroupList extends DynamicList {
         if (group.isFolded) {
             await group.toggle();
         }
-        await group.quickCreate(this.quickCreateInfo.fields, this.context);
+        await group.quickCreate(this.quickCreateInfo.activeFields, this.context);
     }
 
     /**
@@ -1416,7 +1416,8 @@ export class DynamicGroupList extends DynamicList {
             );
         }
         this.isLoadingQuickCreate = false;
-        return new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
+        const archInfo = new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
+        return archInfo;
     }
 }
 
@@ -1573,12 +1574,12 @@ export class Group extends DataPoint {
         return this.list.removeRecord(record);
     }
 
-    quickCreate(fields, context) {
+    quickCreate(activeFields, context) {
         const ctx = {
             ...context,
             [`default_${this.groupByField.name}`]: this.getServerValue(),
         };
-        return this.list.quickCreate(fields, ctx);
+        return this.list.quickCreate(activeFields, ctx);
     }
 
     async validateQuickCreate() {
