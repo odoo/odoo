@@ -96,7 +96,14 @@ export function useModel(ModelClass, params, options = {}) {
     services.orm = services.orm || useService("orm");
 
     const model = new ModelClass(component.env, params, services);
-    useBus(model, "update", options.onUpdate || component.render);
+    useBus(
+        model,
+        "update",
+        options.onUpdate ||
+            (() => {
+                component.render(true); // FIXME WOWL reactivity
+            })
+    );
 
     const globalState = component.props.globalState || {};
     let useSampleModel = Boolean(

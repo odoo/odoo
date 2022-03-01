@@ -51,7 +51,7 @@ export function useViewButtons(model, beforeExecuteAction = () => {}) {
             buttonContext,
             onClose: async () => {
                 await model.root.load();
-                comp.render();
+                comp.render(true); // FIXME WOWL reactivity
             },
         });
 

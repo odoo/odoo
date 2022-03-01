@@ -18,7 +18,7 @@ import { Model } from "@web/views/helpers/model";
 import { isNumeric, isX2Many } from "@web/views/helpers/view_utils";
 
 const { DateTime } = luxon;
-const { xml } = owl;
+const { toRaw, xml } = owl;
 
 const preloadedDataRegistry = registry.category("preloadedData");
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
@@ -283,7 +283,10 @@ export class Record extends DataPoint {
         } else {
             this.resId = false;
         }
-        this.resIds = params.resIds || state.resIds || (this.resId ? [this.resId] : []);
+        this.resIds =
+            (params.resIds ? toRaw(params.resIds) : null) || // FIXME WOWL reactivity
+            state.resIds ||
+            (this.resId ? [this.resId] : []);
         this._values = params.values;
         this._changes = {};
         this.data = { ...this._values };

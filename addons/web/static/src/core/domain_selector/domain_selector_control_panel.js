@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { Component } = owl;
+const { Component, toRaw } = owl;
 
 export class DomainSelectorControlPanel extends Component {
     deleteNode() {
@@ -8,7 +8,7 @@ export class DomainSelectorControlPanel extends Component {
     }
 
     insertNode(newNodeType) {
-        this.props.node.insert(newNodeType);
+        toRaw(this.props.node).insert(newNodeType); // FIXME WOWL reactivity
     }
 
     onEnterDeleteNodeBtn() {

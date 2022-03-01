@@ -229,7 +229,7 @@ export class ListView extends Component {
                     this.model.root.offset = offset;
                     this.model.root.limit = limit;
                     await this.model.root.load();
-                    this.render();
+                    this.render(true); // FIXME WOWL reactivity
                 },
             };
         });

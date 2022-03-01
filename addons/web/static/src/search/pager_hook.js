@@ -32,6 +32,6 @@ export function usePager(getProps) {
         },
     });
     onWillRender(() => {
-        Object.assign(pagerState, getProps());
+        Object.assign(pagerState, getProps() || { total: 0 });
     });
 }

@@ -12,7 +12,7 @@ export class ActionContainer extends Component {
         this.info = {};
         this.onActionManagerUpdate = ({ detail: info }) => {
             this.info = info;
-            this.render();
+            this.render(true); // WOWL reactivity
         };
         this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
         onWillDestroy(() => {

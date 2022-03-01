@@ -303,21 +303,21 @@ class KanbanView extends Component {
         useSetupView({
             /** TODO **/
         });
-        usePager(() =>
-            this.model.root.isGrouped
-                ? { total: 0 }
-                : {
-                      offset: this.model.root.offset,
-                      limit: this.model.root.limit,
-                      total: this.model.root.count,
-                      onUpdate: async ({ offset, limit }) => {
-                          this.model.root.offset = offset;
-                          this.model.root.limit = limit;
-                          await this.model.root.load();
-                          this.render();
-                      },
-                  }
-        );
+        usePager(() => {
+            if (!this.model.root.isGrouped) {
+                return {
+                    offset: this.model.root.offset,
+                    limit: this.model.root.limit,
+                    total: this.model.root.count,
+                    onUpdate: async ({ offset, limit }) => {
+                        this.model.root.offset = offset;
+                        this.model.root.limit = limit;
+                        await this.model.root.load();
+                        this.render();
+                    },
+                };
+            }
+        });
     }
 
     async openRecord(record) {
