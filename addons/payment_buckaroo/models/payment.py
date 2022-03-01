@@ -73,7 +73,7 @@ class AcquirerBuckaroo(models.Model):
                     break
 
             items = sorted(values.items(), key=lambda pair: pair[0].lower())
-            sign = ''.join('%s=%s' % (k, urls.url_unquote_plus(v)) for k, v in items)
+            sign = ''.join('%s=%s' % (k, v) for k, v in items)
         else:
             sign = ''.join('%s=%s' % (k, get_value(k)) for k in keys)
         # Add the pre-shared secret key at the end of the signature
