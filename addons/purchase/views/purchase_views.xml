@@ -439,7 +439,7 @@
                 <search string="Search Purchase Order">
                     <field name="name" string="Order"
                         filter_domain="['|', '|', ('name', 'ilike', self), ('partner_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
-                    <field name="partner_id" operator="child_of"/>
+                    <field name="partner_id" operator="child_of" context="{'active_test': False}"/>
                     <field name="user_id"/>
                     <field name="product_id"/>
                     <filter name="my_Orders" string="My Orders" domain="[('user_id', '=', uid)]"/>
