@@ -36,7 +36,7 @@
         <record id="food_expense_product" model="product.product">
             <field name="name">Food &amp; beverages</field>
             <field name="list_price">10</field>
-            <field name="standard_price">0</field>
+            <field name="standard_price">1</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FOOD</field>
@@ -47,7 +47,7 @@
         </record>
         <record id="trans_expense_product" model="product.product">
             <field name="name">Flights, train, bus, taxi, parking</field>
-            <field name="standard_price">0</field>
+            <field name="standard_price">1</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
@@ -70,7 +70,7 @@
         </record>
         <record id="accomodation_expense_product" model="product.product">
             <field name="name">Accomodation</field>
-            <field name="standard_price">0</field>
+            <field name="standard_price">1</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
@@ -93,7 +93,7 @@
             <field name="image_1920" type="base64" file="hr_expense/static/img/allowance.png"/>
         </record>
         <record id="other_expense_product" model="product.product">
-            <field name="standard_price">0</field>
+            <field name="standard_price">1</field>
             <field name="name">Other expenses</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
