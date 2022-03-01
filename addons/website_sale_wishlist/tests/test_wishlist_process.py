@@ -8,3 +8,6 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
     def test_01_wishlist_tour(self):
         self.start_tour("/", 'shop_wishlist')
+
+    def test_02_wishlist_admin_tour(self):
+        self.start_tour("/", 'shop_wishlist_admin', login="admin")
