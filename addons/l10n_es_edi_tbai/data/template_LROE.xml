@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <template id="template_LROE_240_1_1">
+            <!-- <?xml version="1.0" encoding="UTF-8" standalone="no"?> -->
+            <lrpjfecsgap:LROEPJ240FacturasEmitidasConSGAltaPeticion xmlns:lrpjfecsgap="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AltaPeticion_V1_0_2.xsd">
+                <Cabecera>
+                    <Modelo>240</Modelo>
+                    <Capitulo>1</Capitulo>
+                    <Subcapitulo>1.1</Subcapitulo>
+                    <Operacion>A00</Operacion>
+                    <Version>1.0</Version>
+                    <Ejercicio>2022</Ejercicio>
+                    <ObligadoTributario>
+                        <NIF t-out="sender_vat"/>
+                        <ApellidosNombreRazonSocial t-out="sender.name"/>
+                    </ObligadoTributario>
+                </Cabecera>
+                <FacturasEmitidas>
+                    <FacturaEmitida t-foreach="tbai_b64_list" t-as="tbai_b64">
+                        <TicketBai t-out="tbai_b64"/>
+                    </FacturaEmitida>
+                </FacturasEmitidas>
+            </lrpjfecsgap:LROEPJ240FacturasEmitidasConSGAltaPeticion>
+        </template>
+    </data>
+</odoo>

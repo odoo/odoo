@@ -36,6 +36,7 @@ class IrAttachment(models.Model):
 
     def _l10n_es_tbai_create_xsd_attachment(self, name, xsd_bytes, description=None):
         xsd_bytes = self._l10n_es_tbai_replace_xsd_import(xsd_bytes)
+        xsd_bytes = xsd_bytes[xsd_bytes.find("<".encode()):]  # Remove any non-XML prefix (Bizkaia's XSDs are dirty)
 
         try:
             xsd_object = objectify.fromstring(xsd_bytes)

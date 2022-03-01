@@ -397,8 +397,49 @@ class AccountEdiFormat(models.Model):
 
         # Get connection data
         url = company.get_l10n_es_tbai_url_cancel() if cancel else company.get_l10n_es_tbai_url_invoice()
-        header = {"Content-Type": "application/xml; charset=UTF-8"}
+        header = {"Content-Type": "application/xml; charset=utf-8"}
         cert_file = company.l10n_es_tbai_certificate_id
+
+        # ===== WIP =====
+        if company.l10n_es_tbai_tax_agency == "bizkaia":
+            sender = invoices.company_id if invoices.is_sale_document() else invoices.commercial_partner_id
+            values = {
+                'sender': sender,
+                'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
+                'tbai_b64_list': [b64encode(etree.tostring(invoice_xml, encoding="UTF-8")).decode()],
+            }
+            lroe_str = self.env.ref('l10n_es_edi_tbai.template_LROE_240_1_1')._render(values)
+            invoice_xml = L10nEsTbaiXmlUtils._cleanup_xml_content(lroe_str)
+            xml_str = etree.tostring(invoice_xml, encoding="UTF-8")
+
+            import gzip
+            import io
+            xml_bytes = io.BytesIO()
+            with gzip.GzipFile(mode="wb", fileobj=xml_bytes) as xml_gz:
+                xml_gz.write(xml_str)
+            xml_str = xml_bytes.getvalue()
+
+            import json
+            header = {
+                'Accept-Encoding': 'gzip',
+                'Content-Encoding': 'gzip',
+                'Content-Length': str(len(xml_str)),
+                'Content-Type': 'application/octet-stream',
+                'eus-bizkaia-n3-version': '1.0',
+                'eus-bizkaia-n3-content-type': 'application/xml',
+                'eus-bizkaia-n3-data': json.dumps({
+                    'con': 'LROE',
+                    'apa': '1.1',
+                    'inte': {
+                        'nif': values['sender_vat'],
+                        'nrs': sender.name,
+                    },
+                    'drs': {
+                        'mode': '240',
+                        'ejer': '2022',
+                    }
+                }),
+            }
 
         # Post and retrieve response
         try:
@@ -408,24 +449,39 @@ class AccountEdiFormat(models.Model):
                 'success': False, 'error': str(e), 'blocking_level': 'warning', 'response': None
             }}
 
-        data = response.content.decode(response.encoding)
+        response_data = response.content.decode(response.encoding)
+        response_data = etree.fromstring(bytes(response_data, 'utf-8'))
 
-        # Error management
-        response_xml = etree.fromstring(bytes(data, 'utf-8'))
-        message, already_received, tbai_id = TicketBaiWebServices()._get_response_values(response_xml, self.env)
+        # ===== WIP =====
+        if company.l10n_es_tbai_tax_agency == "bizkaia":
+            # GLOBAL (batch)
+            # message = response.headers['eus-bizkaia-n3-mensaje-respuesta']
+            # response_code = response.headers['eus-bizkaia-n3-tipo-respuesta']
+            # response_success = (response_code != "Incorrecto")
 
-        # TODO log warning if tbai_id provided in response does not match our own computed tbai_id ?
-        # when already_received is True, tbai_id is '' (the response does not include it)
-        # thus it's kind of pointless but if it did happen, it would definitely mean sth went wrong
+            # INVOICE (only one in batch)
+            # equivalent of get_response_values for Bizkaia (todo select ES/EU based on get_lang)
+            message = (response_data.find(r'.//CodigoErrorRegistro').text) + ": " + (response_data.find(r'.//DescripcionErrorRegistroES').text or '')
+            response_success = response_data.find(r'.//EstadoRegistro').text != "Incorrecto"
 
-        state = int(response_xml.find(r'.//Estado').text)
-        if state == 0 or already_received:
+        else:
+            # Error management
+            message, already_received, tbai_id = TicketBaiWebServices()._get_response_values(response_data, self.env)
+
+            # TODO log warning if tbai_id provided in response does not match our own computed tbai_id ?
+            # when already_received is True, tbai_id is '' (the response does not include it)
+            # thus it's kind of pointless but if it did happen, it would definitely mean sth went wrong
+
+            response_code = int(response_data.find(r'.//Estado').text)
+            response_success = (response_code == 0) or already_received
+
+        if response_success:
             # SUCCESS
             return {invoices: {
                 'success': True, 'message': message,
-                'response': response_xml}}
+                'response': response_data}}
         else:
             # ERROR
             return {invoices: {
                 'success': False, 'error': message, 'blocking_level': 'error',
-                'response': response_xml}}
+                'response': response_data}}

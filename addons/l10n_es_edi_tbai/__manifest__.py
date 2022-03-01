@@ -32,6 +32,7 @@
         'data/ir_cron.xml',
         'data/res_partner_data.xml',
         'data/template_invoice.xml',
+        'data/template_LROE.xml',
 
         'security/ir.model.access.csv',
 

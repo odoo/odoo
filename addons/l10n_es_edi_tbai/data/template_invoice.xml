@@ -52,6 +52,7 @@
                 <ApellidosNombreRazonSocial t-out="sender.name"/>
             </Emisor>
             <Destinatarios t-if="is_emission and not is_simplified">
+                <!-- TODO simplified invoices can have Destinatario ! Not compatible with current way to compute is_simplified. When compatible, use t-if="is_emission and len(recipients) > 0" -->
                 <IDDestinatario t-foreach="recipients" t-as="recipient">
                     <NIF t-if="recipient.get('nif')" t-out="recipient['nif']"/>
                     <IDOtro t-else="">
@@ -76,8 +77,8 @@
                 <FechaExpedicionFactura t-if="not is_emission" t-out="datetime_strftime(invoice.l10n_es_tbai_registration_date, '%d-%m-%Y')"/>
                 <FechaExpedicionFactura t-if="is_emission" t-out="datetime_strftime(datetime_now, '%d-%m-%Y')"/>
                 <HoraExpedicionFactura t-if="is_emission" t-out="datetime_strftime(datetime_now, '%H:%M:%S')"/>
-                <FacturaSimplificada t-if="is_simplified" t-out="'S' if is_simplified else 'N'"/>
-                <!-- TODO <FacturaEmitidaSustitucionSimplificada/> -->
+                <FacturaSimplificada t-out="'S' if is_simplified else 'N'"/>
+                <!-- <FacturaEmitidaSustitucionSimplificada/> TODO True iff is_refund, where rectified invoice is 'simplified' -->
                 <FacturaRectificativa t-if="credit_note_invoices">
                     <Codigo t-out="credit_note_code"/>
                     <Tipo>I</Tipo>
@@ -108,6 +109,8 @@
                     </IDDetalleFactura>
                 </DetallesFactura>
                 <ImporteTotalFactura t-out="float_repr(invoice_total)"/>
+                <!-- <RetencionSoportada/> TODO -->
+                <!-- <BaseImponibleACoste/> TODO -->
                 <Claves>
                     <IDClave>
                         <ClaveRegimenIvaOpTrascendencia t-out="vat_regime_code"/>
@@ -148,9 +151,12 @@
                 <NoExenta t-if="su.get('NoExenta')">
                     <t t-set="nex" t-value="su['NoExenta']"/>
                     <DetalleNoExenta>
+                        <!-- DetalleNoExenta: Up to 2 (not 3!), grouped by TipoNoExenta t-foreach='nex_list' t-as="nex"-->
                         <TipoNoExenta t-out="nex['TipoNoExenta']"/>
                         <DesgloseIVA>
                             <DetalleIVA t-foreach="nex['DesgloseIVA']['DetalleIVA']" t-as="det">
+                                <!-- DetalleIVA: Should distinguish by 'tipos' (OK if recargo/not recargo never mixed)
+                                CHECK if different tax types get separated-->
                                 <BaseImponible t-out="float_repr(det['BaseImponible'])"/>
                                 <TipoImpositivo t-out="float_repr(det['TipoImpositivo'])"/>
                                 <CuotaImpuesto t-out="float_repr(det['CuotaRepercutida'])"/>
@@ -165,7 +171,7 @@
             <NoSujeta t-if="breakdown.get('NoSujeta')">
                 <t t-set="nsu" t-value="breakdown['NoSujeta']"/>
                 <DetalleNoSujeta>
-                    <Causa>RL</Causa>
+                    <Causa>RL</Causa> <!-- TODO should be 'OT' if 'the' ClaveRegimen == 10, should be 'RL' if 'some' ClaveRegimen == 08-->
                     <Importe t-out="nsu['ImporteTAIReglasLocalizacion']"/>
                 </DetalleNoSujeta>
             </NoSujeta>
