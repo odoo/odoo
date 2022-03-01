@@ -6,6 +6,10 @@ import { session } from "@web/session";
 
 let serverData;
 
+function getFieldArch(fieldName, widget) {
+    return `<field name="${fieldName}" ` + (widget ? `widget="${widget}"` : "") + `/>`;
+}
+
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         serverData = {
@@ -19,7 +23,12 @@ QUnit.module("Fields", (hooks) => {
                             sortable: true,
                             searchable: true,
                         },
-                        qux: { string: "Qux", type: "float", digits: [16, 1], searchable: true },
+                        float_field: {
+                            string: "float_field",
+                            type: "float",
+                            digits: [16, 1],
+                            searchable: true,
+                        },
                         p: {
                             string: "one2many field",
                             type: "one2many",
@@ -42,25 +51,25 @@ QUnit.module("Fields", (hooks) => {
                             id: 1,
                             bar: true,
                             int_field: 10,
-                            qux: 0.44444,
+                            float_field: 0.44444,
                             p: [],
                         },
                         {
                             id: 2,
                             bar: true,
                             int_field: 0,
-                            qux: 0,
+                            float_field: 0,
                             p: [],
                             currency_id: 2,
                         },
                         {
                             id: 4,
                             int_field: false,
-                            qux: false,
+                            float_field: false,
                         },
-                        { id: 3, bar: true, int_field: 80, qux: -3.89859 },
-                        { id: 5, bar: false, int_field: -4, qux: 9.1, currency_id: 1 },
-                        { id: 6, qux: 3.9, monetary_field: 4.2, currency_id: 1 },
+                        { id: 3, bar: true, int_field: 80, float_field: -3.89859 },
+                        { id: 5, bar: false, int_field: -4, float_field: 9.1, currency_id: 1 },
+                        { id: 6, float_field: 3.9, monetary_field: 4.2, currency_id: 1 },
                     ],
                 },
                 currency: {
@@ -99,22 +108,28 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("MonetaryField");
 
-    QUnit.test("basic flow in form view", async function (assert) {
-        assert.expect(5);
+    async function basicFlowInFormView(assert, fieldName, widget) {
+        serverData.models.partner.records = [
+            {
+                id: 1,
+                float_field: 9.1,
+                monetary_field: 9.1,
+                currency_id: 1,
+            },
+        ];
 
         const form = await makeView({
             type: "form",
             serverData,
             resModel: "partner",
-            resId: 5,
+            resId: 1,
             arch: `
                 <form>
-                    <field name="qux" widget="monetary"/>
+                    ${getFieldArch(fieldName, widget)}
                     <field name="currency_id" invisible="1"/>
                 </form>`,
         });
 
-        // Non-breaking space between the currency and the amount
         assert.strictEqual(
             form.el.querySelector(".o_field_widget").textContent,
             "$\u00a09.10",
@@ -123,44 +138,56 @@ QUnit.module("Fields", (hooks) => {
 
         await clickEdit(form);
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            form.el.querySelector(".o_field_widget input").value,
             "9.10",
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] input").parentNode.childNodes[0]
-                .textContent,
+            form.el.querySelector(".o_field_widget input").parentNode.childNodes[0].textContent,
             "$",
             "The input should be preceded by a span containing the currency symbol."
         );
 
         await editInput(form.el, ".o_field_monetary input", "108.2458938598598");
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            form.el.querySelector(".o_field_widget input").value,
             "108.25",
             "The new value should be rounded properly after the blur"
         );
 
         await clickSave(form);
-        // Non-breaking space between the currency and the amount
         assert.strictEqual(
             form.el.querySelector(".o_field_widget").textContent,
             "$\u00a0108.25",
             "The new value should be rounded properly."
         );
+    }
+
+    QUnit.test("basic flow in form view - float field", async function (assert) {
+        return basicFlowInFormView(assert, "float_field", "monetary");
+    });
+    QUnit.test("basic flow in form view - monetary field", async function (assert) {
+        return basicFlowInFormView(assert, "monetary_field");
     });
 
-    QUnit.test("rounding using formula in form view", async function (assert) {
-        assert.expect(1);
+    async function RoundingUsingFormulaInFormView(assert, fieldName, widget) {
+        serverData.models.partner.records = [
+            {
+                id: 1,
+                float_field: 9.1,
+                monetary_field: 9.1,
+                currency_id: 1,
+            },
+        ];
 
         const form = await makeView({
             type: "form",
             serverData,
             resModel: "partner",
-            resId: 5,
+            resId: 1,
             arch: `
                 <form>
-                    <field name="qux" widget="monetary"/>
+                    ${getFieldArch(fieldName, widget)}
                     <field name="currency_id" invisible="1"/>
                 </form>`,
         });
@@ -174,17 +201,34 @@ QUnit.module("Fields", (hooks) => {
             "$\u00a033.33",
             "The new value should be calculated and rounded properly."
         );
+    }
+
+    QUnit.test("rounding using formula in form view - float field", async function (assert) {
+        return RoundingUsingFormulaInFormView(assert, "float_field", "monetary");
     });
 
-    QUnit.test("with currency symbol after", async function (assert) {
+    QUnit.test("rounding using formula in form view - monetary field", async function (assert) {
+        return RoundingUsingFormulaInFormView(assert, "monetary_field");
+    });
+
+    async function withCurrencySymbolAfter(assert, fieldName, widget) {
+        serverData.models.partner.records = [
+            {
+                id: 1,
+                float_field: 0,
+                monetary_field: 0,
+                currency_id: 2,
+            },
+        ];
+
         const form = await makeView({
             type: "form",
             serverData,
             resModel: "partner",
-            resId: 2,
+            resId: 1,
             arch: `
                 <form>
-                    <field name="qux" widget="monetary"/>
+                    ${getFieldArch(fieldName, widget)}
                     <field name="currency_id" invisible="1"/>
                 </form>`,
         });
@@ -198,20 +242,19 @@ QUnit.module("Fields", (hooks) => {
 
         await clickEdit(form);
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            form.el.querySelector(".o_field_widget input").value,
             "0.00",
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] input").parentNode.children[1]
-                .textContent,
+            form.el.querySelector(".o_field_widget input").parentNode.children[1].textContent,
             "€",
             "The input should be followed by a span containing the currency symbol."
         );
 
-        await editInput(form.el, ".o_field_widget[name=qux] input", "108.2458938598598");
+        await editInput(form.el, ".o_field_widget input", "108.2458938598598");
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            form.el.querySelector(".o_field_widget input").value,
             "108.25",
             "The value should be formatted on blur."
         );
@@ -223,11 +266,16 @@ QUnit.module("Fields", (hooks) => {
             "108.25\u00a0€",
             "The new value should be rounded properly."
         );
+    }
+
+    QUnit.test("with currency symbol after - float field", async function (assert) {
+        return withCurrencySymbolAfter(assert, "float_field", "monetary");
+    });
+    QUnit.test("with currency symbol after - monetary field", async function (assert) {
+        return withCurrencySymbolAfter(assert, "monetary_field");
     });
 
-    QUnit.test("MonetaryField with currency digits != 2", async function (assert) {
-        assert.expect(5);
-
+    async function withCurrencyDigitsNot2(assert, fieldName, widget) {
         // need to also add it to the session (as currencies are loaded there)
         patchWithCleanup(session, {
             currencies: {
@@ -244,7 +292,8 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records = [
             {
                 id: 1,
-                qux: 99.1234,
+                float_field: 99.1234,
+                monetary_field: 99.1234,
                 currency_id: 3,
             },
         ];
@@ -256,7 +305,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             arch: `
                 <form>
-                    <field name="qux" widget="monetary"/>
+                    ${getFieldArch(fieldName, widget)}
                     <field name="currency_id" invisible="1"/>
                 </form>`,
         });
@@ -270,20 +319,19 @@ QUnit.module("Fields", (hooks) => {
 
         await clickEdit(form);
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            form.el.querySelector(".o_field_widget input").value,
             "99.1234",
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] input").parentNode.children[1]
-                .textContent,
+            form.el.querySelector(".o_field_widget input").parentNode.children[1].textContent,
             "Bs.F",
             "The input should be followed by a span containing the currency symbol."
         );
 
-        await editInput(form.el, ".o_field_widget[name=qux] input", "99.111111111");
+        await editInput(form.el, ".o_field_widget input", "99.111111111");
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            form.el.querySelector(".o_field_widget input").value,
             "99.1111",
             "The value should should be formatted on blur."
         );
@@ -295,15 +343,48 @@ QUnit.module("Fields", (hooks) => {
             "99.1111\u00a0Bs.F",
             "The new value should be rounded properly."
         );
+    }
+
+    QUnit.test("with currency digits != 2 - float field", async function (assert) {
+        return withCurrencyDigitsNot2(assert, "float_field", "monetary");
+    });
+    QUnit.test("with currency digits != 2 - monetary field", async function (assert) {
+        return withCurrencyDigitsNot2(assert, "monetary_field");
     });
 
-    QUnit.test("basic flow in editable list view", async function (assert) {
-        var list = await makeView({
+    async function basicFlowInEditableListView(assert, fieldName, widget) {
+        serverData.models.partner.records = [
+            {
+                id: 1,
+                float_field: 9.1,
+                monetary_field: 9.1,
+                currency_id: 1,
+            },
+            {
+                id: 2,
+                float_field: 15.3,
+                monetary_field: 15.3,
+                currency_id: 2,
+            },
+            {
+                id: 3,
+                float_field: false,
+                monetary_field: false,
+                currency_id: 1,
+            },
+            {
+                id: 4,
+                float_field: 5.0,
+                monetary_field: 5.0,
+            },
+        ];
+
+        const list = await makeView({
             type: "list",
             serverData,
             resModel: "partner",
             arch: `<tree editable="bottom">
-                    <field name="qux" widget="monetary"/>
+                    ${getFieldArch(fieldName, widget)}
                     <field name="currency_id" invisible="1"/>
                 </tree>`,
         });
@@ -316,10 +397,15 @@ QUnit.module("Fields", (hooks) => {
         const euroValues = Array.from(list.el.querySelectorAll("td")).filter((x) =>
             x.textContent.includes("€")
         );
-        assert.strictEqual(euroValues.length, 1, "One one line has euro as a currency.");
+        assert.strictEqual(euroValues.length, 1, "Only 1 line has euro as a currency.");
+
+        const noCurrencyValues = Array.from(list.el.querySelectorAll("td.o_data_cell")).filter(
+            (x) => !(x.textContent.includes("€") || x.textContent.includes("$"))
+        );
+        assert.strictEqual(noCurrencyValues.length, 1, "Only 1 line has no currency.");
 
         // switch to edit mode
-        const dollarCell = list.el.querySelector("td[title='9.1']");
+        const dollarCell = list.el.querySelectorAll("td.o_field_cell")[0];
         await click(dollarCell);
 
         assert.strictEqual(
@@ -330,25 +416,24 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             list.el,
-            '[name="qux"] input',
+            ".o_field_widget input",
             "The view should have 1 input for editable monetary float."
         );
-
         assert.strictEqual(
-            list.el.querySelector('[name="qux"] input').value,
+            list.el.querySelector(".o_field_widget  input").value,
             "9.10",
             "The input should be rendered without the currency symbol."
         );
 
         assert.strictEqual(
-            list.el.querySelector('[name="qux"] input').parentNode.childNodes[0].textContent,
+            list.el.querySelector(".o_field_widget input").parentNode.childNodes[0].textContent,
             "$",
             "The input should be preceded by a span containing the currency symbol."
         );
 
-        await editInput(list.el, '[name="qux"] input', "108.2458938598598");
+        await editInput(list.el, ".o_field_widget input", "108.2458938598598");
         assert.strictEqual(
-            list.el.querySelector('[name="qux"] input').value,
+            list.el.querySelector(".o_field_widget  input").value,
             "108.25",
             "The typed value should be correctly displayed and formatted on blur"
         );
@@ -359,55 +444,33 @@ QUnit.module("Fields", (hooks) => {
             "$\u00a0108.25",
             "The new value should be correct"
         );
+    }
+
+    QUnit.test("basic flow in editable list view - float field", async function (assert) {
+        return basicFlowInEditableListView(assert, "float_field", "monetary");
+    });
+    QUnit.test("basic flow in editable list view - monetary field", async function (assert) {
+        return basicFlowInEditableListView(assert, "monetary_field");
     });
 
-    QUnit.test("with real monetary field in model", async function (assert) {
+    async function changingCurrencyUpdatesTheField(assert, fieldName, widget) {
+        serverData.models.partner.records = [
+            {
+                id: 1,
+                float_field: 4.2,
+                monetary_field: 4.2,
+                currency_id: 1,
+            },
+        ];
+
         const form = await makeView({
             type: "form",
             serverData,
             resModel: "partner",
-            resId: 6,
+            resId: 1,
             arch: `
                 <form>
-                    <sheet>
-                    <field name="monetary_field"/>
-                    <field name="currency_id" invisible="1"/>
-                    </sheet>
-                </form>`,
-        });
-
-        assert.strictEqual(
-            form.el.querySelector(".o_field_monetary").textContent,
-            "$\u00a04.20",
-            "value should contain the currency"
-        );
-
-        await clickEdit(form);
-        await editInput(form.el, ".o_field_monetary input", 108.249);
-        assert.strictEqual(
-            form.el.querySelector(".o_field_monetary input").value,
-            "108.25",
-            "The value should be formatted on blur."
-        );
-
-        await clickSave(form);
-        // Non-breaking space between the currency and the amount
-        assert.strictEqual(
-            form.el.querySelector(".o_field_monetary").textContent,
-            "$\u00a0108.25",
-            "The new value should be rounded properly."
-        );
-    });
-
-    QUnit.test("changing the currency updates the monetary field", async function (assert) {
-        const form = await makeView({
-            type: "form",
-            serverData,
-            resModel: "partner",
-            resId: 6,
-            arch: `
-                <form>
-                    <field name="monetary_field"/>
+                    ${getFieldArch(fieldName, widget)}
                     <field name="currency_id"/>
                 </form>`,
         });
@@ -441,12 +504,19 @@ QUnit.module("Fields", (hooks) => {
             "4.20\u00a0€",
             "The new value should still be correct."
         );
+    }
+
+    QUnit.test("changing currency updates the field - float field", async function (assert) {
+        return changingCurrencyUpdatesTheField(assert, "float_field", "monetary");
+    });
+    QUnit.test("changing currency updates the field - monetary field", async function (assert) {
+        return changingCurrencyUpdatesTheField(assert, "monetary_field");
     });
 
     QUnit.skipWOWL("MonetaryField with monetary field given in options", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.qux.type = "monetary";
+        this.data.partner.fields.float_field.type = "monetary";
         this.data.partner.fields.company_currency_id = {
             string: "Company Currency",
             type: "many2one",
@@ -461,7 +531,7 @@ QUnit.module("Fields", (hooks) => {
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
-                "<field name=\"qux\" options=\"{'currency_field': 'company_currency_id'}\"/>" +
+                "<field name=\"float_field\" options=\"{'currency_field': 'company_currency_id'}\"/>" +
                 '<field name="company_currency_id"/>' +
                 "</sheet>" +
                 "</form>",
@@ -506,7 +576,7 @@ QUnit.module("Fields", (hooks) => {
                 archs: {
                     "partner,false,list":
                         '<tree editable="bottom">' +
-                        '<field name="qux" widget="monetary"/>' +
+                        '<field name="float_field" widget="monetary"/>' +
                         '<field name="currency_id" invisible="1"/>' +
                         "</tree>",
                 },
@@ -534,7 +604,7 @@ QUnit.module("Fields", (hooks) => {
             await testUtils.dom.click(form.$el);
 
             assert.strictEqual(
-                $o2m.find(".o_field_widget[name=qux]").html(),
+                $o2m.find(".o_field_widget[name=float_field]").html(),
                 "$&nbsp;22.00",
                 "the value should have been formatted after losing the focus"
             );
@@ -558,7 +628,7 @@ QUnit.module("Fields", (hooks) => {
             await testUtils.dom.click(form.$el);
 
             assert.strictEqual(
-                $m2m.find(".o_field_widget[name=qux]").html(),
+                $m2m.find(".o_field_widget[name=float_field]").html(),
                 "22.00&nbsp;€",
                 "the value should have been formatted after losing the focus"
             );
@@ -586,7 +656,7 @@ QUnit.module("Fields", (hooks) => {
             arch:
                 '<tree editable="top">' +
                 '<field name="int_field"/>' +
-                '<field name="qux" widget="monetary"/>' +
+                '<field name="float_field" widget="monetary"/>' +
                 '<field name="currency_id" invisible="1"/>' +
                 "</tree>",
             session: {
@@ -597,54 +667,54 @@ QUnit.module("Fields", (hooks) => {
         await testUtils.dom.click(list.$buttons.find(".o_list_button_add"));
         assert.containsOnce(
             list,
-            "div.o_field_widget[name=qux] input",
+            "div.o_field_widget[name=float_field] input",
             "monetary field should have been rendered correctly (without currency)"
         );
         assert.containsNone(
             list,
-            ".o_field_widget[name=qux] span",
+            ".o_field_widget[name=float_field] span",
             "monetary field should have been rendered correctly (without currency)"
         );
 
-        // set a value for int_field -> should set the currency and re-render qux
+        // set a value for int_field -> should set the currency and re-render float_field
         await testUtils.fields.editInput(list.$(".o_field_widget[name=int_field]"), "7");
         assert.containsOnce(
             list,
-            "div.o_field_widget[name=qux] input",
+            "div.o_field_widget[name=float_field] input",
             "monetary field should have been re-rendered correctly (with currency)"
         );
         assert.strictEqual(
-            list.$(".o_field_widget[name=qux] span:contains(€)").length,
+            list.$(".o_field_widget[name=float_field] span:contains(€)").length,
             1,
             "monetary field should have been re-rendered correctly (with currency)"
         );
-        var $quxInput = list.$(".o_field_widget[name=qux] input");
-        await testUtils.dom.click($quxInput);
+        var $float_fieldInput = list.$(".o_field_widget[name=float_field] input");
+        await testUtils.dom.click($float_fieldInput);
         assert.strictEqual(
             document.activeElement,
-            $quxInput[0],
-            "focus should be on the qux field's input"
+            $float_fieldInput[0],
+            "focus should be on the float_field field's input"
         );
 
-        // unset the value of int_field -> should unset the currency and re-render qux
+        // unset the value of int_field -> should unset the currency and re-render float_field
         await testUtils.dom.click(list.$(".o_field_widget[name=int_field]"));
         await testUtils.fields.editInput(list.$(".o_field_widget[name=int_field]"), "0");
-        $quxInput = list.$("div.o_field_widget[name=qux] input");
+        $float_fieldInput = list.$("div.o_field_widget[name=float_field] input");
         assert.strictEqual(
-            $quxInput.length,
+            $float_fieldInput.length,
             1,
             "monetary field should have been re-rendered correctly (without currency)"
         );
         assert.containsNone(
             list,
-            ".o_field_widget[name=qux] span",
+            ".o_field_widget[name=float_field] span",
             "monetary field should have been re-rendered correctly (without currency)"
         );
-        await testUtils.dom.click($quxInput);
+        await testUtils.dom.click($float_fieldInput);
         assert.strictEqual(
             document.activeElement,
-            $quxInput[0],
-            "focus should be on the qux field's input"
+            $float_fieldInput[0],
+            "focus should be on the float_field field's input"
         );
 
         list.destroy();
