@@ -1118,12 +1118,27 @@ var IconWidget = SearchableMediaWidget.extend({
     /**
      * @override
      */
-    save: function () {
+    save: async function () {
         var style = this.$media.attr('style') || '';
         var iconFont = this._getFont(this.selectedIcon) || {base: 'fa', font: ''};
         if (!this.$media.is('span, i')) {
             var $span = $('<span/>');
-            $span.data(this.$media.data());
+            if (this.$media.length) {
+                // Make sure jquery data() is clean by signaling the removal
+                // (e.g. website wants to remove SnippetEditor references from
+                // the data).
+                // TODO make sure copying the data is in fact useful at all, but
+                // in stable it did not feel safe to remove anyway.
+                //
+                // Note: done with an array of promises filled by the event
+                // handler instead of a Promise created here to be resolved by
+                // the event handler as the event handler does not necessarily
+                // exists (in simple HTML fields for example).
+                const data = { proms: [] };
+                this.$media.trigger('before_replace_target', data);
+                await Promise.all(data.proms);
+                $span.data(this.$media.data());
+            }
             this.$media = $span;
             this.media = this.$media[0];
             style = style.replace(/\s*width:[^;]+/, '');
