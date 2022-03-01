@@ -228,19 +228,21 @@ odoo.define('web.OwlDialog', function (require) {
             this.displayed.splice(this.displayed.indexOf(dialog), 1);
             // Activate last dialog and update body class
             const lastDialog = this.displayed[this.displayed.length - 1];
+            let modalEl;
             if (lastDialog) {
                 if (lastDialog.el) {
                     // legacy dialog
                     lastDialog.el.focus();
+                    modalEl = lastDialog.$modal[0];
+                } else if (lastDialog.modalRef){
+                    // Owl 2 / Wowl dialogs (because of legacy_dialogs.js patch on Dialog)
+                    lastDialog.modalRef.el.focus();
+                    modalEl = lastDialog.modalRef.el;
                 } else {
                     // Owl dialog | LegacyAdaptedDialog
                     lastDialog.dialogRef.el.focus();
-                }
-                const modalEl = lastDialog.modalRef ?
-                    // Owl dialog | LegacyAdaptedDialog
-                    lastDialog.modalRef.el :
-                    // Legacy dialog
-                    lastDialog.$modal[0];
+                    modalEl = lastDialog.dialogRef.el;
+                } 
                 modalEl.classList.remove('o_inactive_modal');
                 modalEl.setAttribute("tabindex", "-1");
             } else {
