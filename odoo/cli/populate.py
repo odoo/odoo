@@ -115,11 +115,11 @@ class Populate(Command):
                 ordered_models.append(model)
                 processed.add(model)
         for model in env.values():
-            ir_model = env['ir.model'].search([('model', '=', model._name)])
             if model_patterns and not any(fnmatch.fnmatch(model._name, match) for match in model_patterns):
                 continue
             if model._transient or model._abstract:
                 continue
+            ir_model = env['ir.model'].search([('model', '=', model._name)])
             if not model_patterns and all(module.startswith('test_') for module in ir_model.modules.split(',')):
                 continue
             add_model(model)
