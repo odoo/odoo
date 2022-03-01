@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='company']" position="after">
-                <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('l10n_co_pos_country_code', '!=', 'CO')]}">
-                    <field name="l10n_co_pos_country_code" invisible="1"/>
+                <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('country_code', '!=', 'CO')]}">
+                    <field name="country_code" invisible="1"/>
                     <div class="o_setting_right_pane">
                         <label for="l10n_co_pos_serial_number"/>
                         <div class="content-group mt16">

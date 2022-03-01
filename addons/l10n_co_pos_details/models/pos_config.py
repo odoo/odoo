@@ -7,4 +7,4 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     l10n_co_pos_serial_number = fields.Char(string="POS Serial Number")
-    l10n_co_pos_country_code = fields.Char(related='company_id.country_id.code')
+    country_code = fields.Char(related='company_id.country_id.code')
