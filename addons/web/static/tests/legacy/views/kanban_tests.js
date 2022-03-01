@@ -21,7 +21,7 @@ const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
 const { Markup } = require("web.utils");
-const { Component, markup, xml } = owl;
+const { markup, xml } = owl;
 
 QUnit.module('Views', {
     before: function () {
@@ -245,7 +245,6 @@ QUnit.module('Views', {
         // add active field on partner model and make all records active
         this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
 
-        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
         var kanban = await createView({
             View: KanbanView,
             model: 'partner',
@@ -280,7 +279,6 @@ QUnit.module('Views', {
         // archive the records of the first column
         assert.containsN(kanban, '.o_kanban_group:last .o_kanban_record', 3,
             "last column should contain 3 records");
-        envIDs = [4];
         testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:last'));
         await testUtils.dom.click(kanban.$('.o_kanban_group:last .o_column_archive_records'));
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
@@ -300,7 +298,6 @@ QUnit.module('Views', {
         // add active field on partner model and make all records active
         this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
 
-        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
         var kanban = await createView({
             View: KanbanView,
             model: 'partner',

@@ -8,7 +8,7 @@ import { browser } from "@web/core/browser/browser";
 import { symmetricalDifference } from "@web/core/utils/arrays";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, useState } = owl;
+const { useState } = owl;
 
 export class SwitchCompanyMenu extends LegacyComponent {
     setup() {

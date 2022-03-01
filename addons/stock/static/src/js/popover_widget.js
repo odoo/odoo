@@ -5,7 +5,6 @@ var AbstractField = require('web.AbstractField');
 var core = require('web.core');
 var QWeb = core.qweb;
 var Context = require('web.Context');
-var data_manager = require('web.data_manager');
 var fieldRegistry = require('web.field_registry');
 
 /**

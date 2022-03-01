@@ -7,7 +7,7 @@ odoo.define('web.popover_tests', function (require) {
     const { click, mount } = require("@web/../tests/helpers/utils");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, useState, xml } = owl;
+    const { useState, xml } = owl;
 
     QUnit.module('core', {}, function () {
         QUnit.module('Popover');

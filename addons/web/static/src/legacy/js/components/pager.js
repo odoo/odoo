@@ -4,7 +4,7 @@ odoo.define('web.Pager', function (require) {
     const { useAutofocus } = require("@web/core/utils/hooks");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, onWillUpdateProps, useState } = owl;
+    const { onWillUpdateProps, useState } = owl;
 
     /**
      * Pager

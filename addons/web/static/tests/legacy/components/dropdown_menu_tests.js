@@ -7,7 +7,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
     const { mount } = require("@web/../tests/helpers/utils");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component, useState, xml } = owl;
+    const { useState, xml } = owl;
     const { createComponent } = testUtils;
 
     QUnit.module('Components', {

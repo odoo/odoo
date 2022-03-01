@@ -2,7 +2,6 @@ odoo.define('web.test.constraint', function (require) {
     'use strict';
 
     var tour = require("web_tour.tour");
-    var inc;
 
     tour.register('sql_constaint', {
         url: '/web?debug=1#action=test_new_api.action_categories',

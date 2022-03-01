@@ -10,7 +10,7 @@ import { createComponent } from "web.test_utils";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { click, destroy, getFixture, mount, triggerEvent } from "../helpers/utils";
+import { click, getFixture, mount, triggerEvent } from "../helpers/utils";
 import { applyFilter, toggleMenu } from "@web/../tests/search/helpers";
 
 const { Component, xml } = owl;

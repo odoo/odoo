@@ -16,7 +16,7 @@ import { registry } from "@web/core/registry";
 import { loadPublicAsset } from "@web/core/assets";
 import { LegacyComponent } from "./legacy_component";
 
-const { Component, xml, onWillStart } = owl;
+const { xml, onWillStart } = owl;
 const viewRegistry = registry.category("views");
 
 function getJsClassWidget(fieldsInfo) {

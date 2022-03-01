@@ -8,7 +8,6 @@ odoo.define('website_links.website_links_menu', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
-var websiteNavbarData = require('website.navbar');
 
 const { registry } = require("@web/core/registry");
 

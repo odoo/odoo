@@ -8,7 +8,7 @@
     import { CustomGroupByItem } from "@web/search/group_by_menu/custom_group_by_item";
     import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    const { Component, useEffect, useExternalListener, useState } = owl;
+    const { useEffect, useExternalListener, useState } = owl;
 
     export class PivotGroupByMenu extends LegacyComponent {
 
@@ -30,7 +30,7 @@
             if (this.props.hasSearchArchGroupBys) {
                 items = this.props.searchModel.get('filters', f => f.type === 'groupBy');
                 let groupNumber = 1 + Math.max(...items.map(g => g.groupNumber), 0);
-                for (const [_, customGroupBy] of this.props.customGroupBys) {
+                for (const [ , customGroupBy] of this.props.customGroupBys) {
                     customGroupBy.groupNumber = groupNumber++;
                     items.push(customGroupBy);
                 }

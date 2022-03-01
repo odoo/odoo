@@ -2,7 +2,6 @@ odoo.define('unsplash.api', function (require) {
 'use strict';
 
 var Class = require('web.Class');
-var rpc = require('web.rpc');
 var Mixins = require('web.mixins');
 var ServicesMixin = require('web.ServicesMixin');
 

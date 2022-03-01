@@ -130,11 +130,11 @@
         exportState() {
             const state = Object.assign({}, super.exportState());
             state.sections = serialiseMap(state.sections);
-            for (const [id, section] of state.sections) {
+            for (const [/* id */ , section] of state.sections) {
                 section.values = serialiseMap(section.values);
                 if (section.groups) {
                     section.groups = serialiseMap(section.groups);
-                    for (const [id, group] of section.groups) {
+                    for (const [/* id */ , group] of section.groups) {
                         group.values = serialiseMap(group.values);
                     }
                 }

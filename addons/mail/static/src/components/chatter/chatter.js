@@ -5,7 +5,7 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { LegacyComponent } from '@web/legacy/legacy_component';
 
-const { Component, useRef } = owl;
+const { useRef } = owl;
 
 export class Chatter extends LegacyComponent {
 

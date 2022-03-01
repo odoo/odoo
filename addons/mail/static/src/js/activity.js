@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import * as mailUtils from '@mail/js/utils';
-
 import AbstractField from 'web.AbstractField';
 import BasicModel from 'web.BasicModel';
 import config from 'web.config';

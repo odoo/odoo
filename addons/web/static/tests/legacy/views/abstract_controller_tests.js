@@ -8,7 +8,6 @@ var BasicView = require("web.BasicView");
 var BasicRenderer = require("web.BasicRenderer");
 const AbstractRenderer = require('web.AbstractRendererOwl');
 const RendererWrapper = require('web.RendererWrapper');
-const { nextTick } = require('web.test_utils');
 
 const { xml, onMounted, onWillUnmount, onWillDestroy } = owl;
 

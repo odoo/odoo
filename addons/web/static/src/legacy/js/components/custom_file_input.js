@@ -2,7 +2,7 @@ odoo.define('web.CustomFileInput', function (require) {
     "use strict";
 
     const { LegacyComponent } = require("@web/legacy/legacy_component");
-    const { Component, useRef } = owl;
+    const { useRef } = owl;
 
     /**
      * Custom file input

@@ -22,7 +22,6 @@ var VatActivity = AbstractField.extend({
     // Private
     //------------------------------------------------------------
     _render: function () {
-        var self = this;
         var info = JSON.parse(this.value);
         if (!info) {
             this.$el.html('');

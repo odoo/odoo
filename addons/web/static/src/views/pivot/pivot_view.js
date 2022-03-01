@@ -15,7 +15,6 @@ import { PivotModel } from "@web/views/pivot/pivot_model";
 import { PivotRenderer } from "@web/views/pivot/pivot_renderer";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component } = owl;
 const viewRegistry = registry.category("views");
 
 export class PivotView extends LegacyComponent {

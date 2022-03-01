@@ -212,7 +212,6 @@ var KanbanController = BasicController.extend({
      * @returns {Promise}
      */
     _resequenceRecords: function (column_id, ids) {
-        var self = this;
         return this.model.resequence(this.modelName, ids, column_id);
     },
     /**
@@ -464,7 +463,6 @@ var KanbanController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onResequenceColumn: function (ev) {
-        var self = this;
         this._resequenceColumns(ev.data.ids);
     },
     /**

@@ -93,7 +93,7 @@ return core.Class.extend({
                 // Freeze the fields dict as it will be shared between views and
                 // no one should edit it
                 utils.deepFreeze(result.fields);
-                for (const [viewId, viewType] of views_descr) {
+                for (const [ /* viewId */ , viewType] of views_descr) {
                     const fvg = result.fields_views[viewType];
                     fvg.viewFields = fvg.fields;
                     fvg.fields = result.fields;

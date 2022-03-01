@@ -3,7 +3,7 @@
 import FormView from 'web.FormView';
 import FormController from 'web.FormController';
 import FormRenderer from 'web.FormRenderer';
-import { bus, _t } from 'web.core';
+import { bus } from 'web.core';
 import viewRegistry from 'web.view_registry';
 import config from 'web.config';
 

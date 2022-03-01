@@ -103,7 +103,6 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         // We declare this event handler as a debounce function in
         // order to lower its trigger rate.
         async updatePartnerList(event) {
-            let newPartnerList = await this.getNewPartners();
             this.state.query = event.target.value;
             const partners = this.partners;
             if (event.code === 'Enter' && partners.length === 1) {

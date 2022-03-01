@@ -3,7 +3,6 @@
 import core from 'web.core';
 import Dialog from 'web.Dialog';
 import publicWidget from 'web.public.widget';
-import utils from 'web.utils';
 
 var QWeb = core.qweb;
 var _t = core._t;

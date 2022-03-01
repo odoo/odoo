@@ -1,8 +1,6 @@
 odoo.define('website_sale.s_dynamic_snippet_products', function (require) {
 'use strict';
 
-const config = require('web.config');
-const core = require('web.core');
 const publicWidget = require('web.public.widget');
 const DynamicSnippetCarousel = require('website.s_dynamic_snippet_carousel');
 var wSaleUtils = require('website_sale.utils');

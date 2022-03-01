@@ -195,7 +195,6 @@ QUnit.module('Views', {
             },
         });
 
-        var dialog;
         new dialogs.SelectCreateDialog(parent, {
             no_create: true,
             readonly: true,
@@ -205,9 +204,7 @@ QUnit.module('Views', {
                 search_default_groupby_bar: true,
                 search_default_foo: 'piou',
             },
-        }).open().then(function (result) {
-            dialog = result;
-        });
+        }).open();
         await testUtils.nextTick();
         const modal = document.body.querySelector(".modal");
         await cpHelpers.removeFacet(modal, "Bar");

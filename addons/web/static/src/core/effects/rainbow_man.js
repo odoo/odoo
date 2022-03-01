@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, useEffect, useExternalListener } = owl;
+const { useEffect, useExternalListener } = owl;
 
 /**
  * @typedef Common

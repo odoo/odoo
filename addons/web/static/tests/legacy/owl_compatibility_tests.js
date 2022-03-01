@@ -21,7 +21,6 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
     const { mount, useLogLifeCycle, destroy } = require("@web/../tests/helpers/utils");
 
     const {
-        Component,
         onError,
         onMounted,
         onWillDestroy,
@@ -31,9 +30,6 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
         useState,
         xml,
     } = owl;
-
-    // from Owl internal status enum
-    const ISMOUNTED = 3;
 
     const WidgetAdapter = Widget.extend(WidgetAdapterMixin, {
         destroy() {
@@ -420,7 +416,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             Parent.components = { ComponentAdapter };
 
             const target = testUtils.prepareTarget();
-            const parent = await mount(Parent, target);
+            await mount(Parent, target);
 
             widget.trigger_up('some-event', { value: 'a' });
             widget.trigger_up('some_event', { value: 'b' }); // _ are converted to -
@@ -500,7 +496,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             };
 
             const target = testUtils.prepareTarget();
-            const parent = await mount(Parent, target, { env });
+            await mount(Parent, target, { env });
         });
 
         QUnit.test("sub widget that requests the session", async function (assert) {

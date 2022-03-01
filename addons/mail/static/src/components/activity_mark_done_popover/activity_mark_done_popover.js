@@ -5,7 +5,7 @@ import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onMounted, useRef } = owl;
+const { onMounted, useRef } = owl;
 
 export class ActivityMarkDonePopover extends LegacyComponent {
 

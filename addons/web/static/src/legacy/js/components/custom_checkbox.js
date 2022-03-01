@@ -4,8 +4,6 @@ odoo.define('web.CustomCheckbox', function (require) {
     const utils = require('web.utils');
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component } = owl;
-
     /**
      * Custom checkbox
      * 

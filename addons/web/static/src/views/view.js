@@ -10,7 +10,7 @@ import { useActionLinks } from "@web/views/helpers/view_hook";
 import { extractLayoutComponents } from "@web/views/layout";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
+const { onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config

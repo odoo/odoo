@@ -216,7 +216,6 @@ var EventCreateDialog = Dialog.extend({
      * @private
      */
     _submitForm: function () {
-        var self = this;
         var eventValues = this._prepareFormValues();
         var errors = this._validateForm(eventValues)
         console.log(eventValues, errors);

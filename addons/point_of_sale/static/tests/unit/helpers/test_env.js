@@ -11,7 +11,6 @@ odoo.define('point_of_sale.test_env', async function (require) {
     const makeTestEnvironment = require('web.test_env');
     const env = require('point_of_sale.env');
     const { PosGlobalState } = require('point_of_sale.models');
-    const Registries = require('point_of_sale.Registries');
     const cleanup = require("@web/../tests/helpers/cleanup");
 
     // We override this method in the pos unit tests to prevent the unnecessary error in the web tests.

@@ -12,7 +12,7 @@ import { patch, unpatch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 const { DateTime, Settings } = luxon;
 
 const terms = { Hello: "Bonjour" };

@@ -259,7 +259,7 @@ QUnit.test("webSearchRead method", async (assert) => {
 });
 
 QUnit.test("useModel is specialized for component", async (assert) => {
-    const [query, rpc] = makeFakeRPC();
+    const [, /* query */ rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
     const env = await makeTestEnv();
 
@@ -306,7 +306,7 @@ QUnit.test("silent mode", async (assert) => {
 
 QUnit.test("validate some obviously wrong calls", async (assert) => {
     assert.expect(2);
-    const [query, rpc] = makeFakeRPC();
+    const [, /* query*/ rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
     const env = await makeTestEnv();
     try {

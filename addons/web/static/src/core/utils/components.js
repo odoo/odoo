@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { Component, onError, useComponent, xml } = owl;
+const { Component, onError, xml } = owl;
 
 export class ErrorHandler extends Component {
     setup() {

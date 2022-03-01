@@ -322,7 +322,6 @@ var Domain = collections.Tree.extend({
         if (!domain.length) {
             return 'True';
         }
-        var self = this;
         function consume(stack) {
             var len = stack.length;
             if (len <= 1) {

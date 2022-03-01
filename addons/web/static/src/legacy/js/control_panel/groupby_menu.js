@@ -8,8 +8,6 @@ odoo.define('web.GroupByMenu', function (require) {
     const { useModel } = require('web.Model');
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component } = owl;
-
     class GroupByMenu extends LegacyComponent {
 
         setup() {

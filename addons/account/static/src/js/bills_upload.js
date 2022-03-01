@@ -2,7 +2,6 @@ odoo.define('account.upload.bill.mixin', function (require) {
 "use strict";
 
     var core = require('web.core');
-    var _t = core._t;
 
     var qweb = core.qweb;
 
@@ -46,7 +45,6 @@ odoo.define('account.upload.bill.mixin', function (require) {
         },
 
         _onUpload: function (event) {
-            var self = this;
             // If hidden upload form don't exists, create it
             var $formContainer = this.$('.o_content').find('.o_vendor_bill_upload');
             if (!$formContainer.length) {
@@ -63,7 +61,6 @@ odoo.define('account.upload.bill.mixin', function (require) {
 
 odoo.define('account.bills.tree', function (require) {
 "use strict";
-    var core = require('web.core');
     var ListController = require('web.ListController');
     var ListView = require('web.ListView');
     var UploadBillMixin = require('account.upload.bill.mixin');
@@ -111,7 +108,6 @@ odoo.define('account.bills.kanban', function (require) {
 
 odoo.define('account.dashboard.kanban', function (require) {
 "use strict";
-    var core = require('web.core');
     var KanbanController = require('web.KanbanController');
     var KanbanView = require('web.KanbanView');
     var UploadBillMixin = require('account.upload.bill.mixin');

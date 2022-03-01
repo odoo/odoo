@@ -6,7 +6,6 @@ import { useAutofocus } from "@web/core/utils/hooks";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const {
-    Component,
     onMounted,
     onWillUpdateProps,
     onWillUnmount,

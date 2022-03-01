@@ -62,7 +62,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
             var options = {
                 content: function () {
                     var $content = $(QWeb.render('PaymentPopOver', content));
-                    var unreconcile_button = $content.filter('.js_unreconcile_payment').on('click', self._onRemoveMoveReconcile.bind(self));
+                    $content.filter('.js_unreconcile_payment').on('click', self._onRemoveMoveReconcile.bind(self));
 
                     $content.filter('.js_open_payment').on('click', self._onOpenPaymentOrMove.bind(self));
                     return $content;

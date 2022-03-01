@@ -6,8 +6,6 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
 
-    const { onWillUnmount } = owl;
-
     /**
      * IMPROVEMENT: Perhaps this class is quite complicated for its worth.
      * This is because it needs to listen to changes to the current order.

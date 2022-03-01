@@ -53,7 +53,6 @@ odoo.define('website_sale.editor', function (require) {
 'use strict';
 
 var options = require('web_editor.snippets.options');
-var publicWidget = require('web.public.widget');
 const Wysiwyg = require('web_editor.wysiwyg');
 const {qweb, _t} = require('web.core');
 const {Markup} = require('web.utils');

@@ -1,13 +1,11 @@
 /** @odoo-module **/
 
 import BasicModel from 'web.BasicModel';
-import core from 'web.core';
 import form_common from 'web.view_dialogs';
 import field_registry from 'web.field_registry';
 import relational_fields from 'web.relational_fields';
 
 var M2MTags = relational_fields.FieldMany2ManyTags;
-var _t = core._t;
 
 BasicModel.include({
 

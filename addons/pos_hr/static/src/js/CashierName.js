@@ -1,4 +1,3 @@
-/* global Sha1 */
 odoo.define('pos_hr.CashierName', function (require) {
     'use strict';
 

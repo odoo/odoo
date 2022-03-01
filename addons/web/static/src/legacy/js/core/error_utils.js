@@ -12,7 +12,6 @@ import { _t } from "web.core";
  * @returns {string}
  */
 export function formatTraceback(error) {
-  const traceback = error.stack;
   // Error.prototype.stack is non-standard.
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
   // However, most engines provide an implementation.

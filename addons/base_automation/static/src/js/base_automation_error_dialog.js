@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
-import session from "web.session";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 

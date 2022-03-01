@@ -8,8 +8,6 @@ odoo.define('web.FilterMenu', function (require) {
     const { useModel } = require('web.Model');
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { Component } = owl;
-
     /**
      * 'Filters' menu
      *

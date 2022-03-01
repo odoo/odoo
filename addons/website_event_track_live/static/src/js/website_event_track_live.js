@@ -1,6 +1,4 @@
 /* global YT */
-var onYouTubeIframeAPIReady;
-
 odoo.define('website_event_track_live.website_event_youtube_embed', function (require) {
 'use strict';
 
@@ -79,7 +77,7 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
         var $youtubeElement = $('<script/>', {src: 'https://www.youtube.com/iframe_api'});
         $(document.head).append($youtubeElement);
 
-        onYouTubeIframeAPIReady = function () {
+        window.onYouTubeIframeAPIReady = function () {
             self.youtubePlayer = new YT.Player('o_wevent_youtube_iframe_container', {
                 height: '100%',
                 width: '100%',

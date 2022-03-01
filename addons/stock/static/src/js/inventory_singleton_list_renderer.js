@@ -1,10 +1,7 @@
 odoo.define('stock.SingletonListRenderer', function (require) {
 "use strict";
 
-var core = require('web.core');
 var ListRenderer = require('web.ListRenderer');
-
-var _t = core._t;
 
 /**
  * The purpose of this override is to disable line buttons when the row is edited.

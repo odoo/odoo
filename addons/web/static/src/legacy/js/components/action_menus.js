@@ -7,7 +7,6 @@ odoo.define('web.ActionMenus', function (require) {
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
     const {
-        Component,
         onMounted,
         onPatched,
         onWillStart,

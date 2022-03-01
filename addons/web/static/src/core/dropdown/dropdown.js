@@ -7,7 +7,6 @@ import { localization } from "../l10n/localization";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const {
-    Component,
     EventBus,
     onWillStart,
     useEffect,

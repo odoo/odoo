@@ -3,22 +3,6 @@ odoo.define('auth_totp_mail.tours', function(require) {
 
 const tour = require('web_tour.tour');
 
-function openUserProfileAtSecurityTab() {
-    return [{
-        content: 'Open user account menu',
-        trigger: '.o_user_menu .oe_topbar_name',
-        run: 'click',
-    }, {
-        content: "Open preferences / profile screen",
-        trigger: '[data-menu=settings]',
-        run: 'click',
-    }, {
-        content: "Switch to security tab",
-        trigger: 'a[role=tab]:contains("Account Security")',
-        run: 'click',
-    }];
-}
-
 function openAccountSettingsTab() {
     return [{
         content: 'Go to settings',

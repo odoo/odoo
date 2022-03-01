@@ -213,7 +213,6 @@ var FormRenderer = BasicRenderer.extend({
      *
      */
     enableButtons: function () {
-        const allButtons = this.$el[0].querySelectorAll('.o_statusbar_buttons button, .oe_button_box button');
         this.manuallyDisabledButtons.forEach((button) => {
             button.removeAttribute("disabled");
         });

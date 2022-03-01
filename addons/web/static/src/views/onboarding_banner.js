@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useActionLinks } from "@web/views/helpers/view_hook";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, markup, onWillStart, xml } = owl;
+const { markup, onWillStart, xml } = owl;
 
 export class OnboardingBanner extends LegacyComponent {
     setup() {

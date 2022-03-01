@@ -30,7 +30,6 @@ var PortalChatter = publicWidget.Widget.extend({
      * @constructor
      */
     init: function (parent, options) {
-        var self = this;
         this.options = {};
         this._super.apply(this, arguments);
 

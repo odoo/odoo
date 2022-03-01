@@ -402,7 +402,7 @@ var KanbanModel = BasicModel.extend({
     async _readProgressBarGroup(list, options) {
         const groupsDef = this._readGroup(list, options);
         const progressBarDef = this._readProgressBar(list);
-        const [groups, progressBar] = await Promise.all([groupsDef, progressBarDef]);
+        const [ /* groups */ , progressBar] = await Promise.all([groupsDef, progressBarDef]);
 
         // For each empty group having an active filter, we clear their filter and refetch.
         // For instance, this could arrive when we drag out all records of a column

@@ -7,7 +7,7 @@ import { PivotGroupByMenu } from "@web/views/pivot/pivot_group_by_menu";
 import fieldUtils from "web.field_utils";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onWillUpdateProps } = owl;
+const { onWillUpdateProps } = owl;
 const formatterRegistry = registry.category("formatters");
 
 export class PivotRenderer extends LegacyComponent {

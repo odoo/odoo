@@ -27,7 +27,7 @@ export function prepareFavoriteMenuRegister() {
 
     customFavoriteItemKey = 'custom-favorite-item';
     const favoriteMenuRegistry = registry.category("favoriteMenu");
-    for (const [key, _] of favoriteMenuRegistry.getEntries()) {
+    for (const [key] of favoriteMenuRegistry.getEntries()) {
         if (key !== customFavoriteItemKey) {
             favoriteMenuRegistry.remove(key);
         }

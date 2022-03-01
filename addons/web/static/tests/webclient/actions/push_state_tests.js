@@ -14,7 +14,7 @@ import {
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 
 let serverData;
 let target;

@@ -3,7 +3,6 @@ odoo.define('stock.StockOrderpointListController', function (require) {
 
 var core = require('web.core');
 var ListController = require('web.ListController');
-var FormView = require('web.FormView');
 
 var qweb = core.qweb;
 

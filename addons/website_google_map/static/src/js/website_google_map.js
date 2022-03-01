@@ -80,7 +80,7 @@ function initialize_map() {
         for (var i = 0; i < odoo_partner_data.counter; i++) {
             set_marker(odoo_partner_data.partners[i]);
         }
-        var markerCluster = new MarkerClusterer(map, markers, options);
+        new MarkerClusterer(map, markers, options);
     }
     /* eslint-enable no-undef */
 }

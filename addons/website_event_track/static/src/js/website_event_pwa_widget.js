@@ -18,7 +18,6 @@ odoo.define("website_event_track.website_event_pwa_widget", function (require) {
 
     var config = require("web.config");
     var publicWidget = require("web.public.widget");
-    var utils = require("web.utils");
 
     var PWAInstallBanner = publicWidget.Widget.extend({
         xmlDependencies: ["/website_event_track/static/src/xml/website_event_pwa.xml"],

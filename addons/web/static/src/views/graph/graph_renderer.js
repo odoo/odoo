@@ -9,7 +9,7 @@ import { useAssets } from "@web/core/assets";
 import { renderToString } from "@web/core/utils/render";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onWillUnmount, useEffect, useRef } = owl;
+const { onWillUnmount, useEffect, useRef } = owl;
 
 const NO_DATA = _lt("No data");
 

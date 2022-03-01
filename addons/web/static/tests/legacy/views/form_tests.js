@@ -32,7 +32,7 @@ const { registry } = require("@web/core/registry");
 const { scrollerService } = require("@web/core/scroller_service");
 const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-const { Component, onMounted, onWillUnmount, xml } = owl;
+const { onMounted, onWillUnmount, xml } = owl;
 
 let serverData;
 let target;
@@ -1338,7 +1338,6 @@ QUnit.module('Views', {
             res_id: 2,
         });
 
-        var count = 0;
         await testUtils.mock.intercept(form, "execute_action", function (event) {
             if (event.data.action_data.name == "action_to_perform") {
                 assert.containsN(form, 'button.oe_stat_button[disabled]', 2, "While performing the action, both buttons should be disabled.");

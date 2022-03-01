@@ -4,8 +4,6 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component } = owl;
-
 /**
  * @param {Object} params
  * @returns {Object}

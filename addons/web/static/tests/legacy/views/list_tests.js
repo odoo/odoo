@@ -29,7 +29,7 @@ const { getFixture, click, legacyExtraNextTick } = require("@web/../tests/helper
 const { createWebClient, doAction, loadState } = require('@web/../tests/webclient/helpers');
 
 const { _t } = core;
-const { Component, markup, onMounted, onWillUnmount, xml } = owl;
+const { markup, onMounted, onWillUnmount, xml } = owl;
 
 let serverData;
 let target;
