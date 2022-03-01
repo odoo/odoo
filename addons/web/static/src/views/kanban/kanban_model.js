@@ -318,7 +318,26 @@ class KanbanDynamicGroupList extends DynamicGroupList {
     }
 }
 
-class KanbanDynamicRecordList extends DynamicRecordList {}
+class KanbanDynamicRecordList extends DynamicRecordList {
+    async moveRecord(dataRecordId, dataGroupId, refId) {
+        this.model.transaction.start();
+
+        // Quick update: moves the record at the right position and notifies components
+        const record = this.records.find((r) => r.id === dataRecordId);
+        const refIndex = this.records.findIndex((r) => r.id === refId);
+        this.addRecord(this.removeRecord(record), refIndex >= 0 ? refIndex + 1 : 0);
+
+        // Call resequence
+        try {
+            await this.resequence();
+        } catch (err) {
+            this.model.transaction.abort();
+            this.model.notify();
+            throw err;
+        }
+        this.model.transaction.commit();
+    }
+}
 
 KanbanDynamicRecordList.DEFAULT_LIMIT = 40;
 

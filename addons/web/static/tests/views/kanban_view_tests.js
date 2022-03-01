@@ -33,14 +33,13 @@ const { markup } = owl;
 
 /**
  * @param {HTMLElement} el
- * @param {boolean} after
  * @returns {{ clientX: number, clientY: number }}
  */
-const getPos = (el, after = false) => {
-    const rect = el.getBoundingClientRect();
+const getPos = (el) => {
+    const { x, y, width, height } = el.getBoundingClientRect();
     return {
-        clientX: rect.x + rect.width / 2,
-        clientY: rect.y + (after ? rect.height + 1 : rect.height / 2),
+        clientX: x + width / 2,
+        clientY: y + height / 2,
     };
 };
 const makeFakeActionService = (actionService) => {
@@ -82,12 +81,12 @@ const getCounters = () =>
  *  first element will be dropped. Said key can either be:
  *
  *      * 'after': the first element will be dropped *below* the second,
- *          typically used to move a record after another.
+ *          typically used to move a record after another;
  *
  *      * 'before': the first element will be dropped *above* the second,
- *          typically used to move a record before another.
+ *          typically used to move a record before another;
  *
- *      * 'inside': the first element will be dropped *right at the start* of
+ *      * 'appendTo': the first element will be dropped *at the end* of
  *          the second, typically used to move a record in another group.
  *
  * Note that only the last event is awaited, since all the others are
@@ -97,35 +96,44 @@ const getCounters = () =>
  * @param {Object} params
  * @param {string} [params.after]
  * @param {string} [params.before]
- * @param {string} [params.inside]
+ * @param {string} [params.appendTo]
  * @returns {Promise<void>}
  */
-const dragAndDrop = async (selector, { after, before, inside }) => {
-    let targetEl;
-    if (inside) {
-        const list = target.querySelector(inside);
-        targetEl = list.children[list.children.length - 1];
-    } else {
-        targetEl = target.querySelector(after || before);
-    }
+const dragAndDrop = async (selector, { after, before, appendTo }) => {
+    const el = target.querySelector(selector);
+    const targetEl = target.querySelector(after || before || appendTo);
 
     // Mouse down on main target then move to a far away position to initiate the drag
-    const el = target.querySelector(selector);
-    if (!el) {
-        throw new Error(`Couldn't find element to drag for selector "${selector}"`);
-    }
     triggerEvent(el, null, "mousedown", getPos(el));
     triggerEvent(window, null, "mousemove", { clientX: -999, clientY: -999 });
 
-    // Enter the target list (iff other list)
-    const initList = el.closest(".o_kanban_group");
-    const targetList = targetEl.closest(".o_kanban_group");
-    if (initList !== targetList) {
-        triggerEvent(targetList, null, "mouseenter", getPos(targetList));
+    // Enter the target list (if grouped and other list)
+    if (target.querySelector(".o_kanban_group")) {
+        const initList = el.closest(".o_kanban_group");
+        const targetList = targetEl.closest(".o_kanban_group");
+        if (initList !== targetList) {
+            triggerEvent(targetList, null, "mouseenter", getPos(targetList));
+        }
+    }
+
+    // Find target position
+    const { x, y, width, height } = targetEl.getBoundingClientRect();
+    const targetPos = { clientX: x, clientY: y };
+    if (after) {
+        // Right after the bottom-right pixel of the center of the target
+        targetPos.clientX += width / 2 + 1;
+        targetPos.clientY += height / 2 + 1;
+    } else if (before) {
+        // Right before the top-left pixel of the center of the target
+        targetPos.clientX += width / 2 - 1;
+        targetPos.clientY += height / 2 - 1;
+    } else if (appendTo) {
+        // At the bottom-right corner of the target
+        targetPos.clientX += width - 1;
+        targetPos.clientY += height - 1;
     }
 
     // Move, enter and drop the element on the target
-    const targetPos = getPos(targetEl, Boolean(after || inside));
     triggerEvent(window, null, "mousemove", targetPos);
     triggerEvent(targetEl, null, "mouseenter", targetPos);
     await triggerEvent(el, null, "mouseup", targetPos);
@@ -3608,7 +3616,7 @@ QUnit.module("Views", (hooks) => {
 
         // first record of first column moved to the bottom of second column
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:nth-child(2)",
+            appendTo: ".o_kanban_group:nth-child(2)",
         });
 
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
@@ -3649,7 +3657,7 @@ QUnit.module("Views", (hooks) => {
 
         // first record of second column moved to the bottom of first column
         await dragAndDrop(".o_kanban_group:nth-child(2) .o_kanban_record", {
-            inside: ".o_kanban_group:first-child",
+            appendTo: ".o_kanban_group:first-child",
         });
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
@@ -3691,7 +3699,7 @@ QUnit.module("Views", (hooks) => {
 
         // first record of first column moved to the bottom of second column
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:nth-child(2)",
+            appendTo: ".o_kanban_group:nth-child(2)",
         });
 
         // should not be draggable
@@ -3707,7 +3715,7 @@ QUnit.module("Views", (hooks) => {
 
         // first record of first column moved to the bottom of second column
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:nth-child(2)",
+            appendTo: ".o_kanban_group:nth-child(2)",
         });
 
         // should not be draggable
@@ -3768,7 +3776,7 @@ QUnit.module("Views", (hooks) => {
 
         // drag&drop a record in another column
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:nth-child(2)",
+            appendTo: ".o_kanban_group:nth-child(2)",
         });
 
         // should not drag&drop record
@@ -3803,7 +3811,7 @@ QUnit.module("Views", (hooks) => {
 
         // drag&drop a record in another column
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:nth-child(2)",
+            appendTo: ".o_kanban_group:nth-child(2)",
         });
 
         // should not drag&drop record
@@ -3859,7 +3867,7 @@ QUnit.module("Views", (hooks) => {
 
         // drag&drop a record in another column
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:nth-child(2)",
+            appendTo: ".o_kanban_group:nth-child(2)",
         });
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
@@ -3889,7 +3897,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:last-child",
+            appendTo: ".o_kanban_group:last-child",
         });
 
         assert.containsNone(
@@ -3964,7 +3972,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-                inside: ".o_kanban_group:nth-child(2)",
+                appendTo: ".o_kanban_group:nth-child(2)",
             });
 
             assert.containsOnce(
@@ -3997,7 +4005,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-                inside: ".o_kanban_group:nth-child(2)",
+                appendTo: ".o_kanban_group:nth-child(2)",
             });
 
             assert.containsOnce(
@@ -4041,7 +4049,7 @@ QUnit.module("Views", (hooks) => {
 
             // attempt to drag&drop a record in another column
             await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-                inside: ".o_kanban_group:nth-child(2)",
+                appendTo: ".o_kanban_group:nth-child(2)",
             });
 
             // should not drag&drop record
@@ -4110,7 +4118,7 @@ QUnit.module("Views", (hooks) => {
 
         // drag&drop a record in another column
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:nth-child(2)",
+            appendTo: ".o_kanban_group:nth-child(2)",
         });
 
         // should not be dropped, card should reset back to first column
@@ -6639,8 +6647,8 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.hasClass(
-            target.querySelector(".o_kanban_view"),
-            "ui-sortable",
+            target.querySelector(".o_kanban_renderer"),
+            "o_kanban_sortable",
             "columns should be sortable"
         );
         assert.containsN(target, ".o_kanban_group", 2, "should have two columns");
@@ -7786,19 +7794,19 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCounters(), ["1", "1", "2"]);
 
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:nth-child(2)",
+            appendTo: ".o_kanban_group:nth-child(2)",
         });
 
         assert.deepEqual(getCounters(), ["0", "2", "2"]);
 
         await dragAndDrop(".o_kanban_group:nth-child(2) .o_kanban_record", {
-            inside: ".o_kanban_group:first-child",
+            appendTo: ".o_kanban_group:first-child",
         });
 
         assert.deepEqual(getCounters(), ["1", "1", "2"]);
 
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:nth-child(3)",
+            appendTo: ".o_kanban_group:nth-child(3)",
         });
 
         assert.deepEqual(getCounters(), ["0", "1", "3"]);
@@ -7858,7 +7866,7 @@ QUnit.module("Views", (hooks) => {
 
             // Drag the last kanban record to the first column
             await dragAndDrop(".o_kanban_group:last-child .o_kanban_record:nth-child(4)", {
-                inside: ".o_kanban_group:first-child",
+                appendTo: ".o_kanban_group:first-child",
             });
 
             assert.deepEqual(
@@ -7901,7 +7909,7 @@ QUnit.module("Views", (hooks) => {
 
         // Drag the first kanban record on top of the last
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            inside: ".o_kanban_group:last-child",
+            appendTo: ".o_kanban_group:last-child",
         });
 
         // load more twice to load all records of second column
@@ -8045,7 +8053,7 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector(".o_kanban_group"),
                 "quick create should have been added in the first column"
             );
-            await dragAndDrop(".o_kanban_record", { inside: ".o_kanban_group:nth-child(2)" });
+            await dragAndDrop(".o_kanban_record", { appendTo: ".o_kanban_group:nth-child(2)" });
             await createRecord();
             assert.strictEqual(
                 target.querySelector(".o_kanban_quick_create").closest(".o_kanban_group"),
@@ -8815,10 +8823,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["1", "2"], "should writes on both kanban records");
     });
 
-    QUnit.skipWOWL("ungrouped kanban with handle field", async (assert) => {
+    QUnit.test("ungrouped kanban with handle field", async (assert) => {
         assert.expect(4);
-
-        const envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
 
         await makeView({
             type: "kanban",
@@ -8836,32 +8842,22 @@ QUnit.module("Views", (hooks) => {
                 if (route === "/web/dataset/resequence") {
                     assert.deepEqual(
                         args.ids,
-                        envIDs,
+                        [2, 3, 4, 1],
                         "should write the sequence in correct order"
                     );
-                    return true;
                 }
             },
         });
 
-        assert.hasClass(target.querySelector(".o_kanban_view"), "ui-sortable");
-        assert.strictEqual(
-            target.querySelector(".o_kanban_record:not(.o_kanban_ghost)").innerText,
-            "yopblipgnapblip"
-        );
+        assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_sortable");
+        assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
 
-        const $record = target.querySelector(".o_kanban_view .o_kanban_record:first-child");
-        const $to = target.querySelector(".o_kanban_view .o_kanban_record:nth-child(4)");
-        envIDs = [2, 3, 4, 1]; // first record of moved after last one
-        await testUtils.dom.dragAndDrop($record, $to, { position: "bottom" });
+        await dragAndDrop(".o_kanban_record", { after: ".o_kanban_record:nth-child(4)" });
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_record:not(.o_kanban_ghost)").innerText,
-            "blipgnapblipyop"
-        );
+        assert.deepEqual(getCardTexts(), ["blip", "gnap", "blip", "yop"]);
     });
 
-    QUnit.skipWOWL("ungrouped kanban without handle field", async (assert) => {
+    QUnit.test("ungrouped kanban without handle field", async (assert) => {
         assert.expect(3);
 
         await makeView({
@@ -8877,26 +8873,17 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates></kanban>",
             async mockRPC(route, args) {
                 if (route === "/web/dataset/resequence") {
-                    assert.ok(false, "should not trigger a resequencing");
+                    throw new Error("should not trigger a resequencing");
                 }
-                return this._super(route, args);
             },
         });
 
-        assert.doesNotHaveClass(target.querySelector(".o_kanban_view"), "ui-sortable");
-        assert.strictEqual(
-            target.querySelector(".o_kanban_record:not(.o_kanban_ghost)").innerText,
-            "yopblipgnapblip"
-        );
+        assert.doesNotHaveClass(target.querySelector(".o_kanban_renderer"), "o_kanban_sortable");
+        assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
 
-        const $draggedRecord = target.querySelector(".o_kanban_view .o_kanban_record:first-child");
-        const $to = target.querySelector(".o_kanban_view .o_kanban_record:nth-child(4)");
-        await testUtils.dom.dragAndDrop($draggedRecord, $to, { position: "bottom" });
+        await dragAndDrop(".o_kanban_record", { after: ".o_kanban_record:nth-child(4)" });
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_record:not(.o_kanban_ghost)").innerText,
-            "yopblipgnapblip"
-        );
+        assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
     });
 
     QUnit.skipWOWL("click on image field in kanban with oe_kanban_global_click", async (assert) => {

@@ -111,6 +111,7 @@ export class KanbanArchParser extends XMLParser {
         const tooltips = {};
         let kanbanBoxTemplate = makeEl("<t />");
         let colorField = "color";
+        let hasHandleWidget = null;
         const activeFields = {};
 
         // Root level of the template
@@ -133,6 +134,8 @@ export class KanbanArchParser extends XMLParser {
                         `<span t-esc="(Array.isArray(${value}) ? ${value}[1] : ${value}) or ''"/>`
                     );
                     node.replaceWith(tesc);
+                } else if (fieldInfo.widget === "handle") {
+                    hasHandleWidget = true;
                 }
             }
             // Converts server qweb attributes to Owl attributes.
@@ -265,6 +268,7 @@ export class KanbanArchParser extends XMLParser {
             activeActions,
             className,
             defaultGroupBy,
+            hasHandleWidget,
             colorField,
             onCreate,
             quickCreateView,

@@ -57,10 +57,10 @@ export class KanbanRenderer extends Component {
             ref: rootRef,
             setup: () =>
                 this.canResequenceRecords && {
-                    listSelector: ".o_kanban_group",
+                    listSelector: this.props.list.isGrouped ? ".o_kanban_group" : false,
                     itemSelector: ".o_record_draggable",
                     containment: this.canMoveRecords ? false : "parent",
-                    axis: this.canMoveRecords ? false : "y",
+                    axis: !this.canMoveRecords && this.props.list.isGrouped ? "y" : false,
                     cursor: "move",
                 },
             onListEnter(group) {
@@ -70,8 +70,10 @@ export class KanbanRenderer extends Component {
                 group.classList.remove("o_kanban_hover");
             },
             onStart(group, item) {
-                dataGroupId = group.dataset.id;
                 dataRecordId = item.dataset.id;
+                if (group) {
+                    dataGroupId = group.dataset.id;
+                }
                 item.classList.add("o_dragged");
             },
             onStop(group, item) {
@@ -79,11 +81,13 @@ export class KanbanRenderer extends Component {
             },
             onDrop: async ({ item, previous, parent }) => {
                 item.classList.remove("o_record_draggable");
-                const groupEl = parent.closest(".o_kanban_group");
                 const refId = previous ? previous.dataset.id : null;
-                const groupId = groupEl.dataset.id;
-                await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, groupId);
-                item.classList.add("o_record_draggable");
+                let targetGroupId;
+                if (this.props.list.isGrouped) {
+                    const groupEl = parent.closest(".o_kanban_group");
+                    targetGroupId = groupEl.dataset.id;
+                }
+                await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
             },
         });
         useSortable({
@@ -166,7 +170,10 @@ export class KanbanRenderer extends Component {
     }
 
     get canResequenceRecords() {
-        return this.props.list.isGrouped && this.props.info.recordsDraggable;
+        return (
+            (this.props.info.hasHandleWidget || this.props.list.isGrouped) &&
+            this.props.info.recordsDraggable
+        );
     }
 
     // `context` can be called in the evaluated kanban template.
