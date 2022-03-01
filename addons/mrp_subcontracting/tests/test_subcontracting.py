@@ -435,7 +435,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(backorder_mo.qty_produced, 0)
         backorder.move_lines.quantity_done = 2
         backorder._action_done()
-        self.assertTrue(picking_receipt.move_lines.move_orig_ids.production_id.state == 'done')
+        self.assertTrue(picking_receipt.move_lines.move_orig_ids[0].production_id.state == 'done')
 
     def test_flow_9(self):
         """Ensure that cancel the subcontract moves will also delete the
@@ -955,3 +955,96 @@ class TestSubcontractingTracking(TransactionCase):
                 wizard.process()
 
             self.assertEqual(picking_receipt.state, 'done')
+
+
+class TestSubcontractingSerialMassReceipt(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.subcontractor = self.env['res.partner'].create({
+            'name': 'Subcontractor',
+        })
+        self.resupply_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        self.raw_material = self.env['product.product'].create({
+            'name': 'Component',
+            'type': 'product',
+            'route_ids': [Command.link(self.resupply_route.id)],
+        })
+        self.finished = self.env['product.product'].create({
+            'name': 'Finished',
+            'type': 'product',
+            'tracking': 'serial'
+        })
+        self.bom = self.env['mrp.bom'].create({
+            'product_id': self.finished.id,
+            'product_tmpl_id': self.finished.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.link(self.subcontractor.id)],
+            'consumption': 'strict',
+            'bom_line_ids': [
+                Command.create({'product_id': self.raw_material.id, 'product_qty': 1}),
+            ]
+        })
+
+    def test_receive_after_resupply(self):
+        quantities = [5, 4, 1]
+        # Make needed component stock
+        self.env['stock.quant']._update_available_quantity(self.raw_material, self.env.ref('stock.stock_location_stock'), sum(quantities))
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = sum(quantities)
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        # Process the delivery of the components
+        picking_deliver = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)]).picking_ids
+        picking_deliver.action_assign()
+        picking_deliver.button_validate()
+        wizard_data = picking_deliver.button_validate()
+        wizard = Form(self.env[wizard_data['res_model']].with_context(wizard_data['context'])).save()
+        wizard.process()
+        # Receive
+        for quantity in quantities:
+            # Receive <quantity> finished products
+            Form(self.env['stock.assign.serial'].with_context(
+                default_move_id=picking_receipt.move_lines[0].id,
+                default_next_serial_number=self.env['stock.production.lot']._get_next_serial(picking_receipt.company_id, picking_receipt.move_lines[0].product_id) or 'sn#1',
+                default_next_serial_count=quantity,
+            )).save().generate_serial_numbers()
+            wizard_data = picking_receipt.button_validate()
+            if wizard_data is not True:
+                # Create backorder
+                wizard = Form(self.env[wizard_data['res_model']].with_context(wizard_data['context'])).save()
+                wizard.process()
+                self.assertEqual(picking_receipt.state, 'done')
+                picking_receipt = picking_receipt.backorder_ids[-1]
+                self.assertEqual(picking_receipt.state, 'assigned')
+        self.assertEqual(picking_receipt.state, 'done')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.raw_material, self.env.ref('stock.stock_location_stock')), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.raw_material, self.subcontractor.property_stock_subcontractor), 0)
+
+    def test_receive_no_resupply(self):
+        quantity = 5
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = quantity
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        # Receive finished products
+        Form(self.env['stock.assign.serial'].with_context(
+            default_move_id=picking_receipt.move_lines[0].id,
+            default_next_serial_number=self.env['stock.production.lot']._get_next_serial(picking_receipt.company_id, picking_receipt.move_lines[0].product_id) or 'sn#1',
+            default_next_serial_count=quantity,
+        )).save().generate_serial_numbers()
+        picking_receipt.button_validate()
+        self.assertEqual(picking_receipt.state, 'done')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.raw_material, self.env.ref('stock.stock_location_stock')), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.raw_material, self.subcontractor.property_stock_subcontractor, allow_negative=True), -quantity)
