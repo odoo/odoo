@@ -43,6 +43,10 @@ class DefaultFooter extends Component {
             .map((el) => ({ namespace: el[0], name: el[1].name }))
             .filter((el) => el.name);
     }
+
+    onClick(namespace) {
+        this.props.switchNamespace(namespace);
+    }
 }
 DefaultFooter.template = xml`
 <span>
@@ -50,7 +54,9 @@ DefaultFooter.template = xml`
     <t t-foreach="elements" t-as="element" t-key="element.namespace">
         <t t-if="!(element_first || element_last)">, </t>
         <t t-if="element_last and !element_first"> and </t>
-        <span t-esc="element.namespace" class='o_promote'/><t t-esc="element.name"/>
+        <span class="o_namespace" t-on-click="() => this.onClick(element.namespace)">
+            <span t-esc="element.namespace" class='o_promote'/><t t-esc="element.name"/>
+        </span>
     </t>
 </span>
 `;
