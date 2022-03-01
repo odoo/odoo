@@ -282,6 +282,7 @@ class Channel(models.Model):
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id', string='Upload Groups',
         help="Group of users allowed to publish contents on a documentation course.")
+    website_background_image_url = fields.Char('Background image URL', compute='_compute_website_background_image_url')
     # not stored access fields, depending on each user
     completed = fields.Boolean('Done', compute='_compute_user_statistics', compute_sudo=False)
     completion = fields.Integer('Completion', compute='_compute_user_statistics', compute_sudo=False)
@@ -331,16 +332,18 @@ class Channel(models.Model):
 
     @api.depends('channel_partner_ids.partner_id')
     @api.depends_context('uid')
-    @api.model
     def _compute_is_member(self):
+        if self.env.user._is_public():
+            self.is_member = False
+            return
         channel_partners = self.env['slide.channel.partner'].sudo().search([
             ('channel_id', 'in', self.ids),
         ])
-        result = dict()
+        result = defaultdict(set)
         for cp in channel_partners:
-            result.setdefault(cp.channel_id.id, []).append(cp.partner_id.id)
+            result[cp.channel_id.id].add(cp.partner_id.id)
         for channel in self:
-            channel.is_member = channel.is_member = self.env.user.partner_id.id in result.get(channel.id, [])
+            channel.is_member = self.env.user.partner_id.id in result[channel.id]
 
     @api.depends('slide_ids.is_category')
     def _compute_category_and_slide_ids(self):
@@ -453,6 +456,15 @@ class Channel(models.Model):
         for channel in self:
             new_slides = new_published_slides.filtered(lambda slide: slide.channel_id == channel)
             channel.partner_has_new_content = any(slide not in slide_partner_completed for slide in new_slides)
+
+    @api.depends('image_1920', 'channel_type')
+    def _compute_website_background_image_url(self):
+        for channel in self:
+            channel.website_background_image_url = (
+                channel.website_id.image_url(channel, 'image_256') if channel.image_1920
+                else '/website_slides/static/src/img/channel-%s-default.jpg'
+                     % ('training' if channel.channel_type == 'training' else 'documentation')
+            )
 
     @api.depends('name', 'website_id.domain')
     def _compute_website_url(self):
