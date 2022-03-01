@@ -285,7 +285,7 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
     def open_website_url(self):
         return {
             'type': 'ir.actions.act_url',
-            'url': url_join(self.website_id._get_http_domain(), self.website_url) if self.website_id else self.website_url,
+            'url': url_join(self.website_id.domain, self.website_url) if self.website_id else self.website_url,
             'target': 'self',
         }
 
