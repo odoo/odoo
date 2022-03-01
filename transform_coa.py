@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import glob
+import io
 import sys
 import csv
 from pathlib import Path
@@ -25,6 +26,11 @@ class Node(dict):
         children.append(child)
         self['children'] = children
 
+    def pformat(self, level=0):
+        stream = io.StringIO()
+        self.pprint(level, stream)
+        return stream.getvalue()
+
     def pprint(self, level=0, stream=None):
         stream = stream or sys.stdout
         for child in self.get('children', []):
@@ -33,7 +39,7 @@ class Node(dict):
 class Field(Node):
     def __init__(self, el):
         super().__init__(el)
-        text = (el.text or '').strip()
+        text = (el.get('text') or (hasattr(el, 'text') and el.text) or '').strip()
         ref = el.get('ref', '').strip()
         _eval = el.get('eval', '').strip()
         if text:
@@ -137,8 +143,14 @@ class Unquoted(str):
     def __repr__(self):
         return self._value
 
-class ResCompany(Record):
+class TemplateData(Record):
     _from = 'account.chart.template'
+    def cleanup(self, child):
+        child = super().cleanup(child)
+        record_id = child.get('id')
+        if record_id in ('name'):
+            child['delete'] = True
+        return child
 
 class ResCountryGroup(Record):
     _from = 'res.country.group'
@@ -148,7 +160,6 @@ class ResCountryGroup(Record):
         if record_id in ('country_ids'):
             child._value = self.cleanup_o2m(child)
         return child
-
 
 class AccountTax(Record):
     _from = 'account.tax.template'
@@ -163,6 +174,19 @@ class AccountTax(Record):
 
 class AccountTaxRepartitionLine(Record):
     _from = 'account.tax.repartition.line'
+
+class AccountFiscalPosition(Record):
+    _from = 'account.fiscal.position'
+    def cleanup(self, child):
+        child = super().cleanup(child)
+        record_id = child.get('id')
+        if child._value is None:
+            child['delete'] = True
+        elif record_id in ('country_id', 'country_group_id'):
+            child._value = Ref(child._value)
+        elif record_id in ('vat_required', 'auto_apply'):
+            child._value = int(child._value)
+        return child
 
 class AccountTaxReport(Record):
     _from = 'account.tax.report'
@@ -225,13 +249,68 @@ def run_file(filename):
 
     return {record['id']: record for record in nodes_tree}
 
-def do_module(module, lang):
-    convert_account_account_csv(module, )
-    convert_account_group_csv(module)
-    convert_account_tax_group_xml(module)
+def merge_records(record_a, record_b):
+    for _id, field in record_a['children'].items():
+        record_b['children'][_id] = field
 
-def convert_account_tax_group_xml(module):
-    records = {id: record for id, record in get_records(module).items()
+def get_records(module):
+    records = {}
+    for filename in get_files(f'addons/{module}/data/*.xml'):
+        try:
+            for key, value in run_file(filename).items():
+                # if the id is already present, merge the fields
+                if key not in records:
+                    records[key] = value
+                else:
+                    merge_records(value, records[key])
+        except etree.ParseError as e:
+            print(f"Invalid XML file {filename}, {e}")
+
+    return records
+
+# -----------------------------------------------------------
+
+def do_module(module, lang):
+    records = get_records(module)
+    convert_account_account_csv(module, lang)
+    convert_account_group_csv(module)
+    convert_account_tax_group_xml(module, records)
+    content = convert_template_data(module, records)
+    content += "\n" + convert_account_tax_xml(module, records)
+    content += "\n" + convert_account_fiscal_position_template_csv(module)
+    save_file(module, "chart_template.py", content)
+
+def convert_template_data(module, all_records):
+    stream = io.StringIO()
+    records = {id: record for id, record in all_records.items()
+               if record['_model'] == 'account.chart.template'}
+    stream.write(f"{indent(1)}@delegate_to_super_if_code_doesnt_match\n"
+                 f"{indent(1)}def _get_template_data(self, template_code, company):\n"
+                 f"{indent(2)}return ")
+    stream.write(list(records.values())[0].pformat(2).lstrip())
+    return stream.getvalue()
+
+def convert_account_account_csv(module, lang):
+    lines = load_csv(module, filename='account_account_template.csv')
+    if lines:
+        header, *rows = lines
+        header, rows = remove_chart_template_id(header, rows)
+        header.append(f"name@{lang}")
+        content = ','.join(header) + '\n' + '\n'.join([','.join(row) for row in rows])
+        save_file(module, "account.account.csv", content)
+
+def convert_account_group_csv(module):
+    lines = load_csv(module, filename='account_group_template.csv')
+    if lines:
+        header, *rows = lines
+        header, rows = remove_chart_template_id(header, rows)
+        content = ','.join(header) + '\n' + '\n'.join([','.join(row) for row in rows])
+        save_file(module, "account.group.csv", content)
+
+# -- journals missing
+
+def convert_account_tax_group_xml(module, all_records):
+    records = {id: record for id, record in all_records.items()
                if record['_model'] == 'account.tax.group'}
     header = ['name', 'country_id/id']
     rows = []
@@ -240,36 +319,68 @@ def convert_account_tax_group_xml(module):
     content = generate_csv(header, rows)
     save_file(module, "account.tax.group.csv", content)
 
-def generate_csv(header, rows):
-    fields_per_rows = [','.join([str(field) for field in row]) for row in rows]
-    return ','.join(header) + '\n' + '\n'.join(fields_per_rows)
+def convert_account_tax_xml(module, all_records):
+    stream = io.StringIO()
+    records = {id: record for id, record in all_records.items()
+                   if record['_model'] == 'account.tax.template'}
+    stream.write(f"{indent(1)}@delegate_to_super_if_code_doesnt_match\n"
+                 f"{indent(1)}def _get_account_tax(self, template_code, company):\n"
+                 f"{indent(2)}cid = (company or self.env.company).id\n"
+                 f"{indent(2)}return [\n")
+    for i, (_id, record) in enumerate(records.items()):
+        content = record.pformat(3).rstrip() + \
+                  ("," if i < len(records) - 1 else "") + "\n"
+        stream.write(content)
+    stream.write(f"{indent(2)}]\n")
+    return stream.getvalue()
 
-def convert_account_account_csv(module, lang):
-    header, rows = load_csv(module, filename='account_account_template.csv')
-    header, rows = remove_chart_template_id(header, rows)
-    header.append(f"name@{lang}")
-    content = ','.join(header) + '\n' + '\n'.join([','.join(row) for row in rows])
-    save_file(module, "account.account.csv", content)
-
-def convert_account_group_csv(module):
-    header, rows = load_csv(module, filename='account_group_template.csv')
-    header, rows = remove_chart_template_id(header, rows)
-    content = ','.join(header) + '\n' + '\n'.join([','.join(row) for row in rows])
-    save_file(module, "account.group.csv", content)
+def convert_account_fiscal_position_template_csv(module):
+    lines = load_csv(module, filename='account_fiscal_position.csv')
+    stream = io.StringIO()
+    if lines:
+        stream.write(f"{indent(1)}@delegate_to_super_if_code_doesnt_match\n"
+                     f"{indent(1)}def _get_fiscal_position(self, template_code, company):\n"
+                     f"{indent(2)}return [")
+        header, *rows = lines
+        header, rows = remove_chart_template_id(header, rows)
+        content = ""
+        for j, row in enumerate(rows):
+            record = AccountFiscalPosition({'tag': 'AccountFiscalPosition', '_model': 'account.fiscal.position'},
+                            'account.fiscal.position')
+            for i, field_header in enumerate(header):
+                record.append(Field({
+                    'id': field_header,
+                    'text': row[i] if not row[i].startswith('ref(') else '',
+                    'ref': Ref(row[i]) if row[i].startswith('ref(') else ''
+                }))
+            content += record.pformat(2).rstrip() + (',\n' if j < len(rows) - 1 else '')
+        stream.write(content.lstrip())
+        stream.write(f'\n{indent(2)}]')
+    return stream.getvalue()
 
 def remove_chart_template_id(header, rows):
-    chart_template_id_col = header.index('chart_template_id/id')
+    chart_template_id_col = None
+    for i, field in enumerate(header):
+        if field in ('chart_template_id/id', 'chart_template_id:id'):
+            chart_template_id_col = i
+        elif field.endswith(':id') or field.endswith('/id'):
+            header[i] = header[i][:-3]
     if chart_template_id_col:
         header.pop(chart_template_id_col)
         for row in rows:
             row.pop(chart_template_id_col)
     return header, rows
 
+def generate_csv(header, rows):
+    fields_per_rows = [','.join([str(field) for field in row]) for row in rows]
+    return ','.join(header) + '\n' + '\n'.join(fields_per_rows)
+
 def load_csv(module, filename):
-    csvfile = load_file(module, filename).split('\n')
+    csvfile = (load_file(module, filename) or '').split('\n')
+    if not csvfile:
+        return []
     reader = csv.reader(csvfile, delimiter=',')
-    header, *rows = [line for line in reader if line]
-    return header, rows
+    return [line for line in reader if line]
 
 def load_file(module, filename):
     filenames = (filename,
@@ -281,7 +392,8 @@ def load_file(module, filename):
         if path.exists():
             break
     else:
-        raise ValueError(f"Cannot find account_account file for {module}")
+        print(f"Cannot find {filename} file for {module}")
+        return
 
     with open(path, newline='', encoding='utf-8') as infile:
         return infile.read()
@@ -293,31 +405,8 @@ def save_file(module, filename, content):
     with open(str(path / filename), 'w', encoding="utf-8") as outfile:
         outfile.write(content)
 
-def get_records(module):
-    records = {}
-    for filename in get_files(f'addons/{module}/data/*.xml'):
-        try:
-            records.update(run_file(filename))
-        except etree.ParseError as e:
-            print(f"Invalid XML file {filename}, {e}")
-
-    return records
+# -----------------------------------------------------------
 
 if __name__ == '__main__':
-    do_l10n_fr()
-    # elif command == 'eval':
-    #     record_id = 'account_fr_tag_salaires'
-    #     record = records.get(record_id)
-    #     if not record:
-    #         sys.exit(1)
-
-    #     stream = io.StringIO()
-    #     record.pprint(stream=stream)
-    #     eval_record = safe_eval(stream.getvalue(), globals_dict={
-    #         "ref": env.ref,
-    #         "Command": Command
-    #     })
-
-    #     model = record['_model']
-    #     added_record = env[model]._load_records([{'values': eval_record}])
-    #     print(added_record)
+    # do_module("l10n_fr", "fr_FR")
+    do_module("l10n_it", "it_IT")

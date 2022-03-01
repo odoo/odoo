@@ -336,6 +336,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _get_template_data(self, template_code, company):
         return {
+            'code_digits': 6,
             'bank_account_code_prefix': '1014',
             'cash_account_code_prefix': '1015',
             'transfer_account_code_prefix': '1017',
@@ -431,7 +432,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_res_company(self, template_code, company):
         cid = (company or self.env.company).id
         return {
-            self.env.company.get_metadata()[0]['xmlid']: {
+            self.env.company.get_external_id[cid]: {
                 'currency_id': 'base.USD',
                 'account_fiscal_country_id': 'base.us',
                 'default_cash_difference_income_account_id': f'account.{cid}_cash_diff_income',
