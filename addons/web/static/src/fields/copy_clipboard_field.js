@@ -3,62 +3,42 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
 
-const { Component, useEffect, useRef, useState } = owl;
+import { CopyButton } from "@web/core/copy_button/copy_button";
+import { UrlField } from "./url_field";
+import { CharField } from "./char_field";
+import { TextField } from "./text_field";
 
-class CopyClipboard extends Component {
-    setup() {
-        this.copyRef = useRef("copyBtn");
-        this.state = useState({
-            isCopied: false,
-        });
-        this.timeout = undefined;
-        useEffect(() => {
-            if (!this.copyRef.el) return;
-            this.clipboard = new ClipboardJS(this.copyRef.el);
-            this.clipboard.on("success", () => {
-                this.state.isCopied = true;
-                setTimeout(() => {
-                    this.timeout = this.state.isCopied = false;
-                }, 800);
-            });
-            return clearTimeout(this.timeout);
-        });
-    }
-}
-
-CopyClipboard.props = {
-    isInline: { type: Boolean, optional: true },
-    type: String,
-    value: String | null,
-};
-CopyClipboard.template = "web.CopyClipboard";
+const { Component } = owl;
 
 export class CopyClipboardCharField extends Component {}
 
-CopyClipboardCharField.components = { CopyClipboard };
+CopyClipboardCharField.TYPE = CharField;
+CopyClipboardCharField.components = { CopyButton };
 CopyClipboardCharField.props = {
     ...standardFieldProps,
 };
-CopyClipboardCharField.template = "web.CopyClipboardCharField";
+CopyClipboardCharField.template = "web.CopyClipboardField";
 
 registry.category("fields").add("CopyClipboardChar", CopyClipboardCharField);
 
 export class CopyClipboardTextField extends Component {}
 
-CopyClipboardTextField.components = { CopyClipboard };
+CopyClipboardTextField.TYPE = TextField;
+CopyClipboardTextField.components = { CopyButton };
 CopyClipboardTextField.props = {
     ...standardFieldProps,
 };
-CopyClipboardTextField.template = "web.CopyClipboardTextField";
+CopyClipboardTextField.template = "web.CopyClipboardField";
 
 registry.category("fields").add("CopyClipboardText", CopyClipboardTextField);
 
 export class CopyClipboardURLField extends Component {}
 
-CopyClipboardURLField.components = { CopyClipboard };
+CopyClipboardURLField.TYPE = UrlField;
+CopyClipboardURLField.components = { CopyButton };
 CopyClipboardURLField.props = {
     ...standardFieldProps,
 };
-CopyClipboardURLField.template = "web.CopyClipboardURLField";
+CopyClipboardURLField.template = "web.CopyClipboardField";
 
 registry.category("fields").add("CopyClipboardURL", CopyClipboardURLField);

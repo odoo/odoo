@@ -1,32 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.CopyClipboard" owl="1">
-        <div t-if="props.value" class="o_field_copy o_field_widget" t-att-class="{'o_text_overflow': props.isInline}">
-            <a t-if="props.type === 'url'" target="_blank" t-att-href="props.value" t-esc="props.value"/>
-            <span t-else="" t-esc="props.value"/>
-            <button
-                t-attf-class="btn btn-sm btn-primary o_clipboard_button {{'o_btn_' + props.type + '_copy'}} {{state.isCopied ? 'bg-success' : ''}}"
-                t-ref="copyBtn"
-                t-att-data-clipboard-text="props.value"
-            >
-                <span t-if="!state.isCopied"><span class="fa fa-clipboard mx-1"></span>Copy</span>
-                <span t-else=""><span class="fa fa-check mx-1"></span>Copied</span>
-            </button>
-        </div>
-        <div t-else=""></div>
-    </t>
-
-    <t t-name="web.CopyClipboardCharField" owl="1">
-        <CopyClipboard isInline="true" type="'char'" value="props.value"/>
-    </t>
-
-    <t t-name="web.CopyClipboardTextField" owl="1">
-        <CopyClipboard type="'text'" value="props.value"/>
-    </t>
-
-    <t t-name="web.CopyClipboardURLField" owl="1">
-        <CopyClipboard isInline="true" type="'url'" value="props.value"/>
+    <t t-name="web.CopyClipboardField" owl="1">
+        <t t-if="props.value">
+            <t t-component="constructor.TYPE" t-props="props"/>
+            <CopyButton className="'o_btn_' + props.type + '_copy'" value="props.value"/>
+        </t>
     </t>
 
 </templates>

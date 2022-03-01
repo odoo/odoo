@@ -1,0 +1,20 @@
+.o_field_CopyClipboardText, .o_field_CopyClipboardURL, .o_field_CopyClipboardChar {
+    display: flex !important;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: fit-content !important;
+    border-radius: 5px;
+    border: 1px solid $primary;
+    font-size: $font-size-sm;
+    color: $o-brand-primary;
+    font-weight: $badge-font-weight;
+
+    &.o_field_empty {
+        display: none !important;
+    }
+    
+    > span {
+        padding: 0 5px;
+        text-align: center;
+    }
+}
