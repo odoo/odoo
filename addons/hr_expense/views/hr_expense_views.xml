@@ -131,7 +131,7 @@
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
-                            <field name="name" placeholder="e.g. Lunch with Customer"/>
+                            <field name="name" placeholder="e.g. Lunch with Customer" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
                         </h1>
                     </div>
                     <group>
@@ -141,17 +141,18 @@
                             <field name="is_editable" invisible="1"/>
                             <field name="is_ref_editable" invisible="1"/>
                             <field name="company_currency_id" invisible="1"/>
-                            <field name="product_id" required="1" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"/>
-                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('product_has_cost', '=', False)]}"/>
+                            <field name="sheet_is_editable" invisible="1"/>
+                            <field name="product_id" required="1" attrs="{'readonly': [('sheet_is_editable', '=', False)]}" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"/>
+                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('product_has_cost', '=', False)], 'readonly': [('sheet_is_editable', '=', False)]}"/>
                             <field name="product_uom_category_id" invisible="1"/>
                             <label for="quantity" attrs="{'invisible': [('product_has_cost', '=', False)]}"/>
                             <div class="o_row" attrs="{'invisible': [('product_has_cost', '=', False)]}">
-                                <field name="quantity" class="oe_inline"/>
+                                <field name="quantity" class="oe_inline" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
                                 <field name="product_uom_id" required="1" options="{'no_open': True, 'no_create': True}" class="oe_inline" groups="uom.group_uom"/>
                             </div>
                             <label for="total_amount" string="Total" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
                             <div class="o_row" attrs="{'invisible': [('product_has_cost', '=', True)]}">
-                                <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
                                 <field name="currency_id" groups="base.group_multi_currency"/>
                             </div>
                             <!-- YTI TO REMOVE IN MASTER START -->
@@ -168,9 +169,9 @@
                             <field name="tax_ids" widget="many2many_tags" groups="account.group_account_readonly" attrs="{'readonly': [('is_editable', '=', False)], 'invisible': [('product_has_cost', '=', True)]}"  context="{'default_company_id': company_id}"/>
                         </group><group>
                             <field name="reference" groups="account.group_account_readonly" attrs="{'readonly': [('is_ref_editable', '=', False)], 'invisible': [('product_has_cost', '=', True)]}"/>
-                            <field name="date"/>
+                            <field name="date" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
                             <field name="accounting_date" attrs="{'invisible': ['|', ('accounting_date', '=', False), ('state', 'not in', ['approved', 'done'])]}" />
-                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]" groups="account.group_account_readonly" attrs="{'readonly': [('is_editable', '=', False)]}" context="{'default_company_id': company_id}"/>
+                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]" groups="account.group_account_readonly" attrs="{'readonly': ['|', ('is_editable', '=', False), ('sheet_is_editable', '=', False)]}" context="{'default_company_id': company_id}"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" attrs="{'readonly': [('is_editable', '=', False)]}"/>
@@ -746,16 +747,17 @@
                                 <field name="reference" optional="hide"/>
                                 <field name="analytic_account_id" optional="show" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
                                 <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
-                                <field name="account_id" optional="hide" readonly="True"/>
+                                <field name="account_id" optional="hide"/>
                                 <field name="message_unread" invisible="1"/>
+                                <field name="product_has_cost" invisible="1"/>
                                 <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-right pr-0"/>
                                 <field name="attachment_number" class="text-left pl-0" nolabel="1"/>
-                                <field name="unit_amount" optional="hide" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="unit_amount" optional="show" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'currency_id'}"/>
                                 <field name="currency_id" optional="hide"/>
-                                <field name="quantity" optional="hide"/>
+                                <field name="quantity" optional="hide" attrs="{'readonly': [('product_has_cost', '=', False)]}"/>
                                 <field name="company_id" invisible="1"/>
                                 <field name="tax_ids" optional="show" widget="many2many_tags" groups="account.group_account_readonly" context="{'default_company_id': company_id}"/>
-                                <field name="total_amount" optional="show"/>
+                                <field name="total_amount" optional="show" attrs="{'readonly': [('product_has_cost', '=', True)]}"/>
                                 <field name="company_currency_id" invisible="1"/>
                                 <field name="total_amount_company" optional="show" groups="base.group_multi_currency"/>
                                 <field name="is_refused" invisible="True"/>
