@@ -294,6 +294,19 @@ class HrEmployeePrivate(models.Model):
             vals['tz'] = user.tz
         return vals
 
+    def _prepare_resource_values(self, vals, tz):
+        resource_vals = super()._prepare_resource_values(vals, tz)
+        vals.pop('name')  # Already considered by super call but no popped
+        # We need to pop it to avoid useless resource update (& write) call
+        # on every newly created resource (with the correct name already)
+        user_id = vals.pop('user_id', None)
+        if user_id:
+            resource_vals['user_id'] = user_id
+        active_status = vals.get('active')
+        if active_status is not None:
+            resource_vals['active'] = active_status
+        return resource_vals
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

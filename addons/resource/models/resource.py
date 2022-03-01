@@ -962,6 +962,17 @@ class ResourceResource(models.Model):
             default.update(name=_('%s (copy)') % (self.name))
         return super(ResourceResource, self).copy(default)
 
+    def write(self, values):
+        if self.env.context.get('check_idempotence') and len(self) == 1:
+            values = {
+                fname: value
+                for fname, value in values.items()
+                if self._fields[fname].convert_to_write(self[fname], self) != value
+            }
+        if not values:
+            return True
+        return super().write(values)
+
     @api.onchange('company_id')
     def _onchange_company_id(self):
         if self.company_id:
