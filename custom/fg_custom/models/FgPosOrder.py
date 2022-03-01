@@ -26,6 +26,9 @@ class PosPaymentInherit(models.Model):
     x_gc_voucher_name = fields.Char("Gift Check Voucher Name")
     x_gc_voucher_cust = fields.Char("Gift Check Customer")
 
+
+
+
     @api.model
     def _export_for_ui(self, payment):
         fields = super(PosPaymentInherit, self)._export_for_ui(payment)
@@ -137,7 +140,9 @@ class PosOrder(models.Model):
         fields.update({
             'x_receipt_note': order.x_receipt_note,
             'x_ext_source': order.x_ext_source,
-            'x_ext_order_ref': order.x_ext_order_ref
+            'x_ext_order_ref': order.x_ext_order_ref,
+            'x_receipt_printed': order.x_receipt_printed,
+            'x_receipt_printed_date': order.x_receipt_printed_date
         })
         return fields
 
@@ -146,9 +151,28 @@ class PosOrder(models.Model):
         fields = super(PosOrder, self)._order_fields(order)
         fields.update({
             'x_ext_source': order.get('x_ext_source', False),
-            'x_ext_order_ref': order.get('x_ext_order_ref', False)
+            'x_ext_order_ref': order.get('x_ext_order_ref', False),
+            'x_receipt_printed': order.get('x_receipt_printed', False),
+            'x_receipt_printed_date': order.get('x_receipt_printed_date', False)
         })
         return fields
+
+    @api.model
+    def create_from_ui(self, orders, draft=False):
+        order_ids = []
+        for order in orders:
+            existing_order = False
+            if 'server_id' in order['data']:
+                existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
+            if (existing_order and existing_order.state == 'draft') or not existing_order:
+                order_ids.append(self._process_order(order, draft, existing_order))
+            elif (order['data']['x_receipt_printed']):
+                pos_order = existing_order
+                pos_order.write({
+                    'x_receipt_printed': order['data']['x_receipt_printed'],
+                    'x_receipt_printed_date': order['data']['x_receipt_printed_date'],
+                })
+        return self.env['pos.order'].search_read(domain = [('id', 'in', order_ids)], fields = ['id', 'pos_reference'])
 
 class PosOrderLineInherit(models.Model):
     _inherit = "pos.order.line"

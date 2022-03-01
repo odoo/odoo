@@ -9,12 +9,13 @@
                             <div class="header-row">
                                 <div class="col start wide">Date</div>
                                 <div class="col start wide">Receipt Number</div>
-                                <div class="col start wide">External Order Ref</div>
-                                <div class="col start wide">Channel</div>
+                                <div class="col start narrow">External Order Ref</div>
+                                <div class="col start narrow">Channel</div>
                                 <div class="col start">Customer</div>
                                 <div class="col start wide" t-if="showCardholderName()">Cardholder Name</div>
                                 <div class="col start">Employee</div>
                                 <div class="col end">Total</div>
+                                <div class="col start narrow">OR Printed Date</div>
                                 <div class="col start narrow">Status</div>
                                 <div class="col center very-narrow" name="delete"></div>
                             </div>
@@ -26,10 +27,10 @@
                                     <div class="col start wide">
                                         <t t-esc="order.name"></t>
                                     </div>
-                                    <div class="col start wide">
+                                    <div class="col start narrow">
                                         <t t-if="order.x_ext_order_ref" t-esc="order.x_ext_order_ref"></t>
                                     </div>
-                                    <div class="col start wide">
+                                    <div class="col start narrow">
                                         <t t-if="order.x_ext_source" t-esc="order.x_ext_source"></t>
                                     </div>
                                     <div class="col start">
@@ -43,6 +44,9 @@
                                     </div>
                                     <div class="col end">
                                         <t t-esc="getTotal(order)"></t>
+                                    </div>
+                                    <div class="col start narrow">
+                                            <t t-if="order.x_receipt_printed_date" t-esc="order.x_receipt_printed_date"></t>
                                     </div>
                                     <div class="col start narrow">
                                         <t t-esc="getStatus(order)"></t>
