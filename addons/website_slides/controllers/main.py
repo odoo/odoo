@@ -64,10 +64,12 @@ class WebsiteSlides(WebsiteProfile):
         return {'slide': slide}
 
     def _set_viewed_slide(self, slide, quiz_attempts_inc=False):
-        if request.env.user._is_public() or not slide.website_published or not slide.channel_id.is_member:
+        if not slide.channel_id.is_member:
             viewed_slides = request.session.setdefault('viewed_slides', set())
             if slide.id not in viewed_slides:
                 if tools.sql.increment_field_skiplock(slide, 'public_views'):
+                    # Increment total views immediately as compute is not triggered
+                    tools.sql.increment_field_skiplock(slide, 'total_views')
                     viewed_slides.add(slide.id)
                     request.session.touch()
         else:

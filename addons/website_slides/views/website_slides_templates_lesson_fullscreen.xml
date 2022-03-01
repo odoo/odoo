@@ -158,7 +158,9 @@
                             <div t-else="" class="o_wslides_js_course_join o_wslides_no_access ps-0">
                                 <li t-if="slide.channel_id.enroll == 'public'" class="o_wslides_fs_slide_link mb-1">
                                     <i class="fa fa-download me-1"/>
-                                    <t t-call="website_slides.join_course_link"/>
+                                    <t t-call="website_slides.join_course_link">
+                                        <t t-set="for_resources" t-value="1"/>
+                                    </t>
                                 </li>
                             </div>
                             <li class="o_wslides_fs_sidebar_list_item ps-0 mb-1" t-if="slide.question_ids and not slide.slide_category == 'quiz'"

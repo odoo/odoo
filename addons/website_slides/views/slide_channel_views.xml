@@ -96,7 +96,7 @@
                             <page name="options" string="Options">
                                 <group>
                                     <group name="course" string="Course">
-                                        <field name="user_id" domain="[('share', '=', False)]"/>
+                                        <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
                                     <group name="access_rights" string="Access Rights">

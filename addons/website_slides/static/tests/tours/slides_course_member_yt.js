@@ -38,7 +38,7 @@ tour.register('course_member_youtube', {
 }, {
     trigger: 'a:contains("Choose your wood")'
 }, {
-    trigger: 'a:contains("Join Course")'
+    trigger: 'a:contains("Join this Course")'
 }, {
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
     run: function () {} // check membership

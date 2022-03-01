@@ -55,12 +55,12 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
             'survey_id': certification.id,
             'is_published': True,
         })
-        # Step 3: add public user as member of the channel
-        self.channel._action_add_members(self.user_public.partner_id)
+        # Step 3: add portal user as member of the channel
+        self.channel._action_add_members(self.user_portal.partner_id)
         # forces recompute of partner_ids as we create directly in relation
         self.channel.invalidate_model()
-        slide_partner = self.slide_certification._action_set_viewed(self.user_public.partner_id)
-        self.slide_certification.with_user(self.user_public)._generate_certification_url()
+        slide_partner = self.slide_certification._action_set_viewed(self.user_portal.partner_id)
+        self.slide_certification.with_user(self.user_portal)._generate_certification_url()
 
         self.assertEqual(1, len(slide_partner.user_input_ids), 'A user input should have been automatically created upon slide view')
 
@@ -70,11 +70,11 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
         self.assertFalse(slide_partner.survey_scoring_success, 'Quizz should not be marked as passed with wrong answers')
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_model()
-        self.assertIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should still be a member of the course because they still have attempts left')
+        self.assertIn(self.user_portal.partner_id, self.channel.partner_ids, 'Portal user should still be a member of the course because they still have attempts left')
 
         # Step 5: simulate a 'retry'
         retry_user_input = self.slide_certification.survey_id.sudo()._create_answer(
-            partner=self.user_public.partner_id,
+            partner=self.user_portal.partner_id,
             **{
                 'slide_id': self.slide_certification.id,
                 'slide_partner_id': slide_partner.id
@@ -85,16 +85,16 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
         self.fill_in_answer(retry_user_input, certification.question_ids)
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_model()
-        self.assertNotIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should have been kicked out of the course because they failed their last attempt')
+        self.assertNotIn(self.user_portal.partner_id, self.channel.partner_ids, 'Portal user should have been kicked out of the course because they failed their last attempt')
 
-        # Step 7: add public user as member of the channel once again
-        self.channel._action_add_members(self.user_public.partner_id)
+        # Step 7: add portal user as member of the channel once again
+        self.channel._action_add_members(self.user_portal.partner_id)
         # forces recompute of partner_ids as we create directly in relation
         self.channel.invalidate_model()
 
-        self.assertIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should be a member of the course once again')
-        new_slide_partner = self.slide_certification._action_set_viewed(self.user_public.partner_id)
-        self.slide_certification.with_user(self.user_public)._generate_certification_url()
+        self.assertIn(self.user_portal.partner_id, self.channel.partner_ids, 'Portal user should be a member of the course once again')
+        new_slide_partner = self.slide_certification._action_set_viewed(self.user_portal.partner_id)
+        self.slide_certification.with_user(self.user_portal)._generate_certification_url()
         self.assertEqual(1, len(new_slide_partner.user_input_ids.filtered(lambda user_input: user_input.state != 'done')), 'A new user input should have been automatically created upon slide view')
 
         # Step 8: fill in the created user_input with correct answers this time
@@ -102,7 +102,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
         self.assertTrue(new_slide_partner.survey_scoring_success, 'Quizz should be marked as passed with correct answers')
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_model()
-        self.assertIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should still be a member of the course')
+        self.assertIn(self.user_portal.partner_id, self.channel.partner_ids, 'Portal user should still be a member of the course')
 
     def fill_in_answer(self, answer, questions, good_answers=False):
         """ Fills in the user_input with answers for all given questions.

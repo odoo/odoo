@@ -122,7 +122,7 @@
                             <!-- ==== Header Left ==== -->
                             <div class="col-12 col-md-4 col-lg-3 position-relative">
                                 <div class="d-flex align-items-end justify-content-around h-100">
-                                    <div t-if="channel.image_1920" t-field="channel.image_1920" t-options='{"widget": "image", "class": "o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"}' class="h-100"/>
+                                    <div t-if="channel.image_1920" t-field="channel.image_1920" t-options='{"widget": "image", "class": "o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0", "preview_image": "image_1024"}' class="h-100"/>
                                     <div t-else="" class="h-100">
                                         <img t-att-src="'/website_slides/static/src/img/channel-%s-default.jpg' % ('training' if channel.channel_type == 'training' else 'documentation')"
                                             class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"/>
@@ -295,12 +295,11 @@
     <div class="o_wslides_js_course_join flex-grow-1 d-grid">
         <a t-if="not channel.is_member and channel.enroll == 'public'" role="button"
             class="btn btn-primary o_wslides_js_course_join_link"
-            title="Start Course" aria-label="Start Course Channel"
-            t-att-href="'#'"
+            title="Start Course" aria-label="Start Course Channel" href="#"
             t-att-data-channel-id="channel.id"
             t-att-data-channel-enroll="channel.enroll">
             <span class="cta-title text_small_caps">
-                Join Course
+                Join this Course
             </span>
         </a>
 
@@ -557,28 +556,31 @@
     <div class="o_wslides_promoted_slide">
         <div t-if="not search and not search_slide_category and slide_promoted" class="container py-1 mb-2">
             <div class="card flex-column flex-lg-row">
-                <t t-set="image_url" t-value="website.image_url(slide_promoted, 'image_1024')"/>
+                <t t-set="image_url" t-value="website.image_url(slide_promoted, 'image_512')"/>
 
                 <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
-                t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}" class="w-100 w-lg-50 flex-shrink-0 rounded">
-                    <div t-attf-style="background-image:url(#{image_url}); background-size: cover; background-position:center; padding-bottom: 35%;" class="h-lg-100"/>
+                   t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}" class="w-100 w-lg-50 flex-shrink-0 rounded">
+                    <div t-if="slide_promoted.image_1920" t-field="slide_promoted.image_1920"
+                         t-options="{'widget': 'image', 'style': 'height:100%', 'preview_image': 'image_512'}" class="h-100"/>
+                    <div t-else="" t-attf-style="background-image:url(#{image_url});" class="o_wslides_background_image h-lg-100"/>
                 </a>
                 <div t-else="" class="w-100 w-lg-50 flex-shrink-0 rounded">
-                    <div t-attf-style="background-image:url(#{image_url}); background-size: cover; background-position:center; padding-bottom: 35%;" class="h-lg-100"/>
+                    <div t-if="slide_promoted.image_1920" t-field="slide_promoted.image_1920"
+                         t-options="{'widget': 'image', 'style': 'height:100%', 'preview_image': 'image_512'}" class="h-100"/>
+                    <div t-else="" t-attf-style="background-image:url(#{image_url});" class="o_wslides_background_image h-lg-100"/>
                 </div>
 
                 <div class="card-body">
                     <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
                     t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}"
-                    class="h4 d-block" t-att-title="slide_promoted.name" t-field="slide_promoted.name"/>
-                    <h4 t-else="" class="text-muted" t-field="slide_promoted.name"/>
-
-                    <div t-if="slide_promoted.tag_ids" class="border-top mt-2 pt-1">
+                    class="h4 d-block pb-2 border-bottom" t-att-title="slide_promoted.name" t-field="slide_promoted.name"/>
+                    <h4 t-else="" class="text-muted pb-2 border-bottom" t-field="slide_promoted.name"/>
+                    <div class="o_wslides_desc_truncate_10 mt-3" t-field="slide_promoted.description"/>
+                    <div t-if="slide_promoted.tag_ids" class="mt-2 pt-1">
                         <t t-foreach="slide_promoted.tag_ids" t-as="tag">
                             <a t-att-href="'/slides/%s/tag/%s' % (slug(slide_promoted.channel_id), slug(tag))" class="badge text-bg-light" t-esc="tag.name"/>
                         </t>
                     </div>
-                    <div class="o_wslides_desc_truncate_10 mt-3" t-field="slide_promoted.description"/>
                 </div>
             </div>
         </div>
@@ -760,48 +762,36 @@
 
 <template id='lesson_card' name="Lesson Card">
     <div class="card w-100 o_wslides_lesson_card mb-4">
-            <t t-if="slide.is_new_slide and not channel_progress[slide.id].get('completed')" t-call="website_slides.course_card_information"/>
+        <t t-if="slide.is_new_slide and not channel_progress[slide.id].get('completed')" t-call="website_slides.course_card_information"/>
         <t t-set="can_access" t-value="slide.is_preview or channel.is_member or channel.can_publish"/>
-
-        <t t-if="slide.image_1024">
-            <t t-set="lesson_image" t-value="website.image_url(slide, 'image_1024')"/>
-            <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name">
-                <div class="card-img-top border-bottom" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
-            </a>
-            <div t-else="" class="card-img-top border-bottom" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
-        </t>
-        <t t-else="">
-            <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name">
-                <div class="o_wslides_card_default_background card-img-top border-bottom" t-attf-style="padding-top: 50%;"/>
-            </a>
-            <div t-else="" class="o_wslides_card_default_background card-img-top border-bottom" t-attf-style="padding-top: 50%;"/>
-        </t>
+        <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name" style="height:150px">
+            <div t-if="slide.image_1920" t-field="slide.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}"
+                 class="o_wslides_background_image h-100"/>
+            <div t-else="" class="o_wslides_background_image">
+                <img t-att-src="channel.website_background_image_url" class="img img-fluid"/>
+            </div>
+        </a>
+        <div t-else="" class="o_wslides_background_image" style="height:150px">
+            <img t-att-src="channel.website_background_image_url" class="img img-fluid"/>
+        </div>
         <i t-if="channel_progress[slide.id].get('completed')" class="position-absolute py-1 px-2 h5 fa fa-check-circle text-primary" style="right:0; top:0;"/>
 
-        <div class="card-body d-flex flex-column p-3">
-            <a t-if="can_access" class="card-title h5 mb-2o_wslides_desc_truncate_2" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-esc="slide.name"/>
-            <span t-else="" class="card-title h5 mb-2 o_wslides_desc_truncate_2 text-muted" t-esc="slide.name"/>
-            <div class="card-subtitle mb-2 text-muted" t-if="slide.is_preview or (not slide.is_published and user.has_group('website_slides.group_website_slides_officer'))">
-                <t t-if="slide.is_preview">
-                    <span class="badge text-bg-info">Preview</span>
-                </t>
-                <t t-if="not slide.is_published and channel.can_publish">
-                    <span class="badge text-bg-danger">Unpublished</span>
-                </t>
+        <div class="card-body d-flex flex-column px-3">
+            <a t-if="can_access" class="card-title h5 o_wslides_desc_truncate_2" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-esc="slide.name"/>
+            <span t-else="" class="card-title h5 o_wslides_desc_truncate_2 text-muted" t-esc="slide.name"/>
+            <div class="text-muted o_wslides_desc_truncate_2 mb-2" t-if="slide.is_preview or (not slide.is_published and user.has_group('website_slides.group_website_slides_officer'))">
+                <span t-if="slide.is_preview" class="badge text-bg-info">Preview</span>
+                <span t-if="not slide.is_published and channel.can_publish" class="badge text-bg-danger">Unpublished</span>
             </div>
-            <div class="card-text pt-2">
+            <div class="card-text mb-auto">
                 <div class="o_wslides_desc_truncate_3 fw-light oe_no_empty" t-field="slide.description"/>
             </div>
-            <div class="mt-auto">
-                <div t-if="slide.tag_ids" class="o_wslides_desc_truncate_2 my-2">
-                    <t t-foreach="slide.tag_ids" t-as="tag">
-                        <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-light" t-esc="tag.name"/>
-                    </t>
-                </div>
-                <t t-if="channel.is_member and channel_progress[slide.id].get('completed')">
-                    <span class="badge rounded-pill text-bg-success"><i class="fa fa-check"/> Completed</span>
+            <div class="text-muted o_wslides_desc_truncate_2 my-2">
+                <t t-foreach="slide.tag_ids" t-as="tag">
+                    <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-light" t-esc="tag.name"/>
                 </t>
             </div>
+            <span t-if="channel.is_member and channel_progress[slide.id].get('completed')" class="badge rounded-pill text-bg-success align-self-start"><i class="fa fa-check me-1"/>Completed</span>
         </div>
         <div class="card-footer bg-white text-600">
             <div class="d-flex align-items-center small">

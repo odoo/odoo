@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { sprintf } from '@web/core/utils/strings';
 import { _t } from 'web.core';
 import publicWidget from 'web.public.widget';
 import '@website_slides/js/slides';
@@ -22,6 +23,7 @@ var SlideLikeWidget = publicWidget.Widget.extend({
     _popoverAlert: function ($el, message) {
         $el.popover({
             trigger: 'focus',
+            delay: {'hide': 300},
             placement: 'bottom',
             container: 'body',
             html: true,
@@ -65,12 +67,10 @@ var SlideLikeWidget = publicWidget.Widget.extend({
                 $dislikesIcon.toggleClass("fa-thumbs-o-down", data.user_vote !== -1);
             } else {
                 if (data.error === 'public_user') {
-                    var message = _t('Please <a href="/web/login?redirect=%s">login</a> to vote this lesson');
-                    var signupAllowed = data.error_signup_allowed || false;
-                    if (signupAllowed) {
-                        message = _t('Please <a href="/web/signup?redirect=%s">create an account</a> to vote this lesson');
-                    }
-                    self._popoverAlert(self.$el, _.str.sprintf(message, (document.URL)));
+                    const message = data.error_signup_allowed ?
+                        _t('Please <a href="/web/login?redirect=%s">login</a> or <a href="/web/signup?redirect=%s">create an account</a> to vote for this lesson') :
+                        _t('Please <a href="/web/login?redirect=%s">login</a> to vote for this lesson');
+                    self._popoverAlert(self.$el, sprintf(message, document.URL, document.URL));
                 } else if (data.error === 'slide_access') {
                     self._popoverAlert(self.$el, _t('You don\'t have access to this lesson'));
                 } else if (data.error === 'channel_membership_required') {

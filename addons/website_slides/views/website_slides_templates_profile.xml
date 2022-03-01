@@ -39,12 +39,7 @@
                 <div class="card mb-2">
                     <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex"
                         t-attf-onclick="location.href='/slides/#{slug(course.channel_id)}';">
-
-                        <div t-if="course.channel_id.image_1024" class="ps-5 pe-4 rounded-start" t-attf-style="background-image: url(#{website.image_url(course.channel_id, 'image_1024')}); background-size: cover; background-position: center"/>
-                        <div t-else="" class="o_wslides_card_default_background ps-5 pe-4 rounded-start position-relative" style="opacity: 0.8">
-                            <i class="fa fa-graduation-cap fa-fw me-2 mt-3 position-absolute text-white-75" style="right:0; top: 0"/>
-                        </div>
-
+                        <div class="o_wslides_background_image ps-5 pe-4 rounded-start" t-attf-style="background-image: url(#{course.channel_id.website_background_image_url});"/>
                         <div class="p-2 w-100">
                             <h5 class="mt-0 mb-1" t-field="course.channel_id.name"/>
 

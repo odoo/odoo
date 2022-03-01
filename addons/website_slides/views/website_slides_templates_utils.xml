@@ -70,8 +70,7 @@
 
 <template id="join_course_link" name="Join Course Link">
     <a class="o_wslides_js_course_join_link" href="#" t-att-data-channel-enroll="slide.channel_id.enroll"
-       t-att-data-channel-id="slide.channel_id.id">
-        Join Course</a> to access resources
+       t-att-data-channel-id="slide.channel_id.id">Join this Course</a><t t-if="for_resources"> to access resources</t>
 </template>
 
 <!-- Python equivalent of the JS template "website.slides.sidebar.done.button" -->
