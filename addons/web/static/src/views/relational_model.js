@@ -963,6 +963,7 @@ export class DynamicRecordList extends DynamicList {
     constructor(model, params) {
         super(...arguments);
 
+        /** @type {Record[]} */
         this.records = [];
         this.data = params.data;
         this.isDirty = false;
@@ -1146,6 +1147,7 @@ export class DynamicGroupList extends DynamicList {
         this.groupLimit = params.groupLimit || state.groupLimit || this.constructor.DEFAULT_LIMIT;
         this.groupByInfo = params.groupByInfo || {}; // FIXME: is this something specific to the list view?
         this.openGroupsByDefault = params.openGroupsByDefault || false;
+        /** @type {Group[]} */
         this.groups = state.groups || [];
         this.activeFields = params.activeFields;
         this.isGrouped = true;
@@ -1607,6 +1609,7 @@ export class StaticList extends DataPoint {
 
         this.isOne2Many = params.field.type === "one2many";
         this.resIds = [...params.resIds] || [];
+        /** @type {Record[]} */
         this.records = [];
         this._cache = {};
         this.views = params.views || {};

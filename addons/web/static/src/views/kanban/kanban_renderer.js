@@ -28,7 +28,9 @@ const { RECORD_COLORS } = ColorPickerField;
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
 const GLOBAL_CLICK_CANCEL_SELECTORS = ["a", ".dropdown", ".oe_kanban_action"];
+
 const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
+const isNull = (value) => [null, undefined].includes(value);
 
 const formatterRegistry = registry.category("formatters");
 
@@ -209,17 +211,23 @@ export class KanbanRenderer extends Component {
                 .sort((a, b) => (a.value && !b.value ? 1 : !a.value && b.value ? -1 : 0))
                 .map((group, i) => ({
                     group,
-                    key: `group_key_${
-                        [null, undefined].includes(group.value) ? i : String(group.value)
-                    }`,
+                    key: `group_key_${isNull(group.value) ? i : String(group.value)}`,
                 }));
         } else {
             return list.records.map((record) => ({ record, key: record.resId }));
         }
     }
 
-    getGroupName({ count, displayName, isFolded }) {
-        return isFolded ? `${displayName} (${count})` : displayName;
+    getGroupName({ groupByField, count, displayName, isFolded }) {
+        let name = displayName;
+        if (isNull(name)) {
+            name = this.env._t("None");
+        } else if (isRelational(groupByField)) {
+            name = name || this.env._t("None");
+        } else if (groupByField.type === "boolean") {
+            name = name ? this.env._t("Yes") : this.env._t("No");
+        }
+        return isFolded ? `${name} (${count})` : name;
     }
 
     getGroupClasses(group) {

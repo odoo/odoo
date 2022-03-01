@@ -53,15 +53,6 @@ const reload = async (kanban, params = {}) => {
     await nextTick();
 };
 const getColumn = (groupIndex) => target.querySelectorAll(".o_kanban_group")[groupIndex];
-const getCard = (groupIndex, cardIndex) => {
-    let root = target;
-    if (cardIndex >= 0) {
-        root = getColumn(groupIndex);
-    } else {
-        cardIndex = groupIndex;
-    }
-    return root.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")[cardIndex];
-};
 const getCardTexts = (groupIndex) => {
     const root = groupIndex >= 0 ? getColumn(groupIndex) : target;
     return [...root.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")]
@@ -70,6 +61,12 @@ const getCardTexts = (groupIndex) => {
 };
 const getCounters = () =>
     [...target.querySelectorAll(".o_kanban_counter_side")].map((counter) => counter.innerText);
+const getTooltips = (groupIndex) => {
+    const root = groupIndex >= 0 ? getColumn(groupIndex) : target;
+    return [...root.querySelectorAll(".o_kanban_counter_progress .progress-bar")]
+        .map((card) => card.dataset.tooltip)
+        .filter(Boolean);
+};
 
 /**
  * Helper to perform a full drag & drop sequence.
@@ -7627,7 +7624,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.deepEqual(getCounters(), ["-4", "36"], "counter should contain the correct value");
         assert.deepEqual(
-            [...getColumn(1).querySelectorAll(".progress-bar")].map((el) => el.dataset.tooltip),
+            getTooltips(1),
             ["1 yop", "1 gnap", "1 blip"],
             "the counter progressbars should be correctly displayed"
         );
@@ -7857,11 +7854,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            assert.deepEqual(
-                [...target.querySelectorAll(".progress-bar")].map((el) => el.dataset.tooltip),
-                ["1 blip", "1 yop", "1 gnap", "1 blip"]
-            );
-
+            assert.deepEqual(getTooltips(), ["1 blip", "1 yop", "1 gnap", "1 blip"]);
             assert.deepEqual(getCounters(), ["1", "3"]);
 
             // Drag the last kanban record to the first column
@@ -7869,11 +7862,7 @@ QUnit.module("Views", (hooks) => {
                 appendTo: ".o_kanban_group:first-child",
             });
 
-            assert.deepEqual(
-                [...target.querySelectorAll(".progress-bar")].map((el) => el.dataset.tooltip),
-                ["1 gnap", "1 blip", "1 yop", "1 blip"]
-            );
-
+            assert.deepEqual(getTooltips(), ["1 gnap", "1 blip", "1 yop", "1 blip"]);
             assert.deepEqual(getCounters(), ["2", "2"]);
         }
     );
@@ -9052,7 +9041,7 @@ QUnit.module("Views", (hooks) => {
 
         await makeView({
             type: "kanban",
-            model: "product",
+            resModel: "product",
             serverData,
             arch: `<kanban>
                         <field name="description"/>
@@ -9087,7 +9076,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "progressbar filter state is kept unchanged when domain is updated (records still in group)",
         async (assert) => {
             assert.expect(16);
@@ -9120,27 +9109,12 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["0 yop", "1 blip", "0 __false"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["1 yop", "1 blip", "1 __false"]
-            );
+            assert.deepEqual(getTooltips(0), ["1 blip"]);
+            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
 
             // Apply an active filter
-            await click(
-                target.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]")
-            );
+            await click(target, ".o_kanban_group:nth-child(2) .progress-bar.bg-success");
+
             assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show");
             assert.strictEqual(
                 target.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title")
@@ -9155,12 +9129,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(target, ".o_kanban_group");
             assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show");
             assert.strictEqual(target.querySelector(".o_column_title").innerText, "Yes");
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group .o_kanban_counter .progress-bar")].map(
-                    (el) => el.dataset.tooltip
-                ),
-                ["1 yop", "0 blip", "0 __false"]
-            );
+            assert.deepEqual(getTooltips(), ["1 yop"]);
 
             // Undo searchdomain
             await reload(kanban, { domain: [] });
@@ -9172,26 +9141,12 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["0 yop", "1 blip", "0 __false"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["1 yop", "1 blip", "1 __false"]
-            );
+            assert.deepEqual(getTooltips(0), ["1 blip"]);
+            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "progressbar filter state is kept unchanged when domain is updated (emptying group)",
         async (assert) => {
             assert.expect(25);
@@ -9201,20 +9156,19 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch: `
-                <kanban default_group_by="bar">
-                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
-                    <field name="foo"/>
-                    <field name="bar"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="id"/>
-                                <field name="foo"/>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            `,
+                    <kanban default_group_by="bar">
+                        <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                        <field name="foo"/>
+                        <field name="bar"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="id"/>
+                                    <field name="foo"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
             });
 
             // Check that we have 2 columns, check their progressbar's state and check records
@@ -9224,61 +9178,21 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["0 yop", "1 blip", "0 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["4 blip"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["1 yop", "1 blip", "1 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["1 yop", "2 blip", "3 gnap"]
-            );
+            assert.deepEqual(getTooltips(0), ["1 blip"]);
+            assert.deepEqual(getCardTexts(0), ["4blip"]);
+            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
+            assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
 
             // Apply an active filter
-            await click(
-                target.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]")
-            );
+            await click(target, ".o_kanban_group:nth-child(2) .progress-bar.bg-success");
             assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show");
             assert.strictEqual(
                 target.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title")
                     .innerText,
                 "Yes"
             );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group.o_kanban_group_show .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["1 yop", "1 blip", "1 __false"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group.o_kanban_group_show .o_kanban_record"
-                    ),
-                ].map((el) => el.innerText),
-                ["1 yop"]
-            );
+            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
+            assert.deepEqual(getCardTexts(1), ["1yop"]);
 
             // Add searchdomain to something restricting progressbars' values + emptying the filtered group
             await reload(kanban, { domain: [["foo", "=", "blip"]] });
@@ -9290,34 +9204,10 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["0 yop", "1 blip", "0 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["4 blip"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["0 yop", "1 blip", "0 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["2 blip"]
-            );
+            assert.deepEqual(getTooltips(0), ["1 blip"]);
+            assert.deepEqual(getCardTexts(0), ["4blip"]);
+            assert.deepEqual(getTooltips(1), ["1 blip"]);
+            assert.deepEqual(getCardTexts(1), ["2blip"]);
 
             // Undo searchdomain
             await reload(kanban, { domain: [] });
@@ -9329,38 +9219,14 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["0 yop", "1 blip", "0 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["4 blip"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["1 yop", "1 blip", "1 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["1 yop", "2 blip", "3 gnap"]
-            );
+            assert.deepEqual(getTooltips(0), ["1 blip"]);
+            assert.deepEqual(getCardTexts(0), ["4blip"]);
+            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
+            assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "filtered column keeps consistent counters when dropping in a non-matching record",
         async (assert) => {
             assert.expect(19);
@@ -9393,39 +9259,14 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["0 yop", "1 blip", "0 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["4 blip"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["1 yop", "1 blip", "1 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["1 yop", "2 blip", "3 gnap"]
-            );
+            assert.deepEqual(getTooltips(0), ["1 blip"]);
+            assert.deepEqual(getCardTexts(0), ["4blip"]);
+            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
+            assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
 
             // Apply an active filter
-            await click(
-                target.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]")
-            );
+            await click(target, ".o_kanban_group:nth-child(2) .progress-bar.bg-success");
+
             assert.hasClass(
                 target.querySelector(".o_kanban_group:nth-child(2)"),
                 "o_kanban_group_show"
@@ -9437,201 +9278,105 @@ QUnit.module("Views", (hooks) => {
                 "Yes"
             );
             assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
-            assert.strictEqual(
-                target.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record")
-                    .innerText,
-                "1 yop"
-            );
+            assert.deepEqual(getCardTexts(1), ["1yop"]);
 
             // Drop in the non-matching record from first column
-            await testUtils.dom.dragAndDrop(
-                target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record"),
-                target.querySelector(".o_kanban_group.o_kanban_group_show")
-            );
-
-            // Check that we have 2 columns, check their progressbar's state, and check records
-            assert.containsN(target, ".o_kanban_group", 2);
-            assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show");
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["No", "Yes"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["0 yop", "0 blip", "0 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                []
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["1 yop", "2 blip", "1 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["1 yop", "4 blip"]
-            );
-        }
-    );
-
-    QUnit.skipWOWL(
-        "filtered column is reloaded when dragging out its last record",
-        async (assert) => {
-            assert.expect(33);
-
-            await makeView({
-                type: "kanban",
-                resModel: "partner",
-                serverData,
-                arch: `
-                <kanban default_group_by="bar">
-                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
-                    <field name="foo"/>
-                    <field name="bar"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="id"/>
-                                <field name="foo"/>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            `,
-                async mockRPC(route, args) {
-                    assert.step(args.method || route);
-                    return this._super(route, args);
-                },
+            await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
+                appendTo: ".o_kanban_group.o_kanban_group_show",
             });
 
             // Check that we have 2 columns, check their progressbar's state, and check records
             assert.containsN(target, ".o_kanban_group", 2);
-            assert.containsNone(target, ".o_kanban_group.o_kanban_group_show");
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["No", "Yes"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["0 yop", "1 blip", "0 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["4 blip"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["1 yop", "1 blip", "1 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["1 yop", "2 blip", "3 gnap"]
-            );
-            assert.verifySteps([
-                "web_read_group",
-                "read_progress_bar",
-                "web_search_read",
-                "web_search_read",
-            ]);
-
-            // Apply an active filter
-            await click(
-                target.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]")
-            );
-            assert.hasClass(
-                target.querySelector(".o_kanban_group:nth-child(2)"),
-                "o_kanban_group_show"
-            );
             assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show");
-            assert.strictEqual(
-                target.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title")
-                    .innerText,
-                "Yes"
-            );
-            assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
-            assert.strictEqual(
-                target.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record")
-                    .innerText,
-                "1 yop"
-            );
-            assert.verifySteps(["web_search_read"]);
-
-            // Drag out its only record onto the first column
-            await testUtils.dom.dragAndDrop(
-                target.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record"),
-                target.querySelector(".o_kanban_group:nth-child(2)")
-            );
-
-            // Check that we have 2 columns, check their progressbar's state, and check records
-            assert.containsN(target, ".o_kanban_group", 2);
-            assert.containsNone(target, ".o_kanban_group.o_kanban_group_show");
             assert.deepEqual(
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["1 yop", "1 blip", "0 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["4 blip", "1 yop"]
-            );
-            assert.deepEqual(
-                [
-                    ...target.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar"
-                    ),
-                ].map((el) => el.dataset.tooltip),
-                ["0 yop", "1 blip", "1 __false"]
-            );
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
-                    (el) => el.innerText
-                ),
-                ["2 blip", "3 gnap"]
-            );
-            assert.verifySteps([
-                "write",
-                "read",
-                "web_read_group",
-                "read_progress_bar",
-                "web_search_read",
-                "/web/dataset/resequence",
-            ]);
+            assert.deepEqual(getTooltips(0), []);
+            assert.deepEqual(getCardTexts(0), []);
+            assert.deepEqual(getTooltips(1), ["1 yop", "2 blip", "1 Other"]);
+            assert.deepEqual(getCardTexts(1), ["1yop", "4blip"]);
         }
     );
+
+    QUnit.test("filtered column is reloaded when dragging out its last record", async (assert) => {
+        assert.expect(31);
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <kanban default_group_by="bar">
+                        <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                        <field name="foo"/>
+                        <field name="bar"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="id"/>
+                                    <field name="foo"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
+        });
+
+        // Check that we have 2 columns, check their progressbar's state, and check records
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsNone(target, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
+            ["No", "Yes"]
+        );
+        assert.deepEqual(getTooltips(0), ["1 blip"]);
+        assert.deepEqual(getCardTexts(0), ["4blip"]);
+        assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
+        assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
+        assert.verifySteps([
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+        ]);
+
+        // Apply an active filter
+        await click(target, ".o_kanban_group:nth-child(2) .progress-bar.bg-success");
+
+        assert.hasClass(
+            target.querySelector(".o_kanban_group:nth-child(2)"),
+            "o_kanban_group_show"
+        );
+        assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText,
+            "Yes"
+        );
+        assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
+        assert.deepEqual(getCardTexts(1), ["1yop"]);
+        assert.verifySteps(["web_search_read"]);
+
+        // Drag out its only record onto the first column
+        await dragAndDrop(".o_kanban_group.o_kanban_group_show .o_kanban_record", {
+            appendTo: ".o_kanban_group:first-child",
+        });
+
+        // Check that we have 2 columns, check their progressbar's state, and check records
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsNone(target, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
+            ["No", "Yes"]
+        );
+        assert.deepEqual(getTooltips(0), ["1 yop", "1 blip"]);
+        assert.deepEqual(getCardTexts(0), ["4blip", "1yop"]);
+        assert.deepEqual(getTooltips(1), ["1 blip", "1 Other"]);
+        assert.deepEqual(getCardTexts(1), ["2blip", "3gnap"]);
+        assert.verifySteps(["write", "read", "web_search_read", "/web/dataset/resequence"]);
+    });
 
     QUnit.skipWOWL("kanban widget supports options parameters", async (assert) => {
         assert.expect(2);

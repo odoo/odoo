@@ -123,6 +123,20 @@ class KanbanGroup extends Group {
         return super.quickCreate(fields, ctx);
     }
 
+    /**
+     * This method checks that the current active value
+     * @returns {Promise<void>}
+     */
+    async updateActiveValue() {
+        if (!this.hasActiveProgressValue) {
+            return;
+        }
+        const activePV = this.progressValues.find((pv) => pv.value === this.activeProgressValue);
+        if (activePV.count === 0) {
+            await this.filterProgressValue(null);
+        }
+    }
+
     async filterProgressValue(value) {
         const { fieldName } = this.model.progressAttributes;
         const domains = [this.groupDomain];
@@ -227,15 +241,24 @@ class KanbanGroup extends Group {
 }
 
 class KanbanDynamicGroupList extends DynamicGroupList {
+    constructor(model, params, state = {}) {
+        super(...arguments);
+
+        this.previousParams = state.previousParams || "";
+    }
+
     /**
+     * After a reload, empty groups are expcted to disappear from the web_read_group.
+     * However, if the parameters are the same (domain + groupBy), we want to
+     * temporarily keep these empty groups in the interface until the next reload
+     * with different parameters.
      * @override
      */
     async load() {
         const oldGroups = this.groups.map((g, i) => [g, i]);
-        const oldGroupBy = this.groupByField.name;
         await this._loadWithProgressData(super.load());
-        for (const [group, index] of oldGroups) {
-            if (oldGroupBy === group.groupByField.name) {
+        if (this.previousParams === JSON.stringify([this.domain, this.groupBy])) {
+            for (const [group, index] of oldGroups) {
                 const newGroup = this.groups.find((g) => isValueEqual(g.value, group.value));
                 if (!newGroup) {
                     group.empty();
@@ -243,6 +266,16 @@ class KanbanDynamicGroupList extends DynamicGroupList {
                 }
             }
         }
+    }
+
+    /**
+     * @override
+     */
+    exportState() {
+        return {
+            ...super.exportState(),
+            previousParams: JSON.stringify([this.domain, this.groupBy]),
+        };
     }
 
     async moveRecord(dataRecordId, dataGroupId, refId, targetGroupId) {
@@ -268,6 +301,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
                     : targetGroup.value;
                 await record.update(this.groupByField.name, value);
                 await record.save();
+                await sourceGroup.updateActiveValue();
             }
             await targetGroup.list.resequence();
         } catch (err) {
@@ -303,18 +337,22 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         });
 
         const [progressData] = await Promise.all([progressPromise, ...loadPromises]);
-
-        for (const group of this.groups) {
-            /** @type {Record<string, number>} */
-            const groupData = progressData[group.displayName || group.value] || {};
-            /** @type {Map<string | symbol, number>} */
-            const counts = new Map(groupData ? Object.entries(groupData) : [[FALSE, group.count]]);
-            const total = [...counts.values()].reduce((acc, c) => acc + c, 0);
-            counts.set(FALSE, group.count - total);
-            for (const pv of group.progressValues) {
-                pv.count = counts.get(pv.value) || 0;
-            }
-        }
+        await Promise.all(
+            this.groups.map(async (group) => {
+                /** @type {Record<string, number>} */
+                const groupData = progressData[group.displayName || group.value] || {};
+                /** @type {Map<string | symbol, number>} */
+                const counts = new Map(
+                    groupData ? Object.entries(groupData) : [[FALSE, group.count]]
+                );
+                const total = [...counts.values()].reduce((acc, c) => acc + c, 0);
+                counts.set(FALSE, group.count - total);
+                for (const pv of group.progressValues) {
+                    pv.count = counts.get(pv.value) || 0;
+                }
+                await group.updateActiveValue();
+            })
+        );
     }
 }
 
