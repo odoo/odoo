@@ -21,9 +21,9 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # Martin Trigaux, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
-# Noma Yuki, 2021
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2021
-# Ryoko Tsuda <ryoko@quartile.co>, 2021
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Noma Yuki, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2021\n"
+"Last-Translator: Noma Yuki, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8100,7 +8100,7 @@ msgstr "パーセント"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
 msgid "Percent (%)"
-msgstr ""
+msgstr "確率 (%)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__percentage
@@ -9221,7 +9221,7 @@ msgstr "勘定科目表テンプレートの検索"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr "財政ポジションを検索"
+msgstr "会計ポジションを検索"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10076,12 +10076,12 @@ msgstr "税マッピング"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Tax Mapping Template of Fiscal Position"
-msgstr "財政状況の税務マッピングテンプレート"
+msgstr "会計ポジションの税マッピングテンプレート"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "財政状況の税務マッピング"
+msgstr "会計ポジションの税マッピング"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -10784,7 +10784,7 @@ msgstr "ベンダー'フィールドは必須です。ベンダー請求書を�
 #: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
-msgstr "財政状態は、この連絡に使用される税金/勘定を決定します。"
+msgstr "会計ポジションは、この連絡先に使用される税金/勘定を決定します。"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -12421,7 +12421,7 @@ msgstr "この台帳はストリクトモードであるため、投稿された
 msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
-msgstr ""
+msgstr "すでに会計仕訳がある仕訳の項目%sを変更することはできません。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12580,7 +12580,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
-msgstr ""
+msgstr "%s(id%s)はすでに投稿済です。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12815,6 +12815,7 @@ msgid ""
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
 msgstr ""
+"選択した仕訳は、請求書タイプと互換性のないタイプです。販売業務は「販売」ジャーナルに行き、購入業務は「購入」ジャーナルに行く必要があります。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

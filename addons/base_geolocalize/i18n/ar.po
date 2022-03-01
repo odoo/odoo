@@ -7,7 +7,7 @@
 # amrnegm <amrnegm.01@gmail.com>, 2019
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2019
 # Ali Alrehawi <alrehawi@hotmail.com>, 2019
-# Malaz Abuidris <msea@odoo.com>, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2021\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,11 +50,13 @@ msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
+"بحاجة إلى مفتاح الواجهة البرمجية للتطبيق للترميز الجغرافي (الأماكن).\n"
+"قم بزيارة https://developers.google.com/maps/documentation/geocoding/get-api-key للمزيد من المعلومات. "
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "API:"
-msgstr ""
+msgstr "الواجهو البرمجية للتطبيق: "
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
@@ -86,17 +88,17 @@ msgstr "الاسم المعروض"
 #: code:addons/base_geolocalize/models/base_geocoder.py:156
 #, python-format
 msgid "Error with geolocation server:"
-msgstr ""
+msgstr "حدث خطأ في خادم الموقع الجغرافي: "
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr ""
+msgstr "الترميز الجغرافي "
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr ""
+msgstr "المزود الجغرافي "
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -128,7 +130,7 @@ msgstr "المُعرف"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr ""
+msgstr "المفتاح: "
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
@@ -160,13 +162,13 @@ msgstr "تكليف الشريك"
 #: code:addons/base_geolocalize/models/base_geocoder.py:69
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
-msgstr ""
+msgstr "المزود %s غير مطبق في خدمة المواقع الجغرافية. "
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Tech Name"
-msgstr ""
+msgstr "الاسم التقني "
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/base_geocoder.py:123
@@ -180,6 +182,13 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
+"تعذر إيجاد الموقع الجغرافي، تم استلام رسالة الخطأ:\n"
+"%s\n"
+"\n"
+"قام Google بجعل هذه الخاصية مدفوعة.\n"
+"عليك أولاً تفعيل الفوترة في حساب Google الخاص بك.\n"
+"ثم اذهب إلى أداة المطوِّر وقم بتفعيل الواجهة البرمجية للتطبيق:\n"
+"الترميز الجغرافي، الخرائط الساكنة، خرائط جافا سكريبت.\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
@@ -187,3 +196,5 @@ msgid ""
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
 " for more information."
 msgstr ""
+"قم بزيارة https://developers.google.com/maps/documentation/geocoding/get-"
+"api-key للمزيد من المعلومات. "
