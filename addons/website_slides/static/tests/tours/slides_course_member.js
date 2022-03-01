@@ -19,7 +19,7 @@ tour.register('course_member', {
 {
     trigger: 'a:contains("Basics of Gardening - Test")'
 }, {
-    trigger: 'a:contains("Join Course")'
+    trigger: 'a:contains("Join this Course")'
 }, {
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
     run: function () {} // check membership

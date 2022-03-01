@@ -16,18 +16,22 @@ $o-wslides-fs-side-width: 300px;
 // If '-webkit-line-clamp' is not supported, a less effective
 // 'line-height' fallback will be used instead.
 $truncate-limits: 2, 3, 10;
+$line-height-truncate: 1.25em;
 
 @each $limit in $truncate-limits {
     .o_wslides_desc_truncate_#{$limit} {
-        $line-height: 1.3;
-        max-height: $limit * $line-height * 1.2em;
+        max-height: $limit * $line-height-truncate;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: normal;
-        line-height: $line-height;
+        line-height: $line-height-truncate;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: $limit;
+    }
+    .o_wslides_desc_truncate_#{$limit}_badges {
+        @extend .o_wslides_desc_truncate_#{$limit};
+        max-height: $limit * $line-height-truncate * 1.2;
     }
 }
 
@@ -220,10 +224,6 @@ $truncate-limits: 2, 3, 10;
 
 }
 
-.o_wslides_card_default_background {
-    background-color: $o-wslides-color-bg;  // same as body
-}
-
 .o_wslides_channel_completion_completed {
     font-size: 1rem;
 }
@@ -237,7 +237,11 @@ $truncate-limits: 2, 3, 10;
             border: none;
         }
     }
-
+    .o_wslides_background_image img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
     .o_wprofile_progress_circle {
         margin-left: auto;
         margin-right: auto;
@@ -489,6 +493,21 @@ $truncate-limits: 2, 3, 10;
             }
         }
     }
+
+    .o_wslides_promoted_slide {
+        .o_wslides_background_image {
+            background-size: cover;
+            background-position: center;
+            padding-bottom: 35%;
+        }
+    }
+    .o_wslides_lesson_card {
+        .o_wslides_background_image img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
 }
 
 
@@ -496,6 +515,13 @@ $truncate-limits: 2, 3, 10;
 // **************************************************
 .o_wslides_lesson_main {
     .o_wslides_lesson_aside {
+        .o_wslides_background_image_aside_card {
+            min-width: 20%;
+            padding-top: 20%;
+            background-size: cover;
+            background-position: center;
+        }
+
         .o_wslides_lesson_aside_collapse.collapsed {
             transform: rotate(90deg);
         }

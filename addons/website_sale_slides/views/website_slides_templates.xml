@@ -18,15 +18,23 @@
         <li t-elif="aside_slide.channel_id.enroll == 'payment'" class="text-decoration-none small">
             <i class="fa fa-download me-1"/>
             <t t-call="website_sale_slides.course_buy_course_link">
+                <t t-set="for_resources" t-value="1"/>
                 <t t-set="slide" t-value="aside_slide"/>
             </t>
         </li>
     </xpath>
 </template>
 
-<template name="Buy Course To Download Resource Slide Detail" id="slide_content_detailed_buy_course" inherit_id="website_slides.slide_content_detailed">
+<template name="Buy Course To Access Resources or Interact Slide Detail" id="slide_content_detailed_buy_course" inherit_id="website_slides.slide_content_detailed">
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <span t-elif="slide.channel_id.enroll == 'payment'" class="text-muted me-auto border-start ps-3">
+            <t t-call="website_sale_slides.course_buy_course_link">
+                <t t-set="for_resources" t-value="1"/>
+            </t>
+        </span>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access_comments')]" position="inside">
+        <span t-elif="slide.channel_id.enroll == 'payment'">
             <t t-call="website_sale_slides.course_buy_course_link"/>
         </span>
     </xpath>
@@ -62,7 +70,9 @@
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="slide.channel_id.enroll == 'payment'" class="o_wslides_fs_slide_link mb-1">
             <i class="fa fa-download me-1"/>
-            <t t-call="website_sale_slides.course_buy_course_link"/>
+            <t t-call="website_sale_slides.course_buy_course_link">
+                <t t-set="for_resources" t-value="1"/>
+            </t>
         </li>
     </xpath>
 </template>
@@ -92,7 +102,7 @@
 <!-- TOOLS -->
 <template name="Buy Course Link" id="course_buy_course_link">
     <a class="post_link" t-att-href="'/shop/cart/update?product_id=%s' % slide.channel_id.product_id.id">
-        Buy Course</a> to access resources
+        Join this Course</a><t t-if="for_resources"> to access resources</t>
 </template>
 
 <template name="Buy Course Button" id="course_buy_course_button">
@@ -140,8 +150,7 @@
 <template name="Display 'Buy Now'" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False">
     <xpath expr="//div[hasclass('add_to_cart_button')]" position="before">
         <div class="mb-1">
-          <!-- FIXME TDE seems strange to redirect to /cart/update with get params when it only supports POST requests -->
-            <a role="button" class="btn btn-primary btn-block post_link" t-attf-href="/shop/cart/update?product_id={{channel.product_id.id}}&amp;express=1">
+            <a role="button" class="post_link btn btn-primary btn-block" t-attf-href="/shop/cart/update?product_id={{channel.product_id.id}}&amp;express=1">
                 <i class="fa fa-bolt"></i> Buy Now
             </a>
         </div>
