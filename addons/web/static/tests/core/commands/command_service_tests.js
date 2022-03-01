@@ -490,6 +490,74 @@ QUnit.test("footer displays the right tips", async (assert) => {
     );
 });
 
+QUnit.test("namespaces display in the footer are still clickable", async (assert) => {
+    const action = () => {};
+    clearRegistryWithCleanup(commandProviderRegistry);
+    commandProviderRegistry.add("@", {
+        namespace: "@",
+        provide: () => [
+            {
+                name: "Command@",
+                action,
+            },
+        ],
+    });
+    commandProviderRegistry.add("#", {
+        namespace: "#",
+        provide: () => [
+            {
+                name: "Command#",
+                action,
+            },
+        ],
+    });
+
+    const commandSetupRegistry = registry.category("command_setup");
+    clearRegistryWithCleanup(commandSetupRegistry);
+    commandSetupRegistry.add("default", {});
+    commandSetupRegistry.add("@", {
+        name: "users",
+    });
+    commandSetupRegistry.add("#", {
+        name: "channels",
+    });
+    await mount(TestComponent, target, { env });
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.strictEqual(
+        target.querySelector(".o_command_palette_footer").textContent,
+        "TIP — search for @users and #channels"
+    );
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        []
+    );
+
+    await click(target.querySelectorAll(".o_command_palette_footer .o_namespace")[0]);
+    assert.strictEqual(target.querySelector(".o_command_palette_search input").value, "@");
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["Command@"]
+    );
+
+    await editSearchBar("Com");
+    await click(target.querySelectorAll(".o_command_palette_footer .o_namespace")[1]);
+    assert.strictEqual(target.querySelector(".o_command_palette_search input").value, "#Com");
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["Command#"]
+    );
+
+    await click(target.querySelectorAll(".o_command_palette_footer .o_namespace")[0]);
+    assert.strictEqual(target.querySelector(".o_command_palette_search input").value, "@Com");
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["Command@"]
+    );
+});
+
 QUnit.test("defined multiple providers with the same namespace", async (assert) => {
     assert.expect(2);
 

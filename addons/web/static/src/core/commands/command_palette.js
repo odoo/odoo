@@ -82,7 +82,7 @@ export class CommandPalette extends Component {
         this.DefaultCommandItem = DefaultCommandItem;
         this.activeElement = useService("ui").activeElement;
         this.defaultDebounceSearch = debounce.apply(this, [this.search, 0]);
-        useAutofocus();
+        this.inputRef = useAutofocus();
 
         useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
         useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), {
@@ -267,6 +267,9 @@ export class CommandPalette extends Component {
             searchValue,
             activeElement: this.activeElement,
         });
+        if (this.inputRef.el) {
+            this.inputRef.el.focus();
+        }
     }
 
     debounceSearch(value) {
@@ -298,6 +301,12 @@ export class CommandPalette extends Component {
             searchValue = searchValue.slice(1);
         }
         return { namespace, searchValue };
+    }
+
+    switchNamespace(namespace) {
+        const searchValue = `${namespace}${this.clearSearchValue}`;
+        this.state.searchValue = searchValue;
+        this.debounceSearch(searchValue);
     }
 }
 CommandPalette.template = "web.CommandPalette";
