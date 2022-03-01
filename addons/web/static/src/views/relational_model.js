@@ -1041,7 +1041,9 @@ export class DynamicRecordList extends DynamicList {
         const index = this.records.findIndex((r) => r === record);
         this.records.splice(index, 1);
         this.count--;
-        this.editedRecord = this.editedRecord === record ? null : record;
+        if (this.editedRecord === record) {
+            this.editedRecord = null;
+        }
         this.model.notify();
         return record;
     }
