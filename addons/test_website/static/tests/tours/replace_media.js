@@ -42,4 +42,34 @@ tour.register('test_replace_media', {
         trigger: "#oe_snippets we-title:contains('Image'):not(:has(.o_we_image_weight:visible))",
         run: function () {}, // check
     },
+    {
+        content: "replace image",
+        trigger: "#oe_snippets we-button[data-replace-media]",
+    },
+    {
+        content: "go to pictogram tab",
+        trigger: ".o_select_media_dialog .nav-link#editor-media-icon-tab",
+    },
+    {
+        content: "select an icon",
+        trigger: ".o_select_media_dialog .tab-pane#editor-media-icon span.fa-lemon-o",
+    },
+    {
+        content: "ensure icon block is displayed",
+        trigger: "#oe_snippets we-customizeblock-options we-title:contains('Icon')",
+        run: function () {}, // check
+    },
+    {
+        content: "select footer",
+        trigger: "#wrapwrap footer",
+    },
+    {
+        content: "select icon",
+        trigger: "#wrapwrap .s_picture figure span.fa-lemon-o",
+    },
+    {
+        content: "ensure icon block is still displayed",
+        trigger: "#oe_snippets we-customizeblock-options we-title:contains('Icon')",
+        run: function () {}, // check
+    },
 ]);
