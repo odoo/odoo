@@ -4,7 +4,7 @@
 import json
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import format_amount, float_is_zero, formatLang
@@ -402,7 +402,7 @@ class Project(models.Model):
         if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
             buttons.append({
                 'icon': 'clock-o',
-                'text': _('Billable Time'),
+                'text': _lt('Billable Time'),
                 'number': '%s %%' % (self.billable_percentage),
                 'action_type': 'object',
                 'action': 'action_billable_time_button',
