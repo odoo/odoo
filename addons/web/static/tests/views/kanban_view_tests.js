@@ -7870,75 +7870,51 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "load more should load correct records after drag&drop event",
-        async (assert) => {
-            assert.expect(3);
+    QUnit.test("load more should load correct records after drag&drop event", async (assert) => {
+        assert.expect(3);
 
-            // Add a sequence number and initialize
-            serverData.models.partner.fields.sequence = { type: "integer" };
-            serverData.models.partner.records.forEach((el, i) => {
-                el.sequence = i;
-            });
+        // Add a sequence number and initialize
+        serverData.models.partner.fields.sequence = { type: "integer" };
+        serverData.models.partner.records.forEach((el, i) => {
+            el.sequence = i;
+        });
 
-            await makeView({
-                type: "kanban",
-                resModel: "partner",
-                serverData,
-                arch: `<kanban limit="1">
-                    <field name="id"/>
-                    <field name="foo"/>
-                    <field name="sequence"/>
-                    <templates><t t-name="kanban-box">
-                        <div>
-                            <field name="id"/>
-                        </div>
-                    </t></templates>
-                </kanban>`,
-                groupBy: ["bar"],
-                favoriteFilters: [
-                    {
-                        domain: "[]",
-                        is_default: true,
-                        sort: '["sequence asc"]',
-                    },
-                ],
-            });
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban limit="1">
+                <field name="id"/>
+                <field name="foo"/>
+                <field name="sequence"/>
+                <templates><t t-name="kanban-box">
+                    <div>
+                        <field name="id"/>
+                    </div>
+                </t></templates>
+            </kanban>`,
+            groupBy: ["bar"],
+        });
 
-            assert.strictEqual(
-                getCard(1, 0).innerText,
-                "4",
-                "first column's first record must be id 4"
-            );
+        assert.deepEqual(getCardTexts(0), ["4"], "first column's first record must be id 4");
+        assert.deepEqual(getCardTexts(1), ["1"], "second column's records should be only the id 1");
 
-            assert.deepEqual(
-                getCard(1, 0).innerText,
-                [1],
-                "second column's records should be only the id 1"
-            );
+        // Drag the first kanban record on top of the last
+        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
+            inside: ".o_kanban_group:last-child",
+        });
 
-            // Drag the first kanban record on top of the last
-            await testUtils.dom.dragAndDrop(
-                [...view.el.querySelectorAll(".o_kanban_record")].shift(),
-                [...view.el.querySelectorAll(".o_kanban_record")].pop(),
-                { position: "top" }
-            );
+        // load more twice to load all records of second column
+        await loadMore(1);
+        await loadMore(1);
 
-            // load more twice to load all records of second column
-            await click(view.el, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
-            await click(view.el, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
-
-            // Check records of the second column
-            assert.deepEqual(
-                [
-                    ...view.el.querySelectorAll(
-                        ".o_kanban_group:nth-child(2) .o_kanban_record span"
-                    ),
-                ].map((el) => Number(el.innerText)),
-                [4, 1, 2, 3]
-            );
-        }
-    );
+        // Check records of the second column
+        assert.deepEqual(
+            getCardTexts(1),
+            ["4", "1", "2", "3"],
+            "first column's first record must be id 4"
+        );
+    });
 
     QUnit.test(
         "column progressbars on quick create with quick_create_view are updated",

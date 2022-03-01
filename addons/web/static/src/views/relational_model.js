@@ -957,7 +957,6 @@ export class DynamicRecordList extends DynamicList {
 
         this.records = [];
         this.data = params.data;
-        this.type = "record-list";
         this.isDirty = false;
     }
 
@@ -1029,6 +1028,7 @@ export class DynamicRecordList extends DynamicList {
     addRecord(record, index) {
         this.records.splice(Number.isInteger(index) ? index : this.count, 0, record);
         this.count++;
+        this.isDirty = true;
         this.model.notify();
         return record;
     }
@@ -1041,6 +1041,7 @@ export class DynamicRecordList extends DynamicList {
         const index = this.records.findIndex((r) => r === record);
         this.records.splice(index, 1);
         this.count--;
+        this.isDirty = true;
         if (this.editedRecord === record) {
             this.editedRecord = null;
         }
@@ -1081,7 +1082,6 @@ export class DynamicRecordList extends DynamicList {
         if (record) {
             this.removeRecord(record);
         }
-        this.isDirty = true;
         return this.createRecord({ activeFields, context, isInQuickCreation: true }, true);
     }
 
@@ -1140,7 +1140,6 @@ export class DynamicGroupList extends DynamicList {
         this.openGroupsByDefault = params.openGroupsByDefault || false;
         this.groups = state.groups || [];
         this.activeFields = params.activeFields;
-        this.type = "group-list";
         this.isGrouped = true;
         this.quickCreateInfo = null; // Lazy loaded;
     }
