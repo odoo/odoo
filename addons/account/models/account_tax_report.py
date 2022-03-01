@@ -149,20 +149,23 @@ class AccountTaxReportLine(models.Model):
         return [(0, 0, minus_tag_vals), (0, 0, plus_tag_vals)]
 
     def write(self, vals):
-        tag_name_postponed = None
-
         # If tag_name was set, but not tag_ids, we postpone the write of
         # tag_name, and perform it only after having generated/retrieved the tags.
         # Otherwise, tag_name and tags' name would not match, breaking
         # _validate_tags constaint.
-        postpone_tag_name = 'tag_name' in vals and not 'tag_ids' in vals
+        postponed_vals = {}
 
-        if postpone_tag_name:
-            tag_name_postponed = vals.pop('tag_name')
+        if 'tag_name' in vals and 'tag_ids' not in vals:
+            postponed_vals = {'tag_name': vals.pop('tag_name')}
+            tag_name_postponed = postponed_vals['tag_name']
+            # if tag_name is posponed then we also postpone formula to avoid
+            # breaking _validate_formula constraint
+            if 'formula' in vals:
+                postponed_vals['formula'] = vals.pop('formula')
 
         rslt = super(AccountTaxReportLine, self).write(vals)
 
-        if postpone_tag_name:
+        if postponed_vals:
             # If tag_name modification has been postponed,
             # we need to search for existing tags corresponding to the new tag name
             # (or create them if they don't exist yet) and assign them to the records
@@ -183,7 +186,7 @@ class AccountTaxReportLine(models.Model):
                         minus_child_tags.write({'name': '-' + tag_name_postponed})
                         plus_child_tags = tags_to_update.filtered(lambda x: not x.tax_negate)
                         plus_child_tags.write({'name': '+' + tag_name_postponed})
-                        super(AccountTaxReportLine, to_update).write({'tag_name': tag_name_postponed})
+                        super(AccountTaxReportLine, to_update).write(postponed_vals)
 
                     else:
                         existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name_postponed, country_id)
@@ -195,7 +198,7 @@ class AccountTaxReportLine(models.Model):
                             # linking it to the first report line of the record set
                             first_record = records_to_link[0]
                             tags_to_remove += first_record.tag_ids
-                            first_record.write({'tag_name': tag_name_postponed, 'tag_ids': [(5, 0, 0)] + self._get_tags_create_vals(tag_name_postponed, country_id)})
+                            first_record.write({**postponed_vals, 'tag_ids': [(5, 0, 0)] + self._get_tags_create_vals(tag_name_postponed, country_id)})
                             existing_tags = first_record.tag_ids
                             records_to_link -= first_record
 
@@ -203,7 +206,7 @@ class AccountTaxReportLine(models.Model):
                         tags_to_remove += records_to_link.mapped('tag_ids')
                         records_to_link = tags_to_remove.mapped('tax_report_line_ids')
                         tags_to_remove.mapped('tax_report_line_ids')._remove_tags_used_only_by_self()
-                        records_to_link.write({'tag_name': tag_name_postponed, 'tag_ids': [(2, tag.id) for tag in tags_to_remove] + [(6, 0, existing_tags.ids)]})
+                        records_to_link.write({**postponed_vals, 'tag_ids': [(2, tag.id) for tag in tags_to_remove] + [(6, 0, existing_tags.ids)]})
 
                 else:
                     # tag_name was set empty, so we remove the tags on current lines
@@ -214,7 +217,7 @@ class AccountTaxReportLine(models.Model):
                     if not other_lines_same_tag:
                         self._delete_tags_from_taxes(line_tags.ids)
                     orm_cmd_code = other_lines_same_tag and 3 or 2
-                    records.write({'tag_name': None, 'tag_ids': [(orm_cmd_code, tag.id) for tag in line_tags]})
+                    records.write({**postponed_vals, 'tag_ids': [(orm_cmd_code, tag.id) for tag in line_tags]})
 
         return rslt
 

@@ -146,7 +146,8 @@ class Slide(models.Model):
                                    string='Subscribers', groups='website_slides.group_website_slides_officer', copy=False)
     slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='website_slides.group_website_slides_officer', copy=False)
     user_membership_id = fields.Many2one(
-        'slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id', compute_sudo=False,
+        'slide.slide.partner', string="Subscriber information",
+        compute='_compute_user_membership_id', compute_sudo=False,
         help="Subscriber information for the current logged in user")
     # Quiz related fields
     question_ids = fields.One2many("slide.question", "slide_id", string="Questions")
@@ -177,9 +178,9 @@ class Slide(models.Model):
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date', readonly=True, tracking=1)
-    likes = fields.Integer('Likes', compute='_compute_user_info', store=True, compute_sudo=False)
-    dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True, compute_sudo=False)
-    user_vote = fields.Integer('User vote', compute='_compute_user_info', compute_sudo=False)
+    likes = fields.Integer('Likes', compute='_compute_like_info', store=True, compute_sudo=False)
+    dislikes = fields.Integer('Dislikes', compute='_compute_like_info', store=True, compute_sudo=False)
+    user_vote = fields.Integer('User vote', compute='_compute_user_membership_id', compute_sudo=False)
     embed_code = fields.Text('Embed Code', readonly=True, compute='_compute_embed_code')
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
@@ -250,8 +251,38 @@ class Slide(models.Model):
             record.total_views = record.slide_views + record.public_views
 
     @api.depends('slide_partner_ids.vote')
+    def _compute_like_info(self):
+        if not self.ids:
+            self.update({'likes': 0, 'dislikes': 0})
+            return
+
+        rg_data_like = self.env['slide.slide.partner'].sudo().read_group(
+            [('slide_id', 'in', self.ids), ('vote', '=', 1)],
+            ['slide_id'], ['slide_id']
+        )
+        rg_data_dislike = self.env['slide.slide.partner'].sudo().read_group(
+            [('slide_id', 'in', self.ids), ('vote', '=', -1)],
+            ['slide_id'], ['slide_id']
+        )
+        mapped_data_like = dict(
+            (rg_data['slide_id'][0], rg_data['slide_id_count'])
+            for rg_data in rg_data_like
+        )
+        mapped_data_dislike = dict(
+            (rg_data['slide_id'][0], rg_data['slide_id_count'])
+            for rg_data in rg_data_dislike
+        )
+
+        for slide in self:
+            slide.likes = mapped_data_like.get(slide.id, 0)
+            slide.dislikes = mapped_data_dislike.get(slide.id, 0)
+
+    @api.depends('slide_partner_ids.vote')
     @api.depends_context('uid')
     def _compute_user_info(self):
+        """ Deprecated. Now computed directly by _compute_user_membership_id
+        for user_vote and _compute_like_info for likes / dislikes. Remove me in
+        master. """
         default_stats = {'likes': 0, 'dislikes': 0, 'user_vote': False}
 
         if not self.ids:
@@ -262,6 +293,7 @@ class Slide(models.Model):
         slide_partners = self.env['slide.slide.partner'].sudo().search([
             ('slide_id', 'in', self.ids)
         ])
+
         for slide_partner in slide_partners:
             if slide_partner.vote == 1:
                 slide_data[slide_partner.slide_id.id]['likes'] += 1
@@ -271,6 +303,7 @@ class Slide(models.Model):
                 slide_data[slide_partner.slide_id.id]['dislikes'] += 1
                 if slide_partner.partner_id == self.env.user.partner_id:
                     slide_data[slide_partner.slide_id.id]['user_vote'] = -1
+
         for slide in self:
             slide.update(slide_data[slide.id])
 
@@ -317,7 +350,7 @@ class Slide(models.Model):
                 result[cid]['total_slides'] += slide_type_count
         return result
 
-    @api.depends('slide_partner_ids.partner_id')
+    @api.depends('slide_partner_ids.partner_id', 'slide_partner_ids.vote')
     @api.depends('uid')
     def _compute_user_membership_id(self):
         slide_partners = self.env['slide.slide.partner'].sudo().search([
@@ -330,6 +363,7 @@ class Slide(models.Model):
                 (slide_partner for slide_partner in slide_partners if slide_partner.slide_id == record),
                 self.env['slide.slide.partner']
             )
+            record.user_vote = record.user_membership_id.vote
 
     @api.depends('document_id', 'slide_type', 'mime_type')
     def _compute_embed_code(self):

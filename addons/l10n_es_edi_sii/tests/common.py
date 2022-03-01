@@ -33,6 +33,7 @@ class TestEsEdiCommon(AccountEdiTestCommon):
             'l10n_es_edi_certificate_id': cls.certificate.id,
             'vat': 'ES59962470K',
             'l10n_es_edi_test_env': True,
+            'l10n_es_edi_tax_agency': 'bizkaia',
         })
 
         # ==== Business ====

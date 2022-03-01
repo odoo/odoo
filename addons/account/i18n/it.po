@@ -11,6 +11,7 @@
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2020
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2020
+# efraimbiffi <eab@odoo.com>, 2020
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
@@ -18,7 +19,6 @@
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
 # Paolo Valier, 2020
 # David Minneci <david@numeko.it>, 2020
-# efraimbiffi <eab@odoo.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
 # Luana Andronico <andronicoluana@gmail.com>, 2020
@@ -812,7 +812,7 @@ msgstr "<span>Vista</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr "<strong class=\"mr16\">Imponibile</strong>"
+msgstr "<strong class=\"mr16\">Totale parziale</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -921,7 +921,7 @@ msgstr "<strong>Saldo iniziale</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Imponibile: </strong>"
+msgstr "<strong>Totale parziale</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -1040,8 +1040,8 @@ msgid ""
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
 "Se i prezzi sono imposta inclusa è consigliato un arrotondamento per riga. "
-"In questo modo, la somma degli importi riga corrisponde al totale imposte "
-"incluse."
+"In questo modo, la somma dei totali parziali delle righe corrisponde al "
+"totale imposte incluse."
 
 #. module: account
 #: code:addons/account/models/account_account_tag.py:0
@@ -5895,7 +5895,7 @@ msgstr "METÀ (PER ECCESSO)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
 msgid "Has Accounting Entries"
-msgstr "Contiene registrazioni contabili"
+msgstr "Ha registrazioni contabili"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_reconciled_entries
@@ -5908,7 +5908,7 @@ msgstr "Ha registrazioni riconciliate"
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "Contiene registrazioni non riconciliate"
+msgstr "Ha registrazioni non riconciliate"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -8443,7 +8443,7 @@ msgstr "Prima i più vecchi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "On the"
-msgstr "Sul"
+msgstr "Al"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -10521,7 +10521,7 @@ msgstr "Sezione"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
 msgid "Secure Sequence"
-msgstr ""
+msgstr "Sequenza sicura"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -10994,18 +10994,18 @@ msgstr "Mostrare registro nella bacheca"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_line_subtotals_tax_included
 msgid "Show line subtotals with taxes (B2C)"
-msgstr "Mostra gli importi riga con imposte (B2C)"
+msgstr "Mostra i totali parziali della riga con imposte (B2C)"
 
 #. module: account
 #: model:res.groups,comment:account.group_show_line_subtotals_tax_included
 msgid "Show line subtotals with taxes included (B2C)"
-msgstr "Mostra gli importi riga imposte incluse (B2C)"
+msgstr "Mostra i totali parziali della riga imposte incluse (B2C)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_line_subtotals_tax_excluded
 #: model:res.groups,comment:account.group_show_line_subtotals_tax_excluded
 msgid "Show line subtotals without taxes (B2B)"
-msgstr "Mostra gli importi riga imposte escluse (B2B)"
+msgstr "Mostra i totali parziali della riga imposte escluse (B2B)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11290,7 +11290,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_subtotal
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Subtotal"
-msgstr "Imponibile"
+msgstr "Totale parziale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subtype_id
@@ -13599,7 +13599,7 @@ msgstr "Operazioni"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__total_entry_encoding
 msgid "Transactions Subtotal"
-msgstr "Imponibile operazioni"
+msgstr "Totale parziale operazioni"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
