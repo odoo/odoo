@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_br_cpf_code" attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"/>
+                <field name="l10n_br_ie_code" attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"/>
+                <field name="l10n_br_im_code" attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"/>
+                <field name="l10n_br_nire_code" attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
