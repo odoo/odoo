@@ -557,6 +557,7 @@ var SnippetEditor = Widget.extend({
         // as explained above where it is defined. However, it is critical to at
         // least await it before destroying the snippet editor instance
         // otherwise the logic of activateSnippet gets messed up.
+        // FIXME should not this call _destroyEditor ?
         activateSnippetProm.then(() => this.destroy());
         $parent.trigger('content_changed');
 
@@ -1389,6 +1390,7 @@ var SnippetsMenu = Widget.extend({
             for (const snippetEditor of this.snippetEditors) {
                 this._mutex.exec(() => snippetEditor.destroy());
             }
+            // FIXME should not the snippetEditors list be emptied here ?
             const selection = this.$body[0].ownerDocument.getSelection();
             if (selection.rangeCount) {
                 const target = selection.getRangeAt(0).startContainer.parentElement;
@@ -1547,13 +1549,7 @@ var SnippetsMenu = Widget.extend({
             }
             // Destroy options whose $target are not in the DOM anymore but
             // only do it once all options executions are done.
-            this._mutex.exec(() => {
-                snippetEditor.destroy();
-                const index = this.snippetEditors.indexOf(snippetEditor);
-                if (index !== -1) {
-                    this.snippetEditors.splice(index, 1);
-                }
-            });
+            this._mutex.exec(() => this._destroyEditor(snippetEditor));
         }
         this._mutex.exec(() => {
             if (this._currentTab === this.tabs.OPTIONS && !this.snippetEditors.length) {
@@ -1953,6 +1949,20 @@ var SnippetsMenu = Widget.extend({
             const html = await this.loadSnippets(invalidateCache);
             await this._computeSnippetTemplates(html);
         }, false);
+    },
+    /**
+     * TODO everything related to SnippetEditor destroy / cleanForSave should
+     * really be cleaned / unified.
+     *
+     * @private
+     * @param {SnippetEditor} editor
+     */
+    _destroyEditor(editor) {
+        editor.destroy();
+        const index = this.snippetEditors.indexOf(editor);
+        if (index >= 0) {
+            this.snippetEditors.splice(index, 1);
+        }
     },
     /**
      * @private
