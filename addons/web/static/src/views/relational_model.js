@@ -306,6 +306,9 @@ export class Record extends DataPoint {
             (params.resIds ? toRaw(params.resIds) : null) || // FIXME WOWL reactivity
             state.resIds ||
             (this.resId ? [this.resId] : []);
+
+        this.onChanges = params.onChanges || (() => {});
+
         this._values = params.values;
         this._changes = params.changes || {};
         this.data = { ...this._values, ...this._changes };
@@ -522,6 +525,10 @@ export class Record extends DataPoint {
                 resIds: this.data[fieldName] || [],
                 views,
                 viewMode,
+                onChanges: () => {
+                    // this.onChanges(); wait
+                    this._changes[fieldName] = list;
+                },
             });
             this._values[fieldName] = list;
             this.data[fieldName] = list;
@@ -562,7 +569,7 @@ export class Record extends DataPoint {
                 );
                 return;
             }
-            const changes = this._getChanges();
+            const changes = this.getChanges();
             const keys = Object.keys(changes);
             let reload = true;
             if (this.resId) {
@@ -681,7 +688,7 @@ export class Record extends DataPoint {
         const field = this.fields[fieldName];
         if (field && ["one2many", "many2many"].includes(field.type)) {
             this.data[fieldName].update(value);
-            this._changes[fieldName] = true;
+            this._changes[fieldName] = this.data[fieldName];
         } else {
             this.data[fieldName] = value;
             this._changes[fieldName] = value;
@@ -693,7 +700,7 @@ export class Record extends DataPoint {
             const result = await this.model.orm.call(
                 this.resModel,
                 "onchange",
-                [[], this._getChanges(true), fieldName ? [fieldName] : [], this._getOnchangeSpec()],
+                [[], this.getChanges(true), fieldName ? [fieldName] : [], this._getOnchangeSpec()],
                 { context: this.context }
             );
             if (result.warning) {
@@ -746,31 +753,13 @@ export class Record extends DataPoint {
         return specs;
     }
 
-    getChanges() {
-        const changes = this._getChanges();
-        if (!Object.keys(changes).length) {
-            return null;
-        }
-        const command = Commands.update(this.resId, changes);
-        return command;
-    }
-
-    _getChanges(allFields = false) {
+    getChanges(allFields = false) {
         const changes = { ...(allFields ? this.data : this._changes) };
-        for (const fieldName of Object.keys(this.activeFields)) {
-            const { type } = this.fields[fieldName];
-            if (["one2many", "many2many"].includes(type) && this.data[fieldName]) {
-                // bof
-                delete changes[fieldName];
-                const fieldChanges = this.data[fieldName].getChanges();
-                if (fieldChanges) {
-                    changes[fieldName] = fieldChanges;
-                }
-            }
-        }
         for (const fieldName in changes) {
             const fieldType = this.fields[fieldName].type;
-            if (fieldType === "many2one") {
+            if (["one2many", "many2many"].includes(fieldType)) {
+                changes[fieldName] = changes[fieldName].getCommands();
+            } else if (fieldType === "many2one") {
                 changes[fieldName] = changes[fieldName] ? changes[fieldName][0] : false;
             } else if (fieldType === "date") {
                 changes[fieldName] = changes[fieldName] ? serializeDate(changes[fieldName]) : false;
@@ -1616,7 +1605,7 @@ export class StaticList extends DataPoint {
     constructor(model, params, state) {
         super(...arguments);
 
-        this.field = params.field;
+        this.isOne2Many = params.field.type === "one2many";
         this.resIds = [...params.resIds] || [];
         this.records = [];
         this._cache = {};
@@ -1627,6 +1616,8 @@ export class StaticList extends DataPoint {
 
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.offset = 0;
+
+        this.onChanges = params.onChanges || (() => {});
 
         this._commands = [];
         this._changes = [];
@@ -1645,6 +1636,7 @@ export class StaticList extends DataPoint {
     }
 
     delete(record) {
+        this.onChanges();
         const { resId } = record;
         // Where do we need to manage resId=false?
         this._commands.push(Commands.delete(record.resId));
@@ -1655,6 +1647,7 @@ export class StaticList extends DataPoint {
     }
 
     async add(context) {
+        this.onChanges();
         const record = this.model.createDataPoint("record", {
             context: Object.assign({}, this.context, context || {}),
             resModel: this.resModel,
@@ -1732,6 +1725,7 @@ export class StaticList extends DataPoint {
                         viewMode: this.viewMode,
                         views: this.views,
                         onRecordWillSwitchMode: this.onRecordWillSwitchMode,
+                        onChanges: this.onChanges,
                     });
                     this._cache[resId] = record;
                     await record.load();
@@ -1767,17 +1761,23 @@ export class StaticList extends DataPoint {
         this.model.notify();
     }
 
-    getChanges() {
+    /**
+     * @returns {Array[] | null}
+     */
+    getCommands() {
         if (!this._commands.length) {
             return null;
         }
         const commands = [];
-        if (this.field.type === "one2many") {
+        if (this.isOne2Many) {
             for (const resId of this.resIds) {
                 let record = this._cache[resId];
                 let command;
                 if (record) {
-                    command = record.getChanges();
+                    const changes = record.getChanges();
+                    if (Object.keys(changes).length) {
+                        command = Commands.update(this.resId, changes);
+                    }
                 }
                 if (command) {
                     commands.push(command);
@@ -1807,6 +1807,7 @@ export class StaticList extends DataPoint {
     async _applyChange(command) {
         switch (command.operation) {
             case "REPLACE_WITH": {
+                this.onChanges();
                 this.resIds = command.resIds;
                 this._changes = [[6, false, command.resIds]];
                 this._commands = [[6, false, command.resIds]];
