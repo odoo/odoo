@@ -1,0 +1,34 @@
+// = Bootstrap v5.0 Utility Classes
+
+// Waiting the complete migration, some classes needs to be available to already 
+// migrates xml files.
+// This file will be deleted once we're done.
+// ============================================================================
+
+// == Inline margins
+//------------------------------------------------------------------------------
+// "Bootstrap v5 ready" utility-classes to handle inline margins.
+// These classes definitions can be safely removed after migrating to BTS v5.
+
+$o-inline-spacers: map-merge($spacers, ('auto': auto));
+
+@each $size, $length in $o-inline-spacers {
+  .ms-#{$size} {
+    margin-inline-start: $length !important;
+  }
+  .me-#{$size} {
+    margin-inline-end: $length !important;
+  }
+}
+
+// == Float Classes
+//------------------------------------------------------------------------------
+// "Bootstrap v5 ready" utility-classes to float elements to the left or right.
+// These classes definitions can be safely removed after migrating to BTS v5.
+
+.float-start {
+  float: left !important;
+}
+.float-end {
+  float: right !important;
+}

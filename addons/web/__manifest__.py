@@ -90,6 +90,8 @@ This module provides the core of the Odoo Web Client.
 
             ('include', 'web._assets_bootstrap'),
 
+            'web/static/src/libs/bs5_utility_classes.scss',
+
             'base/static/src/css/modules.css',
             'base/static/src/js/res_config_settings.js',
 
