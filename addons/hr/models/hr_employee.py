@@ -304,19 +304,26 @@ class HrEmployeePrivate(models.Model):
         employees = super().create(vals_list)
         if self.env.context.get('salary_simulation'):
             return employees
+        employee_departments = employees.department_id
+        if employee_departments:
+            self.env['mail.channel'].sudo().search([
+                ('subscription_department_ids', 'in', employee_departments.ids)
+            ])._subscribe_users_automatically()
+        onboarding_notes_bodies = {}
+        hr_root_menu = self.env.ref('hr.menu_hr_root')
         for employee in employees:
-            if employee.department_id:
-                self.env['mail.channel'].sudo().search([
-                    ('subscription_department_ids', 'in', employee.department_id.id)
-                ])._subscribe_users_automatically()
             # Launch onboarding plans
             url = '/web#%s' % url_encode({
                 'action': 'hr.plan_wizard_action',
                 'active_id': employee.id,
                 'active_model': 'hr.employee',
-                'menu_id': self.env.ref('hr.menu_hr_root').id,
+                'menu_id': hr_root_menu.id,
             })
-            employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
+            onboarding_notes_bodies[employee.id] = _(
+                '<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>',
+                url,
+            )
+        employees._message_log_batch(onboarding_notes_bodies)
         return employees
 
     def write(self, vals):
