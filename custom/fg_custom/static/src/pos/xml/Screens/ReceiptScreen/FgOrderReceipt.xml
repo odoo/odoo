@@ -3,7 +3,14 @@
     <t t-name="OrderReceipt"  t-extend="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension"
        owl="1">
 
-    	<xpath expr="//img[@class='pos-receipt-logo']" position="replace" />
+    	<xpath expr="//img[@class='pos-receipt-logo']" position="replace" >
+            <t t-if="receipt.x_receipt_printed">
+                <br/>
+                <div style="text-align:center"><b>RE-PRINT COPY</b></div>
+            </t>
+        </xpath>
+
+
 
         <xpath expr="//div[@class='pos-receipt-contact']" position="replace">
                 <div class="pos-receipt-contact">

@@ -21,8 +21,12 @@ class PosOrderInherit(models.Model):
     x_ext_order_ref = fields.Char("External Order Ref")
     x_ext_source = fields.Char("Channel")
 
-
     x_receipt_note = fields.Char("Receipt Note")
+    x_receipt_printed = fields.Boolean("Is Receipt Printed")
+    x_receipt_printed_date = fields.Date("OR Printed Date")
+
+
+    x_receipt_printed_date = fields.Date("OR Printed Date")
 
 
 class FgImportOrders(models.TransientModel):
