@@ -269,20 +269,18 @@ export class CommandPalette extends Component {
 
     debounceSearch(value) {
         const { namespace } = this.processSearchValue(value);
-        if (!this.debounceSearchByNamespace[namespace]) {
-            const namespaceConfig = this.configByNamespace[namespace] || {};
-            if (namespaceConfig.debounceDelay) {
-                this.debounceSearchByNamespace[namespace] = debounce.apply(this, [
-                    this.search,
-                    namespaceConfig.debounceDelay,
-                ]);
-            } else {
-                this.debounceSearchByNamespace[namespace] = this.defaultDebounceSearch;
+        const namespaceConfig = this.configByNamespace[namespace] || {};
+        if (this.namespace !== namespace) {
+            if (this.lastDebounceSearch) {
+                this.lastDebounceSearch.cancel();
             }
+            this.lastDebounceSearch = debounce(
+                (value) => this.search(value),
+                namespaceConfig.debounceDelay || 0
+            );
+            this.namespace = namespace;
         }
-        const debounceSearch =
-            this.debounceSearchByNamespace[namespace] || this.defaultDebounceSearch;
-        this.searchValuePromise = debounceSearch.apply(this, [value]).catch(() => {
+        this.searchValuePromise = this.lastDebounceSearch(value).catch(() => {
             this.searchValuePromise = null;
         });
     }
