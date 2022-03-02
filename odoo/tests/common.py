@@ -508,8 +508,8 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         )
         for actual_query, expect_query in zip(actual_queries, expected):
             self.assertEqual(
-                "".join(actual_query.lower().split()),
-                "".join(expect_query.lower().split()),
+                "".join(actual_query.split()),
+                "".join(expect_query.split()),
                 "\n---- actual query:\n%s\n---- not like:\n%s" % (actual_query, expect_query),
             )
 
