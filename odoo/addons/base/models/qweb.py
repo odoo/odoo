@@ -965,7 +965,7 @@ class QWeb(object):
         return compiled
 
     def _compile_directive_elif(self, el, options, indent):
-        """Compile `t-eif` expressions into a python code as a list of strings.
+        """Compile `t-elif` expressions into a python code as a list of strings.
 
         This method is linked with the `t-if` directive.
         The code will contain the compiled code of the element (without `else`
