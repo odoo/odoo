@@ -21,7 +21,7 @@
                     <field name="user_ids" context="{'active_test': False}"/>
                     <field string="Project" name="display_project_id"/>
                     <field name="stage_id"/>
-                    <field name="partner_id" operator="child_of"/>
+                    <field name="partner_id" operator="child_of" context="{'active_test': False}"/>
                     <field name="parent_id"/>
                     <field name="rating_last_text"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
