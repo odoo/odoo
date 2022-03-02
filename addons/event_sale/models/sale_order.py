@@ -130,13 +130,7 @@ class SaleOrderLine(models.Model):
 
     @api.depends('event_ticket_id')
     def _compute_price_unit(self):
-        """Do not update the price on qty/uom change"""
-        event_lines = self.filtered('event_ticket_id')
-        super(SaleOrderLine, self-event_lines)._compute_price_unit()
-        for line in event_lines:
-            if not line.product_id or line._origin.product_id != line.product_id:
-                # Note: this also computes the price for new lines :)
-                super(SaleOrderLine, line)._compute_price_unit()
+        super()._compute_price_unit()
 
     @api.depends('event_ticket_id')
     def _compute_name(self):
@@ -173,9 +167,15 @@ class SaleOrderLine(models.Model):
                 pricelist=self.order_id.pricelist_id.id,
                 uom=self.product_uom.id
             )
-            if self.order_id.pricelist_id.discount_policy == 'with_discount':
-                return event_ticket.price_reduce
+            company = event_ticket.company_id or self.env.company
+            currency = company.currency_id
+            pricelist = self.order_id.pricelist_id
+            if pricelist.discount_policy == "with_discount":
+                price = event_ticket.price_reduce
             else:
-                return event_ticket.price
-        else:
-            return super()._get_display_price()
+                price = event_ticket.price
+            return currency._convert(
+                price, self.order_id.currency_id,
+                self.order_id.company_id or self.env.company.id,
+                self.order_id.date_order or fields.Date.today())
+        return super()._get_display_price()
