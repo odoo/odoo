@@ -1168,7 +1168,7 @@ function makeActionManager(env) {
                     // warning: quotes and double quotes problem due to json and xml clash
                     // maybe we should force escaping in xml or do a better parse of the args array
                     additionalArgs = JSON.parse(params.args.replace(/'/g, '"'));
-                } catch (e) {
+                } catch (_e) {
                     browser.console.error("Could not JSON.parse arguments", params.args);
                 }
                 args = args.concat(additionalArgs);

@@ -335,7 +335,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                     var cwindow = self.$iframe[0].contentWindow;
                     try {
                         cwindow.document;
-                    } catch (e) {
+                    } catch (_e) {
                         return;
                     }
                     cwindow.document
@@ -399,7 +399,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         var value = text || "";
         try {
             $(text)[0].innerHTML; // crashes if text isn't html
-        } catch (e) {
+        } catch (_e) {
             if (value.match(/^\s*$/)) {
                 value = '<p><br/></p>';
             } else {

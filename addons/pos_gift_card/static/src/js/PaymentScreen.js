@@ -47,7 +47,7 @@ odoo.define('pos_gift_card.PaymentScreen', function(require) {
                                 }
                             }
                         }
-                    } catch (e) {
+                    } catch (_e) {
                         // do nothing with the error
                     }
                 }

@@ -403,7 +403,7 @@ odoo.define('website.s_website_form', function (require) {
                 try {
                     this.parse_date(value, type_of_date);
                     return true;
-                } catch (e) {
+                } catch (_e) {
                     return false;
                 }
             }

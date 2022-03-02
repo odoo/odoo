@@ -15,7 +15,7 @@ try {
     // Safari crashes in Private Browsing
     localStorage.setItem("__localStorage__", "true");
     localStorage.removeItem("__localStorage__");
-} catch (e) {
+} catch (_e) {
     localStorage = makeRAMLocalStorage();
     sessionStorage = makeRAMLocalStorage();
 }

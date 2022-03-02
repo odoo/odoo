@@ -114,7 +114,7 @@ QUnit.module("Legacy MockServer", {
                 args: [],
                 kwargs: {},
             });
-        } catch (error) {
+        } catch (_error) {
             assert.step("name_get failed")
         }
         assert.verifySteps(["name_get failed"])
@@ -166,7 +166,7 @@ QUnit.module("Legacy MockServer", {
                 args: [11111],
                 kwargs: {},
             });
-        } catch (error) {
+        } catch (_error) {
             assert.step("name_get failed")
         }
         assert.verifySteps(["name_get failed"])

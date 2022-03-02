@@ -155,7 +155,7 @@ var DateWidget = Widget.extend({
             try {
                 this._parseClient(value);
                 return true;
-            } catch (e) {
+            } catch (_e) {
                 return false;
             }
         }

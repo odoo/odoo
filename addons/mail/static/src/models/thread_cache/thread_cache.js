@@ -25,7 +25,7 @@ registerModel({
             try {
                 fetchedMessages = await this._loadMessages({ limit, maxId: Math.min(...messageIds) });
                 success = true;
-            } catch (e) {
+            } catch (_e) {
                 success = false;
             }
             if (!this.exists()) {

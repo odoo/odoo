@@ -41,12 +41,12 @@ try {
                         newValue: newValue,
                     });
                 }
-            } catch (error) {}
+            } catch (_error) {}
         });
         return storage;
     })();
 
-} catch (exception) {
+} catch (_exception) {
     console.warn('Fail to load sessionStorage');
     storage = new RamStorage();
 }

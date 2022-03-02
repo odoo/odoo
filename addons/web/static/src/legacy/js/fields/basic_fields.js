@@ -517,7 +517,7 @@ var NumericField = InputField.extend({
                 value = this._formatValue(value);
                 // Set the computed value in the input
                 this.$input.val(value);
-            } catch (err) {
+            } catch (_err) {
                 // in case of exception, set value as the original value
                 // that way the Webclient will show an error as
                 // it is expecting a numeric value.
@@ -711,7 +711,7 @@ var FieldDateRange = InputField.extend({
         const value = this.mode === "readonly" ? this.value : this.$input.val();
         try {
             return field_utils.parse[this.formatType](value, this.field, { timezone: true }) || true;
-        } catch (error) {
+        } catch (_error) {
             return false;
         }
     },
@@ -731,7 +731,7 @@ var FieldDateRange = InputField.extend({
             // user may enter manual value in input and it may not be parsed as date/datetime value
             this.removeInvalidClass();
             return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
-        } catch (error) {
+        } catch (_error) {
             this.setInvalidClass();
             return false;
         }
@@ -3194,7 +3194,7 @@ var FieldProgressBar = AbstractField.extend({
         try {
             // Cover all numbers with parseFloat
             parsedValue = field_utils.parse.float($input.val());
-        } catch (error) {
+        } catch (_error) {
             this.displayNotification({ message: _t("Please enter a numerical value"), type: 'danger' });
         }
 
@@ -4138,7 +4138,7 @@ var FieldColorPicker = FieldInteger.extend({
     _highlightSelectedColor: function(){
         try{
             $(this.$('li')[parseInt(this.value)]).css('border', '2px solid teal');
-        } catch(err) {
+        } catch(_err) {
 
         }
     },

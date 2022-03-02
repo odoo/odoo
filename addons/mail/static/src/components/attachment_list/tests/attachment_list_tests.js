@@ -346,7 +346,7 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
     try {
         imageEl.dispatchEvent(new Event('load', { bubbles: true }));
         successfulLoad = true;
-    } catch (err) {
+    } catch (_err) {
         successfulLoad = false;
     } finally {
         assert.ok(successfulLoad, 'should not crash when the image is loaded');

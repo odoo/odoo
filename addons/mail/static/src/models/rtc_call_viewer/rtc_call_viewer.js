@@ -78,7 +78,7 @@ registerModel({
                 if (this.exists()) {
                     this.update({ isFullScreen: true });
                 }
-            } catch (e) {
+            } catch (_e) {
                 if (this.exists()) {
                     this.update({ isFullScreen: false });
                 }

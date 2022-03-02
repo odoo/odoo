@@ -262,7 +262,7 @@ var LivechatButton = Widget.extend({
                         message: _t("No available collaborator, please try again later."),
                         sticky: true,
                     });
-                } catch (err) {
+                } catch (_err) {
                     /**
                      * Failure in displaying notification happens when
                      * notification service doesn't exist, which is the case in
@@ -368,7 +368,7 @@ var LivechatButton = Widget.extend({
                             message: _t("Session expired... Please refresh and try again."),
                             sticky: true,
                         });
-                    } catch (err) {
+                    } catch (_err) {
                         /**
                          * Failure in displaying notification happens when
                          * notification service doesn't exist, which is the case

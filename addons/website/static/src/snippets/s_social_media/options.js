@@ -160,7 +160,7 @@ options.registry.SocialMedia = options.Class.extend({
             const domain = new URL(url).hostname.split('.').slice(-2)[0];
             fonts.computeFonts();
             return fonts.fontIcons[0].alias.find(el => el.includes(domain)).split('fa-').pop();
-        } catch (error) {
+        } catch (_error) {
             return false;
         }
     },
@@ -171,7 +171,7 @@ options.registry.SocialMedia = options.Class.extend({
     _isValidURL(str) {
         try {
             new URL(str);
-        } catch (error) {
+        } catch (_error) {
             return false;
         }
         return true;

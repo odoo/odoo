@@ -288,7 +288,7 @@ function get_file(options) {
             try { // Case of a serialized Odoo Exception: It is Json Parsable
                 var node = nodes[1] || nodes[0];
                 err = JSON.parse(node.textContent);
-            } catch (e) { // Arbitrary uncaught python side exception
+            } catch (_e) { // Arbitrary uncaught python side exception
                 err = {
                     message: nodes.length > 1 ? nodes[1].textContent : '',
                     data: {
