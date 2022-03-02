@@ -30,10 +30,10 @@ class ProductPackaging(models.Model):
 
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):
-        """ With GS1 nomenclature, products and packagins use the same pattern. Therefore, we need
+        """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
         to ensure the uniqueness between products' barcodes and packagings' ones"""
-        condition = expression.OR([[('barcode', '=', b)] for b in self.mapped('barcode') if b])
-        if self.env['product.product'].search(condition, limit=1):
+        domain = [('barcode', 'in', [b for b in self.mapped('barcode') if b])]
+        if self.env['product.product'].search(domain, order="id", limit=1):
             raise ValidationError(_("A product already uses the barcode"))
 
     def _check_qty(self, product_qty, uom_id, rounding_method="HALF-UP"):
