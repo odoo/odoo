@@ -146,6 +146,10 @@ class SaleOrder(models.Model):
         store=True, readonly=False, required=True, precompute=True,
         states=LOCKED_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+    # Credit Limit related field
+    partner_credit_warning = fields.Text(
+        compute='_compute_partner_credit_warning',
+        groups="account.group_account_invoice,account.group_account_readonly")
 
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
@@ -587,6 +591,17 @@ class SaleOrder(models.Model):
                                  "You may be unable to honor the delivery date.")
                 }
             }
+
+    @api.depends('company_id', 'partner_id', 'amount_total')
+    def _compute_partner_credit_warning(self):
+        for order in self:
+            order.with_company(order.company_id)
+            order.partner_credit_warning = ''
+            show_warning = order.state in ('draft', 'sent') and \
+                           order.company_id.account_use_credit_limit
+            if show_warning:
+                updated_credit = order.partner_id.credit + (order.amount_total * order.currency_rate)
+                order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(order, updated_credit)
 
     @api.onchange('partner_id')
     def _onchange_partner_id_warning(self):

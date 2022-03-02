@@ -325,6 +325,24 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="account_use_credit_limit"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="account_use_credit_limit"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." role="img"/>
+                                    <div class="text-muted">
+                                        Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.
+                                    </div>
+                                    <div class="content-group mt-2" attrs="{'invisible': [('account_use_credit_limit', '=', False)]}">
+                                        <div class="row">
+                                            <label for="account_default_credit_limit" class="col-lg-4 o_light_label"/>
+                                            <field name="account_default_credit_limit"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Customer Payments</h2>
                         <div class="row mt16 o_settings_container" id="pay_invoice_online_setting_container">
