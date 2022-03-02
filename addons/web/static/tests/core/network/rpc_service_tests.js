@@ -18,7 +18,7 @@ import {
 } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 
-const { xml } = owl;
+const { Component, xml } = owl;
 
 let isXHRMocked = false;
 const serviceRegistry = registry.category("services");

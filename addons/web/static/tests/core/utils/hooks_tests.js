@@ -148,7 +148,7 @@ QUnit.module("utils", () => {
 
             const env = await makeTestEnv();
             const target = getFixture();
-            const comp = await mount(MyComponent, target, { env });
+            await mount(MyComponent, target, { env });
 
             await click(target.querySelector(".root"));
             assert.verifySteps(["click"]);

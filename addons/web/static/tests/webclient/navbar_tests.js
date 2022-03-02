@@ -18,9 +18,8 @@ import {
     patchWithCleanup,
     makeDeferred,
 } from "../helpers/utils";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { xml } = owl;
+const { Component, xml } = owl;
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
 

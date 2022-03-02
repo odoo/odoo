@@ -3,7 +3,7 @@
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 
-const { useRef, useChildSubEnv, xml } = owl;
+const { Component, useRef, useChildSubEnv, xml } = owl;
 
 export class Dialog extends Component {
     setup() {
