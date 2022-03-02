@@ -346,6 +346,12 @@ var MassMailingFieldHtml = FieldHtml.extend({
         var $snippets = $snippetsSideBar.find(".oe_snippet");
         var $snippets_menu = $snippetsSideBar.find("#snippets_menu");
 
+        for (const button of $snippets_menu.get(0).children) {
+            if (button.textContent === 'Select a template') {
+                button.style.display = 'none';
+            }
+        }
+
         if (config.device.isMobile) {
             $snippetsSideBar.hide();
             this.$content.attr('style', 'padding-left: 0px !important');
