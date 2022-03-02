@@ -98,6 +98,8 @@ class ResCompany(models.Model):
 
     invoice_is_email = fields.Boolean('Email by default', default=True)
     invoice_is_print = fields.Boolean('Print by default', default=True)
+    account_use_credit_limit = fields.Boolean(
+        string='Sales Credit Limit', help='Enable the use of credit limit on partners.')
 
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")

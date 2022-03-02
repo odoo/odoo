@@ -433,9 +433,21 @@ class ResPartner(models.Model):
                 partner.currency_id = self.env.company.currency_id
 
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
-        string='Total Receivable', help="Total amount this customer owes you.")
-    debit = fields.Monetary(compute='_credit_debit_get', search=_debit_search, string='Total Payable',
-        help="Total amount you have to pay to this vendor.")
+        string='Total Receivable', help="Total amount this customer owes you.",
+        groups='account.group_account_invoice,account.group_account_readonly')
+    credit_limit = fields.Float(
+        string='Credit Limit', help='Credit limit specific to this partner.',
+        groups='account.group_account_invoice,account.group_account_readonly',
+        company_dependent=True, copy=False, readonly=False)
+    use_partner_credit_limit = fields.Boolean(
+        string='Partner Limit', groups='account.group_account_invoice,account.group_account_readonly',
+        compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit')
+    show_credit_limit = fields.Boolean(
+        compute='_compute_show_credit_limit', groups='account.group_account_invoice,account.group_account_readonly')
+    debit = fields.Monetary(
+        compute='_credit_debit_get', search=_debit_search, string='Total Payable',
+        help="Total amount you have to pay to this vendor.",
+        groups='account.group_account_invoice,account.group_account_readonly')
     debit_limit = fields.Monetary('Payable Limit')
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced",
         groups='account.group_account_invoice,account.group_account_readonly')
@@ -527,6 +539,22 @@ class ResPartner(models.Model):
         for partner in self:
             partner.duplicated_bank_account_partners_count = len(partner._get_duplicated_bank_accounts())
 
+    @api.depends_context('company')
+    def _compute_use_partner_credit_limit(self):
+        for partner in self:
+            company_limit = self.env['ir.property']._get('credit_limit', 'res.partner')
+            partner.use_partner_credit_limit = partner.credit_limit != company_limit
+
+    def _inverse_use_partner_credit_limit(self):
+        for partner in self:
+            if not partner.use_partner_credit_limit:
+                partner.credit_limit = self.env['ir.property']._get('credit_limit', 'res.partner')
+
+    @api.depends_context('company')
+    def _compute_show_credit_limit(self):
+        for partner in self:
+            partner.show_credit_limit = self.env.company.account_use_credit_limit
+
     def _find_accounting_partner(self, partner):
         ''' Find the partner for which the accounting entries will be created '''
         return partner.commercial_partner_id
@@ -535,7 +563,7 @@ class ResPartner(models.Model):
     def _commercial_fields(self):
         return super(ResPartner, self)._commercial_fields() + \
             ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
-             'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked']
+             'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked', 'credit_limit']
 
     def action_view_partner_invoices(self):
         self.ensure_one()

@@ -203,6 +203,7 @@
                 <page name="sales_purchases" position="after">
                     <page string="Invoicing" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice,account.group_account_readonly">
                         <field name="duplicated_bank_account_partners_count" invisible="1"/>
+                        <field name="show_credit_limit" invisible="1"/>
                         <group>
                             <group string="Bank Accounts" name="banks" groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="bank_ids" nolabel="1" colspan="2">
@@ -224,6 +225,17 @@
                                 <field name="currency_id" invisible="1"/>
                                 <field name="property_account_receivable_id"/>
                                 <field name="property_account_payable_id"/>
+                            </group>
+                            <group string="Credit Limits"
+                                   name="credit_limits"
+                                   groups="account.group_account_invoice,account.group_account_readonly"
+                                   attrs="{'invisible': [('show_credit_limit', '=', False)]}">
+                                <field name="credit"/>
+                                <div name="partner_credit_limit" colspan="2" class="o_checkbox_optional_field">
+                                    <label for="use_partner_credit_limit"/>
+                                    <field name="use_partner_credit_limit"/>
+                                    <field name="credit_limit" class="oe_inline" attrs="{'invisible': [('use_partner_credit_limit', '=', False)]}"/>
+                                </div>
                             </group>
                         </group>
                     </page>

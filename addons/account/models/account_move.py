@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
-from odoo.tools import float_compare, date_utils, email_split, email_re, html_escape, is_html_empty, sql
+from odoo.tools import float_compare, date_utils, email_split, email_re, is_html_empty, sql
 from odoo.tools.misc import format_amount, formatLang, format_date, get_lang
 
 from datetime import date, timedelta
@@ -11,7 +11,6 @@ from contextlib import contextmanager
 from itertools import zip_longest
 from hashlib import sha256
 from json import dumps
-from markupsafe import Markup
 
 import ast
 import json
@@ -376,6 +375,10 @@ class AccountMove(models.Model):
     # Technical field to hide Reconciled Entries stat button
     has_reconciled_entries = fields.Boolean(compute="_compute_has_reconciled_entries")
     show_reset_to_draft_button = fields.Boolean(compute='_compute_show_reset_to_draft_button')
+    # Credit Limit related field
+    partner_credit_warning = fields.Text(
+        compute='_compute_partner_credit_warning',
+        groups="account.group_account_invoice,account.group_account_readonly")
 
     # ==== Hash Fields ====
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
@@ -1690,6 +1693,37 @@ class AccountMove(models.Model):
     def _compute_tax_country_code(self):
         for record in self:
             record.tax_country_code = record.tax_country_id.code
+
+    @api.depends('company_id', 'partner_id', 'amount_total_signed')
+    def _compute_partner_credit_warning(self):
+        for move in self:
+            move.with_company(move.company_id)
+            move.partner_credit_warning = ''
+            show_warning = move.state == 'draft' and \
+                           move.move_type == 'out_invoice' and \
+                           move.company_id.account_use_credit_limit
+            if show_warning:
+                updated_credit = move.partner_id.credit + move.amount_total_signed
+                move.partner_credit_warning = self._build_credit_warning_message(move, updated_credit)
+
+    def _build_credit_warning_message(self, record, updated_credit):
+        ''' Build the warning message that will be displayed in a yellow banner on top of the current record
+            if the partner exceeds a credit limit (set on the company or the partner itself).
+
+            :param record:                  The record where the warning will appear (Invoice, Sales Order...).
+            :param updated_credit (float):  The partner's updated credit limit including the current record.
+            :return (str):                  The warning message to be showed.
+        '''
+        credit_limit = record.partner_id.credit_limit
+        if (not credit_limit) or updated_credit <= credit_limit:
+            return ''
+        msg = _('%s has reached its Credit Limit of : %s\nTotal amount due ',
+                record.partner_id.name,
+                formatLang(self.env, credit_limit, currency_obj=record.company_id.currency_id))
+        if updated_credit > record.partner_id.credit:
+            msg += _('(including this document) ')
+        msg += ': %s' % formatLang(self.env, updated_credit, currency_obj=record.company_id.currency_id)
+        return msg
 
     # -------------------------------------------------------------------------
     # BUSINESS MODELS SYNCHRONIZATION
