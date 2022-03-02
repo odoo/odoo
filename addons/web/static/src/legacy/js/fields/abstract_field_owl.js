@@ -537,7 +537,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             try {
                 value = this._parseValue(value);
                 this._isValid = true;
-            } catch (e) {
+            } catch (_e) {
                 this._isValid = false;
                 this.trigger('set-dirty', {dataPointID: this.dataPointId});
                 return Promise.reject({message: "Value set is not valid"});

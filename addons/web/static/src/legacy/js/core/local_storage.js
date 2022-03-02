@@ -39,12 +39,12 @@ try {
                     key: key,
                     newValue: newValue,
                 });
-            } catch (error) {}
+            } catch (_error) {}
         });
         return storage;
     })();
 
-} catch (exception) {
+} catch (_exception) {
 	console.warn('Fail to load localStorage');
     storage = new RamStorage();
 }

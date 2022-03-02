@@ -42,11 +42,11 @@ function runTestSet(assert, testSet, options) {
         let res2;
         try {
             res1 = options.newFn(input);
-        } catch (e) {}
+        } catch (_e) {}
 
         try {
             res2 = options.legacyFn(input);
-        } catch (e) {}
+        } catch (_e) {}
 
         const expect =
             expected.length === 1

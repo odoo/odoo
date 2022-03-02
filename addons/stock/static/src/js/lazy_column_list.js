@@ -156,7 +156,7 @@ const LazyColumnListRenderer = ListRenderer.extend({
             if (JSON.parse(node.attrs.options).lazy) {
                 return true;
             }
-        } catch (e) {
+        } catch (_e) {
             return false;
         }
         return false;

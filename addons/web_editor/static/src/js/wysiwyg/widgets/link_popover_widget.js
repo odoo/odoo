@@ -156,7 +156,7 @@ const LinkPopoverWidget = Widget.extend({
         let url;
         try {
             url = new URL(this.target.href); // relative to absolute
-        } catch (e) {
+        } catch (_e) {
             // Invalid URL, might happen with editor unsuported protocol. eg type
             // `geo:37.786971,-122.399677`, become `http://geo:37.786971,-122.399677`
             this.displayNotification({

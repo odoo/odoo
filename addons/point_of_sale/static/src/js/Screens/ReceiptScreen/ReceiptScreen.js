@@ -48,7 +48,7 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                     await this._sendReceiptToCustomer();
                     this.orderUiState.emailSuccessful = true;
                     this.orderUiState.emailNotice = this.env._t('Email sent.');
-                } catch (error) {
+                } catch (_error) {
                     this.orderUiState.emailSuccessful = false;
                     this.orderUiState.emailNotice = this.env._t('Sending email failed. Please try again.');
                 }

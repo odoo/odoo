@@ -8254,7 +8254,7 @@ QUnit.module('basic_fields', {
         var left = $progressBarEl.offset().left + 5;
         try {
             testUtils.dom.triggerPositionalMouseEvent(left, top, "click");
-        } catch (e) {
+        } catch (_e) {
             form.destroy();
             $view.remove();
             throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
@@ -8301,7 +8301,7 @@ QUnit.module('basic_fields', {
         var left = $progressBarEl.offset().left + 5;
         try {
             testUtils.dom.triggerPositionalMouseEvent(left, top, "click");
-        } catch (e) {
+        } catch (_e) {
             form.destroy();
             $view.remove();
             throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');

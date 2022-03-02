@@ -423,7 +423,7 @@ function _download(data, filename, mimetype) {
         if (typeof blob === "string" || blob.constructor === toString) {
             try {
                 return saver(`data:${mimeType};base64,${self.btoa(blob)}`);
-            } catch (y) {
+            } catch (_y) {
                 return saver(`data:${mimeType},${encodeURIComponent(blob)}`);
             }
         }
@@ -505,7 +505,7 @@ download._download = (options) => {
                         // a Serialized python Error
                         const node = nodes[1] || nodes[0];
                         error = JSON.parse(node.textContent);
-                    } catch (e) {
+                    } catch (_e) {
                         error = {
                             message: "Arbitrary Uncaught Python Exception",
                             data: {

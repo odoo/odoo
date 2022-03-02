@@ -247,7 +247,7 @@ odoo.define('web.basic_model_tests', function (require) {
             try {
                 await model.load(this.params);
             }
-            catch (e) {
+            catch (_e) {
                 assert.ok("load should return a rejected deferred for an invalid id");
             }
 

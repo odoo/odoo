@@ -288,7 +288,7 @@ registerModel({
                 try {
                     const audioStream = await browser.navigator.mediaDevices.getUserMedia({ audio: this.messaging.userSetting.getAudioConstraints() });
                     audioTrack = audioStream.getAudioTracks()[0];
-                } catch (e) {
+                } catch (_e) {
                     this.env.services.notification.notify({
                         message: _.str.sprintf(
                             this.env._t(`"%s" requires microphone access`),
@@ -348,7 +348,7 @@ registerModel({
                     },
                     volumeThreshold: this.messaging.userSetting.voiceActivationThreshold,
                 });
-            } catch (e) {
+            } catch (_e) {
                 /**
                  * The browser is probably missing audioContext,
                  * in that case, voice activation is not enabled
@@ -773,14 +773,14 @@ registerModel({
             for (const sender of RTCRtpSenders) {
                 try {
                     peerConnection.removeTrack(sender);
-                } catch (e) {
+                } catch (_e) {
                     // ignore error
                 }
             }
             for (const transceiver of peerConnection.getTransceivers()) {
                 try {
                     transceiver.stop();
-                } catch (e) {
+                } catch (_e) {
                     // transceiver may already be stopped by the remote.
                 }
             }
@@ -1016,7 +1016,7 @@ registerModel({
                     videoStream = await browser.navigator.mediaDevices.getDisplayMedia({ video: this.videoConfig });
                     this.messaging.soundEffects.screenSharing.play();
                 }
-            } catch (e) {
+            } catch (_e) {
                 this.env.services.notification.notify({
                     message: _.str.sprintf(
                         this.env._t(`"%s" requires "%s" access`),
@@ -1075,7 +1075,7 @@ registerModel({
                 try {
                     await transceiver.sender.replaceTrack(track);
                     transceiver.direction = transceiverDirection;
-                } catch (e) {
+                } catch (_e) {
                     // ignored, the track is probably already on the peerConnection.
                 }
                 return;
@@ -1083,7 +1083,7 @@ registerModel({
             try {
                 await transceiver.sender.replaceTrack(null);
                 transceiver.direction = transceiverDirection;
-            } catch (e) {
+            } catch (_e) {
                 // ignored, the transceiver is probably already removed
             }
             if (trackKind === 'video') {

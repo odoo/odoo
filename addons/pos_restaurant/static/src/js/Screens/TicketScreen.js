@@ -109,7 +109,7 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                     }
                     order.finalize();
                     return true;
-                } catch (error) {
+                } catch (_error) {
                     const { confirmed } = await this.showPopup('ConfirmPopup', {
                         title: 'Failed to set tip',
                         body: `Failed to set tip to ${order.name}. Do you want to proceed on setting the tips of the remaining?`,

@@ -170,7 +170,7 @@ export function searchModelStateToLegacy(state) {
                 let context = item.context;
                 try {
                     context = makeContext([context]);
-                } catch (e) {}
+                } catch (_e) {}
                 filter.context = context;
         }
         filters[item.id] = filter;

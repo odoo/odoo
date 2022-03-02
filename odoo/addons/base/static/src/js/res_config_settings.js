@@ -371,7 +371,7 @@ var BaseSettingController = FormController.extend({
                                     dialog.close();
                                 },
                             });
-                        } catch (e) {
+                        } catch (_e) {
                             cancel();
                             dialog.close();
                         }
