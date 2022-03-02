@@ -6516,10 +6516,10 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("button executes action with domain field not in view", async (assert) => {
+    QUnit.test("button executes action with domain field not in view", async (assert) => {
         assert.expect(1);
 
-        await makeView({
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -6533,17 +6533,14 @@ QUnit.module("Views", (hooks) => {
                 "</div></templates>" +
                 "</kanban>",
         });
-
-        testUtils.mock.intercept(kanban, "execute_action", function (event) {
-            event.data.on_closed();
+        patchWithCleanup(kanban.env.services.action, {
+            doActionButton({ onClose }) {
+                onClose();
+            },
         });
 
         try {
-            await click(
-                target.querySelector(
-                    '.o_kanban_record:contains(yop) button[data-name="toggle_action"]'
-                )
-            );
+            await click(target.querySelector('.o_kanban_record button[name="toggle_action"]'));
             assert.strictEqual(true, true, "Everything went fine");
         } catch (e) {
             assert.strictEqual(true, false, "Error triggered at action execution");
