@@ -80,6 +80,9 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         expected_etree = self.get_xml_tree_from_string(expected_values)
         if applied_xpath:
             expected_etree = self.with_applied_xpath(expected_etree, applied_xpath)
+        # DEBUG: uncomment to get the generated xml and then, be able to submit it online for validation.
+        with open('generated_facturx.xml', 'wb+') as f:
+            f.write(xml_content)
         self.assertXmlTreeEqual(current_etree, expected_etree)
 
     def create_edi_document(self, edi_format, state, move=None, move_type=None):
