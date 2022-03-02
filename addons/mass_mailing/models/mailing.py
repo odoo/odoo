@@ -600,7 +600,7 @@ class MassMailing(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',
             'res_model': 'link.tracker',
-            'domain': [('mass_mailing_id.id', '=', self.id)],
+            'domain': [('mass_mailing_id', '=', self.id)],
             'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
             ),

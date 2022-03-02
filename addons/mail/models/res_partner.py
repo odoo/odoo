@@ -197,7 +197,7 @@ class Partner(models.Model):
         search_dom = expression.AND([[('active', '=', True), ('type', '!=', 'private')], search_dom])
         if channel_id:
             search_dom = expression.AND([[('channel_ids', 'in', channel_id)], search_dom])
-        domain_is_user = expression.AND([[('user_ids.id', '!=', False), ('user_ids.active', '=', True)], search_dom])
+        domain_is_user = expression.AND([[('user_ids', '!=', False), ('user_ids.active', '=', True)], search_dom])
         priority_conditions = [
             expression.AND([domain_is_user, [('partner_share', '=', False)]]),  # Search partners that are internal users
             domain_is_user,  # Search partners that are users

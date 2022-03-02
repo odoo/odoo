@@ -59,7 +59,7 @@ class Partner(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
         action['context'] = {'active_test': False}
         if self.is_company:
-            action['domain'] = [('partner_id.commercial_partner_id.id', '=', self.id)]
+            action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
         else:
-            action['domain'] = [('partner_id.id', '=', self.id)]
+            action['domain'] = [('partner_id', '=', self.id)]
         return action
