@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ViewNotFoundError } from "../webclient/actions/action_service";
 import { cleanDomFromBootstrap, wrapSuccessOrFail, useLegacyRefs } from "./utils";
 import { mapDoActionOptionAPI } from "./backend_utils";
-import { setScrollPosition } from "@web/core/utils/scrolling";
+import { setScrollPosition } from "@web/webclient/actions/scrolling";
 
 const {
     Component,
@@ -90,7 +90,7 @@ class ActionAdapter extends ComponentAdapter {
         });
 
         this.onScrollTo = (payload) => {
-            setScrollPosition(this, { left: payload.left, top: payload.top });
+            setScrollPosition(this.wowlEnv, { left: payload.left, top: payload.top });
         };
     }
 

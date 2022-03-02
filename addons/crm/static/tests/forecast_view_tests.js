@@ -91,7 +91,7 @@ QUnit.module("Views", (hooks) => {
             [],
         ];
 
-        const forecastGraph = await makeView({
+        await makeView({
             resModel: "foo",
             type: "graph",
             serverData,
@@ -108,16 +108,16 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await toggleGroupByMenu(forecastGraph);
-        await toggleMenuItem(forecastGraph, "Bar");
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Bar");
 
-        await toggleMenuItem(forecastGraph, "Date Field");
-        await toggleMenuItemOption(forecastGraph, "Date Field", "Quarter");
+        await toggleMenuItem(target, "Date Field");
+        await toggleMenuItemOption(target, "Date Field", "Quarter");
 
-        await toggleMenuItemOption(forecastGraph, "Date Field", "Year");
+        await toggleMenuItemOption(target, "Date Field", "Year");
 
-        await toggleFilterMenu(forecastGraph);
-        await toggleMenuItem(forecastGraph, "Forecast Filter");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Forecast Filter");
 
         unpatchDate();
     });

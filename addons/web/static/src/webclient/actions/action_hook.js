@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { getScrollPosition, setScrollPosition } from "@web/core/utils/scrolling";
+import { getScrollPosition, setScrollPosition } from "./scrolling";
 
 const { useComponent, useEffect } = owl;
 
@@ -75,7 +75,7 @@ export function useSetupAction(params = {}) {
     if (__getLocalState__) {
         useCallbackRecorder(__getLocalState__, () => {
             const state = {};
-            state[scrollSymbol] = getScrollPosition(component);
+            state[scrollSymbol] = getScrollPosition(component.env);
             if (params.getLocalState) {
                 Object.assign(state, params.getLocalState());
             }
@@ -89,7 +89,7 @@ export function useSetupAction(params = {}) {
     useEffect(
         () => {
             if (component.props.state && component.props.state[scrollSymbol]) {
-                setScrollPosition(component, component.props.state[scrollSymbol]);
+                setScrollPosition(component.env, component.props.state[scrollSymbol]);
             }
         },
         () => []
