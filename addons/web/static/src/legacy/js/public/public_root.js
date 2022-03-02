@@ -409,6 +409,7 @@ export async function createPublicRoot(RootWidget) {
     window.__OWL_TEMPLATES__ = templates;
     await startServices(wowlEnv);
     mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
+    odoo.__WOWL_ENV__ = wowlEnv;
     // The root widget's parent is a standalone adapter so that it has _trigger_up
     const publicRoot = new RootWidget(standaloneAdapter({ Component }));
     await Promise.all([

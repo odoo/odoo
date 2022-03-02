@@ -6,7 +6,7 @@ import { getDataURLFromFile } from 'web.utils';
 
 const { reactive } = owl;
 
-const AUTOCLOSE_DELAY = 3000;
+export const AUTOCLOSE_DELAY = 3000;
 
 export const uploadService = {
     dependencies: ['rpc'],
@@ -20,6 +20,23 @@ export const uploadService = {
         });
 
         return {
+            get fileId() {
+                return fileId;
+            },
+
+            addFile(file) {
+                filesToUpload[file.id] = file;
+                return filesToUpload[file.id];
+            },
+
+            deleteFile(fileId) {
+                delete filesToUpload[fileId];
+            },
+
+            incrementId() {
+                fileId++;
+            },
+
             uploadUrl: async (url, { resModel, resId }, onUploaded) => {
                 const attachment = await rpc('/web_editor/attachment/add_url', {
                     url,
