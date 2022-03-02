@@ -51,6 +51,7 @@ import odoo
 from odoo import api
 from odoo.models import BaseModel
 from odoo.exceptions import AccessError
+from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
@@ -2038,6 +2039,15 @@ class Form(object):
                     if f_['type'] == 'many2many':
                         # field value should be [(6, _, ids)], we want just the ids
                         field_val = field_val[0][2] if field_val else []
+
+                    # in an embedded view, the modifiers' view is not self._view so the fields for the domains cannot be
+                    # found but we have the field name and it's value, so we can guess a m2m field in a hack-ish way
+                    if f_['type'] is None and f.endswith('_ids') and len(field_val) == 1:
+                        try:
+                            if field_val[0][0] == Command.SET:
+                                field_val = field_val[0][2]
+                        except (IndexError, TypeError):
+                            pass
 
                 stack.append(self._OPS[op](field_val, val))
             else:
