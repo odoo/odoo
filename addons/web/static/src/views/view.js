@@ -5,9 +5,9 @@ import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy } from "@web/core/utils/objects";
+import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/helpers/view_hook";
-import { extractLayoutComponents } from "@web/views/layout";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
@@ -255,7 +255,6 @@ export class View extends LegacyComponent {
         const viewProps = {
             info: { actionMenus, mode: this.props.display.mode },
             arch,
-            className: "o_action o_view_controller",
             fields,
             resModel,
             useSampleModel: false,
