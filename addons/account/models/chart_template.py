@@ -953,8 +953,8 @@ class AccountTaxTemplate(models.Model):
 
             if force_tax:
                 search_domain += [
-                    '|', ('invoice_tax_id.id', 'in', force_tax.ids),
-                    ('refund_tax_id.id', 'in', force_tax.ids),
+                    '|', ('invoice_tax_id', 'in', force_tax.ids),
+                    ('refund_tax_id', 'in', force_tax.ids),
                 ]
 
             return self.env['account.tax.repartition.line'].search(search_domain, limit=1).account_id

@@ -38,9 +38,9 @@ class ResPartner(models.Model):
         '''
         action = self.env['ir.actions.act_window']._for_xml_id('point_of_sale.action_pos_pos_form')
         if self.is_company:
-            action['domain'] = [('partner_id.commercial_partner_id.id', '=', self.id)]
+            action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
         else:
-            action['domain'] = [('partner_id.id', '=', self.id)]
+            action['domain'] = [('partner_id', '=', self.id)]
         return action
 
     @api.model

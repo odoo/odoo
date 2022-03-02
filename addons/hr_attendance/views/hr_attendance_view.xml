@@ -94,7 +94,7 @@
             <search string="Hr Attendance Search">
                 <field name="employee_id"/>
                 <field name="department_id" operator="child_of"/>
-                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
                 <separator/>
                 <filter string="Check In" name="check_in_filter" date="check_in" default_period="last_month"/>
                 <filter string="No Check Out" name="nocheckout" domain="[('check_out', '=', False)]" />
