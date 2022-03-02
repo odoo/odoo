@@ -11,7 +11,14 @@
   },
   "rules": {
     "prettier/prettier": "error",
-    "no-undef": "error"
+    "no-undef": "error",
+    "no-restricted-globals": ["error", "event", "self"],
+    "no-const-assign": ["error"],
+    "no-debugger": ["error"],
+    "no-dupe-class-members": ["error"],
+    "no-unsafe-negation": ["error"],
+    "no-duplicate-imports": ["error"],
+    "valid-typeof": ["error"]
   },
   "globals": {
     "odoo": "writable",
