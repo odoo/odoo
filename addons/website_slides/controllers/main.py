@@ -478,7 +478,7 @@ class WebsiteSlides(WebsiteProfile):
                 domain += [('category_id', '=', category.id)]
                 pager_url += "/category/%s" % category.id
             elif tag:
-                domain += [('tag_ids.id', '=', tag.id)]
+                domain += [('tag_ids', '=', tag.id)]
                 pager_url += "/tag/%s" % tag.id
             if uncategorized:
                 domain += [('category_id', '=', False)]

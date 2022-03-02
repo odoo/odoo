@@ -172,7 +172,7 @@ class TestWiseOperator(TransactionCase):
         records = self.env['stock.quant'].search([
             ('product_id', '=', product_wise.id),
             ('quantity', '<', 0.0),
-            ('location_id.id', '=', self.ref('stock.stock_location_stock'))])
+            ('location_id', '=', self.ref('stock.stock_location_stock'))])
         self.assertEqual(len(records.ids), 0, 'This should not have created a negative quant')
 
         # Check the other delivery order has changed its state back to ready
