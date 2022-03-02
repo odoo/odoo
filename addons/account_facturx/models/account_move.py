@@ -179,6 +179,11 @@ class AccountMove(models.Model):
                 if elements[0].attrib.get('currencyID'):
                     currency_str = elements[0].attrib['currencyID']
                     currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
+                    if currency and not currency.active:
+                        raise UserError(
+                            _('The currency (%s) of the document you are uploading is not active in this database.\n'
+                              'Please activate it before trying again to import.') % currency.name
+                        )
                     if currency != self.env.company.currency_id and currency.active:
                         invoice_form.currency_id = currency
 

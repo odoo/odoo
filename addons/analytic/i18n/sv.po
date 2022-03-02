@@ -11,8 +11,8 @@
 # Daniel Osser <danielosser@gmail.com>, 2019
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # STefan Rundgren <stefanrundgren@cellglas.com>, 2021
-# Simon S, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
+# Simon S, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
+"Last-Translator: Simon S, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +43,7 @@ msgstr "Aktiv"
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr ""
+msgstr "Lägg till ett nytt objektkonto"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
@@ -70,7 +70,7 @@ msgstr "Objektkonto"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution
 msgid "Analytic Account Distribution"
-msgstr ""
+msgstr "Objektkontofördelning"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_group_action
@@ -87,7 +87,7 @@ msgstr "Objektsredovisning"
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
-msgstr ""
+msgstr "Objektetiketter"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
@@ -99,7 +99,7 @@ msgstr "Objektkonton"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_group
 msgid "Analytic Categories"
-msgstr ""
+msgstr "Objektkontogrupper"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
@@ -174,7 +174,7 @@ msgstr "Saldo"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
-msgstr ""
+msgstr "Saldo:"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
@@ -189,12 +189,12 @@ msgstr "Objektkontoplan"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
 msgid "Childrens"
-msgstr ""
+msgstr "Barn"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr ""
+msgstr "Klicka för att lägga till en ny objektkontogrupp"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -240,6 +240,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
+"Kostnader kommer att skapas automatiskt när du registrerar leverantörs-\n"
+"                fakturor, utlägg eller tidrapporter."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -366,6 +368,9 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"I Odoo implementeras försäljningsorder och projekt med hjälp av\n"
+"                objektkonton. Man kan spåra kostnader och intäkter för att \n"
+"                enkelt analysera sina marginaler."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -424,12 +429,12 @@ msgstr "Namn"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
-msgstr ""
+msgstr "Ingen aktivitet ännu"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
-msgstr ""
+msgstr "Ingen aktivitet ännu på detta konto"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -469,7 +474,7 @@ msgstr "Förälder Sökväg"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
 msgid "Parent tag"
-msgstr ""
+msgstr "Överordnads etikett"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
@@ -516,6 +521,7 @@ msgstr ""
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
 msgstr ""
+"Ställ in Aktiv till false för att gömma objektetiketten utan att ta bort den"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
@@ -526,7 +532,7 @@ msgstr "Taggar"
 #: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
-msgstr ""
+msgstr "Procenten av en objektfördelning bör vara mellan 0 och 100."
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_account.py:0
@@ -569,4 +575,4 @@ msgstr "Användare"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
-msgstr ""
+msgstr "t.ex. Projekt XYZ"

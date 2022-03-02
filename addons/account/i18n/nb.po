@@ -8,8 +8,8 @@
 # Jorunn D. Newth, 2020
 # Jens Nymoen <jens@nettimport.no>, 2021
 # Mads Søndergaard, 2021
-# Marius Stedjan <marius@stedjan.com>, 2021
 # Martin Trigaux, 2021
+# Marius Stedjan <marius@stedjan.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -296,7 +296,7 @@ msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Send Melding</b>"
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/>Konfigurer Epost server"
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/>Konfigurer E-post server"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -684,7 +684,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>Sorter oppføringer etter:</strong>"
+msgstr "<strong>Sorter poster etter:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1049,12 +1049,12 @@ msgstr "Kontostatistikk"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "Konto-tag"
+msgstr "Konto-etikett"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
 msgid "Account Tags"
-msgstr "Konto-tagger"
+msgstr "Konto-etiketter"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
@@ -1183,7 +1183,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
 msgid "Account tag"
-msgstr "Konto-tag"
+msgstr "Konto-etikett"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_base_account_id
@@ -1447,7 +1447,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.account_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "Opprett en ny etikett"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1573,7 +1573,7 @@ msgstr "Aliasdomene"
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__target_move__all
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "All Entries"
-msgstr "Alle oppføringer"
+msgstr "Alle poster"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__all_lines_reconciled
@@ -2572,7 +2572,7 @@ msgstr "Avbryt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr "Avbryt oppføring"
+msgstr "Avbryt post"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
@@ -2880,8 +2880,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_account_template__reconcile
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
-msgstr ""
-"Kryss av om du vil at brukeren skal avstemme oppføringer på denne kontoen."
+msgstr "Kryss av om du vil at brukeren skal avstemme poster på denne kontoen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3632,7 +3631,7 @@ msgstr "Kreditnota"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Credit Note Created"
-msgstr ""
+msgstr "Kreditnota opprettet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence_id
@@ -3778,7 +3777,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__taxes_id
 msgid "Customer Taxes"
-msgstr "Kundeavgifter"
+msgstr "Salgsavgifter"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -4077,7 +4076,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__auto_delete
 msgid "Delete Emails"
-msgstr "Slett epostmeldinger"
+msgstr "Slett e-postmeldinger"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__auto_delete_message
@@ -4457,12 +4456,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_email
 msgid "Email"
-msgstr "Epost"
+msgstr "E-post"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email Alias"
-msgstr "Epostalias"
+msgstr "E-postalias"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__email_from
@@ -4479,7 +4478,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email your Invoices/Bills"
-msgstr ""
+msgstr "Send fakturaer med e-post"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__end_bank_stmt_ids
@@ -4522,7 +4521,7 @@ msgstr "Inngang"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_print_journal__sort_selection
 msgid "Entries Sorted by"
-msgstr "Oppføringer sortert etter"
+msgstr "Poster sortert etter"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -4836,7 +4835,7 @@ msgstr "Finans år Slutt dato"
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_month
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_last_month
 msgid "Fiscalyear Last Month"
-msgstr "Finans år Slutt Måned"
+msgstr "Regnskapsår Siste Måned"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__amount_type__fixed
@@ -5888,7 +5887,7 @@ msgstr "Faktura betalt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Invoice send & Print"
-msgstr ""
+msgstr "Faktura send & Print"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
@@ -6737,12 +6736,12 @@ msgstr "DIV"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr "Epostaktivitetstype"
+msgstr "E-postaktivitetstype"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
 msgid "Mailing List"
-msgstr "Epostliste"
+msgstr "E-postliste"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_main_attachment_id
@@ -6932,7 +6931,7 @@ msgstr "Melding for feil ved levering"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
 msgid "Message Record Name"
-msgstr "Melding rekord navn."
+msgstr "Post-navn for Melding"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
@@ -7596,7 +7595,7 @@ msgstr "Opprinnelse"
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
 msgid "Original Bills"
-msgstr "Original fakturaer"
+msgstr "Originalfakturaer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -7650,7 +7649,7 @@ msgstr "Utgående"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
 msgid "Outgoing mail server"
-msgstr "Utgående epostserver"
+msgstr "Utgående e-postserver"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -8260,7 +8259,7 @@ msgstr "Skrevet bilagsregistrering"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Posterte journaloppføringer"
+msgstr "Posterte journalposter"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9364,17 +9363,17 @@ msgstr "Send"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Send & Print"
-msgstr ""
+msgstr "Send & Skriv ut"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.invoice_send
 msgid "Send & print"
-msgstr ""
+msgstr "Send & Skriv ut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_email
 msgid "Send Email"
-msgstr "Send epost"
+msgstr "Send e-post"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9521,7 +9520,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Setup your chart of accounts and record initial balances."
-msgstr "Sett opp kontoplan og legg inn åpningsbalansen"
+msgstr "Sett opp kontoplan og poster åpningsbalansen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_company_step
@@ -9574,7 +9573,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Show all records which has next action date is before today"
-msgstr "Vis alle oppføringer som har en neste tiltak-dato før dagen i dag"
+msgstr "Vis alle poster som har neste handlingsdato før dagen i dag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9862,7 +9861,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__tag_name
 msgid "Tag Name"
-msgstr "Tagnavn"
+msgstr "Etikettnavn"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -9887,7 +9886,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_form
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_tree
 msgid "Tags"
-msgstr "Tagger"
+msgstr "Etiketter"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tag_ids
@@ -10689,7 +10688,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
 msgid "The currency used to enter statement"
-msgstr "Valutaen brukt til oppføringen"
+msgstr "Valutaen brukt til posten"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -11586,7 +11585,7 @@ msgstr "Navn på type"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type for unntaksaktiviteten på posten."
+msgstr "Type unntaks-aktivitet på posten."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -11931,7 +11930,7 @@ msgstr "Leverandør betalinger"
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "Leverandør mva"
+msgstr "Kjøpsavgifter"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_supplier
@@ -12082,7 +12081,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Feil kredit eller debet beløp i regnskaps oppføringen !"
+msgstr "Feil kredit eller debet beløp i regnskaps posten !"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

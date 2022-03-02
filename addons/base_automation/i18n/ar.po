@@ -12,6 +12,7 @@
 # Zuhair Hammadi <zuhair12@gmail.com>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -303,7 +304,7 @@ msgstr "النسخة التجريبية"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
-msgstr ""
+msgstr "تعطيل الإجراء "
 
 #. module: base_automation
 #. openerp-web
@@ -338,7 +339,7 @@ msgstr "نوع الاستحقاق"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
-msgstr ""
+msgstr "تحرير الإجراء "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -629,6 +630,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"سوف يتم تشغيل الإجراء فقط إذا كانت إحدى تلك الحقول محدثة. إذا كانت فارغة، "
+"فستتم مراقبة كافة الحقول. "
 
 #. module: base_automation
 #. openerp-web
@@ -661,6 +664,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"القيم التالية متاحة لنوع إجراء الخادم:\n"
+"- 'تنفيذ كود بايثون': سوف يتم تنفيذ كتلة كود بايثون\n"
+"- 'إنشاء': إنشاء سجل جديد بقيم جديدة\n"
+"- 'تحديث سجل': تحديث قيم سجل\n"
+"- 'تنفيذ عدة إجراءات': قم بتحديد إجراء سوف يقوم بتشغيل إجراءات خادم متعددة أخرى\n"
+"- 'إرسال بريد إلكتروني': إرسال بريد إلكتروني تلقائياً (المناقشة)\n"
+"- 'إضافة متابعين': إضافة متابعين إلى سجل (المناقشة)\n"
+"- 'إنشاء النشاط التالي': إنشاء نشاط (المناقشة) "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -770,11 +781,11 @@ msgstr ""
 #, python-format
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
-msgstr ""
+msgstr "يمكنك أن تطلب من أحد المدراء تعطيل أو تصحيح هذا الإجراء المؤتمت. "
 
 #. module: base_automation
 #. openerp-web
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
-msgstr ""
+msgstr "بإمكانك تعطيل هذا الإجراء المؤتمت أو تحريره لحل المشكلة. "

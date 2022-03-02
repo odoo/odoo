@@ -761,42 +761,52 @@ class expression(object):
             if not ids:
                 return [FALSE_LEAF]
             if left_model._parent_store:
-                doms = OR([
+                domain = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
-                    for rec in left_model.browse(ids)
+                    for rec in left_model.sudo().browse(ids)
                 ])
-                if prefix:
-                    return [(left, 'in', left_model.search(doms, order='id').ids)]
-                return doms
             else:
+                # recursively retrieve all children nodes with sudo(); the
+                # filtering of forbidden records is done by the rest of the
+                # domain
                 parent_name = parent or left_model._parent_name
-                child_ids = set(ids)
-                while ids:
-                    ids = left_model.search([(parent_name, 'in', ids)], order='id').ids
-                    child_ids.update(ids)
-                return [(left, 'in', list(child_ids))]
+                child_ids = set()
+                records = left_model.sudo().browse(ids)
+                while records:
+                    child_ids.update(records._ids)
+                    records = records.search([(parent_name, 'in', records.ids)], order='id')
+                domain = [('id', 'in', list(child_ids))]
+            if prefix:
+                return [(left, 'in', left_model._search(domain, order='id'))]
+            return domain
 
         def parent_of_domain(left, ids, left_model, parent=None, prefix=''):
             """ Return a domain implementing the parent_of operator for [(left,parent_of,ids)],
                 either as a range using the parent_path tree lookup field
                 (when available), or as an expanded [(left,in,parent_ids)] """
+            if not ids:
+                return [FALSE_LEAF]
             if left_model._parent_store:
                 parent_ids = [
                     int(label)
-                    for rec in left_model.browse(ids)
+                    for rec in left_model.sudo().browse(ids)
                     for label in rec.parent_path.split('/')[:-1]
                 ]
-                if prefix:
-                    return [(left, 'in', parent_ids)]
-                return [('id', 'in', parent_ids)]
+                domain = [('id', 'in', parent_ids)]
             else:
+                # recursively retrieve all parent nodes with sudo() to avoid
+                # access rights errors; the filtering of forbidden records is
+                # done by the rest of the domain
                 parent_name = parent or left_model._parent_name
                 parent_ids = set()
-                for record in left_model.browse(ids):
-                    while record:
-                        parent_ids.add(record.id)
-                        record = record[parent_name]
-                return [(left, 'in', list(parent_ids))]
+                records = left_model.sudo().browse(ids)
+                while records:
+                    parent_ids.update(records._ids)
+                    records = records[parent_name]
+                domain = [('id', 'in', list(parent_ids))]
+            if prefix:
+                return [(left, 'in', left_model._search(domain, order='id'))]
+            return domain
 
         HIERARCHY_FUNCS = {'child_of': child_of_domain,
                            'parent_of': parent_of_domain}

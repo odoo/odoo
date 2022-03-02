@@ -29,9 +29,9 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Silvio Gregorini <silviogregorini@openforce.it>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # BigBlu <paolo.moroni@air-srl.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
@@ -797,6 +797,10 @@ msgid ""
 "        UNSPSC code for their products and uoms.  \n"
 "    "
 msgstr ""
+"\n"
+"        Nazioni come Colombia, Perù e Messico devono essere in grado di\n"
+"        utilizzare il codice UNSPSC per i loro prodotti e unità di misura.  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -1623,6 +1627,11 @@ msgid ""
 "Manage automatic transfers between your accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Trasferimenti automatici dei conti\n"
+"===============================\n"
+"Gestione automatica dei trasferimenti tra conti.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_auto_transfer_demo
@@ -2123,6 +2132,9 @@ msgid ""
 "Allows to access purchase orders from Project Overview\n"
 "======================================================\n"
 msgstr ""
+"\n"
+"Consente di accedere agli ordini di acquisto dalla panoramica progetti\n"
+"=================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -2390,6 +2402,10 @@ msgid ""
 "This is meant to be used with localization specific modules.\n"
 "    "
 msgstr ""
+"\n"
+"Modulo base per la segnalazione SAF-T\n"
+"===============================\n"
+"Questo è pensato per essere usato con moduli specifici per la localizzazione."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -7261,6 +7277,8 @@ msgid ""
 "\n"
 "Time off documents will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"I documenti delle ferie saranno integrati automaticamente nell'app Documenti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -8122,12 +8140,16 @@ msgid ""
 "<code>model</code>: Odoo Model of the record on which the action is "
 "triggered; is a void recordset"
 msgstr ""
+"<code>model</code>: modello Odoo del record sul quale viene attivata "
+"l'azione; è un insieme di record vuoto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
 msgstr ""
+"<code>record</code>: record sul quale viene attivata l'azione; può essere "
+"vuoto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -8135,6 +8157,8 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
 msgstr ""
+"<code>records</code>: insieme contenente tutti i record sui quali viene "
+"attivata l'azione in modalità multi; può essere vuoto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -8941,7 +8965,7 @@ msgstr "Account Taxcloud - Vendita (buono sconto) - Consegna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_winbooks_import
 msgid "Account Winbooks Import"
-msgstr ""
+msgstr "Account Winbooks Import"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_payment
@@ -11209,6 +11233,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Azioni server secondarie che verranno eseguite. Nota: l'ultimo valore return"
+" dell'azione restituita viene utilizzato come valore return globale."
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -15412,7 +15438,7 @@ msgstr "H TRASPORTI E STOCCAGGIO"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
 msgid "HR Attendance Holidays"
-msgstr ""
+msgstr "HR Presenza Vacanze"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary
@@ -19417,7 +19443,7 @@ msgstr "Numero di moduli aggiornati"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__rules_count
 msgid "Number of record rules that apply to the current user"
-msgstr ""
+msgstr "Numero di regole su record che si applicano all'utente corrente"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -23047,7 +23073,7 @@ msgstr "Campo QWeb monetario"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_relative
 msgid "Qweb Field Relative"
-msgstr ""
+msgstr "Campo QWeb relativo"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_selection
@@ -23496,7 +23522,7 @@ msgstr "Ripristina versione del file (ripristino forte)."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_document_layout
 msgid "Reset to logo colors"
-msgstr ""
+msgstr "Ripristina i colori del logo"
 
 #. module: base
 #: code:addons/models.py:0
@@ -25358,7 +25384,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_test_l10n_be_hr_payroll_account
 #: model:ir.module.module,summary:base.module_test_l10n_be_hr_payroll_account
 msgid "Test Belgian Payroll"
-msgstr ""
+msgstr "Prova libro paga Belgio"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
