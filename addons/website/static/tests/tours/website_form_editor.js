@@ -323,13 +323,13 @@ odoo.define('website.tour.form_editor', function (require) {
             run: () => null,
         }, {
             content: "Change button's style",
-            trigger: '.dropdown-toggle[data-bs-original-title="Link Style"]',
+            trigger: '.dropdown:has([name="link_style_color"]) > button',
             run: () => {
-                $('.dropdown-toggle[data-bs-original-title="Link Style"]').click();
+                $('.dropdown:has([name="link_style_color"]) > button').click();
                 $('[data-value="secondary"]').click();
-                $('[data-bs-original-title="Link Shape"]').click();
+                $('.dropdown:has([name="link_style_shape"]) > button').click();
                 $('[data-value="rounded-circle"]').click();
-                $('[data-bs-original-title="Link Size"]').click();
+                $('.dropdown:has([name="link_style_size"]) > button').click();
                 $('[data-value="sm"]').click();
             },
         }, {

@@ -78,7 +78,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "The new link content should be odoo website and url odoo.be",
-        trigger: '#toolbar button[data-bs-original-title="Link Style"]',
+        trigger: '#toolbar .dropdown:has([name="link_style_color"]) > button',
     },
     {
         // When doing automated testing, the link popover takes time to
