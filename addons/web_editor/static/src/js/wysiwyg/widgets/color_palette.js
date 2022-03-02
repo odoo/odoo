@@ -300,7 +300,7 @@ const ColorPaletteWidget = Widget.extend({
             });
             await this.colorPicker.appendTo(this.sections['custom-colors']);
         }
-        //$('[title]').tooltip();
+        $('[title]').tooltip();
 
         return res;
     },
