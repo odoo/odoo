@@ -8,8 +8,12 @@
             <t t-if="(ticket.price-website.currency_id._convert(ticket.price_reduce, event.company_id.sudo().currency_id, event.company_id, datetime.date.today())) &gt; 1 and website.pricelist_id.discount_policy == 'without_discount'">
                 <del class="text-danger mr-1" t-field="ticket.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"/>
             </t>
-            <span t-field="ticket.price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_excluded"/>
-            <span t-field="ticket.price_reduce_taxinc" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_included"/>
+            <span t-field="ticket.price_reduce"
+                  t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
+                  groups="account.group_show_line_subtotals_tax_excluded"/>
+            <span t-field="ticket.price_reduce_taxinc"
+                  t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
+                  groups="account.group_show_line_subtotals_tax_included"/>
             <span itemprop="price" class="d-none" t-out="ticket.price"/>
             <span itemprop="priceCurrency" class="d-none" t-out="website.pricelist_id.currency_id.name"/>
         </t>
@@ -19,10 +23,10 @@
         <t t-if="event.event_ticket_ids[-1].price_reduce > 0">
             <span class="text-dark">
                 From
-                <span t-out="event.event_ticket_ids[0].price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
+                <span t-out="event.event_ticket_ids[0].price_reduce" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"/>
                 <t t-if="event.event_ticket_ids[-1].price_reduce != event.event_ticket_ids[0].price_reduce">
                     to
-                    <span t-out="event.event_ticket_ids[-1].price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
+                    <span t-out="event.event_ticket_ids[-1].price_reduce" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"/>
                 </t>
             </span>
         </t>
@@ -34,8 +38,12 @@
                 <t t-if="(tickets.price-website.currency_id._convert(tickets.price_reduce, event.company_id.sudo().currency_id, event.company_id, datetime.date.today())) &gt; 1 and website.pricelist_id.discount_policy == 'without_discount'">
                     <del class="text-danger mr-1" t-field="tickets.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"/>
                 </t>
-                <span t-field="tickets.price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_excluded"/>
-                <span t-field="tickets.price_reduce_taxinc" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}" groups="account.group_show_line_subtotals_tax_included"/>
+                <span t-field="tickets.price_reduce"
+                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
+                      groups="account.group_show_line_subtotals_tax_excluded"/>
+                <span t-field="tickets.price_reduce_taxinc"
+                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
+                      groups="account.group_show_line_subtotals_tax_included"/>
                 <span itemprop="price" class="d-none" t-out="tickets.price"/>
                 <span itemprop="priceCurrency" class="d-none" t-out="website.pricelist_id.currency_id.name"/>
             </t>
