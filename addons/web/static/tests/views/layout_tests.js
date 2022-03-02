@@ -4,7 +4,7 @@ import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { Layout } from "@web/views/layout";
+import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 
@@ -51,11 +51,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.module("Layout");
 
     QUnit.test("Simple rendering", async (assert) => {
-        assert.expect(5);
-
         class ToyComponent extends Component {}
         ToyComponent.template = xml`
-            <Layout viewType="'toy'" useSampleModel="true">
+            <Layout className="'o_view_sample_data'">
                 <div class="toy_content" />
             </Layout>`;
         ToyComponent.components = { Layout };
@@ -63,7 +61,7 @@ QUnit.module("Views", (hooks) => {
         const env = await makeTestEnv({ config: {} });
         await mount(ToyComponent, getFixture(), { env });
 
-        assert.containsOnce(target, ".o_toy_view.o_view_sample_data");
+        assert.containsOnce(target, ".o_view_sample_data");
         assert.containsNone(target, ".o_control_panel");
         assert.containsNone(target, ".o_component_with_search_panel");
         assert.containsNone(target, ".o_search_panel");
@@ -71,11 +69,9 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Simple rendering: with search", async (assert) => {
-        assert.expect(6);
-
         class ToyComponent extends Component {}
         ToyComponent.template = xml`
-            <Layout viewType="'toy'">
+            <Layout>
                 <t t-set-slot="control-panel-top-right">
                     <div class="toy_search_bar" />
                 </t>
@@ -90,8 +86,6 @@ QUnit.module("Views", (hooks) => {
             searchViewId: false,
         });
 
-        assert.containsOnce(target, ".o_toy_view");
-        assert.containsNone(target, ".o_view_sample_data");
         assert.containsOnce(target, ".o_control_panel .o_cp_top_right .toy_search_bar");
         assert.containsOnce(target, ".o_component_with_search_panel .o_search_panel");
         assert.containsNone(target, ".o_cp_searchview");
@@ -99,10 +93,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Nested layouts", async (assert) => {
-        assert.expect(10);
-
         // Component C: bottom (no control panel)
-
         class ToyC extends Component {
             setup() {
                 useChildSubEnv({
@@ -116,13 +107,12 @@ QUnit.module("Views", (hooks) => {
             }
         }
         ToyC.template = xml`
-            <Layout viewType="'toy_c'">
+            <Layout className="'toy_c'">
                 <div class="toy_c_content" />
             </Layout>`;
         ToyC.components = { Layout };
 
         // Component B: center (with custom search panel)
-
         class SearchPanel extends Component {}
         SearchPanel.template = xml`<div class="o_toy_search_panel" />`;
 
@@ -137,7 +127,7 @@ QUnit.module("Views", (hooks) => {
             }
         }
         ToyB.template = xml`
-            <Layout viewType="'toy_b'">
+            <Layout className="'toy_b'">
                 <t t-set-slot="control-panel-top-right">
                     <div class="toy_b_breadcrumbs" />
                 </t>
@@ -149,7 +139,7 @@ QUnit.module("Views", (hooks) => {
 
         class ToyA extends Component {}
         ToyA.template = xml`
-            <Layout viewType="'toy_a'">
+            <Layout className="'toy_a'">
                 <t t-set-slot="control-panel-top-right">
                     <div class="toy_a_search" />
                 </t>
@@ -164,9 +154,7 @@ QUnit.module("Views", (hooks) => {
             searchViewId: false,
         });
 
-        assert.containsOnce(target, ".o_toy_a_view");
-        assert.containsNone(target, ".o_view_sample_data");
-        assert.containsOnce(target, ".o_content .o_toy_b_view .o_content .o_toy_c_view .o_content"); // Full chain of contents
+        assert.containsOnce(target, ".o_content.toy_a .o_content.toy_b .o_content.toy_c"); // Full chain of contents
         assert.containsN(target, ".o_control_panel", 2); // Component C has hidden its control panel
         assert.containsN(target, ".o_content.o_component_with_search_panel", 3);
         assert.containsOnce(target, ".o_search_panel"); // Standard search panel
@@ -177,8 +165,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Custom control panel", async (assert) => {
-        assert.expect(3);
-
         class ToyComponent extends Component {}
         ToyComponent.template = xml`
             <Layout>
@@ -203,8 +189,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Custom search panel", async (assert) => {
-        assert.expect(3);
-
         class ToyComponent extends Component {}
         ToyComponent.template = xml`
             <Layout>
@@ -229,8 +213,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Custom banner: no bannerRoute in env", async (assert) => {
-        assert.expect(2);
-
         class ToyComponent extends Component {}
         ToyComponent.template = xml`
             <Layout>
@@ -254,8 +236,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Custom banner: with bannerRoute in env", async (assert) => {
-        assert.expect(2);
-
         class ToyComponent extends Component {}
         ToyComponent.template = xml`
             <Layout>

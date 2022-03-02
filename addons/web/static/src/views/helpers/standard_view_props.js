@@ -19,7 +19,6 @@ export const standardViewProps = {
     },
     resModel: String,
     arch: { type: String },
-    className: { type: String, optional: 1 },
     comparison: { validate: () => true }, // fix problem with validation with type: [Object, null]
     // Issue OWL: https://github.com/odoo/owl/issues/910
     context: { type: Object },

@@ -46,7 +46,7 @@
     </t>
 
     <t t-name="web.GraphView" owl="1">
-        <Layout viewType="'graph'" useSampleModel="model.useSampleModel" className="props.className">
+        <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
             <t t-set-slot="control-panel-bottom-left">
                 <t t-call="{{ constructor.buttonTemplate }}"/>
             </t>

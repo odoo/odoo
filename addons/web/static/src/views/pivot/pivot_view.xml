@@ -17,7 +17,7 @@
     </t>
 
     <t t-name="web.PivotView" owl="1">
-        <Layout viewType="'pivot'" useSampleModel="model.useSampleModel" className="props.className">
+        <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
             <t t-set-slot="control-panel-bottom-left">
                 <t t-call="{{ constructor.buttonTemplate }}"/>
             </t>

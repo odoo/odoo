@@ -3244,14 +3244,17 @@ QUnit.module("Views", (hooks) => {
             noContentHelp: '<p class="abc">click to add a foo</p>',
         });
 
-        assert.hasClass(target.querySelector(".o_graph_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_graph_view .o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_view_nocontent");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
         assert.hasClass(target.querySelector(".o_graph_renderer"), "o_sample_data_disabled");
 
         await toggleFilterMenu(target);
         await toggleMenuItem(target, "False Domain");
-        assert.doesNotHaveClass(target, "o_view_sample_data");
+        assert.doesNotHaveClass(
+            target.querySelector(".o_graph_view .o_content"),
+            "o_view_sample_data"
+        );
         assert.containsNone(target, ".o_view_nocontent");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
         assert.doesNotHaveClass(
