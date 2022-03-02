@@ -22,6 +22,20 @@ are agreements you have with vendors to benefit from a predetermined pricing.
         'views/purchase_requisition_views.xml',
         'report/purchase_requisition_report.xml',
         'report/report_purchaserequisition.xml',
+        'wizard/purchase_requisition_alternative_warning.xml',
+        'wizard/purchase_requisition_create_alternative.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'purchase_requisition/static/src/js/purchase_order_alternatives_widget.js',
+            'purchase_requisition/static/src/js/purchase_order_compare_list_renderer.js',
+            'purchase_requisition/static/src/js/purchase_order_line_compare_list_controller.js',
+            'purchase_requisition/static/src/js/purchase_order_line_compare_list_renderer.js',
+            'purchase_requisition/static/src/js/purchase_order_line_compare_list_view.js',
+        ],
+        'web.assets_qweb': [
+            'purchase_requisition/static/src/xml/purchase_order_line_compare.xml',
+        ],
+    },
     'license': 'LGPL-3',
 }

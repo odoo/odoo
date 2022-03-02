@@ -13,6 +13,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/purchase_requisition_stock_data.xml',
+        'views/purchase_views.xml',
         'views/purchase_requisition_views.xml',
     ],
     'installable': True,
