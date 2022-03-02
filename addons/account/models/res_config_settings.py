@@ -141,6 +141,13 @@ class ResConfigSettings(models.TransientModel):
     use_invoice_terms = fields.Boolean(
         string='Default Terms & Conditions',
         config_parameter='account.use_invoice_terms')
+    account_use_credit_limit = fields.Boolean(
+        string="Sales Credit Limit", related="company_id.account_use_credit_limit", readonly=False,
+        help="Enable the use of credit limit on partners.")
+    account_default_credit_limit = fields.Monetary(
+        string="Default Credit Limit", readonly=False,
+        help='This is the default credit limit that will be used on partners that do not have a specific limit on them.',
+        compute="_compute_account_default_credit_limit", inverse="_inverse_account_default_credit_limit")
 
     # Technical field to hide country specific fields from accounting configuration
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
@@ -158,6 +165,20 @@ class ResConfigSettings(models.TransientModel):
                 and self.chart_template_id \
                 and self.chart_template_id != self.company_id.chart_template_id:
             self.chart_template_id._load(self.env.company)
+
+    @api.depends('company_id')
+    def _compute_account_default_credit_limit(self):
+        for setting in self:
+            setting.account_default_credit_limit = self.env['ir.property']._get('credit_limit', 'res.partner')
+
+    def _inverse_account_default_credit_limit(self):
+        for setting in self:
+            self.env['ir.property']._set_default(
+                'credit_limit',
+                'res.partner',
+                setting.account_default_credit_limit,
+                self.company_id.id
+            )
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):

@@ -108,9 +108,6 @@ class Partner(models.Model):
                 [50, 10, 2, 20, 5, 10, 1])),
             ('tz', populate.randomize([tz for tz in self.env['res.partner']._fields['tz'].get_values(self.env)])),
             ('website', populate.randomize([False, '', 'http://www.example.com'])),
-            ('credit_limit', populate.randomize(
-                [False, 0, 500, 2500, 5000, 10000],
-                [50, 30, 5, 5, 5, 5])),
             ('name', populate.compute(get_name)),  # keep after is_company
             ('ref', populate.randomize([False, '', '{counter}', 'p-{counter}'], [10, 10, 30, 50])),
             ('industry_id', populate.randomize(
