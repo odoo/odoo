@@ -1294,386 +1294,6 @@
         vnode.remove();
     }
 
-    /**
-     * Apply default props (only top level).
-     *
-     * Note that this method does modify in place the props
-     */
-    function applyDefaultProps(props, ComponentClass) {
-        const defaultProps = ComponentClass.defaultProps;
-        if (defaultProps) {
-            for (let propName in defaultProps) {
-                if (props[propName] === undefined) {
-                    props[propName] = defaultProps[propName];
-                }
-            }
-        }
-    }
-    //------------------------------------------------------------------------------
-    // Prop validation helper
-    //------------------------------------------------------------------------------
-    function getPropDescription(staticProps) {
-        if (staticProps instanceof Array) {
-            return Object.fromEntries(staticProps.map((p) => (p.endsWith("?") ? [p.slice(0, -1), false] : [p, true])));
-        }
-        return staticProps || { "*": true };
-    }
-    /**
-     * Validate the component props (or next props) against the (static) props
-     * description.  This is potentially an expensive operation: it may needs to
-     * visit recursively the props and all the children to check if they are valid.
-     * This is why it is only done in 'dev' mode.
-     */
-    function validateProps(name, props, parent) {
-        const ComponentClass = typeof name !== "string"
-            ? name
-            : parent.constructor.components[name];
-        if (!ComponentClass) {
-            // this is an error, wrong component. We silently return here instead so the
-            // error is triggered by the usual path ('component' function)
-            return;
-        }
-        applyDefaultProps(props, ComponentClass);
-        const defaultProps = ComponentClass.defaultProps || {};
-        let propsDef = getPropDescription(ComponentClass.props);
-        const allowAdditionalProps = "*" in propsDef;
-        for (let propName in propsDef) {
-            if (propName === "*") {
-                continue;
-            }
-            const propDef = propsDef[propName];
-            let isMandatory = !!propDef;
-            if (typeof propDef === "object" && "optional" in propDef) {
-                isMandatory = !propDef.optional;
-            }
-            if (isMandatory && propName in defaultProps) {
-                throw new Error(`A default value cannot be defined for a mandatory prop (name: '${propName}', component: ${ComponentClass.name})`);
-            }
-            if (props[propName] === undefined) {
-                if (isMandatory) {
-                    throw new Error(`Missing props '${propName}' (component '${ComponentClass.name}')`);
-                }
-                else {
-                    continue;
-                }
-            }
-            let isValid;
-            try {
-                isValid = isValidProp(props[propName], propDef);
-            }
-            catch (e) {
-                e.message = `Invalid prop '${propName}' in component ${ComponentClass.name} (${e.message})`;
-                throw e;
-            }
-            if (!isValid) {
-                throw new Error(`Invalid Prop '${propName}' in component '${ComponentClass.name}'`);
-            }
-        }
-        if (!allowAdditionalProps) {
-            for (let propName in props) {
-                if (!(propName in propsDef)) {
-                    throw new Error(`Unknown prop '${propName}' given to component '${ComponentClass.name}'`);
-                }
-            }
-        }
-    }
-    /**
-     * Check if an invidual prop value matches its (static) prop definition
-     */
-    function isValidProp(prop, propDef) {
-        if (propDef === true) {
-            return true;
-        }
-        if (typeof propDef === "function") {
-            // Check if a value is constructed by some Constructor.  Note that there is a
-            // slight abuse of language: we want to consider primitive values as well.
-            //
-            // So, even though 1 is not an instance of Number, we want to consider that
-            // it is valid.
-            if (typeof prop === "object") {
-                return prop instanceof propDef;
-            }
-            return typeof prop === propDef.name.toLowerCase();
-        }
-        else if (propDef instanceof Array) {
-            // If this code is executed, this means that we want to check if a prop
-            // matches at least one of its descriptor.
-            let result = false;
-            for (let i = 0, iLen = propDef.length; i < iLen; i++) {
-                result = result || isValidProp(prop, propDef[i]);
-            }
-            return result;
-        }
-        // propsDef is an object
-        if (propDef.optional && prop === undefined) {
-            return true;
-        }
-        let result = propDef.type ? isValidProp(prop, propDef.type) : true;
-        if (propDef.validate) {
-            result = result && propDef.validate(prop);
-        }
-        if (propDef.type === Array && propDef.element) {
-            for (let i = 0, iLen = prop.length; i < iLen; i++) {
-                result = result && isValidProp(prop[i], propDef.element);
-            }
-        }
-        if (propDef.type === Object && propDef.shape) {
-            const shape = propDef.shape;
-            for (let key in shape) {
-                result = result && isValidProp(prop[key], shape[key]);
-            }
-            if (result) {
-                for (let propName in prop) {
-                    if (!(propName in shape)) {
-                        throw new Error(`unknown prop '${propName}'`);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Creates a batched version of a callback so that all calls to it in the same
-     * microtick will only call the original callback once.
-     *
-     * @param callback the callback to batch
-     * @returns a batched version of the original callback
-     */
-    function batched(callback) {
-        let called = false;
-        return async () => {
-            // This await blocks all calls to the callback here, then releases them sequentially
-            // in the next microtick. This line decides the granularity of the batch.
-            await Promise.resolve();
-            if (!called) {
-                called = true;
-                callback();
-                // wait for all calls in this microtick to fall through before resetting "called"
-                // so that only the first call to the batched function calls the original callback
-                await Promise.resolve();
-                called = false;
-            }
-        };
-    }
-    function validateTarget(target) {
-        if (!(target instanceof HTMLElement)) {
-            throw new Error("Cannot mount component: the target is not a valid DOM element");
-        }
-        if (!document.body.contains(target)) {
-            throw new Error("Cannot mount a component on a detached dom node");
-        }
-    }
-    class EventBus extends EventTarget {
-        trigger(name, payload) {
-            this.dispatchEvent(new CustomEvent(name, { detail: payload }));
-        }
-    }
-    function whenReady(fn) {
-        return new Promise(function (resolve) {
-            if (document.readyState !== "loading") {
-                resolve(true);
-            }
-            else {
-                document.addEventListener("DOMContentLoaded", resolve, false);
-            }
-        }).then(fn || function () { });
-    }
-    async function loadFile(url) {
-        const result = await fetch(url);
-        if (!result.ok) {
-            throw new Error("Error while fetching xml templates");
-        }
-        return await result.text();
-    }
-    /*
-     * This class just transports the fact that a string is safe
-     * to be injected as HTML. Overriding a JS primitive is quite painful though
-     * so we need to redfine toString and valueOf.
-     */
-    class Markup extends String {
-    }
-    /*
-     * Marks a value as safe, that is, a value that can be injected as HTML directly.
-     * It should be used to wrap the value passed to a t-out directive to allow a raw rendering.
-     */
-    function markup(value) {
-        return new Markup(value);
-    }
-
-    /**
-     * This file contains utility functions that will be injected in each template,
-     * to perform various useful tasks in the compiled code.
-     */
-    function withDefault(value, defaultValue) {
-        return value === undefined || value === null || value === false ? defaultValue : value;
-    }
-    function callSlot(ctx, parent, key, name, dynamic, extra, defaultContent) {
-        key = key + "__slot_" + name;
-        const nonReactiveProps = ctx.props && ctx.props[TARGET];
-        const slots = nonReactiveProps ? nonReactiveProps.slots || {} : {};
-        // const slots = (ctx.props && ctx.props.slots) || {};
-        const { __render, __ctx, __scope } = slots[name] || {};
-        const slotScope = Object.create(__ctx || {});
-        if (__scope) {
-            slotScope[__scope] = extra || {};
-        }
-        const slotBDom = __render ? __render.call(__ctx.__owl__.component, slotScope, parent, key) : null;
-        if (defaultContent) {
-            let child1 = undefined;
-            let child2 = undefined;
-            if (slotBDom) {
-                child1 = dynamic ? toggler(name, slotBDom) : slotBDom;
-            }
-            else {
-                child2 = defaultContent.call(ctx.__owl__.component, ctx, parent, key);
-            }
-            return multi([child1, child2]);
-        }
-        return slotBDom || text("");
-    }
-    function capture(ctx) {
-        const component = ctx.__owl__.component;
-        const result = Object.create(component);
-        for (let k in ctx) {
-            result[k] = ctx[k];
-        }
-        return result;
-    }
-    function withKey(elem, k) {
-        elem.key = k;
-        return elem;
-    }
-    function prepareList(collection) {
-        let keys;
-        let values;
-        if (Array.isArray(collection)) {
-            keys = collection;
-            values = collection;
-        }
-        else if (collection) {
-            values = Object.keys(collection);
-            keys = Object.values(collection);
-        }
-        else {
-            throw new Error("Invalid loop expression");
-        }
-        const n = values.length;
-        return [keys, values, n, new Array(n)];
-    }
-    const isBoundary = Symbol("isBoundary");
-    function setContextValue(ctx, key, value) {
-        const ctx0 = ctx;
-        while (!ctx.hasOwnProperty(key) && !ctx.hasOwnProperty(isBoundary)) {
-            const newCtx = ctx.__proto__;
-            if (!newCtx) {
-                ctx = ctx0;
-                break;
-            }
-            ctx = newCtx;
-        }
-        ctx[key] = value;
-    }
-    function toNumber(val) {
-        const n = parseFloat(val);
-        return isNaN(n) ? val : n;
-    }
-    function shallowEqual$1(l1, l2) {
-        for (let i = 0, l = l1.length; i < l; i++) {
-            if (l1[i] !== l2[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    class LazyValue {
-        constructor(fn, ctx, node) {
-            this.fn = fn;
-            this.ctx = capture(ctx);
-            this.node = node;
-        }
-        evaluate() {
-            return this.fn(this.ctx, this.node);
-        }
-        toString() {
-            return this.evaluate().toString();
-        }
-    }
-    /*
-     * Safely outputs `value` as a block depending on the nature of `value`
-     */
-    function safeOutput(value) {
-        if (!value) {
-            return value;
-        }
-        let safeKey;
-        let block;
-        if (value instanceof Markup) {
-            safeKey = `string_safe`;
-            block = html(value);
-        }
-        else if (value instanceof LazyValue) {
-            safeKey = `lazy_value`;
-            block = value.evaluate();
-        }
-        else if (value instanceof String || typeof value === "string") {
-            safeKey = "string_unsafe";
-            block = text(value);
-        }
-        else {
-            // Assuming it is a block
-            safeKey = "block_safe";
-            block = value;
-        }
-        return toggler(safeKey, block);
-    }
-    let boundFunctions = new WeakMap();
-    function bind(ctx, fn) {
-        let component = ctx.__owl__.component;
-        let boundFnMap = boundFunctions.get(component);
-        if (!boundFnMap) {
-            boundFnMap = new WeakMap();
-            boundFunctions.set(component, boundFnMap);
-        }
-        let boundFn = boundFnMap.get(fn);
-        if (!boundFn) {
-            boundFn = fn.bind(component);
-            boundFnMap.set(fn, boundFn);
-        }
-        return boundFn;
-    }
-    function multiRefSetter(refs, name) {
-        let count = 0;
-        return (el) => {
-            if (el) {
-                count++;
-                if (count > 1) {
-                    throw new Error("Cannot have 2 elements with same ref name at the same time");
-                }
-            }
-            if (count === 0 || el) {
-                refs[name] = el;
-            }
-        };
-    }
-    const UTILS = {
-        withDefault,
-        zero: Symbol("zero"),
-        isBoundary,
-        callSlot,
-        capture,
-        withKey,
-        prepareList,
-        setContextValue,
-        multiRefSetter,
-        shallowEqual: shallowEqual$1,
-        toNumber,
-        validateProps,
-        LazyValue,
-        safeOutput,
-        bind,
-    };
-
     const mainEventHandler = (data, ev, currentTarget) => {
         const { data: _data, modifiers } = filterOutModifiersFromData(data);
         data = _data;
@@ -1726,6 +1346,21 @@
     // Special key to subscribe to, to be notified of key creation/deletion
     const KEYCHANGES = Symbol("Key changes");
     const objectToString = Object.prototype.toString;
+    const objectHasOwnProperty = Object.prototype.hasOwnProperty;
+    const SUPPORTED_RAW_TYPES = new Set(["Object", "Array", "Set", "Map", "WeakMap"]);
+    const COLLECTION_RAWTYPES = new Set(["Set", "Map", "WeakMap"]);
+    /**
+     * extract "RawType" from strings like "[object RawType]" => this lets us ignore
+     * many native objects such as Promise (whose toString is [object Promise])
+     * or Date ([object Date]), while also supporting collections without using
+     * instanceof in a loop
+     *
+     * @param obj the object to check
+     * @returns the raw type of the object
+     */
+    function rawType(obj) {
+        return objectToString.call(obj).slice(8, -1);
+    }
     /**
      * Checks whether a given value can be made into a reactive object.
      *
@@ -1736,11 +1371,17 @@
         if (typeof value !== "object") {
             return false;
         }
-        // extract "RawType" from strings like "[object RawType]" => this lets us
-        // ignore many native objects such as Promise (whose toString is [object Promise])
-        // or Date ([object Date]).
-        const rawType = objectToString.call(value).slice(8, -1);
-        return rawType === "Object" || rawType === "Array";
+        return SUPPORTED_RAW_TYPES.has(rawType(value));
+    }
+    /**
+     * Creates a reactive from the given object/callback if possible and returns it,
+     * returns the original object otherwise.
+     *
+     * @param value the value make reactive
+     * @returns a reactive for the given object when possible, the original otherwise
+     */
+    function possiblyReactive(val, cb) {
+        return canBeMadeReactive(val) ? reactive(val, cb) : val;
     }
     /**
      * Mark an object or array so that it is ignored by the reactivity system
@@ -1875,53 +1516,288 @@
         }
         const reactivesForTarget = reactiveCache.get(target);
         if (!reactivesForTarget.has(callback)) {
-            const proxy = new Proxy(target, {
-                get(target, key, proxy) {
-                    if (key === TARGET) {
-                        return target;
-                    }
-                    observeTargetKey(target, key, callback);
-                    const value = Reflect.get(target, key, proxy);
-                    if (!canBeMadeReactive(value)) {
-                        return value;
-                    }
-                    return reactive(value, callback);
-                },
-                set(target, key, value, proxy) {
-                    const isNewKey = !Object.hasOwnProperty.call(target, key);
-                    const originalValue = Reflect.get(target, key, proxy);
-                    const ret = Reflect.set(target, key, value, proxy);
-                    if (isNewKey) {
-                        notifyReactives(target, KEYCHANGES);
-                    }
-                    // While Array length may trigger the set trap, it's not actually set by this
-                    // method but is updated behind the scenes, and the trap is not called with the
-                    // new value. We disable the "same-value-optimization" for it because of that.
-                    if (originalValue !== value || (Array.isArray(target) && key === "length")) {
-                        notifyReactives(target, key);
-                    }
-                    return ret;
-                },
-                deleteProperty(target, key) {
-                    const ret = Reflect.deleteProperty(target, key);
-                    notifyReactives(target, KEYCHANGES);
-                    notifyReactives(target, key);
-                    return ret;
-                },
-                ownKeys(target) {
-                    observeTargetKey(target, KEYCHANGES, callback);
-                    return Reflect.ownKeys(target);
-                },
-                has(target, key) {
-                    // TODO: this observes all key changes instead of only the presence of the argument key
-                    observeTargetKey(target, KEYCHANGES, callback);
-                    return Reflect.has(target, key);
-                },
-            });
+            const targetRawType = rawType(target);
+            const handler = COLLECTION_RAWTYPES.has(targetRawType)
+                ? collectionsProxyHandler(target, callback, targetRawType)
+                : basicProxyHandler(callback);
+            const proxy = new Proxy(target, handler);
             reactivesForTarget.set(callback, proxy);
         }
         return reactivesForTarget.get(callback);
     }
+    /**
+     * Creates a basic proxy handler for regular objects and arrays.
+     *
+     * @param callback @see reactive
+     * @returns a proxy handler object
+     */
+    function basicProxyHandler(callback) {
+        return {
+            get(target, key, proxy) {
+                if (key === TARGET) {
+                    return target;
+                }
+                observeTargetKey(target, key, callback);
+                return possiblyReactive(Reflect.get(target, key, proxy), callback);
+            },
+            set(target, key, value, proxy) {
+                const isNewKey = !objectHasOwnProperty.call(target, key);
+                const originalValue = Reflect.get(target, key, proxy);
+                const ret = Reflect.set(target, key, value, proxy);
+                if (isNewKey) {
+                    notifyReactives(target, KEYCHANGES);
+                }
+                // While Array length may trigger the set trap, it's not actually set by this
+                // method but is updated behind the scenes, and the trap is not called with the
+                // new value. We disable the "same-value-optimization" for it because of that.
+                if (originalValue !== value || (Array.isArray(target) && key === "length")) {
+                    notifyReactives(target, key);
+                }
+                return ret;
+            },
+            deleteProperty(target, key) {
+                const ret = Reflect.deleteProperty(target, key);
+                // TODO: only notify when something was actually deleted
+                notifyReactives(target, KEYCHANGES);
+                notifyReactives(target, key);
+                return ret;
+            },
+            ownKeys(target) {
+                observeTargetKey(target, KEYCHANGES, callback);
+                return Reflect.ownKeys(target);
+            },
+            has(target, key) {
+                // TODO: this observes all key changes instead of only the presence of the argument key
+                // observing the key itself would observe value changes instead of presence changes
+                // so we may need a finer grained system to distinguish observing value vs presence.
+                observeTargetKey(target, KEYCHANGES, callback);
+                return Reflect.has(target, key);
+            },
+        };
+    }
+    /**
+     * Creates a function that will observe the key that is passed to it when called
+     * and delegates to the underlying method.
+     *
+     * @param methodName name of the method to delegate to
+     * @param target @see reactive
+     * @param callback @see reactive
+     */
+    function makeKeyObserver(methodName, target, callback) {
+        return (key) => {
+            key = toRaw(key);
+            observeTargetKey(target, key, callback);
+            return possiblyReactive(target[methodName](key), callback);
+        };
+    }
+    /**
+     * Creates an iterable that will delegate to the underlying iteration method and
+     * observe keys as necessary.
+     *
+     * @param methodName name of the method to delegate to
+     * @param target @see reactive
+     * @param callback @see reactive
+     */
+    function makeIteratorObserver(methodName, target, callback) {
+        return function* () {
+            observeTargetKey(target, KEYCHANGES, callback);
+            const keys = target.keys();
+            for (const item of target[methodName]()) {
+                const key = keys.next().value;
+                observeTargetKey(target, key, callback);
+                yield possiblyReactive(item, callback);
+            }
+        };
+    }
+    /**
+     * Creates a function that will delegate to an underlying method, and check if
+     * that method has modified the presence or value of a key, and notify the
+     * reactives appropriately.
+     *
+     * @param setterName name of the method to delegate to
+     * @param getterName name of the method which should be used to retrieve the
+     *  value before calling the delegate method for comparison purposes
+     * @param target @see reactive
+     */
+    function delegateAndNotify(setterName, getterName, target) {
+        return (key, value) => {
+            key = toRaw(key);
+            const hadKey = target.has(key);
+            const originalValue = target[getterName](key);
+            const ret = target[setterName](key, value);
+            const hasKey = target.has(key);
+            if (hadKey !== hasKey) {
+                notifyReactives(target, KEYCHANGES);
+            }
+            if (originalValue !== value) {
+                notifyReactives(target, key);
+            }
+            return ret;
+        };
+    }
+    /**
+     * Creates a function that will clear the underlying collection and notify that
+     * the keys of the collection have changed.
+     *
+     * @param target @see reactive
+     */
+    function makeClearNotifier(target) {
+        return () => {
+            const allKeys = [...target.keys()];
+            target.clear();
+            notifyReactives(target, KEYCHANGES);
+            for (const key of allKeys) {
+                notifyReactives(target, key);
+            }
+        };
+    }
+    /**
+     * Maps raw type of an object to an object containing functions that can be used
+     * to build an appropritate proxy handler for that raw type. Eg: when making a
+     * reactive set, calling the has method should mark the key that is being
+     * retrieved as observed, and calling the add or delete method should notify the
+     * reactives that the key which is being added or deleted has been modified.
+     */
+    const rawTypeToFuncHandlers = {
+        Set: (target, callback) => ({
+            has: makeKeyObserver("has", target, callback),
+            add: delegateAndNotify("add", "has", target),
+            delete: delegateAndNotify("delete", "has", target),
+            keys: makeIteratorObserver("keys", target, callback),
+            values: makeIteratorObserver("values", target, callback),
+            entries: makeIteratorObserver("entries", target, callback),
+            [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, callback),
+            clear: makeClearNotifier(target),
+            get size() {
+                observeTargetKey(target, KEYCHANGES, callback);
+                return target.size;
+            },
+        }),
+        Map: (target, callback) => ({
+            has: makeKeyObserver("has", target, callback),
+            get: makeKeyObserver("get", target, callback),
+            set: delegateAndNotify("set", "get", target),
+            delete: delegateAndNotify("delete", "has", target),
+            keys: makeIteratorObserver("keys", target, callback),
+            values: makeIteratorObserver("values", target, callback),
+            entries: makeIteratorObserver("entries", target, callback),
+            [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, callback),
+            clear: makeClearNotifier(target),
+            get size() {
+                observeTargetKey(target, KEYCHANGES, callback);
+                return target.size;
+            },
+        }),
+        WeakMap: (target, callback) => ({
+            has: makeKeyObserver("has", target, callback),
+            get: makeKeyObserver("get", target, callback),
+            set: delegateAndNotify("set", "get", target),
+            delete: delegateAndNotify("delete", "has", target),
+        }),
+    };
+    /**
+     * Creates a proxy handler for collections (Set/Map/WeakMap)
+     *
+     * @param callback @see reactive
+     * @param target @see reactive
+     * @returns a proxy handler object
+     */
+    function collectionsProxyHandler(target, callback, targetRawType) {
+        // TODO: if performance is an issue we can create the special handlers lazily when each
+        // property is read.
+        const specialHandlers = rawTypeToFuncHandlers[targetRawType](target, callback);
+        return Object.assign(basicProxyHandler(callback), {
+            get(target, key) {
+                if (key === TARGET) {
+                    return target;
+                }
+                if (objectHasOwnProperty.call(specialHandlers, key)) {
+                    return specialHandlers[key];
+                }
+                observeTargetKey(target, key, callback);
+                return possiblyReactive(target[key], callback);
+            },
+        });
+    }
+
+    /**
+     * Creates a batched version of a callback so that all calls to it in the same
+     * microtick will only call the original callback once.
+     *
+     * @param callback the callback to batch
+     * @returns a batched version of the original callback
+     */
+    function batched(callback) {
+        let called = false;
+        return async () => {
+            // This await blocks all calls to the callback here, then releases them sequentially
+            // in the next microtick. This line decides the granularity of the batch.
+            await Promise.resolve();
+            if (!called) {
+                called = true;
+                callback();
+                // wait for all calls in this microtick to fall through before resetting "called"
+                // so that only the first call to the batched function calls the original callback
+                await Promise.resolve();
+                called = false;
+            }
+        };
+    }
+    function validateTarget(target) {
+        if (!(target instanceof HTMLElement)) {
+            throw new Error("Cannot mount component: the target is not a valid DOM element");
+        }
+        if (!document.body.contains(target)) {
+            throw new Error("Cannot mount a component on a detached dom node");
+        }
+    }
+    class EventBus extends EventTarget {
+        trigger(name, payload) {
+            this.dispatchEvent(new CustomEvent(name, { detail: payload }));
+        }
+    }
+    function whenReady(fn) {
+        return new Promise(function (resolve) {
+            if (document.readyState !== "loading") {
+                resolve(true);
+            }
+            else {
+                document.addEventListener("DOMContentLoaded", resolve, false);
+            }
+        }).then(fn || function () { });
+    }
+    async function loadFile(url) {
+        const result = await fetch(url);
+        if (!result.ok) {
+            throw new Error("Error while fetching xml templates");
+        }
+        return await result.text();
+    }
+    /*
+     * This class just transports the fact that a string is safe
+     * to be injected as HTML. Overriding a JS primitive is quite painful though
+     * so we need to redfine toString and valueOf.
+     */
+    class Markup extends String {
+    }
+    /*
+     * Marks a value as safe, that is, a value that can be injected as HTML directly.
+     * It should be used to wrap the value passed to a t-out directive to allow a raw rendering.
+     */
+    function markup(value) {
+        return new Markup(value);
+    }
+    // -----------------------------------------------------------------------------
+    //  xml tag helper
+    // -----------------------------------------------------------------------------
+    const globalTemplates = {};
+    function xml(...args) {
+        const name = `__template__${xml.nextId++}`;
+        const value = String.raw(...args);
+        globalTemplates[name] = value;
+        return name;
+    }
+    xml.nextId = 1;
 
     // Maps fibers to thrown errors
     const fibersInError = new WeakMap();
@@ -2153,6 +2029,145 @@
                 handleError({ fiber: current, error: e });
             }
         }
+    }
+
+    /**
+     * Apply default props (only top level).
+     *
+     * Note that this method does modify in place the props
+     */
+    function applyDefaultProps(props, ComponentClass) {
+        const defaultProps = ComponentClass.defaultProps;
+        if (defaultProps) {
+            for (let propName in defaultProps) {
+                if (props[propName] === undefined) {
+                    props[propName] = defaultProps[propName];
+                }
+            }
+        }
+    }
+    //------------------------------------------------------------------------------
+    // Prop validation helper
+    //------------------------------------------------------------------------------
+    function getPropDescription(staticProps) {
+        if (staticProps instanceof Array) {
+            return Object.fromEntries(staticProps.map((p) => (p.endsWith("?") ? [p.slice(0, -1), false] : [p, true])));
+        }
+        return staticProps || { "*": true };
+    }
+    /**
+     * Validate the component props (or next props) against the (static) props
+     * description.  This is potentially an expensive operation: it may needs to
+     * visit recursively the props and all the children to check if they are valid.
+     * This is why it is only done in 'dev' mode.
+     */
+    function validateProps(name, props, parent) {
+        const ComponentClass = typeof name !== "string"
+            ? name
+            : parent.constructor.components[name];
+        if (!ComponentClass) {
+            // this is an error, wrong component. We silently return here instead so the
+            // error is triggered by the usual path ('component' function)
+            return;
+        }
+        applyDefaultProps(props, ComponentClass);
+        const defaultProps = ComponentClass.defaultProps || {};
+        let propsDef = getPropDescription(ComponentClass.props);
+        const allowAdditionalProps = "*" in propsDef;
+        for (let propName in propsDef) {
+            if (propName === "*") {
+                continue;
+            }
+            const propDef = propsDef[propName];
+            let isMandatory = !!propDef;
+            if (typeof propDef === "object" && "optional" in propDef) {
+                isMandatory = !propDef.optional;
+            }
+            if (isMandatory && propName in defaultProps) {
+                throw new Error(`A default value cannot be defined for a mandatory prop (name: '${propName}', component: ${ComponentClass.name})`);
+            }
+            if (props[propName] === undefined) {
+                if (isMandatory) {
+                    throw new Error(`Missing props '${propName}' (component '${ComponentClass.name}')`);
+                }
+                else {
+                    continue;
+                }
+            }
+            let isValid;
+            try {
+                isValid = isValidProp(props[propName], propDef);
+            }
+            catch (e) {
+                e.message = `Invalid prop '${propName}' in component ${ComponentClass.name} (${e.message})`;
+                throw e;
+            }
+            if (!isValid) {
+                throw new Error(`Invalid Prop '${propName}' in component '${ComponentClass.name}'`);
+            }
+        }
+        if (!allowAdditionalProps) {
+            for (let propName in props) {
+                if (!(propName in propsDef)) {
+                    throw new Error(`Unknown prop '${propName}' given to component '${ComponentClass.name}'`);
+                }
+            }
+        }
+    }
+    /**
+     * Check if an invidual prop value matches its (static) prop definition
+     */
+    function isValidProp(prop, propDef) {
+        if (propDef === true) {
+            return true;
+        }
+        if (typeof propDef === "function") {
+            // Check if a value is constructed by some Constructor.  Note that there is a
+            // slight abuse of language: we want to consider primitive values as well.
+            //
+            // So, even though 1 is not an instance of Number, we want to consider that
+            // it is valid.
+            if (typeof prop === "object") {
+                return prop instanceof propDef;
+            }
+            return typeof prop === propDef.name.toLowerCase();
+        }
+        else if (propDef instanceof Array) {
+            // If this code is executed, this means that we want to check if a prop
+            // matches at least one of its descriptor.
+            let result = false;
+            for (let i = 0, iLen = propDef.length; i < iLen; i++) {
+                result = result || isValidProp(prop, propDef[i]);
+            }
+            return result;
+        }
+        // propsDef is an object
+        if (propDef.optional && prop === undefined) {
+            return true;
+        }
+        let result = propDef.type ? isValidProp(prop, propDef.type) : true;
+        if (propDef.validate) {
+            result = result && propDef.validate(prop);
+        }
+        if (propDef.type === Array && propDef.element) {
+            for (let i = 0, iLen = prop.length; i < iLen; i++) {
+                result = result && isValidProp(prop[i], propDef.element);
+            }
+        }
+        if (propDef.type === Object && propDef.shape) {
+            const shape = propDef.shape;
+            for (let key in shape) {
+                result = result && isValidProp(prop[key], shape[key]);
+            }
+            if (result) {
+                for (let propName in prop) {
+                    if (!(propName in shape)) {
+                        throw new Error(`unknown prop '${propName}'`);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     let currentNode = null;
@@ -2467,96 +2482,70 @@
         }
     }
 
-    function wrapError(fn, hookName) {
-        const error = new Error(`The following error occurred in ${hookName}: `);
-        return (...args) => {
-            try {
-                const result = fn(...args);
-                if (result instanceof Promise) {
-                    return result.catch((cause) => {
-                        error.cause = cause;
-                        if (cause instanceof Error) {
-                            error.message += `"${cause.message}"`;
-                        }
-                        throw error;
-                    });
-                }
-                return result;
-            }
-            catch (cause) {
-                if (cause instanceof Error) {
-                    error.message += `"${cause.message}"`;
-                }
-                throw error;
-            }
-        };
-    }
     // -----------------------------------------------------------------------------
-    //  hooks
+    //  Scheduler
     // -----------------------------------------------------------------------------
-    function onWillStart(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willStart.push(decorate(fn.bind(node.component), "onWillStart"));
-    }
-    function onWillUpdateProps(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willUpdateProps.push(decorate(fn.bind(node.component), "onWillUpdateProps"));
-    }
-    function onMounted(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.mounted.push(decorate(fn.bind(node.component), "onMounted"));
-    }
-    function onWillPatch(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willPatch.unshift(decorate(fn.bind(node.component), "onWillPatch"));
-    }
-    function onPatched(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.patched.push(decorate(fn.bind(node.component), "onPatched"));
-    }
-    function onWillUnmount(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willUnmount.unshift(decorate(fn.bind(node.component), "onWillUnmount"));
-    }
-    function onWillDestroy(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willDestroy.push(decorate(fn.bind(node.component), "onWillDestroy"));
-    }
-    function onWillRender(fn) {
-        const node = getCurrent();
-        const renderFn = node.renderFn;
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.renderFn = decorate(() => {
-            fn.call(node.component);
-            return renderFn();
-        }, "onWillRender");
-    }
-    function onRendered(fn) {
-        const node = getCurrent();
-        const renderFn = node.renderFn;
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.renderFn = decorate(() => {
-            const result = renderFn();
-            fn.call(node.component);
-            return result;
-        }, "onRendered");
-    }
-    function onError(callback) {
-        const node = getCurrent();
-        let handlers = nodeErrorHandlers.get(node);
-        if (!handlers) {
-            handlers = [];
-            nodeErrorHandlers.set(node, handlers);
+    class Scheduler {
+        constructor() {
+            this.tasks = new Set();
+            this.isRunning = false;
+            this.requestAnimationFrame = Scheduler.requestAnimationFrame;
         }
-        handlers.push(callback.bind(node.component));
+        start() {
+            this.isRunning = true;
+            this.scheduleTasks();
+        }
+        stop() {
+            this.isRunning = false;
+        }
+        addFiber(fiber) {
+            this.tasks.add(fiber.root);
+            if (!this.isRunning) {
+                this.start();
+            }
+        }
+        /**
+         * Process all current tasks. This only applies to the fibers that are ready.
+         * Other tasks are left unchanged.
+         */
+        flush() {
+            this.tasks.forEach((fiber) => {
+                if (fiber.root !== fiber) {
+                    this.tasks.delete(fiber);
+                    return;
+                }
+                const hasError = fibersInError.has(fiber);
+                if (hasError && fiber.counter !== 0) {
+                    this.tasks.delete(fiber);
+                    return;
+                }
+                if (fiber.node.status === 2 /* DESTROYED */) {
+                    this.tasks.delete(fiber);
+                    return;
+                }
+                if (fiber.counter === 0) {
+                    if (!hasError) {
+                        fiber.complete();
+                    }
+                    this.tasks.delete(fiber);
+                }
+            });
+            if (this.tasks.size === 0) {
+                this.stop();
+            }
+        }
+        scheduleTasks() {
+            this.requestAnimationFrame(() => {
+                this.flush();
+                if (this.isRunning) {
+                    this.scheduleTasks();
+                }
+            });
+        }
     }
+    // capture the value of requestAnimationFrame as soon as possible, to avoid
+    // interactions with other code, such as test frameworks that override them
+    Scheduler.requestAnimationFrame = window.requestAnimationFrame.bind(window);
 
     /**
      * Owl QWeb Expression Parser
@@ -4678,114 +4667,96 @@
         return new Function("bdom, helpers", code);
     }
 
-    const bdom = { text, createBlock, list, multi, html, toggler, component, comment };
-    const globalTemplates = {};
-    function parseXML(xml) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(xml, "text/xml");
-        if (doc.getElementsByTagName("parsererror").length) {
-            let msg = "Invalid XML in template.";
-            const parsererrorText = doc.getElementsByTagName("parsererror")[0].textContent;
-            if (parsererrorText) {
-                msg += "\nThe parser has produced the following error message:\n" + parsererrorText;
-                const re = /\d+/g;
-                const firstMatch = re.exec(parsererrorText);
-                if (firstMatch) {
-                    const lineNumber = Number(firstMatch[0]);
-                    const line = xml.split("\n")[lineNumber - 1];
-                    const secondMatch = re.exec(parsererrorText);
-                    if (line && secondMatch) {
-                        const columnIndex = Number(secondMatch[0]) - 1;
-                        if (line[columnIndex]) {
-                            msg +=
-                                `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
+    function wrapError(fn, hookName) {
+        const error = new Error(`The following error occurred in ${hookName}: `);
+        return (...args) => {
+            try {
+                const result = fn(...args);
+                if (result instanceof Promise) {
+                    return result.catch((cause) => {
+                        error.cause = cause;
+                        if (cause instanceof Error) {
+                            error.message += `"${cause.message}"`;
                         }
-                    }
+                        throw error;
+                    });
                 }
+                return result;
             }
-            throw new Error(msg);
-        }
-        return doc;
-    }
-    class TemplateSet {
-        constructor(config = {}) {
-            this.rawTemplates = Object.create(globalTemplates);
-            this.templates = {};
-            this.utils = Object.assign({}, UTILS, {
-                call: (owner, subTemplate, ctx, parent, key) => {
-                    const template = this.getTemplate(subTemplate);
-                    return toggler(subTemplate, template.call(owner, ctx, parent, key));
-                },
-                getTemplate: (name) => this.getTemplate(name),
-            });
-            this.dev = config.dev || false;
-            this.translateFn = config.translateFn;
-            this.translatableAttributes = config.translatableAttributes;
-            if (config.templates) {
-                this.addTemplates(config.templates);
-            }
-        }
-        addTemplate(name, template, options = {}) {
-            if (name in this.rawTemplates && !options.allowDuplicate) {
-                throw new Error(`Template ${name} already defined`);
-            }
-            this.rawTemplates[name] = template;
-        }
-        addTemplates(xml, options = {}) {
-            if (!xml) {
-                // empty string
-                return;
-            }
-            xml = xml instanceof Document ? xml : parseXML(xml);
-            for (const template of xml.querySelectorAll("[t-name]")) {
-                const name = template.getAttribute("t-name");
-                this.addTemplate(name, template, options);
-            }
-        }
-        getTemplate(name) {
-            if (!(name in this.templates)) {
-                const rawTemplate = this.rawTemplates[name];
-                if (rawTemplate === undefined) {
-                    let extraInfo = "";
-                    try {
-                        const componentName = getCurrent().component.constructor.name;
-                        extraInfo = ` (for component "${componentName}")`;
-                    }
-                    catch { }
-                    throw new Error(`Missing template: "${name}"${extraInfo}`);
+            catch (cause) {
+                if (cause instanceof Error) {
+                    error.message += `"${cause.message}"`;
                 }
-                const templateFn = this._compileTemplate(name, rawTemplate);
-                // first add a function to lazily get the template, in case there is a
-                // recursive call to the template name
-                const templates = this.templates;
-                this.templates[name] = function (context, parent) {
-                    return templates[name].call(this, context, parent);
-                };
-                const template = templateFn(bdom, this.utils);
-                this.templates[name] = template;
+                throw error;
             }
-            return this.templates[name];
-        }
-        _compileTemplate(name, template) {
-            return compile(template, {
-                name,
-                dev: this.dev,
-                translateFn: this.translateFn,
-                translatableAttributes: this.translatableAttributes,
-            });
-        }
+        };
     }
     // -----------------------------------------------------------------------------
-    //  xml tag helper
+    //  hooks
     // -----------------------------------------------------------------------------
-    function xml(...args) {
-        const name = `__template__${xml.nextId++}`;
-        const value = String.raw(...args);
-        globalTemplates[name] = value;
-        return name;
+    function onWillStart(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willStart.push(decorate(fn.bind(node.component), "onWillStart"));
     }
-    xml.nextId = 1;
+    function onWillUpdateProps(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willUpdateProps.push(decorate(fn.bind(node.component), "onWillUpdateProps"));
+    }
+    function onMounted(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.mounted.push(decorate(fn.bind(node.component), "onMounted"));
+    }
+    function onWillPatch(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willPatch.unshift(decorate(fn.bind(node.component), "onWillPatch"));
+    }
+    function onPatched(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.patched.push(decorate(fn.bind(node.component), "onPatched"));
+    }
+    function onWillUnmount(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willUnmount.unshift(decorate(fn.bind(node.component), "onWillUnmount"));
+    }
+    function onWillDestroy(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willDestroy.push(decorate(fn.bind(node.component), "onWillDestroy"));
+    }
+    function onWillRender(fn) {
+        const node = getCurrent();
+        const renderFn = node.renderFn;
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.renderFn = decorate(() => {
+            fn.call(node.component);
+            return renderFn();
+        }, "onWillRender");
+    }
+    function onRendered(fn) {
+        const node = getCurrent();
+        const renderFn = node.renderFn;
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.renderFn = decorate(() => {
+            const result = renderFn();
+            fn.call(node.component);
+            return result;
+        }, "onRendered");
+    }
+    function onError(callback) {
+        const node = getCurrent();
+        let handlers = nodeErrorHandlers.get(node);
+        if (!handlers) {
+            handlers = [];
+            nodeErrorHandlers.set(node, handlers);
+        }
+        handlers.push(callback.bind(node.component));
+    }
 
     class Component {
         constructor(props, env, node) {
@@ -4864,70 +4835,283 @@
         slots: true,
     };
 
-    // -----------------------------------------------------------------------------
-    //  Scheduler
-    // -----------------------------------------------------------------------------
-    class Scheduler {
-        constructor() {
-            this.tasks = new Set();
-            this.isRunning = false;
-            this.requestAnimationFrame = Scheduler.requestAnimationFrame;
+    /**
+     * This file contains utility functions that will be injected in each template,
+     * to perform various useful tasks in the compiled code.
+     */
+    function withDefault(value, defaultValue) {
+        return value === undefined || value === null || value === false ? defaultValue : value;
+    }
+    function callSlot(ctx, parent, key, name, dynamic, extra, defaultContent) {
+        key = key + "__slot_" + name;
+        const slots = ctx.props[TARGET].slots || {};
+        const { __render, __ctx, __scope } = slots[name] || {};
+        const slotScope = Object.create(__ctx || {});
+        if (__scope) {
+            slotScope[__scope] = extra || {};
         }
-        start() {
-            this.isRunning = true;
-            this.scheduleTasks();
+        const slotBDom = __render ? __render.call(__ctx.__owl__.component, slotScope, parent, key) : null;
+        if (defaultContent) {
+            let child1 = undefined;
+            let child2 = undefined;
+            if (slotBDom) {
+                child1 = dynamic ? toggler(name, slotBDom) : slotBDom;
+            }
+            else {
+                child2 = defaultContent.call(ctx.__owl__.component, ctx, parent, key);
+            }
+            return multi([child1, child2]);
         }
-        stop() {
-            this.isRunning = false;
+        return slotBDom || text("");
+    }
+    function capture(ctx) {
+        const component = ctx.__owl__.component;
+        const result = Object.create(component);
+        for (let k in ctx) {
+            result[k] = ctx[k];
         }
-        addFiber(fiber) {
-            this.tasks.add(fiber.root);
-            if (!this.isRunning) {
-                this.start();
+        return result;
+    }
+    function withKey(elem, k) {
+        elem.key = k;
+        return elem;
+    }
+    function prepareList(collection) {
+        let keys;
+        let values;
+        if (Array.isArray(collection)) {
+            keys = collection;
+            values = collection;
+        }
+        else if (collection) {
+            values = Object.keys(collection);
+            keys = Object.values(collection);
+        }
+        else {
+            throw new Error("Invalid loop expression");
+        }
+        const n = values.length;
+        return [keys, values, n, new Array(n)];
+    }
+    const isBoundary = Symbol("isBoundary");
+    function setContextValue(ctx, key, value) {
+        const ctx0 = ctx;
+        while (!ctx.hasOwnProperty(key) && !ctx.hasOwnProperty(isBoundary)) {
+            const newCtx = ctx.__proto__;
+            if (!newCtx) {
+                ctx = ctx0;
+                break;
+            }
+            ctx = newCtx;
+        }
+        ctx[key] = value;
+    }
+    function toNumber(val) {
+        const n = parseFloat(val);
+        return isNaN(n) ? val : n;
+    }
+    function shallowEqual(l1, l2) {
+        for (let i = 0, l = l1.length; i < l; i++) {
+            if (l1[i] !== l2[i]) {
+                return false;
             }
         }
-        /**
-         * Process all current tasks. This only applies to the fibers that are ready.
-         * Other tasks are left unchanged.
-         */
-        flush() {
-            this.tasks.forEach((fiber) => {
-                if (fiber.root !== fiber) {
-                    this.tasks.delete(fiber);
-                    return;
+        return true;
+    }
+    class LazyValue {
+        constructor(fn, ctx, node) {
+            this.fn = fn;
+            this.ctx = capture(ctx);
+            this.node = node;
+        }
+        evaluate() {
+            return this.fn(this.ctx, this.node);
+        }
+        toString() {
+            return this.evaluate().toString();
+        }
+    }
+    /*
+     * Safely outputs `value` as a block depending on the nature of `value`
+     */
+    function safeOutput(value) {
+        if (!value) {
+            return value;
+        }
+        let safeKey;
+        let block;
+        if (value instanceof Markup) {
+            safeKey = `string_safe`;
+            block = html(value);
+        }
+        else if (value instanceof LazyValue) {
+            safeKey = `lazy_value`;
+            block = value.evaluate();
+        }
+        else if (value instanceof String || typeof value === "string") {
+            safeKey = "string_unsafe";
+            block = text(value);
+        }
+        else {
+            // Assuming it is a block
+            safeKey = "block_safe";
+            block = value;
+        }
+        return toggler(safeKey, block);
+    }
+    let boundFunctions = new WeakMap();
+    function bind(ctx, fn) {
+        let component = ctx.__owl__.component;
+        let boundFnMap = boundFunctions.get(component);
+        if (!boundFnMap) {
+            boundFnMap = new WeakMap();
+            boundFunctions.set(component, boundFnMap);
+        }
+        let boundFn = boundFnMap.get(fn);
+        if (!boundFn) {
+            boundFn = fn.bind(component);
+            boundFnMap.set(fn, boundFn);
+        }
+        return boundFn;
+    }
+    function multiRefSetter(refs, name) {
+        let count = 0;
+        return (el) => {
+            if (el) {
+                count++;
+                if (count > 1) {
+                    throw new Error("Cannot have 2 elements with same ref name at the same time");
                 }
-                const hasError = fibersInError.has(fiber);
-                if (hasError && fiber.counter !== 0) {
-                    this.tasks.delete(fiber);
-                    return;
-                }
-                if (fiber.node.status === 2 /* DESTROYED */) {
-                    this.tasks.delete(fiber);
-                    return;
-                }
-                if (fiber.counter === 0) {
-                    if (!hasError) {
-                        fiber.complete();
+            }
+            if (count === 0 || el) {
+                refs[name] = el;
+            }
+        };
+    }
+    const helpers = {
+        withDefault,
+        zero: Symbol("zero"),
+        isBoundary,
+        callSlot,
+        capture,
+        withKey,
+        prepareList,
+        setContextValue,
+        multiRefSetter,
+        shallowEqual,
+        toNumber,
+        validateProps,
+        LazyValue,
+        safeOutput,
+        bind,
+    };
+
+    const bdom = { text, createBlock, list, multi, html, toggler, component, comment };
+    function parseXML(xml) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xml, "text/xml");
+        if (doc.getElementsByTagName("parsererror").length) {
+            let msg = "Invalid XML in template.";
+            const parsererrorText = doc.getElementsByTagName("parsererror")[0].textContent;
+            if (parsererrorText) {
+                msg += "\nThe parser has produced the following error message:\n" + parsererrorText;
+                const re = /\d+/g;
+                const firstMatch = re.exec(parsererrorText);
+                if (firstMatch) {
+                    const lineNumber = Number(firstMatch[0]);
+                    const line = xml.split("\n")[lineNumber - 1];
+                    const secondMatch = re.exec(parsererrorText);
+                    if (line && secondMatch) {
+                        const columnIndex = Number(secondMatch[0]) - 1;
+                        if (line[columnIndex]) {
+                            msg +=
+                                `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
+                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                        }
                     }
-                    this.tasks.delete(fiber);
                 }
-            });
-            if (this.tasks.size === 0) {
-                this.stop();
+            }
+            throw new Error(msg);
+        }
+        return doc;
+    }
+    /**
+     * Returns the helpers object that will be injected in each template closure
+     * function
+     */
+    function makeHelpers(getTemplate) {
+        return Object.assign({}, helpers, {
+            Portal,
+            markRaw,
+            getTemplate,
+            call: (owner, subTemplate, ctx, parent, key) => {
+                const template = getTemplate(subTemplate);
+                return toggler(subTemplate, template.call(owner, ctx, parent, key));
+            },
+        });
+    }
+    class TemplateSet {
+        constructor(config = {}) {
+            this.rawTemplates = Object.create(globalTemplates);
+            this.templates = {};
+            this.dev = config.dev || false;
+            this.translateFn = config.translateFn;
+            this.translatableAttributes = config.translatableAttributes;
+            if (config.templates) {
+                this.addTemplates(config.templates);
+            }
+            this.helpers = makeHelpers(this.getTemplate.bind(this));
+        }
+        addTemplate(name, template, options = {}) {
+            if (name in this.rawTemplates && !options.allowDuplicate) {
+                throw new Error(`Template ${name} already defined`);
+            }
+            this.rawTemplates[name] = template;
+        }
+        addTemplates(xml, options = {}) {
+            if (!xml) {
+                // empty string
+                return;
+            }
+            xml = xml instanceof Document ? xml : parseXML(xml);
+            for (const template of xml.querySelectorAll("[t-name]")) {
+                const name = template.getAttribute("t-name");
+                this.addTemplate(name, template, options);
             }
         }
-        scheduleTasks() {
-            this.requestAnimationFrame(() => {
-                this.flush();
-                if (this.isRunning) {
-                    this.scheduleTasks();
+        getTemplate(name) {
+            if (!(name in this.templates)) {
+                const rawTemplate = this.rawTemplates[name];
+                if (rawTemplate === undefined) {
+                    let extraInfo = "";
+                    try {
+                        const componentName = getCurrent().component.constructor.name;
+                        extraInfo = ` (for component "${componentName}")`;
+                    }
+                    catch { }
+                    throw new Error(`Missing template: "${name}"${extraInfo}`);
                 }
+                const templateFn = this._compileTemplate(name, rawTemplate);
+                // first add a function to lazily get the template, in case there is a
+                // recursive call to the template name
+                const templates = this.templates;
+                this.templates[name] = function (context, parent) {
+                    return templates[name].call(this, context, parent);
+                };
+                const template = templateFn(bdom, this.helpers);
+                this.templates[name] = template;
+            }
+            return this.templates[name];
+        }
+        _compileTemplate(name, template) {
+            return compile(template, {
+                name,
+                dev: this.dev,
+                translateFn: this.translateFn,
+                translatableAttributes: this.translatableAttributes,
             });
         }
     }
-    // capture the value of requestAnimationFrame as soon as possible, to avoid
-    // interactions with other code, such as test frameworks that override them
-    Scheduler.requestAnimationFrame = window.requestAnimationFrame.bind(window);
 
     const DEV_MSG = () => {
         const hash = window.owl ? window.owl.__info__.hash : "master";
@@ -5010,45 +5194,6 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             case 2 /* DESTROYED */:
                 return "destroyed";
         }
-    }
-
-    class Memo extends Component {
-        constructor(props, env, node) {
-            super(props, env, node);
-            // prevent patching process conditionally
-            let applyPatch = false;
-            const patchFn = node.patch;
-            node.patch = () => {
-                if (applyPatch) {
-                    patchFn.call(node);
-                    applyPatch = false;
-                }
-            };
-            // check props change, and render/apply patch if it changed
-            let prevProps = props;
-            const updateAndRender = node.updateAndRender;
-            node.updateAndRender = function (props, parentFiber) {
-                const shouldUpdate = !shallowEqual(prevProps, props);
-                if (shouldUpdate) {
-                    prevProps = props;
-                    updateAndRender.call(node, props, parentFiber);
-                    applyPatch = true;
-                }
-                return Promise.resolve();
-            };
-        }
-    }
-    Memo.template = xml `<t t-slot="default"/>`;
-    /**
-     * we assume that each object have the same set of keys
-     */
-    function shallowEqual(p1, p2) {
-        for (let k in p1) {
-            if (k !== "slots" && p1[k] !== p2[k]) {
-                return false;
-            }
-        }
-        return true;
     }
 
     // -----------------------------------------------------------------------------
@@ -5155,8 +5300,6 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
 
     config.shouldNormalizeDom = false;
     config.mainEventHandler = mainEventHandler;
-    UTILS.Portal = Portal;
-    UTILS.markRaw = markRaw;
     const blockDom = {
         config,
         // bdom entry points
@@ -5177,7 +5320,6 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     exports.App = App;
     exports.Component = Component;
     exports.EventBus = EventBus;
-    exports.Memo = Memo;
     exports.__info__ = __info__;
     exports.blockDom = blockDom;
     exports.loadFile = loadFile;
@@ -5211,9 +5353,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-alpha.2';
-    __info__.date = '2022-02-25T08:12:58.656Z';
-    __info__.hash = '7845304';
+    __info__.version = '2.0.0-beta.1';
+    __info__.date = '2022-03-02T12:32:30.688Z';
+    __info__.hash = 'd6348b8';
     __info__.url = 'https://github.com/odoo/owl';
 
 
