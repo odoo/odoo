@@ -10,14 +10,13 @@ import { translatedTerms, _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { session } from "@web/session";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { xml } = owl;
 const { DateTime, Settings } = luxon;
 
 const terms = { Hello: "Bonjour" };
 const serviceRegistry = registry.category("services");
-class TestComponent extends LegacyComponent {}
+class TestComponent extends Component {}
 
 /**
  * Patches the 'lang' of the user session and context.
