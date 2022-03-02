@@ -683,7 +683,18 @@ export class ViewCompiler {
         button.setAttribute("classes", JSON.stringify(Array.from(node.classList)));
 
         const clickParams = {};
-        for (const attName of ["name", "type", "args", "context", "close", "special", "effect"]) {
+        for (const attName of [
+            "name",
+            "type",
+            "args",
+            "context",
+            "close",
+            "special",
+            "effect",
+            // WOWL SAD: is adding the support for debounce attribute here justified or should we
+            // just override compileButton in kanban compiler to add the debounce?
+            "debounce",
+        ]) {
             const att = node.getAttribute(attName);
             if (att) {
                 clickParams[attName] = att;

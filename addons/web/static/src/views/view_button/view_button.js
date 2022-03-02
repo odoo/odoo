@@ -1,5 +1,7 @@
 /** @odoo-module */
 
+import { debounce as debounceFn } from "@web/core/utils/timing";
+
 const explicitRankClasses = [
     "btn-primary",
     "btn-secondary",
@@ -51,7 +53,7 @@ function iconFromString(iconString) {
 export class ViewButton extends owl.Component {
     setup() {
         const classes = transformButtonClasses(this.props.classes, this.props.defaultRank);
-        const { name, type, special } = this.props.clickParams;
+        const { name, type, special, debounce } = this.props.clickParams;
         this.disabled = !name && !type && !special;
         if (this.props.size) {
             classes.push(`btn-${this.props.size}`);
@@ -60,6 +62,9 @@ export class ViewButton extends owl.Component {
 
         if (this.props.icon) {
             this.icon = iconFromString(this.props.icon);
+        }
+        if (debounce) {
+            this.onClick = debounceFn(this.onClick.bind(this), debounce, true);
         }
     }
 

@@ -5598,7 +5598,6 @@ QUnit.module('Views', {
             data.partner.records[0].active = false;
             event.data.on_closed();
         });
-
         assert.strictEqual(kanban.$('.o_kanban_record:contains(yop)').length, 1, "should display 'yop' record");
         await testUtils.dom.click(kanban.$('.o_kanban_record:contains(yop) button[data-name="toggle_active"]'));
         assert.strictEqual(kanban.$('.o_kanban_record:contains(yop)').length, 0, "should remove 'yop' record from the view");

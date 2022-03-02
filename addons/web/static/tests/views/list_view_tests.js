@@ -682,7 +682,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "list view: buttons handler is called once on double click",
         async function (assert) {
-            assert.expect(2);
+            assert.expect(3);
 
             const executeActionDef = makeDeferred();
             const list = await makeView({
@@ -701,9 +701,9 @@ QUnit.module("Views", (hooks) => {
                     await executeActionDef;
                 },
             });
-            const button = target.querySelector("tbody .o_list_button > button > span");
+            const button = target.querySelector("tbody .o_list_button > button");
             await click(button);
-            await click(button);
+            assert.ok(button.matches("[disabled]"));
 
             executeActionDef.resolve();
             await nextTick();

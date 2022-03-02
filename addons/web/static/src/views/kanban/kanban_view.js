@@ -236,12 +236,17 @@ export class KanbanArchParser extends XMLParser {
 
         // Special actions
         for (const el of kanbanBox.querySelectorAll("a[type],button[type]")) {
-            const { type } = extractAttributes(el, ["type"]);
-            const params = { type };
-            if (SPECIAL_TYPES.includes(type)) {
-                if (ACTION_TYPES.includes(type)) {
-                    Object.assign(params, extractAttributes(el, ["name", "confirm"]));
-                } else if (type === "set_cover") {
+            const type = el.getAttribute("type");
+            if (ACTION_TYPES.includes(type)) {
+                // action buttons are debounced in kanban records
+                el.setAttribute("debounce", 300);
+                // Action buttons will be compiled in compileButton, no further
+                // processing is needed here
+                continue;
+            } else if (SPECIAL_TYPES.includes(type)) {
+                el.removeAttribute("type");
+                const params = { type };
+                if (type === "set_cover") {
                     const { "data-field": fieldName, "auto-open": autoOpen } = extractAttributes(
                         el,
                         ["data-field", "auto-open"]

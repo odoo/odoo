@@ -6429,10 +6429,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_btn_test_2", 3, "kanban should have three buttons of type 2");
     });
 
-    QUnit.skipWOWL("button executes action and reloads", async (assert) => {
-        assert.expect(6);
+    QUnit.test("button executes action and reloads", async (assert) => {
+        assert.expect(7);
 
-        await makeView({
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -6440,39 +6440,40 @@ QUnit.module("Views", (hooks) => {
                 "<kanban>" +
                 '<templates><div t-name="kanban-box">' +
                 '<field name="foo"/>' +
-                '<button type="object" name="a1" />' +
+                '<button type="object" name="a1" class="a1"/>' +
                 "</div></templates>" +
                 "</kanban>",
             async mockRPC(route) {
                 assert.step(route);
             },
         });
+        assert.verifySteps(["/web/dataset/call_kw/partner/web_search_read"]);
 
         assert.ok(
-            target.querySelector('button[data-name="a1"]').length,
+            target.querySelectorAll("button.a1").length,
             "kanban should have at least one button a1"
         );
 
-        const count = 0;
-        testUtils.mock.intercept(kanban, "execute_action", function (event) {
-            count++;
-            event.data.on_closed();
+        let count = 0;
+        patchWithCleanup(kanban.env.services.action, {
+            doActionButton({ onClose }) {
+                count++;
+                onClose();
+            },
         });
-        click($('button[data-name="a1"]'));
-        await new Promise((r) => setTimeout(r));
+        await click(target.querySelector("button.a1"));
         assert.strictEqual(count, 1, "should have triggered a execute action");
 
-        click($('button[data-name="a1"]'));
-        await new Promise((r) => setTimeout(r));
-        assert.strictEqual(count, 1, "double-click on kanban actions should be debounced");
-
         assert.verifySteps(
-            ["web_search_read", "/web/dataset/call_kw/partner/read"],
-            "a read should be done after the call button to reload the record"
+            ["/web/dataset/call_kw/partner/web_search_read"],
+            "the records should be reloaded after executing a button action"
         );
+
+        await click(target.querySelector("button.a1"));
+        assert.strictEqual(count, 1, "double-click on kanban actions should be debounced");
     });
 
-    QUnit.skipWOWL("button executes action and check domain", async (assert) => {
+    QUnit.test("button executes action and check domain", async (assert) => {
         assert.expect(2);
 
         const data = serverData.models;
@@ -6481,37 +6482,36 @@ QUnit.module("Views", (hooks) => {
             data.partner.records[k].active = true;
         }
 
-        await makeView({
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
-            data: data,
+            serverData,
             arch:
                 "<kanban>" +
                 '<templates><div t-name="kanban-box">' +
                 '<field name="foo"/>' +
                 '<field name="active"/>' +
                 '<button type="object" name="a1" />' +
-                '<button type="object" name="toggle_active" />' +
+                '<button type="object" name="toggle_active" class="toggle-active" />' +
                 "</div></templates>" +
                 "</kanban>",
         });
-
-        testUtils.mock.intercept(kanban, "execute_action", function (event) {
-            data.partner.records[0].active = false;
-            event.data.on_closed();
+        patchWithCleanup(kanban.env.services.action, {
+            doActionButton({ onClose }) {
+                serverData.models.partner.records[0].active = false;
+                onClose();
+            },
         });
 
         assert.strictEqual(
-            target.querySelector(".o_kanban_record:contains(yop)").length,
-            1,
+            target.querySelector(".o_kanban_record span").textContent,
+            "yop",
             "should display 'yop' record"
         );
-        await click(
-            target.querySelector('.o_kanban_record:contains(yop) button[data-name="toggle_active"]')
-        );
-        assert.strictEqual(
-            target.querySelector(".o_kanban_record:contains(yop)").length,
-            0,
+        await click(target.querySelector(".o_kanban_record button.toggle-active"));
+        assert.notEqual(
+            target.querySelector(".o_kanban_record span").textContent,
+            "yop",
             "should remove 'yop' record from the view"
         );
     });

@@ -1338,18 +1338,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("rendering stat buttons without action", async function (assert) {
-        // FIXME: there should be no dependency from views to actionService
-        const fakeActionService = {
-            start() {
-                return {
-                    doActionButton() {
-                        throw new Error("Should not call doActionButton");
-                    },
-                };
-            },
-        };
-        serviceRegistry.add("action", fakeActionService, { force: true });
-
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -1373,8 +1361,11 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
         });
 
-        assert.containsOnce(form, "button.oe_stat_button");
-        await click(form.el.querySelector(".oe_stat_button")); // should not call doActionButton
+        assert.containsOnce(
+            form,
+            "button.oe_stat_button[disabled]",
+            "stat button should be disabled"
+        );
     });
 
     QUnit.test("readonly stat buttons stays disabled", async function (assert) {
