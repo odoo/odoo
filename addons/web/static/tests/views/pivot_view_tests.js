@@ -202,7 +202,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("simple pivot rendering", async function (assert) {
         assert.expect(4);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -219,17 +219,17 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(pivot.el, "o_action o_view_controller");
-        assert.hasClass(pivot.el.querySelector("table"), "o_enable_linking");
+        assert.hasClass(target.querySelector(".o_pivot_view"), "o_action o_view_controller");
+        assert.hasClass(target.querySelector("table"), "o_enable_linking");
         assert.containsOnce(
-            pivot,
+            target,
             "td.o_pivot_cell_value:contains(32)",
             "should contain a pivot cell with the sum of all records"
         );
     });
 
     QUnit.test("pivot rendering with widget", async function (assert) {
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -240,7 +240,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(
-            pivot,
+            target,
             "td.o_pivot_cell_value:contains(32:00)",
             "should contain a pivot cell with the sum of all records"
         );
@@ -254,7 +254,7 @@ QUnit.module("Views", (hooks) => {
             group_operator: "sum",
         };
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -264,13 +264,13 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
         });
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
         assert.strictEqual(
-            pivot.el.querySelector(".o_cp_bottom_left .dropdown-menu .dropdown-item").innerText,
+            target.querySelector(".o_cp_bottom_left .dropdown-menu .dropdown-item").innerText,
             "BAR"
         );
         assert.strictEqual(
-            pivot.el.querySelector(".o_pivot_measure_row").innerText,
+            target.querySelector(".o_pivot_measure_row").innerText,
             "BAR",
             "the displayed name should be the one set in the string attribute"
         );
@@ -286,7 +286,7 @@ QUnit.module("Views", (hooks) => {
                 group_operator: "sum",
             };
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -296,7 +296,7 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
             });
             assert.strictEqual(
-                pivot.el.querySelector(".o_pivot_measure_row").innerText,
+                target.querySelector(".o_pivot_measure_row").innerText,
                 "fubar",
                 "the displayed name should be the one set in the string attribute"
             );
@@ -310,7 +310,7 @@ QUnit.module("Views", (hooks) => {
             foo2: { string: "Foo2", type: "integer", store: true, group_operator: "sum" },
         });
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -322,13 +322,13 @@ QUnit.module("Views", (hooks) => {
         });
 
         // there should be only one displayed measure as the other one is invisible
-        assert.containsOnce(pivot, ".o_pivot_measure_row");
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        assert.containsOnce(target, ".o_pivot_measure_row");
+        await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
         // there should be only one measure besides count, as the other one is invisible
-        assert.containsN(pivot, ".o_cp_bottom_left .dropdown-menu .dropdown-item", 2);
+        assert.containsN(target, ".o_cp_bottom_left .dropdown-menu .dropdown-item", 2);
         // the invisible field souldn't be in the groupable fields neither
-        await click(pivot.el.querySelector(".o_pivot_header_cell_closed"));
-        assert.containsNone(pivot, '.dropdown-menu a[data-field="foo2"]');
+        await click(target.querySelector(".o_pivot_header_cell_closed"));
+        assert.containsNone(target, '.dropdown-menu a[data-field="foo2"]');
     });
 
     QUnit.test('pivot view without "string" attribute', async function (assert) {
@@ -355,7 +355,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("group headers should have a tooltip", async function (assert) {
         assert.expect(2);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -367,11 +367,11 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[0].dataset.tooltip,
+            target.querySelectorAll("tbody .o_pivot_header_cell_closed")[0].dataset.tooltip,
             "Date"
         );
         assert.strictEqual(
-            pivot.el.querySelectorAll("thead .o_pivot_header_cell_closed")[1].dataset.tooltip,
+            target.querySelectorAll("thead .o_pivot_header_cell_closed")[1].dataset.tooltip,
             "Product"
         );
     });
@@ -379,7 +379,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "pivot view add computed fields explicitly defined as measure",
         async function (assert) {
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -389,13 +389,13 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
             });
 
-            await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+            await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
             assert.containsOnce(
-                pivot,
+                target,
                 ".o_cp_bottom_left .dropdown-menu .dropdown-item:contains(Computed and not stored)"
             );
             assert.strictEqual(
-                pivot.el.querySelector(".o_pivot_measure_row").innerText,
+                target.querySelector(".o_pivot_measure_row").innerText,
                 "Computed and not stored"
             );
         }
@@ -435,7 +435,7 @@ QUnit.module("Views", (hooks) => {
         };
         serviceRegistry.add("action", fakeActionService, { force: true });
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -455,14 +455,14 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(pivot.el.querySelector("table"), "o_enable_linking");
-        await click(pivot.el.querySelectorAll(".o_pivot_cell_value")[1]); // should trigger a do_action
+        assert.hasClass(target.querySelector("table"), "o_enable_linking");
+        await click(target.querySelectorAll(".o_pivot_cell_value")[1]); // should trigger a do_action
     });
 
     QUnit.test("row and column are highlighted when hovering a cell", async function (assert) {
         assert.expect(11);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -475,35 +475,35 @@ QUnit.module("Views", (hooks) => {
 
         // check row highlighting
         assert.hasClass(
-            pivot.el.querySelector("table"),
+            target.querySelector("table"),
             "table-hover",
             "with className 'table-hover', rows are highlighted (bootstrap)"
         );
 
         // check column highlighting
         // hover third measure
-        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(3)", ["mouseover"]);
-        assert.containsN(pivot, ".o_cell_hover", 3);
+        await triggerEvents(target, "th.o_pivot_measure_row:nth-of-type(3)", ["mouseover"]);
+        assert.containsN(target, ".o_cell_hover", 3);
         for (var i = 1; i <= 3; i++) {
             assert.hasClass(
-                pivot.el.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(3)`),
+                target.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(3)`),
                 "o_cell_hover"
             );
         }
-        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(3)", ["mouseout"]);
-        assert.containsNone(pivot, ".o_cell_hover");
+        await triggerEvents(target, "th.o_pivot_measure_row:nth-of-type(3)", ["mouseout"]);
+        assert.containsNone(target, ".o_cell_hover");
 
         // hover second cell, second row
-        await triggerEvents(pivot.el, "tbody tr:nth-of-type(1) td:nth-of-type(2)", ["mouseover"]);
-        assert.containsN(pivot, ".o_cell_hover", 3);
+        await triggerEvents(target, "tbody tr:nth-of-type(1) td:nth-of-type(2)", ["mouseover"]);
+        assert.containsN(target, ".o_cell_hover", 3);
         for (i = 1; i <= 3; i++) {
             assert.hasClass(
-                pivot.el.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(2)`),
+                target.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(2)`),
                 "o_cell_hover"
             );
         }
-        await triggerEvents(pivot.el, "tbody tr:nth-of-type(2) td:nth-of-type(2)", ["mouseout"]);
-        assert.containsNone(pivot, ".o_cell_hover");
+        await triggerEvents(target, "tbody tr:nth-of-type(2) td:nth-of-type(2)", ["mouseout"]);
+        assert.containsNone(target, ".o_cell_hover");
     });
 
     QUnit.test("columns are highlighted when hovering a measure", async function (assert) {
@@ -516,7 +516,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.partner.records[2].date = "2016-11-22";
         serverData.models.partner.records[3].date = "2016-11-03";
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -532,44 +532,44 @@ QUnit.module("Views", (hooks) => {
             context: { search_default_date_filter: true },
         });
 
-        await toggleComparisonMenu(pivot);
-        await toggleMenuItem(pivot, "Date: Previous period");
+        await toggleComparisonMenu(target);
+        await toggleMenuItem(target, "Date: Previous period");
 
         // hover Count in first group
-        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(1)", ["mouseover"]);
-        assert.containsN(pivot, ".o_cell_hover", 3);
+        await triggerEvents(target, "th.o_pivot_measure_row:nth-of-type(1)", ["mouseover"]);
+        assert.containsN(target, ".o_cell_hover", 3);
         for (let i = 1; i <= 3; i++) {
             assert.hasClass(
-                pivot.el.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(1)`),
+                target.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(1)`),
                 "o_cell_hover"
             );
         }
-        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(1)", ["mouseout"]);
-        assert.containsNone(pivot, ".o_cell_hover");
+        await triggerEvents(target, "th.o_pivot_measure_row:nth-of-type(1)", ["mouseout"]);
+        assert.containsNone(target, ".o_cell_hover");
 
         // hover Count in second group
-        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(2)", ["mouseover"]);
-        assert.containsN(pivot, ".o_cell_hover", 3);
+        await triggerEvents(target, "th.o_pivot_measure_row:nth-of-type(2)", ["mouseover"]);
+        assert.containsN(target, ".o_cell_hover", 3);
         for (let i = 1; i <= 3; i++) {
             assert.hasClass(
-                pivot.el.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(4)`),
+                target.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(4)`),
                 "o_cell_hover"
             );
         }
-        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(2)", ["mouseout"]);
-        assert.containsNone(pivot, ".o_cell_hover");
+        await triggerEvents(target, "th.o_pivot_measure_row:nth-of-type(2)", ["mouseout"]);
+        assert.containsNone(target, ".o_cell_hover");
 
         // hover Count in total column
-        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(3)", ["mouseover"]);
-        assert.containsN(pivot, ".o_cell_hover", 3);
+        await triggerEvents(target, "th.o_pivot_measure_row:nth-of-type(3)", ["mouseover"]);
+        assert.containsN(target, ".o_cell_hover", 3);
         for (let i = 1; i <= 3; i++) {
             assert.hasClass(
-                pivot.el.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(7)`),
+                target.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(7)`),
                 "o_cell_hover"
             );
         }
-        await triggerEvents(pivot.el, "th.o_pivot_measure_row:nth-of-type(3)", ["mouseout"]);
-        assert.containsNone(pivot, ".o_cell_hover");
+        await triggerEvents(target, "th.o_pivot_measure_row:nth-of-type(3)", ["mouseout"]);
+        assert.containsNone(target, ".o_cell_hover");
     });
 
     QUnit.test(
@@ -584,7 +584,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.records[2].date = "2016-11-22";
             serverData.models.partner.records[3].date = "2016-11-03";
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -600,20 +600,20 @@ QUnit.module("Views", (hooks) => {
                 context: { search_default_date_filter: true },
             });
 
-            await toggleComparisonMenu(pivot);
-            await toggleMenuItem(pivot, "Date: Previous period");
+            await toggleComparisonMenu(target);
+            await toggleMenuItem(target, "Date: Previous period");
 
             // hover the second origin in second group
-            await triggerEvents(pivot.el, "th.o_pivot_origin_row:nth-of-type(5)", ["mouseover"]);
-            assert.containsN(pivot, ".o_cell_hover", 3);
+            await triggerEvents(target, "th.o_pivot_origin_row:nth-of-type(5)", ["mouseover"]);
+            assert.containsN(target, ".o_cell_hover", 3);
             for (let i = 1; i <= 3; i++) {
                 assert.hasClass(
-                    pivot.el.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(5)`),
+                    target.querySelector(`tbody tr:nth-of-type(${i}) td:nth-of-type(5)`),
                     "o_cell_hover"
                 );
             }
-            await triggerEvents(pivot.el, "th.o_pivot_origin_row:nth-of-type(5)", ["mouseout"]);
-            assert.containsNone(pivot, ".o_cell_hover");
+            await triggerEvents(target, "th.o_pivot_origin_row:nth-of-type(5)", ["mouseout"]);
+            assert.containsNone(target, ".o_cell_hover");
         }
     );
 
@@ -629,7 +629,7 @@ QUnit.module("Views", (hooks) => {
         };
         serviceRegistry.add("action", fakeActionService, { force: true });
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -639,9 +639,9 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
         });
 
-        assert.doesNotHaveClass(pivot.el.querySelector("table"), "o_enable_linking");
-        assert.containsOnce(pivot, ".o_pivot_cell_value");
-        await click(pivot.el.querySelector(".o_pivot_cell_value")); // should not trigger a do_action
+        assert.doesNotHaveClass(target.querySelector("table"), "o_enable_linking");
+        assert.containsOnce(target, ".o_pivot_cell_value");
+        await click(target.querySelector(".o_pivot_cell_value")); // should not trigger a do_action
     });
 
     QUnit.test('clicking on the "Total" cell with time range activated', async function (assert) {
@@ -665,7 +665,7 @@ QUnit.module("Views", (hooks) => {
         };
         serviceRegistry.add("action", fakeActionService, { force: true });
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -678,11 +678,11 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.hasClass(
-            pivot.el.querySelector("table"),
+            target.querySelector("table"),
             "o_enable_linking",
             "root node should have classname 'o_enable_linking'"
         );
-        await click(pivot.el.querySelector(".o_pivot_cell_value"));
+        await click(target.querySelector(".o_pivot_cell_value"));
     });
 
     QUnit.test(
@@ -713,7 +713,7 @@ QUnit.module("Views", (hooks) => {
             };
             serviceRegistry.add("action", fakeActionService, { force: true });
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -725,14 +725,14 @@ QUnit.module("Views", (hooks) => {
                 context: { search_default_date_filter: true },
             });
 
-            await toggleComparisonMenu(pivot);
-            await toggleMenuItem(pivot, "Date: Previous period");
+            await toggleComparisonMenu(target);
+            await toggleMenuItem(target, "Date: Previous period");
 
-            assert.hasClass(pivot.el.querySelector("table"), "o_enable_linking");
+            assert.hasClass(target.querySelector("table"), "o_enable_linking");
             // here we click on the group corresponding to Total/Total/This Month
-            pivot.el.querySelectorAll(".o_pivot_cell_value")[1].click(); // should trigger a do_action with appropriate domain
+            target.querySelectorAll(".o_pivot_cell_value")[1].click(); // should trigger a do_action with appropriate domain
             // here we click on the group corresponding to xphone/Total/This Month
-            pivot.el.querySelectorAll(".o_pivot_cell_value")[4].click(); // should trigger a do_action with appropriate domain
+            target.querySelectorAll(".o_pivot_cell_value")[4].click(); // should trigger a do_action with appropriate domain
         }
     );
 
@@ -763,7 +763,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("without measures, pivot view uses __count by default", async function (assert) {
         assert.expect(4);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -779,16 +779,16 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left .dropdown-toggle"));
-        assert.containsOnce(pivot.el, ".o_cp_bottom_left .dropdown-menu .dropdown-item");
-        const measure = pivot.el.querySelector(".o_cp_bottom_left .dropdown-menu .dropdown-item");
+        await click(target.querySelector(".o_cp_bottom_left .dropdown-toggle"));
+        assert.containsOnce(target, ".o_cp_bottom_left .dropdown-menu .dropdown-item");
+        const measure = target.querySelector(".o_cp_bottom_left .dropdown-menu .dropdown-item");
         assert.strictEqual(measure.innerText, "Count");
         assert.hasClass(measure, "selected", "The count measure should be selected");
     });
 
     QUnit.test("pivot view can be reloaded", async function (assert) {
         let readGroupCount = 0;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -805,16 +805,16 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(
-            pivot,
+            target,
             "td.o_pivot_cell_value:contains(4)",
             "should contain a pivot cell with the number of all records"
         );
         assert.strictEqual(readGroupCount, 1, "should have done 1 rpc");
 
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "Some Filter");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Some Filter");
         assert.containsOnce(
-            pivot,
+            target,
             "td.o_pivot_cell_value:contains(2)",
             "should contain a pivot cell with the number of remaining records"
         );
@@ -822,7 +822,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("pivot view grouped by many2one field", async function (assert) {
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -833,14 +833,14 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
         });
 
-        assert.containsOnce(pivot, ".o_pivot_header_cell_opened", "should have one opened header");
+        assert.containsOnce(target, ".o_pivot_header_cell_opened", "should have one opened header");
         assert.containsOnce(
-            pivot,
+            target,
             ".o_pivot_header_cell_closed:contains(xphone)",
             "should display one header with 'xphone'"
         );
         assert.containsOnce(
-            pivot,
+            target,
             ".o_pivot_header_cell_closed:contains(xpad)",
             "should display one header with 'xpad'"
         );
@@ -851,7 +851,7 @@ QUnit.module("Views", (hooks) => {
 
         let rpcCount = 0;
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -865,39 +865,39 @@ QUnit.module("Views", (hooks) => {
             },
         });
         assert.containsN(
-            pivot,
+            target,
             "tbody tr",
             3,
             "should have 3 rows: 1 for the opened header, and 2 for data"
         );
 
         // click on the opened header to close it
-        await click(pivot.el, ".o_pivot_header_cell_opened");
+        await click(target, ".o_pivot_header_cell_opened");
 
-        assert.containsOnce(pivot, "tbody tr", "should have 1 row");
+        assert.containsOnce(target, "tbody tr", "should have 1 row");
 
         // click on closed header to open dropdown
-        await click(pivot.el, "tbody .o_pivot_header_cell_closed");
-        assert.containsOnce(pivot, ".o_pivot .dropdown-menu");
+        await click(target, "tbody .o_pivot_header_cell_closed");
+        assert.containsOnce(target, ".o_pivot .dropdown-menu");
         assert.strictEqual(
-            pivot.el.querySelector(".o_pivot .dropdown-menu").innerText.replace(/\s/g, ""),
+            target.querySelector(".o_pivot .dropdown-menu").innerText.replace(/\s/g, ""),
             "CompanyTypeCustomerDateOtherProductProductbarAddCustomGroup"
         );
 
         // open the Date sub dropdown
-        await mouseEnter(pivot.el, ".o_pivot .dropdown-menu .dropdown-toggle.o_menu_item");
+        await mouseEnter(target, ".o_pivot .dropdown-menu .dropdown-toggle.o_menu_item");
         assert.strictEqual(
-            pivot.el
+            target
                 .querySelector(".o_pivot .dropdown-menu .dropdown-menu")
                 .innerText.replace(/\s/g, ""),
             "YearQuarterMonthWeekDay"
         );
 
         await click(
-            pivot.el.querySelectorAll(".o_pivot .dropdown-menu .dropdown-menu .dropdown-item")[2]
+            target.querySelectorAll(".o_pivot .dropdown-menu .dropdown-menu .dropdown-item")[2]
         );
 
-        assert.containsN(pivot, "tbody tr", 4, "should have 4 rows: one for header, 3 for data");
+        assert.containsN(target, "tbody tr", 4, "should have 4 rows: one for header, 3 for data");
         assert.strictEqual(
             rpcCount,
             3,
@@ -908,7 +908,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("more folding/unfolding", async function (assert) {
         assert.expect(1);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -920,18 +920,16 @@ QUnit.module("Views", (hooks) => {
         });
 
         // open dropdown to zoom into first row
-        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
+        await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
         // click on date by day
-        await mouseEnter(pivot.el.querySelector("tbody .dropdown-menu .dropdown-toggle"));
-        await click(
-            pivot.el.querySelector("tbody .dropdown-menu .dropdown-menu span:nth-child(5)")
-        );
+        await mouseEnter(target.querySelector("tbody .dropdown-menu .dropdown-toggle"));
+        await click(target.querySelector("tbody .dropdown-menu .dropdown-menu span:nth-child(5)"));
 
         // open dropdown to zoom into second row
-        await click(pivot.el.querySelectorAll("tbody th.o_pivot_header_cell_closed")[1]);
+        await click(target.querySelectorAll("tbody th.o_pivot_header_cell_closed")[1]);
 
         assert.containsN(
-            pivot,
+            target,
             "tbody tr",
             7,
             "should have 7 rows (1 for total, 1 for xphone, 1 for xpad, 4 for data)"
@@ -941,7 +939,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("fold and unfold header group", async function (assert) {
         assert.expect(3);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -952,22 +950,22 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
         });
 
-        assert.containsN(pivot, "thead tr", 3);
+        assert.containsN(target, "thead tr", 3);
 
         // fold opened col group
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_opened"));
-        assert.containsN(pivot, "thead tr", 2);
+        await click(target.querySelector("thead .o_pivot_header_cell_opened"));
+        assert.containsN(target, "thead tr", 2);
 
         // unfold it
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelector(".dropdown-menu span:nth-child(5)"));
-        assert.containsN(pivot, "thead tr", 3);
+        await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+        await click(target.querySelector(".dropdown-menu span:nth-child(5)"));
+        assert.containsN(target, "thead tr", 3);
     });
 
     QUnit.test("unfold second header group", async function (assert) {
         assert.expect(4);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -978,16 +976,16 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
         });
 
-        assert.containsN(pivot, "thead tr", 3);
+        assert.containsN(target, "thead tr", 3);
         let values = ["12", "20", "32"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        assert.strictEqual(getCurrentValues(target), values.join(","));
 
         // unfold it
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed:last-child"));
-        await click(pivot.el.querySelector(".dropdown-menu span:nth-child(1)"));
-        assert.containsN(pivot, "thead tr", 4);
+        await click(target.querySelector("thead .o_pivot_header_cell_closed:last-child"));
+        await click(target.querySelector(".dropdown-menu span:nth-child(1)"));
+        assert.containsN(target, "thead tr", 4);
         values = ["12", "17", "3", "32"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        assert.strictEqual(getCurrentValues(target), values.join(","));
     });
 
     QUnit.test(
@@ -995,7 +993,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -1015,42 +1013,42 @@ QUnit.module("Views", (hooks) => {
             });
 
             // open group by dropdown
-            await toggleGroupByMenu(pivot);
+            await toggleGroupByMenu(target);
             assert.containsN(
-                pivot,
+                target,
                 ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
                 3,
                 "should have 3 dropdown items in searchview groupby"
             );
             assert.containsOnce(
-                pivot,
+                target,
                 ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_add_custom_group_menu",
                 "should have custom group generator in searchview groupby"
             );
 
             // click on closed header to open dropdown
-            await click(pivot.el, "tbody tr:last-child .o_pivot_header_cell_closed");
+            await click(target, "tbody tr:last-child .o_pivot_header_cell_closed");
             assert.containsN(
-                pivot,
+                target,
                 ".dropdown-menu > .dropdown-item",
                 3,
                 "should have 3 dropdown items same as searchview groupby"
             );
             assert.containsOnce(
-                pivot,
+                target,
                 ".dropdown-menu .o_add_custom_group_menu",
                 "should have custom group generator same as searchview groupby"
             );
             // check custom groupby selection has groupable fields only
-            await mouseEnter(pivot.el, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
+            await mouseEnter(target, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
             assert.containsN(
-                pivot,
+                target,
                 ".dropdown-menu .o_add_custom_group_menu .dropdown-menu option",
                 6,
                 "should have 6 fields in custom groupby"
             );
             const optionDescriptions = [
-                ...pivot.el.querySelectorAll(
+                ...target.querySelectorAll(
                     ".dropdown-menu .o_add_custom_group_menu .dropdown-menu option"
                 ),
             ].map((option) => option.innerText.trim());
@@ -1063,7 +1061,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("pivot group dropdown sync with search groupby dropdown", async function (assert) {
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1080,59 +1078,59 @@ QUnit.module("Views", (hooks) => {
         });
 
         // open group by dropdown
-        await toggleGroupByMenu(pivot);
+        await toggleGroupByMenu(target);
         assert.containsN(
-            pivot,
+            target,
             ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
             2,
             "should have 2 dropdown items in searchview groupby"
         );
 
         // click on closed header to open dropdown
-        await click(pivot.el, "tbody tr:last-child .o_pivot_header_cell_closed");
+        await click(target, "tbody tr:last-child .o_pivot_header_cell_closed");
         assert.containsN(
-            pivot,
+            target,
             ".dropdown-menu .o_menu_item",
             2,
             "should have 2 dropdown items in pivot groupby"
         );
 
         // add a custom group in searchview groupby
-        await toggleGroupByMenu(pivot);
-        await toggleAddCustomGroup(pivot);
-        await applyGroup(pivot);
+        await toggleGroupByMenu(target);
+        await toggleAddCustomGroup(target);
+        await applyGroup(target);
         assert.containsN(
-            pivot,
+            target,
             ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
             3,
             "should have 3 dropdown items in searchview groupby now"
         );
-        await click(pivot.el, "tbody tr:last-child .o_pivot_header_cell_closed");
+        await click(target, "tbody tr:last-child .o_pivot_header_cell_closed");
         assert.containsN(
-            pivot,
+            target,
             ".dropdown-menu .o_menu_item",
             2,
             "should still have 2 dropdown items in pivot groupby"
         );
 
         // add a custom group in pivot groupby
-        await mouseEnter(pivot.el, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
-        pivot.el.querySelector(".dropdown-menu .o_add_custom_group_menu select").value = "date";
-        await triggerEvent(pivot.el, ".dropdown-menu .o_add_custom_group_menu select", "change");
-        await click(pivot.el, ".dropdown-menu .o_add_custom_group_menu .dropdown-menu .btn");
+        await mouseEnter(target, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
+        target.querySelector(".dropdown-menu .o_add_custom_group_menu select").value = "date";
+        await triggerEvent(target, ".dropdown-menu .o_add_custom_group_menu select", "change");
+        await click(target, ".dropdown-menu .o_add_custom_group_menu .dropdown-menu .btn");
         // click on closed header to open groupby selection dropdown
-        await click(pivot.el, "tbody tr:last-child .o_pivot_header_cell_closed");
+        await click(target, "tbody tr:last-child .o_pivot_header_cell_closed");
         assert.containsN(
-            pivot,
+            target,
             ".dropdown-menu .o_menu_item",
             3,
             "should have 3 dropdown items in pivot groupby dropdown"
         );
 
         // applying custom groupby in pivot groupby dropdown will not update search dropdown
-        await toggleGroupByMenu(pivot);
+        await toggleGroupByMenu(target);
         assert.containsN(
-            pivot,
+            target,
             ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
             3,
             "should still have 3 dropdown items in searchview groupby dropdown"
@@ -1142,7 +1140,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "pivot groupby dropdown renders custom search at the end with separator",
         async function (assert) {
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -1159,31 +1157,31 @@ QUnit.module("Views", (hooks) => {
             });
 
             // open group by dropdown
-            await toggleGroupByMenu(pivot);
+            await toggleGroupByMenu(target);
             assert.containsN(
-                pivot,
+                target,
                 ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
                 2,
                 "should have 2 dropdown items in searchview groupby"
             );
-            await toggleAddCustomGroup(pivot);
-            await applyGroup(pivot);
+            await toggleAddCustomGroup(target);
+            await applyGroup(target);
             assert.containsN(
-                pivot,
+                target,
                 ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
                 3,
                 "should have 3 dropdown items in searchview groupby now"
             );
 
             // click on closed header to open dropdown
-            await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
-            let items = pivot.el.querySelectorAll(".o_menu_item");
+            await click(target.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
+            let items = target.querySelectorAll(".o_menu_item");
             assert.deepEqual(
                 [...items].map((it) => it.innerText),
                 ["bar", "product"]
             );
             assert.containsOnce(
-                pivot,
+                target,
                 "tbody .dropdown-menu .dropdown-divider",
                 "pivot groupby menu should only have one separator"
             );
@@ -1194,23 +1192,19 @@ QUnit.module("Views", (hooks) => {
             );
 
             // add a custom group in pivot groupby
-            await mouseEnter(pivot.el, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
-            pivot.el.querySelector(".o_add_custom_group_menu select").value = "customer";
-            await triggerEvent(
-                pivot.el,
-                ".dropdown-menu .o_add_custom_group_menu select",
-                "change"
-            );
-            await click(pivot.el, ".dropdown-menu .o_add_custom_group_menu .dropdown-menu .btn");
+            await mouseEnter(target, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
+            target.querySelector(".o_add_custom_group_menu select").value = "customer";
+            await triggerEvent(target, ".dropdown-menu .o_add_custom_group_menu select", "change");
+            await click(target, ".dropdown-menu .o_add_custom_group_menu .dropdown-menu .btn");
 
-            await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
-            items = pivot.el.querySelectorAll(".o_menu_item");
+            await click(target.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
+            items = target.querySelectorAll(".o_menu_item");
             assert.deepEqual(
                 [...items].map((it) => it.innerText),
                 ["bar", "product", "Customer"]
             );
             assert.containsN(
-                pivot,
+                target,
                 "tbody .dropdown-menu .dropdown-divider",
                 2,
                 "pivot groupby menu should now have two separators"
@@ -1234,7 +1228,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(1);
 
             let checkReadGroup = false;
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -1260,23 +1254,23 @@ QUnit.module("Views", (hooks) => {
             });
 
             // click on closed header to open dropdown and apply groupby on date field
-            await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
+            await click(target.querySelector("thead .o_pivot_header_cell_closed"));
             await mouseEnter(
-                pivot.el.querySelector(
+                target.querySelector(
                     "thead .dropdown-menu .o_add_custom_group_menu .dropdown-toggle "
                 )
             );
 
             checkReadGroup = true;
-            const select = pivot.el.querySelector(".o_add_custom_group_menu select");
+            const select = target.querySelector(".o_add_custom_group_menu select");
             select.value = "date";
             select.dispatchEvent(new Event("change"));
-            await click(pivot.el.querySelector(".o_add_custom_group_menu .btn-primary"));
+            await click(target.querySelector(".o_add_custom_group_menu .btn-primary"));
         }
     );
 
     QUnit.test("pivot view without group by specified in search arch", async function (assert) {
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1288,27 +1282,27 @@ QUnit.module("Views", (hooks) => {
         });
 
         // open group by dropdown
-        await toggleGroupByMenu(pivot);
+        await toggleGroupByMenu(target);
         assert.containsNone(
-            pivot,
+            target,
             ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
             "should not have any dropdown item in searchview groupby"
         );
         assert.containsOnce(
-            pivot,
+            target,
             ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_add_custom_group_menu",
             "should have add custom group item in searchview groupby"
         );
         // click on closed header to open dropdown
-        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
+        await click(target.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
         assert.containsN(
-            pivot,
+            target,
             "tbody .dropdown-menu .o_menu_item",
             6,
             "should have 6 dropdown items i.e. all groupable fields available"
         );
         assert.containsOnce(
-            pivot,
+            target,
             ".dropdown-menu .o_add_custom_group_menu",
             "should have custom group generator in groupby dropdown"
         );
@@ -1342,7 +1336,7 @@ QUnit.module("Views", (hooks) => {
                 },
             ];
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -1358,27 +1352,27 @@ QUnit.module("Views", (hooks) => {
             });
 
             // open group by dropdown
-            await toggleGroupByMenu(pivot);
+            await toggleGroupByMenu(target);
             assert.containsOnce(
-                pivot,
+                target,
                 ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
                 "should have 1 dropdown item in searchview groupby"
             );
             assert.containsNone(
-                pivot,
+                target,
                 ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_add_custom_group_menu",
                 "should not have custom group generator in searchview groupby"
             );
 
             // click on closed header to open dropdown
-            await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
+            await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
             assert.containsOnce(
-                pivot,
+                target,
                 "tbody .dropdown-menu .dropdown-item",
                 "should have 1 dropdown items"
             );
             assert.containsNone(
-                pivot,
+                target,
                 ".dropdown-menu .o_add_custom_group_menu",
                 "should not have custom group generator in groupby dropdown"
             );
@@ -1390,7 +1384,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -1406,31 +1400,31 @@ QUnit.module("Views", (hooks) => {
             });
 
             // click on closed header to open dropdown
-            await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-            assert.containsOnce(pivot, "thead .dropdown-menu .o_add_custom_group_menu");
+            await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+            assert.containsOnce(target, "thead .dropdown-menu .o_add_custom_group_menu");
             await mouseEnter(
-                pivot.el.querySelector(
+                target.querySelector(
                     "thead .dropdown-menu .o_add_custom_group_menu .dropdown-toggle"
                 )
             );
             assert.containsOnce(
-                pivot,
+                target,
                 "thead .dropdown-menu .o_add_custom_group_menu .dropdown-menu"
             );
 
             // click on apply button should close dropdown
             await click(
-                pivot.el.querySelector(
+                target.querySelector(
                     "thead .dropdown-menu .o_add_custom_group_menu .dropdown-menu .btn-primary"
                 )
             );
-            assert.containsNone(pivot, "thead .dropdown-menu");
+            assert.containsNone(target, "thead .dropdown-menu");
         }
     );
 
     QUnit.test("can toggle extra measure", async function (assert) {
         let rpcCount = 0;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1446,42 +1440,42 @@ QUnit.module("Views", (hooks) => {
 
         rpcCount = 0;
         assert.containsN(
-            pivot,
+            target,
             ".o_pivot_cell_value",
             3,
             "should have 3 cells: 1 for the open header, and 2 for data"
         );
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
         assert.doesNotHaveClass(
-            $(pivot.el).find(".dropdown-item:contains(Count)"),
+            $(target).find(".dropdown-item:contains(Count)"),
             "selected",
             "the __count measure should not be selected"
         );
-        await click($(pivot.el).find(".o_cp_bottom_left .dropdown-item:contains(Count)")[0]);
+        await click($(target).find(".o_cp_bottom_left .dropdown-item:contains(Count)")[0]);
 
         assert.hasClass(
-            $(pivot.el).find(".o_cp_bottom_left .dropdown-item:contains(Count)"),
+            $(target).find(".o_cp_bottom_left .dropdown-item:contains(Count)"),
             "selected",
             "the __count measure should be selected"
         );
         assert.containsN(
-            pivot,
+            target,
             ".o_pivot_cell_value",
             6,
             "should have 6 cells: 2 for the open header, and 4 for data"
         );
         assert.strictEqual(rpcCount, 2, "should have done 2 rpcs to reload data");
 
-        await click($(pivot.el).find(".o_cp_bottom_left .dropdown-item:contains(Count)")[0]);
+        await click($(target).find(".o_cp_bottom_left .dropdown-item:contains(Count)")[0]);
 
         assert.doesNotHaveClass(
-            $(pivot.el).find(".dropdown-item:contains(Count)")[0],
+            $(target).find(".dropdown-item:contains(Count)")[0],
             "selected",
             "the __count measure should not be selected"
         );
         assert.containsN(
-            pivot,
+            target,
             ".o_pivot_cell_value",
             3,
             "should have 3 cells: 1 for the open header, and 2 for data"
@@ -1490,25 +1484,25 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("no content helper when no active measure", async function (assert) {
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
             arch: `<pivot/>`,
         });
 
-        assert.containsNone(pivot, ".o_view_nocontent");
-        assert.containsOnce(pivot, "table");
+        assert.containsNone(target, ".o_view_nocontent");
+        assert.containsOnce(target, "table");
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
-        await click($(pivot.el).find(".o_cp_bottom_left .dropdown-item:contains(Count)")[0]);
+        await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        await click($(target).find(".o_cp_bottom_left .dropdown-item:contains(Count)")[0]);
 
-        assert.containsOnce(pivot, ".o_view_nocontent");
-        assert.containsNone(pivot, "table");
+        assert.containsOnce(target, ".o_view_nocontent");
+        assert.containsNone(target, "table");
     });
 
     QUnit.test("no content helper when no data", async function (assert) {
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1519,31 +1513,31 @@ QUnit.module("Views", (hooks) => {
                 </search>`,
         });
 
-        assert.containsNone(pivot, ".o_view_nocontent");
-        assert.containsOnce(pivot, "table");
+        assert.containsNone(target, ".o_view_nocontent");
+        assert.containsOnce(target, "table");
 
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "Some Filter");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Some Filter");
 
-        assert.containsOnce(pivot, ".o_view_nocontent");
-        assert.containsNone(pivot, "table");
+        assert.containsOnce(target, ".o_view_nocontent");
+        assert.containsNone(target, "table");
     });
 
     QUnit.test("no content helper when no data, part 2", async function (assert) {
         serverData.models.partner.records = [];
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
             arch: "<pivot/>",
         });
 
-        assert.containsOnce(pivot, ".o_view_nocontent");
+        assert.containsOnce(target, ".o_view_nocontent");
     });
 
     QUnit.test("no content helper when no data, part 3", async function (assert) {
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1558,33 +1552,33 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.containsOnce(pivot, ".o_searchview .o_searchview_facet");
-        assert.containsOnce(pivot, ".o_view_nocontent");
+        assert.containsOnce(target, ".o_searchview .o_searchview_facet");
+        assert.containsOnce(target, ".o_view_nocontent");
 
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "Some Filter");
-        assert.containsN(pivot, ".o_searchview .o_searchview_facet", 2);
-        assert.containsOnce(pivot, ".o_view_nocontent");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Some Filter");
+        assert.containsN(target, ".o_searchview .o_searchview_facet", 2);
+        assert.containsOnce(target, ".o_view_nocontent");
 
-        await toggleMenuItem(pivot, "Some Filter");
-        assert.containsOnce(pivot, ".o_searchview .o_searchview_facet");
-        assert.containsOnce(pivot, ".o_view_nocontent");
+        await toggleMenuItem(target, "Some Filter");
+        assert.containsOnce(target, ".o_searchview .o_searchview_facet");
+        assert.containsOnce(target, ".o_view_nocontent");
 
-        await click(pivot.el, ".o_facet_remove");
-        assert.containsNone(pivot, ".o_searchview .o_searchview_facet");
-        assert.containsNone(pivot, ".o_view_nocontent");
+        await click(target, ".o_facet_remove");
+        assert.containsNone(target, ".o_searchview .o_searchview_facet");
+        assert.containsNone(target, ".o_view_nocontent");
 
         // tries to open a field selection menu, to make sure it was not
         // removed from the dom.
-        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        assert.containsOnce(pivot, "tbody .dropdown-menu");
+        await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
+        assert.containsOnce(target, "tbody .dropdown-menu");
     });
 
     QUnit.test("tries to restore previous state after domain change", async function (assert) {
         assert.expect(7);
 
         let rpcCount = 0;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1603,34 +1597,34 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(
-            pivot,
+            target,
             ".o_pivot_cell_value",
             3,
             "should have 3 cells: 1 for the open header, and 2 for data"
         );
         assert.containsOnce(
-            pivot,
+            target,
             ".o_pivot_measure_row:contains(Foo)",
             "should have 1 row for measure Foo"
         );
 
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My Filter");
-        assert.containsNone(pivot, "table");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter");
+        assert.containsNone(target, "table");
 
         rpcCount = 0;
-        await removeFacet(pivot);
+        await removeFacet(target);
 
-        assert.containsOnce(pivot, "table");
+        assert.containsOnce(target, "table");
         assert.equal(rpcCount, 2, "should have reloaded data");
         assert.containsN(
-            pivot,
+            target,
             ".o_pivot_cell_value",
             3,
             "should still have 3 cells: 1 for the open header, and 2 for data"
         );
         assert.containsOnce(
-            pivot,
+            target,
             ".o_pivot_measure_row:contains(Foo)",
             "should still have 1 row for measure Foo"
         );
@@ -1639,7 +1633,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("can be grouped with the search view", async function (assert) {
         assert.expect(4);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1653,20 +1647,20 @@ QUnit.module("Views", (hooks) => {
                 </search>`,
         });
 
-        assert.containsOnce(pivot, ".o_pivot_cell_value", "should have only 1 cell");
-        assert.containsOnce(pivot, "tbody tr", "should have 1 rows");
+        assert.containsOnce(target, ".o_pivot_cell_value", "should have only 1 cell");
+        assert.containsOnce(target, "tbody tr", "should have 1 rows");
 
-        await toggleGroupByMenu(pivot);
-        await toggleMenuItem(pivot, "Product");
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Product");
 
-        assert.containsN(pivot, ".o_pivot_cell_value", 3, "should have 3 cells");
-        assert.containsN(pivot, "tbody tr", 3, "should have 3 rows");
+        assert.containsN(target, ".o_pivot_cell_value", 3, "should have 3 cells");
+        assert.containsN(target, "tbody tr", 3, "should have 3 rows");
     });
 
     QUnit.test("can sort data in a column by clicking on header", async function (assert) {
         assert.expect(3);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1679,25 +1673,25 @@ QUnit.module("Views", (hooks) => {
 
         let values = ["32", "12", "20"];
         assert.strictEqual(
-            getCurrentValues(pivot.el),
+            getCurrentValues(target),
             values.join(","),
             "should have proper values in cells (total, result 1, result 2)"
         );
 
-        await click(pivot.el.querySelector("th.o_pivot_measure_row"));
+        await click(target.querySelector("th.o_pivot_measure_row"));
 
         values = ["32", "12", "20"];
         assert.strictEqual(
-            getCurrentValues(pivot.el),
+            getCurrentValues(target),
             values.join(","),
             "should have proper values in cells (total, result 1, result 2)"
         );
 
-        await click(pivot.el.querySelector("th.o_pivot_measure_row"));
+        await click(target.querySelector("th.o_pivot_measure_row"));
 
         values = ["32", "20", "12"];
         assert.strictEqual(
-            getCurrentValues(pivot.el),
+            getCurrentValues(target),
             values.join(","),
             "should have proper values in cells (total, result 1, result 2)"
         );
@@ -1707,7 +1701,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(7);
 
         let nbReadGroups = 0;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1730,45 +1724,45 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(nbReadGroups, 2, "should have done 2 read_group RPCS");
         assert.strictEqual(
-            getCurrentValues(pivot.el),
+            getCurrentValues(target),
             "32,12,20",
             "should have proper values in cells (total, result 1, result 2)"
         );
 
         // expand on date:days, product
-        await toggleGroupByMenu(pivot);
-        await toggleMenuItem(pivot, "Date");
-        await toggleMenuItemOption(pivot, "Date", "Month");
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Date");
+        await toggleMenuItemOption(target, "Date", "Month");
         nbReadGroups = 0;
-        await toggleMenuItem(pivot, "Product");
+        await toggleMenuItem(target, "Product");
 
         assert.strictEqual(nbReadGroups, 3, "should have done 3 read_group RPCS");
         assert.containsN(
-            pivot,
+            target,
             "tbody tr",
             8,
             "should have 7 rows (total + 3 for December and 2 for October and April)"
         );
 
         // collapse the first two rows
-        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_opened")[2]);
-        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_opened")[1]);
+        await click(target.querySelectorAll("tbody .o_pivot_header_cell_opened")[2]);
+        await click(target.querySelectorAll("tbody .o_pivot_header_cell_opened")[1]);
 
-        assert.containsN(pivot, "tbody tr", 6, "should have 6 rows now");
+        assert.containsN(target, "tbody tr", 6, "should have 6 rows now");
 
         // expand all
         nbReadGroups = 0;
-        await click(pivot.el.querySelector(".o_pivot_expand_button"));
+        await click(target.querySelector(".o_pivot_expand_button"));
 
         assert.strictEqual(nbReadGroups, 3, "should have done 3 read_group RPCS");
-        assert.containsN(pivot, "tbody tr", 8, "should have 8 rows again");
+        assert.containsN(target, "tbody tr", 8, "should have 8 rows again");
     });
 
     QUnit.test("expand all with a delay", async function (assert) {
         assert.expect(4);
 
         let def;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1790,30 +1784,30 @@ QUnit.module("Views", (hooks) => {
         });
 
         // expand on date:days, product
-        await toggleGroupByMenu(pivot);
-        await toggleMenuItem(pivot, "Date");
-        await toggleMenuItemOption(pivot, "Date", "Month");
-        await toggleMenuItem(pivot, "Product");
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Date");
+        await toggleMenuItemOption(target, "Date", "Month");
+        await toggleMenuItem(target, "Product");
         assert.containsN(
-            pivot,
+            target,
             "tbody tr",
             8,
             "should have 7 rows (total + 3 for December and 2 for October and April)"
         );
 
         // collapse the first two rows
-        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_opened")[2]);
-        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_opened")[1]);
+        await click(target.querySelectorAll("tbody .o_pivot_header_cell_opened")[2]);
+        await click(target.querySelectorAll("tbody .o_pivot_header_cell_opened")[1]);
 
-        assert.containsN(pivot, "tbody tr", 6, "should have 6 rows now");
+        assert.containsN(target, "tbody tr", 6, "should have 6 rows now");
 
         // expand all
         def = makeDeferred();
-        await click(pivot.el.querySelector(".o_pivot_expand_button"));
-        assert.containsN(pivot, "tbody tr", 6, "should have 6 rows now");
+        await click(target.querySelector(".o_pivot_expand_button"));
+        assert.containsN(target, "tbody tr", 6, "should have 6 rows now");
         def.resolve();
         await nextTick();
-        assert.containsN(pivot, "tbody tr", 8, "should have 8 rows again");
+        assert.containsN(target, "tbody tr", 8, "should have 8 rows again");
     });
 
     QUnit.test("can download a file", async function (assert) {
@@ -1824,7 +1818,7 @@ QUnit.module("Views", (hooks) => {
             return Promise.resolve();
         });
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1835,7 +1829,7 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
         });
 
-        await click(pivot.el.querySelector(".o_pivot_download"));
+        await click(target.querySelector(".o_pivot_download"));
     });
 
     QUnit.test(
@@ -1854,7 +1848,7 @@ QUnit.module("Views", (hooks) => {
                 return Promise.resolve();
             });
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -1865,7 +1859,7 @@ QUnit.module("Views", (hooks) => {
                     </pivot>`,
             });
 
-            await click(pivot.el.querySelector(".o_pivot_download"));
+            await click(target.querySelector(".o_pivot_download"));
         }
     );
 
@@ -1874,7 +1868,7 @@ QUnit.module("Views", (hooks) => {
 
         serverData.models.partner.records = [];
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1886,7 +1880,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.ok(
-            pivot.el.querySelector(".o_pivot_download").disabled,
+            target.querySelector(".o_pivot_download").disabled,
             "download button should be disabled"
         );
     });
@@ -1895,7 +1889,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(3);
 
         let expectedContext;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1918,38 +1912,38 @@ QUnit.module("Views", (hooks) => {
             pivot_measures: ["foo"],
             pivot_row_groupby: [],
         };
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "Fav1");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "Fav1");
+        await saveFavorite(target);
 
         // expand header on field customer
-        await click(pivot.el.querySelectorAll("thead .o_pivot_header_cell_closed")[1]);
-        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[1]);
+        await click(target.querySelectorAll("thead .o_pivot_header_cell_closed")[1]);
+        await click(target.querySelectorAll("thead .dropdown-menu .dropdown-item")[1]);
         expectedContext = {
             group_by: [],
             pivot_column_groupby: ["date:day", "customer"],
             pivot_measures: ["foo"],
             pivot_row_groupby: [],
         };
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "Fav2");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "Fav2");
+        await saveFavorite(target);
 
         // expand row on field product_id
-        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-item")[4]);
+        await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
+        await click(target.querySelectorAll("tbody .dropdown-menu .dropdown-item")[4]);
         expectedContext = {
             group_by: [],
             pivot_column_groupby: ["date:day", "customer"],
             pivot_measures: ["foo"],
             pivot_row_groupby: ["product_id"],
         };
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "Fav3");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "Fav3");
+        await saveFavorite(target);
     });
 
     QUnit.test("correctly remove pivot_ keys from the context", async function (assert) {
@@ -1965,7 +1959,7 @@ QUnit.module("Views", (hooks) => {
 
         let expectedContext;
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -1999,72 +1993,72 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Unload the filter
-        await removeFacet(pivot); // remove previous favorite
+        await removeFacet(target); // remove previous favorite
         expectedContext = {
             group_by: [],
             pivot_column_groupby: ["customer"],
             pivot_measures: ["foo"],
             pivot_row_groupby: ["product_id"],
         };
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "1");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "1");
+        await saveFavorite(target);
 
         // Let's get rid of the rows groupBy
-        await click(pivot.el, "tbody .o_pivot_header_cell_opened");
+        await click(target, "tbody .o_pivot_header_cell_opened");
         expectedContext = {
             group_by: [],
             pivot_column_groupby: ["customer"],
             pivot_measures: ["foo"],
             pivot_row_groupby: [],
         };
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "2");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "2");
+        await saveFavorite(target);
 
         // And now, get rid of both col and row groupby
-        //await click(pivot.el, "tbody .o_pivot_header_cell_opened"); //It was already removed
-        await click(pivot.el, "thead .o_pivot_header_cell_opened");
+        //await click(target, "tbody .o_pivot_header_cell_opened"); //It was already removed
+        await click(target, "thead .o_pivot_header_cell_opened");
         expectedContext = {
             group_by: [],
             pivot_column_groupby: [],
             pivot_measures: ["foo"],
             pivot_row_groupby: [],
         };
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "3");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "3");
+        await saveFavorite(target);
 
         // Group row by product_id
-        await click(pivot.el, "tbody .o_pivot_header_cell_closed");
-        await click(pivot.el, ".dropdown-menu span:nth-child(5)");
+        await click(target, "tbody .o_pivot_header_cell_closed");
+        await click(target, ".dropdown-menu span:nth-child(5)");
         expectedContext = {
             group_by: [],
             pivot_column_groupby: [],
             pivot_measures: ["foo"],
             pivot_row_groupby: ["product_id"],
         };
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "4");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "4");
+        await saveFavorite(target);
 
         // Group column by customer
-        await click(pivot.el, "thead .o_pivot_header_cell_closed");
-        await click(pivot.el, ".dropdown-menu span:nth-child(2)");
+        await click(target, "thead .o_pivot_header_cell_closed");
+        await click(target, ".dropdown-menu span:nth-child(2)");
         expectedContext = {
             group_by: [],
             pivot_column_groupby: ["customer"],
             pivot_measures: ["foo"],
             pivot_row_groupby: ["product_id"],
         };
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "5");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "5");
+        await saveFavorite(target);
     });
 
     QUnit.test("Apply two groupby, and remove facet", async function (assert) {
@@ -2331,7 +2325,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Unload Filter, reset display, load another filter", async function (assert) {
         assert.expect(18);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -2368,114 +2362,114 @@ QUnit.module("Views", (hooks) => {
 
         // Check Columns
         assert.strictEqual(
-            $(pivot.el).find("thead .o_pivot_header_cell_opened").length,
+            $(target).find("thead .o_pivot_header_cell_opened").length,
             1,
             "The column should be grouped"
         );
         assert.strictEqual(
-            $(pivot.el).find('thead tr:contains("First")').length,
+            $(target).find('thead tr:contains("First")').length,
             1,
             'There should be a column "First"'
         );
         assert.strictEqual(
-            $(pivot.el).find('thead tr:contains("Second")').length,
+            $(target).find('thead tr:contains("Second")').length,
             1,
             'There should be a column "Second"'
         );
 
         // Check Rows
         assert.strictEqual(
-            $(pivot.el).find("tbody .o_pivot_header_cell_opened").length,
+            $(target).find("tbody .o_pivot_header_cell_opened").length,
             1,
             "The row should be grouped"
         );
         assert.strictEqual(
-            $(pivot.el).find('tbody tr:contains("xphone")').length,
+            $(target).find('tbody tr:contains("xphone")').length,
             1,
             'There should be a row "xphone"'
         );
         assert.strictEqual(
-            $(pivot.el).find('tbody tr:contains("xpad")').length,
+            $(target).find('tbody tr:contains("xpad")').length,
             1,
             'There should be a row "xpad"'
         );
 
         // Equivalent to unload the filter
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My fake favorite");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My fake favorite");
         // collapse all headers
-        await click(pivot.el, ".o_pivot_header_cell_opened:first-child");
-        await click(pivot.el, ".o_pivot_header_cell_opened");
+        await click(target, ".o_pivot_header_cell_opened:first-child");
+        await click(target, ".o_pivot_header_cell_opened");
 
         // Check Columns
         assert.strictEqual(
-            $(pivot.el).find("thead .o_pivot_header_cell_closed").length,
+            $(target).find("thead .o_pivot_header_cell_closed").length,
             1,
             "The column should not be grouped"
         );
         assert.strictEqual(
-            $(pivot.el).find('thead tr:contains("First")').length,
+            $(target).find('thead tr:contains("First")').length,
             0,
             'There should not be a column "First"'
         );
         assert.strictEqual(
-            $(pivot.el).find('thead tr:contains("Second")').length,
+            $(target).find('thead tr:contains("Second")').length,
             0,
             'There should not be a column "Second"'
         );
 
         // Check Rows
         assert.strictEqual(
-            $(pivot.el).find("tbody .o_pivot_header_cell_closed").length,
+            $(target).find("tbody .o_pivot_header_cell_closed").length,
             1,
             "The row should not be grouped"
         );
         assert.strictEqual(
-            $(pivot.el).find('tbody tr:contains("xphone")').length,
+            $(target).find('tbody tr:contains("xphone")').length,
             0,
             'There should not be a row "xphone"'
         );
         assert.strictEqual(
-            $(pivot.el).find('tbody tr:contains("xpad")').length,
+            $(target).find('tbody tr:contains("xpad")').length,
             0,
             'There should not be a row "xpad"'
         );
 
         // Equivalent to load another filter
-        await removeFacet(pivot); // remove previously saved favorite
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My fake favorite 2");
+        await removeFacet(target); // remove previously saved favorite
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My fake favorite 2");
 
         // Check Columns
         assert.strictEqual(
-            $(pivot.el).find("thead .o_pivot_header_cell_opened").length,
+            $(target).find("thead .o_pivot_header_cell_opened").length,
             1,
             "The column should be grouped"
         );
         assert.strictEqual(
-            $(pivot.el).find('thead tr:contains("First")').length,
+            $(target).find('thead tr:contains("First")').length,
             1,
             'There should be a column "First"'
         );
         assert.strictEqual(
-            $(pivot.el).find('thead tr:contains("Second")').length,
+            $(target).find('thead tr:contains("Second")').length,
             1,
             'There should be a column "Second"'
         );
 
         // Check Rows
         assert.strictEqual(
-            $(pivot.el).find("tbody .o_pivot_header_cell_opened").length,
+            $(target).find("tbody .o_pivot_header_cell_opened").length,
             1,
             "The row should be grouped"
         );
         assert.strictEqual(
-            $(pivot.el).find('tbody tr:contains("xphone")').length,
+            $(target).find('tbody tr:contains("xphone")').length,
             1,
             'There should be a row "xphone"'
         );
         assert.strictEqual(
-            $(pivot.el).find('tbody tr:contains("xpad")').length,
+            $(target).find('tbody tr:contains("xpad")').length,
             1,
             'There should be a row "xpad"'
         );
@@ -2485,7 +2479,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(2);
 
         let expectedContext;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -2504,12 +2498,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Set a column groupby
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .dropdown-item")[1]);
+        await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+        await click(target.querySelectorAll("thead .dropdown-item")[1]);
 
         // Set a domain
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My Filter 1");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter 1");
 
         // Save to favorites and check that column groupbys were not lost
         expectedContext = {
@@ -2518,19 +2512,19 @@ QUnit.module("Views", (hooks) => {
             pivot_measures: ["__count"],
             pivot_row_groupby: [],
         };
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "My favorite 1");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "My favorite 1");
+        await saveFavorite(target);
 
         // Set a column groupby
-        await removeFacet(pivot); // remove previously saved favorite
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[4]);
+        await removeFacet(target); // remove previously saved favorite
+        await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+        await click(target.querySelectorAll("thead .dropdown-menu .dropdown-item")[4]);
 
         // Set a domain
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My Filter 2");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter 2");
 
         expectedContext = {
             group_by: [],
@@ -2538,16 +2532,16 @@ QUnit.module("Views", (hooks) => {
             pivot_measures: ["__count"],
             pivot_row_groupby: [],
         };
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "My favorite 2");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "My favorite 2");
+        await saveFavorite(target);
     });
 
     QUnit.test("folded groups remain folded at reload", async function (assert) {
         assert.expect(5);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -2564,29 +2558,29 @@ QUnit.module("Views", (hooks) => {
         });
 
         let values = ["29", "3", "32", "12", "12", "17", "3", "20"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        assert.strictEqual(getCurrentValues(target), values.join(","));
 
         // expand a col group
-        await click(pivot.el.querySelectorAll("thead .o_pivot_header_cell_closed")[1]);
-        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[1]);
+        await click(target.querySelectorAll("thead .o_pivot_header_cell_closed")[1]);
+        await click(target.querySelectorAll("thead .dropdown-menu .dropdown-item")[1]);
 
         values = ["29", "2", "1", "32", "12", "12", "17", "2", "1", "20"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        assert.strictEqual(getCurrentValues(target), values.join(","));
 
         // expand a row group
-        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
-        await click(pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-item")[3]);
+        await click(target.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
+        await click(target.querySelectorAll("tbody .dropdown-menu .dropdown-item")[3]);
 
         values = ["29", "2", "1", "32", "12", "12", "17", "2", "1", "20", "17", "2", "1", "20"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        assert.strictEqual(getCurrentValues(target), values.join(","));
 
         // reload (should keep folded groups folded as col/row groupbys didn't change)
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "Dummy Filter");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Dummy Filter");
 
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        assert.strictEqual(getCurrentValues(target), values.join(","));
 
-        await click(pivot.el.querySelector(".o_pivot_expand_button"));
+        await click(target.querySelector(".o_pivot_expand_button"));
 
         // sanity check of what the table should look like if all groups are
         // expanded, to ensure that the former asserts are pertinent
@@ -2609,7 +2603,7 @@ QUnit.module("Views", (hooks) => {
             "1",
             "20",
         ];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        assert.strictEqual(getCurrentValues(target), values.join(","));
     });
 
     QUnit.test("Empty results keep groupbys", async function (assert) {
@@ -2622,7 +2616,7 @@ QUnit.module("Views", (hooks) => {
             pivot_row_groupby: [],
         };
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -2641,33 +2635,33 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Set a column groupby
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[1]);
+        await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+        await click(target.querySelectorAll("thead .dropdown-menu .dropdown-item")[1]);
 
-        assert.containsOnce(pivot, "table");
+        assert.containsOnce(target, "table");
 
         // Set a domain for empty results
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My Filter 1");
-        assert.containsNone(pivot, "table");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter 1");
+        assert.containsNone(target, "table");
 
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "My favorite 1");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "My favorite 1");
+        await saveFavorite(target);
 
         // Set a domain for not empty results
-        await removeFacet(pivot); // remove previously saved favorite
-        assert.containsOnce(pivot, "table");
+        await removeFacet(target); // remove previously saved favorite
+        assert.containsOnce(target, "table");
 
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My Filter 2");
-        assert.containsOnce(pivot, "table");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter 2");
+        assert.containsOnce(target, "table");
 
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "My favorite 2");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "My favorite 2");
+        await saveFavorite(target);
     });
 
     QUnit.test("correctly uses pivot_ keys from the context", async function (assert) {
@@ -2681,7 +2675,7 @@ QUnit.module("Views", (hooks) => {
             group_operator: "sum",
         };
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -2698,39 +2692,39 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(
-            pivot,
+            target,
             "thead .o_pivot_header_cell_opened",
             "column: should have one opened header"
         );
         assert.containsOnce(
-            pivot,
+            target,
             "thead .o_pivot_header_cell_closed:contains(First)",
             "column: should display one closed header with 'First'"
         );
         assert.containsOnce(
-            pivot,
+            target,
             "thead .o_pivot_header_cell_closed:contains(Second)",
             "column: should display one closed header with 'Second'"
         );
 
         assert.containsOnce(
-            pivot,
+            target,
             "tbody .o_pivot_header_cell_opened",
             "row: should have one opened header"
         );
         assert.containsOnce(
-            pivot,
+            target,
             "tbody .o_pivot_header_cell_closed:contains(xphone)",
             "row: should display one closed header with 'xphone'"
         );
         assert.containsOnce(
-            pivot,
+            target,
             "tbody .o_pivot_header_cell_closed:contains(xpad)",
             "row: should display one closed header with 'xpad'"
         );
 
         assert.strictEqual(
-            pivot.el.querySelector("tbody tr").querySelectorAll("td")[2].innerText,
+            target.querySelector("tbody tr").querySelectorAll("td")[2].innerText,
             "32",
             "selected measure should be foo, with total 32"
         );
@@ -2739,7 +2733,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("clear table cells data after closeGroup", async function (assert) {
         assert.expect(2);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -2747,26 +2741,26 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
         });
 
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await mouseEnter(pivot.el.querySelector("thead .dropdown-menu .dropdown-toggle"));
+        await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+        await mouseEnter(target.querySelector("thead .dropdown-menu .dropdown-toggle"));
         await click(
-            pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-menu .dropdown-item")[3]
+            target.querySelectorAll("thead .dropdown-menu .dropdown-menu .dropdown-item")[3]
         );
 
         // close and reopen row groupings after changing value
         serverData.models.partner.records.find((r) => r.product_id === 37).date = "2016-10-27";
 
-        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_opened"));
-        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-item")[4]);
-        assert.strictEqual(pivot.el.querySelectorAll(".o_pivot_cell_value")[4].innerText, ""); // xphone December 2016
+        await click(target.querySelector("tbody .o_pivot_header_cell_opened"));
+        await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
+        await click(target.querySelectorAll("tbody .dropdown-menu .dropdown-item")[4]);
+        assert.strictEqual(target.querySelectorAll(".o_pivot_cell_value")[4].innerText, ""); // xphone December 2016
 
         // invert axis, and reopen column groupings
-        await click(pivot.el.querySelector(".o_cp_bottom_left .o_pivot_flip_button"));
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_opened"));
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[4]);
-        assert.strictEqual(pivot.el.querySelectorAll(".o_pivot_cell_value")[3].innerText, ""); // December 2016 xphone
+        await click(target.querySelector(".o_cp_bottom_left .o_pivot_flip_button"));
+        await click(target.querySelector("thead .o_pivot_header_cell_opened"));
+        await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+        await click(target.querySelectorAll("thead .dropdown-menu .dropdown-item")[4]);
+        assert.strictEqual(target.querySelectorAll(".o_pivot_cell_value")[3].innerText, ""); // December 2016 xphone
     });
 
     QUnit.test("correctly group data after flip (1)", async function (assert) {
@@ -2889,7 +2883,7 @@ QUnit.module("Views", (hooks) => {
             group_operator: "sum",
         };
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -2914,49 +2908,48 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            pivot.el.querySelector("tbody tr").querySelectorAll("td.o_pivot_cell_value")[4]
-                .innerText,
+            target.querySelector("tbody tr").querySelectorAll("td.o_pivot_cell_value")[4].innerText,
             "0.00",
             "the active measure should be amount"
         );
 
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My fake favorite");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My fake favorite");
 
         assert.containsOnce(
-            pivot,
+            target,
             "thead .o_pivot_header_cell_opened",
             "column: should have one opened header"
         );
         assert.containsOnce(
-            pivot,
+            target,
             "thead .o_pivot_header_cell_closed:contains(First)",
             "column: should display one closed header with 'First'"
         );
         assert.containsOnce(
-            pivot,
+            target,
             "thead .o_pivot_header_cell_closed:contains(Second)",
             "column: should display one closed header with 'Second'"
         );
 
         assert.containsOnce(
-            pivot,
+            target,
             "tbody .o_pivot_header_cell_opened",
             "row: should have one opened header"
         );
         assert.containsOnce(
-            pivot,
+            target,
             "tbody .o_pivot_header_cell_closed:contains(xphone)",
             "row: should display one closed header with 'xphone'"
         );
         assert.containsOnce(
-            pivot,
+            target,
             "tbody .o_pivot_header_cell_closed:contains(xpad)",
             "row: should display one closed header with 'xpad'"
         );
 
         assert.strictEqual(
-            pivot.el.querySelector("tbody tr").querySelectorAll("td")[2].innerText,
+            target.querySelector("tbody tr").querySelectorAll("td")[2].innerText,
             "32",
             "selected measure should be foo, with total 32"
         );
@@ -2965,7 +2958,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("correctly use group_by key from the context", async function (assert) {
         assert.expect(7);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -2978,39 +2971,39 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(
-            pivot,
+            target,
             "thead .o_pivot_header_cell_opened",
             "column: should have one opened header"
         );
         assert.containsOnce(
-            pivot,
+            target,
             "thead .o_pivot_header_cell_closed:contains(First)",
             'column: should display one closed header with "First"'
         );
         assert.containsOnce(
-            pivot,
+            target,
             "thead .o_pivot_header_cell_closed:contains(Second)",
             'column: should display one closed header with "Second"'
         );
 
         assert.containsOnce(
-            pivot,
+            target,
             "tbody .o_pivot_header_cell_opened",
             "row: should have one opened header"
         );
         assert.containsOnce(
-            pivot,
+            target,
             "tbody .o_pivot_header_cell_closed:contains(xphone)",
             'row: should display one closed header with "xphone"'
         );
         assert.containsOnce(
-            pivot,
+            target,
             "tbody .o_pivot_header_cell_closed:contains(xpad)",
             'row: should display one closed header with "xpad"'
         );
 
         assert.strictEqual(
-            pivot.el.querySelector("tbody tr").querySelectorAll("td")[2].innerText,
+            target.querySelector("tbody tr").querySelectorAll("td")[2].innerText,
             "32",
             "selected measure should be foo, with total 32"
         );
@@ -3027,7 +3020,7 @@ QUnit.module("Views", (hooks) => {
                 group_operator: "sum",
             };
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -3043,34 +3036,34 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.containsOnce(
-                pivot,
+                target,
                 "thead .o_pivot_header_cell_opened",
                 "column: should have one opened header"
             );
             assert.containsOnce(
-                pivot,
+                target,
                 "thead .o_pivot_header_cell_closed:contains(First)",
                 "column: should display one closed header with 'First'"
             );
             assert.containsOnce(
-                pivot,
+                target,
                 "thead .o_pivot_header_cell_closed:contains(Second)",
                 "column: should display one closed header with 'Second'"
             );
 
             // With pivot_row_groupby, groupBy customer should replace and eventually display product_id
             assert.containsOnce(
-                pivot,
+                target,
                 "tbody .o_pivot_header_cell_opened",
                 "row: should have one opened header"
             );
             assert.containsOnce(
-                pivot,
+                target,
                 "tbody .o_pivot_header_cell_closed:contains(xphone)",
                 "row: should display one closed header with 'xphone'"
             );
             assert.containsOnce(
-                pivot,
+                target,
                 "tbody .o_pivot_header_cell_closed:contains(xpad)",
                 "row: should display one closed header with 'xpad'"
             );
@@ -3082,7 +3075,7 @@ QUnit.module("Views", (hooks) => {
         // '__count__' measure.
         assert.expect(4);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3101,19 +3094,19 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
-        assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-item");
+        await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        assert.containsOnce(target, ".o_cp_bottom_left .dropdown-item");
         assert.strictEqual(
-            pivot.el.querySelector(".o_cp_bottom_left .dropdown-item").innerText,
+            target.querySelector(".o_cp_bottom_left .dropdown-item").innerText,
             "Count"
         );
-        assert.hasClass(pivot.el.querySelector(".o_cp_bottom_left .dropdown-item"), "selected");
+        assert.hasClass(target.querySelector(".o_cp_bottom_left .dropdown-item"), "selected");
     });
 
     QUnit.test("not use a many2one as a measure by default", async function (assert) {
         assert.expect(3);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3123,13 +3116,13 @@ QUnit.module("Views", (hooks) => {
                     <field name="date" interval="month" type="col"/>
                 </pivot>`,
         });
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
-        assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-item");
+        await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        assert.containsOnce(target, ".o_cp_bottom_left .dropdown-item");
         assert.strictEqual(
-            pivot.el.querySelector(".o_cp_bottom_left .dropdown-item").innerText,
+            target.querySelector(".o_cp_bottom_left .dropdown-item").innerText,
             "Count"
         );
-        assert.hasClass(pivot.el.querySelector(".o_cp_bottom_left .dropdown-item"), "selected");
+        assert.hasClass(target.querySelector(".o_cp_bottom_left .dropdown-item"), "selected");
     });
 
     QUnit.test(
@@ -3137,7 +3130,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -3148,14 +3141,14 @@ QUnit.module("Views", (hooks) => {
                     </pivot>`,
                 additionalMeasures: ["product_id"],
             });
-            await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
-            assert.containsN(pivot, ".o_cp_bottom_left .dropdown-item", 2);
+            await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+            assert.containsN(target, ".o_cp_bottom_left .dropdown-item", 2);
             assert.strictEqual(
-                pivot.el.querySelector(".o_cp_bottom_left .dropdown-item").innerText,
+                target.querySelector(".o_cp_bottom_left .dropdown-item").innerText,
                 "Product"
             );
             assert.doesNotHaveClass(
-                pivot.el.querySelector(".o_cp_bottom_left .dropdown-item"),
+                target.querySelector(".o_cp_bottom_left .dropdown-item"),
                 "selected"
             );
         }
@@ -3164,7 +3157,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("pivot view with many2one field as a measure", async function (assert) {
         assert.expect(1);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3176,7 +3169,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            pivot.el.querySelector("table tbody tr").innerText.replace(/\s/g, ""),
+            target.querySelector("table tbody tr").innerText.replace(/\s/g, ""),
             "Total1122",
             "should display product_id count as measure"
         );
@@ -3185,7 +3178,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("m2o as measure, drilling down into data", async function (assert) {
         assert.expect(1);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3194,15 +3187,15 @@ QUnit.module("Views", (hooks) => {
                     <field name="product_id" type="measure"/>
                 </pivot>`,
         });
-        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
+        await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
         // click on date by month
-        await mouseEnter(pivot.el.querySelector("tbody .dropdown-menu .dropdown-toggle"));
+        await mouseEnter(target.querySelector("tbody .dropdown-menu .dropdown-toggle"));
         await click(
-            pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-menu .dropdown-item")[3]
+            target.querySelectorAll("tbody .dropdown-menu .dropdown-menu .dropdown-item")[3]
         );
 
         assert.strictEqual(
-            [...pivot.el.querySelectorAll(".o_pivot_cell_value")].map((c) => c.innerText).join(""),
+            [...target.querySelectorAll(".o_pivot_cell_value")].map((c) => c.innerText).join(""),
             "2112",
             "should have loaded the proper data"
         );
@@ -3213,7 +3206,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -3224,10 +3217,10 @@ QUnit.module("Views", (hooks) => {
                 additionalMeasures: ["product_id"],
             });
 
-            await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
-            await click(pivot.el.querySelector(".o_cp_bottom_left .dropdown-item"));
+            await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+            await click(target.querySelector(".o_cp_bottom_left .dropdown-item"));
             assert.strictEqual(
-                [...pivot.el.querySelectorAll(".o_pivot_cell_value")]
+                [...target.querySelectorAll(".o_pivot_cell_value")]
                     .map((c) => c.innerText)
                     .join(""),
                 "421131",
@@ -3241,7 +3234,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -3251,11 +3244,11 @@ QUnit.module("Views", (hooks) => {
                     </pivot>`,
             });
 
-            await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-            await click(pivot.el.querySelectorAll("tbody .dropdown-item")[4]);
+            await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
+            await click(target.querySelectorAll("tbody .dropdown-item")[4]);
 
             assert.strictEqual(
-                [...pivot.el.querySelectorAll(".o_pivot_cell_value")]
+                [...target.querySelectorAll(".o_pivot_cell_value")]
                     .map((c) => c.innerText)
                     .join(""),
                 "211",
@@ -3273,7 +3266,7 @@ QUnit.module("Views", (hooks) => {
             pivot_measures: ["foo"],
             pivot_row_groupby: ["product_id"],
         };
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3294,33 +3287,33 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Set a column groupby
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .dropdown-item")[1]);
+        await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+        await click(target.querySelectorAll("thead .dropdown-item")[1]);
 
         // Set a Row groupby
-        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("tbody .dropdown-item")[4]);
+        await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
+        await click(target.querySelectorAll("tbody .dropdown-item")[4]);
 
         // Add a filter
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "Some Filter");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Some Filter");
 
         assert.containsOnce(
-            pivot,
+            target,
             "tbody .o_pivot_header_cell_closed",
             "There should be only one product line because of the domain"
         );
         assert.strictEqual(
-            pivot.el.querySelector("tbody .o_pivot_header_cell_closed").innerText,
+            target.querySelector("tbody .o_pivot_header_cell_closed").innerText,
             "xpad",
             "The product should be the right one"
         );
 
         // Save current search to favorite
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "My favorite");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "My favorite");
+        await saveFavorite(target);
     });
 
     QUnit.test(
@@ -3329,7 +3322,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(6);
 
             let def;
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -3349,22 +3342,22 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.containsOnce(pivot, ".o_pivot_cell_value", "should have 1 cell initially");
-            assert.containsOnce(pivot, "tbody tr", "should have 1 row initially");
+            assert.containsOnce(target, ".o_pivot_cell_value", "should have 1 cell initially");
+            assert.containsOnce(target, "tbody tr", "should have 1 row initially");
 
             def = makeDeferred();
-            await toggleGroupByMenu(pivot);
-            await toggleMenuItem(pivot, "Product");
-            await toggleMenuItem(pivot, "Customer");
+            await toggleGroupByMenu(target);
+            await toggleMenuItem(target, "Product");
+            await toggleMenuItem(target, "Customer");
 
-            assert.containsOnce(pivot, ".o_pivot_cell_value", "should still have 1 cell");
-            assert.containsOnce(pivot, "tbody tr", "should still have 1 row");
+            assert.containsOnce(target, ".o_pivot_cell_value", "should still have 1 cell");
+            assert.containsOnce(target, "tbody tr", "should still have 1 row");
 
             await def.resolve();
             await nextTick();
 
-            assert.containsN(pivot, ".o_pivot_cell_value", 6, "should have 6 cells");
-            assert.containsN(pivot, "tbody tr", 6, "should have 6 rows");
+            assert.containsN(target, ".o_pivot_cell_value", 6, "should have 6 cells");
+            assert.containsN(target, "tbody tr", 6, "should have 6 rows");
         }
     );
 
@@ -3389,7 +3382,7 @@ QUnit.module("Views", (hooks) => {
             group_operator: "sum",
         };
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3402,9 +3395,9 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
         });
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
         assert.strictEqual(
-            [...pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-item")]
+            [...target.querySelectorAll(".o_cp_bottom_left .dropdown-item")]
                 .map((i) => i.innerText)
                 .join(""),
             "bouhFoomoddZipCount"
@@ -3414,7 +3407,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("pivot view should use default order for auto sorting", async function (assert) {
         assert.expect(1);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3425,7 +3418,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.hasClass(
-            pivot.el.querySelector("thead th.o_pivot_measure_row"),
+            target.querySelector("thead th.o_pivot_measure_row"),
             "o_pivot_sort_order_asc"
         );
     });
@@ -3435,7 +3428,7 @@ QUnit.module("Views", (hooks) => {
 
         var rpcCount = 0;
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3449,22 +3442,22 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(
-            pivot,
+            target,
             "tbody tr",
             3,
             "should have 3 rows: 1 for the open header, and 2 for data"
         );
         let values = ["4", "1", "3"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join());
+        assert.strictEqual(getCurrentValues(target), values.join());
 
         rpcCount = 0;
-        await click(pivot.el.querySelector(".o_pivot_flip_button"));
+        await click(target.querySelector(".o_pivot_flip_button"));
 
         assert.strictEqual(rpcCount, 0, "should not have done any rpc");
-        assert.containsOnce(pivot, "tbody tr", "should have 1 rows: 1 for the main header");
+        assert.containsOnce(target, "tbody tr", "should have 1 rows: 1 for the main header");
 
         values = ["1", "3", "4"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join());
+        assert.strictEqual(getCurrentValues(target), values.join());
     });
 
     QUnit.test("rendering of pivot view with comparison", async function (assert) {
@@ -3477,7 +3470,7 @@ QUnit.module("Views", (hooks) => {
 
         patchDate(2016, 11, 20, 1, 0, 0);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3523,29 +3516,29 @@ QUnit.module("Views", (hooks) => {
         });
 
         // with no data
-        await toggleComparisonMenu(pivot);
-        await toggleMenuItem(pivot, "Date: Previous period");
+        await toggleComparisonMenu(target);
+        await toggleMenuItem(target, "Date: Previous period");
 
-        assert.containsOnce(pivot, "p.o_view_nocontent_empty_folder");
+        assert.containsOnce(target, "p.o_view_nocontent_empty_folder");
 
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "Date");
-        await toggleMenuItemOption(pivot, "Date", "December");
-        await toggleMenuItemOption(pivot, "Date", "2016");
-        await toggleMenuItemOption(pivot, "Date", "2015");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Date");
+        await toggleMenuItemOption(target, "Date", "December");
+        await toggleMenuItemOption(target, "Date", "2016");
+        await toggleMenuItemOption(target, "Date", "2015");
 
         assert.containsN(
-            pivot,
+            target,
             ".o_pivot thead tr:last th",
             9,
             "last header row should contains 9 cells (3*[December 2016, November 2016, Variation]"
         );
         let values = ["19", "0", "-100%", "0", "13", "100%", "19", "13", "-31.58%"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join());
+        assert.strictEqual(getCurrentValues(target), values.join());
 
         // with data, with row groupby
-        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-item")[4]);
+        await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
+        await click(target.querySelectorAll("tbody .dropdown-menu .dropdown-item")[4]);
         values = [
             "19",
             "0",
@@ -3572,15 +3565,11 @@ QUnit.module("Views", (hooks) => {
             "12",
             "100%",
         ];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join());
+        assert.strictEqual(getCurrentValues(target), values.join());
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
-        await click(
-            pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[0]
-        );
-        await click(
-            pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[1]
-        );
+        await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        await click(target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[0]);
+        await click(target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[1]);
         values = [
             "1",
             "0",
@@ -3607,14 +3596,10 @@ QUnit.module("Views", (hooks) => {
             "1",
             "100%",
         ];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join());
+        assert.strictEqual(getCurrentValues(target), values.join());
 
-        await click(
-            pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[2]
-        );
-        await click(
-            pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[1]
-        );
+        await click(target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[2]);
+        await click(target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[1]);
         values = [
             "2",
             "0",
@@ -3641,16 +3626,16 @@ QUnit.module("Views", (hooks) => {
             "1",
             "100%",
         ];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join());
+        assert.strictEqual(getCurrentValues(target), values.join());
 
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_opened"));
+        await click(target.querySelector("thead .o_pivot_header_cell_opened"));
         values = ["2", "2", "0%", "2", "1", "-50%", "0", "1", "100%"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join());
+        assert.strictEqual(getCurrentValues(target), values.join());
 
-        await toggleFavoriteMenu(pivot);
-        await toggleSaveFavorite(pivot);
-        await editFavoriteName(pivot, "Fav");
-        await saveFavorite(pivot);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "Fav");
+        await saveFavorite(target);
     });
 
     QUnit.test("export data in excel with comparison", async function (assert) {
@@ -3685,7 +3670,7 @@ QUnit.module("Views", (hooks) => {
             return Promise.resolve();
         });
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3702,25 +3687,25 @@ QUnit.module("Views", (hooks) => {
         });
 
         // open comparison menu
-        await toggleComparisonMenu(pivot);
+        await toggleComparisonMenu(target);
         // compare October 2016 to September 2016
-        await toggleMenuItem(pivot, "Date: Previous period");
+        await toggleMenuItem(target, "Date: Previous period");
 
         // With the data above, the time ranges contain no record.
-        assert.containsOnce(pivot, "p.o_view_nocontent_empty_folder", "there should be no data");
+        assert.containsOnce(target, "p.o_view_nocontent_empty_folder", "there should be no data");
         // export data should be impossible since the pivot buttons
         // are deactivated (exception: the 'Measures' button).
-        assert.ok(pivot.el.querySelector(".o_control_panel button.o_pivot_download").disabled);
+        assert.ok(target.querySelector(".o_control_panel button.o_pivot_download").disabled);
 
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "Date");
-        await toggleMenuItemOption(pivot, "Date", "December");
-        await toggleMenuItemOption(pivot, "Date", "October");
-        assert.notOk(pivot.el.querySelector(".o_control_panel button.o_pivot_download").disabled);
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Date");
+        await toggleMenuItemOption(target, "Date", "December");
+        await toggleMenuItemOption(target, "Date", "October");
+        assert.notOk(target.querySelector(".o_control_panel button.o_pivot_download").disabled);
 
         // With the data above, the time ranges contain some records.
         // export data. Should execute 'get_file'
-        await click(pivot.el.querySelector(".o_control_panel button.o_pivot_download"));
+        await click(target.querySelector(".o_control_panel button.o_pivot_download"));
 
         assert.verifySteps([
             // col group headers
@@ -3753,7 +3738,7 @@ QUnit.module("Views", (hooks) => {
 
         patchDate(2016, 11, 20, 1, 0, 0);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -3779,13 +3764,13 @@ QUnit.module("Views", (hooks) => {
         mockMock = true;
 
         // compare December 2016 to November 2016
-        await toggleComparisonMenu(pivot);
-        await toggleMenuItem(pivot, "Date: Previous period");
+        await toggleComparisonMenu(target);
+        await toggleMenuItem(target, "Date: Previous period");
 
         const values = ["0", "4", "100%", "0", "2", "100%", "0", "2", "100%"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        assert.strictEqual(getCurrentValues(target), values.join(","));
         assert.containsN(
-            pivot,
+            target,
             ".o_pivot_header_cell_closed",
             3,
             "there should be exactly three closed header ('Total','First', 'Second')"
@@ -3803,7 +3788,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.records[3].date = "2016-11-03";
 
             patchDate(2016, 11, 20, 1, 0, 0);
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -3822,8 +3807,8 @@ QUnit.module("Views", (hooks) => {
             });
 
             // compare December 2016 to November 2016
-            await toggleComparisonMenu(pivot);
-            await toggleMenuItem(pivot, "Date: Previous period");
+            await toggleComparisonMenu(target);
+            await toggleMenuItem(target, "Date: Previous period");
 
             // initial sanity check
             let values = [
@@ -3861,10 +3846,10 @@ QUnit.module("Views", (hooks) => {
                 "1",
                 "100%",
             ];
-            assert.strictEqual(getCurrentValues(pivot.el), values.join());
+            assert.strictEqual(getCurrentValues(target), values.join());
 
             // click on 'Foo' in column Total/Company (should sort by the period of interest, ASC)
-            await click(pivot.el.querySelector(".o_pivot_measure_row"));
+            await click(target.querySelector(".o_pivot_measure_row"));
             values = [
                 "17",
                 "12",
@@ -3900,10 +3885,10 @@ QUnit.module("Views", (hooks) => {
                 "0",
                 "-100%",
             ];
-            assert.strictEqual(getCurrentValues(pivot.el), values.join());
+            assert.strictEqual(getCurrentValues(target), values.join());
 
             // click again on 'Foo' in column Total/Company (should sort by the period of interest, DESC)
-            await click(pivot.el.querySelector(".o_pivot_measure_row"));
+            await click(target.querySelector(".o_pivot_measure_row"));
             values = [
                 "17",
                 "12",
@@ -3939,10 +3924,10 @@ QUnit.module("Views", (hooks) => {
                 "1",
                 "100%",
             ];
-            assert.strictEqual(getCurrentValues(pivot.el), values.join());
+            assert.strictEqual(getCurrentValues(target), values.join());
 
             // click on 'This Month' in column Total/Individual/Foo
-            await click(pivot.el.querySelectorAll(".o_pivot_origin_row")[3]);
+            await click(target.querySelectorAll(".o_pivot_origin_row")[3]);
             values = [
                 "17",
                 "12",
@@ -3978,10 +3963,10 @@ QUnit.module("Views", (hooks) => {
                 "0",
                 "-100%",
             ];
-            assert.strictEqual(getCurrentValues(pivot.el), values.join());
+            assert.strictEqual(getCurrentValues(target), values.join());
 
             // click on 'Previous Period' in column Total/Individual/Foo
-            await click(pivot.el.querySelectorAll(".o_pivot_origin_row")[4]);
+            await click(target.querySelectorAll(".o_pivot_origin_row")[4]);
             values = [
                 "17",
                 "12",
@@ -4017,10 +4002,10 @@ QUnit.module("Views", (hooks) => {
                 "1",
                 "100%",
             ];
-            assert.strictEqual(getCurrentValues(pivot.el), values.join());
+            assert.strictEqual(getCurrentValues(target), values.join());
 
             // click on 'Variation' in column Total/Foo
-            await click(pivot.el.querySelectorAll(".o_pivot_origin_row")[8]);
+            await click(target.querySelectorAll(".o_pivot_origin_row")[8]);
             values = [
                 "17",
                 "12",
@@ -4056,14 +4041,14 @@ QUnit.module("Views", (hooks) => {
                 "1",
                 "100%",
             ];
-            assert.strictEqual(getCurrentValues(pivot.el), values.join());
+            assert.strictEqual(getCurrentValues(target), values.join());
         }
     );
 
     QUnit.test("Click on the measure list but not on a menu item", async function (assert) {
         assert.expect(4);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -4075,21 +4060,21 @@ QUnit.module("Views", (hooks) => {
             arch: `<pivot><field name="foo" type="measure"/></pivot>`,
         });
 
-        assert.containsNone(pivot, ".o_cp_bottom_left .dropdown-menu");
+        assert.containsNone(target, ".o_cp_bottom_left .dropdown-menu");
 
         // open the "Measures" menu
-        await click(pivot.el.querySelector(".o_cp_bottom_left .dropdown-toggle"));
-        assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-menu");
+        await click(target.querySelector(".o_cp_bottom_left .dropdown-toggle"));
+        assert.containsOnce(target, ".o_cp_bottom_left .dropdown-menu");
 
         // click on the divider in the "Measures" menu does not crash
-        await click(pivot.el.querySelector(".o_cp_bottom_left .dropdown-menu .dropdown-divider"));
+        await click(target.querySelector(".o_cp_bottom_left .dropdown-menu .dropdown-divider"));
         // the menu should still be open
-        assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-menu");
+        assert.containsOnce(target, ".o_cp_bottom_left .dropdown-menu");
 
         // click on the measure list but not on a menu item or the separator
-        await click(pivot.el.querySelector(".o_cp_bottom_left .dropdown-menu"));
+        await click(target.querySelector(".o_cp_bottom_left .dropdown-menu"));
         // the menu should still be open
-        assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-menu");
+        assert.containsOnce(target, ".o_cp_bottom_left .dropdown-menu");
     });
 
     QUnit.test(
@@ -4179,7 +4164,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.records[3].date = "2016-11-03";
 
             patchDate(2016, 11, 20, 1, 0, 0);
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -4198,8 +4183,8 @@ QUnit.module("Views", (hooks) => {
             });
 
             // compare December 2016 to November 2016
-            await toggleComparisonMenu(pivot);
-            await toggleMenuItem(pivot, "Date: Previous period");
+            await toggleComparisonMenu(target);
+            await toggleMenuItem(target, "Date: Previous period");
 
             // initial sanity check
             let values = [
@@ -4237,10 +4222,10 @@ QUnit.module("Views", (hooks) => {
                 "1",
                 "100%",
             ];
-            assert.strictEqual(getCurrentValues(pivot.el), values.join());
+            assert.strictEqual(getCurrentValues(target), values.join());
 
             // flip table
-            await click(pivot.el.querySelector(".o_pivot_flip_button"));
+            await click(target.querySelector(".o_pivot_flip_button"));
 
             values = [
                 "2",
@@ -4277,7 +4262,7 @@ QUnit.module("Views", (hooks) => {
                 "1",
                 "-50%",
             ];
-            assert.strictEqual(getCurrentValues(pivot.el), values.join());
+            assert.strictEqual(getCurrentValues(target), values.join());
         }
     );
 
@@ -4290,7 +4275,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.partner.records[3].date = "2016-11-03";
 
         patchDate(2016, 11, 20, 1, 0, 0);
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -4308,21 +4293,21 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.deepEqual(
-            [...pivot.el.querySelectorAll("thead th")].map((th) => th.innerText),
+            [...target.querySelectorAll("thead th")].map((th) => th.innerText),
             ["", "Total", "", "Company", "individual", "Foo", "Foo", "Foo"],
             "The col headers should be as expected"
         );
         assert.deepEqual(
-            [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
+            [...target.querySelectorAll("tbody th")].map((th) => th.innerText),
             ["Total", "2016-11-03", "2016-11-22", "2016-12-15", "2016-12-17"],
             "The row headers should be as expected"
         );
 
         // flip
-        await click(pivot.el.querySelector(".o_pivot_flip_button"));
+        await click(target.querySelector(".o_pivot_flip_button"));
 
         assert.deepEqual(
-            [...pivot.el.querySelectorAll("thead th")].map((th) => th.innerText),
+            [...target.querySelectorAll("thead th")].map((th) => th.innerText),
             [
                 "",
                 "Total",
@@ -4340,22 +4325,22 @@ QUnit.module("Views", (hooks) => {
             "The col headers should be as expected"
         );
         assert.deepEqual(
-            [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
+            [...target.querySelectorAll("tbody th")].map((th) => th.innerText),
             ["Total", "Company", "individual"],
             "The row headers should be as expected"
         );
 
         // Filter on December 2016
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "Date");
-        await toggleMenuItemOption(pivot, "Date", "December");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Date");
+        await toggleMenuItemOption(target, "Date", "December");
 
         // compare December 2016 to November 2016
-        await toggleComparisonMenu(pivot);
-        await toggleMenuItem(pivot, "Date: Previous period");
+        await toggleComparisonMenu(target);
+        await toggleMenuItem(target, "Date: Previous period");
 
         assert.deepEqual(
-            [...pivot.el.querySelectorAll("thead th")].map((th) => th.innerText),
+            [...target.querySelectorAll("thead th")].map((th) => th.innerText),
             [
                 "",
                 "Total",
@@ -4388,7 +4373,7 @@ QUnit.module("Views", (hooks) => {
             "The col headers should be as expected"
         );
         assert.deepEqual(
-            [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
+            [...target.querySelectorAll("tbody th")].map((th) => th.innerText),
             ["Total", "Company", "individual"],
             "The row headers should be as expected"
         );
@@ -4415,7 +4400,7 @@ QUnit.module("Views", (hooks) => {
             };
             serviceRegistry.add("action", fakeActionService, { force: true });
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -4425,7 +4410,7 @@ QUnit.module("Views", (hooks) => {
                     </pivot>`,
             });
 
-            await click(pivot.el.querySelectorAll(".o_value")[1]);
+            await click(target.querySelectorAll(".o_value")[1]);
         }
     );
     QUnit.test(
@@ -4443,7 +4428,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.records[2].favorite_animal = "None";
 
             patchDate(2016, 11, 20, 1, 0, 0);
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -4454,12 +4439,12 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("thead th")].map((th) => th.innerText),
+                [...target.querySelectorAll("thead th")].map((th) => th.innerText),
                 ["", "Total", "Count"],
                 "The col headers should be as expected"
             );
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
+                [...target.querySelectorAll("tbody th")].map((th) => th.innerText),
                 ["Total", "Dog", "None", "false", "None"],
                 "The row headers should be as expected"
             );
@@ -4471,7 +4456,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(8);
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -4483,60 +4468,60 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("thead th")].map((th) => th.innerText),
+                [...target.querySelectorAll("thead th")].map((th) => th.innerText),
                 ["", "Total", "Foo"],
                 "The col headers should be as expected"
             );
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
+                [...target.querySelectorAll("tbody th")].map((th) => th.innerText),
                 ["Total"],
                 "The row headers should be as expected"
             );
 
             // open group by menu and add new groupby
-            await toggleGroupByMenu(pivot);
-            await toggleAddCustomGroup(pivot);
-            await applyGroup(pivot);
+            await toggleGroupByMenu(target);
+            await toggleAddCustomGroup(target);
+            await applyGroup(target);
 
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("thead th")].map((th) => th.innerText),
+                [...target.querySelectorAll("thead th")].map((th) => th.innerText),
                 ["", "Total", "Foo"],
                 "The col headers should be as expected"
             );
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
+                [...target.querySelectorAll("tbody th")].map((th) => th.innerText),
                 ["Total", "Company", "individual"],
                 "The row headers should be as expected"
             );
 
             // Set a Row groupby
-            await click(pivot.el, "tbody tr:nth-child(2) .o_pivot_header_cell_closed");
-            await click(pivot.el, "tbody .dropdown-menu .o_menu_item:nth-child(5)");
+            await click(target, "tbody tr:nth-child(2) .o_pivot_header_cell_closed");
+            await click(target, "tbody .dropdown-menu .o_menu_item:nth-child(5)");
 
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("thead th")].map((th) => th.innerText),
+                [...target.querySelectorAll("thead th")].map((th) => th.innerText),
                 ["", "Total", "Foo"],
                 "The col headers should be as expected"
             );
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
+                [...target.querySelectorAll("tbody th")].map((th) => th.innerText),
                 ["Total", "Company", "xphone", "xpad", "individual"],
                 "The row headers should be as expected"
             );
 
             // open groupby menu generator and add a new groupby
-            await toggleGroupByMenu(pivot);
-            await toggleAddCustomGroup(pivot);
-            await selectGroup(pivot, "bar");
-            await applyGroup(pivot);
+            await toggleGroupByMenu(target);
+            await toggleAddCustomGroup(target);
+            await selectGroup(target, "bar");
+            await applyGroup(target);
 
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("thead th")].map((th) => th.innerText),
+                [...target.querySelectorAll("thead th")].map((th) => th.innerText),
                 ["", "Total", "Foo"],
                 "The col headers should be as expected"
             );
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
+                [...target.querySelectorAll("tbody th")].map((th) => th.innerText),
                 ["Total", "Company", "Yes", "individual", "No", "Yes"],
                 "The row headers should be as expected"
             );
@@ -4546,7 +4531,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("display only one dropdown menu", async function (assert) {
         assert.expect(1);
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -4558,15 +4543,15 @@ QUnit.module("Views", (hooks) => {
         });
 
         // add a col groupby on Product
-        await click(pivot.el.querySelector("thead th.o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[5]);
+        await click(target.querySelector("thead th.o_pivot_header_cell_closed"));
+        await click(target.querySelectorAll("thead .dropdown-menu .dropdown-item")[5]);
 
         // Click on the two header dropdown togglers
-        await click(pivot.el.querySelectorAll("thead th.o_pivot_header_cell_closed")[0]);
-        await click(pivot.el.querySelectorAll("thead th.o_pivot_header_cell_closed")[1]);
+        await click(target.querySelectorAll("thead th.o_pivot_header_cell_closed")[0]);
+        await click(target.querySelectorAll("thead th.o_pivot_header_cell_closed")[1]);
 
         assert.containsOnce(
-            pivot,
+            target,
             "thead .dropdown-menu",
             "Only one dropdown should be displayed at a time"
         );
@@ -4576,7 +4561,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
 
         let isSecondReadGroup = false;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -4611,7 +4596,7 @@ QUnit.module("Views", (hooks) => {
             "18", // Second
             "14", // First
         ];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join());
+        assert.strictEqual(getCurrentValues(target), values.join());
     });
 
     QUnit.test("pivot rendering with boolean field", async function (assert) {
@@ -4629,7 +4614,7 @@ QUnit.module("Views", (hooks) => {
             { id: 2, bar: false, date: "2019-05-14" },
         ];
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -4642,21 +4627,21 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            $(pivot.el).find('tbody tr:contains("2019-12-14")').length,
+            $(target).find('tbody tr:contains("2019-12-14")').length,
             1,
             "There should be a first column"
         );
         assert.ok(
-            $(pivot.el).find('tbody tr:contains("2019-12-14") [type="checkbox"]').is(":checked"),
+            $(target).find('tbody tr:contains("2019-12-14") [type="checkbox"]').is(":checked"),
             "first column contains checkbox and value should be ticked"
         );
         assert.strictEqual(
-            $(pivot.el).find('tbody tr:contains("2019-05-14")').length,
+            $(target).find('tbody tr:contains("2019-05-14")').length,
             1,
             "There should be a second column"
         );
         assert.notOk(
-            $(pivot.el).find('tbody tr:contains("2019-05-14") [type="checkbox"]').is(":checked"),
+            $(target).find('tbody tr:contains("2019-05-14") [type="checkbox"]').is(":checked"),
             "second column should have checkbox that is not checked by default"
         );
     });
@@ -4673,7 +4658,7 @@ QUnit.module("Views", (hooks) => {
                     <filter name="small_than_0" string="Small Than 0" domain="[('id', '&lt;', 0)]"/>
                 </search>`,
         };
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -4684,13 +4669,13 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.containsOnce(pivot, ".o_view_nocontent .abc");
-        assert.containsNone(pivot, "table");
+        assert.containsOnce(target, ".o_view_nocontent .abc");
+        assert.containsNone(target, "table");
 
-        await removeFacet(pivot);
+        await removeFacet(target);
 
-        assert.containsNone(pivot, ".o_view_nocontent .abc");
-        assert.containsOnce(pivot, "table");
+        assert.containsNone(target, ".o_view_nocontent .abc");
+        assert.containsOnce(target, "table");
     });
 
     QUnit.test("empty pivot view with sample data", async function (assert) {
@@ -4706,7 +4691,7 @@ QUnit.module("Views", (hooks) => {
                 </search>`,
         };
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -4717,16 +4702,16 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(pivot.el, "o_view_sample_data");
-        assert.containsOnce(pivot, ".o_view_nocontent .abc");
-        assert.containsOnce(pivot, "table.o_sample_data_disabled");
+        assert.hasClass(target.querySelector(".o_pivot_view"), "o_view_sample_data");
+        assert.containsOnce(target, ".o_view_nocontent .abc");
+        assert.containsOnce(target, "table.o_sample_data_disabled");
 
-        await removeFacet(pivot);
+        await removeFacet(target);
 
-        assert.doesNotHaveClass(pivot.el, "o_view_sample_data");
-        assert.containsNone(pivot, ".o_view_nocontent .abc");
-        assert.containsOnce(pivot, "table");
-        assert.doesNotHaveClass(pivot.el.querySelector("table"), "o_sample_data_disabled");
+        assert.doesNotHaveClass(target, "o_view_sample_data");
+        assert.containsNone(target, ".o_view_nocontent .abc");
+        assert.containsOnce(target, "table");
+        assert.doesNotHaveClass(target.querySelector("table"), "o_sample_data_disabled");
     });
 
     QUnit.test("non empty pivot view with sample data", async function (assert) {
@@ -4742,7 +4727,7 @@ QUnit.module("Views", (hooks) => {
                 </search>`,
         };
 
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -4752,17 +4737,17 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.doesNotHaveClass(pivot.el, "o_view_sample_data");
-        assert.containsNone(pivot, ".o_view_nocontent .abc");
-        assert.containsOnce(pivot, "table");
-        assert.doesNotHaveClass(pivot.el.querySelector("table"), "o_sample_data_disabled");
+        assert.doesNotHaveClass(target, "o_view_sample_data");
+        assert.containsNone(target, ".o_view_nocontent .abc");
+        assert.containsOnce(target, "table");
+        assert.doesNotHaveClass(target.querySelector("table"), "o_sample_data_disabled");
 
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "Small Than 0");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Small Than 0");
 
-        assert.doesNotHaveClass(pivot.el, "o_view_sample_data");
-        assert.containsOnce(pivot, ".o_view_nocontent .abc");
-        assert.containsNone(pivot, "table");
+        assert.doesNotHaveClass(target, "o_view_sample_data");
+        assert.containsOnce(target, ".o_view_nocontent .abc");
+        assert.containsNone(target, "table");
     });
 
     QUnit.test("pivot is reloaded when leaving and coming back", async function (assert) {
@@ -4952,7 +4937,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("consecutively toggle several measures", async function (assert) {
         let def;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -4969,27 +4954,27 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         // Toggle several measures (the reload is blocked, so all measures should be toggled in once)
         def = makeDeferred();
-        await toggleMenu(pivot, "Measures");
-        await toggleMenuItem(pivot, "Product"); // add product
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
-        await toggleMenuItem(pivot, "Foo"); // remove foo
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
-        await toggleMenuItem(pivot, "Count"); // add count
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        await toggleMenu(target, "Measures");
+        await toggleMenuItem(target, "Product"); // add product
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
+        await toggleMenuItem(target, "Foo"); // remove foo
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
+        await toggleMenuItem(target, "Count"); // add count
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         def.resolve();
         await nextTick();
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["2", "4", "1", "1", "1", "3"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["2", "4", "1", "1", "1", "3"].join(","));
     });
 
     QUnit.test("flip axis while loading a filter", async function (assert) {
         let def;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -5011,27 +4996,27 @@ QUnit.module("Views", (hooks) => {
         });
 
         const values = ["2", "1", "29", "32", "12", "12", "2", "1", "17", "20"];
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        assert.strictEqual(getCurrentValues(target), values.join(","));
 
         // Set a domain (this reload is delayed)
         def = makeDeferred();
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My Filter");
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter");
+        assert.strictEqual(getCurrentValues(target), values.join(","));
 
         // Flip axis
-        await click(pivot.el.querySelector(".o_pivot_flip_button"));
-        assert.strictEqual(getCurrentValues(pivot.el), values.join(","));
+        await click(target.querySelector(".o_pivot_flip_button"));
+        assert.strictEqual(getCurrentValues(target), values.join(","));
 
         def.resolve();
         await nextTick();
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["20", "2", "1", "17"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["20", "2", "1", "17"].join(","));
     });
 
     QUnit.test("sort rows while loading a filter", async function (assert) {
         let def;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -5051,28 +5036,28 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         // Set a domain (this reload is delayed)
         def = makeDeferred();
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My Filter");
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter");
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         // Sort rows (this operation should be ignored as it concerns the old
         // table, which will be replaced soon)
-        await click(pivot.el.querySelector("th.o_pivot_measure_row"));
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        await click(target.querySelector("th.o_pivot_measure_row"));
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         def.resolve();
         await nextTick();
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["20", "20"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["20", "20"].join(","));
     });
 
     QUnit.test("close a group while loading a filter", async function (assert) {
         let def;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -5092,28 +5077,28 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         // Set a domain (this reload is delayed)
         def = makeDeferred();
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My Filter");
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter");
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         // Close a group (this operation should be ignored as it concerns the old
         // table, which will be replaced soon)
-        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_opened"));
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        await click(target.querySelector("tbody .o_pivot_header_cell_opened"));
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         def.resolve();
         await nextTick();
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["20", "20"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["20", "20"].join(","));
     });
 
     QUnit.test("add a groupby while loading a filter", async function (assert) {
         let def;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -5133,29 +5118,29 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         // Set a domain (this reload is delayed)
         def = makeDeferred();
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My Filter");
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter");
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         // Add a groupby (this operation should be ignored as it concerns the old
         // table, which will be replaced soon)
-        await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelector("thead .dropdown-menu .dropdown-item"));
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+        await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+        await click(target.querySelector("thead .dropdown-menu .dropdown-item"));
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
         def.resolve();
         await nextTick();
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["20", "20"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["20", "20"].join(","));
     });
 
     QUnit.test("expand a group while loading a filter", async function (assert) {
         let def;
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
@@ -5176,33 +5161,33 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Add a groupby, to have a group to expand afterwards
-        await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelector("tbody .dropdown-menu .dropdown-item"));
+        await click(target.querySelector("tbody .o_pivot_header_cell_closed"));
+        await click(target.querySelector("tbody .dropdown-menu .dropdown-item"));
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "12", "20"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "12", "20"].join(","));
 
         // Set a domain (this reload is delayed)
         def = makeDeferred();
-        await toggleFilterMenu(pivot);
-        await toggleMenuItem(pivot, "My Filter");
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "12", "20"].join(","));
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter");
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "12", "20"].join(","));
 
         // Expand a group (this operation should be ignored as it concerns the old
         // table, which will be replaced soon)
-        await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
-        assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "12", "20"].join(","));
+        await click(target.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
+        assert.strictEqual(getCurrentValues(target), ["32", "12", "12", "20"].join(","));
 
         def.resolve();
         await nextTick();
 
-        assert.strictEqual(getCurrentValues(pivot.el), ["20", "20"].join(","));
+        assert.strictEqual(getCurrentValues(target), ["20", "20"].join(","));
     });
 
     QUnit.test(
         "concurrent reloads: add a filter, and directly toggle a measure",
         async function (assert) {
             let def;
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -5222,32 +5207,32 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+            assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
             // Set a domain (this reload is delayed)
             def = makeDeferred();
-            await toggleFilterMenu(pivot);
-            await toggleMenuItem(pivot, "My Filter");
+            await toggleFilterMenu(target);
+            await toggleMenuItem(target, "My Filter");
 
-            assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+            assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
             // Toggle a measure
-            await toggleMenu(pivot, "Measures");
-            await toggleMenuItem(pivot, "Count");
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Count");
 
-            assert.strictEqual(getCurrentValues(pivot.el), ["32", "12", "20"].join(","));
+            assert.strictEqual(getCurrentValues(target), ["32", "12", "20"].join(","));
 
             def.resolve();
             await nextTick();
 
-            assert.strictEqual(getCurrentValues(pivot.el), ["12", "1", "12", "1"].join(","));
+            assert.strictEqual(getCurrentValues(target), ["12", "1", "12", "1"].join(","));
         }
     );
 
     QUnit.test(
         "if no measure is set in arch, 'Count' is used as measure initially",
         async function (assert) {
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -5255,7 +5240,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("thead th")].map((e) => e.innerText),
+                [...target.querySelectorAll("thead th")].map((e) => e.innerText),
                 ["", "Total", "Count"]
             );
         }
@@ -5264,7 +5249,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "if (at least) one measure is set in arch and display_quantity is false or unset, 'Count' is not used as measure initially",
         async function (assert) {
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -5276,7 +5261,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("thead th")].map((e) => e.innerText),
+                [...target.querySelectorAll("thead th")].map((e) => e.innerText),
                 ["", "Total", "Foo"]
             );
         }
@@ -5285,7 +5270,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "if (at least) one measure is set in arch and display_quantity is true, 'Count' is used as measure initially",
         async function (assert) {
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -5297,7 +5282,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("thead th")].map((e) => e.innerText),
+                [...target.querySelectorAll("thead th")].map((e) => e.innerText),
                 ["", "Total", "Count", "Foo"]
             );
         }
@@ -5308,24 +5293,24 @@ QUnit.module("Views", (hooks) => {
             fields: {},
             records: [{ id: 1, display_name: "The one" }],
         };
-        const pivot = await makeView({
+        await makeView({
             type: "pivot",
             resModel: "partner",
             serverData,
             arch: `<pivot/>`,
         });
 
-        await toggleMenu(pivot, "Measures");
+        await toggleMenu(target, "Measures");
 
         // "Count" is the only measure available
         assert.deepEqual(
-            [...pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .o_menu_item")].map(
+            [...target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .o_menu_item")].map(
                 (e) => e.innerText
             ),
             ["Count"]
         );
         // No separator should be displayed in the menu "Measures"
-        assert.containsNone(pivot, ".o_cp_bottom_left .dropdown-menu div.dropdown-divider");
+        assert.containsNone(target, ".o_cp_bottom_left .dropdown-menu div.dropdown-divider");
     });
 
     QUnit.test(
@@ -5343,7 +5328,7 @@ QUnit.module("Views", (hooks) => {
             ];
             serverData.models.customer.records = [{ id: 1, display_name: "P" }];
 
-            const pivot = await makeView({
+            await makeView({
                 type: "pivot",
                 resModel: "partner",
                 serverData,
@@ -5361,26 +5346,26 @@ QUnit.module("Views", (hooks) => {
             });
 
             // compare 2021 to 2020
-            await toggleFilterMenu(pivot);
-            await toggleMenuItem(pivot, "Date");
-            await toggleMenuItemOption(pivot, "Date", "2021");
-            await toggleComparisonMenu(pivot);
-            await toggleMenuItem(pivot, 0);
+            await toggleFilterMenu(target);
+            await toggleMenuItem(target, "Date");
+            await toggleMenuItemOption(target, "Date", "2021");
+            await toggleComparisonMenu(target);
+            await toggleMenuItem(target, 0);
 
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("th")].slice(0, 6).map((el) => el.innerText),
+                [...target.querySelectorAll("th")].slice(0, 6).map((el) => el.innerText),
                 ["", "Total", "Count", "2020", "2021", "Variation"],
                 "The col headers should be as expected"
             );
 
             assert.deepEqual(
-                [...pivot.el.querySelectorAll("th")].slice(6).map((el) => el.innerText),
+                [...target.querySelectorAll("th")].slice(6).map((el) => el.innerText),
                 ["Total", "P", "B", "A"],
                 "The row headers should be as expected"
             );
 
             const values = ["1", "1", "0%", "1", "1", "0%", "1", "0", "-100%", "0", "1", "100%"];
-            assert.strictEqual(getCurrentValues(pivot.el), values.join());
+            assert.strictEqual(getCurrentValues(target), values.join());
         }
     );
 });
