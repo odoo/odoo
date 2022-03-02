@@ -144,7 +144,7 @@ export class SearchBar extends LegacyComponent {
                         value = parser(trimmedQuery);
                     }
                 }
-            } catch (e) {
+            } catch (_e) {
                 continue;
             }
 
@@ -183,7 +183,7 @@ export class SearchBar extends LegacyComponent {
         if (searchItem.domain) {
             try {
                 domain = new Domain(searchItem.domain).toList();
-            } catch (e) {
+            } catch (_e) {
                 // Pass
             }
         }

@@ -140,7 +140,7 @@ export class DatePicker extends LegacyComponent {
     updateInput() {
         try {
             this.inputRef.el.value = this.format(this.date, this.options);
-        } catch (err) {
+        } catch (_err) {
             // Do nothing
         }
     }
@@ -192,7 +192,7 @@ export class DatePicker extends LegacyComponent {
                 this.state.warning = date > DateTime.local();
                 this.props.onDateTimeChanged(date);
             }
-        } catch (err) {
+        } catch (_err) {
             // Reset to default (= given) date.
             this.updateInput();
         }

@@ -84,7 +84,7 @@ odoo.define('web.Pager', function (require) {
         async _changeSelection(direction) {
             try {
                 await this.props.validate();
-            } catch (err) {
+            } catch (_err) {
                 return;
             }
             const { limit, size } = this.props;
@@ -115,7 +115,7 @@ odoo.define('web.Pager', function (require) {
         async _saveValue(value) {
             try {
                 await this.props.validate();
-            } catch (err) {
+            } catch (_err) {
                 return;
             }
             const [min, max] = value.trim().split(/\s*[\-\s,;]\s*/);

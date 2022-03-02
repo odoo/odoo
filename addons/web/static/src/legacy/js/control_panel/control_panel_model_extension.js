@@ -899,7 +899,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                         child.attrs.defaultInterval = context.group_by.split(':')[1];
                         child.tag = 'groupBy';
                     }
-                } catch (e) { }
+                } catch (_e) { }
             }
             if (child.attrs.name in this.searchDefaults) {
                 child.attrs.isDefault = true;

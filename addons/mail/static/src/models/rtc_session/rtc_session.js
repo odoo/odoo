@@ -263,7 +263,7 @@ registerModel({
                 this.audioElement.pause();
                 try {
                     this.audioElement.srcObject = undefined;
-                } catch (error) {
+                } catch (_error) {
                     // ignore error during remove, the value will be overwritten at next usage anyway
                 }
             }

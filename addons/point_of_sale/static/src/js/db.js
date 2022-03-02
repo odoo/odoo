@@ -335,7 +335,7 @@ var PosDB = core.Class.extend({
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
             query = query.replace(/ /g,'.+');
             var re = RegExp("([0-9]+):.*?"+utils.unaccent(query),"gi");
-        }catch(e){
+        }catch(_e){
             return [];
         }
         var results = [];
@@ -398,7 +398,7 @@ var PosDB = core.Class.extend({
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
             query = query.replace(/ /g,'.+');
             var re = RegExp("([0-9]+):.*?"+utils.unaccent(query),"gi");
-        }catch(e){
+        }catch(_e){
             return [];
         }
         var results = [];

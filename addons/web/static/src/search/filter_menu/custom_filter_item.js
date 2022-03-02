@@ -306,7 +306,7 @@ export class CustomFilterItem extends Component {
             // Only updates values if it can be correctly parsed and formatted.
             condition.value = parsed;
             condition.displayedValue = formatted;
-        } catch (err) {
+        } catch (_err) {
             // Parsing error: nothing is done
         }
         ev.target.value = condition.displayedValue;

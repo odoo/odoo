@@ -163,7 +163,7 @@ odoo.define('web.SearchBar', function (require) {
                 if (typeof args === 'string') {
                     try {
                         args = Domain.prototype.stringToArray(args);
-                    } catch (err) {
+                    } catch (_err) {
                         args = [];
                     }
                 }
@@ -295,7 +295,7 @@ odoo.define('web.SearchBar', function (require) {
         _validateSource(query, source) {
             try {
                 this._parseWithSource(query, source);
-            } catch (err) {
+            } catch (_err) {
                 return false;
             }
             return true;

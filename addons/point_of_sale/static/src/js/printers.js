@@ -64,7 +64,7 @@ var PrinterMixin = {
             image = await this.htmlToImg(receipt);
             try {
                 sendPrintResult = await this.send_printing_job(image);
-            } catch (error) {
+            } catch (_error) {
                 // Error in communicating to the IoT box.
                 this.receipt_queue.length = 0;
                 return this.printResultGenerator.IoTActionError();

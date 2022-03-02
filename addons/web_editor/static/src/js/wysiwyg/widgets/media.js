@@ -822,7 +822,7 @@ var ImageWidget = FileWidget.extend({
                 const newMedia = response.media;
                 this.nbMediaResults = response.results;
                 this.libraryMedia.push(...newMedia);
-            } catch (e) {
+            } catch (_e) {
                 // Either API endpoint doesn't exist or is misconfigured.
                 console.error(`Couldn't reach API endpoint.`);
             }
@@ -958,7 +958,7 @@ var ImageWidget = FileWidget.extend({
                         return;
                     }
                 }
-            } catch (e) {
+            } catch (_e) {
                 console.error('CORS is misconfigured on the API server, image will be treated as non-dynamic.');
             }
         }
@@ -1342,7 +1342,7 @@ var VideoWidget = MediaWidget.extend({
         if (this.media.dataset.src) {
             try {
                 delete this.media.dataset.src;
-            } catch (e) {
+            } catch (_e) {
                 this.media.dataset.src = undefined;
             }
         }

@@ -88,7 +88,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
               try {
                 await this.env.pos.load_new_partners();
               }
-              catch (error){
+              catch (_error){
               }
               currentPOSOrder.set_partner(this.env.pos.db.get_partner_by_id(sale_order.partner_id[0]));
               let orderFiscalPos = sale_order.fiscal_position_id ? this.env.pos.fiscal_positions.find(
