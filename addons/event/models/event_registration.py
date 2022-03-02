@@ -4,7 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.tools import format_datetime
+from odoo.tools import format_date
 from odoo.exceptions import AccessError, ValidationError
 
 
@@ -296,7 +296,7 @@ class EventRegistration(models.Model):
     # TOOLS
     # ------------------------------------------------------------
 
-    def get_date_range_str(self):
+    def get_date_range_str(self, lang_code=False):
         self.ensure_one()
         today = fields.Datetime.now()
         event_date = self.event_begin_date
@@ -312,7 +312,7 @@ class EventRegistration(models.Model):
         elif event_date.month == (today + relativedelta(months=+1)).month:
             return _('next month')
         else:
-            return _('on %(date)s', date=format_datetime(self.env, self.event_begin_date, tz=self.event_id.date_tz, dt_format='medium'))
+            return _('on %(date)s', date=format_date(self.env, self.event_begin_date, lang_code=lang_code, date_format='medium'))
 
     def _get_registration_summary(self):
         self.ensure_one()

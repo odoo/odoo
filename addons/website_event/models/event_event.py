@@ -417,7 +417,7 @@ class Event(models.Model):
             'details': self.name,
         }
         if self.address_id:
-            params.update(location=self.sudo().address_id.contact_address.replace('\n', ' '))
+            params.update(location=self.address_inline)
         encoded_params = werkzeug.urls.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
         iCal_url = '/event/%d/ics?%s' % (self.id, encoded_params)

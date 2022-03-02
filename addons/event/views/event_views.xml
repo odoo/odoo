@@ -572,8 +572,8 @@
                             <group string="Attendee" name="attendee">
                                 <field class="o_text_overflow" name="name"/>
                                 <field name="email"/>
-                                <field name="phone" class="o_force_ltr"/>
-                                <field name="mobile" class="o_force_ltr"/>
+                                <field name="phone" class="o_force_ltr" widget="phone" options="{'enable_sms': false}"/>
+                                <field name="mobile" class="o_force_ltr" widget="phone"/>
                             </group>
                             <group string="Event Information" name="event">
                                 <field class="o_text_overflow" name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>

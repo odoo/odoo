@@ -79,7 +79,7 @@ class TestEventData(TestEventInternalsCommon):
             self.assertEqual(registration.get_date_range_str(), u'next month')
 
             event.date_begin = datetime(2020, 3, 1, 10, 0, 0)
-            self.assertEqual(registration.get_date_range_str(), u'on Mar 1, 2020, 11:00:00 AM')
+            self.assertEqual(registration.get_date_range_str(), u'on Mar 1, 2020')
 
             # Is actually 8:30 to 20:00 in Mexico
             event.write({
