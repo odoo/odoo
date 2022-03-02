@@ -614,7 +614,7 @@ class expression(object):
             if is_operator(leaf):
                 if leaf == NOT_OPERATOR:
                     expr, params = pop_result()
-                    push_result('(NOT (%s))' % expr, params)
+                    push_result('(NOT %s)' % expr, params)
                 else:
                     ops = {AND_OPERATOR: '(%s AND %s)', OR_OPERATOR: '(%s OR %s)'}
                     lhs, lhs_params = pop_result()
@@ -635,7 +635,7 @@ class expression(object):
             comodel = model.env.get(getattr(field, 'comodel_name', None))
 
             if not field:
-                raise ValueError(f"Invalid field {model._name}.{ path[0]} in leaf {leaf}")
+                raise ValueError(f"Invalid field {model._name}.{path[0]} in leaf {leaf}")
 
             elif field.inherited:
                 parent_model = model.env[field.related_field.model_name]
@@ -764,7 +764,7 @@ class expression(object):
                     if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
                         # rewrite condition to match records with/without lines
                         op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                        subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (field.inverse_name, comodel._table, field.inverse_name)
+                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IS NOT NULL' % (field.inverse_name, comodel._table, field.inverse_name)
                         push(('id', op1, (subquery, [])), model, alias, internal=True)
                     else:
                         comodel_domain = [(field.inverse_name, '!=', False)]
@@ -821,7 +821,7 @@ class expression(object):
                 else:
                     # rewrite condition to match records with/without relations
                     op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                    subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (rel_id1, rel_table, rel_id1)
+                    subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IS NOT NULL' % (rel_id1, rel_table, rel_id1)
                     push(('id', op1, (subquery, [])), model, alias, internal=True)
 
             elif field.type == 'many2one':
@@ -914,7 +914,7 @@ class expression(object):
 
                     left = unaccent(model._generate_translated_field(alias, left, self.query))
                     instr = unaccent('%s')
-                    push_result(f"{left} {sql_operator} {instr}", [right])
+                    push_result(f"{left} {sql_operator.upper()} {instr}", [right])
 
                 else:
                     expr, params = self.__leaf_to_sql(leaf, model, alias)
@@ -946,11 +946,11 @@ class expression(object):
         field = model._fields[left]  # asserts by `left in model._fields`
 
         if operator == 'inselect':
-            query = f'("{alias}"."{left}" IN ({right[0]}))'
+            query = f'"{alias}"."{left}" IN ({right[0]})'
             params = list(right[1])
 
         elif operator == 'not inselect':
-            query = f'("{alias}"."{left}" NOT IN ({right[0]}))'
+            query = f'"{alias}"."{left}" NOT IN ({right[0]})'
             params = list(right[1])
 
         elif operator in ('in', 'not in'):
@@ -959,13 +959,13 @@ class expression(object):
             if isinstance(right, bool):
                 _logger.warning("The domain term '%s' should use the '=' or '!=' operator.", leaf)
                 if (operator == 'in' and right) or (operator == 'not in' and not right):
-                    query = f'("{alias}"."{left}" IS NOT NULL)'
+                    query = f'"{alias}"."{left}" IS NOT NULL'
                 else:
-                    query = f'("{alias}"."{left}" IS NULL)'
+                    query = f'"{alias}"."{left}" IS NULL'
                 params = []
             elif isinstance(right, Query):
                 subquery, subparams = right.subselect()
-                query = f'("{alias}"."{left}" {operator} ({subquery}))'
+                query = f'"{alias}"."{left}" {operator.upper()} ({subquery})'
                 params = subparams
             elif isinstance(right, (list, tuple)):
                 if field.type == "boolean":
@@ -977,7 +977,7 @@ class expression(object):
                 if params:
                     if left != 'id':
                         params = [field.convert_to_column(p, model, validate=False) for p in params]
-                    query = f'("{alias}"."{left}" {operator} %s)'
+                    query = f'("{alias}"."{left}" {operator.upper()} %s)'
                     params = [tuple(params)]
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).
@@ -994,7 +994,7 @@ class expression(object):
             params = []
 
         elif (right is False or right is None) and (operator == '='):
-            query = f'"{alias}"."{left}" IS NULL '
+            query = f'"{alias}"."{left}" IS NULL'
             params = []
 
         elif field.type == "boolean" and ((operator == '!=' and right is False) or (operator == '==' and right is True)):
@@ -1021,7 +1021,7 @@ class expression(object):
 
             unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
             column = f'"{alias}"."{left}"'
-            query = f'({unaccent(column + cast)} {sql_operator} {unaccent("%s")})'
+            query = f'{unaccent(column + cast)} {sql_operator.upper()} {unaccent("%s")}'
 
             if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):
                 query = f'({query} OR "{alias}"."{left}" IS NULL)'
