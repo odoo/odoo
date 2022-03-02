@@ -4,6 +4,7 @@ import glob
 import io
 import sys
 import csv
+import re
 from itertools import groupby
 from pathlib import Path
 from pprint import pformat
@@ -207,7 +208,7 @@ class AccountTaxReportLine(Record):
             child._value = int(child._value)
         return child
 
-# -----------------------------------------------
+# TOOLS -----------------------------------------------
 
 class Ref():
     def __init__(self, value):
@@ -217,14 +218,16 @@ class Ref():
     def __str__(self):
         return self.value
 
+def indent(level=0, indent_size=4):
+    return ' ' * level * indent_size
+
+# -----------------------------------------------
+
 def get_files(pattern, path=None):
     path = Path(path or Path.cwd())
     return glob.glob(str(path / pattern), recursive=True)
 
-def indent(level=0, indent_size=4):
-    return ' ' * level * indent_size
-
-def run_file(filename):
+def parse_file(filename):
     tree = etree.parse(filename)
     root = tree.getroot()
     nodes_tree = []
@@ -258,7 +261,7 @@ def get_records(module):
     records = {}
     for filename in get_files(f'addons/{module}/data/*.xml'):
         try:
-            for key, value in run_file(filename).items():
+            for key, value in parse_file(filename).items():
                 # if the id is already present, merge the fields
                 if key not in records:
                     records[key] = value
@@ -272,22 +275,46 @@ def get_records(module):
 # -----------------------------------------------------------
 
 def do_module(module, lang):
-    all_records = {model: list(records) for model, records in groupby(get_records(module), lambda x: x['_model'])}
+    """
+        Translate an old Chart Template from a module to a new set of files and a Python class.
+    """
+    grouped_records = groupby(get_records(module).values(), lambda x: x['_model'])
+    all_records = {model: {record['id']: record for record in records} for model, records in grouped_records}
+    all_records["account.fiscal.position"] = convert_csv_to_records(module, "account_fiscal_position.csv", "account.fiscal.position", AccountFiscalPosition)
 
     convert_old_csv(module, source="account_account_template.csv", destination="account.account.csv",
                     callback=lambda header, rows: header.append(f"name@{lang}") or (header, rows))
     convert_old_csv(module, source='account_group_template.csv', destination="account.group.csv")
-    content = convert_records_to_csv(module, all_records['account.tax.group'], 'account.tax.group')
+    content = convert_records_to_csv(module, all_records, 'account.tax.group')
     save_new_file(module, "account.tax.group.csv", content)
 
-    content = convert_records_to_function(module, all_records['account.chart.template'], "account.chart.template", "_get_template_data")
-    content = convert_records_to_function(module, all_records['account.tax.template'], "account.tax.template", "_get_account_tax")
-    content += "\n" + convert_account_fiscal_position_template_csv(module)
-    save_new_file(module, "chart_template.py", content)
+    content = (
+        "# -*- coding: utf-8 -*-\n"
+        "# Part of Odoo. See LICENSE file for full copyright and licensing details.\n"
+        "from odoo import models, Command, _\n"
+        "from odoo.addons.account.models.chart_template import delegate_to_super_if_code_doesnt_match\n"
+        "\n"
+        "class AccountChartTemplate(models.AbstractModel):\n"
+        "    _inherit = 'account.chart.template'\n"
+        "    _template_code = 'be'\n\n"
+    ) + "\n".join([convert_records_to_function(module, all_records, model, function_name)
+                  for model, function_name in (
+                      ("account.chart.template", "_get_template_data"),
+                      ("account.tax.template", "_get_account_tax"),
+                      ("account.fiscal.position", "_get_fiscal_position"),
+                  )])
 
-def convert_records_to_function(module, records, model, function_name, cid=True):
+    path = Path.cwd() / f'addons/{module}/models/chart_template.py'
+    with open(str(path), 'w', encoding="utf-8") as outfile:
+        outfile.write(content)
+
+def convert_records_to_function(module, all_records, model, function_name, cid=True):
+    """
+        Convert a set of Records to a Python function.
+    """
+    records = all_records.get(model, {})
     stream = io.StringIO()
-    cid_str = cid and f"{indent(2)}(company or self.env.company).id"
+    cid_str = cid and f"{indent(2)}cid = (company or self.env.company).id\n"
     stream.write(f"{indent(1)}@delegate_to_super_if_code_doesnt_match\n"
                  f"{indent(1)}def {function_name}(self, template_code, company):\n" +
                  cid_str +
@@ -300,30 +327,30 @@ def convert_records_to_function(module, records, model, function_name, cid=True)
         for i, (_id, record) in enumerate(records.items()):
             is_last = i < len(records) - 1
             stream.write(record.pformat(3).rstrip() + (is_last and "" or ",") + "\n")
-        stream.write("{indent(2)}]\n")
+        stream.write(f"{indent(2)}]\n")
     return stream.getvalue()
 
-def convert_account_fiscal_position_template_csv(module):
-    lines = read_csv_lines(module, filename='account_fiscal_position.csv')
+def convert_csv_to_records(module, filename, model, cls):
+    """
+        Convert old CSV to Records, so that it can be further be processed.
+        For example, it can be turned into a Python list.
+    """
+    lines = read_csv_lines(module, filename)
     records = {}
     if lines:
         header, *rows = lines
         header, rows = remove_chart_template_id(header, rows)
-        for row in rows:
-            _id = f"account_fiscal_position_{id}"
-            records[_id] = AccountFiscalPosition({
-                'id': _id,
-                'tag': 'AccountFiscalPosition',
-                '_model': 'account.fiscal.position'
-            }, 'account.fiscal.position')
+        for i, row in enumerate(rows):
+            _id = f"{model}_{i}"
+            records[_id] = cls({'id': _id, 'tag': cls.__name__, '_model': model}, model)
             for i, field_header in enumerate(header):
-                is_ref = row[i].startswith('ref(')
+                is_ref = re.match(r'^ref\(.*\)$', row[i], re.I)
                 records[_id].append(Field({
                     'id': field_header,
                     'text': row[i] if not is_ref else '',
                     'ref': Ref(row[i]) if is_ref else ''
                 }))
-    return convert_records_to_function(module, records, "account.fiscal.position", "_get_fiscal_position", cid=True)
+    return records
 
 # ---------------------------------------------------------
 
@@ -340,7 +367,8 @@ def remove_chart_template_id(header, rows):
             row.pop(chart_template_id_col)
     return header, rows
 
-def convert_records_to_csv(module, records, model):
+def convert_records_to_csv(module, all_records, model):
+    records = all_records.get(model, {})
     header, rows = [], []
     for i, (_id, record) in enumerate(records.items()):
         if i == 0:
@@ -371,11 +399,16 @@ def convert_old_csv(module, source, destination, callback=None):
         save_new_file(module, destination, content)
 
 def load_old_source(module, filename):
+    """
+        Look for old Chart Template file and read it.
+    """
     stem, suffix = Path(filename).stem, Path(filename).suffix
-    filenames = (filename,
-                 filename.replace('_', '.'),
-                 f"{stem}_template{suffix}",
-                 (f"{stem}_template{suffix}").replace('_', '.'))
+    filenames = (
+        filename,
+        filename.replace('_', '.'),
+        f"{stem}_template{suffix}",
+        (f"{stem}_template{suffix}").replace('_', '.'),
+    )
     for name in filenames:
         path = Path.cwd() / f'addons/{module}/data/{name}'
         if path.exists():
@@ -399,3 +432,4 @@ def save_new_file(module, filename, content):
 if __name__ == '__main__':
     # do_module("l10n_fr", "fr_FR")
     do_module("l10n_it", "it_IT")
+    # do_module("l10n_es", "es_ES")
