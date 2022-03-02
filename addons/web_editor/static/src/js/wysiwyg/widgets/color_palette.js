@@ -782,7 +782,6 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorButtonEnter: function (ev) {
-        ev.stopPropagation();
         this.trigger_up('color_hover', Object.assign(this.getSelectedColors(), this._getButtonInfo(ev.currentTarget)));
     },
     /**
@@ -792,7 +791,6 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorButtonLeave: function (ev) {
-        ev.stopPropagation();
         this.trigger_up('color_leave', Object.assign(this.getSelectedColors(), {
             target: ev.target,
         }));
