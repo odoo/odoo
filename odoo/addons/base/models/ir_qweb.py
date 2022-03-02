@@ -1592,7 +1592,7 @@ class IrQWeb(models.AbstractModel):
         return code
 
     def _compile_directive_elif(self, el, options, level):
-        """Compile `t-eif` expressions into a python code as a list of
+        """Compile `t-elif` expressions into a python code as a list of
         strings. This method is linked with the `t-if` directive.
 
         Check if this directive is valide, the t-qweb-skip flag and call
