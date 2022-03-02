@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
 
   <t t-name="web.View" owl="1">
-    <WithSearch t-props="withSearchProps"/>
+    <div t-attf-class="o_action o_view_controller o_{{env.config.viewType}}_view">
+      <WithSearch t-props="withSearchProps"/>
+    </div>
   </t>
 
   <t t-name="web.ReportViewMeasures" owl="1">

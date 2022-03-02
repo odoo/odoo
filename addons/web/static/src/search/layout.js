@@ -22,16 +22,6 @@ export class Layout extends LegacyComponent {
         this.components = extractLayoutComponents(this.env.config);
         this.display = display;
     }
-    get className() {
-        const classes = this.props.className.split(" ");
-        if (this.props.useSampleModel) {
-            classes.push("o_view_sample_data");
-        }
-        if (this.props.viewType) {
-            classes.push(`o_${this.props.viewType}_view`);
-        }
-        return classes.join(" ");
-    }
     get controlPanelSlots() {
         const slots = { ...this.props.slots };
         delete slots.default;
@@ -40,10 +30,7 @@ export class Layout extends LegacyComponent {
 }
 
 Layout.template = "web.Layout";
-Layout.defaultProps = { className: "" };
 Layout.props = {
     className: { type: String, optional: true },
     slots: { type: Object, optional: true },
-    viewType: { type: String, optional: true },
-    useSampleModel: { type: Boolean, optional: true },
 };
