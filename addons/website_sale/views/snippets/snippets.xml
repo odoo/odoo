@@ -87,6 +87,13 @@
                 <we-button class="fa fa-fw fa-long-arrow-left" title="Left" data-customize-website-views="website_sale.carousel_product_indicators_left"/>
                 <we-button class="fa fa-fw fa-long-arrow-down" title="Bottom" data-customize-website-views="website_sale.carousel_product_indicators_bottom"/>
             </we-button-group>
+            <div data-selector="#product_detail #o-carousel-product" data-no-check="true"
+                 data-js="WebsiteSaleProduct">
+                <we-row string="Images">
+                    <we-button class="o_we_bg_success" data-add-images="true" data-no-preview="true">Add</we-button>
+                    <we-button class="o_we_bg_danger" data-clear-images="true" data-no-preview="true">Remove all</we-button>
+                </we-row>
+            </div>
         </div>
     </xpath>
 </template>

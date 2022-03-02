@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
+import pdb
+
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
@@ -18,6 +20,8 @@ from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website.controllers.form import WebsiteForm
+
+from odoo.models import Model
 from odoo.osv import expression
 from odoo.tools.json import scriptsafe as json_scriptsafe
 _logger = logging.getLogger(__name__)
@@ -394,6 +398,27 @@ class WebsiteSale(http.Controller):
     def old_product(self, product, category='', search='', **kwargs):
         # Compatibility pre-v14
         return request.redirect(_build_url_w_params("/shop/%s" % slug(product), request.params), code=301)
+
+    @http.route(['/shop/product/<model("product.product"):product>/images'], type='json', auth='user', website=True)
+    def add_product_images(self, product, **kwargs):
+        images = kwargs['images']
+        Attachment = request.env['ir.attachment']
+        ProductImage = request.env['product.image']
+        image_ids = Attachment.browse(i['id'] for i in images)
+        product_template = product.product_tmpl_id
+
+        for image in image_ids:
+            product_template.product_template_image_ids |= ProductImage.create({
+                'name': image.name,
+                'image_1920': image.datas,
+                'product_tmpl_id': product_template.id
+            })
+        return True
+
+    @http.route(['/shop/product/<model("product.product"):product>/clear-images'], type='json', auth='user', website=True)
+    def clear_product_images(self, product):
+        product_template = product.product_tmpl_id
+        product_template.product_template_image_ids.unlink()
 
     def _prepare_product_values(self, product, category, search, **kwargs):
         add_qty = int(kwargs.get('add_qty', 1))

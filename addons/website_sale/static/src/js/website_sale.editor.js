@@ -4,7 +4,6 @@ odoo.define('website_sale.add_product', function (require) {
 var core = require('web.core');
 var wUtils = require('website.utils');
 var WebsiteNewMenu = require('website.newMenu');
-
 var _t = core._t;
 
 WebsiteNewMenu.include({
@@ -55,6 +54,7 @@ odoo.define('website_sale.editor', function (require) {
 var options = require('web_editor.snippets.options');
 var publicWidget = require('web.public.widget');
 const Wysiwyg = require('web_editor.wysiwyg');
+const weWidgets = require('wysiwyg.widgets')
 const {qweb, _t} = require('web.core');
 const {Markup} = require('web.utils');
 
@@ -681,4 +681,31 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         }).then(reload);
     },
 });
+
+options.registry.WebsiteSaleProduct = options.Class.extend({
+    willStart: async function () {
+        const _super = this._super.bind(this);
+        this.productID = parseInt(this.$target.find('[data-oe-model="product.product"]').data('oe-id'));
+        return _super(...arguments);
+    },
+
+    addImages: function() {
+        let dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true}).open();
+        dialog.on('save', this, (attachments) => {
+            this._rpc({
+                route: `/shop/product/${this.productID}/images`,
+                params: {
+                    images: attachments,
+                }
+            }).then(reload);
+        })
+    },
+
+    clearImages: function() {
+        this._rpc({
+                route: `/shop/product/${this.productID}/clear-images`,
+            }).then(reload);
+    }
+})
 });
+
