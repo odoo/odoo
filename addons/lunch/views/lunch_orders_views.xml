@@ -30,7 +30,7 @@
         <field name="name">lunch.order.tree</field>
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
-            <tree string="Order lines Tree" create="false" edit="false" decoration-muted="state == 'cancelled'" class="o_lunch_list">
+            <tree string="Order lines Tree" create="false" edit="false" decoration-muted="state == 'cancelled'" class="o_lunch_list" expand="1">
                 <header>
                     <button name="action_confirm" type="object" string="Receive"/>
                 </header>
@@ -43,15 +43,21 @@
                 <field name="lunch_location_id"/>
                 <field name="currency_id" invisible="1"/>
                 <field name='price' sum="Total" string="Price" widget="monetary"/>
-                <field name='state'/>
+                <field name='state' widget="badge" decoration-warning="state == 'new'" decoration-success="state == 'confirmed'" decoration-info="state == 'sent'" decoration-danger="state == 'ordered'"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="display_reorder_button" invisible="1"/>
                 <field name="notified" invisible="1"/>
                 <button name="action_reorder" string="Re-order" type="object" icon="fa-history" attrs="{'invisible': [('display_reorder_button', '=', False)]}" groups="lunch.group_lunch_user"/>
-                <button name="action_confirm" string="Confirm" type="object" icon="fa-check" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_confirm" string="Confirm" type="object" icon="fa-check" attrs="{'invisible': [('state', '!=', 'sent')]}" groups="lunch.group_lunch_manager"/>
                 <button name="action_cancel" string="Cancel" type="object" icon="fa-times" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
                 <button name="action_reset" string="Reset" type="object" icon="fa-undo" attrs="{'invisible': [('state', '!=', 'cancelled')]}" groups="lunch.group_lunch_manager"/>
                 <button name="action_notify" string="Send Notification" type="object" icon="fa-envelope" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('notified', '=', True)]}" groups="lunch.group_lunch_manager"/>
+                <groupby name="supplier_id">
+                    <field name="show_order_button" invisible="1" />
+                    <field name="show_confirm_button" invisible="1" />
+                    <button string="Send Orders" type="object" name="action_send_orders" attrs="{'invisible': [('show_order_button', '=', False)]}"/>
+                    <button string="Confirm Orders" type="object" name="action_confirm_orders" attrs="{'invisible': [('show_confirm_button', '=', False)]}"/>
+                </groupby>
             </tree>
         </field>
     </record>
@@ -91,13 +97,16 @@
                             </div>
                             <div class="row mt4">
                                 <div class="col-6">
-                                    <a class="btn btn-sm btn-success" role="button" name="action_order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
+                                    <a class="btn btn-sm btn-success" role="button" name="action_order" string="Order" type="object" attrs="{'invisible': [('state', 'in', ['sent', 'ordered', 'confirmed'])]}" groups="lunch.group_lunch_manager">
                                         <i class="fa fa-phone" role="img" aria-label="Order button" title="Order button"/>
                                     </a>
-                                    <a class="btn btn-sm btn-info" role="button" name="action_confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
+                                    <a class="btn btn-sm btn-primary" role="button" name="action_send" string="Send" type="object" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager">
+                                        <i class="fa fa-paper-plane" role="img" aria-label="Send button" title="Send button"/>
+                                    </a>
+                                    <a class="btn btn-sm btn-info" role="button" name="action_confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','sent')]}" groups="lunch.group_lunch_manager">
                                         <i class="fa fa-check" role="img" aria-label="Receive button" title="Receive button"/>
                                     </a>
-                                    <a class="btn btn-sm btn-danger" role="button" name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
+                                    <a class="btn btn-sm btn-danger" role="button" name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state','in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager">
                                         <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel button"/>
                                     </a>
                                     <a class="btn btn-sm btn-info" role="button" name="action_notify" string="Send Notification" type="object" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('notified', '=', True)]}" groups="lunch.group_lunch_manager">
@@ -193,14 +202,18 @@
         <field name="arch" type="xml">
             <form>
                 <field name="company_id" invisible="1"/>
+                <field name="date" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="quantity" invisible="1"/>
                 <field name="product_id" invisible="1"/>
+                <field name="state" invisible="1"/>
                 <field name="category_id" invisible="1"/>
                 <field name="available_toppings_1" invisible="1"/>
                 <field name="available_toppings_2" invisible="1"/>
                 <field name="available_toppings_3" invisible="1"/>
                 <field name="supplier_id" invisible="1"/>
+                <field name="order_deadline_passed" invisible="1"/>
+                <field name="available_today" invisible="1"/>
                 <div class="d-flex">
                     <div class="flex-grow-0 pr-5">
                         <field name="image_1920" widget="image" class="o_lunch_image" options="{'image_preview': 'image_128'}"/>
@@ -251,10 +264,18 @@
                             <field name="note" nolabel="1" placeholder="Information, allergens, ..." />
                         </div>
                     </div>
+
+                    <div class="row" attrs="{'invisible': [('order_deadline_passed', '=', False)]}">
+                        <div class="col">
+                            <div class="alert alert-warning" role="alert">
+                                The orders for this vendor have already been sent.
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <footer>
                     <button string="Save" special="save" data-hotkey="v" class="oe_highlight" invisible="not context.get('active_id', False)"/>
-                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" invisible="context.get('active_id', False)" data-hotkey="w"/>
+                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" invisible="context.get('active_id', False)" attrs="{'invisible': [('order_deadline_passed', '=', True)]}" data-hotkey="w"/>
                     <button string="Discard" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>

@@ -414,7 +414,7 @@ QUnit.module('LunchKanbanView', {
         });
 
         QUnit.test('ordered cart', async function (assert) {
-            assert.expect(15);
+            assert.expect(13);
 
             const kanban = await createLunchView({
                 View: LunchKanbanView,
@@ -438,6 +438,7 @@ QUnit.module('LunchKanbanView', {
                                 product: [1, "Tuna sandwich", "3.00"],
                                 toppings: [],
                                 quantity: 1.0,
+                                raw_state: 'ordered',
                             },
                         ],
                     }),
@@ -457,10 +458,6 @@ QUnit.module('LunchKanbanView', {
 
             assert.containsOnce($widgetSecondColumn, '.o_lunch_widget_unlink',
                 "should have a button to clear the order");
-            assert.containsOnce($widgetSecondColumn, '.badge.badge-warning.o_lunch_ordered',
-                "should have an ordered state badge");
-            assert.strictEqual($widgetSecondColumn.find('.o_lunch_ordered').text().trim(), "Ordered",
-                "should have 'Ordered' in the state badge");
 
             assert.containsOnce($widgetSecondColumn, '.o_lunch_widget_lines > li',
                 "should have 1 order line");
@@ -490,7 +487,7 @@ QUnit.module('LunchKanbanView', {
         });
 
         QUnit.test('confirmed cart', async function (assert) {
-            assert.expect(15);
+            assert.expect(12);
 
             const kanban = await createLunchView({
                 View: LunchKanbanView,
@@ -514,6 +511,8 @@ QUnit.module('LunchKanbanView', {
                                 product: [1, "Tuna sandwich", "3.00"],
                                 toppings: [],
                                 quantity: 1.0,
+                                raw_state: 'confirmed',
+                                state: 'Confirmed',
                             },
                         ],
                     }),
@@ -533,10 +532,6 @@ QUnit.module('LunchKanbanView', {
 
             assert.containsNone($widgetSecondColumn, '.o_lunch_widget_unlink',
                 "shouldn't have a button to clear the order");
-            assert.containsOnce($widgetSecondColumn, '.badge.badge-success.o_lunch_confirmed',
-                "should have a confirmed state badge");
-            assert.strictEqual($widgetSecondColumn.find('.o_lunch_confirmed').text().trim(), "Received",
-                "should have 'Received' in the state badge");
 
             assert.containsOnce($widgetSecondColumn, '.o_lunch_widget_lines > li',
                 "should have 1 order line");
@@ -550,10 +545,8 @@ QUnit.module('LunchKanbanView', {
                 "should have the line's quantity");
             assert.strictEqual($firstLine.find('.o_lunch_product_quantity').text().trim(), "1",
                 "should have 1 as the line's quantity");
-            assert.containsOnce($firstLine, '.o_lunch_open_wizard',
-                "should have the line's product name to open the wizard");
-            assert.strictEqual($firstLine.find('.o_lunch_open_wizard').text().trim(), "Tuna sandwich",
-                "should have 'Tuna sandwich' as the line's product name");
+            assert.containsNone($firstLine, '.o_lunch_open_wizard',
+                "shouldn't have the line's product name to open the wizard");
             assert.containsOnce($firstLine, '.o_field_monetary',
                 "should have the line's amount");
             assert.strictEqual($firstLine.find('.o_field_monetary').text().trim(), "3.00€",

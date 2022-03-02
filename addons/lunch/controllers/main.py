@@ -18,19 +18,19 @@ class LunchController(http.Controller):
 
         lines = self._get_current_lines(user)
         if lines:
+            translated_states = dict(request.env['lunch.order']._fields['state']._description_selection(request.env))
             lines = [{'id': line.id,
                       'product': (line.product_id.id, line.product_id.name, float_repr(float_round(line.price, 2), 2)),
                       'toppings': [(topping.name, float_repr(float_round(topping.price, 2), 2))
                                    for topping in line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3],
                       'quantity': line.quantity,
                       'price': line.price,
-                      'state': line.state, # Only used for _get_state
-                      'note': line.note} for line in lines]
-            raw_state, state = self._get_state(lines)
+                      'raw_state': line.state,
+                      'state': translated_states[line.state],
+                      'note': line.note} for line in lines.sorted('date')]
             infos.update({
                 'total': float_repr(float_round(sum(line['price'] for line in lines), 2), 2),
-                'raw_state': raw_state,
-                'state': state,
+                'raw_state': self._get_state(lines),
                 'lines': lines,
             })
         return infos
@@ -41,6 +41,7 @@ class LunchController(http.Controller):
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
         lines = self._get_current_lines(user)
+        lines = lines.filtered_domain([('state', 'not in', ['sent', 'confirmed'])])
         lines.action_cancel()
         lines.unlink()
 
@@ -134,10 +135,7 @@ class LunchController(http.Controller):
 
             eg: [confirmed, confirmed, new] will return ('new', 'To Order')
         """
-        states_to_int = {'new': 0, 'ordered': 1, 'confirmed': 2, 'cancelled': 3}
-        int_to_states = ['new', 'ordered', 'confirmed', 'cancelled']
-        translated_states = dict(request.env['lunch.order']._fields['state']._description_selection(request.env))
+        states_to_int = {'new': 0, 'ordered': 1, 'sent': 2, 'confirmed': 3, 'cancelled': 4}
+        int_to_states = ['new', 'ordered', 'sent', 'confirmed', 'cancelled']
 
-        state = int_to_states[min(states_to_int[line['state']] for line in lines)]
-
-        return (state, translated_states[state])
+        return int_to_states[min(states_to_int[line['raw_state']] for line in lines)]
