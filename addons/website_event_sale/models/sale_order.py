@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -40,11 +40,28 @@ class SaleOrder(models.Model):
             values['product_id'] = ticket.product_id.id
             values['event_id'] = ticket.event_id.id
             values['event_ticket_id'] = ticket.id
+            discount = 0
             if order.pricelist_id.discount_policy == 'without_discount':
-                values['price_unit'] = ticket.price
+                price_unit = ticket.price
+                company_currency = order.company_id.currency_id
+                pricelist_currency = order.pricelist_id.currency_id
+                if company_currency != pricelist_currency:
+                    price_unit = company_currency._convert(
+                        ticket.price,
+                        pricelist_currency,
+                        order.company_id,
+                        order.date_order or fields.Datetime.now()
+                    )
+                discount = (price_unit - ticket.price_reduce) / price_unit * 100
+                if discount < 0:
+                    discount = 0
             else:
-                values['price_unit'] = ticket.price_reduce
-            values['name'] = ticket._get_ticket_multiline_description()
+                price_unit = ticket.price_reduce
+            values.update(
+                discount=discount,
+                name=ticket._get_ticket_multiline_description(),
+                price_unit=price_unit,
+            )
 
         # avoid writing related values that end up locking the product record
         values.pop('event_ok', None)
