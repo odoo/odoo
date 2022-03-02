@@ -95,7 +95,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
 
                     self.supplier_pizza_inn._send_auto_email()
 
-                    assert line.state == 'confirmed'
+                    assert line.state == 'sent'
 
                     line = self.env['lunch.order'].create({
                         'product_id': self.product_pizza.id,
@@ -115,21 +115,21 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
 
                     self.supplier_pizza_inn._send_auto_email()
 
-                    assert line.state == 'confirmed'
+                    assert line.state == 'sent'
                     assert line2.state == 'ordered'
 
                     line_1 = self.env['lunch.order'].create({
                         'product_id': self.product_pizza.id,
                         'quantity': 2,
                         'date': self.monday_1pm.date(),
-                        'supplier_id': self.product_pizza.id,
+                        'supplier_id': self.supplier_pizza_inn.id,
                     })
 
                     line_2 = self.env['lunch.order'].create({
                         'product_id': self.product_pizza.id,
                         'topping_ids_1': [(6, 0, [self.topping_olives.id])],
                         'date': self.monday_1pm.date(),
-                        'supplier_id': self.product_pizza.id,
+                        'supplier_id': self.supplier_pizza_inn.id,
                     })
 
                     line_3 = self.env['lunch.order'].create({
