@@ -106,16 +106,16 @@ function checkTooltip(assert, graph, expectedTooltipContent, index, datasetIndex
         lineLabels.push(line.label);
         lineValues.push(`${line.value}`);
     }
-    assert.containsOnce(graph, "div.o_graph_custom_tooltip");
-    const tooltipTitle = graph.el.querySelector("table thead tr th.o_measure");
+    assert.containsOnce(target, "div.o_graph_custom_tooltip");
+    const tooltipTitle = target.querySelector("table thead tr th.o_measure");
     assert.strictEqual(tooltipTitle.innerText, title || "Count", `Tooltip title`);
     assert.deepEqual(
-        [...graph.el.querySelectorAll("table tbody tr td span.o_label")].map((td) => td.innerText),
+        [...target.querySelectorAll("table tbody tr td span.o_label")].map((td) => td.innerText),
         lineLabels,
         `Tooltip line labels`
     );
     assert.deepEqual(
-        [...graph.el.querySelectorAll("table tbody tr td.o_value")].map((td) => td.innerText),
+        [...target.querySelectorAll("table tbody tr td.o_value")].map((td) => td.innerText),
         lineValues,
         `Tooltip line values`
     );
@@ -132,7 +132,7 @@ async function selectMode(el, mode) {
 function checkModeIs(assert, graph, mode) {
     assert.strictEqual(getGraphModelMetaData(graph).mode, mode);
     assert.strictEqual(getChart(graph).config.type, mode);
-    assert.hasClass(getModeButton(graph.el, mode), "active");
+    assert.hasClass(getModeButton(target, mode), "active");
 }
 
 function getXAxeLabel(graph) {
@@ -155,6 +155,7 @@ async function clickOnDataset(graph) {
 }
 
 let serverData;
+let target;
 QUnit.module("Views", (hooks) => {
     hooks.beforeEach(async () => {
         serverData = {
@@ -300,6 +301,8 @@ QUnit.module("Views", (hooks) => {
         setupControlPanelFavoriteMenuRegistry();
         serviceRegistry.add("dialog", dialogService);
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+
+        target = getFixture();
     });
 
     QUnit.module("GraphView");
@@ -307,8 +310,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("simple bar chart rendering", async function (assert) {
         const graph = await makeView({ serverData, type: "graph", resModel: "foo" });
         const { measure, mode, order, stacked } = getGraphModelMetaData(graph);
-        assert.hasClass(graph.el, "o_action o_view_controller");
-        assert.containsOnce(graph, "div.o_graph_canvas_container canvas");
+        assert.hasClass(target.querySelector(".o_graph_view"), "o_action o_view_controller");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         assert.strictEqual(measure, "__count", `the active measure should be "__count" by default`);
         assert.strictEqual(mode, "bar", "should be in bar chart mode by default");
         assert.strictEqual(order, null, "should not be ordered by default");
@@ -329,8 +332,8 @@ QUnit.module("Views", (hooks) => {
         assert.expect(4);
         serverData.models.foo.records = [];
         const graph = await makeView({ serverData, type: "graph", resModel: "foo" });
-        assert.containsOnce(graph, "div.o_graph_canvas_container canvas");
-        assert.containsNone(graph, ".o_nocontent_help");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
+        assert.containsNone(target, ".o_nocontent_help");
         checkLabels(assert, graph, []);
         checkDatasets(assert, graph, [], []);
     });
@@ -343,7 +346,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             arch: `<graph><field name="bar"/></graph>`,
         });
-        assert.containsOnce(graph.el, "div.o_graph_canvas_container canvas");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         checkLabels(assert, graph, ["false", "true"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label"], {
             backgroundColor: "#1f77b4",
@@ -369,7 +372,7 @@ QUnit.module("Views", (hooks) => {
                 </graph>
             `,
         });
-        assert.containsOnce(graph.el, "div.o_graph_canvas_container canvas");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         checkLabels(assert, graph, ["false", "true"]);
         checkDatasets(
             assert,
@@ -787,7 +790,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             arch: `<graph type="line"/>`,
         });
-        assert.containsOnce(graph.el, "div.o_graph_canvas_container canvas");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         const { mode } = getGraphModelMetaData(graph);
         assert.strictEqual(mode, "line");
         checkLabels(assert, graph, ["", "Total", ""]);
@@ -814,7 +817,7 @@ QUnit.module("Views", (hooks) => {
                 </graph>
             `,
         });
-        assert.containsOnce(graph.el, "div.o_graph_canvas_container canvas");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         checkLabels(assert, graph, ["false", "true"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label"], {
             backgroundColor: "rgba(31,119,180,0.4)",
@@ -840,7 +843,7 @@ QUnit.module("Views", (hooks) => {
                 </graph>
             `,
         });
-        assert.containsOnce(graph.el, "div.o_graph_canvas_container canvas");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         checkLabels(assert, graph, ["false", "true"]);
         checkDatasets(
             assert,
@@ -1262,13 +1265,13 @@ QUnit.module("Views", (hooks) => {
         // this test makes sure the line chart does not crash when only one data
         // point is displayed.
         serverData.models.foo.records = serverData.models.foo.records.slice(0, 1);
-        const graph = await makeView({
+        await makeView({
             serverData,
             type: "graph",
             resModel: "foo",
             arch: `<graph type="line"/>`,
         });
-        assert.containsOnce(graph, "canvas", "should have a canvas");
+        assert.containsOnce(target, "canvas", "should have a canvas");
     });
 
     QUnit.test("pie chart rendering (no groupBy)", async function (assert) {
@@ -1279,7 +1282,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             arch: `<graph type="pie"/>`,
         });
-        assert.containsOnce(graph.el, "div.o_graph_canvas_container canvas");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         const { mode } = getGraphModelMetaData(graph);
         assert.strictEqual(mode, "pie");
         checkLabels(assert, graph, ["Total"]);
@@ -1306,7 +1309,7 @@ QUnit.module("Views", (hooks) => {
                 </graph>
             `,
         });
-        assert.containsOnce(graph.el, "div.o_graph_canvas_container canvas");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         checkLabels(assert, graph, ["false", "true"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data"], {
             backgroundColor: ["#1f77b4", "#ff7f0e"],
@@ -1331,7 +1334,7 @@ QUnit.module("Views", (hooks) => {
                 </graph>
             `,
         });
-        assert.containsOnce(graph.el, "div.o_graph_canvas_container canvas");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         checkLabels(assert, graph, ["false / xphone", "false / xpad", "true / xphone"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label"], {
             backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
@@ -1823,7 +1826,7 @@ QUnit.module("Views", (hooks) => {
                 { bar: true, revenue: 2 },
                 { bar: false, revenue: -3 },
             ];
-            const graph = await makeView({
+            await makeView({
                 serverData,
                 type: "graph",
                 resModel: "foo",
@@ -1834,12 +1837,12 @@ QUnit.module("Views", (hooks) => {
                     </graph>
                 `,
             });
-            assert.containsOnce(graph, ".o_view_nocontent");
+            assert.containsOnce(target, ".o_view_nocontent");
             assert.strictEqual(
-                graph.el.querySelector(".o_view_nocontent").innerText.replace(/[\s\n]/g, " "),
+                target.querySelector(".o_view_nocontent").innerText.replace(/[\s\n]/g, " "),
                 `Invalid data  Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results`
             );
-            assert.containsNone(graph, ".o_graph_canvas_container");
+            assert.containsNone(target, ".o_graph_canvas_container");
         }
     );
 
@@ -1898,15 +1901,15 @@ QUnit.module("Views", (hooks) => {
         checkModeIs(assert, graph, "bar");
         assert.strictEqual(getXAxeLabel(graph), "bar");
         assert.strictEqual(getYAxeLabel(graph), "Count");
-        await selectMode(graph.el, "line");
+        await selectMode(target, "line");
         checkModeIs(assert, graph, "line");
         assert.strictEqual(getXAxeLabel(graph), "bar");
-        await toggleMenu(graph, "Measures");
-        await toggleMenuItem(graph, "Revenue");
+        await toggleMenu(target, "Measures");
+        await toggleMenuItem(target, "Revenue");
         assert.strictEqual(getYAxeLabel(graph), "Revenue");
         assert.ok(true, "Message");
-        await toggleGroupByMenu(graph);
-        await toggleMenuItem(graph, "Color");
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Color");
         checkModeIs(assert, graph, "line");
         assert.strictEqual(getXAxeLabel(graph), "Color");
         assert.strictEqual(getYAxeLabel(graph), "Revenue");
@@ -1916,11 +1919,11 @@ QUnit.module("Views", (hooks) => {
         assert.expect(12);
         const graph = await makeView({ serverData, type: "graph", resModel: "foo" });
         checkModeIs(assert, graph, "bar");
-        await selectMode(graph.el, "bar"); // click on the active mode does not change anything
+        await selectMode(target, "bar"); // click on the active mode does not change anything
         checkModeIs(assert, graph, "bar");
-        await selectMode(graph.el, "line");
+        await selectMode(target, "line");
         checkModeIs(assert, graph, "line");
-        await selectMode(graph.el, "pie");
+        await selectMode(target, "pie");
         checkModeIs(assert, graph, "pie");
     });
 
@@ -1930,15 +1933,15 @@ QUnit.module("Views", (hooks) => {
         function checkMeasure(measure) {
             const yAxe = getChart(graph).config.options.scales.yAxes[0];
             assert.strictEqual(yAxe.scaleLabel.labelString, measure);
-            const item = [...graph.el.querySelectorAll(".o_menu_item")].find(
+            const item = [...target.querySelectorAll(".o_menu_item")].find(
                 (el) => el.innerText === measure
             );
             assert.hasClass(item, "selected");
         }
-        await toggleMenu(graph, "Measures");
+        await toggleMenu(target, "Measures");
         checkMeasure("Count");
         checkLegend(assert, graph, "Count");
-        await toggleMenuItem(graph, "Foo");
+        await toggleMenuItem(target, "Foo");
         checkMeasure("Foo");
         checkLegend(assert, graph, "Foo");
     });
@@ -2023,12 +2026,12 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["xphone", "xpad"]);
         checkLegend(assert, graph, ["false / Undefined", "true / Undefined", "true / red"]);
 
-        await selectMode(graph.el, "line");
+        await selectMode(target, "line");
 
         checkLabels(assert, graph, ["xphone", "xpad"]);
         checkLegend(assert, graph, ["false / Undefined", "true / Undefined", "true / red"]);
 
-        await selectMode(graph.el, "pie");
+        await selectMode(target, "pie");
 
         checkLabels(assert, graph, [
             "xphone / false / Undefined",
@@ -2047,20 +2050,20 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("no content helper", async function (assert) {
         assert.expect(3);
         serverData.models.foo.records = [];
-        const graph = await makeView({
+        await makeView({
             serverData,
             type: "graph",
             resModel: "foo",
             noContentHelp: '<p class="abc">This helper should not be displayed in graph views</p>',
         });
-        assert.containsOnce(graph, "div.o_graph_canvas_container canvas");
-        assert.containsNone(graph, "div.o_view_nocontent");
-        assert.containsNone(graph, ".abc");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
+        assert.containsNone(target, "div.o_view_nocontent");
+        assert.containsNone(target, ".abc");
     });
 
     QUnit.test("no content helper after update", async function (assert) {
         assert.expect(6);
-        const graph = await makeView({
+        await makeView({
             serverData,
             type: "graph",
             resModel: "foo",
@@ -2069,14 +2072,14 @@ QUnit.module("Views", (hooks) => {
                 views: [[false, "search"]],
             },
         });
-        assert.containsOnce(graph, "div.o_graph_canvas_container canvas");
-        assert.containsNone(graph, "div.o_view_nocontent");
-        assert.containsNone(graph, ".abc");
-        await toggleFilterMenu(graph);
-        await toggleMenuItem(graph, "False Domain");
-        assert.containsOnce(graph, "div.o_graph_canvas_container canvas");
-        assert.containsNone(graph, "div.o_view_nocontent");
-        assert.containsNone(graph, ".abc");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
+        assert.containsNone(target, "div.o_view_nocontent");
+        assert.containsNone(target, ".abc");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "False Domain");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
+        assert.containsNone(target, "div.o_view_nocontent");
+        assert.containsNone(target, ".abc");
     });
 
     QUnit.test("can reload with other group by", async function (assert) {
@@ -2097,8 +2100,8 @@ QUnit.module("Views", (hooks) => {
             `,
         });
         checkLabels(assert, graph, ["xphone", "xpad"]);
-        await toggleGroupByMenu(graph);
-        await toggleMenuItem(graph, "Color");
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Color");
         checkLabels(assert, graph, ["Undefined", "red"]);
     });
 
@@ -2132,7 +2135,7 @@ QUnit.module("Views", (hooks) => {
         ];
 
         let serverId = 1;
-        const graph = await makeView({
+        await makeView({
             mockRPC: function (_, args) {
                 if (args.method === "create_or_replace") {
                     const favorite = args.args[0];
@@ -2163,34 +2166,34 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        await toggleFavoriteMenu(graph);
-        await toggleSaveFavorite(graph);
-        await editFavoriteName(graph, "First Favorite");
-        await saveFavorite(graph);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "First Favorite");
+        await saveFavorite(target);
 
-        await toggleMenu(graph, "Measures");
-        await toggleMenuItem(graph, "Foo");
+        await toggleMenu(target, "Measures");
+        await toggleMenuItem(target, "Foo");
 
-        await toggleFavoriteMenu(graph);
-        await toggleSaveFavorite(graph);
-        await editFavoriteName(graph, "Second Favorite");
-        await saveFavorite(graph);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "Second Favorite");
+        await saveFavorite(target);
 
-        await selectMode(graph.el, "line");
+        await selectMode(target, "line");
 
-        await toggleFavoriteMenu(graph);
-        await toggleSaveFavorite(graph);
-        await editFavoriteName(graph, "Third Favorite");
-        await saveFavorite(graph);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "Third Favorite");
+        await saveFavorite(target);
 
-        await toggleGroupByMenu(graph);
-        await toggleMenuItem(graph, "Product");
-        await toggleMenuItem(graph, "Color");
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Product");
+        await toggleMenuItem(target, "Color");
 
-        await toggleFavoriteMenu(graph);
-        await toggleSaveFavorite(graph);
-        await editFavoriteName(graph, "Fourth Favorite");
-        await saveFavorite(graph);
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "Fourth Favorite");
+        await saveFavorite(target);
     });
 
     QUnit.test("correctly uses graph_ keys from the context", async function (assert) {
@@ -2326,8 +2329,8 @@ QUnit.module("Views", (hooks) => {
                 { title: "FooFighters", lines: [{ label: "Total", value: "239" }] },
                 0
             );
-            await toggleMenu(graph, "Measures");
-            await toggleMenuItem(graph, "Nirvana");
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Nirvana");
             checkTooltip(
                 assert,
                 graph,
@@ -2354,8 +2357,8 @@ QUnit.module("Views", (hooks) => {
         checkLegend(assert, graph, "Count");
         assert.strictEqual(getYAxeLabel(graph), "Count");
         checkModeIs(assert, graph, "bar");
-        await toggleFilterMenu(graph);
-        await toggleMenuItem(graph, "Context");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Context");
         checkLegend(assert, graph, "Foo");
         assert.strictEqual(getYAxeLabel(graph), "Foo");
         checkModeIs(assert, graph, "line");
@@ -2363,7 +2366,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("reload graph with correct fields", async function (assert) {
         assert.expect(2);
-        const graph = await makeView({
+        await makeView({
             serverData,
             mockRPC: function (_, args) {
                 if (args.method === "web_read_group") {
@@ -2383,8 +2386,8 @@ QUnit.module("Views", (hooks) => {
                 </search>
             `,
         });
-        await toggleFilterMenu(graph);
-        await toggleMenuItem(graph, "False Domain");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "False Domain");
     });
 
     QUnit.test("initial groupby is kept when reloading", async function (assert) {
@@ -2415,8 +2418,8 @@ QUnit.module("Views", (hooks) => {
         checkDatasets(assert, graph, "data", { data: [82, 157] });
         assert.strictEqual(getXAxeLabel(graph), "Product");
         assert.strictEqual(getYAxeLabel(graph), "Foo");
-        await toggleFilterMenu(graph);
-        await toggleMenuItem(graph, "False Domain");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "False Domain");
         checkLabels(assert, graph, []);
         checkLegend(assert, graph, []);
         checkDatasets(assert, graph, "data", []);
@@ -2503,15 +2506,15 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("not use a many2one as a measure by default", async function (assert) {
         assert.expect(1);
-        const graph = await makeView({
+        await makeView({
             serverData,
             type: "graph",
             resModel: "foo",
             arch: "<graph/>",
         });
-        await toggleMenu(graph, "Measures");
+        await toggleMenu(target, "Measures");
         assert.deepEqual(
-            [...graph.el.querySelectorAll(".o_cp_bottom_left .o_menu_item")].map(
+            [...target.querySelectorAll(".o_cp_bottom_left .o_menu_item")].map(
                 (el) => el.innerText
             ),
             ["Foo", "Revenue", "Count"]
@@ -2522,13 +2525,13 @@ QUnit.module("Views", (hooks) => {
         "graph view crash when moving from search view using Down key",
         async function (assert) {
             assert.expect(1);
-            const graph = await makeView({
+            await makeView({
                 serverData,
                 type: "graph",
                 resModel: "foo",
                 arch: `<graph/>`,
             });
-            await triggerEvent(graph.el, ".o_searchview input", "keydown", { key: "ArrowDown" });
+            await triggerEvent(target, ".o_searchview input", "keydown", { key: "ArrowDown" });
             assert.ok(true, "should not generate any error");
         }
     );
@@ -2543,7 +2546,7 @@ QUnit.module("Views", (hooks) => {
                 store: true,
                 group_operator: "sum",
             };
-            const graph = await makeView({
+            await makeView({
                 serverData,
                 type: "graph",
                 resModel: "foo",
@@ -2554,9 +2557,9 @@ QUnit.module("Views", (hooks) => {
                     </graph>
                 `,
             });
-            await toggleMenu(graph, "Measures");
+            await toggleMenu(target, "Measures");
             assert.deepEqual(
-                [...graph.el.querySelectorAll(".o_cp_bottom_left .o_menu_item")].map(
+                [...target.querySelectorAll(".o_cp_bottom_left .o_menu_item")].map(
                     (el) => el.innerText
                 ),
                 ["Bouh", "Foo", "Revenue", "Count"]
@@ -2593,8 +2596,8 @@ QUnit.module("Views", (hooks) => {
                 arch: `<graph/>`,
                 additionalMeasures: ["product_id"],
             });
-            await toggleMenu(graph, "Measures");
-            await toggleMenuItem(graph, "Product");
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Product");
             checkLegend(assert, graph, "Product");
             assert.strictEqual(getYAxeLabel(graph), "Product");
         }
@@ -2664,12 +2667,12 @@ QUnit.module("Views", (hooks) => {
                 return getChart(graph).data.labels.some((l) => /Undefined/.test(l));
             }
             assert.notOk(someUndefined());
-            await selectMode(graph.el, "bar");
+            await selectMode(target, "bar");
             assert.ok(someUndefined());
-            await selectMode(graph.el, "pie");
+            await selectMode(target, "pie");
             assert.ok(someUndefined());
             // Undefined should not appear after switching back to line chart
-            await selectMode(graph.el, "line");
+            await selectMode(target, "line");
             assert.notOk(someUndefined());
         }
     );
@@ -2690,8 +2693,8 @@ QUnit.module("Views", (hooks) => {
                 additionalMeasures: ["revenue"],
             });
             checkTooltip(assert, graph, { lines: [{ label: "Total", value: "8" }] }, 0);
-            await toggleMenu(graph, "Measures");
-            await toggleMenuItem(graph, "Revenue");
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Revenue");
             checkTooltip(
                 assert,
                 graph,
@@ -2716,9 +2719,9 @@ QUnit.module("Views", (hooks) => {
                 `,
             });
             checkTooltip(assert, graph, { lines: [{ label: "Total", value: "8" }] }, 0);
-            await toggleMenu(graph, "Measures");
+            await toggleMenu(target, "Measures");
             assert.notOk(
-                [...graph.el.querySelectorAll(".o_menu_item")].find(
+                [...target.querySelectorAll(".o_menu_item")].find(
                     (el) => el.innerText.trim() === "Revenue"
                 ),
                 `"Revenue" can not be found in the "Measures" menu`
@@ -2976,27 +2979,27 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("graph view without invisible attribute on field", async function (assert) {
         assert.expect(4);
-        const graph = await makeView({
+        await makeView({
             serverData,
             type: "graph",
             resModel: "foo",
             arch: `<graph/>`,
         });
-        await toggleMenu(graph, "Measures");
+        await toggleMenu(target, "Measures");
         assert.containsN(
-            graph,
+            target,
             ".o_menu_item",
             3,
             "there should be three menu item in the measures dropdown (count, revenue and foo)"
         );
-        assert.containsOnce(graph, '.o_menu_item:contains("Revenue")');
-        assert.containsOnce(graph, '.o_menu_item:contains("Foo")');
-        assert.containsOnce(graph, '.o_menu_item:contains("Count")');
+        assert.containsOnce(target, '.o_menu_item:contains("Revenue")');
+        assert.containsOnce(target, '.o_menu_item:contains("Foo")');
+        assert.containsOnce(target, '.o_menu_item:contains("Count")');
     });
 
     QUnit.test("graph view with invisible attribute on field", async function (assert) {
         assert.expect(2);
-        const graph = await makeView({
+        await makeView({
             serverData,
             type: "graph",
             resModel: "foo",
@@ -3006,14 +3009,14 @@ QUnit.module("Views", (hooks) => {
                 </graph>
             `,
         });
-        await toggleMenu(graph, "Measures");
+        await toggleMenu(target, "Measures");
         assert.containsN(
-            graph,
+            target,
             ".o_menu_item",
             2,
             "there should be only two menu item in the measures dropdown (count and foo)"
         );
-        assert.containsNone(graph, '.o_menu_item:contains("Revenue")');
+        assert.containsNone(target, '.o_menu_item:contains("Revenue")');
     });
 
     QUnit.test("graph view sort by measure", async function (assert) {
@@ -3034,66 +3037,66 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        assert.containsOnce(graph, "button.oi-sort--ascending");
-        assert.containsOnce(graph, "button.oi-sort--descending");
+        assert.containsOnce(target, "button.oi-sort--ascending");
+        assert.containsOnce(target, "button.oi-sort--descending");
 
         checkLegend(assert, graph, "Count", "measure should be by count");
         assert.hasClass(
-            graph.el.querySelector("button.oi-sort--descending"),
+            target.querySelector("button.oi-sort--descending"),
             "active",
             'sorting should be applie on descending order by default when sorting="desc"'
         );
         checkDatasets(assert, graph, "data", { data: [4, 3, 1] });
 
-        await click(graph.el, "button.oi-sort--ascending");
+        await click(target, "button.oi-sort--ascending");
         assert.hasClass(
-            graph.el.querySelector("button.oi-sort--ascending"),
+            target.querySelector("button.oi-sort--ascending"),
             "active",
             "ascending order should be applied"
         );
         checkDatasets(assert, graph, "data", { data: [1, 3, 4] });
 
-        await click(graph.el, "button.oi-sort--descending");
+        await click(target, "button.oi-sort--descending");
         assert.hasClass(
-            graph.el.querySelector("button.oi-sort--descending"),
+            target.querySelector("button.oi-sort--descending"),
             "active",
             "descending order button should be active"
         );
         checkDatasets(assert, graph, "data", { data: [4, 3, 1] });
 
         // again click on descending button to deactivate order button
-        await click(graph.el, "button.oi-sort--descending");
+        await click(target, "button.oi-sort--descending");
         assert.doesNotHaveClass(
-            graph.el.querySelector("button.oi-sort--descending"),
+            target.querySelector("button.oi-sort--descending"),
             "active",
             "descending order button should not be active"
         );
         checkDatasets(assert, graph, "data", { data: [4, 1, 3] });
 
         // set line mode
-        await selectMode(graph.el, "line");
-        assert.containsOnce(graph, "button.oi-sort--ascending");
-        assert.containsOnce(graph, "button.oi-sort--descending");
+        await selectMode(target, "line");
+        assert.containsOnce(target, "button.oi-sort--ascending");
+        assert.containsOnce(target, "button.oi-sort--descending");
 
         checkLegend(assert, graph, "Count", "measure should be by count");
         assert.doesNotHaveClass(
-            graph.el.querySelector("button.oi-sort--descending"),
+            target.querySelector("button.oi-sort--descending"),
             "active",
             "descending order should be applied"
         );
         checkDatasets(assert, graph, "data", { data: [4, 1, 3] });
 
-        await click(graph.el, "button.oi-sort--ascending");
+        await click(target, "button.oi-sort--ascending");
         assert.hasClass(
-            graph.el.querySelector("button.oi-sort--ascending"),
+            target.querySelector("button.oi-sort--ascending"),
             "active",
             "ascending order button should be active"
         );
         checkDatasets(assert, graph, "data", { data: [1, 3, 4] });
 
-        await click(graph.el, "button.oi-sort--descending");
+        await click(target, "button.oi-sort--descending");
         assert.hasClass(
-            graph.el.querySelector("button.oi-sort--descending"),
+            target.querySelector("button.oi-sort--descending"),
             "active",
             "descending order button should be active"
         );
@@ -3122,26 +3125,26 @@ QUnit.module("Views", (hooks) => {
         checkLegend(assert, graph, ["false", "true"], "measure should be by count");
         checkDatasets(assert, graph, "data", [{ data: [1, 1, 3] }, { data: [3, 0, 0] }]);
 
-        await click(graph.el, "button.oi-sort--ascending");
+        await click(target, "button.oi-sort--ascending");
         assert.hasClass(
-            graph.el.querySelector("button.oi-sort--ascending"),
+            target.querySelector("button.oi-sort--ascending"),
             "active",
             "ascending order should be applied by default"
         );
         checkDatasets(assert, graph, "data", [{ data: [1, 3, 1] }, { data: [0, 0, 3] }]);
 
-        await click(graph.el, "button.oi-sort--descending");
+        await click(target, "button.oi-sort--descending");
         assert.hasClass(
-            graph.el.querySelector("button.oi-sort--descending"),
+            target.querySelector("button.oi-sort--descending"),
             "active",
             "ascending order button should be active"
         );
         checkDatasets(assert, graph, "data", [{ data: [1, 3, 1] }, { data: [3, 0, 0] }]);
 
         // again click on descending button to deactivate order button
-        await click(graph.el, "button.oi-sort--descending");
+        await click(target, "button.oi-sort--descending");
         assert.doesNotHaveClass(
-            graph.el.querySelector("button.oi-sort--descending"),
+            target.querySelector("button.oi-sort--descending"),
             "active",
             "descending order button should not be active"
         );
@@ -3182,9 +3185,9 @@ QUnit.module("Views", (hooks) => {
             { data: [0, 1, 0, 0] },
         ]);
 
-        await click(graph.el, "button.oi-sort--ascending");
+        await click(target, "button.oi-sort--ascending");
         assert.hasClass(
-            graph.el.querySelector("button.oi-sort--ascending"),
+            target.querySelector("button.oi-sort--ascending"),
             "active",
             "ascending order should be applied by default"
         );
@@ -3194,9 +3197,9 @@ QUnit.module("Views", (hooks) => {
             { data: [0, 0, 0, 1] },
         ]);
 
-        await click(graph.el, "button.oi-sort--descending");
+        await click(target, "button.oi-sort--descending");
         assert.hasClass(
-            graph.el.querySelector("button.oi-sort--descending"),
+            target.querySelector("button.oi-sort--descending"),
             "active",
             "descending order button should be active"
         );
@@ -3207,9 +3210,9 @@ QUnit.module("Views", (hooks) => {
         ]);
 
         // again click on descending button to deactivate order button
-        await click(graph.el, "button.oi-sort--descending");
+        await click(target, "button.oi-sort--descending");
         assert.doesNotHaveClass(
-            graph.el.querySelector("button.oi-sort--descending"),
+            target.querySelector("button.oi-sort--descending"),
             "active",
             "descending order button should not be active"
         );
@@ -3222,7 +3225,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("empty graph view with sample data", async function (assert) {
         assert.expect(8);
-        const graph = await makeView({
+        await makeView({
             serverData,
             type: "graph",
             resModel: "foo",
@@ -3241,25 +3244,25 @@ QUnit.module("Views", (hooks) => {
             noContentHelp: '<p class="abc">click to add a foo</p>',
         });
 
-        assert.hasClass(graph.el, "o_view_sample_data");
-        assert.containsOnce(graph, ".o_view_nocontent");
-        assert.containsOnce(graph, ".o_graph_canvas_container canvas");
-        assert.hasClass(graph.el.querySelector(".o_graph_renderer"), "o_sample_data_disabled");
+        assert.hasClass(target.querySelector(".o_graph_view"), "o_view_sample_data");
+        assert.containsOnce(target, ".o_view_nocontent");
+        assert.containsOnce(target, ".o_graph_canvas_container canvas");
+        assert.hasClass(target.querySelector(".o_graph_renderer"), "o_sample_data_disabled");
 
-        await toggleFilterMenu(graph);
-        await toggleMenuItem(graph, "False Domain");
-        assert.doesNotHaveClass(graph.el, "o_view_sample_data");
-        assert.containsNone(graph, ".o_view_nocontent");
-        assert.containsOnce(graph, ".o_graph_canvas_container canvas");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "False Domain");
+        assert.doesNotHaveClass(target, "o_view_sample_data");
+        assert.containsNone(target, ".o_view_nocontent");
+        assert.containsOnce(target, ".o_graph_canvas_container canvas");
         assert.doesNotHaveClass(
-            graph.el.querySelector(".o_graph_renderer"),
+            target.querySelector(".o_graph_renderer"),
             "o_sample_data_disabled"
         );
     });
 
     QUnit.test("non empty graph view with sample data", async function (assert) {
         assert.expect(8);
-        const graph = await makeView({
+        await makeView({
             serverData,
             type: "graph",
             resModel: "foo",
@@ -3276,22 +3279,22 @@ QUnit.module("Views", (hooks) => {
             `,
             noContentHelp: '<p class="abc">click to add a foo</p>',
         });
-        assert.doesNotHaveClass(graph.el, "o_view_sample_data");
-        assert.containsNone(graph, ".o_view_nocontent");
-        assert.containsOnce(graph, ".o_graph_canvas_container canvas");
+        assert.doesNotHaveClass(target, "o_view_sample_data");
+        assert.containsNone(target, ".o_view_nocontent");
+        assert.containsOnce(target, ".o_graph_canvas_container canvas");
         assert.doesNotHaveClass(
-            graph.el.querySelector(".o_graph_canvas_container"),
+            target.querySelector(".o_graph_canvas_container"),
             "o_sample_data_disabled"
         );
-        await toggleFilterMenu(graph);
-        await toggleMenuItem(graph, "False Domain");
-        assert.doesNotHaveClass(graph.el, "o_view_sample_data");
-        assert.containsOnce(graph, ".o_graph_canvas_container canvas");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "False Domain");
+        assert.doesNotHaveClass(target, "o_view_sample_data");
+        assert.containsOnce(target, ".o_graph_canvas_container canvas");
         assert.doesNotHaveClass(
-            graph.el.querySelector(".o_graph_canvas_container"),
+            target.querySelector(".o_graph_canvas_container"),
             "o_sample_data_disabled"
         );
-        assert.containsNone(graph, ".o_view_nocontent");
+        assert.containsNone(target, ".o_view_nocontent");
     });
 
     QUnit.test("reload chart with switchView button keep internal state", async function (assert) {
@@ -3338,8 +3341,8 @@ QUnit.module("Views", (hooks) => {
                 },
             });
             checkLabels(assert, graph, ["2", "3", "4", "24", "42", "48", "53", "63"]);
-            await toggleGroupByMenu(graph);
-            await toggleMenuItem(graph, "Foo");
+            await toggleGroupByMenu(target);
+            await toggleMenuItem(target, "Foo");
             checkLabels(assert, graph, ["xphone", "xpad"]);
         }
     );
@@ -3366,22 +3369,22 @@ QUnit.module("Views", (hooks) => {
 
             checkModeIs(assert, graph, "line");
 
-            await selectMode(graph.el, "bar");
+            await selectMode(target, "bar");
 
             checkModeIs(assert, graph, "bar");
-            assert.hasClass(graph.el.querySelector(`[data-tooltip="Stacked"]`), "active");
+            assert.hasClass(target.querySelector(`[data-tooltip="Stacked"]`), "active");
 
-            await click(graph.el.querySelector(`[data-tooltip="Stacked"]`));
+            await click(target.querySelector(`[data-tooltip="Stacked"]`));
 
-            assert.doesNotHaveClass(graph.el.querySelector(`[data-tooltip="Stacked"]`), "active");
-            assert.doesNotHaveClass(graph.el.querySelector(`[data-tooltip="Ascending"]`), "active");
+            assert.doesNotHaveClass(target.querySelector(`[data-tooltip="Stacked"]`), "active");
+            assert.doesNotHaveClass(target.querySelector(`[data-tooltip="Ascending"]`), "active");
 
-            await click(graph.el.querySelector(`[data-tooltip="Ascending"]`));
+            await click(target.querySelector(`[data-tooltip="Ascending"]`));
 
-            assert.hasClass(graph.el.querySelector(`[data-tooltip="Ascending"]`), "active");
+            assert.hasClass(target.querySelector(`[data-tooltip="Ascending"]`), "active");
 
-            await toggleMenu(graph, "Measures");
-            await toggleMenuItem(graph, "Foo");
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Foo");
 
             assert.verifySteps([
                 `["__count"]`, // first load
@@ -3420,8 +3423,8 @@ QUnit.module("Views", (hooks) => {
 
             // Set a domain (this reload is delayed)
             def = makeDeferred();
-            await toggleFilterMenu(graph);
-            await toggleMenuItem(graph, "My Filter");
+            await toggleFilterMenu(target);
+            await toggleMenuItem(target, "My Filter");
 
             checkDatasets(assert, graph, ["data", "label"], {
                 data: [4, 4],
@@ -3429,8 +3432,8 @@ QUnit.module("Views", (hooks) => {
             });
 
             // Toggle a measure
-            await toggleMenu(graph, "Measures");
-            await toggleMenuItem(graph, "Foo");
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Foo");
 
             checkDatasets(assert, graph, ["data", "label"], {
                 data: [4, 4],
@@ -3476,8 +3479,8 @@ QUnit.module("Views", (hooks) => {
 
         // Set a domain (this reload is delayed)
         def = makeDeferred();
-        await toggleFilterMenu(graph);
-        await toggleMenuItem(graph, "My Filter");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter");
 
         checkDatasets(assert, graph, ["data", "label"], {
             data: [4, 4],
@@ -3486,7 +3489,7 @@ QUnit.module("Views", (hooks) => {
         checkModeIs(assert, graph, "line");
 
         // Change graph mode
-        await selectMode(graph.el, "bar");
+        await selectMode(target, "bar");
 
         checkDatasets(assert, graph, ["data", "label"], {
             data: [4, 4],
@@ -3533,11 +3536,11 @@ QUnit.module("Views", (hooks) => {
         checkDatasets(assert, graph, "data", { data: [82, 157] });
 
         def = makeDeferred();
-        await toggleGroupByMenu(graph);
-        await toggleMenuItem(graph, "Color");
-        await toggleMenuItem(graph, "Color");
-        await toggleMenuItem(graph, "Date");
-        await toggleMenuItemOption(graph, "Date", "Month");
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Color");
+        await toggleMenuItem(target, "Color");
+        await toggleMenuItem(target, "Date");
+        await toggleMenuItemOption(target, "Date", "Month");
 
         checkLabels(assert, graph, ["xphone", "xpad"]);
         checkDatasets(assert, graph, "data", { data: [82, 157] });
@@ -3618,8 +3621,8 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        await toggleComparisonMenu(graph);
-        await toggleMenuItem(graph, "Date: Previous period");
+        await toggleComparisonMenu(target);
+        await toggleMenuItem(target, "Date: Previous period");
 
         checkLabels(assert, graph, ["", ""]);
     });
@@ -3652,8 +3655,8 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        await toggleComparisonMenu(graph);
-        await toggleMenuItem(graph, "Date: Previous period");
+        await toggleComparisonMenu(target);
+        await toggleMenuItem(target, "Date: Previous period");
 
         checkDatasets(assert, graph, "backgroundColor", {
             backgroundColor: undefined,

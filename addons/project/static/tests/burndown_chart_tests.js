@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { click } from "@web/../tests/helpers/utils";
+import { click, getFixture } from "@web/../tests/helpers/utils";
 import { COLORS, hexToRGBA } from "@web/views/graph/colors";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { getGraphRenderer } from "@web/../tests/views/graph_view_tests";
@@ -12,7 +12,9 @@ const serviceRegistry = registry.category("services");
 QUnit.module("Project", {}, () => {
     QUnit.module("Views", (hooks) => {
         let serverData;
+        let target;
         hooks.beforeEach(async () => {
+            target = getFixture();
             serverData = {
                 models: {
                     burndown_chart: {
@@ -110,8 +112,8 @@ QUnit.module("Project", {}, () => {
                 type: "burndown_chart",
             });
             assert.ok(burndownChart.model.metaData.stacked, "graph should be a burndown chart.");
-            assert.containsOnce(burndownChart, `button.o_graph_button[data-tooltip="Stacked"]`);
-            const stackButton = burndownChart.el.querySelector(`button.o_graph_button[data-tooltip="Stacked"]`);
+            assert.containsOnce(target, `button.o_graph_button[data-tooltip="Stacked"]`);
+            const stackButton = target.querySelector(`button.o_graph_button[data-tooltip="Stacked"]`);
             await click(stackButton);
             assert.notOk(burndownChart.model.metaData.stacked, "graph should be a classic line chart.");
         });
@@ -125,7 +127,7 @@ QUnit.module("Project", {}, () => {
                 type: "burndown_chart",
             });
 
-            const stackButton = burndownChart.el.querySelector(`button.o_graph_button[data-tooltip="Stacked"]`);
+            const stackButton = target.querySelector(`button.o_graph_button[data-tooltip="Stacked"]`);
             await click(stackButton);
             assert.notOk(burndownChart.model.metaData.stacked, "graph should be a classic line chart.");
 

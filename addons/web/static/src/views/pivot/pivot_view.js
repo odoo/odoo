@@ -13,11 +13,11 @@ import { Layout } from "@web/views/layout";
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { PivotRenderer } from "@web/views/pivot/pivot_renderer";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const viewRegistry = registry.category("views");
+const { Component } = owl;
 
-export class PivotView extends LegacyComponent {
+export class PivotView extends Component {
     setup() {
         this.actionService = useService("action");
 
