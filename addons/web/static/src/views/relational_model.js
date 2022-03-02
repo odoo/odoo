@@ -1616,7 +1616,7 @@ export class StaticList extends DataPoint {
         this._cache = {};
         this.views = params.views || {};
         this.viewMode = params.viewMode;
-        this.orderBy = (params.orderBy && params.orderBy[0]) || {}; // rename orderBy + get back from state
+        this.orderBy = params.orderBy || []; // rename orderBy + get back from state
         // to fix! use all objects?!
 
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
@@ -1683,38 +1683,59 @@ export class StaticList extends DataPoint {
         if (!this.resIds.length) {
             return [];
         }
-        const orderFieldName = this.orderBy.name;
+        const orderFieldNames = this.orderBy.map((o) => o.name);
+        const isAscByFieldName = {};
+        for (const o of this.orderBy) {
+            isAscByFieldName[o.name] = o.asc;
+        }
+        const compareRecords = (r1, r2) => {
+            for (const fieldName of orderFieldNames) {
+                let v1 = r1[fieldName];
+                let v2 = r2[fieldName];
+                if (this.fields[fieldName].type === "many2one") {
+                    v1 = v1[1];
+                    v2 = v2[1];
+                }
+                if (v1 !== v2) {
+                    if (v1 < v2) {
+                        return isAscByFieldName[fieldName] ? -1 : 1;
+                    } else {
+                        return isAscByFieldName[fieldName] ? 1 : -1;
+                    }
+                }
+            }
+            return 0;
+        };
+
         const hasSeveralPages = this.limit < this.resIds.length;
-        if (hasSeveralPages && orderFieldName) {
+        if (hasSeveralPages && orderFieldNames.length) {
             // there several pages in the x2many and it is ordered, so we must know the value
             // for the sorted field for all records and sort the resIds w.r.t. to those values
             // before fetching the activeFields for the resIds of the current page.
             // 1) populate values for already fetched records
             let recordValues = {};
-            for (const resId in this._cache) {
-                recordValues[resId] = this._cache[resId].data[orderFieldName];
+            for (const resId of this.resIds) {
+                if (this._cache[resId]) {
+                    recordValues[resId] = {};
+                    for (const fieldName of orderFieldNames) {
+                        recordValues[resId][fieldName] = this._cache[resId].data[fieldName];
+                    }
+                }
             }
             // 2) fetch values for non loaded records
             const resIds = this.resIds.filter((resId) => !(resId in this._cache));
             if (resIds.length) {
-                const records = await this.model.orm.read(this.resModel, resIds, [orderFieldName]);
+                const records = await this.model.orm.read(this.resModel, resIds, orderFieldNames);
                 for (const record of records) {
-                    recordValues[record.id] = record[orderFieldName];
+                    recordValues[record.id] = {};
+                    for (const fieldName of orderFieldNames) {
+                        recordValues[record.id][fieldName] = record[fieldName];
+                    }
                 }
             }
             // 3) sort resIds
             this.resIds.sort((id1, id2) => {
-                let v1 = recordValues[id1];
-                let v2 = recordValues[id2];
-                if (this.fields[orderFieldName].type === "many2one") {
-                    v1 = v1[1];
-                    v2 = v2[1];
-                }
-                if (v1 <= v2) {
-                    return this.orderBy.asc ? -1 : 1;
-                } else {
-                    return this.orderBy.asc ? 1 : -1;
-                }
+                return compareRecords(recordValues[id1], recordValues[id2]);
             });
         }
         const resIdsInCurrentPage = this.resIds.slice(this.offset, this.offset + this.limit);
@@ -1738,19 +1759,9 @@ export class StaticList extends DataPoint {
                 return record;
             })
         );
-        if (!hasSeveralPages && orderFieldName) {
+        if (!hasSeveralPages && orderFieldNames.length) {
             this.records.sort((r1, r2) => {
-                let v1 = r1.data[orderFieldName];
-                let v2 = r2.data[orderFieldName];
-                if (this.fields[orderFieldName].type === "many2one") {
-                    v1 = v1[1];
-                    v2 = v2[1];
-                }
-                if (v1 <= v2) {
-                    return this.orderBy.asc ? -1 : 1;
-                } else {
-                    return this.orderBy.asc ? 1 : -1;
-                }
+                return compareRecords(r1.data, r2.data);
             });
         }
     }

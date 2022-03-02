@@ -11632,9 +11632,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["onchange on partner"]);
     });
 
-    QUnit.skipWOWL("x2many default_order multiple fields", async function (assert) {
-        assert.expect(7);
-
+    QUnit.test("x2many default_order multiple fields", async function (assert) {
         serverData.models.partner.records = [
             { int_field: 10, id: 1, display_name: "record1" },
             { int_field: 12, id: 2, display_name: "record2" },
@@ -11663,17 +11661,46 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        var $recordList = form.$(".o_field_x2many_list .o_data_row");
-        var expectedOrderId = ["1", "5", "6", "3", "7", "2", "4"];
+        const recordIdList = [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
+            (record) => record.querySelector(".o_data_cell").innerText
+        );
+        const expectedOrderId = ["1", "5", "6", "3", "7", "2", "4"];
+        assert.deepEqual(recordIdList, expectedOrderId);
+    });
 
-        _.each($recordList, function (record, index) {
-            var $record = $(record);
-            assert.strictEqual(
-                $record.find(".o_data_cell").eq(0).text(),
-                expectedOrderId[index],
-                "The record should be the right place. Index: " + index
-            );
+    QUnit.test("x2many default_order multiple fields with limit", async function (assert) {
+        serverData.models.partner.records = [
+            { int_field: 10, id: 1, display_name: "record1" },
+            { int_field: 12, id: 2, display_name: "record2" },
+            { int_field: 11, id: 3, display_name: "record3" },
+            { int_field: 12, id: 4, display_name: "record4" },
+            { int_field: 10, id: 5, display_name: "record5" },
+            { int_field: 10, id: 6, display_name: "record6" },
+            { int_field: 11, id: 7, display_name: "record7" },
+        ];
+
+        serverData.models.partner.records[0].p = [1, 7, 4, 5, 2, 6, 3];
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p" >
+                        <tree default_order="int_field,id" limit="4">
+                            <field name="id"/>
+                            <field name="int_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
         });
+        const recordIdList = [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
+            (record) => record.querySelector(".o_data_cell").innerText
+        );
+        const expectedOrderId = ["1", "5", "6", "3"];
+        assert.deepEqual(recordIdList, expectedOrderId);
     });
 
     QUnit.skipWOWL("focus when closing many2one modal in many2one modal", async function (assert) {
@@ -13003,7 +13030,6 @@ QUnit.module("Fields", (hooks) => {
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
-                debug: 1,
                 serverData,
                 arch: `
                     <form>
