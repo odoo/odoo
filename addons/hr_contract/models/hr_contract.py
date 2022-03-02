@@ -249,9 +249,11 @@ class Contract(models.Model):
 
     def action_open_contract_form(self):
         self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "hr.contract",
-            "views": [[False, "form"]],
-            "res_id": self.id,
-        }
+        action = self.env['ir.actions.actions']._for_xml_id('hr_contract.action_hr_contract')
+        action.update({
+            'view_mode': 'form',
+            'view_id': self.env.ref('hr_contract.hr_contract_view_form').id,
+            'views': [(self.env.ref('hr_contract.hr_contract_view_form').id, 'form')],
+            'res_id': self.id,
+        })
+        return action
