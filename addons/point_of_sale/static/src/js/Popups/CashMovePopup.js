@@ -18,7 +18,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
         }
         confirm() {
             try {
-                parse.float(this.state.inputAmount);
+                parse.float(this.state.inputAmount.replace(",", "."));
             } catch (error) {
                 this.state.inputHasError = true;
                 this.errorMessage = this.env._t('Invalid amount');
@@ -38,7 +38,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
         }
         getPayload() {
             return {
-                amount: parse.float(this.state.inputAmount),
+                amount: parse.float(this.state.inputAmount.replace(",", ".")),
                 reason: this.state.inputReason.trim(),
                 type: this.state.inputType,
             };
