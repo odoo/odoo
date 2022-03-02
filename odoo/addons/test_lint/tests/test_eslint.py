@@ -28,6 +28,7 @@ class TestESLint(lint_case.LintCase):
         files_to_check = [
             p for p in self.iter_module_files('**/static/**/*.js')
             if not re.match('.*/libs?/.*', p)  # don't check libraries
+            if not re.match('.*/o_spreadsheet/o_spreadsheet.js', p) # don't check generated code
         ]
         eslintrc_path = get_resource_path('test_lint', 'tests', 'eslintrc')
 
