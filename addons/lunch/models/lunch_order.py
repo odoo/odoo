@@ -23,6 +23,8 @@ class LunchOrder(models.Model):
                        default=fields.Date.context_today)
     supplier_id = fields.Many2one(
         string='Vendor', related='product_id.supplier_id', store=True, index=True)
+    available_today = fields.Boolean(related='supplier_id.available_today')
+    order_deadline_passed = fields.Boolean(related='supplier_id.order_deadline_passed')
     user_id = fields.Many2one('res.users', 'User', readonly=True,
                               states={'new': [('readonly', False)]},
                               default=lambda self: self.env.uid)
@@ -31,8 +33,9 @@ class LunchOrder(models.Model):
     price = fields.Monetary('Total Price', compute='_compute_total_price', readonly=True, store=True)
     active = fields.Boolean('Active', default=True)
     state = fields.Selection([('new', 'To Order'),
-                              ('ordered', 'Ordered'),
-                              ('confirmed', 'Received'),
+                              ('ordered', 'Ordered'),       # "Internally" ordered
+                              ('sent', 'Sent'),             # Order sent to the supplier
+                              ('confirmed', 'Received'),    # Order received
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, default='new')
     notified = fields.Boolean(default=False)
@@ -75,7 +78,7 @@ class LunchOrder(models.Model):
     def _compute_display_reorder_button(self):
         show_button = self.env.context.get('show_reorder_button')
         for order in self:
-            order.display_reorder_button = show_button and order.state == 'confirmed'
+            order.display_reorder_button = show_button and order.state == 'confirmed' and order.supplier_id.available_today
 
     def init(self):
         self._cr.execute("""CREATE INDEX IF NOT EXISTS lunch_order_user_product_date ON %s (user_id, product_id, date)"""
@@ -124,7 +127,7 @@ class LunchOrder(models.Model):
                 **vals,
                 'toppings': self._extract_toppings(vals),
             })
-            if lines:
+            if lines.filtered(lambda l: l.state not in ['sent', 'confirmed']):
                 # YTI FIXME This will update multiple lines in the case there are multiple
                 # matching lines which should not happen through the interface
                 lines.update_quantity(1)
@@ -187,7 +190,7 @@ class LunchOrder(models.Model):
             line.display_toppings = ' + '.join(toppings.mapped('name'))
 
     def update_quantity(self, increment):
-        for line in self.filtered(lambda line: line.state != 'confirmed'):
+        for line in self.filtered(lambda line: line.state not in ['sent', 'confirmed']):
             if line.quantity <= -increment:
                 # TODO: maybe unlink the order?
                 line.active = False
@@ -241,6 +244,9 @@ class LunchOrder(models.Model):
 
     def action_reset(self):
         self.write({'state': 'ordered'})
+
+    def action_send(self):
+        self.state = 'sent'
 
     def action_notify(self):
         self -= self.filtered('notified')

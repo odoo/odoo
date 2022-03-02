@@ -3,10 +3,11 @@
 import math
 import pytz
 
+from collections import defaultdict
 from datetime import datetime, time, timedelta
 from textwrap import dedent
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import float_round
 
@@ -72,6 +73,7 @@ class LunchSupplier(models.Model):
     available_location_ids = fields.Many2many('lunch.location', string='Location')
     available_today = fields.Boolean('This is True when if the supplier is available today',
                                      compute='_compute_available_today', search='_search_available_today')
+    order_deadline_passed = fields.Boolean(compute='_compute_order_deadline_passed')
 
     tz = fields.Selection(_tz_get, string='Timezone', required=True, default=lambda self: self.env.user.tz or 'UTC')
 
@@ -105,6 +107,9 @@ class LunchSupplier(models.Model):
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
         ('1', 'Only One')], 'Extra 3 Quantity', default='0_more', required=True)
+
+    show_order_button = fields.Boolean(compute='_compute_buttons')
+    show_confirm_button = fields.Boolean(compute='_compute_buttons')
 
     _sql_constraints = [
         ('automatic_email_time_range',
@@ -215,6 +220,19 @@ class LunchSupplier(models.Model):
         Product.search([('supplier_id', 'in', inactive_suppliers.ids)]).write({'active': False})
         return res
 
+    def _get_current_orders(self, state='ordered'):
+        """ Returns today's orders """
+        available_today = self.filtered('available_today')
+        if not available_today:
+            return self.env['lunch.order']
+
+        orders = self.env['lunch.order'].search([
+            ('supplier_id', 'in', available_today.ids),
+            ('state', '=', state),
+            ('date', '=', fields.Date.context_today(self.with_context(tz=self.tz))),
+        ], order="user_id, name")
+        return orders
+
     def _send_auto_email(self):
         """ Send an email to the supplier with the order of the day """
         # Called daily by cron
@@ -226,11 +244,7 @@ class LunchSupplier(models.Model):
         if self.send_by != 'mail':
             raise ValueError("Cannot send an email to this supplier")
 
-        orders = self.env['lunch.order'].search([
-            ('supplier_id', '=', self.id),
-            ('state', '=', 'ordered'),
-            ('date', '=', fields.Date.context_today(self.with_context(tz=self.tz))),
-        ], order="user_id, name")
+        orders = self._get_current_orders()
         if not orders:
             return
 
@@ -265,7 +279,7 @@ class LunchSupplier(models.Model):
             order=order, lines=email_orders, sites=email_sites
         ).send_mail(self.id)
 
-        orders.action_confirm()
+        orders.action_send()
 
     @api.depends('recurrency_end_date', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')
     def _compute_available_today(self):
@@ -274,11 +288,27 @@ class LunchSupplier(models.Model):
         for supplier in self:
             now = now.astimezone(pytz.timezone(supplier.tz))
 
-            if supplier.recurrency_end_date and now.date() >= supplier.recurrency_end_date:
-                supplier.available_today = False
+            supplier.available_today = supplier._available_on_date(now)
+
+    def _available_on_date(self, date):
+        self.ensure_one()
+
+        fieldname = WEEKDAY_TO_NAME[date.weekday()]
+        return not (self.recurrency_end_date and date.date() >= self.recurrency_end_date) and self[fieldname]
+
+    @api.depends('available_today', 'automatic_email_time', 'send_by')
+    def _compute_order_deadline_passed(self):
+        now = fields.Datetime.now().replace(tzinfo=pytz.UTC)
+
+        for supplier in self:
+            if supplier.send_by == 'mail':
+                now = now.astimezone(pytz.timezone(supplier.tz))
+                email_time = pytz.timezone(supplier.tz).localize(datetime.combine(
+                    fields.Date.context_today(supplier),
+                    float_to_time(supplier.automatic_email_time, supplier.moment)))
+                supplier.order_deadline_passed = supplier.available_today and now > email_time
             else:
-                fieldname = WEEKDAY_TO_NAME[now.weekday()]
-                supplier.available_today = supplier[fieldname]
+                supplier.order_deadline_passed = not supplier.available_today
 
     def _search_available_today(self, operator, value):
         if (not operator in ['=', '!=']) or (not value in [True, False]):
@@ -298,3 +328,52 @@ class LunchSupplier(models.Model):
             recurrency_domain,
             [(fieldname, operator, value)]
         ])
+
+    def _compute_buttons(self):
+        self.env.cr.execute("""
+            SELECT supplier_id, state, COUNT(*)
+              FROM lunch_order
+             WHERE supplier_id IN %s
+               AND state in ('ordered', 'sent')
+               AND date = %s
+               AND active
+          GROUP BY supplier_id, state
+        """, (tuple(self.ids), fields.Date.context_today(self)))
+        supplier_orders = defaultdict(dict)
+        for order in self.env.cr.fetchall():
+            supplier_orders[order[0]][order[1]] = order[2]
+        for supplier in self:
+            supplier.show_order_button = supplier_orders[supplier.id].get('ordered', False)
+            supplier.show_confirm_button = supplier_orders[supplier.id].get('sent', False)
+
+    def action_send_orders(self):
+        no_auto_mail = self.filtered(lambda s: s.send_by != 'mail')
+
+        for supplier in self - no_auto_mail:
+            supplier._send_auto_email()
+        orders = no_auto_mail._get_current_orders()
+        orders.action_send()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _('The orders have been sent!'),
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
+
+    def action_confirm_orders(self):
+        orders = self._get_current_orders(state='sent')
+        orders.action_confirm()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _('The orders have been confirmed!'),
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }

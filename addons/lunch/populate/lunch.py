@@ -127,6 +127,7 @@ class LunchOrder(models.Model):
             ('note', populate.constant('lunch_note_{counter}')),
             ('company_id', populate.randomize(company_ids)),
             ('quantity', populate.randint(0, 10)),
+            ('date', populate.randdatetime(relative_before=relativedelta(months=-3), relative_after=relativedelta(months=3))),
         ]
 
 
