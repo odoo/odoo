@@ -4,6 +4,7 @@ import glob
 import io
 import sys
 import csv
+from itertools import groupby
 from pathlib import Path
 from pprint import pformat
 
@@ -271,92 +272,60 @@ def get_records(module):
 # -----------------------------------------------------------
 
 def do_module(module, lang):
-    records = get_records(module)
-    convert_account_account_csv(module, lang)
-    convert_account_group_csv(module)
-    convert_account_tax_group_xml(module, records)
-    content = convert_template_data(module, records)
-    content += "\n" + convert_account_tax_xml(module, records)
+    all_records = {model: list(records) for model, records in groupby(get_records(module), lambda x: x['_model'])}
+
+    convert_old_csv(module, source="account_account_template.csv", destination="account.account.csv",
+                    callback=lambda header, rows: header.append(f"name@{lang}") or (header, rows))
+    convert_old_csv(module, source='account_group_template.csv', destination="account.group.csv")
+    content = convert_records_to_csv(module, all_records['account.tax.group'], 'account.tax.group')
+    save_new_file(module, "account.tax.group.csv", content)
+
+    content = convert_records_to_function(module, all_records['account.chart.template'], "account.chart.template", "_get_template_data")
+    content = convert_records_to_function(module, all_records['account.tax.template'], "account.tax.template", "_get_account_tax")
     content += "\n" + convert_account_fiscal_position_template_csv(module)
-    save_file(module, "chart_template.py", content)
+    save_new_file(module, "chart_template.py", content)
 
-def convert_template_data(module, all_records):
+def convert_records_to_function(module, records, model, function_name, cid=True):
     stream = io.StringIO()
-    records = {id: record for id, record in all_records.items()
-               if record['_model'] == 'account.chart.template'}
+    cid_str = cid and f"{indent(2)}(company or self.env.company).id"
     stream.write(f"{indent(1)}@delegate_to_super_if_code_doesnt_match\n"
-                 f"{indent(1)}def _get_template_data(self, template_code, company):\n"
+                 f"{indent(1)}def {function_name}(self, template_code, company):\n" +
+                 cid_str +
                  f"{indent(2)}return ")
-    stream.write(list(records.values())[0].pformat(2).lstrip())
-    return stream.getvalue()
-
-def convert_account_account_csv(module, lang):
-    lines = load_csv(module, filename='account_account_template.csv')
-    if lines:
-        header, *rows = lines
-        header, rows = remove_chart_template_id(header, rows)
-        header.append(f"name@{lang}")
-        content = ','.join(header) + '\n' + '\n'.join([','.join(row) for row in rows])
-        save_file(module, "account.account.csv", content)
-
-def convert_account_group_csv(module):
-    lines = load_csv(module, filename='account_group_template.csv')
-    if lines:
-        header, *rows = lines
-        header, rows = remove_chart_template_id(header, rows)
-        content = ','.join(header) + '\n' + '\n'.join([','.join(row) for row in rows])
-        save_file(module, "account.group.csv", content)
-
-# -- journals missing
-
-def convert_account_tax_group_xml(module, all_records):
-    records = {id: record for id, record in all_records.items()
-               if record['_model'] == 'account.tax.group'}
-    header = ['name', 'country_id/id']
-    rows = []
-    for _id, record in records.items():
-        rows.append([field._value for _id, field in record['children'].items()])
-    content = generate_csv(header, rows)
-    save_file(module, "account.tax.group.csv", content)
-
-def convert_account_tax_xml(module, all_records):
-    stream = io.StringIO()
-    records = {id: record for id, record in all_records.items()
-                   if record['_model'] == 'account.tax.template'}
-    stream.write(f"{indent(1)}@delegate_to_super_if_code_doesnt_match\n"
-                 f"{indent(1)}def _get_account_tax(self, template_code, company):\n"
-                 f"{indent(2)}cid = (company or self.env.company).id\n"
-                 f"{indent(2)}return [\n")
-    for i, (_id, record) in enumerate(records.items()):
-        content = record.pformat(3).rstrip() + \
-                  ("," if i < len(records) - 1 else "") + "\n"
-        stream.write(content)
-    stream.write(f"{indent(2)}]\n")
+    if len(records) == 1:
+        for _id, record in records.items():
+            stream.write(record.pformat(2).lstrip())
+    else:
+        stream.write("[\n")
+        for i, (_id, record) in enumerate(records.items()):
+            is_last = i < len(records) - 1
+            stream.write(record.pformat(3).rstrip() + (is_last and "" or ",") + "\n")
+        stream.write("{indent(2)}]\n")
     return stream.getvalue()
 
 def convert_account_fiscal_position_template_csv(module):
-    lines = load_csv(module, filename='account_fiscal_position.csv')
-    stream = io.StringIO()
+    lines = read_csv_lines(module, filename='account_fiscal_position.csv')
+    records = {}
     if lines:
-        stream.write(f"{indent(1)}@delegate_to_super_if_code_doesnt_match\n"
-                     f"{indent(1)}def _get_fiscal_position(self, template_code, company):\n"
-                     f"{indent(2)}return [")
         header, *rows = lines
         header, rows = remove_chart_template_id(header, rows)
-        content = ""
-        for j, row in enumerate(rows):
-            record = AccountFiscalPosition({'tag': 'AccountFiscalPosition', '_model': 'account.fiscal.position'},
-                            'account.fiscal.position')
+        for row in rows:
+            _id = f"account_fiscal_position_{id}"
+            records[_id] = AccountFiscalPosition({
+                'id': _id,
+                'tag': 'AccountFiscalPosition',
+                '_model': 'account.fiscal.position'
+            }, 'account.fiscal.position')
             for i, field_header in enumerate(header):
-                record.append(Field({
+                is_ref = row[i].startswith('ref(')
+                records[_id].append(Field({
                     'id': field_header,
-                    'text': row[i] if not row[i].startswith('ref(') else '',
-                    'ref': Ref(row[i]) if row[i].startswith('ref(') else ''
+                    'text': row[i] if not is_ref else '',
+                    'ref': Ref(row[i]) if is_ref else ''
                 }))
-            content += record.pformat(2).rstrip() + (',\n' if j < len(rows) - 1 else '')
-        stream.write(content.lstrip())
-        stream.write(f'\n{indent(2)}]')
-    return stream.getvalue()
+    return convert_records_to_function(module, records, "account.fiscal.position", "_get_fiscal_position", cid=True)
+
+# ---------------------------------------------------------
 
 def remove_chart_template_id(header, rows):
     chart_template_id_col = None
@@ -371,22 +340,42 @@ def remove_chart_template_id(header, rows):
             row.pop(chart_template_id_col)
     return header, rows
 
-def generate_csv(header, rows):
+def convert_records_to_csv(module, records, model):
+    header, rows = [], []
+    for i, (_id, record) in enumerate(records.items()):
+        if i == 0:
+            for _id in record.get('children', {}):
+                header.append(_id.replace(":", "/"))
+        rows.append([field._value for _id, field in record.get('children', {}).items()])
+    return generate_csv_content(header, rows)
+
+def generate_csv_content(header, rows):
     fields_per_rows = [','.join([str(field) for field in row]) for row in rows]
     return ','.join(header) + '\n' + '\n'.join(fields_per_rows)
 
-def load_csv(module, filename):
-    csvfile = (load_file(module, filename) or '').split('\n')
+def read_csv_lines(module, filename):
+    csvfile = (load_old_source(module, filename) or '').split('\n')
     if not csvfile:
         return []
     reader = csv.reader(csvfile, delimiter=',')
     return [line for line in reader if line]
 
-def load_file(module, filename):
+def convert_old_csv(module, source, destination, callback=None):
+    lines = read_csv_lines(module, filename=source)
+    if lines:
+        header, *rows = lines
+        header, rows = remove_chart_template_id(header, rows)
+        if callback:
+            header, rows = callback(header, rows)
+        content = generate_csv_content(header, rows)
+        save_new_file(module, destination, content)
+
+def load_old_source(module, filename):
+    stem, suffix = Path(filename).stem, Path(filename).suffix
     filenames = (filename,
                  filename.replace('_', '.'),
-                 filename[:-4] + '_template.csv',
-                 (filename[:-4] + '_template.csv').replace('_', '.'))
+                 f"{stem}_template{suffix}",
+                 (f"{stem}_template{suffix}").replace('_', '.'))
     for name in filenames:
         path = Path.cwd() / f'addons/{module}/data/{name}'
         if path.exists():
@@ -398,7 +387,7 @@ def load_file(module, filename):
     with open(path, newline='', encoding='utf-8') as infile:
         return infile.read()
 
-def save_file(module, filename, content):
+def save_new_file(module, filename, content):
     path = Path.cwd() / f'addons/{module}/data/template'
     if not path.is_dir():
         path.mkdir()
