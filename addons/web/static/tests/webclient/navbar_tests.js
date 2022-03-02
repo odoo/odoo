@@ -24,12 +24,14 @@ const { xml } = owl;
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
 
-class MySystrayItem extends LegacyComponent {}
+class MySystrayItem extends Component {}
 MySystrayItem.template = xml`<li class="my-item">my item</li>`;
 let baseConfig;
+let target;
 
 QUnit.module("Navbar", {
     async beforeEach() {
+        target = getFixture();
         serviceRegistry.add("menu", menuService);
         serviceRegistry.add("action", actionService);
         serviceRegistry.add("notification", notificationService);
@@ -51,10 +53,9 @@ QUnit.module("Navbar", {
 
 QUnit.test("can be rendered", async (assert) => {
     const env = await makeTestEnv(baseConfig);
-    const target = getFixture();
-    const navbar = await mount(NavBar, target, { env });
+    await mount(NavBar, target, { env });
     assert.containsOnce(
-        navbar.el,
+        target,
         ".o_navbar_apps_menu button.dropdown-toggle",
         "1 apps menu toggler present"
     );
@@ -62,9 +63,8 @@ QUnit.test("can be rendered", async (assert) => {
 
 QUnit.test("dropdown menu can be toggled", async (assert) => {
     const env = await makeTestEnv(baseConfig);
-    const target = getFixture();
-    const navbar = await mount(NavBar, target, { env });
-    const dropdown = navbar.el.querySelector(".o_navbar_apps_menu");
+    await mount(NavBar, target, { env });
+    const dropdown = target.querySelector(".o_navbar_apps_menu");
     await click(dropdown, "button.dropdown-toggle");
     assert.containsOnce(dropdown, ".dropdown-menu");
     await click(dropdown, "button.dropdown-toggle");
@@ -81,11 +81,10 @@ QUnit.test("data-menu-xmlid attribute on AppsMenu items", async (assert) => {
         5: { id: 5, children: [], name: "Sub menu", appID: 1, xmlid: "menu_5" },
     };
     const env = await makeTestEnv(baseConfig);
-    const target = getFixture();
-    const navbar = await mount(NavBar, target, { env });
+    await mount(NavBar, target, { env });
 
     // check apps
-    const appsMenu = navbar.el.querySelector(".o_navbar_apps_menu");
+    const appsMenu = target.querySelector(".o_navbar_apps_menu");
     await click(appsMenu, "button.dropdown-toggle");
     const menuItems = appsMenu.querySelectorAll("a");
     assert.strictEqual(
@@ -102,21 +101,20 @@ QUnit.test("data-menu-xmlid attribute on AppsMenu items", async (assert) => {
     // check menus
     env.services.menu.setCurrentMenu(1);
     await nextTick();
-    assert.containsOnce(navbar, ".o_menu_sections .dropdown-item[data-menu-xmlid=menu_3]");
+    assert.containsOnce(target, ".o_menu_sections .dropdown-item[data-menu-xmlid=menu_3]");
 
     // check sub menus toggler
-    assert.containsOnce(navbar, ".o_menu_sections button.dropdown-toggle[data-menu-xmlid=menu_4]");
+    assert.containsOnce(target, ".o_menu_sections button.dropdown-toggle[data-menu-xmlid=menu_4]");
 
     // check sub menus
-    await click(navbar.el.querySelector(".o_menu_sections .dropdown-toggle"));
-    assert.containsOnce(navbar, ".o_menu_sections .dropdown-item[data-menu-xmlid=menu_5]");
+    await click(target.querySelector(".o_menu_sections .dropdown-toggle"));
+    assert.containsOnce(target, ".o_menu_sections .dropdown-item[data-menu-xmlid=menu_5]");
 });
 
 QUnit.test("navbar can display current active app", async (assert) => {
     const env = await makeTestEnv(baseConfig);
-    const target = getFixture();
-    const navbar = await mount(NavBar, target, { env });
-    const dropdown = navbar.el.querySelector(".o_navbar_apps_menu");
+    await mount(NavBar, target, { env });
+    const dropdown = target.querySelector(".o_navbar_apps_menu");
     // Open apps menu
     await click(dropdown, "button.dropdown-toggle");
     assert.containsOnce(
@@ -137,19 +135,18 @@ QUnit.test("navbar can display current active app", async (assert) => {
 
 QUnit.test("navbar can display systray items", async (assert) => {
     const env = await makeTestEnv(baseConfig);
-    const target = getFixture();
-    const navbar = await mount(NavBar, target, { env });
-    assert.containsOnce(navbar.el, "li.my-item");
+    await mount(NavBar, target, { env });
+    assert.containsOnce(target, "li.my-item");
 });
 
 QUnit.test("navbar can display systray items ordered based on their sequence", async (assert) => {
-    class MyItem1 extends LegacyComponent {}
+    class MyItem1 extends Component {}
     MyItem1.template = xml`<li class="my-item-1">my item 1</li>`;
-    class MyItem2 extends LegacyComponent {}
+    class MyItem2 extends Component {}
     MyItem2.template = xml`<li class="my-item-2">my item 2</li>`;
-    class MyItem3 extends LegacyComponent {}
+    class MyItem3 extends Component {}
     MyItem3.template = xml`<li class="my-item-3">my item 3</li>`;
-    class MyItem4 extends LegacyComponent {}
+    class MyItem4 extends Component {}
     MyItem4.template = xml`<li class="my-item-4">my item 4</li>`;
 
     clearRegistryWithCleanup(systrayRegistry);
@@ -158,9 +155,8 @@ QUnit.test("navbar can display systray items ordered based on their sequence", a
     systrayRegistry.add("addon.myitem3", { Component: MyItem3 }, { sequence: 100 });
     systrayRegistry.add("addon.myitem4", { Component: MyItem4 });
     const env = await makeTestEnv(baseConfig);
-    const target = getFixture();
-    const navbar = await mount(NavBar, target, { env });
-    const menuSystray = navbar.el.getElementsByClassName("o_menu_systray")[0];
+    await mount(NavBar, target, { env });
+    const menuSystray = target.getElementsByClassName("o_menu_systray")[0];
     assert.containsN(menuSystray, "li", 4, "four systray items should be displayed");
     assert.strictEqual(menuSystray.innerText, "my item 3\nmy item 4\nmy item 2\nmy item 1");
 });
@@ -188,51 +184,50 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
     const env = await makeTestEnv(baseConfig);
 
     // Force the parent width, to make this test independent of screen size
-    const target = getFixture();
     target.style.width = "1080px";
 
     // Set menu and mount
     env.services.menu.setCurrentMenu(1);
-    const navbar = await mount(MyNavbar, target, { env });
+    await mount(MyNavbar, target, { env });
     assert.containsN(
-        navbar.el,
+        target,
         ".o_menu_sections > *:not(.o_menu_sections_more):not(.d-none)",
         3,
         "should have 3 menu sections displayed (that are not the 'more' menu)"
     );
-    assert.containsNone(navbar.el, ".o_menu_sections_more", "the 'more' menu should not exist");
+    assert.containsNone(target, ".o_menu_sections_more", "the 'more' menu should not exist");
     // Force minimal width and dispatch window resize event
-    navbar.el.style.width = "0%";
+    target.style.width = "0%";
     window.dispatchEvent(new Event("resize"));
     await nextTick();
     assert.containsOnce(
-        navbar.el,
+        target,
         ".o_menu_sections > *:not(.d-none)",
         "only one menu section should be displayed"
     );
     assert.containsOnce(
-        navbar.el,
+        target,
         ".o_menu_sections_more:not(.d-none)",
         "the displayed menu section should be the 'more' menu"
     );
     // Open the more menu
-    await click(navbar.el, ".o_menu_sections_more .dropdown-toggle");
+    await click(target, ".o_menu_sections_more .dropdown-toggle");
     assert.deepEqual(
-        [...navbar.el.querySelectorAll(".dropdown-menu > *")].map((el) => el.textContent),
+        [...target.querySelectorAll(".dropdown-menu > *")].map((el) => el.textContent),
         ["Section 10", "Section 11", "Section 12", "Section 120", "Section 121", "Section 122"],
         "'more' menu should contain all hidden sections in correct order"
     );
     // Reset to full width and dispatch window resize event
-    navbar.el.style.width = "100%";
+    target.style.width = "100%";
     window.dispatchEvent(new Event("resize"));
     await nextTick();
     assert.containsN(
-        navbar.el,
+        target,
         ".o_menu_sections > *:not(.o_menu_sections_more):not(.d-none)",
         3,
         "should have 3 menu sections displayed (that are not the 'more' menu)"
     );
-    assert.containsNone(navbar.el, ".o_menu_sections_more", "the 'more' menu should not exist");
+    assert.containsNone(target, ".o_menu_sections_more", "the 'more' menu should not exist");
     // Check the navbar adaptation calls
     assert.verifySteps([
         "adapt -> hide 0/3 sections",
@@ -241,7 +236,7 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
     ]);
 });
 
-QUnit.test(
+QUnit.skip(
     "'more' menu sections adaptations do not trigger render in some cases",
     async (assert) => {
         let adaptRunning = false;
@@ -272,13 +267,12 @@ QUnit.test(
         baseConfig.serverData.menus = newMenus;
 
         // Force the parent width, to make this test independent of screen size
-        const target = getFixture();
         target.style.width = "600px";
 
         const env = await makeTestEnv(baseConfig);
         const navbar = await mount(MyNavbar, target, { env });
         assert.strictEqual(navbar.currentAppSections.length, 0, "0 app sub menus");
-        assert.strictEqual(navbar.el.offsetWidth, 600);
+        assert.strictEqual(target.offsetWidth, 600);
         assert.strictEqual(adaptCount, 1);
         assert.strictEqual(
             adaptRenderCount,
@@ -287,10 +281,10 @@ QUnit.test(
         );
 
         // Force minimal width and dispatch window resize event
-        navbar.el.style.width = "0%";
+        target.style.width = "0%";
         window.dispatchEvent(new Event("resize"));
         await nextTick();
-        assert.strictEqual(navbar.el.offsetWidth, 0);
+        assert.strictEqual(target.offsetWidth, 0);
         assert.strictEqual(adaptCount, 2);
         assert.strictEqual(
             adaptRenderCount,
@@ -315,7 +309,7 @@ QUnit.test(
         );
 
         // Force 40% width and dispatch window resize event
-        navbar.el.style.width = "40%";
+        target.style.width = "40%";
         window.dispatchEvent(new Event("resize"));
         await nextTick();
         assert.strictEqual(
@@ -331,7 +325,7 @@ QUnit.test(
         );
 
         // Reset to full width and dispatch window resize event
-        navbar.el.style.width = "100%";
+        target.style.width = "100%";
         window.dispatchEvent(new Event("resize"));
         await nextTick();
         assert.strictEqual(navbar.currentAppSections.length, 3, "still 3 app sub menus");
@@ -373,46 +367,45 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
     const env = await makeTestEnv(baseConfig);
 
     // Force the parent width, to make this test independent of screen size
-    const target = getFixture();
     target.style.width = "1080px";
 
     // Set App1 menu and mount
     env.services.menu.setCurrentMenu(1);
-    const navbar = await mount(NavBar, target, { env });
+    await mount(NavBar, target, { env });
 
     // Force minimal width and dispatch window resize event
-    navbar.el.style.width = "0%";
+    target.style.width = "0%";
     window.dispatchEvent(new Event("resize"));
     await nextTick();
     assert.containsOnce(
-        navbar.el,
+        target,
         ".o_menu_sections > *:not(.d-none)",
         "only one menu section should be displayed"
     );
     assert.containsOnce(
-        navbar.el,
+        target,
         ".o_menu_sections_more:not(.d-none)",
         "the displayed menu section should be the 'more' menu"
     );
 
     // Open the more menu
-    await click(navbar.el, ".o_menu_sections_more .dropdown-toggle");
+    await click(target, ".o_menu_sections_more .dropdown-toggle");
     assert.deepEqual(
-        [...navbar.el.querySelectorAll(".dropdown-menu > *")].map((el) => el.textContent),
+        [...target.querySelectorAll(".dropdown-menu > *")].map((el) => el.textContent),
         ["Section 10", "Section 11", "Section 12", "Section 120", "Section 121", "Section 122"],
         "'more' menu should contain App1 sections"
     );
     // Close the more menu
-    await click(navbar.el, ".o_menu_sections_more .dropdown-toggle");
+    await click(target, ".o_menu_sections_more .dropdown-toggle");
 
     // Set App2 menu
     env.services.menu.setCurrentMenu(2);
     await nextTick();
 
     // Open the more menu
-    await click(navbar.el, ".o_menu_sections_more .dropdown-toggle");
+    await click(target, ".o_menu_sections_more .dropdown-toggle");
     assert.deepEqual(
-        [...navbar.el.querySelectorAll(".dropdown-menu > *")].map((el) => el.textContent),
+        [...target.querySelectorAll(".dropdown-menu > *")].map((el) => el.textContent),
         ["Section 20", "Section 21", "Section 22", "Section 220", "Section 221", "Section 222"],
         "'more' menu should contain App2 sections"
     );
@@ -437,8 +430,6 @@ QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
         }
     }
     const env = await makeTestEnv(baseConfig);
-
-    const target = getFixture();
 
     // Set menu and mount
     env.services.menu.setCurrentMenu(1);

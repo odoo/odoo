@@ -15,7 +15,7 @@ QUnit.module("utils", () => {
         QUnit.module("useAutofocus");
 
         QUnit.test("useAutofocus: simple usecase", async function (assert) {
-            class MyComponent extends LegacyComponent {
+            class MyComponent extends Component {
                 setup() {
                     this.inputRef = useAutofocus();
                 }
@@ -41,7 +41,7 @@ QUnit.module("utils", () => {
         });
 
         QUnit.test("useAutofocus: conditional autofocus", async function (assert) {
-            class MyComponent extends LegacyComponent {
+            class MyComponent extends Component {
                 setup() {
                     this.inputRef = useAutofocus();
                     this.showInput = true;
@@ -113,7 +113,7 @@ QUnit.module("utils", () => {
         QUnit.module("useBus");
 
         QUnit.test("useBus hook: simple usecase", async function (assert) {
-            class MyComponent extends LegacyComponent {
+            class MyComponent extends Component {
                 setup() {
                     useBus(this.env.bus, "test-event", this.myCallback);
                 }
@@ -144,13 +144,13 @@ QUnit.module("utils", () => {
                     useListener("click", () => assert.step("click"));
                 }
             }
-            MyComponent.template = xml`<button>Click Me</button>`;
+            MyComponent.template = xml`<button class="root">Click Me</button>`;
 
             const env = await makeTestEnv();
             const target = getFixture();
             const comp = await mount(MyComponent, target, { env });
 
-            await click(comp.el);
+            await click(target.querySelector(".root"));
             assert.verifySteps(["click"]);
         });
 
@@ -162,7 +162,7 @@ QUnit.module("utils", () => {
                 }
             }
             MyComponent.template = xml`
-                <div>
+                <div class="root">
                     <button t-if="flag">Click Here</button>
                     <button t-else="">
                         <span>or Here</span>
@@ -173,15 +173,15 @@ QUnit.module("utils", () => {
             const target = getFixture();
             const comp = await mount(MyComponent, target, { env });
 
-            await click(comp.el);
+            await click(target.querySelector(".root"));
             assert.verifySteps([]);
-            await click(comp.el.querySelector("button"));
+            await click(target.querySelector("button"));
             assert.verifySteps(["click"]);
 
             comp.flag = false;
             comp.render();
             await nextTick();
-            await click(comp.el.querySelector("button span"));
+            await click(target.querySelector("button span"));
             assert.verifySteps(["click"]);
         });
 
@@ -193,7 +193,7 @@ QUnit.module("utils", () => {
                 }
             }
             MyComponent.template = xml`
-                <div>
+                <div class="root">
                     <button t-if="flag">Click Here</button>
                     <button t-else="">
                         <span>or Here</span>
@@ -204,21 +204,21 @@ QUnit.module("utils", () => {
             const target = getFixture();
             const comp = await mount(MyComponent, target, { env });
 
-            await click(comp.el);
+            await click(target.querySelector(".root"));
             assert.verifySteps([]);
-            await click(comp.el.querySelector("button"));
+            await click(target.querySelector("button"));
             assert.verifySteps(["click"]);
 
             comp.flag = false;
             await comp.render();
-            await click(comp.el.querySelector("button span"));
+            await click(target.querySelector("button span"));
             assert.verifySteps(["click"]);
         });
 
         QUnit.module("useService");
 
         QUnit.test("useService: unavailable service", async function (assert) {
-            class MyComponent extends LegacyComponent {
+            class MyComponent extends Component {
                 setup() {
                     useService("toy_service");
                 }
@@ -235,7 +235,7 @@ QUnit.module("utils", () => {
         });
 
         QUnit.test("useService: service that returns null", async function (assert) {
-            class MyComponent extends LegacyComponent {
+            class MyComponent extends Component {
                 setup() {
                     this.toyService = useService("toy_service");
                 }
