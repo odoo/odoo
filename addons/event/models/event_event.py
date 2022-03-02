@@ -191,6 +191,9 @@ class EventEvent(models.Model):
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    address_inline = fields.Char(
+        string='Venue (formatted for one line uses)', compute='_compute_address_inline',
+        compute_sudo=True)
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
     # ticket reports
@@ -494,6 +497,18 @@ class EventEvent(models.Model):
                is_html_empty(event.event_type_id.ticket_instructions):
                 event.ticket_instructions = event.event_type_id.ticket_instructions
 
+    @api.depends('address_id')
+    def _compute_address_inline(self):
+        """Use venue address if available, otherwise its name, finally ''. """
+        for event in self:
+            if (event.address_id.contact_address or '').strip():
+                event.address_inline = ', '.join(
+                    frag.strip()
+                    for frag in event.address_id.contact_address.split('\n') if frag.strip()
+                )
+            else:
+                event.address_inline = event.address_id.name or ''
+
     @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):
         for event in self:
@@ -585,7 +600,7 @@ class EventEvent(models.Model):
             cal_event.add('dtend').value = event.date_end.astimezone(pytz.timezone(event.date_tz))
             cal_event.add('summary').value = event.name
             if event.address_id:
-                cal_event.add('location').value = event.sudo().address_id.contact_address
+                cal_event.add('location').value = event.address_inline
 
             result[event.id] = cal.serialize().encode('utf-8')
         return result

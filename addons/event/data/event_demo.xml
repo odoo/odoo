@@ -144,6 +144,7 @@
         <field name="user_id" ref="base.user_demo"/>
         <field name="date_begin" eval="(DateTime.today()+ timedelta(days=130)).strftime('%Y-%m-%d 20:15:00')"/>
         <field name="date_end" eval="(DateTime.today()+ timedelta(days=133)).strftime('%Y-%m-%d 00:30:00')"/>
+        <field name="date_tz">Europe/London</field>
         <field name="event_type_id" ref="event_type_0"/>
         <field name="address_id" ref="event.res_partner_location_1"/>
         <field name="stage_id" ref="event_stage_announced"/>
