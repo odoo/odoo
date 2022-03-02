@@ -5,6 +5,8 @@ from ast import literal_eval
 
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
+from odoo.osv import expression
+from odoo.osv.query import Query
 
 
 class Project(models.Model):
@@ -74,12 +76,13 @@ class Project(models.Model):
 
     def _get_all_sales_orders(self):
         self.ensure_one()
-        return self.sale_order_id | self.task_ids.sale_order_id | self.milestone_ids.sale_line_id.order_id
+        return self._fetch_sale_order_items({'project.task': ['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)]}).order_id
 
     @api.depends('sale_order_id', 'task_ids.sale_order_id')
     def _compute_sale_order_count(self):
+        sale_order_items_per_project_id = self._fetch_sale_order_items_per_project_id({'project.task': ['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)]})
         for project in self:
-            project.sale_order_count = len(project._get_all_sales_orders())
+            project.sale_order_count = len(sale_order_items_per_project_id.get(project.id, self.env['sale.order.line']).order_id)
 
     def action_view_sos(self):
         self.ensure_one()
@@ -128,6 +131,84 @@ class Project(models.Model):
     # ----------------------------
     #  Project Updates
     # ----------------------------
+
+    def _fetch_sale_order_items_per_project_id(self, domain_per_model=None):
+        if not self:
+            return {}
+        if len(self) == 1:
+            return {self.id: self._fetch_sale_order_items(domain_per_model)}
+        query_str, params = self._get_sale_order_items_query(domain_per_model).select('id', 'ARRAY_AGG(DISTINCT sale_line_id) AS sale_line_ids')
+        query = f"""
+            {query_str}
+            GROUP BY id
+        """
+        self._cr.execute(query, params)
+        return {row['id']: self.env['sale.order.line'].browse(row['sale_line_ids']) for row in self._cr.dictfetchall()}
+
+    def _fetch_sale_order_items(self, domain_per_model=None, limit=None, offset=None):
+        return self.env['sale.order.line'].browse(self._fetch_sale_order_item_ids(domain_per_model, limit, offset))
+
+    def _fetch_sale_order_item_ids(self, domain_per_model=None, limit=None, offset=None):
+        if not self or not self.filtered('allow_billable'):
+            return []
+        query = self._get_sale_order_items_query(domain_per_model)
+        query.limit = limit
+        query.offset = offset
+        query_str, params = query.select('DISTINCT sale_line_id')
+        self._cr.execute(query_str, params)
+        return [row[0] for row in self._cr.fetchall()]
+
+    def _get_sale_orders(self):
+        return self._get_sale_order_items().order_id
+
+    def _get_sale_order_items(self):
+        return self._fetch_sale_order_items()
+
+    def _get_sale_order_items_query(self, domain_per_model=None):
+        if domain_per_model is None:
+            domain_per_model = {}
+        billable_project = [('allow_billable', '=', True)]
+        project_domain = [('id', 'in', self.ids), ('sale_line_id', '!=', False)]
+        if 'project.project' in domain_per_model:
+            project_domain = expression.AND([
+                domain_per_model['project.project'],
+                project_domain,
+                billable_project,
+            ])
+        project_query = self.env['project.project']._where_calc(project_domain)
+        self._apply_ir_rules(project_query, 'read')
+        project_query_str, project_params = project_query.select('id', 'sale_line_id')
+
+        Task = self.env['project.task']
+        task_domain = [('project_id', 'in', self.ids), ('sale_line_id', '!=', False)]
+        if Task._name in domain_per_model:
+            task_domain = expression.AND([
+                domain_per_model[Task._name],
+                task_domain,
+                billable_project,
+            ])
+        task_query = Task._where_calc(task_domain)
+        Task._apply_ir_rules(task_query, 'read')
+        task_query_str, task_params = task_query.select(f'{Task._table}.project_id AS id', f'{Task._table}.sale_line_id')
+
+        ProjectMilestone = self.env['project.milestone']
+        milestone_domain = [('project_id', 'in', self.ids), ('allow_billable', '=', True)]
+        if ProjectMilestone._name in domain_per_model:
+            milestone_domain = expression.AND([
+                domain_per_model[ProjectMilestone._name],
+                milestone_domain,
+                billable_project,
+            ])
+        milestone_query = ProjectMilestone._where_calc(milestone_domain)
+        ProjectMilestone._apply_ir_rules(milestone_query)
+        milestone_query_str, milestone_params = milestone_query.select(
+            f'{ProjectMilestone._table}.project_id AS id',
+            f'{ProjectMilestone._table}.sale_line_id',
+        )
+
+        query = Query(self._cr, 'project_sale_order_item', ' UNION '.join([project_query_str, task_query_str, milestone_query_str]))
+        query._where_params = project_params + task_params + milestone_params
+        return query
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
