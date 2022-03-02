@@ -463,6 +463,12 @@ class TestBase(TransactionCase):
         self.assertEqual([g['date'] for g in groups_data], ['January 2014', 'September 2014', 'January 2015', 'March 2015'], 'Incorrect ordering of the list')
         self.assertEqual([g['date_count'] for g in groups_data], [1, 1, 1, 3], 'Incorrect number of results')
 
+        # group on inherited date column (res_partner.date) specifying the :year -> Year default ordering
+        groups_data = res_users.read_group(domain, fields=['function', 'color', 'date'], groupby=['date:year'])
+        self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
+        self.assertEqual([g['date:year'] for g in groups_data], ['2014', '2015'], 'Incorrect ordering of the list')
+        self.assertEqual([g['date_count'] for g in groups_data], [2, 4], 'Incorrect number of results')
+
         # group on inherited date column (res_partner.date) -> Year-Month, custom order
         groups_data = res_users.read_group(domain, fields=['function', 'color', 'date'], groupby=['date'], orderby='date DESC')
         self.assertEqual(len(groups_data), 4, "Incorrect number of results when grouping on a field")
