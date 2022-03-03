@@ -278,7 +278,7 @@ var PortalChatter = publicWidget.Widget.extend({
 
     _onChangeDomain: function () {
         var self = this;
-        this.messageFetch().then(function () {
+        return this.messageFetch().then(function () {
             var p = self._currentPage;
             self.set('pager', self._pager(p));
         });

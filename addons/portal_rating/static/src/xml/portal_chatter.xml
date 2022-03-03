@@ -16,6 +16,9 @@
     </t>
 
     <t t-extend="portal.chatter_messages">
+        <t t-jquery="div[class='o_portal_chatter_messages']">
+            this.attr('class', this.attr("class") + ' o_portal_rating_chatter_messages');
+        </t>
         <t t-jquery="t[t-out='message.body']" t-operation="before">
             <t t-if="message['rating_value']">
                 <t t-call="portal_rating.rating_stars_static">
@@ -42,6 +45,15 @@
             <t t-if="!widget.options['display_rating']">
                 <t t-call="portal.chatter_message_count"/>
             </t>
+        </t>
+        <t t-jquery="t[t-call='portal.chatter_messages']" t-operation="before">
+            <div class="o_portal_chatter_messages_loading d-none">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
         </t>
     </t>
 

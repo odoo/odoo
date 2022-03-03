@@ -365,6 +365,10 @@ $truncate-limits: 2, 3, 10;
 }
 
 .o_wslides_course_main {
+    /* Goal of min-height: push the footer out of the screen (in most use-case) to avoid seeing it moving when switching
+    from course to review tab */
+    min-height: 70vh;
+
     .o_wslides_nav_tabs {
         @include media-breakpoint-up(md)  {
             @include o-wslides-tabs();
