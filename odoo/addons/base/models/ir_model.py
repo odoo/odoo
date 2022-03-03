@@ -1682,7 +1682,7 @@ class IrModelAccess(models.Model):
     _description = 'Model Access'
     _order = 'model_id,group_id,name,id'
 
-    name = fields.Char(compute='_compute_name', store=True, readonly=False)
+    name = fields.Char(compute='_compute_name', store=True, readonly=False, precompute=True, required=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
     model_id = fields.Many2one('ir.model', string='Model', required=True, index=True, ondelete='cascade')
     group_id = fields.Many2one('res.groups', string='Group', ondelete='restrict', index=True)
@@ -1690,6 +1690,7 @@ class IrModelAccess(models.Model):
     perm_write = fields.Boolean(string='Write Access')
     perm_create = fields.Boolean(string='Create Access')
     perm_unlink = fields.Boolean(string='Delete Access')
+    note = fields.Text()
 
     @api.depends('model_id', 'group_id')
     def _compute_name(self):
