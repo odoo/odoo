@@ -127,6 +127,9 @@ MockServer.include({
             const follower_id = args.follower_id;
             return this._mockRouteMailReadSubscriptionData(follower_id);
         }
+        if (route === '/mail/thread/data') {
+            return this._mockRouteMailThreadData(args.thread_model, args.thread_id, args.request_list);
+        }
         if (route === '/mail/thread/messages') {
             const { min_id, max_id, limit, thread_model, thread_id } = args;
             return this._mockRouteMailThreadFetchMessages(thread_model, thread_id, max_id, min_id, limit);
@@ -503,6 +506,26 @@ MockServer.include({
     },
 
     /**
+     * Simulates the `/mail/thread/data` route.
+     *
+     * @param {string} thread_model
+     * @param {integer} thread_id
+     * @param {string[]} request_list
+     * @returns {Object}
+     */
+    async _mockRouteMailThreadData(thread_model, thread_id, request_list) {
+        const res = {};
+        const thread = this._mockSearchRead(thread_model, [[['id', '=', thread_id]]], {})[0];
+        if (request_list.includes('attachments')) {
+            const attachments = this._mockSearchRead('ir.attachment', [
+                [['res_id', '=', thread.id], ['res_model', '=', thread_model]],
+            ], {}); // order not done for simplicity
+            res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id), true);
+        }
+        return res;
+    },
+
+    /**
      * Simulates the `/mail/thread/messages` route.
      *
      * @private
@@ -525,6 +548,39 @@ MockServer.include({
     //--------------------------------------------------------------------------
     // Private Mocked Methods
     //--------------------------------------------------------------------------
+
+    /**
+     * Simulates `_attachment_format` on `ir.attachment`.
+     *
+     * @private
+     * @param {string} res_model
+     * @param {string} domain
+     * @returns {Object}
+     */
+    _mockIrAttachment_attachmentFormat(ids, commands = false) {
+        const attachments = this._mockRead('ir.attachment', [ids]);
+        return attachments.map(attachment => {
+            const res = {
+                'checksum': attachment.checksum,
+                'filename': attachment.name,
+                'id': attachment.id,
+                'mimetype': attachment.mimetype,
+                'name': attachment.name,
+            };
+            if (commands) {
+                res['originThread'] = [['insert', {
+                    'id': attachment.res_id,
+                    'model': attachment.res_model,
+                }]];
+            } else {
+                Object.assign(res, {
+                    'res_id': attachment.res_id,
+                    'res_model': attachment.res_model,
+                });
+            }
+            return res;
+        });
+    },
 
     /**
      * Simulates `get_activity_data` on `mail.activity`.
