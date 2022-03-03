@@ -222,7 +222,7 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the
         journal document number with a 8 padding number """
-        if self.journal_id.l10n_latam_use_documents and self.env.company.country_id.code == "AR":
+        if self.journal_id.l10n_latam_use_documents and self.company_id.country_id.code == "AR":
             if self.l10n_latam_document_type_id:
                 return self._get_formatted_sequence()
         return super()._get_starting_sequence()
