@@ -225,7 +225,6 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         cleaned = cleaned.replace(u'%24', u'$')
         cleaned = cleaned.replace(u'%7B', u'{')
         cleaned = cleaned.replace(u'%7D', u'}')
-        cleaned = cleaned.replace(u'%20', u' ')
         cleaned = cleaned.replace(u'%5B', u'[')
         cleaned = cleaned.replace(u'%5D', u']')
         cleaned = cleaned.replace(u'%7C', u'|')
