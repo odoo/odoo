@@ -646,7 +646,10 @@ var EditMenuDialog = weWidgets.Dialog.extend({
                 levels[menu.depth] = (levels[menu.depth] || 0) + 1;
                 var menuFields = this.flat[menu.id].fields;
                 menuFields['sequence'] = levels[menu.depth];
-                menuFields['parent_id'] = menu['parent_id'] || this.rootMenuID;
+                // JQuery's nestedSortable() extracts parent_ids as string.
+                // They must be ints when they are actual existing ids but
+                // remain as strings when they represent a creation ("new-##").
+                menuFields['parent_id'] = parseInt(menu['parent_id']) || menu['parent_id'] || this.rootMenuID;
                 data.push(menuFields);
             }
         });
