@@ -33,6 +33,32 @@ $o-inline-spacers: map-merge($spacers, ('auto': auto));
   float: right !important;
 }
 
+// == Arrangement Classes
+//------------------------------------------------------------------------------
+// https://getbootstrap.com/docs/5.1/utilities/position/#arrange-elements
+
+$position-values: (
+  0: 0,
+  50: 50%,
+  100: 100%,
+  auto: auto,
+);
+
+$position-properties: (
+  top: top,
+  end: right,
+  bottom: bottom,
+  start: left,
+);
+
+@each $-value-key, $-value in $position-values {
+  @each $-property, $-property-direction in $position-properties {
+    .#{$-property}-#{$-value-key} {
+      #{$-property-direction}: $-value !important;
+    }
+  }
+}
+
 // == Gaps
 //------------------------------------------------------------------------------
 // "Bootstrap v5 ready" utility-classes to handle gaps.
@@ -49,3 +75,4 @@ $o-inline-spacers: map-merge($spacers, ('auto': auto));
     }
   }
 }
+
