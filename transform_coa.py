@@ -304,7 +304,7 @@ def do_module(module, lang):
                       ("account.fiscal.position", "_get_fiscal_position"),
                   )])
 
-    path = Path.cwd() / f'addons/{module}/models/chart_template.py'
+    path = Path.cwd() / f'addons/{module}/models/account_chart_template.py'
     with open(str(path), 'w', encoding="utf-8") as outfile:
         outfile.write(content)
 
@@ -430,6 +430,8 @@ def save_new_file(module, filename, content):
 # -----------------------------------------------------------
 
 if __name__ == '__main__':
-    # do_module("l10n_fr", "fr_FR")
-    do_module("l10n_it", "it_IT")
-    # do_module("l10n_es", "es_ES")
+    if len(sys.argv) < 3:
+        print("usage: transform_coa.py <module> <lang>\n"
+              "Example: transform_coa.py l10n_it it_IT")
+        sys.exit(1)
+    do_module(sys.argv[1], sys.argv[2])
