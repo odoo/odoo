@@ -20,6 +20,13 @@ odoo.define('hr_expense.expenses.tree', function (require) {
             'click .o_button_upload_expense': '_onUpload',
             'change .o_expense_documents_upload .o_form_binary_form': '_onAddAttachment',
         }),
+        /**
+         * @override
+         */
+         init: function () {
+            this._super.apply(this, arguments);
+            this.isMobile = config.device.isMobileDevice;
+        },
     });
 
     const ExpenseQRCodeMixin = {

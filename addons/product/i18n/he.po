@@ -1338,14 +1338,10 @@ msgstr "ייבא תבנית עבור מחירוני ספקים"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
-"במחיר סטנדרטי ועלות ממוצעת: שווי המוצר (מחושב אוטומטית בעלות ממוצעת).\n"
-"        ב FIFO: ערך היחידה האחרונה שיצאה מהמלאי (מחושב אוטומטית).\n"
-"        משמש לערך המוצר כאשר עלות הרכישה אינה ידועה (למשל התאמת מלאי).\n"
-"        משמש לחישוב שולי רווח בהזמנות לקוח."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -2682,6 +2678,15 @@ msgid "This comes from the product form."
 msgstr "זה בא מטופס המוצר."
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "זהו סכום המחיר הנוסף של כל התכונות"
@@ -3236,6 +3241,14 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr "אינך יכול להעביר את התכונה %s ממוצר %s למוצר %s."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

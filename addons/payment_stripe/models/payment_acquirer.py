@@ -6,7 +6,7 @@ import uuid
 import requests
 from werkzeug.urls import url_join, url_encode
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_stripe.const import API_VERSION, PROXY_URL, WEBHOOK_HANDLED_EVENTS
@@ -31,6 +31,41 @@ class PaymentAcquirer(models.Model):
         help="If a webhook is enabled on your Stripe account, this signing secret must be set to "
              "authenticate the messages sent from Stripe to Odoo.",
         groups='base.group_system')
+
+    #=== CONSTRAINT METHODS ===#
+
+    @api.constrains('state', 'stripe_publishable_key', 'stripe_secret_key')
+    def _check_state_of_connected_account_is_never_test(self):
+        """ Check that the acquirer of a connected account can never been set to 'test'.
+
+        This constraint is defined in the present module to allow the export of the translation
+        string of the `ValidationError` that can be raised by the internal module responsible for
+        Stripe Connect, although this constraint depends on a field that is defined in that external
+        module.
+        Additionally, having the field defined in the external module prevents from using it
+        as a trigger for this constraint. This is however not a problem because the field `state` is
+        used as trigger, and we always write on `state` when we write on the internal field.
+
+        :return: None
+        """
+        for acquirer in self:
+            if acquirer.state == 'test' and acquirer._stripe_has_connected_account():
+                raise ValidationError(_(
+                    "You cannot set the acquirer to Test Mode while it is linked with your Stripe "
+                    "account."
+                ))
+
+    def _stripe_has_connected_account(self):
+        """ Return whether the acquirer is linked to a connected Stripe account.
+
+        Note: This method is overridden by the internal module responsible for Stripe Connect.
+        Note: self.ensure_one()
+
+        :return: Whether the acquirer is linked to a connected Stripe account
+        :rtype: bool
+        """
+        self.ensure_one()
+        return False
 
     # === ACTION METHODS === #
 
@@ -118,7 +153,7 @@ class PaymentAcquirer(models.Model):
         }
 
     def _get_stripe_webhook_url(self):
-        return self.company_id.get_base_url() + StripeController._webhook_url
+        return self.get_base_url() + StripeController._webhook_url
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
@@ -315,21 +350,19 @@ class PaymentAcquirer(models.Model):
             response = requests.post(url=url, json=proxy_payload, timeout=60)
             response.raise_for_status()
         except requests.exceptions.ConnectionError:
-            raise ValidationError(
-                _("Stripe Proxy: Could not establish the connection.")
-            )
+            _logger.exception("unable to reach endpoint at %s", url)
+            raise ValidationError(_("Stripe Proxy: Could not establish the connection."))
         except requests.exceptions.HTTPError:
+            _logger.exception("invalid API request at %s with data %s", url, payload)
             raise ValidationError(
                 _("Stripe Proxy: An error occurred when communicating with the proxy.")
             )
+
+        # Stripe proxy endpoints always respond with HTTP 200 as they implement JSON-RPC 2.0
         response_content = response.json()
-        if response_content.get('error'):
-            _logger.exception(
-                "Stripe proxy error: %s, traceback:\n%s",
-                response_content['error']['data']['message'],
-                response_content['error']['data']['debug']
-            )
-            raise ValidationError(_(
-                "Stripe Proxy error: %(error)s", error=response_content['error']['data']['message']
-            ))
+        if response_content.get('error'):  # An exception was raised on the proxy
+            error_data = response_content['error']['data']
+            _logger.error("request forwarded with error: %s", error_data['message'])
+            raise ValidationError(_("Stripe Proxy error: %(error)s", error=error_data['message']))
+
         return response_content.get('result', {})

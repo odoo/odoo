@@ -25,12 +25,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
 msgid "# Events"
-msgstr ""
+msgstr "عدد الفعاليات "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 msgid "# Sent"
-msgstr ""
+msgstr "عدد المرسلة "
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -44,11 +44,13 @@ msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
+"'شارة قابلة للطي - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
 msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'شارة قابلة للطي - %s' % (object.name or 'Event').replace('/','') "
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -56,31 +58,33 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
+"'تذكرة كامل الصفحة - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), object.name.replace('/','')) "
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'تذكرة كامل الصفحة - %s' % (object.name or 'Event').replace('/','') "
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
 msgid "10-14"
-msgstr ""
+msgstr "10-14"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_3
 msgid "15-18"
-msgstr ""
+msgstr "15-18"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_4
 msgid "18+"
-msgstr ""
+msgstr "18+"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_1
 msgid "5-10"
-msgstr ""
+msgstr "5-10"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -88,6 +92,8 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"<b>غرفة عمل</b> - لمناقشة منهجيات التنفيذ، وأفضل ممارسات المبيعات، وما إلى "
+"ذلك. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -95,6 +101,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
+"<b>الغرف التقنية</b> - واحدة مخصصة لمطوري أودو المتقدمين، وأخرى للمطورين "
+"الجدد. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -102,6 +110,8 @@ msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for "
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
 msgstr ""
+"<b>يسبق معرض التصميم يومان من الجلسات التدريبية للخبراء!</b><br> نقوم "
+"باقتراح 3 جلسات تدريبية مختلفة، مدة كل منها يومان. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -110,6 +120,8 @@ msgid ""
 "more time for thematical meetings, conferences, workshops and tutorial "
 "sessions in the afternoon."
 msgstr ""
+"<b>سوف تكون الجلسات العامة الصباحية أقصر</b> وسوف نعطي وقتاً أكثر للاجتماعات"
+" والمؤتمرات وورش العمل والجلسات التعليمية الموضوعية في فترة ما بعد الظهيرة. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -120,11 +132,15 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>الفعالية بأكملها مفتوحة للجميع!</b> <br>يتطلب رسوم اشتراك تبلغ 49.50€ "
+"لتكاليف الأيام الثلاث (استراحات القهوة، الضيافة، المشروبات، حفل غنائي، وحفلة"
+" بيرة).<br> بالنسبة لمن لا يرغب بالمشاركة، تتوفر تذاكر مجانية للحضور، ولكن "
+"هذا يعني بأنها لن تشمل الضيافة أو المشاركة في الفعاليات المسائية. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr ""
+msgstr "<b>غرفة ورشة العمل</b> - للمطورين على الأغلب. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -132,6 +148,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">قم ببث ما ترغب عبر الإنترنت، من خلال تكامل YouTube</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -139,6 +157,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">قم بمشاركة اختبار قصير مع حاضريك بمجرد انتهاء المقطع</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -156,6 +176,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    عزيزي <t t-out=\"object.name or ''\">أوسكار مورغان</t>,<br/>\n"
+"    شكراً لاستفسارك.<br/>\n"
+"    إليك شارتك للفعالية <t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت </t>.<br/>\n"
+"    إذا كانت لديك أي أسئلة، يرجى التواصل معنا.\n"
+"    <br/><br/>\n"
+"    شكراً لك،\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>ميتشيل آدمن</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -166,11 +198,16 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>إذا كنت ترغب في تقديم عرض تقديمي، الرجاء تقديم مقترح عرضك التقديمي في "
+"أقرب وقت ممكن إلى السيد Famke Jenssens على ngh (a) yourcompany (dot) com. "
+"يجب أن يكون العرض التقديمي، على سبيل المثال،  عرضاً تقديمياً لتطبيق مجتمعي، "
+"أو دراسة حالة، أو ملاحظات حول المنهجية، أو تقني، أو ما إلى ذلك. يجب أن تكون "
+"كافة العروض التقديمية باللغة الإنجليزية.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"تاريخ النهاية \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -178,6 +215,8 @@ msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"تأكيد التسجيل \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -185,6 +224,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"تأكيد الاشتراك \"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -192,11 +233,13 @@ msgid ""
 "<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle mr-2\"></i>هذه الفعالية وكافة المؤتمرات مقدمة "
+"باللغة <b>الإنجليزية</b>! "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-level-up fa-rotate-90\" title=\"تم التأكيد \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -205,11 +248,13 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"سهم \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker\" title=\"الموقع \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -217,6 +262,8 @@ msgid ""
 "<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
 "button\" title=\"Confirm Attendance\"/>"
 msgstr ""
+"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
+"button\" title=\"تأكيد الحضور \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -224,6 +271,8 @@ msgid ""
 "<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Confirm Attendance\"/>"
 msgstr ""
+"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"تأكيد الحضور \"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -231,6 +280,8 @@ msgid ""
 "<span class=\"badge badge-secondary o_wevent_badge float-"
 "right\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge badge-secondary o_wevent_badge float-"
+"right\">المتحدث</span> "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -238,8 +289,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"القيم المعينة هنا خاصة بهذه "
+"الشركة فقط. \" groups=\"base.group_multi_company\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -247,12 +298,14 @@ msgid ""
 "<span class=\"text-muted\" states=\"done\">Attended</span>\n"
 "                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
 msgstr ""
+"<span class=\"text-muted\" states=\"done\">تم الحضور</span>\n"
+"                                    <span class=\"text-muted\" states=\"cancel\">تم الإلغاء</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span>John Doe</span>"
-msgstr ""
+msgstr "<span>جون دو</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -462,6 +515,210 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and object.event_id.is_published\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">تسجيلك</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">أوسكار مورغان</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <a t-attf-href=\"{{ object.event_id.website_url }}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                            عرض الفعالية\n"
+"                        </a>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        مرحباً <t t-out=\"object.name or ''\">أوسكار مورغان</t>،<br/>\n"
+"                        يسرنا تذكيرك بأن الفعالية\n"
+"                        <t t-if=\"is_online\">\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</strong>\n"
+"                        </t>\n"
+"                        تبدأ <strong t-out=\"object.get_date_range_str() or ''\">اليوم</strong>.\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br/>\n"
+"                        <strong>أضف هذه الفعالية إلى تقويمك</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo\n"
+"                        </a>\n"
+"                        <br/><br/>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        نحن نؤكد تسجيلك ونتطلع إلى مقابلتك هناك،<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name or ''\">شركتك</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            فريق <t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</t>\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>من</strong> <t t-out=\"object.event_id.date_begin_located or ''\">مايو 4, 2021, 7:00:00 صباحاً</t></div>\n"
+"                                <div><strong>إلى</strong> <t t-out=\"object.event_id.date_end_located or ''\">مايو 6, 2021, 5:00:00 مساءً</t></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>المنطقة الزمنية</strong> <t t-out=\"object.event_id.date_tz or ''\">أوروبا/براسيلز</t></i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.street2)\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-out=\"object.event_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.city)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-out=\"object.event_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.state_id.name)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-out=\"object.event_id.address_id.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.zip)\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name or ''\">الأرجنتين</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.country_id.name)\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">ألديك أي أسئلة؟</span>\n"
+"                            <div>لا تتردد في التواصل مع المنظم:</div>\n"
+"                            <ul>\n"
+"                                <li t-out=\"event_organizer.name or ''\">شركتك</li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>البريد: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"/></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>الهاتف: <t t-out=\"event_organizer.phone or ''\"/></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <hr t-if=\"is_online or event_address\" width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <div t-if=\"is_online\">\n"
+"                        <strong>احصل على أفضل تجربة على الهاتف المحمول.</strong>\n"
+"                        <a href=\"/event\">قم بتثبيت تطبيقنا على الهاتف المحمول</a>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <hr t-if=\"is_online and event_address\" width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <table t-if=\"event_address\" style=\"width:100%;\"><tr><td>\n"
+"                        <div>\n"
+"                            <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                <img t-attf-src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </td></tr></table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table t-if=\"object.company_id\" width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        تم الإرسال بواسطة <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">شركتك</a>\n"
+"        <t t-if=\"'website_url' in object.event_id and object.event_id.website_url\">\n"
+"            <br/>\n"
+"            استكشف <a href=\"/event\" style=\"color:#875A7B;\">كافة فعالياتنا</a>.\n"
+"        </t>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -683,19 +940,235 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and object.event_id.is_published\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">تسجيلك</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">أوسكار مورغان</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <a t-att-href=\"object.event_id.website_url\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                            عرض الفعالية\n"
+"                        </a>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        مرحباً <t t-out=\"object.name or ''\">أوسكار مورغان</t>،<br/>\n"
+"                        يسعدنا تأكيد تسجيلك للفعالية\n"
+"                        <t t-if=\"is_online\">\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</strong>\n"
+"                        </t>\n"
+"                        للحاضر <t t-out=\"object.name or ''\">أوسكار مورغان</t>.\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br/>\n"
+"                        <strong>قم بإضافة هذه الفعالية إلى</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo\n"
+"                        </a>\n"
+"                        <br/><br/>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        نراك قريباً،<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name or ''\">شركتك</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            فريق <t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</t>\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>من</strong> <t t-out=\"object.event_id.date_begin_located or ''\">مايو 4, 2021, 7:00:00 صباحاً</t></div>\n"
+"                                <div><strong>إلى</strong> <t t-out=\"object.event_id.date_end_located or ''\">مايو 6, 2021, 5:00:00 مساءً</t></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>المنطقة الزمنية</strong> <t t-out=\"object.event_id.date_tz or ''\">أوروبا/براسيلز</t></i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.street2)\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-out=\"object.event_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.city)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-out=\"object.event_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.state_id.name)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-out=\"object.event_id.address_id.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.zip)\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name or ''\">الأرجنتين</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.country_id.name)\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">ألديك أي أسئلة حول الفعالية؟</span>\n"
+"                            <div>لا تتردد في التواصل مع منظم الفعالية:</div>\n"
+"                            <ul>\n"
+"                                <li><t t-out=\"event_organizer.name or ''\">شركتك</t></li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>البريد الإلكتروني: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>الهاتف: <t t-out=\"event_organizer.phone or ''\">+1 650-123-4567</t></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <t t-if=\"is_online or event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <div>\n"
+"                            <strong>احصل على أفضل تجربة على الهاتف المحمول.</strong>\n"
+"                            <a href=\"/event\">قم بتثبيت تطبيقنا على الهاتف المحمول</a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <t t-if=\"is_online and event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <t t-if=\"event_address\">\n"
+"                        <table style=\"width:100%;\"><tr><td>\n"
+"                            <div>\n"
+"                                <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                    <img t-attf-src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </td></tr></table>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <t t-if=\"object.company_id\">\n"
+"        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"            تم الإرسال بواسطة <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">شركتك</a>\n"
+"            <t t-if=\"is_online\">\n"
+"                <br/>\n"
+"                استكشف <a href=\"/event\" style=\"color:#875A7B;\">كافة فعالياتنا</a>.\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        </table>\n"
+"    </t>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
 #: model:ir.model.fields,help:event.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr ""
+msgstr "وصف للتذكرة التي ترغب في التواصل بشأنها مع عملائك. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction
 msgid "Action Needed"
-msgstr "إجراء مطلوب"
+msgstr "يتطلب اتخاذ إجراء "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__active
@@ -749,7 +1222,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Add a note..."
-msgstr ""
+msgstr "إضافة ملاحظة... "
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -759,7 +1232,7 @@ msgstr "مدير"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_exhibitor
 msgid "Advanced Sponsors"
-msgstr ""
+msgstr "الرعاة المتقدمين "
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
@@ -776,12 +1249,12 @@ msgstr "بعد الفعالية"
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
 msgid "Age"
-msgstr ""
+msgstr "العمر "
 
 #. module: event
 #: model:event.event,name:event.event_6
 msgid "An unpublished event"
-msgstr ""
+msgstr "فعالية غير منشورة "
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -789,6 +1262,8 @@ msgid ""
 "And this time, we go fully ONLINE! Meet us in our live streams from the comfort of your house.<br>\n"
 "        Special discount codes will be handed out during the various streams, make sure to be there on time."
 msgstr ""
+"وهذه المرة، سنكون حاضرين تماماً مباشرة عبر الإنترنت! فلنلتقِ عبر البث المباشر من راحة منزلك.<br>\n"
+"        سوف يتم توزيع أكواد خصومات خاصة خلال جلسات البث المباشر المختلفة، فاحرص على ألا تتأخر حتى لا تفوت أي شيء. "
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -806,6 +1281,8 @@ msgid ""
 "Around one hundred ballons will simultaneously take flight and turn the sky "
 "into a beautiful canvas of colours."
 msgstr ""
+"سيتم إطلاق حوالي 100 بالون إلى السماء في الوقت ذاته لتجعل من السماء لوحة "
+"زاهية. "
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -813,7 +1290,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "As a team, we are happy to contribute to this event."
-msgstr ""
+msgstr "كفريق، يسعدنا أن نساهم في هذه الفعالية. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -823,6 +1300,10 @@ msgid ""
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
+"بعمر 13 فقط، كان جون دو قد بدأ بتطوير تطبيقات الأعمال الأولى الخاصة به "
+"بالفعل للعملاء. بعد حصوله على شهادة في في الهندسة المدنية، قام بتأسيس "
+"TinyERP، وكانت تلك المرحلة الأولى لـOpenERP والذي تمت تسميته أودو (Odoo) بعد"
+" ذلك، وهو أكثر تطبيقات الأعمال تثبيتاً في العالم بأسره. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -876,12 +1357,13 @@ msgid ""
 "Autoconfirm Registrations. Registrations will automatically be confirmed "
 "upon creation."
 msgstr ""
+"تأكيد التسجيل تلقائياً. سوف يتم تأكيد التسجيلات تلقائياً بمجرد الإنشاء. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Autoconfirmation"
-msgstr ""
+msgstr "التأكيد التلقائي "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
@@ -900,6 +1382,8 @@ msgid ""
 "Bands like Bar Fighters, Led Slippers and Link Floyd will offer you the show"
 " of the century during our three day event."
 msgstr ""
+"سوف تقوم الفرق الموسيقية مثل Bar Fighters، Led Slippers، و Link Floyd بتقديم"
+" عروض لا مثيل لها خلال فعاليتنا التي تستمر لثلاثة أيام. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
@@ -938,28 +1422,30 @@ msgid ""
 "Bloem brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"تضمن Bloem الأمانة والجدية إلى مجال الأخشاب، بينما تساعد العملاء في التعامل "
+"مع الأشجار والأزهار والفطريات. "
 
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "محجوز "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Booked By"
-msgstr ""
+msgstr "محجوز من قِبَل "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
-msgstr ""
+msgstr "محجوز من قِبَل "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Booth Management"
-msgstr ""
+msgstr "إدارة الكشك "
 
 #. module: event
 #: model:event.event,subtitle:event.event_5
@@ -967,11 +1453,13 @@ msgid ""
 "Bring your outdoor field hockey season to the next level by taking the field"
 " at this 9th annual Field Hockey tournament."
 msgstr ""
+"انتقل بموسم الهوكي الخارجي إلى المستوى التالي عن طريق أخذ الميدان في بطولة "
+"الهوكي السنوية بحلتها التاسعة. "
 
 #. module: event
 #: model:event.event,name:event.event_4
 msgid "Business workshops"
-msgstr ""
+msgstr "ورش عمل الأعمال "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_campaign_id
@@ -1005,6 +1493,7 @@ msgid ""
 "Chamber Works reserves the right to cancel, re-name or re-locate the event "
 "or change the dates on which it is held."
 msgstr ""
+"لدى Chamber Works حق إلغاء أو إعادة تسمية الفعالية أو تغيير تواريخ إنشائها. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__color
@@ -1017,7 +1506,7 @@ msgstr "معرف اللون"
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "Come see us live, we hope to meet you !"
-msgstr ""
+msgstr "تعالوا لملاقاتنا، فنحن نتوق لرؤيتكم! "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1028,12 +1517,12 @@ msgstr "اتصالات"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
 msgid "Communication related to event registrations"
-msgstr ""
+msgstr "التواصل المتعلق بتسجيلات الفعاليات "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Community Chat Rooms"
-msgstr ""
+msgstr "غرف الدردشة المجتمعية "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__company_id
@@ -1064,7 +1553,7 @@ msgstr "مؤتمر للمهندسين المعماريين"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
+msgstr " سوف يتم تنظيم المؤتمرات وورش العمل والتدريبات في 6 غرف: "
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -1085,7 +1574,7 @@ msgstr "تأكيد"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
-msgstr ""
+msgstr "تأكيد الحضور "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1113,27 +1602,27 @@ msgstr "الدولة"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Create Booths and manage their reservations"
-msgstr ""
+msgstr "قم بإنشاء الأجنحة وإدارة حجوزاتها "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Create an Event"
-msgstr ""
+msgstr "إنشاء فعالية "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
 msgid "Create an Event Stage"
-msgstr ""
+msgstr "إنشاء مرحلة للفعالية "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Create an Event Tag Category"
-msgstr ""
+msgstr "إنشاء فئة علامة تصنيف للفعالية "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
 msgid "Create an Event Template"
-msgstr ""
+msgstr "إنشاء قالب فعالية "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_uid
@@ -1168,7 +1657,7 @@ msgstr "أنشئ في"
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_1
 msgid "Culture"
-msgstr ""
+msgstr "الثقافة "
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -1202,6 +1691,9 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"قم بتحديد عدد التذاكر المتوفرة. إذا كان لديك عدد كبير من التسجيلات، فلن "
+"تتمكن من بيع التذاكر بعد الآن. قم بالتعيين كـ 0 لتجاهل هذه القاعدة والتعيين "
+"كغير محدود. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -1218,7 +1710,7 @@ msgstr "معرض التصميم بلوس أنجلوس"
 #. module: event
 #: model:event.event,subtitle:event.event_4
 msgid "Discover how to grow a sustainable business with our experts."
-msgstr ""
+msgstr "اكتشف كيفية تنمية عمل مستدام، بمساعدة خبرائنا. "
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -1231,7 +1723,7 @@ msgstr "اكتشاف المزيد"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_meet
 msgid "Discussion Rooms"
-msgstr ""
+msgstr "غرف المناقشة "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
@@ -1251,7 +1743,7 @@ msgstr "الاسم المعروض"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
-msgstr ""
+msgstr "قم بعرض الرعاة والعارضين في صفحات فعاليتك "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -1295,7 +1787,7 @@ msgstr "تم تحديد تاريخ الانتهاء"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__pipe_end
 msgid "End Stage"
-msgstr ""
+msgstr "مرحلة النهاية "
 
 #. module: event
 #: model:event.stage,name:event.event_stage_done
@@ -1305,7 +1797,7 @@ msgstr "انتهى"
 #. module: event
 #: model:event.event,subtitle:event.event_2
 msgid "Enhance your architectural business and improve professional skills."
-msgstr ""
+msgstr "حسّن أعمالك المعمارية وطوّر مهاراتك العملية. "
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -1336,7 +1828,7 @@ msgstr "فئة الفعالية"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_form
 msgid "Event Category Tag"
-msgstr ""
+msgstr "علامة تصنيف فئة الفعالية "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
@@ -1346,7 +1838,7 @@ msgstr "تاريخ انتهاء الفعالية"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Event Gamification"
-msgstr ""
+msgstr "تلعيب الفعالية "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1398,17 +1890,29 @@ msgid ""
 "  - or the responsible of the event,\n"
 "  - or the last writer of the template.\n"
 msgstr ""
+"تمت جدولة الفعالية في:\n"
+"  - الفعالية: %(event_name)s (%(event_id)s)\n"
+"  - التاريخ: %(date)s\n"
+"  - القالب: %(template_name)s (%(template_id)s)\n"
+"\n"
+"فشل مع الخطأ:\n"
+"  - %(error)s\n"
+"\n"
+"وصلك هذا البريد الإلكتروني لأنك:\n"
+"  - منظم الفعالية،\n"
+"  - أو المسؤول عن الفعالية،\n"
+"  - أو آخر من كتب في القالب.\n"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
 msgid "Event Stage"
-msgstr ""
+msgstr "مرحلة الفعالية "
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_stage_action
 #: model:ir.ui.menu,name:event.event_stage_menu
 msgid "Event Stages"
-msgstr ""
+msgstr "مراحل الفعالية "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -1419,19 +1923,19 @@ msgstr "تاريخ بدء الفعالية"
 #. module: event
 #: model:ir.model,name:event.model_event_tag
 msgid "Event Tag"
-msgstr ""
+msgstr "علامة تصنيف الفعالية "
 
 #. module: event
 #: model:ir.model,name:event.model_event_tag_category
 msgid "Event Tag Category"
-msgstr ""
+msgstr "فئة علامة تصنيف الفعالية "
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_tag_category_action_tree
 #: model:ir.ui.menu,name:event.menu_event_category
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
 msgid "Event Tags Categories"
-msgstr ""
+msgstr "فئان علامات تصنيف الفعاليات "
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1439,25 +1943,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Template"
-msgstr ""
+msgstr "قالب الفعالية "
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_ticket
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
 msgid "Event Template Ticket"
-msgstr ""
+msgstr "تذكرة قالب الفعالية "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr ""
+msgstr "تذاكر قالب الفعالية "
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr ""
+msgstr "قوالب الفعاليات "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
@@ -1466,6 +1970,9 @@ msgid ""
 "                    usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                    \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"تجمع قوالب الفعاليات بين التهيئات التي تستخدمها بكثرة\n"
+"                    والتي تعتمد عادةً على أنواع الفعاليات التي تقوم بتنظيمها (مثال: \"ورشة عمل\"،\n"
+"                    \"عرض ترويجي\"، \"ندوة عبر الويب\"، وما إلى ذلك). "
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -1477,7 +1984,7 @@ msgstr "تذكرة الفعالية"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Event Ticket For"
-msgstr ""
+msgstr "تذكرة فعالية لـ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
@@ -1487,7 +1994,7 @@ msgstr "نوع الفعالية"
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
 msgid "Event registrations"
-msgstr ""
+msgstr "تسجيلات الفعالية "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
@@ -1495,6 +2002,7 @@ msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
 msgstr ""
+"تُستَخدَم مراحل الفعاليات لمتابعة تقدم فعالية من بدايتها وحتى النهاية. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -1511,17 +2019,17 @@ msgstr "الفعالية: مجدول رسائل البريد"
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration"
-msgstr ""
+msgstr "الفعالية: التسجيل "
 
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr ""
+msgstr "الفعالية: شارة التسجيل "
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "الفعالية: التذكير "
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1551,7 +2059,7 @@ msgstr "الفعالية: مجدولات رسائل البريد"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
-msgstr ""
+msgstr "مرحلة الفعاليات "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__auto_confirm
@@ -1568,6 +2076,8 @@ msgid ""
 "Events will automatically be moved into this stage when they are finished. "
 "The event moved into this stage will automatically be set as green."
 msgstr ""
+"سوف يتم نقل الفعاليات تلقائياً إلى هذه المرحلة عند انتهائها. سوف يتم تحديد "
+"الفعالية التي يتم نقلها لهذه المرحلة باللون الأخضر تلقائياً. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1577,6 +2087,10 @@ msgid ""
 "of future versions, achievements of the software, workshops, training "
 "sessions, etc...."
 msgstr ""
+"في كل عام، نقوم بدعوة أفراد مجتمعنا وشركائنا ومستخدمينا لنلتقي بهم! إنها "
+"الفعالية المثالية لنجتمع معاً ونقدم خصائصنا الجديدة ومخططاتنا للإصدارات "
+"المستقبلية وإنجازات برنامجنا وورش العمل والجلسات التدريبية وغير ذلك "
+"الكثير... "
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -1586,6 +2100,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc....\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
+"في كل عام، نقوم بدعوة أفراد مجتمعنا وشركائنا ومستخدمينا لنلتقي بهم! إنها الفعالية المثالية لنجتمع معاً ونقدم خصائصنا الجديدة ومخططاتنا للإصدارات المستقبلية وإنجازات برنامجنا وورش العمل والجلسات التدريبية وغير ذلك الكثير...\n"
+"            تمثل هذه الفعالية أيضاً فرصة لعرض دراسات حالات أعمال شركائنا أو منهجياتهم أو تطوراتهم. لا تفوت فرصة الحضور حتى تتمكن من اكتشاف خصائص الإصدار الجديد من المصدر بحد ذاته! "
 
 #. module: event
 #: model:event.type,name:event.event_type_0
@@ -1600,7 +2116,7 @@ msgstr "متوقع"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Expected Attendees"
-msgstr ""
+msgstr "الحاضرين المتوقعين "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -1610,23 +2126,24 @@ msgstr "الحضور المتوقع"
 #. module: event
 #: model:event.event,subtitle:event.event_3
 msgid "Experience live music, local food and beverages."
-msgstr ""
+msgstr "احظ بتجربة لا تنسى مع الموسيقى الحية، والأطباق المحلية والمشروبات. "
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
 msgid "Foldable Badge"
-msgstr ""
+msgstr "شارة قابلة للطي "
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid ""
 "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
 msgstr ""
+"شارة قابلة للطي - {{ (object.event_id.name or 'Event').replace('/','_') }} "
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
 msgid "Foldable Badge Example"
-msgstr ""
+msgstr "مثال على شارة قابلة للطي "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -1673,13 +2190,13 @@ msgstr ""
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
 msgid "For only 10, you gain access to catering. Yum yum."
-msgstr ""
+msgstr "مقابل 10 فقط، سوف تتمكن من الاستمتاع بالضيافة. يم يم. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid ""
 "Foster interactions between attendees by creating virtual conference rooms"
-msgstr ""
+msgstr "أشرف على التفاعلات بين الحاضرين عن طريق إنشاء غرف اجتماعات افتراضية "
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_0
@@ -1689,12 +2206,12 @@ msgstr "مجاني"
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_0
 msgid "Free entrance, no food !"
-msgstr ""
+msgstr "الدخول مجاني، ولكن لن يكون هناك طعام! "
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
 msgid "Freshly created"
-msgstr ""
+msgstr "محضر طازجاً "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
@@ -1702,27 +2219,30 @@ msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your"
 " event registrations."
 msgstr ""
+"باستخدام لوحة البيانات هذه، سوف تتمكن من إعداد التقارير وتحليل وكشف اتجاهات "
+"تسجيلات فعاليتك. "
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
 msgid "Full Page Ticket"
-msgstr ""
+msgstr "تذكرة صفحة كاملة "
 
 #. module: event
 #: model:mail.template,report_name:event.event_subscription
 msgid ""
 "Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}"
 msgstr ""
+"تذكرة صفحة كاملة - {{ (object.event_id.name or 'Event').replace('/','') }} "
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
 msgid "Full Page Ticket Example"
-msgstr ""
+msgstr "مثال على تذكرة صفحة كاملة "
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
 msgid "Fully ended"
-msgstr ""
+msgstr "انتهت تماماً "
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1738,29 +2258,29 @@ msgstr "الأنشطة المستقبلية"
 #. module: event
 #: model:event.event.ticket,name:event.event_4_ticket_0
 msgid "General Admission"
-msgstr ""
+msgstr "الدخول العام "
 
 #. module: event
 #: model:event.event,subtitle:event.event_0
 msgid "Get Inspired • Stay Connected • Have Fun"
-msgstr ""
+msgstr "احصل على الإلهام • تواصل • استمتع "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_state
 msgid "Global communication Status"
-msgstr ""
+msgstr "حالة التواصل العالمي "
 
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Great Reno Ballon Race"
-msgstr ""
+msgstr "سباق مناطيد رينو العظيم "
 
 #. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
-msgstr ""
+msgstr "رائع! كل ما عليك فعله الآن هو انتظار وصول حاضريك! "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
@@ -1800,12 +2320,12 @@ msgstr "بحضورهم هذا المؤتمر، ينبغي أن يتمكن الم
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Here it is, the 12th edition of our Live Musical Festival !"
-msgstr ""
+msgstr "حان الوقت الآن، للنسخة الـ 12 من مهرجان الموسيقى الحي! "
 
 #. module: event
 #: model:event.event,name:event.event_5
 msgid "Hockey Tournament"
-msgstr ""
+msgstr "بطولة الهوكي "
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -1816,22 +2336,22 @@ msgstr "الساعات"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (1)"
-msgstr ""
+msgstr "كيفية الطي (1) "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (2)"
-msgstr ""
+msgstr "كيفية الطي (2) "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (3)"
-msgstr ""
+msgstr "كيفية الطي (3) "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (4)"
-msgstr ""
+msgstr "كيفية الطي (4) "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__id
@@ -1880,12 +2400,12 @@ msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض
 #: model:ir.model.fields,help:event.field_event_event__start_sale_datetime
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
-msgstr ""
+msgstr "إذا استخدمت نظام التذاكر، سيحتوي على أقرب تاريخ لبدء بيع التذاكر. "
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "If you don't have this ticket, you will <b>not</b> be allowed entry!"
-msgstr ""
+msgstr "إذا لم تكن لديك هذه التذكرة <b>لن</b> يُسمح لك بالدخول! "
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -1893,6 +2413,8 @@ msgid ""
 "If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time\n"
 "                to chat with experienced players and trainers once the tournament is over !"
 msgstr ""
+"إذا كنت لا تعرف الكثير عن الهوكي، فهذه فرصة رائعة لتتعرف على هذا الرياضة الرائعة، حيث أنك ستتمكن من رؤية بعض التدريبات وسيتسنى لك بعض الوقت للحديث مع\n"
+"                بعض اللاعبين المحترفين والمدربين، فور انتهاء البطولة! "
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -1903,7 +2425,7 @@ msgstr "فورًا"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Important ticket information"
-msgstr ""
+msgstr "معلومات مهمة حول التذكرة "
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -1940,12 +2462,12 @@ msgstr "مقدمة، العلاقات العامة، إدارة المبيعات
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Invalid event / ticket choice"
-msgstr ""
+msgstr "اختيار الفعالية / التذكرة غير صالح "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
 msgid "Is Available"
-msgstr ""
+msgstr "متاح "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -1955,7 +2477,7 @@ msgstr "هو منتهي"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
 msgid "Is Finished"
-msgstr ""
+msgstr "منتهي "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -1966,12 +2488,12 @@ msgstr "متابع"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr ""
+msgstr "يوم واحد "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_ongoing
 msgid "Is Ongoing"
-msgstr ""
+msgstr "جاري "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -1982,24 +2504,24 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John DOE"
-msgstr ""
+msgstr "جون دو "
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times !"
-msgstr ""
+msgstr "انضم إلينا في أعظم سباق مناطيد على الإطلاق! "
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
 #: model_terms:event.event,description:event.event_6
 #: model_terms:ir.ui.view,arch_db:event.event_default_descripton
 msgid "Join us for this 24 hours Event"
-msgstr ""
+msgstr "انضم إلينا في هذه الفعالية التي تستمر لمدة 24 ساعة "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Join us for this 3-day Event"
-msgstr ""
+msgstr "انضم إلينا في هذه الفعالية التي تستمر لـ 3 أيام "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_blocked
@@ -2082,13 +2604,13 @@ msgstr "الأنشطة المتأخرة"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Let's create your first <b>event</b>."
-msgstr ""
+msgstr "فلنقم بإنشاء <b>فعاليتك</b> الأولى. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr ""
+msgstr "تقييد التسجيلات "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -2098,17 +2620,17 @@ msgstr "عدد المقاعد محدود"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Live Broadcast"
-msgstr ""
+msgstr "البث المباشر "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_live
 msgid "Live Mode"
-msgstr ""
+msgstr "الوضع المباشر "
 
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Live Music Festival"
-msgstr ""
+msgstr "مهرجان الموسيقى الحي "
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
@@ -2161,7 +2683,7 @@ msgstr "إدارة ونشر جدول بمسارات تتبع"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr ""
+msgstr "التحديد كحاضر "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2171,7 +2693,7 @@ msgstr "التسويق"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr ""
+msgstr "الحد الأقصى "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
@@ -2193,7 +2715,7 @@ msgstr "الحد الأقصى للتسجيلات"
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_max
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Maximum Seats"
-msgstr ""
+msgstr "الحد الأقصى للمقاعد "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -2226,7 +2748,7 @@ msgstr "شهور"
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
 msgid "Music"
-msgstr ""
+msgstr "الموسيقى "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__my_activity_date_deadline
@@ -2279,18 +2801,18 @@ msgstr "نوع النشاط التالي"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 msgid "No Attendees expected yet!"
-msgstr ""
+msgstr "لا يوجد أي حاضرين متوقعين بعد! "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 #: model_terms:ir.actions.act_window,help:event.action_registration
 msgid "No Attendees yet!"
-msgstr ""
+msgstr "لا يوجد أي حاضرين بعد! "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
 msgid "No Event data yet!"
-msgstr ""
+msgstr "لا توجد أي بيانات للفعالية بعد! "
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -2302,7 +2824,7 @@ msgstr "لا توجد مقاعد متاحة لهذه التذكرة"
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "No more available seats for this ticket."
-msgstr ""
+msgstr "لا يوجد المزيد من المقاعد المتاحة لهذه التذكرة. "
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -2338,14 +2860,14 @@ msgstr "الملاحظات"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
 msgid "Nothing Scheduled yet!"
-msgstr ""
+msgstr "لم تتم جدولة أي شيء بعد! "
 
 #. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Now that your event is ready, click here to move it to another stage."
-msgstr ""
+msgstr "والآن، بما أن فعاليتك أصبحت جاهزة، اضغط هنا لنقلها إلى مرحلة أخرى. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -2401,12 +2923,12 @@ msgstr "أهداف"
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Once again we assembled the most legendary bands in Rock history."
-msgstr ""
+msgstr "ومرة أخرى، تمكنا من جمع أكثر فرق الروك روعة في تاريخ الروك. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ongoing Events"
-msgstr ""
+msgstr "الفعاليات الجارية "
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_1
@@ -2416,7 +2938,7 @@ msgstr "متصل"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Online Exhibitors"
-msgstr ""
+msgstr "العارضين عبر الإنترنت "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
@@ -2429,11 +2951,13 @@ msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the"
 " event or change the dates on which it is held."
 msgstr ""
+"لدى تطبيقات OpenElec حق إلغاء أو إعادة تسمية أو تغيير موقع الفعالية أو تغيير"
+" تواريخ إنشائها. "
 
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "الكشف عن مجموعة OpenWood عبر الإنترنت "
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_2
@@ -2441,6 +2965,8 @@ msgid ""
 "OpenWood brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"تجلب OpenWood الصدق والأمانة والجدية لمجال الأخشاب، بينما تساعد العملاء في "
+"التعامل مع الأشجار والأزهار والفطريات. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -2453,6 +2979,8 @@ msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
 msgstr ""
+"سوف يتم الكشف عن أحدث تشكيلاتنا عبر الإنترنت! تفاعل معنا عن طريق جلسات البث "
+"المباشرة التي نقوم بها. "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_blocked
@@ -2461,6 +2989,7 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection."
 msgstr ""
+"تجاوز القيمة الافتراضية المعروضة لحالة محجوب، في قائمة خيارات كانبان. "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_done
@@ -2469,6 +2998,7 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection."
 msgstr ""
+"تجاوز القيمة الافتراضية المعروضة لحالة منتهي، في قائمة خيارات كانبان. "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
@@ -2477,6 +3007,7 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection."
 msgstr ""
+"تجاوز القيمة الافتراضية المعروضة للحالة العادية، في قائمة خيارات كانبان. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2497,7 +3028,7 @@ msgstr "رقم الهاتف"
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid ""
 "Please come <b>at least</b> 30 minutes before the beginning of the event."
-msgstr ""
+msgstr "الرجاء الحضور قبل 30 دقيقة <b>على الأقل</b> من بدء الفعالية. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2523,7 +3054,7 @@ msgstr "الشراء، إدارة البيع والشراء، المحاسبة �
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr ""
+msgstr "اختبار قصير حول المقاطع "
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -2550,7 +3081,7 @@ msgstr "جاهزة للمرحلة المقبلة"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
-msgstr ""
+msgstr "هل أنت جاهز <b>لتنظيم الفعاليات</b> في دقائق قليلة؟ فلنبدأ الآن! "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
@@ -2579,12 +3110,12 @@ msgstr "تاريخ التسجيل"
 #. module: event
 #: model:res.groups,name:event.group_event_registration_desk
 msgid "Registration Desk"
-msgstr ""
+msgstr "مكتب التسجيل "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
 msgid "Registration End"
-msgstr ""
+msgstr "نهاية التسجيل "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2604,7 +3135,7 @@ msgstr "رسائل التسجيل"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
-msgstr ""
+msgstr "بداية التسجيل "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
@@ -2625,7 +3156,7 @@ msgstr "رسالة التسجيل"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
 msgid "Registration open"
-msgstr ""
+msgstr "التسجيل مفتوح "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -2640,11 +3171,15 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"تكون التسجيلات مفتوحة إذا:\n"
+"- لم تنتهِ الفعالية\n"
+"- توجد مقاعد شاغرة للفعالية\n"
+"- لا يزال بالإمكان بيع التذاكر (في حال استخدام نظام التذاكر) "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr ""
+msgstr "بدأت التسجيلات "
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -2701,6 +3236,8 @@ msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
 msgstr ""
+"قم بجدولة وتنظيم فعالياتك: تولّ أمر التسجيلات وأرسل رسائل التأكيد التلقائية "
+"عبر البريد الإلكترونية وبع التذاكر، وقم بكل ما تحتاج إلى القيام به. "
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -2716,12 +3253,14 @@ msgstr "الوقت المجدول"
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you !"
 msgstr ""
+"إلى معجبي الهوكي المخضرمين، وإلى كل المهتمين بتلك الرياضة، هذه البطولة من "
+"أجلكم! "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Seats Limit"
-msgstr ""
+msgstr "حد المقاعد "
 
 #. module: event
 #: model:event.type,name:event.event_type_data_ticket
@@ -2781,6 +3320,8 @@ msgid ""
 "Shangai Pterocarpus Furniture brings honesty and seriousness to wood "
 "industry while helping customers deal with trees, flowers and fungi."
 msgstr ""
+"تضمن Shangai Pterocarpus Furniture الأمانة والجدية إلى مجال الأخشاب، بينما "
+"تساعد العملاء في التعامل مع الأشجار والأزهار والفطريات. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -2802,7 +3343,7 @@ msgstr "المصدر"
 #: model:event.tag,name:event.event_tag_category_2_tag_3
 #: model:event.type,name:event.event_type_2
 msgid "Sport"
-msgstr ""
+msgstr "الرياضة "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__stage_id
@@ -2823,7 +3364,7 @@ msgstr "اسم المرحلة"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
 msgid "Stage description"
-msgstr ""
+msgstr "وصف المرحلة "
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_1
@@ -2847,7 +3388,7 @@ msgstr "تم تحديد تاريخ البدء"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
 msgid "Start sale date"
-msgstr ""
+msgstr "تاريخ بدء البيع "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -2875,6 +3416,9 @@ msgid ""
 "Tag color. No color means no display in kanban or front-end, to distinguish "
 "internal tags from public categorization tags."
 msgstr ""
+"لون علامة التصنيف. إن لم يكن هناك لون، فهذا يعني أنه لا يوجد عرض في كانبان "
+"أو الواجهة الأمامية، لتمييز علامات التصنيف الداخلية من علامات التصنيف "
+"العامة. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__tag_ids
@@ -2907,7 +3451,7 @@ msgstr "قالب"
 #: model:ir.model.fields,field_description:event.field_event_mail__template_model_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__template_model_id
 msgid "Template Model"
-msgstr ""
+msgstr "نموذج القالب "
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -2915,20 +3459,21 @@ msgid ""
 "The Great Reno Balloon Race is the world's largest free hot-air ballooning "
 "event."
 msgstr ""
+"سباق مناطيد رينو العظيم هو أكبر فعالية مجانية للمناطيد على مستوى العالم. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
 msgid ""
 "The best Hockey teams of the country will compete for the national Hockey "
 "trophy."
-msgstr ""
+msgstr "سوف تتنافس أفضل فرق الهوكي في البلاد للفوز بجائزة الهوكي الوطنية. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid ""
 "The best aeronauts of the world will gather on this event to offer you the "
 "most spectacular show."
-msgstr ""
+msgstr "سوف يجتمع أفضل طياري العالم في هذه الفعالية لتقديم أروع العروض. "
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -2939,12 +3484,12 @@ msgstr "لا يمكن أن يكون تاريخ الانتهاء سابقًا ل�
 #. module: event
 #: model:event.stage,description:event.event_stage_cancelled
 msgid "The event has been cancelled"
-msgstr ""
+msgstr "لقد تم إلغاء الفعالية "
 
 #. module: event
 #: model:event.stage,description:event.event_stage_announced
 msgid "The event has been publicly announced"
-msgstr ""
+msgstr "تم الإعلان عن هذه الفعالية "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
@@ -2952,13 +3497,15 @@ msgid ""
 "The event is sold out if no more seats are available on event. If ticketing "
 "is used and all tickets are sold out, the event will be sold out."
 msgstr ""
+"ينتهي التسجيل إذا لم تتبقّ أي مقاعد شاغرة في الفعالية. إذا كنت تستخدم نظام "
+"التذاكر وبيعت كافة التذاكر، ينتهي التسجيل للفعالية أيضاً. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
 msgid ""
 "The finest OpenWood furnitures are coming to your house in a brand new "
 "collection"
-msgstr ""
+msgstr "أفضل قطع أثاث من OpenWood قادمة إلى منزلك في مجموعة جديدة كلياً "
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -2967,22 +3514,24 @@ msgid ""
 "The following tickets cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"لا يمكن حذف التذاكر التالية بينما هناك تسجيل واحد أو أكثر مرتبط بها:\n"
+"- %s"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_booked
 msgid "The place has been reserved"
-msgstr ""
+msgstr "لقد تم حجز المكان "
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first !"
-msgstr ""
+msgstr "سلامة حاضرينا وطيارينا تأتي أولاً! "
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "The stop date cannot be earlier than the start date."
-msgstr ""
+msgstr "لا يمكن أن يسبق تاريخ الإيقاف تاريخ البدء. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2991,6 +3540,8 @@ msgid ""
 "methodology or developments. Be there and see directly from the source the "
 "features of the version 12!"
 msgstr ""
+"تمثل هذه الفعالية أيضاً فرصة لعرض حالات أعمال الشركاء ومنهجياتهم وتطويراتهم."
+" كونوا هناك لتروا خصائص الإصدار الـ 12 مباشرة من المصدر! "
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -2998,19 +3549,21 @@ msgid ""
 "This event is fully online and FREE, if you have paid for tickets, you should get a refund.<br>\n"
 "        It will require a good Internet connection to get the best video quality."
 msgstr ""
+"هذه الفعالية مجانيةً تماماً وتُقام عبر الإنترنت، وإذا قمت بالدفع من أجل التذاكر، فعليك طلب استرجاع نقودك.<br>\n"
+"        سوف تتطلب اتصالاً جيداً بالإنترنت للحصول على أفضل جودة للفيديو. "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,help:event.field_event_type__ticket_instructions
 msgid "This information will be printed on your tickets."
-msgstr ""
+msgstr "سوف تتم طباعة هذه المعلومة على تذاكرك. "
 
 #. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "This is the <b>name</b> your guests will see when registering."
-msgstr ""
+msgstr "هذا هو <b>الاسم</b> الذي سوف يراه ضيوفك عندما يقومون بالتسجيل. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3018,6 +3571,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories !"
 msgstr ""
+"هذا هو المكان المثالي لقضاء يوم جميل مع عائلتك، ونحن على ثقة من أنك ستذهب مع"
+" ذكريات جميلة لا تُنسى! "
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3025,13 +3580,15 @@ msgid ""
 "This is the perfect place for spending a nice time with your friends while "
 "listening to some of the most iconic rock songs of all times!"
 msgstr ""
+"هذا هو المكان المثالي لقضاء يوم جميل مع أصدقائك بينما تستمعون إلى أفضل أغاني"
+" الروك على الإطلاق! "
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "This operator is not supported"
-msgstr ""
+msgstr "هذا المشغّل غير مدعوم "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3046,18 +3603,18 @@ msgstr "التذكرة"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Ticket Extra Instructions"
-msgstr ""
+msgstr "الإرشادات الإضافية للتذاكر "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
 msgid "Ticket Instructions"
-msgstr ""
+msgstr "إرشادات التذاكر "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Ticket Intructions"
-msgstr ""
+msgstr "إرشادات التذاكر "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -3073,6 +3630,7 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
+"تتيح لك أنواع التذاكر التمييز بين حاضريك. فلنقم <b>بإنشاء</b> نوع جديد. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_ticket_ids
@@ -3086,7 +3644,7 @@ msgstr "تذاكر"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Tickets can be printed or scanned directly from your phone."
-msgstr ""
+msgstr "يمكن طباعة أو مسح التذاكر مباشرة من هاتفك المحمول. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -3109,7 +3667,7 @@ msgstr "الإجمالي"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Total Registrations for this Event"
-msgstr ""
+msgstr "إجمالي التسجيلات لهذه الفعالية "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
@@ -3127,6 +3685,8 @@ msgid ""
 "Tree Dealers brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"تُمثل شركة Tree Dealers الصدق والأمانة والجدية لمجال الأخشاب بينما تساعد "
+"العملاء على التعامل من الأشجار والزهور والفطريات. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
@@ -3165,7 +3725,7 @@ msgstr "الحجوزات غير المؤكدة"
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Unconfirmed Seats"
-msgstr ""
+msgstr "المقاعد غير المؤكدة "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -3173,6 +3733,7 @@ msgid ""
 "Under this technical menu you will find all scheduled communication related "
 "to your events."
 msgstr ""
+"سوف تجد كافة التواصلات المجدولة المتعلقة بفعالياتك تحت هذه القائمة التقنية. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3213,23 +3774,24 @@ msgstr "القادمة/الجارية"
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Use Event Tag Categories to classify and organize your event tags."
 msgstr ""
+"استخدم فئات علامات تصنيف الفعاليات لتصنيف وتنظيم علامات تصنيف فعاليتك. "
 
 #. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
-msgstr ""
+msgstr "استخدم <b>آثار التتبع</b> للعودة إلى طريقة عرض كانبان. "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
 msgid "Use this report to compare or aggregate event performances."
-msgstr ""
+msgstr "استخدم هذا التقرير لمقارنة أو تجميع ما أدته الفعاليات. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
 msgid "Used Seats"
-msgstr ""
+msgstr "المقاعد المستخدَمة "
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -3249,12 +3811,12 @@ msgstr "VIP"
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Value should be True or False (not %s)"
-msgstr ""
+msgstr "يجب أن تكون القيمة صحيحة أو خاطئة (ليس %s) "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 msgid "Venue"
-msgstr ""
+msgstr "المبنى "
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0
@@ -3269,6 +3831,7 @@ msgid ""
 "Wait until Attendees register to your Event or create their registrations "
 "manually."
 msgstr ""
+"انتظر حتى يقوم الحاضرون بالتسجيل لفعاليتك أو قم بإنشاء تسجيلاتهم يدوياً. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3285,6 +3848,8 @@ msgid ""
 "We reserve the right to cancel, re-name or re-locate the event or change the"
 " dates on which it is held in case the weather fails us."
 msgstr ""
+"لدينا حق إلغاء أو إعادة تسمية أو تغيير مكان الفعالية أو تغيير التواريخ التي "
+"سوف تقام فيها الفعالية في حال لم يكن الجو مناسباً. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
@@ -3307,7 +3872,7 @@ msgstr "أسابيع"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
-msgstr ""
+msgstr "ما الجديد؟ "
 
 #. module: event
 #. openerp-web
@@ -3317,16 +3882,18 @@ msgid ""
 "When will your event take place? <b>Select</b> the start and end dates "
 "<b>and click Apply</b>."
 msgstr ""
+"متى ستقام الفعالية؟ <b>اختر</b> تواريخ البدء والانتهاء <b>ثم اضغط على "
+"تطبيق</b>. "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr ""
+msgstr "ما إذا كانت الفعالية قد بدأت أم لا "
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
 msgid "You are truly among the best."
-msgstr ""
+msgstr "أنت حقاً واحد من الأفضل. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3341,32 +3908,34 @@ msgid ""
 "You can define here labels that will be displayed for the state instead\n"
 "                            of the default labels in the kanban view."
 msgstr ""
+"بإمكانك أن تحدد هنا بطاقات العنوان التي سوف يتم عرضها للحالة عوضاً عن\n"
+"                            بطاقات العناوين الافتراضية في طريقة عرض كانبان. "
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for {{ object.event_id.name }}"
-msgstr ""
+msgstr "شارتك لـ {{ object.event_id.name }} "
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at {{ object.event_id.name }}"
-msgstr ""
+msgstr "تسجيلك في {{ object.event_id.name }} "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr ""
+msgstr "مثال: مؤتمر للمعماريين "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr ""
+msgstr "مثال: مؤتمرات عبر الإنترنت "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "e.g. VIP Ticket"
-msgstr ""
+msgstr "مثال: تذكرة كبار الشخصيات "
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3376,7 +3945,7 @@ msgstr "events@odoo.com"
 #. module: event
 #: model_terms:event.event,description:event.event_7
 msgid "events@penwood.example.com"
-msgstr ""
+msgstr "events@penwood.example.com"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3384,7 +3953,7 @@ msgstr ""
 #: model_terms:event.event,description:event.event_3
 #: model_terms:event.event,description:event.event_5
 msgid "events@yourcompany.com"
-msgstr ""
+msgstr "events@yourcompany.com"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -3408,7 +3977,7 @@ msgstr "الأسبوع القادم"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "في %(date)s "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started
@@ -3416,6 +3985,8 @@ msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
 msgstr ""
+"تكون التسجيلات قد بدأت عندما يكون الوقت والتاريخ الحاليين بعد أقرب تاريخ "
+"لبيع التذاكر. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
@@ -3448,4 +4019,4 @@ msgstr "غير مؤكد"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"

@@ -69,6 +69,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
+"<b>Gratulálunk!</b> Szabad javasolni, hogy állítson be egy <a "
+"href=\"%s\">beléptetési tervet?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -155,12 +157,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "<span class=\"o_form_label o_hr_form_label\">Detailed Reason</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label o_hr_form_label\">Részletes ok</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "<span class=\"o_form_label o_hr_form_label\">Personal Info</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label o_hr_form_label\">Személyes infó</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -311,7 +313,7 @@ msgstr "Tevékenység típus ikon"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Activity by"
-msgstr ""
+msgstr "Tevékenység alapján"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -323,12 +325,12 @@ msgstr "Új alkalmazott"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_action
 msgid "Add a new plan"
-msgstr ""
+msgstr "Új terv"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
 msgid "Add a new planning activity"
-msgstr ""
+msgstr "Új tervezési tevékenység"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -860,7 +862,7 @@ msgstr "Születési idő"
 #: code:addons/hr/models/hr_departure_reason.py:0
 #, python-format
 msgid "Default departure reasons cannot be deleted."
-msgstr ""
+msgstr "Az alapértelmezett távozási okokat nem lehet törölni."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -1113,7 +1115,7 @@ msgstr "Alkalmazott címkék"
 #: code:addons/hr/static/src/js/hr_employee.js:0
 #, python-format
 msgid "Employee Termination"
-msgstr ""
+msgstr "Alkalmazotti viszony megszüntetése"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
@@ -1223,7 +1225,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
 msgid "Expected New Employees"
-msgstr "Várható új munkavállalók"
+msgstr "Várható új alkalmazottak"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
@@ -1391,7 +1393,7 @@ msgstr "Nagyon kreatív és önálló"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
 msgid "Hired Employees"
-msgstr "Felvett munkavállalók"
+msgstr "Felvett alkalmazottak"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
@@ -1601,7 +1603,7 @@ msgstr "Állások"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__lang
 msgid "Lang"
-msgstr ""
+msgstr "Nyelv"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1817,7 +1819,7 @@ msgstr "kötelező"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Tevékenységeim határideje"
 
 #. module: hr
 #. openerp-web
@@ -1891,7 +1893,7 @@ msgstr "Jó ha van"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
 msgstr ""
-"Nincsenek ostoba főnökök, használhatatlan eszközök és szigorú minkaidő"
+"Nincsenek: ostoba főnökök, használhatatlan eszközök és szigorú munkaidő"
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
@@ -1914,7 +1916,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_job__state__open
 msgid "Not Recruiting"
-msgstr "Nem toboroz"
+msgstr "Nincs toborzás"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1962,7 +1964,7 @@ msgstr "Hibák száma"
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
-msgstr "A toborzás fázisában ebbe a munkakörbe felvett munkavállalók száma."
+msgstr "A toborzás fázisában ebbe a munkakörbe felvett alkalmazottak száma."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
@@ -2175,7 +2177,7 @@ msgstr "Tervek"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Play any sport with colleagues, <br>the bill is covered."
-msgstr "Sportoljon a kollégáival, <br>a számlát a cég fizeti."
+msgstr "Sportoljon a kollégáival, <br>a számlát cégünk fizeti."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
@@ -2312,7 +2314,7 @@ msgstr "Készen áll a még hatékonyabb toborzásra?"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Real responsibilities and challenges in a fast evolving company"
-msgstr "Igazi felelősségek és kihívások egy fejlődő vállalatnál"
+msgstr "Igazi felelősségek és kihívások egy gyorsan fejlődő vállalatnál"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
@@ -2378,7 +2380,7 @@ msgstr "Követelmények"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
 msgid "Resigned"
-msgstr "Lemondott"
+msgstr "Felmondott"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
@@ -2504,6 +2506,8 @@ msgstr "Társadalombiztosítási azonosító jel"
 #: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
 msgid "Specific responsible of activity if not linked to the employee."
 msgstr ""
+"Adja meg a tevékenység felelősét, ha az nincs hozzákapcsolva egy "
+"alkalmazotthoz!"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2670,7 +2674,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
 msgid "The expected number of new employees must be positive."
-msgstr ""
+msgstr "Az új alkalmazottak várható számának pozitívnak kell lennie."
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -2837,7 +2841,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
-msgstr ""
+msgstr "Felhasználó partnere"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -2919,7 +2923,7 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
-"Az Odoo Alkalmazottak képernyőn szempillantás alatt\n"
+"Az Odoo Alkalmazottak moduljával szempillantás alatt\n"
 "könnyen megtalálja az összes személyhez a kívánt információkat; \n"
 "kapcsolati adatok, munkakör, elérhetőség stb."
 
@@ -2930,7 +2934,7 @@ msgid ""
 "               can easily find all the information you need for each person;\n"
 "               contact data, job position, availability, etc."
 msgstr ""
-"Az Odoo Alkalmazottak képernyőn szempillantás alatt\n"
+"Az Odoo Alkalmazottak moduljával szempillantás alatt\n"
 "könnyen megtalálja az összes személyhez a kívánt információkat; \n"
 "kapcsolati adatok, munkakör, elérhetőség stb."
 
@@ -3076,7 +3080,7 @@ msgstr "pl.: Szabó Géza"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "e.g. Onboarding"
-msgstr ""
+msgstr "pl.: Beléptetés"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form

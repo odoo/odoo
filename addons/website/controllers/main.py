@@ -73,7 +73,8 @@ class Website(Home):
         # prefetch all menus (it will prefetch website.page too)
         top_menu = request.website.menu_id
 
-        homepage = request.website.homepage_id
+        homepage_id = request.website._get_cached('homepage_id')
+        homepage = homepage_id and request.env['website.page'].browse(homepage_id)
         if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/':
             return request.env['ir.http'].reroute(homepage.url)
 

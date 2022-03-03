@@ -273,9 +273,9 @@ odoo.define('pos_coupon.pos', function (require) {
             return res;
         },
         init_from_JSON: function (json) {
+            this.bookedCouponCodes = this.bookedCouponCodes ? this.order.bookedCouponCodes : {};
+            this.activePromoProgramIds = this.activePromoProgramIds ? this.order.activePromoProgramIds : [];
             _order_super.init_from_JSON.apply(this, arguments);
-            this.bookedCouponCodes = json.bookedCouponCodes;
-            this.activePromoProgramIds = json.activePromoProgramIds;
         },
         export_as_JSON: function () {
             let json = _order_super.export_as_JSON.apply(this, arguments);
@@ -1048,6 +1048,11 @@ odoo.define('pos_coupon.pos', function (require) {
                 this.is_program_reward = json.is_program_reward;
                 this.program_id = json.program_id;
                 this.coupon_id = json.coupon_id;
+                if (this.coupon_id && this.coupon_id[1]) {
+                    this.order.bookedCouponCodes[this.coupon_id[1]] = new CouponCode(this.coupon_id[1], this.coupon_id[0], this.program_id[0]);
+                } else if (json.program_id && json.program_id[0]) {
+                    this.order.activePromoProgramIds.push(json.program_id[0]);
+                }
             }
             _orderline_super.init_from_JSON.apply(this, [json]);
         },

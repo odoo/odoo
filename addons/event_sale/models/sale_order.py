@@ -40,7 +40,8 @@ class SaleOrder(models.Model):
 
     def _compute_attendee_count(self):
         sale_orders_data = self.env['event.registration'].read_group(
-            [('sale_order_id', 'in', self.ids)],
+            [('sale_order_id', 'in', self.ids),
+             ('state', '!=', 'cancel')],
             ['sale_order_id'], ['sale_order_id']
         )
         attendee_count_data = {

@@ -12,10 +12,10 @@
 # Trần Hà <tranthuha13590@gmail.com>, 2021
 # Martin Trigaux, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
-# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Vo Thanh Thuy, 2022
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2022\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -242,7 +242,7 @@ msgstr ", tối đa:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "-&gt;"
-msgstr ""
+msgstr "-&gt;"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -1167,6 +1167,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Văn bản dưới đây đóng vai trò như một gợi ý và không liên quan đến trách "
+"nhiệm của Odoo S.A."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -2091,15 +2093,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
 msgid ""
-"Defines the default method used for suggesting the exact location (shelf) "
-"where to take the products from, which lot etc. for this location. This "
-"method can be enforced at the product category level, and a fallback is made"
-" on the parent locations if none is set here."
+"Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.\n"
+"\n"
+"FIFO: products/lots that were stocked first will be moved out first.\n"
+"LIFO: products/lots that were stocked last will be moved out first.\n"
+"Closet location: products/lots closest to the target location will be moved out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Xác định phương thức mặc định được sử dụng để đề xuất địa điểm (giá/kệ) "
-"chính xác mà từ đó lấy sản phẩm ra, hay từ lô nào, v.v. đối với địa điểm "
-"này. Phương thức này có thể áp dụng ở cấp nhóm sản phẩm và có thể áp dụng "
-"trên địa điểm cha nếu không được thiết lập ở đây."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -6509,7 +6509,7 @@ msgstr "Lỗi gửi SMS"
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "ĐIỀU KHOẢN VÀ ĐIỀU KIỆN CỦA BÁN HÀNG TIÊU CHUẨN"
 
 #. module: stock
 #. openerp-web
@@ -6770,11 +6770,13 @@ msgstr "Cài luồng xử lý kho hàng"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__removal_strategy_id
 msgid ""
-"Set a specific removal strategy that will be used regardless of the source "
-"location for this product category"
+"Set a specific removal strategy that will be used regardless of the source location for this product category.\n"
+"\n"
+"FIFO: products/lots that were stocked first will be moved out first.\n"
+"LIFO: products/lots that were stocked last will be moved out first.\n"
+"Closet location: products/lots closest to the target location will be moved out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Đặt chiến lược xuất cụ thể sẽ được sử dụng bất kể vị trí nguồn cho danh mục "
-"sản phẩm này"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7250,7 +7252,7 @@ msgstr "Dịch chuyển kho đã được xử lý"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "Kiểu đóng gói kho"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -7521,6 +7523,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Khách hàng từ bỏ các điều khoản và điều kiện tiêu chuẩn của riêng mình một "
+"cách rõ ràng, ngay cả khi chúng được soạn thảo sau các điều khoản và điều "
+"kiện bán hàng tiêu chuẩn này. Để có hiệu lực, bất kỳ sự phủ định nào phải "
+"được đồng ý trước bằng văn bản."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -7644,14 +7650,9 @@ msgstr ""
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"Số lượng hoàn thành cho sản phẩm  \"%s\" không phù hợp độ làm tròn chính xác"
-" được xác định trên đơn vị tính  \"%s\". Vui lòng thay đổi số lượng hoàn "
-"thành hoặc độ chính xác làm tròn của đơn vị tính đó."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9181,7 +9182,7 @@ msgstr "Bạn cần cung cấp số Lô/Serial cho sản phẩm %s."
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
+msgstr "Bạn nên cập nhật tài liệu này để phản ánh T&amp;C."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

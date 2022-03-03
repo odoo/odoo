@@ -22,7 +22,7 @@
 # david danilov, 2021
 # דודי מלכה <Dudimalka6@gmail.com>, 2021
 # Jonathan Spier, 2021
-# Michael Hadar, 2021
+# MichaelHadar, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # 
 msgid ""
@@ -2057,14 +2057,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
 msgid ""
-"Defines the default method used for suggesting the exact location (shelf) "
-"where to take the products from, which lot etc. for this location. This "
-"method can be enforced at the product category level, and a fallback is made"
-" on the parent locations if none is set here."
+"Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.\n"
+"\n"
+"FIFO: products/lots that were stocked first will be moved out first.\n"
+"LIFO: products/lots that were stocked last will be moved out first.\n"
+"Closet location: products/lots closest to the target location will be moved out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"מגדיר את שיטת ברירת המחדל המשמשת להצעת המיקום המדויק (מדף) היכן לקחת את "
-"המוצרים, מאיזה אצווה וכ'ו עבור מיקום זה. שיטה זו ניתנת לאכיפה ברמת הקטגוריה "
-"של המוצר, ונסיגה מתבצעת במיקומי המקור אם לא מוגדר כאן."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -6687,11 +6686,13 @@ msgstr "הגדר מסלולי מחסן"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__removal_strategy_id
 msgid ""
-"Set a specific removal strategy that will be used regardless of the source "
-"location for this product category"
+"Set a specific removal strategy that will be used regardless of the source location for this product category.\n"
+"\n"
+"FIFO: products/lots that were stocked first will be moved out first.\n"
+"LIFO: products/lots that were stocked last will be moved out first.\n"
+"Closet location: products/lots closest to the target location will be moved out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"הגדר אסטרטגית ניפוק מסוימת שתשמש ללא קשר לאיתור המקור עבור קטגוריית מוצרים "
-"זו"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7541,13 +7542,9 @@ msgstr ""
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"הכמות שבוצעה עבור המוצר \"%s\" אינה תואמת לדיוק העיגול  המוגדר ביחידת המידה "
-"\"%s\". אנא שנה את הכמות או את דיוק מעוגל של יחידת המידה שלך."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

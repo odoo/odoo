@@ -52,16 +52,26 @@ class AccountEdiFormat(models.Model):
                     _logger.info('Received file badly formatted, skipping: \n %s', file)
                     continue
 
-                invoice = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(fattura['filename'], tree)
-                self.env['ir.attachment'].create({
+                invoice = self.env['account.move'].create({'move_type': 'in_invoice'})
+                attachment = self.env['ir.attachment'].create({
                     'name': fattura['filename'],
                     'raw': file,
                     'type': 'binary',
                     'res_model': 'account.move',
                     'res_id': invoice.id
                 })
-
+                if not self.env.context.get('test_skip_commit'):
+                    self.env.cr.commit() #In case something fails after, we still have the attachment
+                # So that we don't delete the attachment when deleting the invoice
+                attachment.res_id = False
+                attachment.res_model = False
+                invoice.unlink()
+                invoice = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(fattura['filename'], tree)
+                attachment.write({'res_model': 'account.move',
+                                  'res_id': invoice.id})
                 proxy_acks.append(id_transaction)
+                if not self.env.context.get('test_skip_commit'):
+                    self.env.cr.commit()
 
             if proxy_acks:
                 try:

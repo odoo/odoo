@@ -4,7 +4,7 @@
 import json
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import format_amount, float_is_zero, formatLang
@@ -306,7 +306,7 @@ class Project(models.Model):
         }
 
     def _get_sale_order_lines(self):
-        sale_orders = self.sale_order_id | self.tasks.sale_order_id
+        sale_orders = self._get_sale_orders()
         return self.env['sale.order.line'].search([('order_id', 'in', sale_orders.ids), ('is_service', '=', True), ('is_downpayment', '=', False)], order='id asc')
 
     def _get_sold_items(self):
@@ -341,6 +341,29 @@ class Project(models.Model):
             'color': 'red' if remaining < 0 else 'black',
         }
         return sold_items
+
+    def _fetch_sale_order_item_ids(self, domain_per_model=None, limit=None, offset=None):
+        if not self or not self.filtered('allow_billable'):
+            return []
+        return super()._fetch_sale_order_item_ids(domain_per_model, limit, offset)
+
+    def _get_sale_order_items_query(self, domain_per_model=None):
+        billable_project_domain = [('allow_billable', '=', True)]
+        if domain_per_model is None:
+            domain_per_model = {
+                'project.project': billable_project_domain,
+                'project.task': billable_project_domain,
+            }
+        else:
+            domain_per_model['project.project'] = expression.AND([
+                domain_per_model.get('project.project', []),
+                billable_project_domain,
+            ])
+            domain_per_model['project.task'] = expression.AND([
+                domain_per_model.get('project.task', []),
+                billable_project_domain,
+            ])
+        return super()._get_sale_order_items_query(domain_per_model)
 
     def _get_profitability_items(self):
         if not self.user_has_groups('project.group_project_manager'):
@@ -409,7 +432,7 @@ class Project(models.Model):
         if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
             buttons.append({
                 'icon': 'clock-o',
-                'text': _('Billable Time'),
+                'text': _lt('Billable Time'),
                 'number': '%s %%' % (self.billable_percentage),
                 'action_type': 'object',
                 'action': 'action_billable_time_button',

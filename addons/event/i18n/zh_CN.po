@@ -7,6 +7,7 @@
 # v2exerer <9010446@qq.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
 # xu aaron, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: xu aaron, 2021\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr "# 活动"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 msgid "# Sent"
-msgstr ""
+msgstr "# 已发送"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -45,11 +46,13 @@ msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
+"‘可折叠徽章 - %s - %s' % ((object.event_id.name or 'Event').replace('/','), "
+"object.name.replace('/','))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
 msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "‘可折叠徽章 - %s' % (object.name or 'Event').replace('/',')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -57,11 +60,13 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
+"‘整页票 - %s - %s' % ((object.event_id.name or 'Event').replace('/','), "
+"object.name.replace('/','))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "‘整页票 - %s' % (object.name or 'Event').replace('/',')"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
@@ -163,6 +168,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    亲爱的<t t-out=\"object.name or ''\">Oscar Morgan</t><br/>\n"
+"    谢谢你的询问。<br/>\n"
+"    这是您的<t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>活动的胸卡。<br/>\n"
+"    如果您有任何问题，请告诉我们。\n"
+"   <br/><br/>\n"
+"    谢谢你。\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell 管理</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -272,7 +289,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span>John Doe</span>"
-msgstr ""
+msgstr "<span>约翰-多伊</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -969,7 +986,7 @@ msgstr "已预订"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Booked By"
-msgstr ""
+msgstr "预订人"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
@@ -981,7 +998,7 @@ msgstr "预订者"
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Booth Management"
-msgstr ""
+msgstr "展位管理"
 
 #. module: event
 #: model:event.event,subtitle:event.event_5
@@ -1050,7 +1067,7 @@ msgstr "附言"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
 msgid "Communication related to event registrations"
-msgstr ""
+msgstr "与活动注册相关的沟通"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1135,7 +1152,7 @@ msgstr "国家"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Create Booths and manage their reservations"
-msgstr ""
+msgstr "创建展位并管理其预订"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -1145,17 +1162,17 @@ msgstr "创建活动"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
 msgid "Create an Event Stage"
-msgstr ""
+msgstr "创建一个活动舞台"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Create an Event Tag Category"
-msgstr ""
+msgstr "创建一个活动标签类别"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
 msgid "Create an Event Template"
-msgstr ""
+msgstr "创建一个活动模板"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_uid
@@ -1273,7 +1290,7 @@ msgstr "显示名称"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
-msgstr ""
+msgstr "在您的活动页面上显示赞助商和参展商"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -1498,6 +1515,9 @@ msgid ""
 "                    usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                    \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"活动模板结合了您经常使用的配置，并且通常是基于您组织的活动类型（如 \"研讨会\"）。\n"
+"                    通常基于您组织的活动类型（如 \"研讨会\"。\n"
+"                    \"路演\"、\"在线网络研讨会 \"等）。"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -1509,7 +1529,7 @@ msgstr "活动入场券"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Event Ticket For"
-msgstr ""
+msgstr "活动门票为"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
@@ -1526,7 +1546,7 @@ msgstr "事件登记"
 msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
-msgstr ""
+msgstr "活动阶段用于跟踪一个活动从起源到结束的进展。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -1548,7 +1568,7 @@ msgstr "活动：注册"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr ""
+msgstr "活动:登记徽章"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -1647,18 +1667,18 @@ msgstr "体验现场音乐，当地美食和饮料。"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
 msgid "Foldable Badge"
-msgstr ""
+msgstr "折叠式徽章"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid ""
 "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
-msgstr ""
+msgstr "可折叠徽章 - {{ (object.event_id.name or 'Event').replace('/', '_') }}}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
 msgid "Foldable Badge Example"
-msgstr ""
+msgstr "折叠式徽章实例"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -1731,23 +1751,23 @@ msgstr "刚创建的"
 msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your"
 " event registrations."
-msgstr ""
+msgstr "从这个仪表板，你可以报告、分析和检测有关你的活动注册的趋势。"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
 msgid "Full Page Ticket"
-msgstr ""
+msgstr "整页票"
 
 #. module: event
 #: model:mail.template,report_name:event.event_subscription
 msgid ""
 "Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}"
-msgstr ""
+msgstr "整页票 - {{ (object.event_id.name or 'Event').replace('/',') }}}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
 msgid "Full Page Ticket Example"
-msgstr ""
+msgstr "整页票示例"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -1778,7 +1798,7 @@ msgstr "受到启发•保持联系•玩得开心"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_state
 msgid "Global communication Status"
-msgstr ""
+msgstr "全球通信状况"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -1846,22 +1866,22 @@ msgstr "小时"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (1)"
-msgstr ""
+msgstr "如何折叠 (1)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (2)"
-msgstr ""
+msgstr "如何折叠 (2)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (3)"
-msgstr ""
+msgstr "如何折叠 (3)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (4)"
-msgstr ""
+msgstr "如何折叠 (4)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__id
@@ -1915,7 +1935,7 @@ msgstr "如果使用票务，则包含门票的最早开始销售日期。"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "If you don't have this ticket, you will <b>not</b> be allowed entry!"
-msgstr ""
+msgstr "如果你没有这张票，你将<b>不</b>被允许进入!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -1935,7 +1955,7 @@ msgstr "马上"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Important ticket information"
-msgstr ""
+msgstr "重要的票务信息"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -1987,7 +2007,7 @@ msgstr "已结束"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
 msgid "Is Finished"
-msgstr ""
+msgstr "已完成"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -2310,18 +2330,18 @@ msgstr "下一活动类型"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 msgid "No Attendees expected yet!"
-msgstr ""
+msgstr "还没有预期的与会者!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 #: model_terms:ir.actions.act_window,help:event.action_registration
 msgid "No Attendees yet!"
-msgstr ""
+msgstr "还没有参会者!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
 msgid "No Event data yet!"
-msgstr ""
+msgstr "还没有活动数据!"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -2369,7 +2389,7 @@ msgstr "备注"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
 msgid "Nothing Scheduled yet!"
-msgstr ""
+msgstr "还没有任何安排!"
 
 #. module: event
 #. openerp-web
@@ -2530,7 +2550,7 @@ msgstr "电话"
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid ""
 "Please come <b>at least</b> 30 minutes before the beginning of the event."
-msgstr ""
+msgstr "请<b>至少</b>在活动开始前30分钟到场。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2681,7 +2701,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr ""
+msgstr "开始登记"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -2737,7 +2757,7 @@ msgstr "预定日期"
 msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
-msgstr ""
+msgstr "安排和组织你的活动：处理注册，发送自动确认电子邮件，销售门票等。"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -2944,7 +2964,7 @@ msgstr "模板"
 #: model:ir.model.fields,field_description:event.field_event_mail__template_model_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__template_model_id
 msgid "Template Model"
-msgstr ""
+msgstr "模板模型"
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -3004,6 +3024,8 @@ msgid ""
 "The following tickets cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"以下票据在有一个或多个注册链接的情况下不能被删除。\n"
+"- %s"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_booked
@@ -3042,7 +3064,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,help:event.field_event_type__ticket_instructions
 msgid "This information will be printed on your tickets."
-msgstr ""
+msgstr "这些信息将印在你的门票上。"
 
 #. module: event
 #. openerp-web
@@ -3085,18 +3107,18 @@ msgstr "门票"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Ticket Extra Instructions"
-msgstr ""
+msgstr "门票附加说明"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
 msgid "Ticket Instructions"
-msgstr ""
+msgstr "票务说明"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Ticket Intructions"
-msgstr ""
+msgstr "票务说明"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -3125,7 +3147,7 @@ msgstr "服务单"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Tickets can be printed or scanned directly from your phone."
-msgstr ""
+msgstr "门票可以直接从你的手机上打印或扫描。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -3211,7 +3233,7 @@ msgstr "未确认的席位"
 msgid ""
 "Under this technical menu you will find all scheduled communication related "
 "to your events."
-msgstr ""
+msgstr "在这个技术菜单下，你会发现所有与你的活动有关的预定通信。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3251,7 +3273,7 @@ msgstr "即将到来的 或 运行中的"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Use Event Tag Categories to classify and organize your event tags."
-msgstr ""
+msgstr "使用活动标签类别来分类和组织您的活动标签。"
 
 #. module: event
 #. openerp-web
@@ -3263,7 +3285,7 @@ msgstr "使用<b>面包屑</b>返回到看板概述。"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
 msgid "Use this report to compare or aggregate event performances."
-msgstr ""
+msgstr "使用此报告来比较或汇总活动表现。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
@@ -3307,7 +3329,7 @@ msgstr "警告: 活动安排存在错误: %s"
 msgid ""
 "Wait until Attendees register to your Event or create their registrations "
 "manually."
-msgstr ""
+msgstr "等到与会者注册到您的活动或手动创建他们的注册。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3384,12 +3406,12 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for {{ object.event_id.name }}"
-msgstr ""
+msgstr "您为{{ object.event_id.name }}的徽章。"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at {{ object.event_id.name }}"
-msgstr ""
+msgstr "您在{{ object.event_id.name }}的注册情况"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -3400,12 +3422,12 @@ msgstr "例如 建筑师会议"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr ""
+msgstr "例如：在线会议"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "e.g. VIP Ticket"
-msgstr ""
+msgstr "例如：贵宾票"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3454,7 +3476,7 @@ msgstr "在%(date)s"
 msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
-msgstr ""
+msgstr "如果当前的日期时间是在门票的最早开始日期之后，则注册已经开始。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
@@ -3487,4 +3509,4 @@ msgstr "未确认"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}:{{ object.get_date_range_str() }}}."

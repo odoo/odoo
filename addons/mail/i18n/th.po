@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
 "Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
@@ -448,7 +448,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span>@</span>"
-msgstr ""
+msgstr "<span>@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -496,11 +496,6 @@ msgid "<strong>Recommended Activities</strong>"
 msgstr "<strong>Recommended Activities</strong>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:0
-msgid "A channel of type 'chat' cannot have more than two users."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_defaults
 msgid ""
@@ -518,6 +513,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_partner_partner_or_guest_exists
 msgid "A channel member must be a partner or a guest."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "A channel of type 'chat' cannot have more than two users."
 msgstr ""
 
 #. module: mail
@@ -1158,22 +1159,22 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "อวตาร 1024"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "อวตาร 128"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "อวตาร 256"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "อวตาร 512"
 
 #. module: mail
 #. openerp-web
@@ -1201,7 +1202,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #, python-format
 msgid "Away"
-msgstr ""
+msgstr "ห่างออกไป"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -1398,6 +1399,13 @@ msgstr "Cc"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
 msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/rtc_call_viewer/rtc_call_viewer.js:0
+#, python-format
+msgid "Change Layout"
+msgstr "เปลี่ยนเค้าโครง"
 
 #. module: mail
 #. openerp-web
@@ -1767,7 +1775,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "สร้าง Uid"
 
 #. module: mail
 #. openerp-web
@@ -1953,7 +1961,7 @@ msgstr "ค่าเริ่มต้น"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__default_display_mode
 msgid "Default Display Mode"
-msgstr ""
+msgstr "โหมดการแสดงผลเริ่มต้น"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_note
@@ -2310,7 +2318,7 @@ msgstr "วันกำหนดจ่าย"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "วันครบกำหนดเมื่อ"
 
 #. module: mail
 #. openerp-web
@@ -2337,7 +2345,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "ประเภทวันครบกำหนด"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_dup
@@ -2410,7 +2418,7 @@ msgstr "นามแฝงอีเมล"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr ""
+msgstr "อีเมลนามแฝง"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
@@ -2469,7 +2477,7 @@ msgstr "แม่แบบอีเมล"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "เธรดอีเมล"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
@@ -2803,7 +2811,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_partner__fold_state__folded
 msgid "Folded"
-msgstr ""
+msgstr "พับ"
 
 #. module: mail
 #. openerp-web
@@ -2995,7 +3003,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_guest_menu
 msgid "Guests"
-msgstr ""
+msgstr "แขก"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_http
@@ -3347,7 +3355,7 @@ msgstr "รูปภาพ 512"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Image is a link"
-msgstr ""
+msgstr "รูปภาพคือลิงก์"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -3852,7 +3860,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Log a note..."
-msgstr ""
+msgstr "บันทึกโน้ตแล้ว..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -4225,7 +4233,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
 msgid "Message subtypes"
-msgstr ""
+msgstr "ประเภทย่อยของข้อความ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__subtype_ids
@@ -5198,7 +5206,7 @@ msgstr "Placeholder Expression"
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__planned
 #, python-format
 msgid "Planned"
-msgstr ""
+msgstr "แผน"
 
 #. module: mail
 #. openerp-web
@@ -5973,7 +5981,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/views/activity/activity_controller.js:0
 #, python-format
 msgid "Search: %s"
-msgstr ""
+msgstr "ค้นหา: %s"
 
 #. module: mail
 #. openerp-web
@@ -6530,7 +6538,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,help:mail.field_ir_cron__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "ชื่อทางเทคนิคของผู้ใช้ในบันทึก"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_template_preview_action
@@ -6602,19 +6610,14 @@ msgid "The FullScreen mode was denied by the browser"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/rtc_call_viewer/rtc_call_viewer.js:0
-#, python-format
-msgid "Change Layout"
-msgstr "เปลี่ยนเค้าโครง"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
 msgstr ""
+"หมายเลขประจำตัวผู้เสียภาษี กรอกให้ครบถ้วนหากผู้ติดต่อต้องเสียภาษีของรัฐบาล "
+"ใช้ในแถลงการณ์ทางกฎหมายบางฉบับ"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
@@ -6754,7 +6757,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr ""
+msgstr "This"
 
 #. module: mail
 #. openerp-web
@@ -7014,6 +7017,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"ประเภทของการดำเนินการกับเซิร์ฟเวอร์ มีค่าต่อไปนี้:\n"
+"- 'Execute Python Code': บล็อกของรหัส python ที่จะดำเนินการ\n"
+"- 'สร้าง': สร้างบันทึกใหม่ด้วยค่าใหม่\n"
+"- 'อัปเดตบันทึก': อัปเดตค่าของบันทึก\n"
+"- 'ดำเนินการหลายอย่าง': กำหนดการกระทำที่เรียกการกระทำอื่น ๆ ของเซิร์ฟเวอร์\n"
+"- 'ส่งอีเมล': ส่งอีเมลโดยอัตโนมัติ (พูดคุย)\n"
+"- 'เพิ่มผู้ติดตาม': เพิ่มผู้ติดตามในบันทึก (พูดคุย)\n"
+"- 'สร้างกิจกรรมถัดไป': สร้างกิจกรรม (พูดคุย)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -7176,7 +7187,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #, python-format
 msgid "Uploaded"
-msgstr ""
+msgstr "อัปโหลด"
 
 #. module: mail
 #. openerp-web
@@ -7194,6 +7205,8 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"ใช้ 'ผู้ใช้เฉพาะ' เพื่อกำหนดผู้ใช้รายเดียวกันในกิจกรรมถัดไปเสมอ ใช้ "
+"'ผู้ใช้ทั่วไปจากบันทึก' เพื่อระบุชื่อฟิลด์ของผู้ใช้ที่จะเลือกในบันทึก"
 
 #. module: mail
 #. openerp-web
@@ -7276,7 +7289,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "ชื่อฟิลด์ผู้ใช้"
 
 #. module: mail
 #. openerp-web
@@ -7308,7 +7321,7 @@ msgstr ""
 #: code:addons/mail/static/src/widgets/common.xml:0
 #, python-format
 msgid "User is online"
-msgstr ""
+msgstr "ผู้ใช้กำลังออนไลน์"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -7377,7 +7390,7 @@ msgstr "มุมมอง"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "View %s"
-msgstr ""
+msgstr "ดู %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__view_mode
@@ -7877,7 +7890,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
-msgstr ""
+msgstr "เช่น พูดคุยเกี่ยวกับข้อเสนอ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -7993,7 +8006,7 @@ msgstr "เดือน"
 #: code:addons/mail/static/src/components/rtc_configuration_menu/rtc_configuration_menu.xml:0
 #, python-format
 msgid "ms"
-msgstr ""
+msgstr "ms"
 
 #. module: mail
 #. openerp-web
@@ -8192,7 +8205,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
-msgstr ""
+msgstr "สัปดาห์"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form

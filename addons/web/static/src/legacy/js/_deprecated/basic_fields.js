@@ -26,6 +26,7 @@ var FieldBoolean = AbstractField.extend({
         change: '_onChange',
     }),
     supportedFieldTypes: ['boolean'],
+    isQuickEditable: true,
 
     //--------------------------------------------------------------------------
     // Public

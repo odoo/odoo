@@ -464,7 +464,7 @@ class View(models.Model):
                 main_object=self,
                 website=request.website,
                 is_view_active=request.website.is_view_active,
-                res_company=request.website.company_id.sudo(),
+                res_company=request.env['res.company'].browse(request.website._get_cached('company_id')).sudo(),
                 translatable=translatable,
                 editable=editable,
             ))

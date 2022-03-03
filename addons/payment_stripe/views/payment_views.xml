@@ -9,7 +9,7 @@
             <xpath expr="//group[@name='acquirer']" position="before">
                 <group invisible="context.get('stripe_onboarding', False)"
                        name="stripe_onboarding_group"
-                       attrs="{'invisible': ['|', ('provider', '!=', 'stripe'), '&amp;', ('stripe_secret_key', '!=', False), ('stripe_publishable_key', '!=', False)]}">
+                       attrs="{'invisible': ['|', '|', ('provider', '!=', 'stripe'), ('stripe_secret_key', '!=', False), ('stripe_publishable_key', '!=', False)]}">
                     <button string="Connect Stripe"
                             type="object"
                             name="action_stripe_connect_account"

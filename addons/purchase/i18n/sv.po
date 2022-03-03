@@ -20,9 +20,9 @@
 # lynnliuying <lynn.liu1971@gmail.com>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # STefan Rundgren <stefanrundgren@cellglas.com>, 2021
-# Simon S, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Karan Bosamia, 2021
+# Simon S, 2022
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Karan Bosamia, 2021\n"
+"Last-Translator: Simon S, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -729,7 +729,7 @@ msgstr "Vänliga hälsningar,"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__default_purchase_method
 msgid "Bill Control"
-msgstr ""
+msgstr "Fakturakontroll"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_count
@@ -1183,7 +1183,7 @@ msgstr "Bekräfta inköpsorder i två steg"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr ""
+msgstr "Få varningar i ordrar för produkter eller kunder"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
@@ -1404,7 +1404,7 @@ msgstr "Lås"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
 msgid "Lock Confirmed Orders"
-msgstr ""
+msgstr "Lås bekräftade ordrar"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -1423,6 +1423,8 @@ msgstr "Huvudbilaga"
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
 msgstr ""
+"Se till att du bara betalar de räkningar där du har fått varorna du har "
+"beställt."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1452,6 +1454,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Felmarginal för leverantörers ledtider. När systemet genererar inköpsordrar "
+"för ombeställning av produkter kommer de att schemaläggas så många dagar "
+"tidigare för att klara av oväntade förseningar från leverantörerna."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -1460,6 +1465,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Felmarginal för leverantörers ledtider. När systemet genererar inköpsordrar "
+"för ombeställning av produkter kommer de att schemaläggas så många dagar "
+"tidigare för att klara av oväntade förseningar från leverantörerna."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1526,7 +1534,7 @@ msgstr "Mina beställningar"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "My Purchases"
-msgstr ""
+msgstr "Mina inköp"
 
 #. module: purchase
 #. openerp-web
@@ -1936,6 +1944,9 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
+"Med inköpsanalys kan du enkelt kontrollera och analysera företagets "
+"inköpshistorik och resultat. Från den här menyn kan du spåra dina "
+"förhandlingsresultat, dina leverantörers leveransresultat osv."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -1988,7 +1999,7 @@ msgstr "Inköps Order #"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
 msgid "Purchase Order Approval"
-msgstr ""
+msgstr "Godkännande av inköpsorder"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__purchase_order_count
@@ -2287,7 +2298,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__receive
 msgid "Received quantities"
-msgstr ""
+msgstr "Mottagna kvantiteter"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reception_confirmed
@@ -2360,7 +2371,7 @@ msgstr "Offertförfrågan #"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request managers to approve orders above a minimum amount"
-msgstr ""
+msgstr "Be chefer att godkänna inköpsordrar över ett minimibelopp"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
@@ -2385,6 +2396,8 @@ msgid ""
 "Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
 msgstr ""
+"Offertförfrågningar är dokument som skickas till dina leverantörer för att begära priser för olika produkter som du överväger att köpa.\n"
+"När en överenskommelse har träffats med leverantören bekräftas de och omvandlas till inköpsorder."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2433,7 +2446,7 @@ msgstr "Sektionens namn (t.ex. Produkter, Tjänster)"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr ""
+msgstr "Säkerhetsledtid för inköp"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
@@ -2685,6 +2698,9 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
+"Det här kontot används vid automatisk lagervärdering för att registrera "
+"prisskillnaden mellan en inköpsorder och dess leverantörsfaktura när "
+"leverantörsfakturan bekräftas."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -2708,6 +2724,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Det här standardvärdet appliceras på alla nya produkter som skapas. Detta "
+"kan ändras på varje enskild produkt."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2946,7 +2964,7 @@ msgstr "Leverantörsfakturor"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor Country"
-msgstr ""
+msgstr "Leverantörens land"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase

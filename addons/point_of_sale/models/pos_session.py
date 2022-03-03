@@ -842,7 +842,7 @@ class PosSession(models.Model):
         rounding_difference = data.get('rounding_difference')
         MoveLine = data.get('MoveLine')
 
-        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount_converted']) for key, amounts in taxes.items() if amounts['amount']]
+        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount_converted']) for key, amounts in taxes.items()]
         # Check if all taxes lines have account_id assigned. If not, there are repartition lines of the tax that have no account_id.
         tax_names_no_account = [line['name'] for line in tax_vals if line['account_id'] == False]
         if len(tax_names_no_account) > 0:
@@ -1151,10 +1151,7 @@ class PosSession(models.Model):
         # of the key used for summing taxes. Since the POS UI doesn't support the tags, inconsistencies
         # may arise in 'Round Globally'.
         check_refund = lambda x: x.qty * x.price_unit < 0
-        if self.company_id.tax_calculation_rounding_method == 'round_globally':
-            is_refund = all(check_refund(line) for line in order_line.order_id.lines)
-        else:
-            is_refund = check_refund(order_line)
+        is_refund = check_refund(order_line)
         tax_data = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund)
         taxes = tax_data['taxes']
         # For Cash based taxes, use the account from the repartition line immediately as it has been paid already

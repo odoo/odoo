@@ -7,7 +7,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
 # Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2167,15 +2167,19 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
 msgid ""
-"Defines the default method used for suggesting the exact location (shelf) "
-"where to take the products from, which lot etc. for this location. This "
-"method can be enforced at the product category level, and a fallback is made"
-" on the parent locations if none is set here."
+"Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.\n"
+"\n"
+"FIFO: products/lots that were stocked first will be moved out first.\n"
+"LIFO: products/lots that were stocked last will be moved out first.\n"
+"Closet location: products/lots closest to the target location will be moved out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Definieert de standaard methode, welke wordt gebruikt voor het voorstellen "
-"van de exacte locatie (schap) waar de producten vandaan te halen. Deze "
-"methode kan op productcategorie niveau worden afgedwongen, en een heeft een "
-"fallback op de bovenliggende locaties als hier geen locatie is ingesteld."
+"Definieert de standaardmethode die wordt gebruikt voor het voorstellen van de exacte locatie (bijv. schap) waar de producten vandaan moeten worden gehaald, welke partij enz. voor deze locatie. Deze methode kan worden afgedwongen op productcategorieniveau en er wordt teruggevallen op de bovenliggende locaties als hier geen is ingesteld.\n"
+"\n"
+"FIFO: producten/partijen die het eerst op voorraad waren, gaan als eerste de deur uit.\n"
+"LIFO: producten/partijen die het laatst op voorraad waren, gaan als eerste de deur uit.\n"
+"Dichtstbijzijnde locatie: producten/partijen die zich het dichtst bij de doellocatie bevinden, worden als eerste verplaatst.\n"
+"FEFO: producten/partijen met de dichtstbijzijnde verwijderdatum worden als eerste verplaatst (de beschikbaarheid van deze methode hangt af van de instelling \"Vervaldatums\")."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -6926,11 +6930,19 @@ msgstr "Stel magazijnroutes in"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__removal_strategy_id
 msgid ""
-"Set a specific removal strategy that will be used regardless of the source "
-"location for this product category"
+"Set a specific removal strategy that will be used regardless of the source location for this product category.\n"
+"\n"
+"FIFO: products/lots that were stocked first will be moved out first.\n"
+"LIFO: products/lots that were stocked last will be moved out first.\n"
+"Closet location: products/lots closest to the target location will be moved out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Stel een specifieke uitgaande voorraadmethode is, welke wordt gebruikt "
-"ongeacht de ingestelde voorraadlocatie voor deze productcategorie"
+"Stel een specifieke verwijderingsstrategie in die wordt gebruikt, ongeacht de bronlocatie voor deze productcategorie.\n"
+"\n"
+"FIFO: producten/partijen die het eerst op voorraad waren, gaan als eerste de deur uit.\n"
+"LIFO: producten/partijen die het laatst op voorraad waren, gaan als eerste de deur uit.\n"
+"Dichtstbijzijnde locatie: producten/partijen die zich het dichtst bij de doellocatie bevinden, worden als eerste verplaatst.\n"
+"FEFO: producten/partijen met de dichtstbijzijnde verwijderdatum worden als eerste verplaatst (de beschikbaarheid van deze methode hangt af van de instelling \"Vervaldatums\")."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7820,15 +7832,12 @@ msgstr "De getelde hoeveelheid van het product."
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"De hoeveelheid gedaan voor het product %s\"\" voldoet niet aan de "
-"afrondingsprecisie gedefinieerd op de maateenheid \"%s\". Wijzig de "
-"hoeveelheid die je hebt gedaan of de afrondingsnauwkeurigheid van je "
-"maateenheid."
+"De hoeveelheid gereed voor het product \"%s\" , komt niet overeen met de "
+"afrondingsnauwkeurigheid die is gedefinieerd op de maateenheid \"%s\". "
+"Wijzig de hoeveelheid gereed of de afrondingsprecisie van de maateenheid."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9584,7 +9593,7 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished"
-msgstr "moet worden bijgevuld"
+msgstr "en moet worden aangevuld"
 
 #. module: stock
 #. openerp-web

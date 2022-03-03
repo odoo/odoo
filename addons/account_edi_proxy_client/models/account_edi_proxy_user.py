@@ -8,6 +8,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.fernet import Fernet
+from psycopg2 import OperationalError
 import requests
 import uuid
 import base64
@@ -56,11 +57,11 @@ class AccountEdiProxyClientUser(models.Model):
     ]
 
     def _get_demo_state(self):
-        demo_state = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False)
+        demo_state = self.env['ir.config_parameter'].sudo().get_param('account_edi_proxy_client.demo', False)
         return 'prod' if demo_state in ['prod', False] else 'test' if demo_state == 'test' else 'demo'
 
     def _get_server_url(self):
-        return DEFAULT_TEST_SERVER_URL if self._get_demo_state() == 'test' else self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
+        return DEFAULT_TEST_SERVER_URL if self._get_demo_state() == 'test' else self.env['ir.config_parameter'].sudo().get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
 
     def _make_request(self, url, params=False):
         ''' Make a request to proxy and handle the generic elements of the reponse (errors, new refresh token).
@@ -98,10 +99,12 @@ class AccountEdiProxyClientUser(models.Model):
             error_code = proxy_error['code']
             if error_code == 'refresh_token_expired':
                 self._renew_token()
+                if not self.env.context.get('test_skip_commit'):
+                    self.env.cr.commit() # We do not want to lose it if in the _make_request below something goes wrong
                 return self._make_request(url, params)
             if error_code == 'no_such_user':
                 # This error is also raised if the user didn't exchange data and someone else claimed the edi_identificaiton.
-                self.active = False
+                self.sudo().active = False
             raise AccountEdiProxyError(error_code, proxy_error['message'] or False)
 
         return response['result']
@@ -166,14 +169,20 @@ class AccountEdiProxyClientUser(models.Model):
         that multiple database use the same credentials. When receiving an error for an expired refresh_token,
         This method makes a request to get a new refresh token.
         '''
+        try:
+            with self.env.cr.savepoint(flush=False):
+                self.env.cr.execute('SELECT * FROM account_edi_proxy_client_user WHERE id IN %s FOR UPDATE NOWAIT', [tuple(self.ids)])
+        except OperationalError as e:
+            if e.pgcode == '55P03':
+                return
+            raise e
         response = self._make_request(self._get_server_url() + '/iap/account_edi/1/renew_token')
         if 'error' in response:
             # can happen if the database was duplicated and the refresh_token was refreshed by the other database.
             # we don't want two database to be able to query the proxy with the same user
             # because it could lead to not inconsistent data.
             _logger.error(response['error'])
-            raise UserError('Proxy error, please contact Odoo (code: 3)')
-        self.refresh_token = response['refresh_token']
+        self.sudo().refresh_token = response['refresh_token']
 
     def _decrypt_data(self, data, symmetric_key):
         ''' Decrypt the data. Note that the data is encrypted with a symmetric key, which is encrypted with an asymmetric key.
@@ -183,7 +192,7 @@ class AccountEdiProxyClientUser(models.Model):
         :param symmetric_key:   The symmetric_key encrypted with self.private_key.public_key()
         '''
         private_key = serialization.load_pem_private_key(
-            base64.b64decode(self.private_key),
+            base64.b64decode(self.sudo().private_key),
             password=None,
             backend=default_backend()
         )
