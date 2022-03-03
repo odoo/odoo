@@ -3,9 +3,12 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
 
     const { Component } = owl;
     const { onMounted, onPatched, onWillUnmount } = owl.hooks;
+    const { Gui } = require('point_of_sale.Gui');
 
     /**
      * Introduce error handlers in the component.
+     * Use Gui to make sure the popups are shown, especially when the calling component
+     * is unmounted.
      *
      * IMPROVEMENT: This is a terrible hook. There could be a better way to handle
      * the error when the order failed to sync.
@@ -16,7 +19,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         component._handlePushOrderError = async function (error) {
             // This error handler receives `error` equivalent to `error.message` of the rpc error.
             if (error.message === 'Backend Invoice') {
-                await this.showPopup('ConfirmPopup', {
+                await Gui.showPopup('ConfirmPopup', {
                     title: this.env._t('Please print the invoice from the backend'),
                     body:
                         this.env._t(
@@ -29,10 +32,10 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
                 const body = this.env._t(
                     'Check the internet connection then try to sync again by clicking on the red wifi button (upper right of the screen).'
                 );
-                await this.showPopup('OfflineErrorPopup', { title, body });
+                await Gui.showPopup('OfflineErrorPopup', { title, body });
             } else if (error.code === 200) {
                 // OpenERP Server Errors
-                await this.showPopup('ErrorTracebackPopup', {
+                await Gui.showPopup('ErrorTracebackPopup', {
                     title: error.data.message || this.env._t('Server Error'),
                     body:
                         error.data.debug ||
@@ -40,7 +43,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
                 });
             } else if (error.code === 700) {
                 // Fiscal module errors
-                await this.showPopup('ErrorPopup', {
+                await Gui.showPopup('ErrorPopup', {
                     title: this.env._t('Fiscal data module error'),
                     body:
                         error.data.error.status ||
@@ -48,7 +51,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
                 });
             } else {
                 // ???
-                await this.showPopup('ErrorPopup', {
+                await Gui.showPopup('ErrorPopup', {
                     title: this.env._t('Unknown Error'),
                     body: this.env._t(
                         'The order could not be sent to the server due to an unknown error'

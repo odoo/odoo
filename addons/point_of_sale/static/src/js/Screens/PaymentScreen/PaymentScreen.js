@@ -8,6 +8,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder } = require('point_of_sale.custom_hooks');
+    const { Gui } = require('point_of_sale.Gui');
 
     class PaymentScreen extends PosComponent {
         constructor() {
@@ -175,45 +176,34 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             this.currentOrder.initialize_validation_date();
             this.currentOrder.finalized = true;
 
+            const saveOrderToServerProm = this._saveOrderToServer(this.currentOrder);
             let syncedOrderBackendIds = [];
 
-            try {
-                if (this.currentOrder.is_to_invoice()) {
-                    syncedOrderBackendIds = await this.env.pos.push_and_invoice_order(
-                        this.currentOrder
+            if (this.currentOrder.wait_for_push_order()) {
+                syncedOrderBackendIds = await saveOrderToServerProm;
+                if (syncedOrderBackendIds.length) {
+                    const result = await this._postPushOrderResolve(
+                        this.currentOrder,
+                        syncedOrderBackendIds
                     );
-                } else {
-                    syncedOrderBackendIds = await this.env.pos.push_single_order(this.currentOrder);
-                }
-            } catch (error) {
-                if (error.code == 700)
-                    this.error = true;
-                if (error instanceof Error) {
-                    throw error;
-                } else {
-                    await this._handlePushOrderError(error);
+                    if (!result) {
+                        this.showPopup('ErrorPopup', {
+                            title: 'Error: no internet connection.',
+                            body: error,
+                        });
+                    }
                 }
             }
-            if (syncedOrderBackendIds.length && this.currentOrder.wait_for_push_order()) {
-                const result = await this._postPushOrderResolve(
-                    this.currentOrder,
-                    syncedOrderBackendIds
-                );
-                if (!result) {
-                    await this.showPopup('ErrorPopup', {
-                        title: 'Error: no internet connection.',
-                        body: error,
-                    });
-                }
-            }
-
             this.showScreen(this.nextScreen);
 
+            syncedOrderBackendIds = await saveOrderToServerProm;
             // If we succeeded in syncing the current order, and
             // there are still other orders that are left unsynced,
             // we ask the user if he is willing to wait and sync them.
             if (syncedOrderBackendIds.length && this.env.pos.db.get_orders().length) {
-                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                // Need to use Gui here since this component is unmounted
+                // when the nextScreen is shown.
+                const { confirmed } = await Gui.showPopup('ConfirmPopup', {
                     title: this.env._t('Remaining unsynced orders'),
                     body: this.env._t(
                         'There are unsynced orders. Do you want to sync these orders?'
@@ -226,6 +216,25 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     this.env.pos.push_orders();
                 }
             }
+        }
+        async _saveOrderToServer(order) {
+            let syncedOrderBackendIds = [];
+            try {
+                if (order.is_to_invoice()) {
+                    syncedOrderBackendIds = await this.env.pos.push_and_invoice_order(order);
+                } else {
+                    syncedOrderBackendIds = await this.env.pos.push_single_order(order);
+                }
+            } catch (error) {
+                if (error.code == 700)
+                    this.error = true;
+                if (error instanceof Error) {
+                    throw error;
+                } else {
+                    this._handlePushOrderError(error);
+                }
+            }
+            return syncedOrderBackendIds;
         }
         get nextScreen() {
             return !this.error? 'ReceiptScreen' : 'ProductScreen';
