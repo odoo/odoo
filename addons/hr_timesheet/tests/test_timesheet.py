@@ -349,3 +349,48 @@ class TestTimesheet(TestCommonTimesheet):
         })
 
         self.assertEqual(timesheet.project_id, second_project, 'The project_id of timesheet should be second_project')
+
+    def test_create_timesheet_employee_not_in_company(self):
+        ''' ts.employee_id only if the user has an employee in the company or one employee for all companies.
+        '''
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        company_3 = self.env['res.company'].create({'name': 'Company 3'})
+
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Aa Aa',
+            'company_id': company_3.id,
+        })
+        project = self.env['project.project'].create({
+            'name': 'Aa Project',
+            'company_id': company_3.id,
+            'analytic_account_id': analytic_account.id,
+        })
+        task = self.env['project.task'].create({
+            'name': 'Aa Task',
+            'project_id': project.id,
+        })
+
+        Timesheet = self.env['account.analytic.line'].with_context(allowed_company_ids=[company_3.id, company_2.id, self.env.company.id])
+        timesheet = Timesheet.create({
+            'name': 'Timesheet',
+            'project_id': project.id,
+            'task_id': task.id,
+            'unit_amount': 2,
+            'user_id': self.user_manager.id,
+            'company_id': company_3.id,
+        })
+        self.assertEqual(timesheet.employee_id, self.user_manager.employee_id, 'As there is a unique employee for this user, it must be found')
+
+        self.env['hr.employee'].with_company(company_2).create({
+            'name': 'Employee 2',
+            'user_id': self.user_manager.id,
+        })
+        timesheet = Timesheet.create({
+            'name': 'Timesheet',
+            'project_id': project.id,
+            'task_id': task.id,
+            'unit_amount': 2,
+            'user_id': self.user_manager.id,
+            'company_id': company_3.id,
+        })
+        self.assertFalse(timesheet.employee_id, 'As there are several employees for this user, but none of them in this company, none must be found')
