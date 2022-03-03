@@ -45,6 +45,9 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
             "Payulatam: transaction reference wasn't correctly singularized.")
 
     def test_redirect_form_values(self):
+        self.patch(self, 'base_url', lambda: 'http://127.0.0.1:8069')
+        self.patch(type(self.env['base']), 'get_base_url', lambda _: 'http://127.0.0.1:8069')
+
         tx = self.create_transaction(flow="redirect")
 
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
