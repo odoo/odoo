@@ -21,7 +21,7 @@ class KnowledgeController(http.Controller):
         if not article.exists():
             return werkzeug.exceptions.NotFound()  # (or BadRequest ?)
 
-        partner = article.sudo().article_member_ids.partner_id.filtered(lambda p: p.id == partner_id)
+        partner = article.main_article_id.sudo().article_member_ids.partner_id.filtered(lambda p: p.id == partner_id)
         if not partner:
             raise werkzeug.exceptions.Forbidden()
 
