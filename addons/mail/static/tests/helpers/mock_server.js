@@ -485,7 +485,7 @@ MockServer.include({
      * Simulates the `/mail/thread/data` route.
      *
      * @param {string} thread_model
-     * @param {integer} thread_mid
+     * @param {integer} thread_id
      * @param {string[]} request_list
      * @returns {Object}
      */

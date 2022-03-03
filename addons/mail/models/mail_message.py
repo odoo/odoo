@@ -844,8 +844,6 @@ class Message(models.Model):
             else:
                 author = (0, message_sudo.email_from)
 
-            # Attachments
-            attachments_formatted = message_sudo.attachment_ids._attachment_format()
             # Tracking values
             tracking_value_ids = []
             for tracking in message_sudo.tracking_value_ids:
@@ -890,7 +888,7 @@ class Message(models.Model):
                 vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
             vals.update({
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachment_ids': attachments_formatted,
+                'attachment_ids': message_sudo.attachment_ids._attachment_format(),
                 'tracking_value_ids': tracking_value_ids,
                 'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
