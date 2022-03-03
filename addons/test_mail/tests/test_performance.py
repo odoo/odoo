@@ -575,7 +575,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_post_one_email_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=30, employee=33):
+        with self.assertQueryCount(__system__=31, employee=34):
             record.message_post(
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,
@@ -726,7 +726,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         self.container.message_subscribe(self.user_portal.partner_id.ids)
         record = self.container.with_user(self.env.user)
 
-        with self.assertQueryCount(__system__=53, employee=54):  # about 20 (19?) queries per additional customer group
+        with self.assertQueryCount(__system__=54, employee=55):  # about 20 (19?) queries per additional customer group
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment',
@@ -743,7 +743,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_container_tpl').id
 
-        with self.assertQueryCount(__system__=61, employee=62):  # about 20 (19 ?) queries per additional customer group
+        with self.assertQueryCount(__system__=62, employee=63):  # about 20 (19 ?) queries per additional customer group
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)

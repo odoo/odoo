@@ -11,7 +11,7 @@ import threading
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import (
-    is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
+    is_html_empty, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
     email_split, email_domain_normalize,
     misc, formataddr,
     prepend_html_content,
@@ -305,6 +305,19 @@ class TestHtmlTools(BaseCase):
         for content, container_tag, expected in cases:
             html = plaintext2html(content, container_tag)
             self.assertEqual(html, expected, 'plaintext2html is broken')
+
+    def test_html_html_to_inner_content(self):
+        cases = [
+            ('<div><p>First <br/>Second <br/>Third Paragraph</p><p>--<br/>Signature paragraph with a <a href="./link">link</a></p></div>',
+             'First Second Third Paragraph -- Signature paragraph with a link'),
+            ('<p>Now =&gt; processing&nbsp;entities&#8203;and extra whitespace too.  </p>',
+             'Now =&gt; processing\xa0entities\u200band extra whitespace too.'),
+            ('<div>Look what happens with <p>unmatched tags</div>', 'Look what happens with unmatched tags'),
+            ('<div>Look what happens with <p unclosed tags</div> Are we good?', 'Look what happens with Are we good?')
+        ]
+        for content, expected in cases:
+            text = html_to_inner_content(content)
+            self.assertEqual(text, expected, 'html_html_to_inner_content is broken')
 
     def test_append_to_html(self):
         test_samples = [

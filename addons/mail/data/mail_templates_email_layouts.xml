@@ -2,6 +2,13 @@
 <odoo>
     <data>
         <template id="message_notification_email">
+<html t-att-lang="lang">
+<header>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+</header>
+<body>
+<t t-set="subtype_internal" t-value="subtype.internal"/>
+<t t-call="mail.notification_preview"/>
 <div>
 <div t-if="has_button_access" itemscope="itemscope" itemtype="http://schema.org/EmailMessage">
     <div itemprop="potentialAction" itemscope="itemscope" itemtype="http://schema.org/ViewAction">
@@ -12,7 +19,7 @@
 </div>
 <div t-if="has_button_access or len(actions) &gt; 0 or not is_discussion"
         summary="o_mail_notification" style="padding: 0px; width:600px;">
-    <table cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
     <tbody><tr>
     <td valign="center">
         <a t-if="has_button_access"
@@ -36,7 +43,7 @@
     <td colspan="2" style="text-align:center;">
         <hr width="100%"
             style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0 12px 0;"/>
-        <p t-if="subtype.internal" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px;">
+        <p t-if="subtype_internal" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px;">
             <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
         </p>
     </td>
@@ -46,7 +53,7 @@
 <div t-out="message.body"/>
 <ul t-if="tracking_values">
     <t t-foreach="tracking_values" t-as="tracking">
-        <li><t t-out="tracking[0]"/>: <t t-out="tracking[1]"/> -&gt; <t t-out="tracking[2]"/></li>
+        <li><t t-out="tracking[0]"/>: <t t-out="tracking[1]"/> &#8594; <t t-out="tracking[2]"/></li>
     </t>
 </ul>
 <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" style="font-size: 13px;"/>
@@ -63,16 +70,24 @@
     <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="text-decoration:none; color: #875A7B;">Odoo</a>.
 </p>
 </div>
+</body></html>
         </template>
 
         <template id="mail_notification_light">
-<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
-<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+<html t-att-lang="lang">
+<header>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+</header>
+<body>
+<t t-set="subtype_internal" t-value="False"/>
+<t t-call="mail.notification_preview"/>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
 <tbody>
     <!-- HEADER -->
     <tr>
         <td align="center" style="min-width: 590px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your <t t-out="model_description or 'document'"/></span>
                     <br/>
@@ -125,17 +140,26 @@
         Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
 </td></tr>
 </table>
+</body>
+</html>
         </template>
 
         <!-- Used mainly in conjunction of portal models (SO, PO, Invoices) although not mandatory -->
         <template id="mail_notification_paynow" name="Mail: Pay Now mail notification template">
-<table border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td>
-<table border="0" cellpadding="0" cellspacing="0" style="max-width:900px; width:100%; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+<html t-att-lang="lang">
+<header>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+</header>
+<body>
+<t t-set="subtype_internal" t-value="False"/>
+<t t-call="mail.notification_preview"/>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="max-width:900px; width:100%; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
 <tbody>
     <!-- HEADER -->
     <tr>
         <td align="center">
-            <table border="0" cellpadding="0" cellspacing="5" width="100%" style="background-color: #FFFFFF; padding: 0; border-collapse:separate;">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="5" width="100%" style="background-color: #FFFFFF; padding: 0; border-collapse:separate;">
                 <tr><td>
                     <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" height="48" style="padding: 0; margin: 0"  t-att-alt="'%s' % company.name"/>
                 </td></tr>
@@ -222,6 +246,21 @@
 </table>
 </td></tr>
 </table>
+</body>
+</html>
+        </template>
+
+        <template id="notification_preview">
+<div style="display: none; max-height: 0px; overflow: hidden;">
+    <t t-if="tracking_values">
+        <t t-out="tracking_values[0][0]"/>: <t t-out="tracking_values[0][1]"/> &#8594; <t t-out="tracking_values[0][2]"/>
+        <t t-if="len(tracking_values) > 1"> |...</t>
+        <t t-if="message.preview"> | </t>
+    </t>
+    <t t-if="subtype_internal">Internal communication: </t><t t-out="message.preview"/>
+    <!--Trailing whitespace to push back email content so that it doesn't appear in preview. Specific characters to use may change over time -->
+    <t t-out="'&#847; &#8203; ' * 140"/>
+</div>
         </template>
     </data>
 </odoo>
