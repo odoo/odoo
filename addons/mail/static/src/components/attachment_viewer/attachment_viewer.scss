@@ -32,19 +32,6 @@
     min-width: 0;
 }
 
-.o_AttachmentViewer_toolbar {
-    bottom: $o-navbar-height * 1.125;
-    transform: translateY(100%);
-}
-
-.o_AttachmentViewer_toolbarButton {
-    padding: 8px;
-}
-
-.o_AttachmentViewer_viewIframe {
-    width: 90%;
-}
-
 .o_AttachmentViewer_zoomer {
     padding: ($o-navbar-height * 1.125) 0;
 }
@@ -57,35 +44,13 @@
     outline: none;
 }
 
-.o_AttachmentViewer_buttonNavigation {
-    color: gray('400');
-    background-color: lighten($black, 15%);
-
-    &:hover {
-        color: lighten(gray('400'), 15%);
-        background-color: $black;
-    }
-}
-
 .o_AttachmentViewer_headerItemButton:hover {
     background-color: rgba($white, 0.1);
     color: lighten($gray-400, 15%);
 }
 
-.o_AttachmentViewer_toolbarButton {
-    background-color: lighten($black, 15%);
-
-    &.o_disabled {
-        filter: brightness(1.3);
-    }
-
-    &:not(.o_disabled) {
-        @include o-hover-text-color($gray-400, lighten($gray-400, 15%));
-
-        &:hover {
-            background-color: $black;
-        }
-    }
+.o_AttachmentViewer_toolbarButton.o_disabled {
+    filter: brightness(1.3);
 }
 
 .o_AttachmentViewer_view {
