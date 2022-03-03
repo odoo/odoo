@@ -295,9 +295,10 @@ class TestMessageNotify(TestMessagePostCommon):
         admin_mails = [mail for mail in self._mails if self.partner_admin.name in mail.get('email_to')[0]]
         self.assertEqual(len(admin_mails), 1, 'There should be exactly one email sent to admin')
         admin_mail_body = admin_mails[0].get('body')
-        admin_access_link = admin_mail_body[admin_mail_body.index('model='):admin_mail_body.index('/>') - 1] if 'model=' in admin_mail_body else None
 
-        self.assertIsNotNone(admin_access_link, 'The email sent to admin should contain an access link')
+        self.assertTrue('model=' in admin_mail_body, 'The email sent to admin should contain an access link')
+        admin_access_link = admin_mail_body[
+            admin_mail_body.index('model='):admin_mail_body.index('/>', admin_mail_body.index('model=')) - 1]
         self.assertIn('model=%s' % self.test_record._name, admin_access_link, 'The access link should contain a valid model argument')
         self.assertIn('res_id=%d' % self.test_record.id, admin_access_link, 'The access link should contain a valid res_id argument')
 
