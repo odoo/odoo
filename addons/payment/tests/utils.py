@@ -12,13 +12,6 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentTestUtils(AccountTestInvoicingCommon):
-
-    @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
-
-        cls.base_url = cls.env['ir.config_parameter'].get_param('web.base.url')
-
     def _generate_test_access_token(self, *values):
         """ Generate an access token based on the provided values for testing purposes.
 
@@ -37,7 +30,7 @@ class PaymentTestUtils(AccountTestInvoicingCommon):
         return access_token
 
     def _build_url(self, route):
-        return urls.url_join(self.base_url, route)
+        return urls.url_join(self.base_url(), route)
 
     def _extract_values_from_html_form(self, html_form):
         """ Extract the transaction rendering values from an HTML form.

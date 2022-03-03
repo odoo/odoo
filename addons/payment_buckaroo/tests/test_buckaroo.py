@@ -16,6 +16,9 @@ from odoo.addons.payment_buckaroo.tests.common import BuckarooCommon
 class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
     def test_redirect_form_values(self):
+        self.patch(self, 'base_url', lambda: 'http://127.0.0.1:8069')
+        self.patch(type(self.env['base']), 'get_base_url', lambda _: 'http://127.0.0.1:8069')
+
         return_url = self._build_url(BuckarooController._return_url)
         expected_values = {
             'Brq_websitekey': self.buckaroo.buckaroo_website_key,
