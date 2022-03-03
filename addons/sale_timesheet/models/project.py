@@ -299,7 +299,6 @@ class Project(models.Model):
             'views': [
                 [self.env.ref('hr_timesheet.timesheet_view_tree_user').id, 'tree'],
                 [self.env.ref('hr_timesheet.view_kanban_account_analytic_line').id, 'kanban'],
-                [self.env.ref('sale_timesheet.view_hr_timesheet_line_pivot_billing_rate').id, 'pivot'],
                 [self.env.ref('hr_timesheet.view_hr_timesheet_line_graph_all').id, 'graph'],
                 [self.env.ref('hr_timesheet.timesheet_view_form_user').id, 'form'],
             ],

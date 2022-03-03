@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="timesheets_analysis_report_pivot_inherit" model="ir.ui.view">
+            <field name="name">timesheets.analysis.report.pivot</field>
+            <field name="model">timesheets.analysis.report</field>
+            <field name="inherit_id" ref="hr_timesheet.timesheets_analysis_report_pivot"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='unit_amount']" position="after">
+                    <field name="billable_time" widget="timesheet_uom"/>
+                    <field name="non_billable_time" widget="timesheet_uom"/>
+                    <field name="margin" type="measure"/>
+                    <field name="amount" type="measure" string="Timesheet Costs"/>
+                    <field name="timesheet_revenues" type="measure"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="timesheets_analysis_report_graph_inherit" model="ir.ui.view">
+            <field name="name">timesheets.analysis.report.graph</field>
+            <field name="model">timesheets.analysis.report</field>
+            <field name="inherit_id" ref="hr_timesheet.timesheets_analysis_report_graph"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='unit_amount']" position="after">
+                    <field name="billable_time" widget="timesheet_uom"/>
+                    <field name="non_billable_time" widget="timesheet_uom"/>
+                    <field name="margin" type="measure"/>
+                    <field name="amount" type="measure" string="Timesheet Costs"/>
+                    <field name="timesheet_revenues" type="measure"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
