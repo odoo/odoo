@@ -2972,8 +2972,7 @@ class AccountMoveLine(models.Model):
 
         # Compute 'price_total'.
         if taxes:
-            force_sign = -1 if move_type in ('out_invoice', 'in_refund', 'out_receipt') else 1
-            taxes_res = taxes._origin.with_context(force_sign=force_sign).compute_all(price_unit_wo_discount,
+            taxes_res = taxes._origin.with_context(force_sign=1).compute_all(price_unit_wo_discount,
                 quantity=quantity, currency=currency, product=product, partner=partner, is_refund=move_type in ('out_refund', 'in_refund'))
             res['price_subtotal'] = taxes_res['total_excluded']
             res['price_total'] = taxes_res['total_included']

@@ -619,6 +619,46 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEqual(line.price_subtotal, 17527.41)
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
 
+    def test_free_product_and_price_include_fixed_tax(self):
+        """ Check that fixed tax include are correctly computed while the price_unit is 0
+        """
+        # please ensure this test remains consistent with
+        # test_out_invoice_line_onchange_2_taxes_fixed_price_include_free_product in account module
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_customer_usd.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_deliver.id,
+                'product_uom_qty': 1,
+                'price_unit': 0.0,
+            })]
+        })
+        sale_order.action_confirm()
+        line = sale_order.order_line
+        line.tax_id = [
+            (0, 0, {
+                'name': 'BEBAT 0.05',
+                'type_tax_use': 'sale',
+                'amount_type': 'fixed',
+                'amount': 0.05,
+                'price_include': True,
+                'include_base_amount': True,
+            }),
+            (0, 0, {
+                'name': 'Recupel 0.25',
+                'type_tax_use': 'sale',
+                'amount_type': 'fixed',
+                'amount': 0.25,
+                'price_include': True,
+                'include_base_amount': True,
+            }),
+        ]
+        sale_order.action_confirm()
+        self.assertRecordValues(sale_order, [{
+            'amount_untaxed': -0.30,
+            'amount_tax': 0.30,
+            'amount_total': 0.0,
+        }])
+
     def test_sol_name_search(self):
         # Shouldn't raise
         self.env['sale.order']._search([('order_line', 'ilike', 'acoustic')])
