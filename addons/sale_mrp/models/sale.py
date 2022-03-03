@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import float_compare
 
 
 class SaleOrder(models.Model):
@@ -89,17 +90,24 @@ class SaleOrderLine(models.Model):
                         (b.product_tmpl_id == order_line.product_id.product_tmpl_id and not b.product_id)))
                 if relevant_bom:
                     # In case of dropship, we use a 'all or nothing' policy since 'bom_line_id' was
-                    # not written on a move coming from a PO.
+                    # not written on a move coming from a PO: all moves (to customer) must be done
+                    # and the returns must be delivered back to the customer
                     # FIXME: if the components of a kit have different suppliers, multiple PO
                     # are generated. If one PO is confirmed and all the others are in draft, receiving
                     # the products for this PO will set the qty_delivered. We might need to check the
                     # state of all PO as well... but sale_mrp doesn't depend on purchase.
                     if dropship:
                         moves = order_line.move_ids.filtered(lambda m: m.state != 'cancel')
-                        if moves and all(m.state == 'done' for m in moves):
-                            order_line.qty_delivered = order_line.product_uom_qty
+                        if any((m.location_dest_id.usage == 'customer' and m.state != 'done')
+                               or (m.location_dest_id.usage != 'customer'
+                               and m.state == 'done'
+                               and float_compare(m.quantity_done,
+                                                 sum(sub_m.product_uom._compute_quantity(sub_m.quantity_done, m.product_uom) for sub_m in m.returned_move_ids if sub_m.state == 'done'),
+                                                 precision_rounding=m.product_uom.rounding) > 0)
+                               for m in moves) or not moves:
+                            order_line.qty_delivered = 0
                         else:
-                            order_line.qty_delivered = 0.0
+                            order_line.qty_delivered = order_line.product_uom_qty
                         continue
                     moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
                     filters = {
