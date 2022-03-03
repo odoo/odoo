@@ -1472,6 +1472,16 @@
         }
         targetsToClear.clear();
     }
+    function getSubscriptions(callback) {
+        const targets = callbacksToTargets.get(callback) || [];
+        return [...targets].map((target) => {
+            const keysToCallbacks = targetToKeysToCallbacks.get(target);
+            return {
+                target,
+                keys: keysToCallbacks ? [...keysToCallbacks.keys()] : [],
+            };
+        });
+    }
     const reactiveCache = new WeakMap();
     /**
      * Creates a reactive proxy for an object. Reading data on the reactive object
@@ -1895,7 +1905,16 @@
         let result = 0;
         for (let fiber of fibers) {
             fiber.node.fiber = null;
-            if (!fiber.bdom) {
+            if (fiber.bdom) {
+                // if fiber has been rendered, this means that the component props have
+                // been updated. however, this fiber will not be patched to the dom, so
+                // it could happen that the next render compare the current props with
+                // the same props, and skip the render completely. With the next line,
+                // we kindly request the component code to force a render, so it works as
+                // expected.
+                fiber.node.forceNextRender = true;
+            }
+            else {
                 result++;
             }
             result += cancelFibers(fiber.children);
@@ -2202,6 +2221,13 @@
             batchedRenderFunctions.set(node, render);
             // manual implementation of onWillDestroy to break cyclic dependency
             node.willDestroy.push(clearReactivesForCallback.bind(null, render));
+            if (node.app.dev) {
+                Object.defineProperty(node, "subscriptions", {
+                    get() {
+                        return getSubscriptions(render);
+                    },
+                });
+            }
         }
         return reactive(state, render);
     }
@@ -2230,8 +2256,15 @@
         }
         const parentFiber = ctx.fiber;
         if (node) {
-            const currentProps = node.component.props[TARGET];
-            if (parentFiber.deep || arePropsDifferent(currentProps, props)) {
+            let shouldRender = node.forceNextRender;
+            if (shouldRender) {
+                node.forceNextRender = false;
+            }
+            else {
+                const currentProps = node.component.props[TARGET];
+                shouldRender = parentFiber.deep || arePropsDifferent(currentProps, props);
+            }
+            if (shouldRender) {
                 node.updateAndRender(props, parentFiber);
             }
         }
@@ -2258,6 +2291,7 @@
             this.fiber = null;
             this.bdom = null;
             this.status = 0 /* NEW */;
+            this.forceNextRender = false;
             this.children = Object.create(null);
             this.refs = {};
             this.willStart = [];
@@ -5113,6 +5147,7 @@
         }
     }
 
+    let hasBeenLogged = false;
     const DEV_MSG = () => {
         const hash = window.owl ? window.owl.__info__.hash : "master";
         return `Owl is running in 'dev' mode.
@@ -5129,11 +5164,13 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             if (config.test) {
                 this.dev = true;
             }
-            if (this.dev && !config.test) {
+            if (this.dev && !config.test && !hasBeenLogged) {
                 console.info(DEV_MSG());
+                hasBeenLogged = true;
             }
-            const descrs = Object.getOwnPropertyDescriptors(config.env || {});
-            this.env = Object.freeze(Object.defineProperties({}, descrs));
+            const env = config.env || {};
+            const descrs = Object.getOwnPropertyDescriptors(env);
+            this.env = Object.freeze(Object.create(Object.getPrototypeOf(env), descrs));
             this.props = config.props || {};
         }
         mount(target, options) {
@@ -5353,9 +5390,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta.1';
-    __info__.date = '2022-03-02T12:32:30.688Z';
-    __info__.hash = 'd6348b8';
+    __info__.version = '2.0.0-beta.2';
+    __info__.date = '2022-03-03T15:22:41.826Z';
+    __info__.hash = 'e4fdd32';
     __info__.url = 'https://github.com/odoo/owl';
 
 
