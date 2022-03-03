@@ -5725,17 +5725,18 @@ Fields:
             # When a search on a field coming from a related occurs (the domain
             # on discussion.important_emails field), make sure the related field
             # is flushed
-            model_fields = {}
+            model_fields = defaultdict(list)
             for fname in fnames:
                 field = self._fields[fname]
-                model_fields.setdefault(field.model_name, []).append(field)
+                model_fields[field.model_name].append(fname)
                 if field.related_field:
-                    model_fields.setdefault(field.related_field.model_name, []).append(field.related_field)
-            for model_name, fields in model_fields.items():
+                    model_fields[field.related_field.model_name].append(field.related_field.name)
+
+            for model_name, field_names in model_fields.items():
                 if any(
-                    field.name in vals
-                    for vals in self.env.all.towrite.get(model_name, {}).values()
-                    for field in fields
+                    fname in vals
+                    for vals in self.env.all.towrite[model_name].values()
+                    for fname in field_names
                 ):
                     id_vals = self.env.all.towrite.pop(model_name)
                     process(self.env[model_name], id_vals)
