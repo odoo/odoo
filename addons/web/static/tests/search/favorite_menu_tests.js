@@ -75,7 +75,7 @@ QUnit.module("Search", (hooks) => {
                 },
             });
 
-            assert.containsOnce(target, "div.o_favorite_menu > button i.oi.oi-star");
+            assert.containsOnce(target, "div.o_favorite_menu > button i.fa.fa-star");
             assert.strictEqual(
                 target
                     .querySelector("div.o_favorite_menu > button span")
@@ -108,7 +108,7 @@ QUnit.module("Search", (hooks) => {
             },
         });
 
-        assert.containsOnce(target, "div.o_favorite_menu > button i.oi.oi-star");
+        assert.containsOnce(target, "div.o_favorite_menu > button i.fa.fa-star");
         assert.strictEqual(
             target
                 .querySelector("div.o_favorite_menu > button span")

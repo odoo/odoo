@@ -120,7 +120,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), ["Foo"]);
         assert.containsOnce(
             target.querySelector(".o_searchview .o_searchview_facet"),
-            "span.oi.oi-filter.o_searchview_facet_label"
+            "span.fa.fa-filter.o_searchview_facet_label"
         );
         assert.ok(isItemSelected(target, "Foo"));
         assert.deepEqual(getDomain(controlPanel), [["foo", "=", "qsdf"]]);

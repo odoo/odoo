@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 export const FACET_ICONS = {
-    filter: "oi oi-filter",
-    groupBy: "oi oi-layers",
-    favorite: "oi oi-star",
-    comparison: "oi oi-contrast",
+    filter: "fa fa-filter",
+    groupBy: "oi oi-group",
+    favorite: "fa fa-star",
+    comparison: "fa fa-adjust",
 };
 
 export const GROUPABLE_TYPES = [

@@ -39,7 +39,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             };
             const controlPanel = await createControlPanel(params);
 
-            assert.containsOnce(controlPanel, 'div.o_favorite_menu > button i.oi.oi-star');
+            assert.containsOnce(controlPanel, 'div.o_favorite_menu > button i.fa.fa-star');
             assert.strictEqual(controlPanel.el.querySelector('div.o_favorite_menu > button span').innerText.trim(), "Favorites");
 
             await cpHelpers.toggleFavoriteMenu(controlPanel);

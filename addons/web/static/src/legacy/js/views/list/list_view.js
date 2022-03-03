@@ -20,7 +20,7 @@ var _lt = core._lt;
 var ListView = BasicView.extend({
     accesskey: "l",
     display_name: _lt('List'),
-    icon: 'oi-table',
+    icon: 'oi oi-view-list',
     config: _.extend({}, BasicView.prototype.config, {
         Model: ListModel,
         Renderer: ListRenderer,

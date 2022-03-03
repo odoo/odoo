@@ -16,8 +16,8 @@
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="oi" t-att-class="{
                                     'oi-large': !rtcController.isSmall,
-                                    'oi-microphone--filled': !messaging.rtc.currentRtcSession.isMute,
-                                    'oi-microphone--off--filled': messaging.rtc.currentRtcSession.isMute,
+                                    'fa-microphone': !messaging.rtc.currentRtcSession.isMute,
+                                    'fa-microphone-slash': messaging.rtc.currentRtcSession.isMute,
                                     'text-danger': messaging.rtc.currentRtcSession.isMute,
                                 }"/>
                             </div>
@@ -32,8 +32,8 @@
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="oi" t-att-class="{
                                     'oi-large': !rtcController.isSmall,
-                                    'oi-volume--up--filled': !messaging.rtc.currentRtcSession.isDeaf,
-                                    'oi-volume--mute--filled': messaging.rtc.currentRtcSession.isDeaf,
+                                    'fa-headphones: !messaging.rtc.currentRtcSession.isDeaf,
+                                    'fa-deaf': messaging.rtc.currentRtcSession.isDeaf,
                                     'text-danger': messaging.rtc.currentRtcSession.isDeaf,
                                 }"/>
                             </div>
@@ -49,7 +49,7 @@
                             t-att-title="cameraTitle"
                             t-on-click="rtcController.onClickCamera">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                <i class="oi oi-video--filled" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
+                                <i class="fa fa-video-camera" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
                             </div>
                         </button>
                         <t t-if="messaging.rtc.sendDisplay"><t t-set="displayTitle">Stop screen sharing</t></t>
@@ -63,7 +63,7 @@
                             t-att-title="displayTitle"
                             t-on-click="rtcController.onClickScreen">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                <i class="oi oi-screen" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
+                                <i class="fa fa-desktop" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
                             </div>
                         </button>
                         <Popover position="'top'">
@@ -73,7 +73,7 @@
                                 t-att-class="{ 'o-isSmall': rtcController.isSmall }"
                             >
                                 <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                    <i class="oi oi-overflow-menu--horizontal" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
+                                    <i class="fa fa-ellipsis-h" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
                                 </div>
                             </button>
                             <t t-set-slot="opened">
@@ -89,7 +89,7 @@
                             t-att-disabled="rtcController.callViewer.threadView.thread.hasPendingRtcRequest"
                             t-on-click="rtcController.onClickToggleVideoCall">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                <i class="oi oi-video--filled" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
+                                <i class="fa fa-video-camera" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
                             </div>
                         </button>
                     </t>
@@ -102,7 +102,7 @@
                                 t-att-disabled="rtcController.callViewer.threadView.thread.hasPendingRtcRequest"
                                 t-on-click="rtcController.onClickRejectCall">
                                 <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                    <i class="oi oi-phone--filled" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
+                                    <i class="fa fa-phone" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
                                 </div>
                             </button>
                         </t>
@@ -115,7 +115,7 @@
                             t-att-title="phoneTitle"
                             t-on-click="rtcController.onClickToggleAudioCall">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                <i class="oi oi-phone--filled" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
+                                <i class="fa fa-phone" t-att-class="{ 'oi-large': !rtcController.isSmall }"/>
                             </div>
                         </button>
                     </t>
