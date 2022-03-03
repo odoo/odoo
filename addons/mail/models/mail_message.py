@@ -839,13 +839,6 @@ class Message(models.Model):
             else:
                 author = (0, message_sudo.email_from)
 
-            # Attachments
-            main_attachment = self.env['ir.attachment']
-            if message_sudo.attachment_ids and message_sudo.res_id and issubclass(self.pool[message_sudo.model], self.pool['mail.thread']):
-                main_attachment = self.env[message_sudo.model].sudo().browse(message_sudo.res_id).message_main_attachment_id
-            attachments_formatted = message_sudo.attachment_ids._attachment_format()
-            for attachment in attachments_formatted:
-                attachment['is_main'] = attachment['id'] == main_attachment.id
             # Tracking values
             tracking_value_ids = []
             for tracking in message_sudo.tracking_value_ids:
@@ -890,7 +883,7 @@ class Message(models.Model):
                 vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
             vals.update({
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachment_ids': attachments_formatted,
+                'attachment_ids': message_sudo.attachment_ids._attachment_format(),
                 'tracking_value_ids': tracking_value_ids,
                 'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
