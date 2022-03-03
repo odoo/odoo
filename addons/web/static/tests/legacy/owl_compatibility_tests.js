@@ -12,15 +12,20 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
     } = require('web.OwlCompatibility');
     const testUtils = require('web.test_utils');
     const Widget = require('web.Widget');
+    const { registry } = require("@web/core/registry");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
+    const { mapLegacyEnvToWowlEnv, useWowlService } = require("@web/legacy/utils");
+
+    const makeTestEnvironment = require("web.test_env");
+    const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
+    const { getFixture, mount, useLogLifeCycle, destroy } = require("@web/../tests/helpers/utils");
 
     const makeTestPromise = testUtils.makeTestPromise;
     const nextTick = testUtils.nextTick;
     const addMockEnvironmentOwl = testUtils.mock.addMockEnvironmentOwl;
 
-    const { mount, useLogLifeCycle, destroy } = require("@web/../tests/helpers/utils");
-
     const {
+        Component,
         onError,
         onMounted,
         onWillDestroy,
@@ -1657,6 +1662,30 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
 
             delete fieldRegistry.map.pad_like;
             delete widgetRegistry.map.widget_comp;
+        });
+
+        QUnit.module("useWowlService");
+
+        QUnit.test("simple use case of useWowlService", async function (assert) {
+            assert.expect(1);
+
+            registry.category("services").add("test", {
+                start() {
+                    return "I'm a wowl service";
+                },
+            });
+            const wowlEnv = await makeTestEnv();
+            const legacyEnv = makeTestEnvironment();
+            mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
+
+            class MyComponent extends Component {
+                setup() {
+                    assert.strictEqual(useWowlService("test"), "I'm a wowl service");
+                }
+            }
+            MyComponent.template = xml`<div/>`;
+
+            await mount(MyComponent, getFixture(), { env: legacyEnv });
         });
     });
 });
