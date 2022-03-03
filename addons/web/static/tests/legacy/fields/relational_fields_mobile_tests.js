@@ -82,6 +82,7 @@ QUnit.module("fields", {}, function () {
                 },
                 data: this.data,
                 model: 'partner',
+                config: {device: {isMobile: true}},
                 viewOptions: {mode: 'edit'},
             });
 
