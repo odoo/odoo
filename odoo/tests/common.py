@@ -71,7 +71,6 @@ _logger = logging.getLogger(__name__)
 # The odoo library is supposed already configured.
 ADDONS_PATH = odoo.tools.config['addons_path']
 HOST = '127.0.0.1'
-PORT = odoo.tools.config['http_port']
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = odoo.SUPERUSER_ID
 
@@ -1670,7 +1669,7 @@ class HttpCase(TransactionCase):
 
     @classmethod
     def base_url(cls):
-        return f"http://{HOST}:{PORT}"
+        return f"http://{HOST}:{odoo.tools.config['http_port']}"
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
