@@ -47,13 +47,13 @@
                         </div>
                     </t>
                     <t t-if="attachmentViewer.attachment.isPdf">
-                        <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf h-100 bg-black border-0" t-ref="iframeViewerPdf" t-att-class="{ 'o-isMobile w-100': messaging.device.isMobile }" t-att-src="attachmentViewer.attachment.defaultSource"/>
+                        <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf w-75 h-100 bg-black border-0" t-ref="iframeViewerPdf" t-att-class="{ 'o-isMobile w-100': messaging.device.isMobile }" t-att-src="attachmentViewer.attachment.defaultSource"/>
                     </t>
                     <t t-if="attachmentViewer.attachment.isText">
-                        <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_text h-100 bg-white border-0" t-att-src="attachmentViewer.attachment.defaultSource"/>
+                        <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_text w-75 h-100 bg-white border-0" t-att-src="attachmentViewer.attachment.defaultSource"/>
                     </t>
                     <t t-if="attachmentViewer.attachment.isUrlYoutube">
-                        <iframe allow="autoplay; encrypted-media" class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_youtube h-100 bg-black border-0" t-att-src="attachmentViewer.attachment.defaultSource" height="315" width="560"/>
+                        <iframe allow="autoplay; encrypted-media" class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_youtube w-75 h-100 bg-black border-0" t-att-src="attachmentViewer.attachment.defaultSource" height="315" width="560"/>
                     </t>
                     <t t-if="attachmentViewer.attachment.isVideo">
                         <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo w-75 h-75 bg-black" t-att-class="{ 'o-isMobile w-100 h-100': messaging.device.isMobile }" t-on-click="_onClickVideo" controls="controls">
@@ -62,32 +62,32 @@
                     </t>
                 </div>
                 <t t-if="attachmentViewer.attachment.isImage">
-                    <div class="o_AttachmentViewer_toolbar position-absolute d-flex" role="toolbar">
-                        <div class="o_AttachmentViewer_toolbarButton o_cursor_pointer" t-on-click="_onClickZoomIn" title="Zoom In (+)" role="button">
+                    <div class="o_AttachmentViewer_toolbar position-absolute bottom-0 d-flex" role="toolbar">
+                        <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-on-click="_onClickZoomIn" title="Zoom In (+)" role="button">
                             <i class="fa fa-fw fa-plus" role="img"/>
                         </div>
-                        <div class="o_AttachmentViewer_toolbarButton o_cursor_pointer" t-att-class="{ o_disabled: attachmentViewer.scale === 1 }" t-on-click="_onClickZoomReset" role="button" title="Reset Zoom (0)">
+                        <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-att-class="{ o_disabled: attachmentViewer.scale === 1 }" t-on-click="_onClickZoomReset" role="button" title="Reset Zoom (0)">
                             <i class="fa fa-fw fa-search" role="img"/>
                         </div>
-                        <div class="o_AttachmentViewer_toolbarButton o_cursor_pointer" t-att-class="{ o_disabled: attachmentViewer.scale === MIN_SCALE }" t-on-click="_onClickZoomOut" title="Zoom Out (-)" role="button">
+                        <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-att-class="{ o_disabled: attachmentViewer.scale === MIN_SCALE }" t-on-click="_onClickZoomOut" title="Zoom Out (-)" role="button">
                             <i class="fa fa-fw fa-minus" role="img"/>
                         </div>
-                        <div class="o_AttachmentViewer_toolbarButton o_cursor_pointer" t-on-click="_onClickRotate" title="Rotate (r)" role="button">
+                        <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-on-click="_onClickRotate" title="Rotate (r)" role="button">
                             <i class="fa fa-fw fa-repeat" role="img"/>
                         </div>
-                        <div class="o_AttachmentViewer_toolbarButton o_cursor_pointer" t-on-click="_onClickPrint" title="Print" role="button">
+                        <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-on-click="_onClickPrint" title="Print" role="button">
                             <i class="fa fa-fw fa-print" role="img"/>
                         </div>
-                        <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_toolbarButton o_cursor_pointer" t-on-click="_onClickDownload" title="Download" role="button">
+                        <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0 o_cursor_pointer" t-on-click="_onClickDownload" title="Download" role="button">
                             <i class="fa fa-download fa-fw" role="img"/>
                         </div>
                     </div>
                 </t>
                 <t t-if="attachmentViewer.attachments.length > 1">
-                    <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationPrevious o_AttachmentViewer_buttonNavigationPreviousIcon btn position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle text-400" t-on-click="_onClickPrevious" title="Previous (Left-Arrow)" role="button">
+                    <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationPrevious o_AttachmentViewer_buttonNavigationPreviousIcon btn btn-dark position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle" t-on-click="_onClickPrevious" title="Previous (Left-Arrow)" role="button">
                         <span class="fa fa-chevron-left" role="img"/>
                     </div>
-                    <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationNext o_AttachmentViewer_buttonNavigationNextIcon btn position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle text-400" t-on-click="_onClickNext" title="Next (Right-Arrow)" role="button">
+                    <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationNext o_AttachmentViewer_buttonNavigationNextIcon btn btn-dark position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle" t-on-click="_onClickNext" title="Next (Right-Arrow)" role="button">
                         <span class="fa fa-chevron-right" role="img"/>
                     </div>
                 </t>
