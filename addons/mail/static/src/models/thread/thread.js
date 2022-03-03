@@ -707,25 +707,49 @@ function factory(dependencies) {
             )];
         }
 
-        /**
-         * Fetch attachments linked to a record. Useful for populating the store
-         * with these attachments, which are used by attachment box in the chatter.
-         */
+         /**
+          * Fetch attachments linked to a record. Useful for populating the store
+          * with these attachments, which are used by attachment box in the chatter.
+          */
         async fetchAttachments() {
-            const attachmentsData = await this.async(() => this.env.services.rpc({
-                model: 'ir.attachment',
-                method: 'search_read',
-                domain: [
-                    ['res_id', '=', this.id],
-                    ['res_model', '=', this.model],
-                ],
-                fields: ['id', 'name', 'mimetype'],
-                orderBy: [{ name: 'id', asc: false }],
-            }, { shadow: true }));
-            this.update({
-                originThreadAttachments: insertAndReplace(attachmentsData),
-            });
-            this.update({ areAttachmentsLoaded: true });
+            return this.fetchData(['attachments']);
+        }
+
+        /**
+         * Requests the given `requestList` data from the server.
+         *
+         * @param {string[]} requestList
+         */
+        async fetchData(requestList) {
+            if (this.isTemporary) {
+                return;
+            }
+            const requestSet = new Set(requestList);
+            if (requestSet.has('attachments')) {
+                this.update({ isLoadingAttachments: true });
+            }
+            const {
+                attachments: attachmentsData,
+            } = await this.env.services.rpc({
+                route: '/mail/thread/data',
+                params: {
+                    request_list: [...requestSet],
+                    thread_id: this.id,
+                    thread_model: this.model,
+                },
+            }, { shadow: true });
+            if (!this.exists()) {
+                return;
+            }
+            const values = {};
+            if (attachmentsData) {
+                Object.assign(values, {
+                    areAttachmentsLoaded: true,
+                    isLoadingAttachments: false,
+                    originThreadAttachments: insertAndReplace(attachmentsData),
+                });
+            }
+            this.update(values);
         }
 
         /**
@@ -1074,9 +1098,7 @@ function factory(dependencies) {
                 return;
             }
             this.loadNewMessages();
-            this.update({ isLoadingAttachments: true });
             await this.async(() => this.fetchAttachments());
-            this.update({ isLoadingAttachments: false });
         }
 
         async refreshActivities() {
