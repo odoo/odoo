@@ -233,7 +233,6 @@ export class ListView extends Component {
     }
 
     async openRecord(record) {
-        debugger;
         const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
         try {
             await this.actionService.switchView("form", { resId: record.resId, resIds });
