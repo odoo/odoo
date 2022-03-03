@@ -5,13 +5,14 @@
 # Translators:
 # e2f <projects@e2f.com>, 2021
 # Laura Piraux <lap@odoo.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
 # Alexandra Jubert <aju@odoo.com>, 2021
 # Maxence del Marmol <mdm@odoo.com>, 2021
 # Corentin POUHET-BRUNERIE <corentin.pb@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Pierrick Brun, 2021
-# Grégory Schreiner, 2021
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
+# Jérôme JEK <jek@odoo.com>, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Grégory Schreiner, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1830,7 +1831,7 @@ msgstr "Effacer les commandes non-payées"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js:0
 #, python-format
 msgid "Delete Unpaid Orders ?"
-msgstr "Effacer les commandes non-payées?"
+msgstr "Effacer les commandes non-payées ?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2848,7 +2849,7 @@ msgstr "Écritures comptables"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Keep Session Open"
-msgstr "Laisser la session ouverte"
+msgstr "Laisser ouvert"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
@@ -3627,7 +3628,7 @@ msgstr "Ouvrir la session"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Open session"
-msgstr "Ouvrir une session"
+msgstr "Ouvrir"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4865,7 +4866,7 @@ msgstr "Actualiser l'affichage"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "Refund"
-msgstr "Avoir"
+msgstr "Retour"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refund_orderline_ids
@@ -4922,7 +4923,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Refunds"
-msgstr "Avoirs"
+msgstr "Retours"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5137,7 +5138,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/ProxyStatus.js:0
 #, python-format
 msgid "Scale"
-msgstr "Échelle"
+msgstr "Balance"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5436,7 +5437,7 @@ msgstr "Définir la nouvelle quantité"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_global_settings
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Settings"
-msgstr "Configuration"
+msgstr "Paramètres"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5975,6 +5976,8 @@ msgstr ""
 msgid ""
 "The payment methods for the point of sale %s must belong to its company."
 msgstr ""
+"Les méthodes de paiement du point de vente %s doivent appartenir à son "
+"entreprise."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__config_id
@@ -6290,6 +6293,13 @@ msgid ""
 msgstr ""
 "Ceci est utile pour les restaurants qui proposent des services sur place et "
 "à emporter, auquel cas le taux de la TVA peut différer."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot modify its type"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -6885,7 +6895,7 @@ msgstr "Marqueur pour Tableau Blanc"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "With a"
-msgstr "Avec un(e)"
+msgstr "Avec"
 
 #. module: point_of_sale
 #. openerp-web
@@ -7126,7 +7136,7 @@ msgstr "appartiennent à une autre session :"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "discount"
-msgstr "remise"
+msgstr "de remise"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form

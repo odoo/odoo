@@ -10,17 +10,18 @@
 # Rémi CAZENAVE, 2021
 # Sebastien LANGE, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
-# Martin Trigaux, 2021
 # Camille Dantinne <cmd@odoo.com>, 2021
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +40,7 @@ msgstr "Ce salon est privé. Vous devez être invité pour le rejoindre."
 #: code:addons/mail/static/src/models/rtc/rtc.js:0
 #, python-format
 msgid "\"%s\" requires \"%s\" access"
-msgstr ""
+msgstr "\"%s\" a besoin de l'accès \"%s\""
 
 #. module: mail
 #. openerp-web
@@ -501,11 +502,6 @@ msgid "<strong>Recommended Activities</strong>"
 msgstr "<strong>Activités recommandées</strong>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:0
-msgid "A channel of type 'chat' cannot have more than two users."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_defaults
 msgid ""
@@ -523,6 +519,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_partner_partner_or_guest_exists
 msgid "A channel member must be a partner or a guest."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "A channel of type 'chat' cannot have more than two users."
 msgstr ""
 
 #. module: mail
@@ -1417,6 +1419,13 @@ msgstr "Copie à (CC)"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
 msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/rtc_call_viewer/rtc_call_viewer.js:0
+#, python-format
+msgid "Change Layout"
+msgstr "Modifier l'agencement"
 
 #. module: mail
 #. openerp-web
@@ -6017,7 +6026,7 @@ msgstr "Planifier une activité"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
-msgstr ""
+msgstr "Planifier des activités pour vous aider à faire les choses."
 
 #. module: mail
 #. openerp-web
@@ -6262,7 +6271,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/rtc_call_viewer/rtc_call_viewer.js:0
 #, python-format
 msgid "Settings"
-msgstr "Configuration"
+msgstr "Paramètres"
 
 #. module: mail
 #. openerp-web
@@ -6722,13 +6731,6 @@ msgstr "La valeur de 'date d'échéance dans' ne peut être négative."
 #, python-format
 msgid "The FullScreen mode was denied by the browser"
 msgstr "Le mode plein écran a été refusé par le navigateur"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/rtc_call_viewer/rtc_call_viewer.js:0
-#, python-format
-msgid "Change Layout"
-msgstr "Modifier l'agencement"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat
@@ -7507,7 +7509,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__vat
 #: model:ir.model.fields,field_description:mail.field_res_users__vat
 msgid "VAT/Tax ID"
-msgstr ""
+msgstr "TVA/numéro fiscal"
 
 #. module: mail
 #. openerp-web

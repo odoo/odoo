@@ -3,14 +3,14 @@
 # 	* payment_stripe
 # 
 # Translators:
-# Martin Trigaux, 2021
+# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2022-02-22 14:45+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -21,10 +21,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+msgid "Connect Stripe"
+msgstr ""
+
+#. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
 msgstr "Impossibile stabilire la connessione all'API."
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+msgid "Generate your webhook"
+msgstr "Genera il tuo webhook"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+msgid "Get your Secret and Publishable keys"
+msgstr "Ottieni il tuo Secret e Publishable keys"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -43,6 +58,11 @@ msgstr "Nessuna transazione trovata corrispondente al riferimento %s."
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Sistema di pagamento"
+
+#. module: payment_stripe
+#: model:ir.actions.act_window,name:payment_stripe.action_payment_acquirer_onboarding
+msgid "Payment Acquirers"
+msgstr "Sistemi di pagamento"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_account_payment_method
@@ -67,7 +87,7 @@ msgstr "Fornitore"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Publishable Key"
-msgstr ""
+msgstr "Publishable Key"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
@@ -106,7 +126,27 @@ msgstr "ID intento di pagamento Stripe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
+msgstr "ID di metodo di pagamento Stripe"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Stripe Proxy error: %(error)s"
+msgstr "Errore di Stripe Proxy: %(error)s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Stripe Proxy: An error occurred when communicating with the proxy."
 msgstr ""
+"Stripe Proxy: Si è verificato un errore durante la comunicazione con il "
+"proxy."
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Stripe Proxy: Could not establish the connection."
+msgstr "Proxy di Stripe: Impossibile stabilire la connessione."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
@@ -149,3 +189,32 @@ msgstr "Impossibile convertire il token di pagamento nella nuova API."
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
 msgid "Webhook Signing Secret"
 msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "You Stripe Webhook was successfully set up!"
+msgstr "Il tuo Stripe Webhook è stato impostato con successo!"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+msgstr ""
+"Non puoi creare uno Stripe Webhook se il tuo Stripe Secret Key non è "
+"impostato."
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot set the acquirer to Test Mode while it is linked with your Stripe"
+" account."
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Your Stripe Webhook is already set up."
+msgstr "Il tuo Stripe Webhook è già impostato."

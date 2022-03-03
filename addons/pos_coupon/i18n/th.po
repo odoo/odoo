@@ -23,7 +23,7 @@ msgstr ""
 #. module: pos_coupon
 #: model:coupon.program,name:pos_coupon.15_pc_on_next_order
 msgid "15% on next order"
-msgstr ""
+msgstr "15% ของคำสั่งถัดไป"
 
 #. module: pos_coupon
 #: model:mail.template,body_html:pos_coupon.mail_coupon_template
@@ -114,13 +114,97 @@ msgid ""
 "</tbody></table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        <t t-if=\"object.partner_id.name\">\n"
+"            ขอแสดงความยินดี <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        </t>\n"
+"\n"
+"       นี้คือรางวัลของคุณจาก <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br/>\n"
+"\n"
+"        <t t-if=\"object.program_id.reward_type == 'discount'\">\n"
+"            <t t-if=\"object.program_id.discount_type == 'fixed_amount'\">\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-out=\"'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id) or ''\">$ 10.0</span><br/>\n"
+"                <strong style=\"font-size: 24px;\">ลดจากคำสั่งถัดไปของคุณ</strong><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
+"                    <t t-out=\"object.program_id.discount_percentage or ''\">10.0</t> %\n"
+"                </span>\n"
+"                <t t-if=\"object.program_id.discount_apply_on == 'specific_products'\">\n"
+"                    <br/>\n"
+"                    <t t-if=\"len(object.program_id.discount_specific_product_ids) != 1\">\n"
+"                        <t t-set=\"display_specific_products\" t-value=\"True\"/>\n"
+"                        <strong style=\"font-size: 24px;\">\n"
+"                            สำหรับสินค้าบางรายการ*\n"
+"                        </strong>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <strong style=\"font-size: 24px;\" t-out=\"'on %s' % object.program_id.discount_specific_product_ids.name or ''\">เก้าอี้ป้องกันพื้น</strong>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-elif=\"object.program_id.discount_apply_on == 'cheapest_product'\">\n"
+"                    <br/><strong style=\"font-size: 24px;\">\n"
+"                        ลดจากสินค้าที่ถูกที่สุด\n"
+"                    </strong>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <br/><strong style=\"font-size: 24px;\">\n"
+"                        ลดจากคำสั่งถัดไปของคุณ\n"
+"                    </strong>\n"
+"                </t>\n"
+"                <br/>\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-elif=\"object.program_id.reward_type == 'product'\">\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\" t-out=\"'get %s free %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name) or ''\">เก้าอี้ป้องกันพื้น</span><br/>\n"
+"            <strong style=\"font-size: 24px;\">สำหรับคำสั่งถัดไป</strong><br/>\n"
+"        </t>\n"
+"        <t t-elif=\"object.program_id.reward_type == 'free_shipping'\">\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
+"                จัดส่งฟรี\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">สำหรับคำสั่งถัดไป</strong><br/>\n"
+"        </t>\n"
+"    </td></tr>\n"
+"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        ใช้โค้ดโปรโมชันนี้\n"
+"        <t t-if=\"object.expiration_date\">\n"
+"            ก่อน <t t-out=\"object.expiration_date or ''\">2021-06-05</t>\n"
+"        </t>\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\" t-out=\"object.code or ''\">13996301932606901095</strong>\n"
+"        </p>\n"
+"        <t t-if=\"object.program_id.rule_min_quantity not in [0, 1]\">\n"
+"            <span style=\"font-size: 14px;\">\n"
+"                การซื้อสินค้าขั้นต่ำ <t t-out=\"object.program_id.rule_min_quantity or ''\">10</t> รายการ\n"
+"            </span><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.program_id.rule_minimum_amount != 0.00\">\n"
+"            <span style=\"font-size: 14px;\">\n"
+"                ใช้ได้สำหรับการซื้อมากกว่า <t t-out=\"object.program_id.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(object.program_id.rule_minimum_amount) or ''\">10.00</t>\n"
+"            </span><br/>\n"
+"        </t>\n"
+"        <t t-if=\"display_specific_products\">\n"
+"            <span>\n"
+"                *ใช้ได้กับสินค้าต่อไปนี้: <t t-out=\"', '.join(object.program_id.discount_specific_product_ids.mapped('name')) or ''\">เก้าอี้สำนักงาน สีดำ</t>\n"
+"            </span><br/>\n"
+"        </t>\n"
+"        <br/>\n"
+"        ขอบคุณ<t t-if=\"object.source_pos_order_id.user_id.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"object.source_pos_order_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </td></tr>\n"
+"</tbody></table>\n"
+"            "
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/coupon.py:0
 #, python-format
 msgid ""
 "A coupon from the same program has already been reserved for this order."
-msgstr ""
+msgstr "คูปองจากโปรแกรมเดียวกันถูกจองไว้สำหรับคำสั่งนี้แล้ว"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__promo_barcode
@@ -128,30 +212,32 @@ msgid ""
 "A technical field used as an alternative to the promo_code. This is "
 "automatically generated when promo_code is changed."
 msgstr ""
+"ฟิลด์เทคนิคที่ใช้เป็นทางเลือกแทน promo_code "
+"ฟิลด์นี้ถูกสร้างขึ้นโดยอัตโนมัติเมื่อมีการเปลี่ยนแปลง promo_code"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/ActivePrograms.xml:0
 #, python-format
 msgid "Active Programs"
-msgstr ""
+msgstr "เปิดใช้งานโปรแกรม"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order__applied_program_ids
 msgid "Applied Programs"
-msgstr ""
+msgstr "ใช้โปรแกรม"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_coupon__pos_order_id
 msgid "Applied on PoS Order"
-msgstr ""
+msgstr "ใช้คำสั่งบน PoS "
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Are you sure you want to deactivate %s in this order?"
-msgstr ""
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการปิดการใช้งาน %s ในคำสั่งนี้?"
 
 #. module: pos_coupon
 #. openerp-web
@@ -169,7 +255,7 @@ msgstr "กฎของบาร์โค้ด"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order__used_coupon_ids
 msgid "Consumed Coupons"
-msgstr ""
+msgstr "คูปองที่ใช้แล้ว"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_coupon_coupon
@@ -183,7 +269,7 @@ msgstr "คูปอง"
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Coupon Codes"
-msgstr ""
+msgstr "โค้ดคูปอง"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_coupon_program
@@ -200,7 +286,7 @@ msgstr "โปรแกรมคูปอง"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__coupon_id
 msgid "Coupon that generated this reward."
-msgstr ""
+msgstr "คูปองที่สร้างรางวัลนี้"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_config__use_coupon_programs
@@ -210,49 +296,50 @@ msgstr "คูปองและโปรโมชั้น"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_config__program_ids
 msgid "Coupons and Promotions"
-msgstr ""
+msgstr "คูปองและโปรโมชั่น"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Deactivating program"
-msgstr ""
+msgstr "ปิดการใช้งานโปรแกรม"
 
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_pos_config_view_form
 msgid "Define the coupon and promotion programs you can use in this PoS."
-msgstr ""
+msgstr "กำหนดคูปองและโปรแกรมโปรโมชั่นที่คุณสามารถใช้ใน PoS นี้ได้"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/PromoCodeButton.xml:0
 #, python-format
 msgid "Enter Code"
-msgstr ""
+msgstr "ป้อนโค้ด"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/js/ControlButtons/PromoCodeButton.js:0
 #, python-format
 msgid "Enter Promotion or Coupon Code"
-msgstr "ใส่โปรโมชันหรือโค้ดคูปอง"
+msgstr "ใส่โปรโมชั่นหรือโค้ดคูปอง"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__is_program_reward
 msgid ""
 "Flag indicating that this order line is a result of coupon/promo program."
 msgstr ""
+"ตั้งค่าสถานะระบุว่าไลน์การสั่งซื้อนี้เป็นผลมาจากโปรแกรมคูปอง/โปรโมชั่น"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order__generated_coupon_ids
 msgid "Generated Coupons"
-msgstr ""
+msgstr "สร้างคูปอง"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order_line__is_program_reward
 msgid "Is reward line"
-msgstr ""
+msgstr "คือไลน์รางวัล"
 
 #. module: pos_coupon
 #. openerp-web
@@ -264,69 +351,69 @@ msgstr "ไม่"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_line_ids
 msgid "Order lines where this program is applied."
-msgstr ""
+msgstr "ไลน์คำสั่งที่โปรแกรมนี้ถูกใช้"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_count
 msgid "PoS Order Count"
-msgstr ""
+msgstr "จำนวนคำสั่ง PoS"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_line_ids
 msgid "PoS Order Lines"
-msgstr ""
+msgstr "ไลน์คำสั่ง PoS"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_coupon__source_pos_order_id
 msgid "PoS Order Reference"
-msgstr ""
+msgstr "อ้างอิงคำสั่ง PoS "
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/coupon_program.py:0
 #, python-format
 msgid "PoS Orders"
-msgstr ""
+msgstr "คำสั่ง PoS"
 
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_coupon_program_form
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_promo_program_form
 msgid "PoS Sales"
-msgstr ""
+msgstr " การขาย PoS"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_coupon__pos_order_id
 msgid "PoS order where this coupon is consumed/booked."
-msgstr ""
+msgstr "คำสั่ง PoS ที่คูปองนี้ถูกใช้/จอง"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_coupon__source_pos_order_id
 msgid "PoS order where this coupon is generated."
-msgstr ""
+msgstr "คำสั่ง PoS ที่สร้างคูปองนี้"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "การตั้งค่าจุดขาย"
+msgstr "กำหนดค่าการขายหน้าร้าน"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "ไลน์คำสั่งการขายหน้าร้าน"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_pos_order
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "คำสั่งการขายหน้าร้าน"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_config_ids
 msgid "Point of Sales"
-msgstr ""
+msgstr "การขายหน้าร้าน"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_ids
 msgid "Pos Order"
-msgstr ""
+msgstr "คำสั่ง Pos"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order_line__program_id
@@ -337,12 +424,12 @@ msgstr "โปรแกรม"
 #: code:addons/pos_coupon/models/pos_config.py:0
 #, python-format
 msgid "Program: %(name)s (%(type)s), Reward Product: `%(reward_product)s`"
-msgstr ""
+msgstr "โปรแกรม: %(name)s (%(type)s) สินค้ารางวัล: `%(reward_product)s`"
 
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_pos_config_view_form
 msgid "Promotion & coupon programs to use."
-msgstr ""
+msgstr "โปรแกรมโปรโมชั่นและคูปองที่จะใช้"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_config__promo_program_ids
@@ -354,14 +441,14 @@ msgstr "โปรแกรมโปรโมชั่น"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__program_id
 msgid "Promotion/Coupon Program where this reward line is based."
-msgstr ""
+msgstr "โปรโมชัน/โปรแกรมคูปองที่ไลน์รางวัลนี้อ้างอิง"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/ResetProgramsButton.xml:0
 #, python-format
 msgid "Reset Programs"
-msgstr ""
+msgstr "รีเซ็ตโปรแกรม"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order__applied_program_ids
@@ -369,27 +456,29 @@ msgid ""
 "Technical field. This is set when the order is validated. We normally get "
 "this value thru the `program_id` of the reward lines."
 msgstr ""
+"ฟิลด์ทางเทคนิค ตั้งค่านี้เมื่อคำสั่งได้รับการตรวจสอบความถูกต้อง "
+"โดยปกติเราได้รับค่านี้ผ่าน `program_id` ของไลน์รางวัล"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_ids
 msgid "The PoS orders where this program is applied."
-msgstr ""
+msgstr "คำสั่ง PoS ที่ใช้โปรแกรมนี้"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__valid_partner_ids
 msgid "These are the partners that can avail this program."
-msgstr ""
+msgstr "เหล่านี้คือพาร์ทเนอร์ที่สามารถใช้ประโยชน์โปรแกรมนี้ได้"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__valid_product_ids
 msgid "These are the products that are valid in this program."
-msgstr ""
+msgstr "นี้เป็นสินค้าที่ถูกต้องในโปรแกรมนี้"
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/pos_config.py:0
 #, python-format
 msgid "This coupon is invalid (%s)."
-msgstr "คูปองนี้ไม่ถูกต้อง (%s)."
+msgstr "คูปองนี้ไม่ถูกต้อง (%s)"
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/pos_config.py:0
@@ -398,6 +487,8 @@ msgid ""
 "To continue, make the following reward products to be available in Point of "
 "Sale."
 msgstr ""
+"หากต้องการดำเนินการต่อ "
+"ทำให้สินค้าที่เป็นรางวัลต่อไปนี้มีอยู่ในการขายหน้าร้าน"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_barcode_rule__type
@@ -407,24 +498,24 @@ msgstr "ประเภท"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_config__use_coupon_programs
 msgid "Use coupon and promotion programs in this PoS configuration."
-msgstr ""
+msgstr "ใช้คูปองและโปรแกรมโปรโมชั่นในการกำหนดค่า PoS นี้"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__valid_partner_ids
 msgid "Valid Partner"
-msgstr ""
+msgstr "พาร์ทเนอร์ที่ถูกต้อง"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__valid_product_ids
 msgid "Valid Product"
-msgstr ""
+msgstr "สินค้าถูกต้อง"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Valid until:"
-msgstr ""
+msgstr "ใช้ได้จนถึง:"
 
 #. module: pos_coupon
 #. openerp-web
@@ -441,16 +532,16 @@ msgstr "โค้ดคูปองของคุณ"
 #. module: pos_coupon
 #: model:mail.template,subject:pos_coupon.mail_coupon_template
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr "รางวัลคูปองของคุณ {{ object.program_id.company_id.name }} "
+msgstr "รางวัลคูปองของคุณจาก {{ object.program_id.company_id.name }} "
 
 #. module: pos_coupon
 #: model:mail.template,name:pos_coupon.mail_coupon_template
 msgid "[POS] Coupon: Send by Email"
-msgstr ""
+msgstr "[POS] คูปอง: ส่งโดยอีเมล"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "no expiration"
-msgstr ""
+msgstr "ไม่มีวันหมดอายุ"

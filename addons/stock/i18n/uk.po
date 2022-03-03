@@ -141,7 +141,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -223,7 +223,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr ""
+msgstr "+ %d дні"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -233,7 +233,7 @@ msgstr ", макс:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "-&gt;"
-msgstr ""
+msgstr "-&gt;"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -1715,7 +1715,7 @@ msgstr "Створити новий пакунок"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
-msgstr ""
+msgstr "Створюйте налаштовувані робочі таблиці для перевірки якості"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
@@ -2097,16 +2097,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
 msgid ""
-"Defines the default method used for suggesting the exact location (shelf) "
-"where to take the products from, which lot etc. for this location. This "
-"method can be enforced at the product category level, and a fallback is made"
-" on the parent locations if none is set here."
+"Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.\n"
+"\n"
+"FIFO: products/lots that were stocked first will be moved out first.\n"
+"LIFO: products/lots that were stocked last will be moved out first.\n"
+"Closet location: products/lots closest to the target location will be moved out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Визначає метод за замовчуванням, який використовується для визначення "
-"точного місцезнаходження (полиці), звідки взяти товари, які партії тощо для "
-"цього місця розташування. Цей метод можна застосувати на рівні категорії "
-"товару, а резервне копіювання виконується в батьківських місцях, якщо нічого"
-" тут не встановлено."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -5791,7 +5788,7 @@ msgstr "Розташування контролю якості"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control_worksheet
 msgid "Quality Worksheet"
-msgstr ""
+msgstr "Робочий аркуш якості"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__quant_ids
@@ -6520,7 +6517,7 @@ msgstr "Помилка доставки SMS"
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "СТАНДАРТНІ ТЕРМІНИ ТА УМОВИ ПРОДАЖУ"
 
 #. module: stock
 #. openerp-web
@@ -6785,11 +6782,13 @@ msgstr "Встановіть складські маршрути"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__removal_strategy_id
 msgid ""
-"Set a specific removal strategy that will be used regardless of the source "
-"location for this product category"
+"Set a specific removal strategy that will be used regardless of the source location for this product category.\n"
+"\n"
+"FIFO: products/lots that were stocked first will be moved out first.\n"
+"LIFO: products/lots that were stocked last will be moved out first.\n"
+"Closet location: products/lots closest to the target location will be moved out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Встановіть конкретну стратегію видалення, яка буде використовуватися "
-"незалежно від місцезнаходження джерела для цієї категорії товарів"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7204,7 +7203,7 @@ msgstr "Звіт кількості запасу"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_reception
 msgid "Stock Reception Report"
-msgstr ""
+msgstr "Звіт поповнення складу"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_product_product_replenishment
@@ -7266,7 +7265,7 @@ msgstr "Складські переміщення, які були обробл�
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "Тип складської упаковки"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -7539,6 +7538,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Клієнт явно відмовляється від своїх стандартних умов, навіть якщо вони були "
+"складені після цих стандартних умов продажу. Для того, щоб будь-яке "
+"відхилення було дійсним, має бути чітко погоджено заздалегідь у письмовій "
+"формі."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -7666,14 +7669,12 @@ msgstr ""
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"Виконана кількість для товару \"%s\" не дотримується точного округлення, "
-"визначеного на одиницю вимірювання \"%s\". Будь ласка, змініть виконану "
-"кількість або точність округлення одиниці виміру."
+"Чуаніті для виробника \"%s\" не враховує точність округлення, визначену в "
+"одиниці вимірювання \"%s\". Будь ласка, змініть виконану кількість або "
+"точність округлення вашої одиниці вимірювання."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9222,6 +9223,7 @@ msgstr "Вам потрібно надати партійний/серійний
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
+"Вам слід оновити цей документ, щоб він відображав ваші терміни та умови."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

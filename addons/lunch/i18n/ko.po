@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
 "Last-Translator: Heesoo Choi, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -314,6 +314,11 @@ msgstr "관리자"
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__name
 msgid "Alert Name"
 msgstr "알림 이름"
+
+#. module: lunch
+#: model:lunch.alert,name:lunch.alert_office_3
+msgid "Alert for Office 3"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
@@ -1150,6 +1155,36 @@ msgid "Lunch: Send by email"
 msgstr ""
 
 #. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_224
+msgid "Lunch: alert chat notification (Alert for Office 3)"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_225
+msgid "Lunch: send automatic email to Coin gourmand"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_221
+msgid "Lunch: send automatic email to Lunch Supplier"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_226
+msgid "Lunch: send automatic email to Pizza Inn"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_228
+msgid "Lunch: send automatic email to Sushi Shop"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_227
+msgid "Lunch: send automatic email to The Corner"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "주요 첨부 파일"
@@ -1517,6 +1552,11 @@ msgid "Pizza Vegetarian"
 msgstr ""
 
 #. module: lunch
+#: model_terms:lunch.alert,message:lunch.alert_office_3
+msgid "Please order"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__price
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -1814,6 +1854,7 @@ msgid ""
 msgstr "책임자는 모든 사람을 위해 점심을 주문할 사람입니다. 자동 이메일을 보낼 때 '보낸 사람'으로 사용됩니다."
 
 #. module: lunch
+#: code:addons/lunch/models/lunch_order.py:0
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "The vendor related to this order is not available today."

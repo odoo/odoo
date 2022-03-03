@@ -3,16 +3,15 @@
 # 	* uom
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,7 +129,7 @@ msgstr "Düzine"
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_category__reference_uom_id
 msgid "Dummy field to keep track of reference uom change"
-msgstr ""
+msgstr "Referans ölçü birimi değişikliğini takip etmek için boş alan"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -218,7 +217,7 @@ msgstr "Bu kategori için Ölçü referans Birimi"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referans Ölçü Birimi"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -233,7 +232,7 @@ msgstr "Ölçü Birimi Ara"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
 msgid "Search UoM Category"
-msgstr ""
+msgstr "Ölçü Birimi  Kategorisi Ara"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
@@ -252,11 +251,18 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Bazı kritik alanlar değiştirildi %s.\n"
+"Mevcut verilerin bu değişiklikle güncelleştirilmeyeceğini unutmayın.\n"
+"\n"
+"Ölçü birimleri tüm sistemi etkilediğinden, bu kritik sorunlara neden olabilir.\n"
+"Örneğin. yuvarlamayı değiştirmek envanter bakiyenizi bozabilir.\n"
+"\n"
+"Bu nedenle, çalışan bir veritabanında temel ölçü birimlerinin değiştirilmesi önerilmez."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
 msgid "Surface"
-msgstr ""
+msgstr "Yüzey"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -279,6 +285,8 @@ msgid ""
 "The following units of measure are used by the system and cannot be deleted: %s\n"
 "You can archive them instead."
 msgstr ""
+" Aşağıdaki ölçü birimleri sistem tarafından kullanılır ve silinemez: %s\n"
+"Bunun yerine onları arşivleyebilirsiniz."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
@@ -330,12 +338,12 @@ msgstr "Ölçü Birimi"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Unit of Measure Category"
-msgstr "Kategori Ölçü Birimi"
+msgstr "Ölçü Birim Kategorisi"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "Birim"
+msgstr "Adet"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -372,7 +380,7 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0 code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
-msgstr ""
+msgstr " %s Ölçü birimi kategorisinin bir referans ölçü birimi olmalıdır."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -383,7 +391,7 @@ msgstr "%s UoM kategorisinde sadece bir referans ölçü birimi olmalıdır."
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
 msgid "Uom"
-msgstr ""
+msgstr "Ölçü Birimi"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
@@ -418,8 +426,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
-"Aynı kategori dahilinde bazı Ölçü Birimleri arasında değişim oranı "
-"tanımlanmalı."
+"Birkaç Birim arasında bir dönüştürme oranı tanımlamanız gerekir.\n"
+"            Aynı kategoride ölçün."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm

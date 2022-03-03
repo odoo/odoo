@@ -289,8 +289,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"القيم المعينة هنا خاصة بهذه "
+"الشركة فقط. \" groups=\"base.group_multi_company\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1168,7 +1168,7 @@ msgstr "وصف للتذكرة التي ترغب في التواصل بشأنها
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction
 msgid "Action Needed"
-msgstr "إجراء مطلوب"
+msgstr "يتطلب اتخاذ إجراء "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__active
@@ -1453,6 +1453,8 @@ msgid ""
 "Bring your outdoor field hockey season to the next level by taking the field"
 " at this 9th annual Field Hockey tournament."
 msgstr ""
+"انتقل بموسم الهوكي الخارجي إلى المستوى التالي عن طريق أخذ الميدان في بطولة "
+"الهوكي السنوية بحلتها التاسعة. "
 
 #. module: event
 #: model:event.event,name:event.event_4
@@ -2129,18 +2131,19 @@ msgstr "احظ بتجربة لا تنسى مع الموسيقى الحية، و�
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
 msgid "Foldable Badge"
-msgstr ""
+msgstr "شارة قابلة للطي "
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid ""
 "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
 msgstr ""
+"شارة قابلة للطي - {{ (object.event_id.name or 'Event').replace('/','_') }} "
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
 msgid "Foldable Badge Example"
-msgstr ""
+msgstr "مثال على شارة قابلة للطي "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -3317,6 +3320,8 @@ msgid ""
 "Shangai Pterocarpus Furniture brings honesty and seriousness to wood "
 "industry while helping customers deal with trees, flowers and fungi."
 msgstr ""
+"تضمن Shangai Pterocarpus Furniture الأمانة والجدية إلى مجال الأخشاب، بينما "
+"تساعد العملاء في التعامل مع الأشجار والأزهار والفطريات. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3972,7 +3977,7 @@ msgstr "الأسبوع القادم"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "في %(date)s "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started
@@ -3980,6 +3985,8 @@ msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
 msgstr ""
+"تكون التسجيلات قد بدأت عندما يكون الوقت والتاريخ الحاليين بعد أقرب تاريخ "
+"لبيع التذاكر. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
@@ -4012,4 +4019,4 @@ msgstr "غير مؤكد"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"
