@@ -18,8 +18,8 @@ var qweb = core.qweb;
 PortalChatter.include({
     events: _.extend({}, PortalChatter.prototype.events, {
         // star based control
-        'click .o_website_rating_select': '_onClickStarDomain',
-        'click .o_website_rating_select_text': '_onClickStarDomainReset',
+        'click .o_website_rating_table_row': '_onClickStarDomain',
+        'click .o_website_rating_selection_reset': '_onClickStarDomainReset',
         // publisher comments
         'click .o_wrating_js_publisher_comment_btn': '_onClickPublisherComment',
         'click .o_wrating_js_publisher_comment_edit': '_onClickPublisherComment',
@@ -236,25 +236,32 @@ PortalChatter.include({
     //--------------------------------------------------------------------------
 
     /**
+     * Show a spinner and hide messages during loading.
+     *
+     * @override
+     * @returns {Promise}
+     */
+    _onChangeDomain: function () {
+        const spinnerDelayed = setTimeout(()=> {
+            this.$('.o_portal_chatter_messages_loading').removeClass('d-none');
+            this.$('.o_portal_chatter_messages').addClass('d-none');
+        }, 500);
+        return this._super.apply(this, arguments).finally(()=>{
+            clearTimeout(spinnerDelayed);
+            // Hide spinner and show messages
+            this.$('.o_portal_chatter_messages_loading').addClass('d-none');
+            this.$('.o_portal_chatter_messages').removeClass('d-none');
+        });
+    },
+
+    /**
      * @private
      * @param {MouseEvent} ev
      */
     _onClickStarDomain: function (ev) {
         var $tr = this.$(ev.currentTarget);
         var num = $tr.data('star');
-        if ($tr.css('opacity') === '1') {
-            this.set('rating_value', num);
-            this.$('.o_website_rating_select').css({
-                'opacity': 0.5,
-            });
-            this.$('.o_website_rating_select_text[data-star="' + num + '"]').css({
-                'visibility': 'visible',
-                'opacity': 1,
-            });
-            this.$('.o_website_rating_select[data-star="' + num + '"]').css({
-                'opacity': 1,
-            });
-        }
+        this.set('rating_value', num);
     },
     /**
      * @private
@@ -264,10 +271,6 @@ PortalChatter.include({
         ev.stopPropagation();
         ev.preventDefault();
         this.set('rating_value', false);
-        this.$('.o_website_rating_select_text').css('visibility', 'hidden');
-        this.$('.o_website_rating_select').css({
-            'opacity': 1,
-        });
     },
 
     /**
