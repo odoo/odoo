@@ -922,61 +922,9 @@ class PosGlobalState extends PosModel {
         return utils.float_is_zero(qty, this.dp['Product Unit of Measure']);
     }
 
-    formatProductQty(qty) {
-        return field_utils.format.float(qty, { digits: [true, this.dp['Product Unit of Measure']] });
-    }
-
-    format_currency(amount, precision) {
-        amount = this.format_currency_no_symbol(amount, precision, this.currency);
-
-        if (this.currency.position === 'after') {
-            return amount + ' ' + (this.currency.symbol || '');
-        } else {
-            return (this.currency.symbol || '') + ' ' + amount;
-        }
-    }
-
-    format_currency_no_symbol(amount, precision, currency) {
-        if (!currency) {
-            currency = this.currency
-        }
-        var decimals = currency.decimal_places;
-
-        if (precision && this.dp[precision] !== undefined) {
-            decimals = this.dp[precision];
-        }
-
-        if (typeof amount === 'number') {
-            amount = round_di(amount, decimals).toFixed(decimals);
-            amount = field_utils.format.float(round_di(amount, decimals), {
-                digits: [69, decimals],
-            });
-        }
-
-        return amount;
-    }
-
-    format_pr(value, precision) {
-        var decimals =
-            precision > 0
-                ? Math.max(0, Math.ceil(Math.log(1.0 / precision) / Math.log(10)))
-                : 0;
-        return value.toFixed(decimals);
-    }
-
     round_decimals_currency(value) {
         const decimals = this.currency.decimal_places;
         return parseFloat(round_di(value, decimals).toFixed(decimals));
-    }
-
-    /**
-     * (value = 1.0000, decimals = 2) => '1'
-     * (value = 1.1234, decimals = 2) => '1.12'
-     * @param {number} value amount to format
-     */
-    formatFixed(value) {
-        const currency = this.currency || { decimal_places: 2 };
-        return `${Number(value.toFixed(currency.decimal_places || 0))}`;
     }
 
     disallowLineQuantityChange() {
@@ -1006,6 +954,24 @@ class PosGlobalState extends PosModel {
     }
     htmlToImgLetterRendering() {
         return false;
+    }
+
+    format(type, value, options = {}) {
+        switch(type) {
+            case 'monetary':
+                return field_utils.format.monetary(
+                            value,
+                            null,
+                            {
+                                currency: options.currency ? options.currency : this.currency,
+                                noSymbol: options.noSymbol ? options.noSymbol : false
+                            }
+                        ).toString().replace("&nbsp;", " ");
+                break;
+            case 'float':
+                return field_utils.format.float(value, null, { 'digits': [false, options.digits ? options.digits : 2] });
+                break;
+        }
     }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
@@ -1325,7 +1291,7 @@ class Orderline extends PosModel {
                         title: _t('Greater than allowed'),
                         body: _.str.sprintf(
                             _t('The requested quantity to be refunded is higher than the refundable quantity of %s.'),
-                            this.pos.formatProductQty(maxQtyToRefund)
+                            this.pos.format('float', maxQtyToRefund, { digits: this.pos.dp['Product Unit of Measure'] })
                         ),
                     });
                     return false;

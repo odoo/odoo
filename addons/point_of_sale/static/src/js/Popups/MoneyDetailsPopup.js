@@ -39,7 +39,7 @@ odoo.define('point_of_sale.MoneyDetailsPopup', function(require) {
             let moneyDetailsNotes = this.state.total  ? 'Money details: \n' : null;
             this.env.pos.bills.forEach(bill => {
                 if (this.state.moneyDetails[bill.value]) {
-                    moneyDetailsNotes += `  - ${this.state.moneyDetails[bill.value]} x ${this.env.pos.format_currency(bill.value)}\n`;
+                    moneyDetailsNotes += `  - ${this.state.moneyDetails[bill.value]} x ${this.env.pos.format('monetary', bill.value)}\n`;
                 }
             })
             const payload = { total: this.state.total, moneyDetailsNotes, moneyDetails: { ...this.state.moneyDetails } };

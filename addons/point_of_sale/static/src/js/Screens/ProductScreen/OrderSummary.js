@@ -7,7 +7,7 @@ odoo.define('point_of_sale.OrderSummary', function(require) {
 
     class OrderSummary extends PosComponent {
         getTotal() {
-            return this.env.pos.format_currency(this.props.order.get_total_with_tax());
+            return this.env.pos.format('monetary', this.props.order.get_total_with_tax());
         }
         getTax() {
             const total = this.props.order.get_total_with_tax();
@@ -15,7 +15,7 @@ odoo.define('point_of_sale.OrderSummary', function(require) {
             const taxAmount = total - totalWithoutTax;
             return {
                 hasTax: !float_is_zero(taxAmount, this.env.pos.currency.decimal_places),
-                displayAmount: this.env.pos.format_currency(taxAmount),
+                displayAmount: this.env.pos.format('monetary', taxAmount)
             };
         }
     }

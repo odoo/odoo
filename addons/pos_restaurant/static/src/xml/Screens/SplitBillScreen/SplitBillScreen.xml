@@ -27,7 +27,7 @@
                     <div class="controls">
                         <div class="order-info">
                             <span class="subtotal">
-                                <t t-esc="env.pos.format_currency(newOrder.get_subtotal())" />
+                                <t t-esc="env.pos.format('monetary', newOrder.get_subtotal())" />
                             </span>
                         </div>
                         <div class="pay-button">

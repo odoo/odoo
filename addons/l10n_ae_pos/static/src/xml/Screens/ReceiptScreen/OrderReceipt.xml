@@ -5,7 +5,7 @@
             <div>
                 <t t-if="env.pos.company.country.code == 'AE'">VAT</t>
                 <t t-else="">Total Taxes</t>
-                <span t-esc="env.pos.format_currency(receipt.total_tax)" class="pos-receipt-right-align"/>
+                <span t-esc="env.pos.format('monetary', receipt.total_tax)" class="pos-receipt-right-align"/>
             </div>
         </xpath>
     </t>

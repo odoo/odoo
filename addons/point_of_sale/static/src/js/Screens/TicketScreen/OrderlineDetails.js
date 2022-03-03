@@ -32,13 +32,13 @@ odoo.define('point_of_sale.OrderlineDetails', function (require) {
             return this.line.productName;
         }
         get totalPrice() {
-            return this.env.pos.format_currency(this.line.totalPrice);
+            return this.env.pos.format('monetary', this.line.totalPrice);
         }
         get quantity() {
             return this.line.quantity;
         }
         get unitPrice() {
-            return this.env.pos.format_currency(this.line.unitPrice);
+            return this.env.pos.format('monetary', this.line.unitPrice);
         }
         get unit() {
             return this.line.unit;
@@ -56,7 +56,7 @@ odoo.define('point_of_sale.OrderlineDetails', function (require) {
             return !this.env.pos.isProductQtyZero(this.props.line.refunded_qty);
         }
         getFormattedRefundedQty() {
-            return this.env.pos.formatProductQty(this.props.line.refunded_qty);
+            return this.env.pos.format('float', this.props.line.refunded_qty, { digits: this.env.pos.dp['Product Unit of Measure']} );
         }
         hasToRefundQty() {
             const toRefundDetail = this.getToRefundDetail();
@@ -64,7 +64,7 @@ odoo.define('point_of_sale.OrderlineDetails', function (require) {
         }
         getFormattedToRefundQty() {
             const toRefundDetail = this.getToRefundDetail();
-            return this.env.pos.formatProductQty(toRefundDetail && toRefundDetail.qty);
+            return this.env.pos.format('float', toRefundDetail && toRefundDetail.qty);
         }
         getRefundingMessage() {
             return _.str.sprintf(this.env._t('Refunding %s in '), this.getFormattedToRefundQty());

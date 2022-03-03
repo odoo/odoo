@@ -31,7 +31,7 @@ odoo.define('pos_sale.SaleOrderRow', function (require) {
             return partner ? partner[1] : null;
         }
         get total() {
-            return this.env.pos.format_currency(this.order.amount_total);
+            return this.env.pos.format('monetary', this.order.amount_total);
         }
         get state() {
             let state_mapping = {

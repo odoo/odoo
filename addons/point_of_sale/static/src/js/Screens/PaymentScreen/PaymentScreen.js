@@ -347,11 +347,11 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     body:
                         this.env._t('Are you sure that the customer wants to  pay') +
                         ' ' +
-                        this.env.pos.format_currency(this.currentOrder.get_total_paid()) +
+                        this.env.pos.format('monetary', this.currentOrder.get_total_paid()) +
                         ' ' +
                         this.env._t('for an order of') +
                         ' ' +
-                        this.env.pos.format_currency(this.currentOrder.get_total_with_tax()) +
+                        this.env.pos.format('monetary', this.currentOrder.get_total_with_tax()) +
                         ' ' +
                         this.env._t('? Clicking "Confirm" will validate the payment.'),
                 }).then(({ confirmed }) => {

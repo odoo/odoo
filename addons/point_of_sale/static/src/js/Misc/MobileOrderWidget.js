@@ -10,7 +10,7 @@ odoo.define('point_of_sale.MobileOrderWidget', function(require) {
         }
         get total() {
             const _total = this.order ? this.order.get_total_with_tax() : 0;
-            return this.env.pos.format_currency(_total);
+            return this.env.pos.format('monetary', _total);
         }
         get items_number() {
             return this.order ? this.order.orderlines.reduce((items_number,line) => items_number + line.quantity, 0) : 0;

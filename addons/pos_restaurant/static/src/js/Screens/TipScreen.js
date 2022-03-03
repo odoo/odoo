@@ -20,9 +20,9 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
         }
         get overallAmountStr() {
             const tipAmount = parse.float(this.state.inputTipAmount || '0');
-            const original = this.env.pos.format_currency(this.totalAmount);
-            const tip = this.env.pos.format_currency(tipAmount);
-            const overall = this.env.pos.format_currency(this.totalAmount + tipAmount);
+            const original = this.env.pos.format('monetary', this.totalAmount);
+            const tip = this.env.pos.format('monetary', tipAmount);
+            const overall = this.env.pos.format('monetary', this.totalAmount + tipAmount);
             return `${original} + ${tip} tip = ${overall}`;
         }
         get totalAmount() {
@@ -64,7 +64,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
             if (amount > 0.25 * this.totalAmount) {
                 const { confirmed } = await this.showPopup('ConfirmPopup', {
                     title: 'Are you sure?',
-                    body: `${this.env.pos.format_currency(
+                    body: `${this.env.pos.format('monetary',
                         amount
                     )} is more than 25% of the order's total amount. Are you sure of this tip amount?`,
                 });
@@ -115,7 +115,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
                 var receipt = renderToString('TipReceipt', {
                     receipt: this.currentOrder.getOrderReceiptEnv().receipt,
                     data: data,
-                    total: this.env.pos.format_currency(this.totalAmount),
+                    total: this.env.pos.format('monetary', this.totalAmount),
                 });
 
                 if (this.env.proxy.printer) {

@@ -40,12 +40,12 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
                 const orderCost = order.get_total_cost();
                 const orderMargin = orderPriceWithoutTax - orderCost;
 
-                this.costCurrency = this.env.pos.format_currency(this.props.product.standard_price);
-                this.marginCurrency = this.env.pos.format_currency(margin);
+                this.costCurrency = this.env.pos.format('monetary', this.props.product.standard_price);
+                this.marginCurrency = this.env.pos.format('monetary', margin);
                 this.marginPercent = priceWithoutTax ? Math.round(margin/priceWithoutTax * 10000) / 100 : 0;
-                this.orderPriceWithoutTaxCurrency = this.env.pos.format_currency(orderPriceWithoutTax);
-                this.orderCostCurrency = this.env.pos.format_currency(orderCost);
-                this.orderMarginCurrency = this.env.pos.format_currency(orderMargin);
+                this.orderPriceWithoutTaxCurrency = this.env.pos.format('monetary', orderPriceWithoutTax);
+                this.orderCostCurrency = this.env.pos.format('monetary', orderCost);
+                this.orderMarginCurrency = this.env.pos.format('monetary', orderMargin);
                 this.orderMarginPercent = orderPriceWithoutTax ? Math.round(orderMargin/orderPriceWithoutTax * 10000) / 100 : 0;
             } catch (error) {
                 this.error = error;

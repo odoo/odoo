@@ -274,9 +274,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
                 // when input is like '+10', '+50', etc
                 const inputValue = parse.float(input.slice(1));
                 const currentBufferValue = this.state.buffer ? parse.float(this.state.buffer) : 0;
-                this.state.buffer = this.component.env.pos.formatFixed(
-                    inputValue + currentBufferValue
-                );
+                this.state.buffer = this.component.env.pos.format('float', inputValue + currentBufferValue);
             } else if (!isNaN(parseInt(input, 10))) {
                 if (this.state.toStartOver) {  // when we want to erase the current buffer for a new value
                     this.state.buffer = '';

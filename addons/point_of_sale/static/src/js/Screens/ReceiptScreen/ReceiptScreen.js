@@ -61,9 +61,9 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                     .get_orderlines()
                     .find((line) => tip_product_id && line.product.id === tip_product_id);
                 const tipAmount = tipLine ? tipLine.get_all_prices().priceWithTax : 0;
-                const orderAmountStr = this.env.pos.format_currency(orderTotalAmount - tipAmount);
+                const orderAmountStr = this.env.pos.format('monetary', orderTotalAmount - tipAmount)
                 if (!tipAmount) return orderAmountStr;
-                const tipAmountStr = this.env.pos.format_currency(tipAmount);
+                const tipAmountStr = this.env.pos.format('monetary', tipAmount)
                 return `${orderAmountStr} + ${tipAmountStr} tip`;
             }
             get currentOrder() {

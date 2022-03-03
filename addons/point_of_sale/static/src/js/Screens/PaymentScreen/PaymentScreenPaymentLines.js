@@ -6,7 +6,7 @@ odoo.define('point_of_sale.PaymentScreenPaymentLines', function(require) {
 
     class PaymentScreenPaymentLines extends PosComponent {
         formatLineAmount(paymentline) {
-            return this.env.pos.format_currency_no_symbol(paymentline.get_amount());
+            return this.env.pos.format('monetary', paymentline.get_amount(), { noSymbol: true });
         }
         selectedLineClass(line) {
             return { 'payment-terminal': line.get_payment_status() };

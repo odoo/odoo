@@ -206,7 +206,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
 
                     let down_payment = sale_order.amount_total;
                     const { confirmed, payload } = await this.showPopup('NumberPopup', {
-                        title: sprintf(this.env._t("Percentage of %s"), this.env.pos.format_currency(sale_order.amount_total)),
+                        title: sprintf(this.env._t("Percentage of %s"), this.env.pos.format('monetary', sale_order.amount_total)),
                         startingValue: 0,
                     });
                     if (confirmed){

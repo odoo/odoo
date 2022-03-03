@@ -17,7 +17,7 @@ odoo.define('point_of_sale.CashMoveButton', function (require) {
             if (!confirmed) return;
             const { type, amount, reason } = payload;
             const translatedType = TRANSLATED_CASH_MOVE_TYPE[type];
-            const formattedAmount = this.env.pos.format_currency(amount);
+            const formattedAmount = this.env.pos.format('monetary', amount);
             if (!amount) {
                 return this.showNotification(
                     _.str.sprintf(this.env._t('Cash in/out of %s is ignored.'), formattedAmount),

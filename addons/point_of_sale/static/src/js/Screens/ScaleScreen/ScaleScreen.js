@@ -79,7 +79,7 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
             return weightstr;
         }
         get computedPriceString() {
-            return this.env.pos.format_currency(this.productPrice * this.state.weight);
+            return this.env.pos.format('monetary', this.productPrice * this.state.weight);
         }
         get productPrice() {
             const product = this.props.product;

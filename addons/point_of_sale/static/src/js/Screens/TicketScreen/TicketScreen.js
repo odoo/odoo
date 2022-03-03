@@ -286,7 +286,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             return moment(order.validation_date).format('YYYY-MM-DD hh:mm A');
         }
         getTotal(order) {
-            return this.env.pos.format_currency(order.get_total_with_tax());
+            return this.env.pos.format('monetary', order.get_total_with_tax())
         }
         getPartner(order) {
             return order.get_partner_name();
