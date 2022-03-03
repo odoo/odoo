@@ -693,7 +693,7 @@
       }
 
       context._timeout = setTimeout(function () {
-        if (context._hoverState === HoverState.SHOW) {
+        if (context._hoverState === HoverState.SHOW && !context.element.className.includes("o_invisible_modifier")) {
           context.show();
         }
       }, context.config.delay.show);
