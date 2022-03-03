@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { ListRenderer } from "@web/views/list/list_renderer";
@@ -278,7 +284,7 @@ QUnit.module("Fields", (hooks) => {
             // and evaluation of the decoration against *visible records*
 
             serverData.models.partner.records[0].p = [2, 4];
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -292,26 +298,40 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
+            await click(target, ".o_form_button_edit");
 
-            await click(form.$(".o_field_x2many_list .o_field_x2many_list_row_add a"));
+            await click(
+                target.querySelector(".o_field_x2many_list .o_field_x2many_list_row_add a")
+            );
 
-            assert.containsN(form, ".o_field_x2many_list .o_data_row", 2, "There should be 2 rows");
+            assert.containsN(
+                target,
+                ".o_field_x2many_list .o_data_row",
+                2,
+                "There should be 2 rows"
+            );
 
-            var $expectedSelectedRow = form.$(".o_field_x2many_list .o_data_row").eq(1);
-            var $actualSelectedRow = form.$(".o_selected_row");
+            const expectedSelectedRow = target.querySelectorAll(
+                ".o_field_x2many_list .o_data_row"
+            )[1];
+            const actualSelectedRow = target.querySelector(".o_selected_row");
             assert.equal(
-                $actualSelectedRow[0],
-                $expectedSelectedRow[0],
+                actualSelectedRow[0],
+                expectedSelectedRow[0],
                 "The selected row should be the new one"
             );
 
             // Cancel Creation
-            await testUtils.fields.triggerKeydown($actualSelectedRow.find("input"), "escape");
-            assert.containsOnce(form, ".o_field_x2many_list .o_data_row", "There should be 1 row");
+            await actualSelectedRow
+                .querySelector("input")
+                .dispatchEvent(new KeyboardEvent("keydown"));
+            await nextTick();
+            assert.containsOnce(
+                target,
+                ".o_field_x2many_list .o_data_row",
+                "There should be 1 row"
+            );
         }
     );
 
@@ -9023,10 +9043,9 @@ QUnit.module("Fields", (hooks) => {
         // read.
         assert.expect(8);
 
-        var data = this.data;
-        data.partner.records[0].turtles = [1, 2, 3];
-        data.turtle.records[0].partner_ids = [1];
-        data.partner.onchanges = {
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
+        serverData.models.turtle.records[0].partner_ids = [1];
+        serverData.models.partner.onchanges = {
             turtles: function (obj) {
                 var res = _.map(obj.turtles, function (command) {
                     if (command[0] === 1) {
@@ -9035,17 +9054,17 @@ QUnit.module("Fields", (hooks) => {
                     }
                     // convert LINK_TO commands to UPDATE commands
                     var id = command[1];
-                    var record = _.findWhere(data.turtle.records, { id: id });
+                    var record = _.findWhere(serverData.models.turtle.records, { id: id });
                     return [1, id, _.pick(record, ["turtle_int", "turtle_foo", "partner_ids"])];
                 });
                 obj.turtles = [[5]].concat(res);
             },
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
-            data: data,
+            serverData,
             arch: `
                 <form>
                     <field name="turtles">
@@ -9059,29 +9078,23 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, args) {
                 var ids = args.method === "read" ? " [" + args.args[0] + "]" : "";
                 assert.step(args.method + ids);
-                return this._super.apply(this, arguments);
             },
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
 
-        assert.strictEqual(
-            form.$(".o_data_cell.foo").text(),
-            "blipkawa",
-            "should display two records out of three, in the correct order"
+        await click(target, ".o_form_button_edit");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell.foo")].map((el) => el.innerText),
+            ["blip", "kawa"]
         );
 
         // edit turtle_int field of first row
-        await click(form.$(".o_data_cell:first"));
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=turtle_int]"), 3);
-        await click(form.$el);
-
-        assert.strictEqual(
-            form.$(".o_data_cell.foo").text(),
-            "blipkawa",
-            "should still display the same two records"
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target.querySelector(".o_data_row"), ".o_field_widget[name=turtle_int]", 3);
+        await click(target);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell.foo")].map((el) => el.innerText),
+            ["blip", "kawa"]
         );
 
         assert.verifySteps([
@@ -9101,12 +9114,12 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "new record, with one2many with more default values than limit",
         async function (assert) {
             assert.expect(2);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -9119,21 +9132,20 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>`,
                 context: { default_turtles: [1, 2, 3] },
-                viewOptions: {
-                    mode: "edit",
-                },
             });
-            assert.strictEqual(
-                form.$(".o_data_row").text(),
-                "yopblip",
-                "data has been properly loaded"
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_row")].map(
+                    (el) => el.querySelector(".o_data_cell").innerText
+                ),
+                ["yop", "blip"]
             );
-            await clickSave(target);
 
-            assert.strictEqual(
-                form.$(".o_data_row").text(),
-                "yopblip",
-                "data has been properly saved"
+            await clickSave(target);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_row")].map(
+                    (el) => el.querySelector(".o_data_cell").innerText
+                ),
+                ["yop", "blip"]
             );
         }
     );

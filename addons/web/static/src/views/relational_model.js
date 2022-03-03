@@ -533,6 +533,7 @@ export class Record extends DataPoint {
             this._values[fieldName] = list;
             this.data[fieldName] = list;
             if (!invisible) {
+                list.applyCommands(this._changes[fieldName]);
                 proms.push(list.load());
             }
         }
@@ -726,7 +727,10 @@ export class Record extends DataPoint {
                 // for x2many fields, the onchange returns commands, not ids, so we need to process them
                 // for now, we simply return an empty list
                 if (isX2Many(this.fields[fieldName])) {
-                    result.value[fieldName] = [];
+                    if (this.data[fieldName]) {
+                        this.data[fieldName].applyCommands(result.value[fieldName]);
+                        delete result.value[fieldName];
+                    }
                 }
             }
             const onChangeValues = this._parseServerValues(result.value);
@@ -1667,6 +1671,19 @@ export class StaticList extends DataPoint {
         this.resIds.push(record.id);
         this.limit = this.limit + 1; // might be not good
         this.model.notify();
+    }
+
+    applyCommands(commands) {
+        if (!(commands && commands.length)) {
+            return;
+        }
+        this.onChanges();
+        for (const command of commands) {
+            if (command[0] === 6) {
+                this.resIds = command[2];
+            }
+            this._commands.push(command);
+        }
     }
 
     exportState() {
