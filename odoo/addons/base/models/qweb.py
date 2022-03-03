@@ -5,7 +5,8 @@ import os.path
 import re
 import traceback
 
-from collections import OrderedDict, Sized, Mapping
+from collections import OrderedDict
+from collections.abc import Sized, Mapping
 from functools import reduce
 from itertools import tee, count
 from textwrap import dedent

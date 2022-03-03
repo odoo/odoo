@@ -3613,7 +3613,7 @@ class AccountMoveLine(models.Model):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
             if 'statement_line_id' in vals and line.payment_id:
                 # In case of an internal transfer, there are 2 liquidity move lines to match with a bank statement
-                if all(line.statement_id for line in line.payment_id.move_line_ids.filtered(
+                if all(_line.statement_id for _line in line.payment_id.move_line_ids.filtered(
                         lambda r: r.id != line.id and r.account_id.internal_type == 'liquidity')):
                     line.payment_id.state = 'reconciled'
 

@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
-import dateutil
 import itertools
 import logging
 import psycopg2
 import time
 from ast import literal_eval
-from collections import defaultdict, Mapping
+from collections import defaultdict
+from collections.abc import Mapping
 from operator import itemgetter
 
-from odoo import api, fields, models, SUPERUSER_ID, tools,  _
+import dateutil
+
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.modules.registry import Registry
 from odoo.osv import expression
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
