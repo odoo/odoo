@@ -1083,22 +1083,13 @@ class Website(models.Model):
             raise ValueError('No record found for unique ID %s. It may have been deleted.' % (view_id))
         return view
 
-    @tools.ormcache_context(keys=('website_id',))
-    def _cache_customize_show_views(self):
-        views = self.env['ir.ui.view'].with_context(active_test=False).sudo().search([('customize_show', '=', True)])
-        views = views.filter_duplicate()
-        return {v.key: v.active for v in views}
-
     @tools.ormcache_context('key', keys=('website_id',))
-    def is_view_active(self, key, raise_if_not_found=False):
+    def is_view_active(self, key):
         """
-            Return True if active, False if not active, None if not found or not a customize_show view
+            Return True if active, False if not active, None if not found
         """
-        views = self._cache_customize_show_views()
-        view = key in views and views[key]
-        if view is None and raise_if_not_found:
-            raise ValueError('No view of type customize_show found for key %s' % key)
-        return view
+        view = self.viewref(key, raise_if_not_found=False)
+        return view.active if view else None
 
     @api.model
     def get_template(self, template):
