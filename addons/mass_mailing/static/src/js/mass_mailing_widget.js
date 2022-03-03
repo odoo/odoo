@@ -250,7 +250,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
         this.$content.closest('body').removeClass(this._allClasses).addClass(themeParams.className);
 
         const old_layout = this.$content.find('.o_layout')[0];
-        const $old_layout = $(old_layout);
 
         var $new_wrapper;
         var $newWrapperContent;
@@ -292,6 +291,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
         this.wysiwyg.trigger('reload_snippet_dropzones');
         this.trigger_up('iframe_updated', { $iframe: this.wysiwyg.$iframe });
+        this.wysiwyg.odooEditor.historyStep(true);
     },
 
     /**
