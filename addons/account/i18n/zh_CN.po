@@ -54,6 +54,12 @@ msgstr ""
 "        "
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid " The %(lock_type)s lock date is set on %(lock_date)s."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
 msgstr "# 已对账账单"
@@ -13009,6 +13015,14 @@ msgstr "在您的日记帐分录中选择的科目强制提供辅助币种。您
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"The accounting date being set prior to the %(lock_type)s lock date "
+"%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "The accounting date is set prior to the tax lock date which is set on %s. "
 "Hence, the accounting date will be changed to %s."
 msgstr "会计日期设置在 %s 上设置的税金锁定日期之前。因此，会计日期将更改为 %s."
@@ -15919,6 +15933,12 @@ msgid ""
 msgstr "保留要求支付固定利息的权利，相当于剩余到期金额的10%."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "tax"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
 msgid "technical field for widget tax-group-custom-field"
 msgstr "小工具 tax-group-custom-field 的技术字段"
@@ -15961,6 +15981,12 @@ msgid ""
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
 msgstr "承诺在约定的时间范围内，尽最大努力在适当的时候提供优质服务. 但是，其任何义务都不能被视为实现结果的义务."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "user"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
