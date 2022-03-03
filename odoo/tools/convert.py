@@ -229,7 +229,7 @@ class xml_import(object):
                     **safe_eval(context, {
                         'ref': self.id_get,
                         **(eval_context or {})
-                    })
+                    }),
                 }
             )
         return self.env
@@ -446,6 +446,10 @@ form: module.record_id""" % (xml_id,)
             res[f_name] = f_val
         if extra_vals:
             res.update(extra_vals)
+        if 'sequence' not in res and 'sequence' in model._fields:
+            sequence = self.next_sequence()
+            if sequence:
+                res['sequence'] = sequence
 
         data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         record = model._load_records([data], self.mode == 'update')
@@ -546,6 +550,7 @@ form: module.record_id""" % (xml_id,)
 
             self.envs.append(self.get_env(el))
             self._noupdate.append(nodeattr2bool(el, 'noupdate', self.noupdate))
+            self._sequences.append(0 if nodeattr2bool(el, 'auto_sequence', False) else None)
             try:
                 f(rec)
             except ParseError:
@@ -568,6 +573,7 @@ form: module.record_id""" % (xml_id,)
             finally:
                 self._noupdate.pop()
                 self.envs.pop()
+                self._sequences.pop()
 
     @property
     def env(self):
@@ -577,12 +583,19 @@ form: module.record_id""" % (xml_id,)
     def noupdate(self):
         return self._noupdate[-1]
 
+    def next_sequence(self):
+        value = self._sequences[-1]
+        if value is not None:
+            value = self._sequences[-1] = value + 10
+        return value
+
     def __init__(self, env, module, idref, mode, noupdate=False, xml_filename=None):
         self.mode = mode
         self.module = module
         self.envs = [env(context=dict(env.context, lang=None))]
         self.idref = {} if idref is None else idref
         self._noupdate = [noupdate]
+        self._sequences = []
         self.xml_filename = xml_filename
         self._tags = {
             'record': self._tag_record,
