@@ -289,6 +289,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
         this.wysiwyg.trigger('reload_snippet_dropzones');
         this.trigger_up('iframe_updated', { $iframe: this.wysiwyg.$iframe });
+        this.wysiwyg.odooEditor.historyStep(true);
     },
 
     /**
