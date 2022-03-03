@@ -478,7 +478,7 @@
                             <group>
                                 <field name="display_name"/>
                                 <field name="model"/>
-                                <field name="res_id"/>
+                                <field name="res_id" widget="integer"/>
                                 <field name="reference" widget="reference" string="Record"/>
                             </group>
                         </group>
@@ -494,7 +494,7 @@
                     <field name="display_name"/>
                     <field name="model" groups="base.group_no_one"/>
                     <field name="module" invisible="1"/>
-                    <field name="res_id"/>
+                    <field name="res_id" widget="integer"/>
                 </tree>
             </field>
         </record>
@@ -506,7 +506,7 @@
                     <filter string="Updatable" name="updatable" domain="[('noupdate', '=', False)]"/>
                     <field name="module"/>
                     <field name="model"/>
-                    <field name="res_id"/>
+                    <field name="res_id" widget="integer"/>
                     <field name="noupdate"/>
                     <group expand="0" string="Group By">
                         <filter string="Module" name="group_by_module" domain="[]" context="{'group_by':'module'}"/>
