@@ -260,6 +260,8 @@ URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
 TEXT_URL_REGEX = r'https?://[\w@:%.+&~#=/-]+(?:\?\S+)?'
 # retrieve inner content of the link
 HTML_TAG_URL_REGEX = URL_REGEX + r'([^<>]*>([^<>]+)<\/)?'
+HTML_TAGS_REGEX = re.compile('<.*?>')
+HTML_NEWLINES_REGEX = re.compile('<(div|p|br|tr)[^>]*>|\n')
 
 
 def validate_url(url):
@@ -293,6 +295,21 @@ def html_keep_url(text):
         idx = item.end()
     final += text[idx:]
     return final
+
+
+def html_to_inner_content(html):
+    """Returns unformatted text after removing html tags and excessive whitespace from a
+    string/Markup. Passed strings will first be sanitized.
+    """
+    if is_html_empty(html):
+        return ''
+    if not isinstance(html, markupsafe.Markup):
+        html = html_sanitize(html)
+    processed = re.sub(HTML_NEWLINES_REGEX, ' ', html)
+    processed = re.sub(HTML_TAGS_REGEX, '', processed)
+    processed = re.sub(r' {2,}|\t', ' ', processed)
+    processed = processed.strip()
+    return processed
 
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):

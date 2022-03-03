@@ -3,9 +3,9 @@
 
 import logging
 import re
-from collections import defaultdict
-
+import textwrap
 from binascii import Error as binascii_error
+from collections import defaultdict
 
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import AccessError
@@ -89,6 +89,9 @@ class Message(models.Model):
     description = fields.Char(
         'Short description', compute="_compute_description",
         help='Message description: either the subject, or the beginning of the body')
+    preview = fields.Char(
+        'Preview', compute='_compute_preview',
+        help='The text-only beginning of the body used as email preview.')
     attachment_ids = fields.Many2many(
         'ir.attachment', 'message_attachment_rel',
         'message_id', 'attachment_id',
@@ -178,13 +181,18 @@ class Message(models.Model):
     canned_response_ids = fields.One2many('mail.shortcode', 'message_ids', string="Canned Responses", store=False)
     reaction_ids = fields.One2many('mail.message.reaction', 'message_id', string="Reactions", groups="base.group_system")
 
+    @api.depends('body', 'subject')
     def _compute_description(self):
         for message in self:
             if message.subject:
                 message.description = message.subject
             else:
-                plaintext_ct = '' if not message.body else tools.html2plaintext(message.body)
-                message.description = plaintext_ct[:30] + '%s' % (' [...]' if len(plaintext_ct) >= 30 else '')
+                message.description = message._get_message_preview(max_char=30)
+
+    @api.depends('body')
+    def _compute_preview(self):
+        for message in self:
+            message.preview = message._get_message_preview()
 
     @api.depends('author_id', 'author_guest_id')
     @api.depends_context('guest', 'uid')
@@ -1026,6 +1034,15 @@ class Message(models.Model):
     # ------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------
+
+    def _get_message_preview(self, max_char=190):
+        """Returns an unformatted version of the message body. Unless `max_char=0` is passed,
+        output will be capped at max_char characters with a ' [...]' suffix if applicable.
+        Default `max_char` is the longest known mail client preview length (Outlook 2013)."""
+        self.ensure_one()
+
+        plaintext_ct = tools.html_to_inner_content(self.body)
+        return textwrap.shorten(plaintext_ct, max_char) if max_char else plaintext_ct
 
     @api.model
     def _get_record_name(self, values):
