@@ -125,4 +125,34 @@ tour.register('edit_menus', {
         trigger: '#top_menu .nav-item a:contains("Modnar !!")',
         run: () => {}, // It's a check.
     },
+    // Nest menu item from the menu.
+    {
+        content: "Open Pages menu",
+        trigger: '.o_menu_sections a:contains("Pages")',
+    },
+    {
+        content: "Click on Edit Menu",
+        trigger: 'a.dropdown-item:contains("Edit Menu")',
+    },
+    {
+        content: "Drag item into parent",
+        trigger: '.oe_menu_editor li:contains("Contact us") > .ui-sortable-handle',
+        // Menu rows are 38px tall.
+        run: "drag_move_and_drop [50,38]@.oe_menu_editor li:contains('Home') > .ui-sortable-handle => .oe_menu_editor li:contains('Home') .ui-sortable-placeholder",
+    },
+    {
+        content: "Wait for drop",
+        trigger: '.oe_menu_editor li:contains("Home") ul li:contains("Contact us")',
+        run: () => {}, // It's a check.
+    },
+    clickOnSave,
+    {
+        content: "Menu item should have a child",
+        trigger: '#top_menu .nav-item a.dropdown-toggle:contains("Home")',
+    },
+    {
+        content: "When menu item is opened, child item must appear in the shown menu",
+        trigger: '#top_menu .nav-item:contains("Home") ul.show li a.dropdown-item:contains("Contact us")[href="/contactus"]',
+        run: () => {}, // It's a check.
+    },
 ]);

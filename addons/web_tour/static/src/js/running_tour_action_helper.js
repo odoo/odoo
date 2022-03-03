@@ -34,6 +34,9 @@ var RunningTourActionHelper = core.Class.extend({
     drag_and_drop: function (to, element) {
         this._drag_and_drop(this._get_action_values(element), to);
     },
+    drag_move_and_drop: function (to, element) {
+        this._drag_move_and_drop(this._get_action_values(element), to);
+    },
     keydown: function (keyCodes, element) {
         this._keydown(this._get_action_values(element), keyCodes.split(/[,\s]+/));
     },
@@ -114,30 +117,25 @@ var RunningTourActionHelper = core.Class.extend({
         values.$element.trigger('focusout');
         values.$element.trigger('blur');
     },
+    _calculateCenter: function ($el, selector) {
+        const center = $el.offset();
+        if (selector && selector.indexOf('iframe') !== -1) {
+            const iFrameOffset = $('iframe').offset();
+            center.left += iFrameOffset.left;
+            center.top += iFrameOffset.top;
+        }
+        center.left += $el.outerWidth() / 2;
+        center.top += $el.outerHeight() / 2;
+        return center;
+    },
     _drag_and_drop: function (values, to) {
         var $to;
-        var elementCenter = values.
-        $element.offset();
-        elementCenter.left += values.$element.outerWidth() / 2;
-        elementCenter.top += values.$element.outerHeight() / 2;
+        const elementCenter = this._calculateCenter(values.$element);
         if (to) {
             $to = get_jquery_element_from_selector(to);
         } else {
             $to = $(document.body);
         }
-
-        const calculateCenter = () => {
-            const toCenter = $to.offset();
-
-            if (to && to.indexOf('iframe') !== -1) {
-                const iFrameOffset = $('iframe').offset();
-                toCenter.left += iFrameOffset.left;
-                toCenter.top += iFrameOffset.top;
-            }
-            toCenter.left += $to.outerWidth() / 2;
-            toCenter.top += $to.outerHeight() / 2;
-            return toCenter;
-        };
 
         values.$element.trigger($.Event("mouseenter"));
         values.$element.trigger($.Event("mousedown", {which: 1, pageX: elementCenter.left, pageY: elementCenter.top}));
@@ -148,12 +146,33 @@ var RunningTourActionHelper = core.Class.extend({
             $to = get_jquery_element_from_selector(to);
         }
 
-        let toCenter = calculateCenter();
+        let toCenter = this._calculateCenter($to, to);
         values.$element.trigger($.Event("mousemove", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
         // Recalculate the center as the mousemove might have made the element bigger.
-        toCenter = calculateCenter();
+        toCenter = this._calculateCenter($to, to);
         values.$element.trigger($.Event("mouseup", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
-     },
+    },
+    _drag_move_and_drop: function (values, params) {
+        // Extract parameters from string: '[deltaX,deltaY]@from => actualTo'.
+        const parts = /^\[(.+),(.+)\]@(.+) => (.+)/.exec(params);            
+        const initialMoveOffset = [parseInt(parts[1]), parseInt(parts[2])];
+        const fromSelector = parts[3];
+        const toSelector = parts[4];
+        // Click on element.
+        values.$element.trigger($.Event("mouseenter"));
+        const elementCenter = this._calculateCenter(values.$element);
+        values.$element.trigger($.Event("mousedown", {which: 1, pageX: elementCenter.left, pageY: elementCenter.top}));
+        // Drag through "from".
+        const fromCenter = this._calculateCenter(get_jquery_element_from_selector(fromSelector), fromSelector);
+        values.$element.trigger($.Event("mousemove", {
+            which: 1,
+            pageX: fromCenter.left + initialMoveOffset[0],
+            pageY: fromCenter.top + initialMoveOffset[1],
+        }));
+        // Drop into "to".
+        const toCenter = this._calculateCenter(get_jquery_element_from_selector(toSelector), toSelector);
+        values.$element.trigger($.Event("mouseup", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
+    },
     _keydown: function (values, keyCodes) {
         while (keyCodes.length) {
             const eventOptions = {};

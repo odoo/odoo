@@ -197,6 +197,9 @@ class Menu(models.Model):
                 if page:
                     menu['page_id'] = page.id
                     menu['url'] = page.url
+                    if isinstance(menu.get('parent_id'), str):
+                        # Avoid failure if parent_id is sent as a string from a customization.
+                        menu['parent_id'] = int(menu['parent_id'])
                 elif menu_id.page_id:
                     try:
                         # a page shouldn't have the same url as a controller
