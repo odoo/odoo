@@ -120,16 +120,19 @@ class AccountAnalyticLine(models.Model):
 
         # Although this make a second loop on the vals, we need to wait the preprocess as it could change the company_id in the vals
         # TODO To be refactored in master
-        company_ids_in_vals = list({vals['company_id'] for vals in vals_list if vals.get('company_id', False)})
-        employees = self.env['hr.employee'].with_context(active_test=False).search([('user_id', 'in', user_ids), ('company_id', 'in', [self.env.company.id] + company_ids_in_vals)])
-        user_map = defaultdict(dict)
+        employees = self.env['hr.employee'].sudo().with_context(active_test=False).search([('user_id', 'in', user_ids)])
+        employee_for_user_company = defaultdict(dict)
         for employee in employees:
-            user_map[employee.company_id.id][employee.user_id.id] = employee.id
+            employee_for_user_company[employee.user_id.id][employee.company_id.id] = employee.id
 
         for vals in vals_list:
             # compute employee only for timesheet lines, makes no sense for other lines
             if not vals.get('employee_id') and vals.get('project_id'):
-                vals['employee_id'] = user_map[vals.get('company_id', self.env.company.id)].get(vals.get('user_id', default_user_id), False)
+                employee_for_company = employee_for_user_company.get(vals.get('user_id', default_user_id), False)
+                if not employee_for_company:
+                    continue
+                company_id = list(employee_for_company)[0] if len(employee_for_company) == 1 else vals.get('company_id', self.env.company.id)
+                vals['employee_id'] = employee_for_company.get(company_id, False)
 
         lines = super(AccountAnalyticLine, self).create(vals_list)
         for line, values in zip(lines, vals_list):
