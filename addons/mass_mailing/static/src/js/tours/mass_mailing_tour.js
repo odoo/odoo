@@ -28,7 +28,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
     }, {
         trigger: 'input[name="subject"]',
         content: Markup(_t('Pick the <b>email subject</b>.')),
-        position: 'right',
+        position: 'bottom',
         run: 'text ' + now.format("MMMM") + " Newsletter",
     }, {
         trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input[type="text"]',
