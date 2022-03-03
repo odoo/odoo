@@ -10,7 +10,7 @@ class SaleOrderLine(models.Model):
         "Margin", compute='_compute_margin',
         digits='Product Price', store=True, groups="base.group_user", precompute=True)
     margin_percent = fields.Float(
-        "Margin (%)", compute='_compute_margin', store=True, groups="base.group_user", precompute=True)
+        "Margin (%)", compute='_compute_margin', store=True, groups="base.group_user", precompute=True, group_operator="avg")
     purchase_price = fields.Float(
         string='Cost', compute="_compute_purchase_price",
         digits='Product Price', store=True, readonly=False, precompute=True,
