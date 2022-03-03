@@ -9,6 +9,11 @@ import {
     ConnectionLostError,
 } from "../core/network/rpc_service";
 import { ErrorDialog } from "../core/errors/error_dialogs";
+import { useService } from "@web/core/utils/hooks";
+
+const { useComponent } = owl;
+
+const wowlServicesSymbol = Symbol("wowlServices");
 
 export function makeLegacyRpcService(legacyEnv) {
     return {
@@ -136,6 +141,9 @@ export function makeLegacySessionService(legacyEnv, session) {
 }
 
 export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
+    // store wowl services on the legacy env (used by the 'useWowlService' hook)
+    legacyEnv[wowlServicesSymbol] = wowlEnv.services;
+
     // rpc
     legacyEnv.session.rpc = (...args) => {
         let rejection;
@@ -331,4 +339,18 @@ export function useLegacyRefs() {
     });
 
     return legacyRefs;
+}
+
+/**
+ * This hook allows legacy owl Components to use services coming from the wowl env.
+ * @param {string} serviceName
+ * @returns {any}
+ */
+export function useWowlService(serviceName) {
+    const component = useComponent();
+    const env = component.env;
+    component.env = { services: env[wowlServicesSymbol] };
+    const service = useService(serviceName);
+    component.env = env;
+    return service;
 }
