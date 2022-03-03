@@ -4,7 +4,7 @@
 <t t-name="web.SwitchCompanyMenu" owl="1">
     <Dropdown class="'o_switch_company_menu d-none d-md-block'" position="'bottom-end'">
         <t t-set-slot="toggler">
-            <i class="oi oi-large oi-connection--two-way d-lg-none"/>
+            <i class="fa fa-building d-lg-none"/>
             <span class="oe_topbar_name d-none d-lg-block" t-esc="currentCompany.name"/>
         </t>
         <t t-foreach="Object.values(companyService.availableCompanies).sort((c1, c2) => c1.sequence - c2.sequence)" t-as="company" t-key="company.id">

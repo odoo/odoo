@@ -14,7 +14,7 @@ var _lt = core._lt;
 var KanbanView = BasicView.extend({
     accesskey: "k",
     display_name: _lt("Kanban"),
-    icon: 'oi-align--vertical-top',
+    icon: 'oi oi-view-kanban',
     mobile_friendly: true,
     config: _.extend({}, BasicView.prototype.config, {
         Model: KanbanModel,

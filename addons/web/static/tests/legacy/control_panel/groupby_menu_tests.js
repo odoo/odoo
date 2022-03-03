@@ -108,7 +108,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
             await cpHelpers.toggleMenuItem(controlPanel, 0);
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ['Groupby Foo']);
             assert.containsOnce(controlPanel.el.querySelector('.o_searchview .o_searchview_facet'),
-                'span.oi.oi-layers.o_searchview_facet_label');
+                'span.oi.oi-group.o_searchview_facet_label');
             assert.ok(cpHelpers.isItemSelected(controlPanel, 0));
 
             await cpHelpers.toggleMenuItem(controlPanel, 0);
