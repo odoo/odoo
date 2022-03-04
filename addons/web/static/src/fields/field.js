@@ -28,7 +28,7 @@ export class Field extends Component {
             o_required_modifier: this.props.record.isRequired(this.props.name),
             o_field_invalid: this.props.record.isInvalid(this.props.name),
             o_field_empty:
-                this.props.record.resId && Field.isEmpty(this.props.record, this.props.name),
+                !this.props.record.isVirtual && Field.isEmpty(this.props.record, this.props.name),
             [`o_field_${this.type}`]: true,
             [this.props.class]: !!this.props.class,
         };

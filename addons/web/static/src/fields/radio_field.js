@@ -66,14 +66,14 @@ RadioField.nextId = 0;
 
 registry.category("fields").add("radio", RadioField);
 
-export async function preloadRadio(orm, datapoint, fieldName) {
-    const field = datapoint.fields[fieldName];
+export async function preloadRadio(orm, record, fieldName) {
+    const field = record.fields[fieldName];
     if (field.type !== "many2one") {
         return null;
     }
 
-    const context = datapoint.evalContext;
-    const domain = datapoint.getFieldDomain(fieldName).toList(context);
+    const context = record.evalContext;
+    const domain = record.getFieldDomain(fieldName).toList(context);
     const records = await orm.searchRead(field.relation, domain, ["id"]);
     return await orm.call(field.relation, "name_get", [records.map((record) => record.id)]);
 }

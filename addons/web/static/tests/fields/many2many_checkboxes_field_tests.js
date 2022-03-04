@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { click, getFixture, triggerEvent } from "../helpers/utils";
-import { makeView, setupViewRegistries } from "../views/helpers";
+import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
 let target;
@@ -38,17 +38,15 @@ QUnit.module("Fields", (hooks) => {
                 },
             },
         };
-
         setupViewRegistries();
     });
 
     QUnit.module("Many2ManyCheckBoxesField");
 
     QUnit.test("Many2ManyCheckBoxesField", async function (assert) {
-        assert.expect(10);
-
         serverData.models.partner.records[0].timmy = [12];
-        const form = await makeView({
+        const commands = [[[6, false, [12, 14]]], [[6, false, [14]]]];
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -60,64 +58,48 @@ QUnit.module("Fields", (hooks) => {
                     </group>
                 </form>
             `,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.step("write");
+                    assert.deepEqual(args.args[1].timmy, commands.shift());
+                }
+            },
         });
 
-        assert.containsN(
-            target,
-            "div.o_field_widget div.custom-checkbox",
-            2,
-            "should have fetched and displayed the 2 values of the many2many"
-        );
+        assert.containsN(target, "div.o_field_widget div.custom-checkbox", 2);
 
         let checkboxes = target.querySelectorAll("div.o_field_widget div.custom-checkbox input");
-        assert.ok(checkboxes[0].checked, "first checkbox should be checked");
-        assert.notOk(checkboxes[1].checked, "second checkbox should not be checked");
+        assert.ok(checkboxes[0].checked);
+        assert.notOk(checkboxes[1].checked);
 
-        assert.containsN(
-            target,
-            "div.o_field_widget div.custom-checkbox input:disabled",
-            2,
-            "the checkboxes should not be disabled"
-        );
+        assert.containsN(target, "div.o_field_widget div.custom-checkbox input:disabled", 2);
 
         await click(target, ".o_form_button_edit");
 
-        assert.containsNone(
-            target,
-            "div.o_field_widget div.custom-checkbox input:disabled",
-            "the checkboxes should not be disabled"
-        );
+        assert.containsNone(target, "div.o_field_widget div.custom-checkbox input:disabled");
 
         // add a m2m value by clicking on input
         checkboxes = target.querySelectorAll("div.o_field_widget div.custom-checkbox input");
         await click(checkboxes[1]);
         await click(target, ".o_form_button_save");
-        assert.deepEqual(
-            serverData.models.partner.records[0].timmy,
-            [12, 14],
-            "should have added the second element to the many2many"
-        );
-        assert.containsN(form, "input:checked", 2, "both checkboxes should be checked");
+        assert.containsN(target, "input:checked", 2);
 
         // remove a m2m value by clinking on label
         await click(target, ".o_form_button_edit");
         await click(target.querySelector("div.o_field_widget div.custom-checkbox > label"));
         await click(target, ".o_form_button_save");
-        assert.deepEqual(
-            serverData.models.partner.records[0].timmy,
-            [14],
-            "should have removed the first element to the many2many"
-        );
         checkboxes = target.querySelectorAll("div.o_field_widget div.custom-checkbox input");
-        assert.notOk(checkboxes[0].checked, "first checkbox should be checked");
-        assert.ok(checkboxes[1].checked, "second checkbox should not be checked");
+        assert.notOk(checkboxes[0].checked);
+        assert.ok(checkboxes[1].checked);
+
+        assert.verifySteps(["write", "write"]);
     });
 
     QUnit.test("Many2ManyCheckBoxesField (readonly)", async function (assert) {
         assert.expect(7);
 
         serverData.models.partner.records[0].timmy = [12];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -216,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,

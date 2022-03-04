@@ -69,14 +69,14 @@ SelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false
 
 registry.category("fields").add("selection", SelectionField);
 
-export function preloadSelection(orm, datapoint, fieldName) {
-    const field = datapoint.fields[fieldName];
+export function preloadSelection(orm, record, fieldName) {
+    const field = record.fields[fieldName];
     if (field.type !== "many2one") {
         return Promise.resolve();
     }
 
-    const context = datapoint.evalContext;
-    const domain = datapoint.getFieldDomain(fieldName).toList(context);
+    const context = record.evalContext;
+    const domain = record.getFieldDomain(fieldName).toList(context);
 
     return orm.call(field.relation, "name_search", ["", domain]);
 }

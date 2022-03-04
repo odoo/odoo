@@ -317,13 +317,12 @@ export class Record extends DataPoint {
             this.resId = state.resId;
         }
         if (!this.resId) {
-            this.resId = false;
-            this.virtualId = `virtual_${this.model.nextVirtualId++}`;
+            this.resId = this.model.nextVirtualId--;
         }
         this.resIds =
             (params.resIds ? toRaw(params.resIds) : null) || // FIXME WOWL reactivity
             state.resIds ||
-            (this.resId ? [this.resId] : []);
+            (this.isVirtual ? [] : [this.resId]);
 
         this.onChanges = params.onChanges || (() => {});
 
@@ -338,7 +337,7 @@ export class Record extends DataPoint {
         this._onChangePromise = Promise.resolve({});
         this._domains = {};
 
-        this.mode = params.mode || (this.resId ? state.mode || "readonly" : "edit");
+        this.mode = params.mode || (this.isVirtual ? "edit" : state.mode || "readonly");
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
     }
 
@@ -384,8 +383,8 @@ export class Record extends DataPoint {
         return true;
     }
 
-    get isNew() {
-        return !this.resId;
+    get isVirtual() {
+        return isVirtual(this.resId);
     }
 
     get isInEdition() {
@@ -427,6 +426,9 @@ export class Record extends DataPoint {
      * @returns {boolean}
      */
     isRequired(fieldName) {
+        if (this.fields[fieldName].required) {
+            return true;
+        }
         const { required } = this.activeFields[fieldName].modifiers;
         return evalDomain(required, this.evalContext);
     }
@@ -448,15 +450,15 @@ export class Record extends DataPoint {
             return;
         }
         let data;
-        if (this.resId) {
-            data = await this._read();
-            this._changes = {};
-        } else {
+        if (isVirtual(this.resId)) {
             const onchangeValues = await this._performOnchange();
             data = {
                 ...this._generateDefaultValues(),
                 ...onchangeValues,
             };
+        } else {
+            data = await this._read();
+            this._changes = {};
         }
         this._values = data; // FIXME: don't update internal state directly
         this.data = { ...data };
@@ -489,8 +491,8 @@ export class Record extends DataPoint {
     loadPreloadedData() {
         const fetchPreloadedData = async (fetchFn, fieldName) => {
             const domain = this.getFieldDomain(fieldName).toList(this.evalContext).toString();
-            if (domain.toString() !== this.preloadedDataCaches[fieldName]) {
-                this.preloadedDataCaches[fieldName] = domain.toString();
+            if (this.preloadedDataCaches[fieldName] !== domain) {
+                this.preloadedDataCaches[fieldName] = domain;
                 this.preloadedData[fieldName] = await fetchFn(this.model.orm, this, fieldName);
             }
         };
@@ -546,7 +548,7 @@ export class Record extends DataPoint {
                 views,
                 viewMode,
                 onChanges: () => {
-                    // this.onChanges(); wait
+                    this.onChanges();
                     this._changes[fieldName] = list;
                 },
                 onRecordWillSwitchMode: (record, mode) => {
@@ -559,6 +561,7 @@ export class Record extends DataPoint {
             this.data[fieldName] = list;
             if (!invisible) {
                 list.applyCommands(this._changes[fieldName]);
+                this._changes[fieldName] = list;
                 proms.push(list.load());
             }
         }
@@ -566,6 +569,7 @@ export class Record extends DataPoint {
     }
 
     async update(fieldName, value) {
+        this.onChanges();
         await this._applyChange(fieldName, value);
         const activeField = this.activeFields[fieldName];
         if (activeField && activeField.onChange) {
@@ -605,11 +609,9 @@ export class Record extends DataPoint {
             }
             const changes = this.getChanges();
             const keys = Object.keys(changes);
-            const hasChanges = !this.resId || keys.length;
+            const hasChanges = this.isVirtual || keys.length;
             const shouldReload = hasChanges ? !options.noReload : false;
-            if (this.resId && keys.length) {
-                await this.model.orm.write(this.resModel, [this.resId], changes);
-            } else if (!this.resId) {
+            if (this.isVirtual) {
                 if (keys.length === 1 && keys[0] === "display_name") {
                     const [resId] = await this.model.orm.call(
                         this.resModel,
@@ -622,6 +624,8 @@ export class Record extends DataPoint {
                     this.resId = await this.model.orm.create(this.resModel, changes, this.context);
                 }
                 this.resIds.push(this.resId);
+            } else if (keys.length > 0) {
+                await this.model.orm.write(this.resModel, [this.resId], changes);
             }
             if (shouldReload) {
                 this.model.trigger("record-updated", { record: this });
@@ -699,7 +703,7 @@ export class Record extends DataPoint {
         this.data = { ...this._values };
         this._changes = {};
         this._domains = {};
-        if (this.resId) {
+        if (!this.isVirtual) {
             this.switchMode("readonly");
         }
         this.model.notify();
@@ -795,6 +799,9 @@ export class Record extends DataPoint {
             const fieldType = this.fields[fieldName].type;
             if (["one2many", "many2many"].includes(fieldType)) {
                 changes[fieldName] = changes[fieldName].getCommands();
+                if (!changes[fieldName]) {
+                    delete changes[fieldName];
+                }
             } else if (fieldType === "many2one") {
                 changes[fieldName] = changes[fieldName] ? changes[fieldName][0] : false;
             } else if (fieldType === "date") {
@@ -1616,28 +1623,38 @@ export class Group extends DataPoint {
     }
 }
 
+const isVirtual = (resId) => resId < 0;
+const removeId = (ids, id) => {
+    const index = ids.indexOf(id);
+    if (index > -1) {
+        ids.splice(index, 1);
+    }
+};
+
 export class StaticList extends DataPoint {
     setup(params, state) {
-        this.isOne2Many = params.field.type === "one2many"; // bof
+        this.resIds = params.resIds || [];
+        this.orderBy = params.orderBy || [];
+        this.offset = params.offset || 0;
+        this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
 
-        this.resIds = [...params.resIds] || [];
-        /** @type {Record[]} */
-        this.records = [];
+        this.deletedIds = new Set([]);
+        this.addedIds = new Set([]);
+        this.virtualIds = [];
 
+        // async computation that depends on previous params
+        // to be initialized
+        this._ids = null;
+        this.displayedIds = [];
         this._cache = {};
+
+        this.isOne2Many = params.field.type === "one2many"; // bof
         this.views = params.views || {};
         this.viewMode = params.viewMode;
-        this.orderBy = params.orderBy || []; // rename orderBy + get back from state
-        // to fix! use all objects?!
 
-        this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
-        this.offset = 0;
-
+        this.notYetValidated = null;
         this.onChanges = params.onChanges || (() => {});
 
-        this._commands = [];
-
-        this.validated = {};
         this.rawContext = params.rawContext;
         this.getEvalContext = params.getEvalContext;
 
@@ -1654,65 +1671,116 @@ export class StaticList extends DataPoint {
             if (mode === "edit") {
                 this.editedRecord = record;
             }
+            if (this.notYetValidated) {
+                const resId = this.notYetValidated;
+                this.notYetValidated = null;
+                removeId(this.virtualIds, resId);
+                removeId(this.displayedIds, resId);
+                delete this._cache[resId]; // won't be used anymore (we know that record is virtual)
+            }
         };
     }
 
-    delete(record) {
-        this.onChanges();
-        const { resId } = record;
-        // Where do we need to manage resId=false?
-        this._commands.push(Commands.delete(record.resId));
-        const i = this.resIds.findIndex((id) => id === resId);
-        this.resIds.splice(i, 1);
-        const j = this.records.findIndex((r) => r.resId === resId);
-        this.records.splice(j, 1);
-        if (this.editedRecord === record) {
-            this.editedRecord = null;
+    /**
+     * @returns {Record[]}
+     */
+    get records() {
+        const records = [];
+        for (const resId of this.displayedIds) {
+            const record = this._cache[resId];
+            if (!record) {
+                records.push({ resId }); // fix problem with evalContext --> system is wrong
+                // throw new Error("record should have been in cache");
+                continue;
+            }
+            records.push(record);
         }
+        return records;
     }
 
-    async add(context) {
-        this.onChanges();
+    async createRecord({ context, mode, resId }) {
         const record = this.model.createDataPoint("record", {
             context: makeContext([this.context, this.rawContext, context], this.getEvalContext()),
             resModel: this.resModel,
+            resId,
             fields: this.fields,
+            mode,
             activeFields: this.activeFields,
             viewMode: this.viewMode,
             views: this.views,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
+            onChanges: () => {
+                this.onChanges();
+                if (record.resId === this.notYetValidated) {
+                    this.notYetValidated = null;
+                }
+            },
         });
-        record._onWillSwitchMode(record, "edit"); // bof
+        this._cache[record.resId] = record;
         await record.load();
-        this._cache[record.virtualId] = record;
-        this.records.push(record);
-        this.resIds.push(record.virtualId);
-        this.limit = this.limit + 1; // might be not good
-        this.validated[record.virtualId] = false;
+        return record;
+    }
+
+    delete(resId) {
+        if (isVirtual(resId)) {
+            removeId(this.virtualIds, resId);
+            delete this._cache[resId];
+        } else {
+            this.deletedIds.add(resId);
+        }
+        removeId(this.displayedIds, resId);
+        this._ids = null;
+        this.onChanges();
         this.model.notify();
     }
 
-    addRecord(record) {
-        this.onChanges();
-        this._cache[record.virtualId] = record;
-        this._cache[record.virtualId] = record;
-        this.records.push(record);
-        this.resIds.push(record.virtualId);
+    async add(resId) {
+        if (this.deletedIds.has(resId)) {
+            this.deletedIds.delete(resId);
+        } else {
+            if (!this._cache[resId]) {
+                await this.createRecord({ resId });
+            }
+            this.addedIds.add(resId);
+        }
+
+        this.displayedIds.push(resId);
         this.limit = this.limit + 1; // might be not good
-        this.validated[record.virtualId] = false;
+        this._ids = null;
+        this.onChanges();
+        this.model.notify();
+    }
+
+    async addNew(context) {
+        const record = await this.createRecord({ context, mode: "edit" });
+        record._onWillSwitchMode(record, "edit"); // bof
+        const { resId } = record;
+        this.virtualIds.push(resId);
+        for (const fieldName in this.activeFields) {
+            if (this.fields[fieldName].type === "boolean") {
+                continue;
+            }
+            if (record.isRequired(fieldName) && !record.data[fieldName]) {
+                this.notYetValidated = resId;
+                break;
+            }
+        }
+
+        this.displayedIds.push(resId);
+        this.limit = this.limit + 1; // might be not good
+        this._ids = null;
+        this.onChanges();
         this.model.notify();
     }
 
     applyCommands(commands) {
-        if (!(commands && commands.length)) {
-            return;
-        }
-        this.onChanges();
-        for (const command of commands) {
+        for (const command of commands || []) {
             if (command[0] === 6) {
-                this.resIds = command[2];
+                this.resIds = [];
+                for (const resId of command[2]) {
+                    this.addedIds.add(resId);
+                }
             }
-            this._commands.push(command);
         }
     }
 
@@ -1723,22 +1791,35 @@ export class StaticList extends DataPoint {
     }
 
     get count() {
-        return this.resIds.length;
+        return this.ids.length;
+    }
+
+    get ids() {
+        if (!this._ids) {
+            this._ids = [
+                ...this.resIds.filter((resId) => !this.deletedIds.has(resId)),
+                ...this.addedIds,
+                ...this.virtualIds,
+            ];
+        }
+        return this._ids;
     }
 
     async load() {
-        if (!this.resIds.length) {
-            return [];
+        this._ids = null;
+        if (!this.count) {
+            return;
         }
+
         const orderFieldNames = this.orderBy.map((o) => o.name);
         const isAscByFieldName = {};
         for (const o of this.orderBy) {
             isAscByFieldName[o.name] = o.asc;
         }
-        const compareRecords = (r1, r2) => {
+        const compareRecords = (d1, d2) => {
             for (const fieldName of orderFieldNames) {
-                let v1 = r1[fieldName];
-                let v2 = r2[fieldName];
+                let v1 = d1[fieldName];
+                let v2 = d2[fieldName];
                 if (this.fields[fieldName].type === "many2one") {
                     v1 = v1[1];
                     v2 = v2[1];
@@ -1754,61 +1835,55 @@ export class StaticList extends DataPoint {
             return 0;
         };
 
-        const hasSeveralPages = this.limit < this.resIds.length;
+        const hasSeveralPages = this.limit < this.count;
         if (hasSeveralPages && orderFieldNames.length) {
             // there several pages in the x2many and it is ordered, so we must know the value
             // for the sorted field for all records and sort the resIds w.r.t. to those values
             // before fetching the activeFields for the resIds of the current page.
             // 1) populate values for already fetched records
             let recordValues = {};
-            for (const resId of this.resIds) {
-                if (this._cache[resId]) {
+            let resIds = [];
+            for (const resId of this.ids) {
+                const record = this._cache[resId];
+                if (record) {
                     recordValues[resId] = {};
                     for (const fieldName of orderFieldNames) {
-                        recordValues[resId][fieldName] = this._cache[resId].data[fieldName];
+                        recordValues[resId][fieldName] = record.data[fieldName];
                     }
+                } else {
+                    resIds.push(resId);
                 }
             }
             // 2) fetch values for non loaded records
-            const resIds = this.resIds.filter((resId) => !(resId in this._cache));
             if (resIds.length) {
-                const records = await this.model.orm.read(this.resModel, resIds, orderFieldNames);
-                for (const record of records) {
-                    recordValues[record.id] = {};
+                const result = await this.model.orm.read(this.resModel, resIds, orderFieldNames);
+                for (const values of result) {
+                    const resId = values.id;
+                    recordValues[resId] = {};
                     for (const fieldName of orderFieldNames) {
-                        recordValues[record.id][fieldName] = record[fieldName];
+                        recordValues[resId][fieldName] = values[fieldName];
                     }
                 }
             }
             // 3) sort resIds
-            this.resIds.sort((id1, id2) => {
+            this.ids.sort((id1, id2) => {
                 return compareRecords(recordValues[id1], recordValues[id2]);
             });
         }
-        const resIdsInCurrentPage = this.resIds.slice(this.offset, this.offset + this.limit);
-        this.records = await Promise.all(
-            resIdsInCurrentPage.map(async (resId) => {
-                let record = this._cache[resId];
-                if (!record) {
-                    record = this.model.createDataPoint("record", {
-                        resModel: this.resModel,
-                        resId,
-                        fields: this.fields,
-                        activeFields: this.activeFields,
-                        viewMode: this.viewMode,
-                        views: this.views,
-                        onRecordWillSwitchMode: this.onRecordWillSwitchMode,
-                        onChanges: this.onChanges,
-                    });
-                    this._cache[resId] = record;
-                    await record.load();
-                }
-                return record;
-            })
-        );
+        this.displayedIds = this.ids.slice(this.offset, this.offset + this.limit);
+        const proms = [];
+        for (const resId of this.displayedIds) {
+            let record = this._cache[resId];
+            if (!record) {
+                proms.push(this.createRecord({ resId }));
+            }
+        }
+
+        await Promise.all(proms);
+
         if (!hasSeveralPages && orderFieldNames.length) {
-            this.records.sort((r1, r2) => {
-                return compareRecords(r1.data, r2.data);
+            this.displayedIds.sort((resId1, resId2) => {
+                return compareRecords(this._cache[resId1].data, this._cache[resId2].data);
             });
         }
     }
@@ -1825,61 +1900,64 @@ export class StaticList extends DataPoint {
     }
 
     /**
-     * @returns {Array[]}
+     * @returns {Array[] | null}
      */
     getCommands() {
         const commands = [];
+        let hasChanged = false;
         if (this.isOne2Many) {
             for (const resId of this.resIds) {
-                let record = this._cache[resId];
-                let command;
-                if (record) {
-                    const changes = record.getChanges();
-                    if (resId !== record.virtualId) {
+                const record = this._cache[resId];
+                if (this.deletedIds.has(resId)) {
+                    hasChanged = true;
+                    commands.push(Commands.delete(resId));
+                } else {
+                    // we should now what are the changed records
+                    if (record) {
+                        const changes = record.getChanges();
                         if (Object.keys(changes).length) {
-                            command = Commands.update(resId, changes);
+                            hasChanged = true;
+                            commands.push(Commands.update(resId, changes));
+                        } else {
+                            commands.push(Commands.linkTo(resId));
                         }
-                    } else {
-                        command = Commands.create(record.virtualId, changes);
                     }
                 }
-                if (command) {
-                    commands.push(command);
-                } else {
-                    commands.push(Commands.linkTo(resId));
-                }
             }
+            for (const resId of this.virtualIds) {
+                const record = this._cache[resId];
+                const changes = record.getChanges();
+                hasChanged = true;
+                commands.push(Commands.create(resId, changes));
+            }
+            if (this.addedIds.size) {
+                hasChanged = true;
+                commands.push(Commands.replaceWith([...this.addedIds]));
+            }
+        } else {
+            hasChanged = true;
+            commands.push(Commands.replaceWith(this.ids));
         }
-        commands.push(...this._commands);
-        return commands;
+        if (hasChanged) {
+            return commands;
+        }
+        return false;
     }
 
-    async update(command) {
-        await this._applyChange(command);
-    }
+    async update() {}
+
     discard() {
-        for (const record of this.records) {
-            record.discard();
-        }
-        this._commands = [];
-        this.resIds = this.resIds.filter((id) => typeof id === "number");
-        this.records = this.records.filter((r) => r.resId);
-    }
-
-    // -------------------------------------------------------------------------
-    // Protected
-    // -------------------------------------------------------------------------
-
-    async _applyChange(command) {
-        switch (command.operation) {
-            case "REPLACE_WITH": {
-                this.onChanges();
-                this.resIds = command.resIds;
-                this._commands = [[6, false, command.resIds]];
-                await this.load();
-                break;
+        for (const record of Object.values(this._cache)) {
+            if (isVirtual(record.resId)) {
+                delete this._cache[record.resId];
+            } else {
+                record.discard();
             }
         }
+        this.deletedIds.clear();
+        this.addedIds.clear();
+        this.virtualIds = [];
+        this.load();
     }
 }
 
@@ -1896,7 +1974,7 @@ export class RelationalModel extends Model {
         this.keepLast = new KeepLast();
         this.mutex = new Mutex();
 
-        this.nextVirtualId = 1;
+        this.nextVirtualId = -1;
 
         this.onCreate = params.onCreate;
         this.quickCreateView = params.quickCreateView;
@@ -1996,29 +2074,6 @@ export class RelationalModel extends Model {
     getGroups() {
         return this.root.groups && this.root.groups.length ? this.root.groups : null;
     }
-
-    // /**
-    //  * @param  {...any} args
-    //  * @returns {DataPoint | null}
-    //  */
-    // get(...args) {
-    //     return this.getAll(...args)[0] || null;
-    // }
-
-    // /**
-    //  * @param  {any} properties
-    //  * @returns {DataPoint[]}
-    //  */
-    // getAll(properties) {
-    //     return Object.values(this.db).filter((record) => {
-    //         for (const prop in properties) {
-    //             if (record[prop] !== properties[prop]) {
-    //                 return false;
-    //             }
-    //         }
-    //         return true;
-    //     });
-    // }
 }
 
 RelationalModel.services = ["action", "dialog", "notification", "rpc", "user", "view"];

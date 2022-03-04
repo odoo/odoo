@@ -8,7 +8,7 @@
                     <!-- <t t-slot="buttons"/> -->
                 </div>
                 <div class="o_cp_pager" role="search">
-                    <Pager t-if="props.value.resIds.length > props.value.limit" t-props="pagerProps"/>
+                    <Pager t-if="props.value.count > props.value.limit" t-props="pagerProps"/>
                 </div>
             </div>
             <t t-if="Renderer" t-component="Renderer" t-props="rendererProps"/>
