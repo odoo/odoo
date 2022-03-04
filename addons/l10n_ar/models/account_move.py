@@ -132,6 +132,12 @@ class AccountMove(models.Model):
             if not rec.l10n_ar_afip_service_end:
                 rec.l10n_ar_afip_service_end = rec.invoice_date + relativedelta(day=1, days=-1, months=+1)
 
+    def _set_afip_responsibility(self):
+        """ We save the information about the receptor responsability at the time we validate the invoice, this is
+        necessary because the user can change the responsability after that any time """
+        for rec in self:
+            rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
+
     def _set_afip_rate(self):
         """ We set the l10n_ar_currency_rate value with the accounting date. This should be done
         after invoice has been posted in order to have the proper accounting date"""
@@ -184,9 +190,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft=soft)
 
         posted_ar_invoices = posted & ar_invoices
-        for rec in posted_ar_invoices:
-            rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
-
+        posted_ar_invoices._set_afip_responsibility()
         posted_ar_invoices._set_afip_rate()
         posted_ar_invoices._set_afip_service_dates()
         return posted
