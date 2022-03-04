@@ -414,7 +414,11 @@ class AccountEdiFormat(models.Model):
                 except RedirectWarning as rw:
                     raise rw
                 except Exception as e:
-                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
+                    _logger.exception(
+                        "Error importing attachment \"%s\" as invoice with format \"%s\": %s",
+                        file_data['filename'],
+                        edi_format.name,
+                        str(e))
                 if res:
                     return res
         return self.env['account.move']
@@ -437,7 +441,11 @@ class AccountEdiFormat(models.Model):
                     else:  # file_data['type'] == 'binary'
                         res = edi_format._update_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'], invoice)
                 except Exception as e:
-                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
+                    _logger.exception(
+                        "Error importing attachment \"%s\" as invoice with format \"%s\": %s",
+                        file_data['filename'],
+                        edi_format.name,
+                        str(e))
                 if res:
                     return res
         return self.env['account.move']
