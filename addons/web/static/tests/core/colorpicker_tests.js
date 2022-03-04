@@ -39,11 +39,11 @@ QUnit.module("Components", () => {
     QUnit.test("basic rendering", async function (assert) {
         assert.expect(4);
 
-        const picker = await mountPicker(ColorPicker, {});
+        await mountPicker(ColorPicker, {});
 
         assert.containsOnce(target, ".o_colorpicker_widget");
-        assert.containsOnce(picker, ".o_color_slider");
-        assert.containsOnce(picker, ".o_color_pick_area");
+        assert.containsOnce(target, ".o_color_slider");
+        assert.containsOnce(target, ".o_color_pick_area");
 
         const input = target.querySelector(".o_hex_div input");
         assert.strictEqual(input.value, "#000000", "Default value should be #000000");
@@ -52,15 +52,15 @@ QUnit.module("Components", () => {
     QUnit.test("change color value using the pick area", async function (assert) {
         assert.expect(7);
 
-        const picker = await mountPicker(ColorPicker, {
+        await mountPicker(ColorPicker, {
             onColorSelected: () => {
                 assert.step("color selected");
             },
         });
 
         assert.containsOnce(target, ".o_colorpicker_widget");
-        assert.containsOnce(picker, ".o_color_slider");
-        assert.containsOnce(picker, ".o_color_pick_area");
+        assert.containsOnce(target, ".o_color_slider");
+        assert.containsOnce(target, ".o_color_pick_area");
 
         const input = target.querySelector(".o_hex_div input");
         assert.strictEqual(input.value, "#000000", "default value should be #000000");
@@ -80,15 +80,15 @@ QUnit.module("Components", () => {
     QUnit.test("change color value using the text input", async function (assert) {
         assert.expect(7);
 
-        const picker = await mountPicker(ColorPicker, {
+        await mountPicker(ColorPicker, {
             onColorSelected: () => {
                 assert.step("color selected");
             },
         });
 
         assert.containsOnce(target, ".o_colorpicker_widget");
-        assert.containsOnce(picker, ".o_color_slider");
-        assert.containsOnce(picker, ".o_color_pick_area");
+        assert.containsOnce(target, ".o_color_slider");
+        assert.containsOnce(target, ".o_color_pick_area");
 
         const input = target.querySelector(".o_hex_div input");
         assert.strictEqual(input.value, "#000000", "Default value should be #000000");
@@ -102,7 +102,7 @@ QUnit.module("Components", () => {
     QUnit.test("picker outputs all values", async function (assert) {
         assert.expect(14);
 
-        const picker = await mountPicker(ColorPicker, {
+        await mountPicker(ColorPicker, {
             onColorSelected: (colorData) => {
                 Object.keys(colorData)
                     .sort()
@@ -111,8 +111,8 @@ QUnit.module("Components", () => {
         });
 
         assert.containsOnce(target, ".o_colorpicker_widget");
-        assert.containsOnce(picker, ".o_color_slider");
-        assert.containsOnce(picker, ".o_color_pick_area");
+        assert.containsOnce(target, ".o_color_slider");
+        assert.containsOnce(target, ".o_color_pick_area");
 
         const input = target.querySelector(".o_hex_div input");
         assert.strictEqual(input.value, "#000000", "Default value should be #000000");

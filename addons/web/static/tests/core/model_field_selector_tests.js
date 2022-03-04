@@ -96,7 +96,7 @@ QUnit.module("Components", (hooks) => {
         fieldSelector = await mount(Parent, target, { env, props: {} });
 
         // Focusing the field selector input should open a field selector popover
-        await click(fieldSelector.el);
+        await click(target, ".o_field_selector");
         assert.containsOnce(
             target,
             ".o_field_selector_popover",
@@ -131,7 +131,7 @@ QUnit.module("Components", (hooks) => {
         );
 
         // Focusing the input again should open the same popover
-        await click(fieldSelector.el);
+        await click(target, ".o_field_selector");
         assert.containsOnce(
             target,
             ".o_field_selector_popover",
@@ -177,11 +177,11 @@ QUnit.module("Components", (hooks) => {
         );
 
         // Remove the current selection and recreate it again
-        await click(fieldSelector.el);
+        await click(target, ".o_field_selector");
         await click(target, ".o_field_selector_prev_page");
         await click(target, ".o_field_selector_close");
 
-        await click(fieldSelector.el);
+        await click(target, ".o_field_selector");
         assert.containsOnce(
             target,
             ".o_field_selector_popover .o_field_selector_relation_icon",
@@ -209,7 +209,7 @@ QUnit.module("Components", (hooks) => {
 
         // Create the field selector and its mock environment
         // passing 'product_id' as a prefilled field-chain
-        fieldSelector = await mount(ModelFieldSelector, target, {
+        await mount(ModelFieldSelector, target, {
             env,
             props: {
                 readonly: false,
@@ -220,7 +220,7 @@ QUnit.module("Components", (hooks) => {
         });
 
         // Focusing the field selector input should open a field selector popover
-        await click(fieldSelector.el);
+        await click(target, ".o_field_selector");
         assert.containsOnce(
             target,
             ".o_field_selector_popover",
@@ -245,7 +245,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(2);
 
         // Create the field selector and its mock environment
-        fieldSelector = await mount(ModelFieldSelector, target, {
+        await mount(ModelFieldSelector, target, {
             env,
             props: {
                 readonly: false,
@@ -255,7 +255,7 @@ QUnit.module("Components", (hooks) => {
             },
         });
 
-        await click(fieldSelector.el);
+        await click(target, ".o_field_selector");
         assert.containsOnce(
             target,
             ".o_field_selector_popover .o_field_selector_item",
@@ -272,7 +272,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(6);
 
         // Create the field selector and its mock environment
-        fieldSelector = await mount(ModelFieldSelector, target, {
+        await mount(ModelFieldSelector, target, {
             env,
             props: {
                 readonly: false,
@@ -281,7 +281,7 @@ QUnit.module("Components", (hooks) => {
             },
         });
 
-        await click(fieldSelector.el);
+        await click(target, ".o_field_selector");
         assert.containsOnce(
             target,
             ".o_field_selector_popover .o_field_selector_search",
@@ -330,7 +330,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         // Create the field selector and its mock environment
-        fieldSelector = await mount(ModelFieldSelector, target, {
+        await mount(ModelFieldSelector, target, {
             env,
             props: {
                 readonly: false,
@@ -340,7 +340,7 @@ QUnit.module("Components", (hooks) => {
             },
         });
 
-        await click(fieldSelector.el);
+        await click(target, ".o_field_selector");
         assert.containsNone(
             target,
             ".o_field_selector_popover .o_field_selector_search",
@@ -352,7 +352,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         //create the field selector with domain value ["1"]
-        fieldSelector = await mount(ModelFieldSelector, target, {
+        await mount(ModelFieldSelector, target, {
             env,
             props: {
                 readonly: false,
@@ -363,7 +363,7 @@ QUnit.module("Components", (hooks) => {
         });
 
         assert.strictEqual(
-            fieldSelector.el.querySelector(".o_field_selector_chain_part").textContent.trim(),
+            target.querySelector(".o_field_selector_chain_part").textContent.trim(),
             "1",
             "field name value should be 1."
         );
@@ -373,7 +373,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         //create the field selector with domain value ["0"]
-        fieldSelector = await mount(ModelFieldSelector, target, {
+        await mount(ModelFieldSelector, target, {
             env,
             props: {
                 readonly: false,
@@ -384,7 +384,7 @@ QUnit.module("Components", (hooks) => {
         });
 
         assert.strictEqual(
-            fieldSelector.el.querySelector(".o_field_selector_chain_part").textContent.trim(),
+            target.querySelector(".o_field_selector_chain_part").textContent.trim(),
             "0",
             "field name value should be 0."
         );

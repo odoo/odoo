@@ -3,7 +3,7 @@
 
     <t t-name="web.ListView" owl="1">
 
-        <Layout viewType="'list'" useSampleModel="model.useSampleModel" className="props.className">
+        <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
             <t t-set-slot="control-panel-bottom-left">
                 <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                     <t t-call="{{ constructor.buttonTemplate }}"/>

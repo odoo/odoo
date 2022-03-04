@@ -19,6 +19,7 @@ export class AutoComplete extends Component {
         });
 
         this.inputRef = useRef("input");
+        this.root = useRef("root");
 
         this.debouncedOnInput = debounce(this.onInput.bind(this), 250);
         useExternalListener(window, "scroll", this.onWindowScroll, true);
@@ -231,10 +232,8 @@ export class AutoComplete extends Component {
     }
 
     onWindowScroll(ev) {
-        if (this.isOpened) {
-            if (!this.el.contains(ev.target)) {
-                this.close();
-            }
+        if (this.isOpened && !this.root.el.contains(ev.target)) {
+            this.close();
         }
     }
 }

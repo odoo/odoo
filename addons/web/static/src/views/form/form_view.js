@@ -12,7 +12,7 @@ import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { getActiveActions, isX2Many } from "@web/views/helpers/view_utils";
-import { Layout } from "@web/views/layout";
+import { Layout } from "@web/search/layout";
 import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";

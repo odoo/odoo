@@ -11,7 +11,7 @@ import { useSetupView } from "@web/views/helpers/view_hook";
 import { getActiveActions } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { Layout } from "@web/views/layout";
+import { Layout } from "@web/search/layout";
 import { ViewNotFoundError } from "@web/views/view";
 import { useViewButtons } from "@web/views/view_button/hook";
 

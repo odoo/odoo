@@ -12,7 +12,7 @@ import { session } from "@web/session";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { Layout } from "@web/views/layout";
+import { Layout } from "@web/search/layout";
 import { ViewNotFoundError } from "@web/views/view";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewButton } from "@web/views/view_button/view_button";

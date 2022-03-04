@@ -40,12 +40,12 @@ QUnit.module("Components", () => {
     QUnit.test("basic rendering", async function (assert) {
         assert.expect(4);
 
-        const picker = await mountComponent(ColorList, {
+        await mountComponent(ColorList, {
             colors: [0, 9],
         });
 
         assert.containsOnce(target, ".o_colorlist");
-        assert.containsN(picker, "button", 2, "two buttons are available");
+        assert.containsN(target, "button", 2, "two buttons are available");
         const secondBtn = target.querySelectorAll(".o_colorlist button")[1];
         assert.strictEqual(
             secondBtn.attributes.title.value,
@@ -63,7 +63,7 @@ QUnit.module("Components", () => {
         assert.expect(9);
 
         const togglerColorId = 0;
-        const picker = await mountComponent(ColorList, {
+        await mountComponent(ColorList, {
             colors: [4, 5, 6],
             togglerColor: togglerColorId,
             onColorSelected: (colorId) => assert.step("color #" + colorId + " is selected"),
@@ -71,7 +71,7 @@ QUnit.module("Components", () => {
 
         assert.containsOnce(target, ".o_colorlist");
         assert.containsOnce(
-            picker,
+            target,
             "button.o_colorlist_toggler",
             "only the toggler button is available"
         );
@@ -88,10 +88,10 @@ QUnit.module("Components", () => {
             "button.o_colorlist_toggler",
             "toggler button is no longer visible"
         );
-        assert.containsN(picker, "button", 3, "three buttons are available");
+        assert.containsN(target, "button", 3, "three buttons are available");
 
         await click(target.querySelector(".outsideDiv"));
-        assert.containsN(picker, "button", 1, "only one button is available");
+        assert.containsN(target, "button", 1, "only one button is available");
         assert.containsOnce(
             target,
             "button.o_colorlist_toggler",
