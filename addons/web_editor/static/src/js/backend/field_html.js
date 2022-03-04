@@ -307,6 +307,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         var def = new Promise(function (resolve) {
             resolver = resolve;
         });
+        const externalLinkSelector = `a:not([href^="${location.origin}"]):not([href^="/"])`;
         if (this.nodeOptions.cssReadonly) {
             this.$iframe = $('<iframe class="o_readonly d-none"/>');
             this.$iframe.appendTo(this.$el);
@@ -372,6 +373,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                             self._onClick(ev);
                         }
                     });
+
+                    // Ensure all external links are opened in a new tab.
+                    for (const externalLink of cwindow.document.body.querySelectorAll(externalLinkSelector)) {
+                        externalLink.setAttribute('target', '_blank');
+                        externalLink.setAttribute('rel', 'noreferrer');
+                    }
                 });
             });
         } else {
@@ -379,6 +386,11 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             this.$content.appendTo(this.$el);
             this._qwebPlugin = new QWebPlugin();
             this._qwebPlugin.sanitizeElement(this.$content[0]);
+            // Ensure all external links are opened in a new tab.
+            for (const externalLink of this.$content.find(externalLinkSelector)) {
+                externalLink.setAttribute('target', '_blank');
+                externalLink.setAttribute('rel', 'noreferrer');
+            }
             resolver();
         }
 
