@@ -12,6 +12,7 @@
                     <field name="type" invisible="1"/>
                     <field name="street" placeholder="Street..." class="o_address_street"
                            attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+<<<<<<< HEAD
                     <field name="street2" placeholder="Street 2..." class="o_address_street"
                            attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                     <field name="l10n_pe_district" placeholder="District..." class="o_address_street"
@@ -29,6 +30,12 @@
                                    'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                     <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
                            context="{'default_country_id': country_id}"
+=======
+                    <field name="street2" invisible="1"/>
+                    <field name="l10n_pe_district" placeholder="District..." class="o_address_street"/>
+                    <field name="city"/>
+                    <field name="state_id" class="o_address_state" placeholder="State..." options='{"no_open": True}'
+>>>>>>> de853d458c8... temp
                            attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                     <field name="zip" placeholder="ZIP" class="o_address_zip"
                            attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
