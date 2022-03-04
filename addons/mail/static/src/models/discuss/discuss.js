@@ -45,7 +45,7 @@ registerModel({
                 const channel = await this.async(() =>
                     this.messaging.models['mail.thread'].performRpcCreateChannel({
                         name,
-                        privacy: ui.item.special,
+                        privacy: ui.item.special === 'private' ? 'private' : 'groups',
                     })
                 );
                 channel.open();
