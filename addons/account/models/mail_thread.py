@@ -8,7 +8,10 @@ class MailThread(models.AbstractModel):
 
     def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
         """ This method extension ensures that, when using the "Send & Print" feature, if the user
-        adds an attachment, the latter will be linked to the record. """
+        adds an attachment, the latter will be linked to the record.
+
+        # TDE NOTE: clean that brol
+        """
         record = self.env.context.get('attached_to')
         # link mail.compose.message attachments to attached_to
         if record and record._name == 'account.move':
