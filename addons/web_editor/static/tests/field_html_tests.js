@@ -450,7 +450,7 @@ QUnit.module('web_editor', {}, function () {
             });
             let $field = form.$('.oe_form_field[name="body"]');
             assert.strictEqual($field.children('.o_readonly').html(),
-                '<p><a href="https://www.external.com" target="_blank">External website</a></p>',
+                '<p><a href="https://www.external.com" target="_blank" rel="noreferrer">External website</a></p>',
                 "should have rendered a div with correct content in readonly");
 
             const promise = new Promise((resolve) => _formResolveTestPromise = resolve);
@@ -478,7 +478,7 @@ QUnit.module('web_editor', {}, function () {
 
             $field = form.$('.oe_form_field[name="body"]');
             assert.strictEqual($field.children('.o_readonly').html(),
-                '<p><a href="https://www.external.com" target="_blank">External website</a></p>',
+                '<p><a href="https://www.external.com" target="_blank" rel="noreferrer">External website</a></p>',
                 "the link shouldn't change");
 
             testUtils.mock.unpatch(LinkDialog);
@@ -577,7 +577,7 @@ QUnit.module('web_editor', {}, function () {
 
             $field = form.$('.oe_form_field[name="body"]');
             assert.strictEqual($field.children('.o_readonly').html(),
-                '<p><a href="http://www.test.com" target="_blank">New external link</a></p>',
+                '<p><a href="http://www.test.com" target="_blank" rel="noreferrer">New external link</a></p>',
                 "the link should be created with the right format");
 
             testUtils.mock.unpatch(LinkDialog);
