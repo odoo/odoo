@@ -34,7 +34,7 @@ RECEIPT_PRINTER_COMMANDS = {
     },
     'escpos': {
         'center': b'\x1b\x61\x01',  # ESC a n
-        'cut': b'\x1d\x56\x41\n',  # GS V m
+        'cut': b'\n\x1d\x56\x41\n',  # GS V m
         'title': b'\x1b\x21\x30%s\x1b\x21\x00',  # ESC ! n
         'drawers': [b'\x1b\x3d\x01', b'\x1b\x70\x00\x19\x19', b'\x1b\x70\x01\x19\x19']  # ESC = n then ESC p m t1 t2
     }
