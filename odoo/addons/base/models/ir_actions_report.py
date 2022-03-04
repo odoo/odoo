@@ -529,6 +529,27 @@ class IrActionsReport(models.Model):
         return report_obj.with_context(context).sudo().search(conditions, limit=1)
 
     @api.model
+    def _get_report(self, report_ref):
+        """Get the report (with sudo) from an id or xmlid
+        report_ref: can be one of
+            - ir.actions.report id
+            - ir.actions.report report_name
+            - ir.model.data reference
+        """
+        ReportSudo = self.env['ir.actions.report'].sudo()
+        if isinstance(report_ref, int):
+            return ReportSudo.browse(report_ref)
+        report = ReportSudo.search([('report_name', '=', report_ref)], limit=1)
+        if report:
+            return report
+        report = self.env.ref(report_ref)
+        if report:
+            if report._name != "ir.actions.report":
+                raise ValueError("Fetching report %r: type %s, expected ir.actions.report" % (report_ref, report._name))
+            return report.sudo()
+        raise ValueError("Fetching report %r: report not found" % report_ref)
+
+    @api.model
     def barcode(self, barcode_type, value, **kwargs):
         defaults = {
             'width': (600, int),
