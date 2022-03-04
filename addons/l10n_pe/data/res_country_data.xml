@@ -11,6 +11,7 @@
                     <field name="type" invisible="1"/>
                     <field name="street" placeholder="Street" class="o_address_street"
                            attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    <field name="street2" invisible="1"/>
                     <field name="l10n_pe_district" placeholder="District..." class="o_address_street"/>
                     <field name="city"/>
                     <field name="state_id" class="o_address_state" placeholder="State..." options='{"no_open": True}'
