@@ -362,7 +362,7 @@ export const editorCommands = {
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
         const isAlreadyBold = getSelectedNodes(editor.editable)
             .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length)
-            .find(n => isBold(n.parentElement));
+            .every(n => isBold(n.parentElement));
         applyInlineStyle(editor, el => {
             if (isAlreadyBold) {
                 const block = closestBlock(el);
