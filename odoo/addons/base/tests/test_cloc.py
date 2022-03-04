@@ -79,11 +79,60 @@ function() {
 }
 '''
 
+CSS_TEST = '''
+/*
+  Comment
+*/
+
+p {
+  text-align: center;
+  color: red;
+  text-overflow: ' /* ';
+}
+
+
+#content, #footer, #supplement {
+   position: absolute;
+   left: 510px;
+   width: 200px;
+   text-overflow: ' */ ';
+}
+'''
+
+SCSS_TEST = '''
+/*
+  Comment
+*/
+
+// Standalone list views
+.o_content > .o_list_view > .table-responsive > .table {
+    // List views always have the table-sm class, maybe we should remove
+    // it (and consider it does not exist) and change the default table paddings
+    @include o-list-view-full-width-padding($base: $table-cell-padding-sm, $ratio: 2);
+    &:not(.o_list_table_grouped) {
+        @include media-breakpoint-up(xl) {
+            @include o-list-view-full-width-padding($base: $table-cell-padding-sm, $ratio: 2.5);
+        }
+    }
+
+    .o_optional_columns_dropdown_toggle {
+        padding: 8px 10px;
+    }
+}
+
+#content, #footer, #supplement {
+   text-overflow: '/*';
+   left: 510px;
+   width: 200px;
+   text-overflow: '*/';
+}
+'''
+
 class TestClocCustomization(TransactionCase):
-    def create_xml_id(self, name, res_id, module='studio_customization'):
+    def create_xml_id(self, name, model, res_id, module='studio_customization'):
         self.env['ir.model.data'].create({
             'name': name,
-            'model': 'ir.model.fields',
+            'model': model,
             'res_id': res_id,
             'module': module,
         })
@@ -105,21 +154,21 @@ class TestClocCustomization(TransactionCase):
             Having an xml_id but no existing module is consider as not belonging to a module
         """
         f1 = self.create_field('x_invoice_count')
-        self.create_xml_id('invoice_count', f1.id)
+        self.create_xml_id('invoice_count', 'ir.model.fields', f1.id)
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('odoo/studio', 0), 0, 'Studio auto generated count field should not be counted in cloc')
         f2 = self.create_field('x_studio_custom_field')
-        self.create_xml_id('studio_custom', f2.id)
+        self.create_xml_id('studio_custom', 'ir.model.fields', f2.id)
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('odoo/studio', 0), 1, 'Count other studio computed field')
-        f3 = self.create_field('x_custom_field')
+        self.create_field('x_custom_field')
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('odoo/studio', 0), 2, 'Count fields without xml_id')
         f4 = self.create_field('x_custom_field_export')
-        self.create_xml_id('studio_custom', f4.id, '__export__')
+        self.create_xml_id('studio_custom', 'ir.model.fields', f4.id, '__export__')
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('odoo/studio', 0), 3, 'Count fields with xml_id but without module')
@@ -143,6 +192,10 @@ class TestClocParser(TransactionCase):
             self.assertEqual(py_count, (8, 16))
         js_count = cl.parse_js(JS_TEST)
         self.assertEqual(js_count, (10, 17))
+        css_count = cl.parse_css(CSS_TEST)
+        self.assertEqual(css_count, (11, 17))
+        scss_count = cl.parse_scss(SCSS_TEST)
+        self.assertEqual(scss_count, (17, 26))
 
 
 @tagged('post_install', '-at_install')
