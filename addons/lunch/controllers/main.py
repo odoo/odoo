@@ -19,7 +19,7 @@ class LunchController(http.Controller):
         lines = self._get_current_lines(user)
         if lines:
             lines = [{'id': line.id,
-                      'product': (line.product_id.id, line.product_id.name, float_repr(float_round(line.product_id.price, 2), 2)),
+                      'product': (line.product_id.id, line.product_id.name, float_repr(float_round(line.price, 2), 2)),
                       'toppings': [(topping.name, float_repr(float_round(topping.price, 2), 2))
                                    for topping in line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3],
                       'quantity': line.quantity,
