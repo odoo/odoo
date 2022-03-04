@@ -1487,7 +1487,7 @@ class MrpProduction(models.Model):
             'orderpoint_id': self.orderpoint_id.id,
         }
 
-    def _split_productions(self, amounts=False, cancel_remaning_qty=False, set_consumed_qty=False):
+    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False):
         """ Splits productions into productions smaller quantities to produce, i.e. creates
         its backorders.
 
@@ -1509,7 +1509,7 @@ class MrpProduction(models.Model):
                 amounts[production] = _default_amounts(production)
                 continue
             total_amount = sum(mo_amounts)
-            if total_amount < production.product_qty and not cancel_remaning_qty:
+            if total_amount < production.product_qty and not cancel_remaining_qty:
                 amounts[production].append(production.product_qty - total_amount)
             elif total_amount > production.product_qty or production.state in ['done', 'cancel']:
                 raise UserError(_("Unable to split with more than the quantity to produce."))
