@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <tree string="Followers">
                     <field name="res_model"/>
-                    <field name="res_id" widget="integer"/>
+                    <field name="res_id"/>
                     <field name="partner_id"/>
                 </tree>
             </field>
@@ -28,7 +28,7 @@
                                 <field name="partner_id"/>
                             </group>
                             <group>
-                                <field name="res_id" widget="integer"/>
+                                <field name="res_id"/>
                                 <field name="subtype_ids" widget="many2many_tags"/>
                             </group>
                         </group>
