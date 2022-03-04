@@ -908,6 +908,30 @@ export function isStrikeThrough(node) {
     }
     return false;
 }
+export const isFormat = {
+    bold: isBold,
+    italic: isItalic,
+    underline: isUnderline,
+    strikeThrough: isStrikeThrough,
+};
+/**
+ * Return true if the current selection on the editable appears as the given
+ * format. The selection is considered to appear as that format if every text
+ * node in it appears as that format.
+ *
+ * @param {Element} editable
+ * @param {String} format 'bold'|'italic'|'underline'|'strikeThrought'
+ * @returns {boolean}
+ */
+export function isSelectionFormat(editable, format) {
+    const selectedText = getSelectedNodes(editable)
+        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
+    if (selectedText.length) {
+        return selectedText.every(n => isFormat[format](n.parentElement));
+    } else {
+        return isFormat[format](closestElement(editable.ownerDocument.getSelection().anchorNode));
+    }
+}
 
 export function isUnbreakable(node) {
     if (!node || node.nodeType === Node.TEXT_NODE) {

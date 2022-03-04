@@ -19,10 +19,8 @@ import {
     insertAndSelectZws,
     insertText,
     isBlock,
-    isBold,
-    isItalic,
-    isUnderline,
-    isStrikeThrough,
+    isFormat,
+    isSelectionFormat,
     isColorGradient,
     isContentTextNode,
     isShrunkBlock,
@@ -213,8 +211,12 @@ function hasColor(element, mode) {
  * whenever possible.
  * @param {Element => void} applyStyle Callback that receives an element to
  * which the wanted style should be applied
+ * @param {string | [string, string]} [style] the format type to toggle or an
+ * array with the style property name and the value to apply to it
+ * @param {boolean} [shouldApply=true] set to false to undo a style rather than
+ * apply it.
  */
-export function applyInlineStyle(editor, applyStyle) {
+export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
     getDeepRange(editor.editable, { splitText: true, select: true });
     const sel = editor.document.getSelection();
     const { startContainer, startOffset, endContainer, endOffset } = sel.getRangeAt(0);
@@ -235,7 +237,24 @@ export function applyInlineStyle(editor, applyStyle) {
         );
         return isContentTextNode(node) && atLeastOneCharFromNodeInSelection;
     });
-    for (const textNode of selectedTextNodes) {
+    const textNodesToFormat = selectedTextNodes.filter(node => {
+        let isApplied;
+        if (Array.isArray(style) && style[style[0]]) {
+            let ancestor = node;
+            while (ancestor) {
+                if (ancestor.style[style[0]]) {
+                    isApplied = ancestor.style[style[0]] === style[1];
+                    break;
+                } else {
+                    ancestor = ancestor.parentElement;
+                }
+            }
+        } else{
+            isApplied = isFormat[style] && isFormat[style](node);
+        }
+        return shouldApply ? !isApplied : isApplied;
+    });
+    for (const textNode of textNodesToFormat) {
         // If text node ends after the end of the selection, split it and
         // keep the part that is inside.
         if (endContainer === textNode && endOffset < textNode.textContent.length) {
@@ -282,22 +301,22 @@ export function applyInlineStyle(editor, applyStyle) {
 }
 const styles = {
     bold: {
-        is: isBold,
+        is: editable => isSelectionFormat(editable, 'bold'),
         name: 'fontWeight',
         value: 'bolder',
     },
     italic: {
-        is: isItalic,
+        is: editable => isSelectionFormat(editable, 'italic'),
         name: 'fontStyle',
         value: 'italic',
     },
     underline: {
-        is: isUnderline,
+        is: editable => isSelectionFormat(editable, 'underline'),
         name: 'textDecorationLine',
         value: 'underline',
     },
     strikeThrough: {
-        is: isStrikeThrough,
+        is: editable => isSelectionFormat(editable, 'strikeThrough'),
         name: 'textDecorationLine',
         value: 'line-through',
     }
@@ -320,7 +339,7 @@ export function toggleFormat(editor, format) {
     const style = styles[format];
     const selectedTextNodes = getSelectedNodes(editor.editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
-    const isAlreadyFormatted = !!selectedTextNodes.find(n => style.is(n.parentElement));
+    const isAlreadyFormatted = style.is(editor.editable);
     if (isAlreadyFormatted && style.name === 'textDecorationLine') {
         const decoratedPairs = new Set(selectedTextNodes.map(n => [closestElement(n, `[style*="text-decoration-line: ${style.value}"]`), n]));
         for (const [closestDecorated, textNode] of decoratedPairs) {
@@ -357,7 +376,7 @@ export function toggleFormat(editor, format) {
             } else {
                 el.style[style.name] = style.value;
             }
-        });
+        }, format, !isAlreadyFormatted);
     }
 }
 function addColumn(editor, beforeOrAfter) {
@@ -481,7 +500,7 @@ export const editorCommands = {
         }
         applyInlineStyle(editor, element => {
             element.style.fontSize = size;
-        });
+        }, ['fontSize', size]);
     },
 
     // Link
