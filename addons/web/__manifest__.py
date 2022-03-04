@@ -56,7 +56,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/week_days.xml',
         ],
         'web.assets_common_minimal': [
-            'web/static/lib/es6-promise/es6-promise-polyfill.js',
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
             'web/static/src/session.js',
@@ -75,7 +74,6 @@ This module provides the core of the Odoo Web Client.
         'web.assets_common_lazy': [
             ('include', 'web.assets_common'),
             # Remove assets_common_minimal
-            ('remove', 'web/static/lib/es6-promise/es6-promise-polyfill.js'),
             ('remove', 'web/static/src/legacy/js/promise_extension.js'),
             ('remove', 'web/static/src/boot.js'),
             ('remove', 'web/static/src/session.js'),
