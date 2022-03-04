@@ -22,6 +22,7 @@ DEFAULT_EXCLUDE = [
 
 STANDARD_MODULES = ['web', 'web_enterprise', 'theme_common', 'base']
 MAX_FILE_SIZE = 25 * 2**20 # 25 MB
+VALID_EXTENSION = ['.py', '.js', '.xml', '.css', '.scss']
 
 class Cloc(object):
     def __init__(self):
@@ -56,17 +57,40 @@ class Cloc(object):
         except Exception:
             return (-1, "Syntax Error")
 
-    def parse_js(self, s):
+    def parse_c_like(self, s, regex):
         # Based on https://stackoverflow.com/questions/241327
         s = s.strip() + "\n"
         total = s.count("\n")
+
         def replacer(match):
             s = match.group(0)
             return " " if s.startswith('/') else s
-        comments_re = re.compile(r'//.*?$|(?<!\\)/\*.*?\*/|\'(\\.|[^\\\'])*\'|"(\\.|[^\\"])*"', re.DOTALL|re.MULTILINE)
+
+        comments_re = re.compile(regex, re.DOTALL | re.MULTILINE)
         s = re.sub(comments_re, replacer, s)
         s = re.sub(r"\s*\n\s*", r"\n", s).lstrip()
         return s.count("\n"), total
+
+    def parse_js(self, s):
+        return self.parse_c_like(s, r'//.*?$|(?<!\\)/\*.*?\*/|\'(\\.|[^\\\'])*\'|"(\\.|[^\\"])*"')
+
+    def parse_scss(self, s):
+        return self.parse_c_like(s, r'//.*?$|/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"')
+
+    def parse_css(self, s):
+        return self.parse_c_like(s, r'/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"')
+
+    def parse(self, s, ext):
+        if ext == '.py':
+            return self.parse_py(s)
+        elif ext == '.js':
+            return self.parse_js(s)
+        elif ext == '.xml':
+            return self.parse_xml(s)
+        elif ext == '.css':
+            return self.parse_css(s)
+        elif ext == '.scss':
+            return self.parse_scss(s)
 
     #------------------------------------------------------
     # Enumeration
@@ -112,19 +136,18 @@ class Cloc(object):
                     continue
 
                 ext = os.path.splitext(file_path)[1].lower()
-                if ext in ['.py', '.js', '.xml']:
-                    if os.path.getsize(file_path) > MAX_FILE_SIZE:
-                        self.book(module_name, file_path, (-1, "Max file size exceeded"))
-                        continue
+                if ext not in VALID_EXTENSION:
+                    continue
 
-                    with open(file_path, 'rb') as f:
-                        content = f.read().decode('latin1')
-                    if ext == '.py':
-                        self.book(module_name, file_path, self.parse_py(content))
-                    elif ext == '.js':
-                        self.book(module_name, file_path, self.parse_js(content))
-                    elif ext == '.xml':
-                        self.book(module_name, file_path, self.parse_xml(content))
+                if os.path.getsize(file_path) > MAX_FILE_SIZE:
+                    self.book(module_name, file_path, (-1, "Max file size exceeded"))
+                    continue
+
+                with open(file_path, 'rb') as f:
+                    # Decode using latin1 to avoid error that may raise by decoding with utf8
+                    # The chars not correctly decoded in latin1 have no impact on how many lines will be counted
+                    content = f.read().decode('latin1')
+                self.book(module_name, file_path, self.parse(content, ext))
 
     def count_modules(self, env):
         # Exclude standard addons paths
@@ -174,6 +197,48 @@ class Cloc(object):
         data = {r[0]: r[1] for r in env.cr.fetchall()}
         for f in env['ir.model.fields'].browse(data.keys()):
             self.book(data[f.id] or "odoo/studio", "ir.model.fields/%s: %s" % (f.id, f.name), self.parse_py(f.compute))
+
+        if not imported_module:
+            return
+
+        # Count qweb view only from imported module
+        query = """
+            SELECT view.id, data.module
+              FROM ir_ui_view view
+        INNER JOIN ir_model_data data ON view.id = data.res_id AND data.model = 'ir.ui.view'
+        INNER JOIN ir_module_module mod ON mod.name = data.module AND mod.imported = True
+             WHERE view.type = 'qweb'
+        """
+        env.cr.execute(query)
+        custom_views = dict(env.cr.fetchall())
+        for view in env['ir.ui.view'].browse(custom_views.keys()):
+            modue_name = custom_views[view.id]
+            self.book(modue_name, "/%s/views/%s.xml" % (modue_name, view.name), self.parse_xml(view.arch_base))
+
+        # Count js, xml, css/scss file from imported module
+        query = r"""
+            SELECT attach.id, data.module
+              FROM ir_attachment attach
+        INNER JOIN ir_model_data data ON attach.id = data.res_id AND data.model = 'ir.attachment'
+        INNER JOIN ir_module_module mod ON mod.name = data.module AND mod.imported = True
+             WHERE attach.name ~ '.*\.(js|xml|css|scss)$'
+        """
+        env.cr.execute(query)
+        uploaded_file = dict(env.cr.fetchall())
+        for attach in env['ir.attachment'].browse(uploaded_file.keys()):
+            module_name = uploaded_file[attach.id]
+            ext = os.path.splitext(attach.url)[1].lower()
+            if ext not in VALID_EXTENSION:
+                continue
+
+            if len(attach.datas) > MAX_FILE_SIZE:
+                self.book(module_name, attach.url, (-1, "Max file size exceeded"))
+                continue
+
+            # Decode using latin1 to avoid error that may raise by decoding with utf8
+            # The chars not correctly decoded in latin1 have no impact on how many lines will be counted
+            content = attach.raw.decode('latin1')
+            self.book(module_name, attach.url, self.parse(content, ext))
 
     def count_env(self, env):
         self.count_modules(env)
