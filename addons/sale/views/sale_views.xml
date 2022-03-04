@@ -566,6 +566,7 @@
                                         widget="many2many_tags"
                                         options="{'no_create': True}"
                                         domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id), ('country_id', '=', parent.tax_country_id)]"
+                                        context="{'active_test': True}"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                         optional="show"
                                     />
