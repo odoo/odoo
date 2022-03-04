@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
@@ -34,7 +36,8 @@ class ProductImage(models.Model):
     @api.onchange('video_url')
     def _onchange_video_url(self):
         if not self.image_1920:
-            self.image_1920 = get_video_thumbnail(self.video_url) or False
+            thumbnail = get_video_thumbnail(self.video_url)
+            self.image_1920 = thumbnail and base64.b64encode(thumbnail) or False
 
     @api.depends('video_url')
     def _compute_embed_code(self):
