@@ -19,6 +19,14 @@ tests independently to functional aspects of other models. """,
     ],
     'demo': [
     ],
+    'assets': {
+        'web.qunit_suite_tests': [
+            'test_mail/static/tests/*',
+        ],
+        'web.tests_assets': [
+            'test_mail/static/tests/helpers/*',
+        ],
+    },
     'installable': True,
     'application': False,
     'license': 'LGPL-3',

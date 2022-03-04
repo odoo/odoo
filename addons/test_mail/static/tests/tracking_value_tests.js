@@ -8,7 +8,7 @@ import {
 import FormView from 'web.FormView';
 import testUtils from 'web.test_utils';
 
-QUnit.module('mail', {}, function () {
+QUnit.module('test_mail', {}, function () {
 QUnit.module('tracking_value_tests.js', {
     async beforeEach() {
         await beforeEach(this);
