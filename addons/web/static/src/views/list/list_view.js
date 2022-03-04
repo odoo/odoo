@@ -79,6 +79,7 @@ export class ListArchParser extends XMLParser {
             fields: {},
         };
         let headerButtons = [];
+        const creates = [];
         const groupListArchParser = new GroupListArchParser();
         let buttonGroup;
         let limit;
@@ -159,6 +160,11 @@ export class ListArchParser extends XMLParser {
                     }))
                     .filter((button) => button.modifiers.invisible !== true);
                 return false;
+            } else if (node.tagName === "create") {
+                creates.push({
+                    context: node.getAttribute("context"),
+                    description: node.getAttribute("string"),
+                });
             } else if (node.tagName === "tree") {
                 const limitAttr = node.getAttribute("limit");
                 limit = limitAttr && parseInt(limitAttr, 10);
@@ -167,6 +173,7 @@ export class ListArchParser extends XMLParser {
 
         return {
             activeActions,
+            creates,
             editable,
             limit,
             headerButtons,

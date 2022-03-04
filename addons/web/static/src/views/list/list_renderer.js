@@ -41,7 +41,9 @@ export class ListRenderer extends Component {
         useExternalListener(document, "click", this.onGlobalClick.bind(this)); // capture ?
         this.tableRef = useRef("table");
 
-        this.creates = [{ description: this.env._t("Add a line") }];
+        this.creates = this.props.archInfo.creates.length
+            ? this.props.archInfo.creates
+            : [{ description: this.env._t("Add a line") }];
 
         this.cellToFocus = null;
         this.activeRowId = null;

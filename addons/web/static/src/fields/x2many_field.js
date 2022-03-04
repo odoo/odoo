@@ -1,13 +1,14 @@
 /** @odoo-module **/
 
-import { evalDomain } from "@web/views/relational_model";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { ListRenderer } from "@web/views/list/list_renderer";
+import { makeContext } from "@web/core/context";
 import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
+import { standardFieldProps } from "@web/fields/standard_field_props";
+import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { ListRenderer } from "@web/views/list/list_renderer";
+import { evalDomain } from "@web/views/relational_model";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 const { Component } = owl;
 
@@ -137,7 +138,48 @@ export class X2ManyField extends Component {
     }
 
     onAdd(context) {
-        this.list.add(context);
+        const archInfo = this.fieldInfo.views[this.viewMode];
+        if (archInfo.editable) {
+            this.list.add(context);
+        } else {
+            const form = this.list.views.form;
+            const record = this.list.model.createDataPoint("record", {
+                context: makeContext(
+                    [this.list.context, this.list.rawContext, context],
+                    this.list.getEvalContext()
+                ),
+                resModel: this.list.resModel,
+                fields: { ...form.fields, id: { name: "id", type: "integer", readonly: true } },
+                activeFields: form.activeFields,
+                views: { form },
+                mode: "edit",
+                viewMode: "form",
+            });
+            this.dialogService.add(FormViewDialog, {
+                archInfo: form, // FIXME: might not be there
+                record,
+                save: () => {
+                    record.switchMode("readonly");
+                    this.list.addRecord(
+                        this.list.model.createDataPoint("record", {
+                            context: makeContext(
+                                [this.list.context, this.list.rawContext, context],
+                                this.list.getEvalContext()
+                            ),
+                            resModel: this.list.resModel,
+                            fields: this.list.fields,
+                            activeFields: this.list.activeFields,
+                            views: this.list.views,
+                            mode: "readonly",
+                            values: record._values,
+                            changes: record._changes,
+                            resId: record.resId,
+                        })
+                    );
+                },
+                title: this.props.record.activeFields[this.props.name].string,
+            });
+        }
     }
 }
 

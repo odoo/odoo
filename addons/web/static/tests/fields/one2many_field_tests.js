@@ -9144,10 +9144,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL(
         "add a new line after limit is reached should behave nicely",
         async function (assert) {
-            assert.expect(2);
-
             serverData.models.partner.records[0].turtles = [1, 2, 3];
-
             serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.turtles = [
@@ -9160,7 +9157,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -9173,16 +9170,14 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
+            await click(target, ".o_form_button_edit");
+            await click(target, ".o_field_x2many_list_row_add a");
+            assert.containsN(target, ".o_data_row", 4);
 
-            await click(form.$(".o_field_x2many_list_row_add a"));
-            assert.containsN(form, ".o_data_row", 4, "should have 4 data rows");
-            await testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), "a");
+            await editInput(target, 'div[name="turtle_foo"] .o_input', "a");
             assert.containsN(
-                form,
+                target,
                 ".o_data_row",
                 4,
                 "should still have 4 data rows (the limit is increased to 4)"
@@ -9291,9 +9286,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.skipWOWL('add a line, edit it and "Save & New"', async function (assert) {
-        assert.expect(5);
-
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9306,43 +9299,42 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.containsNone(form, ".o_data_row", "there should be no record in the relation");
-
+        assert.containsNone(target, ".o_data_row", "there should be no record in the relation");
         // add a new record
-        await click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.editInput($(".modal .o_field_widget"), "new record");
-        await click($(".modal .modal-footer .btn-primary:first"));
+        await click(target, ".o_field_x2many_list_row_add a");
+        await editInput(target, ".modal .o_field_widget input", "new record");
+        await click(target.querySelector(".modal .modal-footer .btn-primary"));
 
-        assert.strictEqual(
-            form.$(".o_data_row .o_data_cell").text(),
-            "new record",
-            "should display the new record"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.innerText),
+            ["new record"]
         );
 
         // reopen freshly added record and edit it
-        await click(form.$(".o_data_row .o_data_cell"));
-        await testUtils.fields.editInput($(".modal .o_field_widget"), "new record edited");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, ".modal .o_field_widget", "new record edited");
 
         // save it, and choose to directly create another record
-        await click($(".modal .modal-footer .btn-primary:nth(1)"));
+        await click(target.querySelectorAll(".modal .modal-footer .btn-primary")[1]);
 
-        assert.strictEqual($(".modal").length, 1, "the model should still be open");
-        assert.strictEqual($(".modal .o_field_widget").text(), "", "should have cleared the input");
-
-        await testUtils.fields.editInput($(".modal .o_field_widget"), "another new record");
-        await click($(".modal .modal-footer .btn-primary:first"));
-
+        assert.containsOnce(target, ".modal");
         assert.strictEqual(
-            form.$(".o_data_row .o_data_cell").text(),
-            "new record editedanother new record",
-            "should display the two records"
+            target.querySelector(".modal .o_field_widget").innerText,
+            "",
+            "should have cleared the input"
+        );
+
+        await editInput(target, ".modal .o_field_widget input", "another new record");
+        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.innerText),
+            ["new record", "editedanother new record"]
         );
     });
 
-    QUnit.skipWOWL("o2m add a line custom control create editable", async function (assert) {
-        assert.expect(5);
-
-        const form = await makeView({
+    QUnit.test("o2m add a line custom control create editable", async function (assert) {
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9367,34 +9359,41 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // new controls correctly added
-        var $td = form.$(".o_field_x2many_list_row_add");
-        assert.strictEqual($td.length, 1);
-        assert.strictEqual($td.closest("tr").find("td").length, 1);
-        assert.strictEqual($td.text(), "Add foodAdd pizzaAdd pasta");
+        const rowAdd = target.querySelectorAll(".o_field_x2many_list_row_add");
+        assert.strictEqual(rowAdd.length, 1);
+        assert.strictEqual(rowAdd[0].closest("tr").querySelectorAll("td").length, 1);
+        assert.deepEqual(
+            [...rowAdd[0].querySelectorAll("a")].map((el) => el.innerText),
+            ["Add food", "Add pizza", "Add pasta"]
+        );
 
         // click add food
         // check it's empty
-        await click(form.$(".o_field_x2many_list_row_add a:eq(0)"));
-        assert.strictEqual($(".o_data_cell").text(), "");
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            [""]
+        );
 
         // click add pizza
         // press enter to save the record
         // check it's pizza
-        await click(form.$(".o_field_x2many_list_row_add a:eq(1)"));
-        const $input = form.$(
+        await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[1]);
+        const input = target.querySelector(
             '.o_field_widget[name="p"] .o_selected_row .o_field_widget[name="display_name"]'
         );
-        await testUtils.fields.triggerKeydown($input, "enter");
+        await input.dispatchEvent(new KeyboardEvent("keydown", { key: "enter" }));
         // click add pasta
-        await click(form.$(".o_field_x2many_list_row_add a:eq(2)"));
+        await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[2]);
         await clickSave(target);
-        assert.strictEqual($(".o_data_cell").text(), "pizzapasta");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            ["", "pizza", "pasta"]
+        );
     });
 
-    QUnit.skipWOWL("o2m add a line custom control create non-editable", async function (assert) {
-        assert.expect(6);
-
-        const form = await makeView({
+    QUnit.test("o2m add a line custom control create non-editable", async function (assert) {
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9419,30 +9418,42 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // new controls correctly added
-        var $td = form.$(".o_field_x2many_list_row_add");
-        assert.strictEqual($td.length, 1);
-        assert.strictEqual($td.closest("tr").find("td").length, 1);
-        assert.strictEqual($td.text(), "Add foodAdd pizzaAdd pasta");
+        const rowAdd = target.querySelectorAll(".o_field_x2many_list_row_add");
+        assert.strictEqual(rowAdd.length, 1);
+        assert.strictEqual(rowAdd[0].closest("tr").querySelectorAll("td").length, 1);
+        assert.deepEqual(
+            [...rowAdd[0].querySelectorAll("a")].map((el) => el.innerText),
+            ["Add food", "Add pizza", "Add pasta"]
+        );
 
         // click add food
         // check it's empty
-        await click(form.$(".o_field_x2many_list_row_add a:eq(0)"));
-        await click($(".modal .modal-footer .btn-primary:first"));
-        assert.strictEqual($(".o_data_cell").text(), "");
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            [""]
+        );
 
         // click add pizza
         // save the modal
         // check it's pizza
-        await click(form.$(".o_field_x2many_list_row_add a:eq(1)"));
-        await click($(".modal .modal-footer .btn-primary:first"));
-        assert.strictEqual($(".o_data_cell").text(), "pizza");
+        await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[1]);
+        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            ["", "pizza"]
+        );
 
         // click add pasta
         // save the whole record
         // check it's pizzapasta
-        await click(form.$(".o_field_x2many_list_row_add a:eq(2)"));
-        await click($(".modal .modal-footer .btn-primary:first"));
-        assert.strictEqual($(".o_data_cell").text(), "pizzapasta");
+        await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[2]);
+        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            ["", "pizza", "pasta"]
+        );
     });
 
     QUnit.skipWOWL(
@@ -11521,10 +11532,10 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("combine contexts on o2m field and create tags", async function (assert) {
+    QUnit.test("combine contexts on o2m field and create tags", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11536,6 +11547,7 @@ QUnit.module("Fields", (hooks) => {
                                 <control>
                                     <create name="add_soft_shell_turtle" context="{'default_turtle_foo': 'soft', 'default_turtle_int': 2}"/>
                                 </control>
+                                <field name="turtle_foo"/>
                             </tree>
                         </field>
                     </sheet>
@@ -11549,16 +11561,18 @@ QUnit.module("Fields", (hooks) => {
                                 default_turtle_foo: "soft",
                                 default_turtle_bar: true,
                                 default_turtle_int: 2,
+                                lang: "en",
+                                tz: "taht",
+                                uid: 7,
                             },
                             "combined context should have the default_turtle_foo value from the <create>"
                         );
                     }
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await click(form.$(".o_field_x2many_list_row_add a:eq(0)"));
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
     });
 
     // The following tests come from relational_fields_tests.js (so there might be issues with serverData)

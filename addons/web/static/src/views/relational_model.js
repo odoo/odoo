@@ -516,11 +516,13 @@ export class Record extends DataPoint {
             }
             const limit = views[viewMode] && views[viewMode].limit;
             const orderBy = views[viewMode] && views[viewMode].defaultOrder;
-
             const list = this.model.createDataPoint("list", {
                 resModel: this.fields[fieldName].relation,
                 fields,
                 activeFields,
+                context: this.context,
+                rawContext: field.context,
+                getEvalContext: () => this.evalContext,
                 limit,
                 orderBy,
                 field: this.fields[fieldName],
@@ -1640,6 +1642,8 @@ export class StaticList extends DataPoint {
         this._commands = [];
 
         this.validated = {};
+        this.rawContext = params.rawContext;
+        this.getEvalContext = params.getEvalContext;
 
         this.editedRecord = null;
         this.onRecordWillSwitchMode = async (record, mode) => {
@@ -1674,7 +1678,7 @@ export class StaticList extends DataPoint {
     async add(context) {
         this.onChanges();
         const record = this.model.createDataPoint("record", {
-            context: Object.assign({}, this.context, context || {}),
+            context: makeContext([this.context, this.rawContext, context], this.getEvalContext()),
             resModel: this.resModel,
             fields: this.fields,
             activeFields: this.activeFields,
@@ -1684,6 +1688,17 @@ export class StaticList extends DataPoint {
         });
         record._onWillSwitchMode(record, "edit"); // bof
         await record.load();
+        this._cache[record.virtualId] = record;
+        this.records.push(record);
+        this.resIds.push(record.virtualId);
+        this.limit = this.limit + 1; // might be not good
+        this.validated[record.virtualId] = false;
+        this.model.notify();
+    }
+
+    addRecord(record) {
+        this.onChanges();
+        this._cache[record.virtualId] = record;
         this._cache[record.virtualId] = record;
         this.records.push(record);
         this.resIds.push(record.virtualId);

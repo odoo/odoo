@@ -15,7 +15,7 @@
                             </th>
                             <th t-else=""></th>
                         </t>
-                        <th t-if="props.activeActions and props.activeActions.canDelete" class="o_list_remove_header"/>
+                        <th t-if="props.activeActions and props.activeActions.onDelete" class="o_list_remove_header"/>
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
@@ -23,13 +23,12 @@
                         <t t-set="list" t-value="props.list"/>
                     </t>
                     <tr t-if="props.activeActions">
-                        <td/>
                         <td t-if="props.activeActions.canCreate"
                             t-att-colspan="state.columns.length + 1"
                             class="o_field_x2many_list_row_add"
                             >
-                            <t t-foreach="creates" t-as="create" t-key="create.index">
-                                <a href="#" role="button" t-on-click.stop.prevent="() => props.onAdd(create.context)">
+                            <t t-foreach="creates" t-as="create" t-key="create_index">
+                                <a href="#" role="button" t-att-class="create_index !== 0 ? 'ml16' : ''" t-on-click.stop.prevent="() => props.onAdd(create.context)">
                                     <t t-esc="create.description"/>
                                 </a>
                             </t>
@@ -46,7 +45,7 @@
                             </td>
                             <td t-else=""/>
                         </t>
-                        <td t-if="props.activeActions and props.activeActions.canDelete"/>
+                        <td t-if="props.activeActions and props.activeActions.onDelete"/>
                     </tr>
                 </tfoot>
                 <Dropdown t-if="getOptionalFields.length" class="'o_optional_columns_dropdown'" position="'bottom-end'">
