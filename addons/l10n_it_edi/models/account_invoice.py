@@ -11,7 +11,7 @@ from datetime import date, datetime
 from lxml import etree
 
 from odoo import api, fields, models, _
-from odoo.tools import float_repr
+from odoo.tools import float_repr, float_compare
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.tests.common import Form
@@ -164,6 +164,20 @@ class AccountMove(models.Model):
                 if tax.amount == 0.0:
                     tax_map[tax] = tax_map.get(tax, 0.0) + line.price_subtotal
 
+        # Constraints within the edi make local rounding on price included taxes a problem.
+        # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
+        #   taxable base = sum(taxable base for each unit) + Arrotondamento
+        tax_details = self._prepare_edi_tax_details()
+        for _tax_name, tax_dict in tax_details['tax_details'].items():
+            base_amount = tax_dict['base_amount']
+            tax_amount = tax_dict['tax_amount']
+            tax_rate = tax_dict['tax'].amount
+            if tax_dict['tax'].price_include and tax_dict['tax'].amount_type == 'percent':
+                expected_base_amount = tax_amount * 100 / tax_rate if tax_rate else False
+                if expected_base_amount and float_compare(base_amount, expected_base_amount, 2):
+                    tax_dict['rounding'] = base_amount - (tax_amount * 100 / tax_rate)
+                    tax_dict['base_amount'] = base_amount - tax_dict['rounding']
+
         # Create file content.
         template_values = {
             'record': self,
@@ -182,6 +196,7 @@ class AccountMove(models.Model):
             'pdf': pdf,
             'pdf_name': pdf_name,
             'tax_map': tax_map,
+            'tax_details': tax_details,
         }
         return template_values
 
