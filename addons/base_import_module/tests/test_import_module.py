@@ -44,13 +44,13 @@ class TestImportModule(odoo.tests.TransactionCase):
 
         asset_data = self.env['ir.model.data'].search([('model', '=', 'ir.asset'), ('res_id', '=', asset.id)])
         self.assertEqual(asset_data.module, 'test_module')
-        self.assertEqual(asset_data.name, f'{bundle}.{path}')
+        self.assertEqual(asset_data.name, f'{bundle}_{path}'.replace(".", "_"))
 
         # Uninstall test module
         self.env['ir.module.module'].search([('name', '=', 'test_module')]).module_uninstall()
 
         attachment = self.env['ir.attachment'].search([('url', '=', path)])
-        self.assertEqual(len(attachment), 1)
+        self.assertEqual(len(attachment), 0)
 
         asset = self.env['ir.asset'].search([('name', '=', f'test_module.{bundle}.{path}')])
         self.assertEqual(len(asset), 0)
