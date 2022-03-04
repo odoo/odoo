@@ -56,4 +56,5 @@ TextField.displayName = _lt("Multiline Text");
 TextField.supportedTypes = ["html", "text"];
 
 registry.category("fields").add("text", TextField);
+registry.category("fields").add("list.text", TextField);
 registry.category("fields").add("html", TextField);

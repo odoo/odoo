@@ -40,7 +40,7 @@ export class FormArchParser extends XMLParser {
                 }
             }
         });
-        return { arch, activeActions, activeFields, xmlDoc };
+        return { arch, activeActions, activeFields, xmlDoc, __rawArch: arch };
     }
 }
 

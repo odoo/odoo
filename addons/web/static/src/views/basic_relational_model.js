@@ -3,6 +3,9 @@
 import BasicModel from "web.BasicModel";
 import fieldRegistry from "web.field_registry";
 import { parse } from "web.field_utils";
+import { parseArch } from "web.viewUtils";
+import { traverse } from "web.utils";
+
 import {
     deserializeDate,
     deserializeDateTime,
@@ -44,7 +47,16 @@ function mapWowlValueToLegacy(value, type) {
 function mapViews(views) {
     const res = {};
     for (const [viewType, viewDescr] of Object.entries(views || {})) {
+        const arch = parseArch(viewDescr.__rawArch);
+        traverse(arch, function (node) {
+            if (typeof node === "string") {
+                return false;
+            }
+            node.attrs.modifiers = node.attrs.modifiers ? JSON.parse(node.attrs.modifiers) : {};
+            return true;
+        });
         res[viewType] = {
+            arch,
             fields: viewDescr.fields,
             type: viewType,
             fieldsInfo: mapActiveFieldsToFieldsInfo(

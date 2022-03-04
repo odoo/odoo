@@ -248,3 +248,4 @@ Many2OneField.extractProps = (fieldName, record, attrs) => {
 };
 
 registry.category("fields").add("many2one", Many2OneField);
+registry.category("fields").add("list.many2one", Many2OneField); // TODO WOWL: link isn't clickable in lists

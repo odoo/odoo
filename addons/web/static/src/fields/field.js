@@ -6,18 +6,49 @@ import { registry } from "@web/core/registry";
 import { isBroadlyFalsy } from "@web/core/utils/misc";
 import { isTruthy } from "@web/core/utils/xml";
 import { X2M_TYPES } from "@web/views/helpers/view_utils";
-import { DefaultField } from "./default";
-import { getFieldClassFromRegistry } from "./utils";
 
 const { Component, xml } = owl;
 
 const viewRegistry = registry.category("views");
+const fieldRegistry = registry.category("fields");
+
+class DefaultField extends Component {}
+DefaultField.template = xml``;
+
+function getFieldClassFromRegistry(viewType, fieldType, widget) {
+    if (viewType && widget) {
+        const name = `${viewType}.${widget}`;
+        if (fieldRegistry.contains(name)) {
+            return fieldRegistry.get(name);
+        }
+    }
+
+    if (widget) {
+        if (fieldRegistry.contains(widget)) {
+            return fieldRegistry.get(widget);
+        }
+        console.warn(`Missing widget: ${widget} for field of type ${fieldType}`);
+    }
+
+    if (viewType && fieldType) {
+        const name = `${viewType}.${fieldType}`;
+        if (fieldRegistry.contains(name)) {
+            return fieldRegistry.get(name);
+        }
+    }
+
+    if (fieldRegistry.contains(fieldType)) {
+        return fieldRegistry.get(fieldType);
+    }
+
+    return DefaultField;
+}
 
 export class Field extends Component {
     setup() {
         this.FieldComponent = this.props.record.activeFields[this.props.name].FieldComponent;
         if (!this.FieldComponent) {
-            this.FieldComponent = Field.getFieldComponent(null, this.type, this.props.name);
+            this.FieldComponent = getFieldClassFromRegistry(null, this.type, this.props.name);
         }
     }
 
@@ -151,10 +182,6 @@ Field.template = xml/* xml */ `
         <t t-component="FieldComponent" t-props="fieldComponentProps"/>
     </div>`;
 
-Field.getFieldComponent = function (viewType, fieldType, widget) {
-    return getFieldClassFromRegistry(viewType, fieldType, widget) || DefaultField;
-};
-
 const EXCLUDED_ATTRS = [
     "name",
     "widget",
@@ -189,7 +216,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         widget,
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         onChange: isTruthy(node.getAttribute("on_change")),
-        FieldComponent: Field.getFieldComponent(viewType, fields[name].type, widget),
+        FieldComponent: getFieldClassFromRegistry(viewType, fields[name].type, widget),
         decorations: {}, // populated below
         noLabel: isTruthy(node.getAttribute("nolabel"), true),
         props: {},

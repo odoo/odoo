@@ -300,6 +300,7 @@ export class KanbanArchParser extends XMLParser {
             xmlDoc: applyDefaultAttributes(kanbanBox),
             tooltipInfo,
             examples: xmlDoc.getAttribute("examples"),
+            __rawArch: arch,
         };
     }
 }

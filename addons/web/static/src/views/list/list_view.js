@@ -168,6 +168,7 @@ export class ListArchParser extends XMLParser {
             groupBy,
             defaultOrder,
             decorations,
+            __rawArch: arch,
         };
     }
 }
