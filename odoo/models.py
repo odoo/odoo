@@ -4860,13 +4860,14 @@ Fields:
 
         return [default]
 
-    def copy_translations(old, new, excluded=()):
+    def copy_translations(self, new, excluded=()):
         """ Recursively copy the translations from original to new record
 
-        :param old: the original record
+        :param self: the original record
         :param new: the new record (copy of the original one)
         :param excluded: a container of user-provided field names
         """
+        old = self
         # avoid recursion through already copied records in case of circular relationship
         if '__copy_translations_seen' not in old._context:
             old = old.with_context(__copy_translations_seen=defaultdict(set))
