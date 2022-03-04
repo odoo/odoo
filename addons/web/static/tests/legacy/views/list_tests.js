@@ -47,7 +47,7 @@ QUnit.module('Views', {
                     m2o: {string: "M2O field", type: "many2one", relation: "bar"},
                     o2m: {string: "O2M field", type: "one2many", relation: "bar"},
                     m2m: {string: "M2M field", type: "many2many", relation: "bar"},
-                    amount: {string: "Monetary field", type: "monetary"},
+                    amount: {string: "Monetary field", type: "monetary", currency_field: "currency_id"},
                     currency_id: {string: "Currency", type: "many2one",
                                   relation: "res_currency", default: 1},
                     datetime: {string: "Datetime Field", type: 'datetime'},
@@ -93,10 +93,16 @@ QUnit.module('Views', {
                         type: "selection",
                         selection: [['after', 'A'], ['before', 'B']],
                     },
+                    rounding: {string: 'Rounding Factor', type: 'float', default: 0.01},
+                    decimal_places: {type: 'integer'}
                 },
                 records: [
                     {id: 1, display_name: "USD", symbol: '$', position: 'before'},
                     {id: 2, display_name: "EUR", symbol: '€', position: 'after'},
+                    {
+                        id: 3, display_name: 'RUB', symbol: '₽', position: 'after',
+                        rounding: 0.0001, decimal_places: 4
+                    }
                 ],
             },
             event: {
@@ -137,6 +143,16 @@ QUnit.module('Views', {
 
         serverData = { models: this.data };
         target = getFixture();
+
+        // prepare currencies for the session in the same way as ir.http get_currencies
+        this.sessionCurrencies = function () {
+            return Object.fromEntries(this.data.res_currency.records.map(currency => [currency.id, {
+                symbol: currency.symbol,
+                position: currency.position,
+                digits: [69, currency.decimal_places || 2]
+            }]))
+        };
+
     }
 }, function () {
 
@@ -2524,6 +2540,77 @@ QUnit.module('Views', {
             "field should still be formatted based on currency");
         assert.strictEqual(list.$('tfoot td:nth(1)').text(), '2000.000',
             "aggregates monetary use digits attribute if available");
+
+        list.destroy();
+    });
+
+     QUnit.test('aggregates digits can be set with the currency digits', async function (assert) {
+         assert.expect(2);
+         this.data.foo.records.forEach(e => e.currency_id = 3);
+
+         const list = await createView({
+             View: ListView,
+             model: 'foo',
+             data: this.data,
+             arch: '<tree>' +
+                 '<field name="amount" widget="monetary" sum="Sum" />' +
+                 '<field name="currency_id" invisible="1"/>' +
+                 '</tree>',
+             session: {currencies: this.sessionCurrencies()},
+         });
+
+        assert.strictEqual(list.$('.o_data_row td:nth(1)').text(), '1200.0000' + '\xa0' + '₽',
+            "field should still be formatted based on currency");
+        assert.strictEqual(list.$('tfoot td:nth(1)').text(), '2000.0000',
+            "aggregates monetary is formatted with the currency " +
+            "digits if no digits attributes has been set");
+
+        list.destroy();
+    });
+
+    QUnit.test('aggregates digits attrs override the currency digits', async function (assert) {
+        assert.expect(2);
+        this.data.foo.records.forEach(e => e.currency_id = 3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                '<field name="amount" widget="monetary" sum="Sum" digits="[5,3]"/>' +
+                '<field name="currency_id" invisible="1" />' +
+                '</tree>',
+            session: {currencies: this.sessionCurrencies()},
+        });
+
+        assert.strictEqual(list.$('.o_data_row td:nth(1)').text(), '1200.0000' + '\xa0' + '₽',
+            "field should still be formatted based on currency");
+        assert.strictEqual(list.$('tfoot td:nth(1)').text(), '2000.000',
+            "aggregates monetary is formatted with the digits attribute");
+
+        list.destroy();
+    });
+
+    QUnit.test("aggregates are not displayed on a currency field with mixed currencies", async function (assert) {
+        assert.expect(2);
+        this.data.foo.records[0].currency_id = 3;
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                '<field name="amount" widget="monetary" sum="Sum" />' +
+                '<field name="currency_id" invisible="1"/>' +
+                '</tree>',
+            session: {currencies: this.sessionCurrencies()},
+        });
+
+        assert.strictEqual(list.$('.o_data_row td:nth(1)').text(), '1200.0000' + '\xa0' + '₽',
+            "field should still be formatted based on currency");
+        assert.strictEqual(list.$('tfoot td:nth(1)').text(), 'N/A',
+            "Data from different currencies cannot be combined");
+        // TODO: Check that a tooltip is displayed
 
         list.destroy();
     });

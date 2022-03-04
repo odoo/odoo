@@ -9,6 +9,7 @@ import field_utils from 'web.field_utils';
 import Pager from 'web.Pager';
 import utils from 'web.utils';
 import viewUtils from 'web.viewUtils';
+import session from 'web.session';
 
 var _t = core._t;
 
@@ -473,9 +474,31 @@ var ListRenderer = BasicRenderer.extend({
                 if (!formatFunc) {
                     formatFunc = field_utils.format[field.type];
                 }
+                let digits = column.attrs.digits ? JSON.parse(column.attrs.digits) : undefined;
+                if (field.type === 'monetary' && self.state.data.length) {
+                    const currencyField = field.currency_field && self.state.fieldsInfo.list[field.currency_field];
+                    if (currencyField) {
+                        const currencies = self.state.data.map(entry => entry.data[field.currency_field].res_id);
+                        // check that every record has the same currency
+                        const singleCurrency = currencies[0] && currencies.every(currency => currency === currencies[0]);
+                        if (!singleCurrency) {
+                            return $cell.text(_t('N/A')).tooltip({
+                                title: function () {
+                                    return _t('Data from different currencies cannot be combined');
+                                }
+                            });
+                        }
+                        if (!digits) {
+                            // if no digits has been set in the column attrs, use the currency digits
+                            const currency = session.get_currency(currencies[0]);
+                            digits = currency.digits;
+                        }
+                    }
+                }
+
                 var formattedValue = formatFunc(value, field, {
                     escape: true,
-                    digits: column.attrs.digits ? JSON.parse(column.attrs.digits) : undefined,
+                    digits,
                 });
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
