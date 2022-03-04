@@ -612,7 +612,7 @@ class GeventServer(CommonServer):
     def process_limits(self):
         restart = False
         if self.ppid != os.getppid():
-            _logger.warning("LongPolling Parent changed", self.pid)
+            _logger.warning("LongPolling Parent changed: %s", self.pid)
             restart = True
         memory = memory_info(psutil.Process(self.pid))
         if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
