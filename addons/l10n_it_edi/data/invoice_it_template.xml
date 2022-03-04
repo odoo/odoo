@@ -162,26 +162,17 @@
                             <t t-set="line_counter" t-value="line_counter + 1"/>
                             <t t-call="l10n_it_edi.account_invoice_line_it_FatturaPA"/>
                         </t>
-                        <t t-foreach="record.line_ids.filtered(lambda line: line.tax_line_id)" t-as="tax_line">
+                        <t t-foreach="tax_details['tax_details']" t-as="tax_name">
+                            <t t-set="tax_dict" t-value="tax_details['tax_details'][tax_name]"/>
                             <DatiRiepilogo>
                                 <!--2.2.2-->
-                                <AliquotaIVA t-esc="format_numbers(tax_line.tax_line_id.amount)"/>
-                                <Natura t-if="tax_line.tax_line_id.l10n_it_has_exoneration" t-esc="tax_line.tax_line_id.l10n_it_kind_exoneration"/>
-                                <ImponibileImporto t-esc="format_monetary(tax_line.tax_base_amount, currency)"/>
-                                <Imposta t-esc="format_monetary(tax_line.price_unit, currency)"/>
-                                <EsigibilitaIVA t-if="not tax_line.tax_line_id.l10n_it_has_exoneration or tax_line.tax_line_id.l10n_it_kind_exoneration=='N6'" t-esc="tax_line.tax_line_id.l10n_it_vat_due_date"/>
-                                <RiferimentoNormativo t-if="tax_line.tax_line_id.l10n_it_has_exoneration" t-esc="tax_line.tax_line_id.l10n_it_law_reference"/>
-                            </DatiRiepilogo>
-                        </t>
-                        <!-- 0% tax lines -->
-                        <t t-foreach="tax_map" t-as="tax">
-                            <DatiRiepilogo>
-                                <AliquotaIVA t-esc="format_numbers(tax.amount)"/>
-                                <Natura t-if="tax.l10n_it_has_exoneration" t-esc="tax.l10n_it_kind_exoneration"/>
-                                <ImponibileImporto t-esc="format_monetary(tax_map[tax], currency)"/>
-                                <Imposta t-esc="format_monetary(0.00, currency)"/>
-                                <EsigibilitaIVA t-if="not tax.l10n_it_has_exoneration or tax.l10n_it_kind_exoneration=='N6'" t-esc="tax.l10n_it_vat_due_date"/>
-                                <RiferimentoNormativo t-if="tax.l10n_it_has_exoneration" t-esc="tax.l10n_it_law_reference"/>
+                                <AliquotaIVA t-esc="format_numbers(tax_dict['tax'].amount)"/>
+                                <Natura t-if="tax_dict['tax'].l10n_it_has_exoneration" t-esc="tax_dict['tax'].l10n_it_kind_exoneration"/>
+                                <Arrotondamento t-if="tax_dict.get('rounding')" t-esc="format_numbers(tax_dict['rounding'])"/>
+                                <ImponibileImporto t-esc="format_monetary(abs(tax_dict['base_amount']), currency)"/>
+                                <Imposta t-esc="format_monetary(abs(tax_dict['tax_amount']), currency)"/>
+                                <EsigibilitaIVA t-if="not tax_dict['tax'].l10n_it_has_exoneration or tax_dict['tax'].l10n_it_kind_exoneration=='N6'" t-esc="tax_dict['tax'].l10n_it_vat_due_date"/>
+                                <RiferimentoNormativo t-if="tax_dict['tax'].l10n_it_has_exoneration" t-esc="tax_dict['tax'].l10n_it_law_reference"/>
                             </DatiRiepilogo>
                         </t>
                     </DatiBeniServizi>
