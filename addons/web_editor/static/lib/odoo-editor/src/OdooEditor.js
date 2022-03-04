@@ -43,10 +43,7 @@ import {
     isEmptyBlock,
     getUrlsInfosInString,
     URL_REGEX,
-    isBold,
-    isItalic,
-    isUnderline,
-    isStrikeThrough,
+    isSelectionFormat,
     YOUTUBE_URL_GET_VIDEO_ID,
     unwrapContents,
     peek,
@@ -1937,14 +1934,12 @@ export class OdooEditor extends EventTarget {
             const selectionStartStyle = getComputedStyle(closestStartContainer);
 
             // queryCommandState does not take stylesheets into account
-            const boldButton = this.toolbar.querySelector('#bold');
-            boldButton && boldButton.classList.toggle('active', isBold(closestStartContainer));
-            const italicButton = this.toolbar.querySelector('#italic');
-            italicButton && italicButton.classList.toggle('active', isItalic(closestStartContainer));
-            const underlineButton = this.toolbar.querySelector('#underline');
-            underlineButton && underlineButton.classList.toggle('active', isUnderline(closestStartContainer));
-            const strikeThroughButton = this.toolbar.querySelector('#strikeThrough');
-            strikeThroughButton && strikeThroughButton.classList.toggle('active', isStrikeThrough(closestStartContainer));
+            for (const format of ['bold', 'italic', 'underline', 'strikeThrough']) {
+                const formatButton = this.toolbar.querySelector(`#${format.toLowerCase()}`);
+                if (formatButton) {
+                    formatButton.classList.toggle('active', isSelectionFormat(this.editable, format));
+                }
+            }
 
             const fontSizeValue = this.toolbar.querySelector('#fontSizeCurrentValue');
             if (fontSizeValue) {
