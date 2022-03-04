@@ -454,6 +454,145 @@ class WebsiteSale(http.Controller):
         # Compatibility pre-v14
         return request.redirect(_build_url_w_params("/shop/%s" % slug(product), request.params), code=301)
 
+    @http.route(['/shop/product/extra-images'], type='json', auth='user', website=True)
+    def add_product_images(self, images, product_product_id, product_template_id, combination_ids=None):
+        """
+        Turns a list of image ids refering to ir.attachments to product.images,
+        links all of them to product.
+        :raises NotFound : If the user is not allowed to access Attachment model
+        """
+
+        if not (request.env.user.has_group('website.group_website_designer') or\
+            request.env.user.has_group('website.group_website_publisher')):
+            raise NotFound()
+
+        image_ids = request.env["ir.attachment"].browse(i['id'] for i in images)
+        image_create_data = [Command.create({
+                    'name': image.name,                          # Images uploaded from url do not have any datas. This recovers them manually
+                    'image_1920': image.datas if image.datas else request.env['ir.qweb.field.image'].load_remote_url(image.url),
+                }) for image in image_ids]
+
+        product_product = request.env['product.product'].browse(int(product_product_id)) if product_product_id else False
+        product_template = request.env['product.template'].browse(int(product_template_id)) if product_template_id else False
+
+        if product_product and not product_template:
+            product_template = product_product.product_tmpl_id
+
+        if not product_product and product_template and product_template.has_dynamic_attributes():
+            combination = request.env['product.template.attribute.value'].browse(combination_ids)
+            product_product = product_template._get_variant_for_combination(combination)
+            if not product_product:
+                product_product = request.env['product.product'].browse(
+                    product_template.create_product_variant(combination_ids))
+        if product_template.has_configurable_attributes and product_product:
+            product_product.write({
+                'product_variant_image_ids': image_create_data
+            })
+        else:
+            product_template.write({
+                'product_template_image_ids': image_create_data
+            })
+
+    @http.route(['/shop/product/clear-images'], type='json', auth='user', website=True)
+    def clear_product_images(self, product_product_id, product_template_id):
+        """
+        Unlinks all images from the product.
+        """
+        if not (request.env.user.has_group('website.group_website_designer') or\
+            request.env.user.has_group('website.group_website_publisher')):
+            raise NotFound()
+
+        product_product = request.env['product.product'].browse(int(product_product_id)) if product_product_id else False
+        product_template = request.env['product.template'].browse(int(product_template_id)) if product_template_id else False
+
+        if product_product and not product_template:
+            product_template = product_product.product_tmpl_id
+
+        if product_product and product_product.product_variant_image_ids:
+            product_product.product_variant_image_ids.unlink()
+        else:
+            product_template.product_template_image_ids.unlink()
+
+    @http.route(['/shop/product/remove-image'], type='json', auth='user', website=True)
+    def remove_product_image(self, image_res_model, image_res_id):
+        """
+        Delete or clear the product's image.
+        """
+        if not (request.env.user.has_group('website.group_website_designer') or\
+            request.env.user.has_group('website.group_website_publisher')) or\
+            image_res_model not in ['product.product', 'product.template', 'product.image']:
+            raise NotFound()
+
+        image_res_id = int(image_res_id)
+        if image_res_model == 'product.product':
+            request.env['product.product'].browse(image_res_id).image_1920 = False
+        elif image_res_model == 'product.template':
+            request.env['product.template'].browse(image_res_id).image_1920 = False
+        else:
+            request.env['product.image'].browse(image_res_id).unlink()
+
+    @http.route(['/shop/product/resequence-image'], type='json', auth='user', website=True)
+    def resequence_product_image(self, image_res_model, image_res_id, move):
+        if not (request.env.user.has_group('website.group_website_designer') or\
+            request.env.user.has_group('website.group_website_publisher')) or\
+            image_res_model not in ['product.product', 'product.template', 'product.image'] or\
+            move not in ['first', 'left', 'right', 'last']:
+            raise NotFound()
+
+        image_res_id = int(image_res_id)
+        image_to_resequence = request.env[image_res_model].browse(image_res_id)
+        product = request.env['product.product']
+        product_template = request.env['product.template']
+        if image_res_model == 'product.product':
+            product = image_to_resequence
+            product_template = product.product_tmpl_id
+        elif image_res_model == 'product.template':
+            product_template = image_to_resequence
+            product = product_template.product_variant_id
+        else:
+            product = image_to_resequence.product_variant_id
+            product_template = product.product_tmpl_id or image_to_resequence.product_tmpl_id
+
+        if not product and not product_template:
+            raise ValidationError(_("Product not found"))
+
+        product_images = (product or product_template)._get_images()
+        if image_to_resequence not in product_images:
+            raise ValidationError(_("Invalid image"))
+
+        image_idx = product_images.index(image_to_resequence)
+        new_image_idx = 0
+        if move == 'left':
+            new_image_idx = max(0, image_idx - 1)
+        elif move == 'right':
+            new_image_idx = min(len(product_images) - 1, image_idx + 1)
+        elif move == 'last':
+            new_image_idx = len(product_images) - 1
+
+        # no-op resequences
+        if new_image_idx == image_idx:
+            return
+        # We can not move an embedded image to the first position (main product image)
+        if image_res_model == 'product.image' and image_to_resequence.video_url and product_images[new_image_idx]._name != 'product.image':
+            raise ValidationError(_("Can not resequence embedded image/video with a non compatible image."))
+
+        # Swap images
+        other_image = product_images[new_image_idx]
+        source_field = hasattr(image_to_resequence, 'video_url') and image_to_resequence.video_url and 'video_url' or 'image_1920'
+        target_field = hasattr(other_image, 'video_url') and other_image.video_url and 'video_url' or 'image_1920'
+        previous_data = other_image[target_field]
+        other_image[source_field] = image_to_resequence[source_field]
+        image_to_resequence[target_field] = previous_data
+        if source_field == 'video_url' and target_field != 'video_url':
+            image_to_resequence.video_url = False
+        if target_field == 'video_url' and source_field != 'video_url':
+            other_image.video_url = False
+
+        if hasattr(other_image, 'video_url'):
+            other_image._onchange_video_url()
+        if hasattr(image_to_resequence, 'video_url'):
+            image_to_resequence._onchange_video_url()
+
     def _prepare_product_values(self, product, category, search, **kwargs):
         ProductCategory = request.env['product.public.category']
 

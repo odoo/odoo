@@ -196,6 +196,13 @@
                 <we-button data-set-image-layout="carousel">Carousel</we-button>
                 <we-button data-set-image-layout="grid">Grid</we-button>
             </we-select>
+            <we-row string="Main image">
+                <we-button class="o_we_bg_brand_primary" data-replace-main-image="true" data-no-preview="true">Replace</we-button>
+            </we-row>
+            <we-row string="Extra Images">
+                <we-button class="o_we_bg_success" data-add-images="true" data-no-preview="true">Add</we-button>
+                <we-button class="o_we_bg_danger" data-clear-images="true" data-no-preview="true">Remove all</we-button>
+            </we-row>
         </div>
         <div data-selector="#product_detail #o-carousel-product" data-no-check="true">
             <we-select string="Image Zoom" data-no-preview="true" data-reload="/">
@@ -275,6 +282,20 @@
                          data-no-preview="true"
                          data-reload="/"/>
         </div>
+    </xpath>
+</template>
+
+<template id="snippets_options_web_editor" inherit_id="web_editor.snippet_options" name="e-commerce base snippet options">
+    <xpath expr="//div[@data-js='ReplaceMedia']" position="inside">
+        <we-row string="Re-order">
+            <we-button class="fa fa-fw fa-angle-double-left" data-no-preview="true" title="Move to first" data-set-position="first" data-name="media_wsale_resequence"/>
+            <we-button class="fa fa-fw fa-angle-left" data-no-preview="true" title="Move to previous" data-set-position="left" data-name="media_wsale_resequence"/>
+            <we-button class="fa fa-fw fa-angle-right" data-no-preview="true" title="Move to next" data-set-position="right" data-name="media_wsale_resequence"/>
+            <we-button class="fa fa-fw fa-angle-double-right" data-no-preview="true" title="Move to last" data-set-position="last" data-name="media_wsale_resequence"/>
+        </we-row>
+    </xpath>
+    <xpath expr="//div[@data-js='ReplaceMedia']/we-row" position="inside">
+        <we-button class="o_we_bg_danger" data-remove-media="true" data-no-preview="true" data-name="media_wsale_remove">Remove</we-button>
     </xpath>
 </template>
 
