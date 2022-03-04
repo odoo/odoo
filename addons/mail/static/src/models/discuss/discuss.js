@@ -40,7 +40,7 @@ registerModel({
                 const channel = await this.async(() =>
                     this.messaging.models['Thread'].performRpcCreateChannel({
                         name,
-                        privacy: ui.item.special,
+                        privacy: ui.item.special === 'private' ? 'private' : 'groups',
                     })
                 );
                 channel.open();
