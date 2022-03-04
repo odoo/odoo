@@ -3,17 +3,18 @@
 
     <t t-name="mail.ChatWindow" owl="1">
         <t t-if="chatWindow">
-            <div class="o_ChatWindow bg-white" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow.visibleIndex"
+            <div class="o_ChatWindow position-absolute bottom-0 d-flex flex-column rounded-lg-top bg-white" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow.visibleIndex"
                 t-att-class="{
                     'o-focused': chatWindow.isFocused,
                     'o-folded': chatWindow.isFolded,
-                    'o-fullscreen': chatWindow.isFullscreen,
-                    'o-mobile': messaging.device.isSmall,
+                    'o-fullscreen w-100 h-100': chatWindow.isFullscreen,
+                    'o-mobile position-fixed': messaging.device.isSmall,
+                    'mw-100 mh-100': !messaging.device.isSmall,
                     'o-new-message': !chatWindow.thread,
                 }" t-att-style="chatWindow.componentStyle" t-on-keydown="chatWindow.onKeydown" t-on-focusout="chatWindow.onFocusout" t-att-data-chat-window-local-id="chatWindow.localId" t-att-data-thread-local-id="chatWindow.thread ? chatWindow.thread.localId : ''" t-ref="root"
             >
                 <ChatWindowHeader
-                    className="'o_ChatWindow_header'"
+                    className="'o_ChatWindow_header flex-grow-0 flex-shrink-0'"
                     chatWindowLocalId="chatWindow.localId"
                     localId="chatWindow.chatWindowHeaderView.localId"
                     onClicked="chatWindow.onClickHeader"
@@ -26,17 +27,17 @@
                 </t>
                 <t t-if="chatWindow.threadView">
                     <ThreadView
-                        className="'o_ChatWindow_thread'"
+                        className="'o_ChatWindow_thread flex-grow-1 flex-shrink-1'"
                         localId="chatWindow.threadView.localId"
                     />
                 </t>
                 <t t-if="chatWindow.newMessageAutocompleteInputView">
-                    <div class="o_ChatWindow_newMessageForm">
-                        <span class="o_ChatWindow_newMessageFormLabel">
+                    <div class="o_ChatWindow_newMessageForm d-flex align-items-center mt-1 p-1">
+                        <span class="o_ChatWindow_newMessageFormLabel flex-grow-0 flex-shrink-0 mr-2">
                             To:
                         </span>
                         <AutocompleteInput
-                            className="'o_ChatWindow_newMessageFormInput'"
+                            className="'o_ChatWindow_newMessageFormInput flex-grow-1 flex-shrink-1 border'"
                             localId="chatWindow.newMessageAutocompleteInputView.localId"
                             select="_onAutocompleteSelect"
                             source="_onAutocompleteSource"
