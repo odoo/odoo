@@ -210,7 +210,7 @@ class AccountMove(models.Model):
     )
     partner_bank_id = fields.Many2one('res.partner.bank', string='Recipient Bank',
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
-        check_company=True)
+        check_company=True, readonly=False, store=True, compute='_compute_bank_partner_id', compute_sudo=False)
     payment_reference = fields.Char(string='Payment Reference', index=True, copy=False,
         help="The payment reference to set on journal items.")
     payment_id = fields.Many2one(
@@ -524,8 +524,6 @@ class AccountMove(models.Model):
                 line.account_id = new_term_account
 
         self._compute_bank_partner_id()
-        bank_ids = self.bank_partner_id.bank_ids.filtered(lambda bank: bank.company_id is False or bank.company_id == self.company_id)
-        self.partner_bank_id = bank_ids and bank_ids[0]
 
         # Find the new fiscal position.
         delivery_partner_id = self._get_invoice_delivery_partner_id()
@@ -1369,6 +1367,9 @@ class AccountMove(models.Model):
                 move.bank_partner_id = move.commercial_partner_id
             else:
                 move.bank_partner_id = move.company_id.partner_id
+
+            bank_ids = move.bank_partner_id.bank_ids.filtered(lambda bank: bank.company_id in (False, move.company_id))
+            move.partner_bank_id = bank_ids and bank_ids[0]
 
     @api.model
     def _get_invoice_in_payment_state(self):

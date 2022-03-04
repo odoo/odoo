@@ -191,7 +191,11 @@ class AccountPaymentRegister(models.TransientModel):
 
         partner_bank_account = self.env['res.partner.bank']
         if move.is_invoice(include_receipts=True):
-            partner_bank_account = move.partner_bank_id._origin
+            if move.move_type == 'in_refund':
+                bank_ids = move.commercial_partner_id.bank_ids.filtered(lambda bank: bank.company_id in (False, move.company_id))
+                partner_bank_account = bank_ids and bank_ids[0]
+            else:
+                partner_bank_account = move.partner_bank_id._origin
 
         return {
             'partner_id': line.partner_id.id,
