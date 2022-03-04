@@ -867,6 +867,18 @@ export function isBold(node) {
     const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
     return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
 }
+/**
+ * Return true if the current selection on the editable appears bold. The
+ * selection is considered to appear bold if every text node in it appears bold.
+ *
+ * @param {Element} editable
+ * @returns {boolean}
+ */
+export function isSelectionBold(editable) {
+    const selectedText = getSelectedNodes(editable)
+        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
+    return selectedText.length && selectedText.every(n => isBold(n.parentElement));
+}
 
 export function isUnbreakable(node) {
     if (!node || node.nodeType === Node.TEXT_NODE) {

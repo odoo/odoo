@@ -42,7 +42,7 @@ import {
     isEmptyBlock,
     getUrlsInfosInString,
     URL_REGEX,
-    isBold,
+    isSelectionBold,
     YOUTUBE_URL_GET_VIDEO_ID,
     unwrapContents,
     peek,
@@ -1865,7 +1865,7 @@ export class OdooEditor extends EventTarget {
 
             // queryCommandState('bold') does not take stylesheets into account
             const button = this.toolbar.querySelector('#bold');
-            button.classList.toggle('active', isBold(closestStartContainer));
+            button.classList.toggle('active', isSelectionBold(this.editable));
 
             const fontSizeValue = this.toolbar.querySelector('#fontSizeCurrentValue');
             if (fontSizeValue) {

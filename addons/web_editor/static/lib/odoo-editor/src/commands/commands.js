@@ -19,6 +19,7 @@ import {
     insertText,
     isBlock,
     isBold,
+    isSelectionBold,
     isColorGradient,
     isContentTextNode,
     isShrunkBlock,
@@ -360,9 +361,7 @@ export const editorCommands = {
         const selection = editor.document.getSelection();
         if (!selection.rangeCount || selection.getRangeAt(0).collapsed) return;
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
-        const isAlreadyBold = getSelectedNodes(editor.editable)
-            .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length)
-            .every(n => isBold(n.parentElement));
+        const isAlreadyBold = isSelectionBold(editor.editable);
         applyInlineStyle(editor, el => {
             if (isAlreadyBold) {
                 const block = closestBlock(el);
