@@ -360,8 +360,6 @@ class StockQuant(models.Model):
         return action
 
     def action_apply_inventory(self):
-        # Update the context to prevent recursive call from write method
-        self = self.with_context({'inventory_report_mode': False})
         products_tracked_without_lot = []
         for quant in self:
             rounding = quant.product_uom_id.rounding
