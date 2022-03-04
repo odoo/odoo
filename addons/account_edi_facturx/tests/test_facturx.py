@@ -59,7 +59,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
         })
 
         cls.expected_invoice_facturx_values = '''
-            <CrossIndustryInvoice>
+             <CrossIndustryInvoice>
                 <ExchangedDocumentContext>
                     <GuidelineSpecifiedDocumentContextParameter>
                         <ID>urn:cen.eu:en16931:2017</ID>
