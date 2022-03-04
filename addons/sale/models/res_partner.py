@@ -43,3 +43,11 @@ class ResPartner(models.Model):
             ('state', 'in', ['sent', 'sale', 'done'])
         ], limit=1)
         return can_edit_vat and not bool(has_so)
+
+    def action_view_sale_order(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('sale.act_res_partner_2_sale_order')
+        if self.is_company:
+            action['domain'] = [('partner_id.commercial_partner_id.id', '=', self.id)]
+        else:
+            action['domain'] = [('partner_id.id', '=', self.id)]
+        return action
