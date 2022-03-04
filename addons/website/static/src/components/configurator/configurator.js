@@ -397,6 +397,7 @@ class ThemeSelectionScreen extends Component {
     setup() {
         this.state = useStore();
         this.router = useRouter();
+        this.rpc = useService('rpc');
         this.themeSVGPreviews = [useRef('ThemePreview1'), useRef('ThemePreview2'), useRef('ThemePreview3')];
 
         onMounted(() => {
