@@ -3,9 +3,14 @@ odoo.define('website_sale.editor', function (require) {
 
 var options = require('web_editor.snippets.options');
 const Wysiwyg = require('website.wysiwyg');
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const { MediaDialog, MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
+const { useWowlService } = require('@web/legacy/utils');
 const {qweb, _t} = require('web.core');
 const {Markup} = require('web.utils');
 const Dialog = require('web.Dialog');
+
+const { onRendered } = owl;
 
 Wysiwyg.include({
     custom_events: Object.assign(Wysiwyg.prototype.custom_events, {
@@ -643,7 +648,47 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     }
 });
 
+// Small override of the MediaDialogWrapper to retrieve the attachment ids instead of img elements
+class AttachmentMediaDialog extends MediaDialog {
+    /**
+     * @override
+     */
+    async save() {
+        const selectedMedia = this.selectedMedia[this.state.activeTab];
+        if (selectedMedia.length) {
+            this.props.save(selectedMedia);
+        }
+        this.props.close();
+    }
+}
+
+class AttachmentMediaDialogWrapper extends MediaDialogWrapper {
+    setup() {
+        this.dialogs = useWowlService('dialog');
+
+        onRendered(() => {
+            this.dialogs.add(AttachmentMediaDialog, this.props);
+        });
+    }
+}
+
 options.registry.WebsiteSaleProductPage = options.Class.extend({
+
+    /**
+     * @override
+     */
+    async willStart() {
+        let productProduct = this.$target[0].querySelector('[data-oe-model="product.product"]');
+        let productTemplate = this.$target[0].querySelector('[data-oe-model="product.template"]');
+        this.productProductID = productProduct ? productProduct.dataset.oeId : null;
+        this.productTemplateID = productTemplate ? productTemplate.dataset.oeId : null;
+        this.mode = "product.template";
+        if (this.productProductID) {
+            this.mode = "product.product"
+        }
+
+        return this._super(...arguments);
+    },
 
     _updateWebsiteConfig(params) {
         this._rpc({
@@ -671,6 +716,80 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
     },
 
     /**
+     * Emulate click on the main image of the carousel.
+     */
+    replaceMainImage: function () {
+        const image = this.$target[0].querySelector(`[data-oe-model="${this.mode}"][data-oe-field=image_1920] img`);
+        image.dispatchEvent(new Event('dblclick', {bubbles: true}));
+    },
+
+    _getSelectedVariantValues($container) {
+        const combination = $container.find('input.js_product_change:checked').data('combination');
+
+        if (combination) {
+            return combination;
+        }
+        const values = [];
+
+        const variantsValuesSelectors = [
+            'input.js_variant_change:checked',
+            'select.js_variant_change'
+        ];
+        _.each($container.find(variantsValuesSelectors.join(', ')), function (el) {
+            values.push(+$(el).val());
+        });
+
+        return values;
+    },
+
+    /**
+     * Prompts the user for images, then saves the new images.
+     */
+    addImages: function () {
+        if(this.mode === 'product.template'){
+            this.displayNotification({
+                type: 'info',
+                message: 'Pictures will be added to the main image. Use "Instant" attributes to set pictures on each variants'
+            });
+        }
+        const dialog = new ComponentWrapper(this, AttachmentMediaDialogWrapper, {
+            multiImages: true,
+            onlyImages: true,
+            save: attachments => {
+                this._rpc({
+                    route: `/shop/product/extra-images`,
+                    params: {
+                        images: attachments,
+                        product_product_id: this.productProductID,
+                        product_template_id: this.productTemplateID,
+                        combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
+                    }
+                }).then(() => {
+                    this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector});
+                });
+            }
+        });
+        dialog.mount(document.body);
+    },
+
+    /**
+     * Removes all extra-images from the product.
+     */
+    clearImages: function () {
+        this._rpc({
+            route: `/shop/product/clear-images`,
+            params: {
+                model: this.mode,
+                product_product_id: this.productProductID,
+                product_template_id: this.productTemplateID,
+                combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
+            }
+        }).then(() => {
+            this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector});
+        });
+    },
+
+    /**
      * @override
      */
     async _computeWidgetState(methodName, params) {
@@ -681,7 +800,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                 return this.$target.data('image_layout');
         }
         return this._super(...arguments);
-    }
+    },
 });
 
 options.registry.WebsiteSaleProductPageGrid = options.Class.extend({
@@ -792,5 +911,57 @@ options.registry.SnippetSave.include({
         return await this._super(...arguments)
             && !this.$target.hasClass('o_wsale_alternative_products');
     }
-})
 });
+
+options.registry.ReplaceMedia.include({
+    /**
+     * @override
+     */
+    async willStart() {
+        const parent = this.$target.parent();
+        this.isProductPageImage = this.$target.closest('#product_detail').length > 0;
+        // Product Page images may be the product's image or a record of `product.image`
+        this.recordModel = parent.data('oe-model');
+        this.recordId = parent.data('oe-id');
+        return this._super(...arguments);
+    },
+    /**
+     * Removes the image in the back-end
+     */
+    async removeMedia() {
+        this._rpc({
+            route: '/shop/product/remove-image',
+            params: {
+                image_res_model: this.recordModel,
+                image_res_id: this.recordId,
+            },
+        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: '#product_detail_main'}));
+    },
+    /**
+     * Change sequence of product page images
+     * 
+     */
+    async setPosition(previewMode, widgetValue, params) {
+        this._rpc({
+            route: '/shop/product/resequence-image',
+            params: {
+                image_res_model: this.recordModel,
+                image_res_id: this.recordId,
+                move: widgetValue,
+            },
+        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: '#product_detail_main'}));
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (['media_wsale_resequence', 'media_wsale_remove'].includes(widgetName)) {
+            // Only include these if we are inside of the product's page images
+            return this.isProductPageImage;
+        }
+        return this._super(...arguments);
+    }
+});
+
+});
+
