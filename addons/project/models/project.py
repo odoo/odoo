@@ -728,6 +728,7 @@ class Project(models.Model):
             'user': self._get_user_values(),
             'milestones': self._get_milestones(),
             'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
+            'currency_id': self.currency_id.id,
         }
         if self._show_profitability():
             panel_data['profitability_items'] = self._get_profitability_items()
