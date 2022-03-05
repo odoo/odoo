@@ -36,6 +36,26 @@ class Project(models.Model):
     #  Project Updates
     # ----------------------------
 
+    def _get_profitability_items(self):
+        profitability_items = super()._get_profitability_items()
+        mrp_category = 'manufacturing_order'
+        mrp_aal_read_group = self.env['account.analytic.line'].sudo()._read_group(
+            [('account_id', 'in', self.analytic_account_id.ids), ('category', '=', mrp_category)],
+            ['amount'],
+            ['account_id'],
+        )
+        if mrp_aal_read_group:
+            mrp_costs = {
+                'id': mrp_category,
+                'name': _lt('Manufacturing Orders'),
+                'billed': sum([res['amount'] for res in mrp_aal_read_group]),
+                'to_bill': 0.0,
+            }
+            costs = profitability_items['costs']
+            costs['data'].append(mrp_costs)
+            costs['total']['billed'] += mrp_costs['billed']
+        return profitability_items
+
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('mrp.group_mrp_user'):
