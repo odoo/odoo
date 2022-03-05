@@ -100,7 +100,20 @@
             </thead>
             <tbody>
                 <tr t-foreach="revenue_items" t-as="revenue" t-key="revenue.id" t-if="revenue.invoiced !== 0 || revenue.to_invoice !== 0">
-                    <td><t t-esc="revenue.name"/></td>
+                    <td>
+                        <a t-if="revenue.action" class="o_rightpanel_button"
+                            t-on-click="onProjectActionClick"
+                            t-att-data-action="revenue.action.name"
+                            t-att-data-type="revenue.action.type or 'action'"
+                            t-att-data-domain="revenue.action.domain"
+                            t-att-data-section="revenue.action.section"
+                            t-att-data-res-id="revenue.action.res_id"
+                            t-att-data-context="revenue.action.context"
+                        >
+                            <t t-esc="revenue.name"/>
+                        </a>
+                        <t t-esc="revenue.name" t-else=""/>
+                    </td>
                     <td align="right" t-attf-class="{{ revenue.invoiced === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue.invoiced)"/></td>
                     <td align="right" t-attf-class="{{ revenue.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue.to_invoice)"/></td>
                     <td align="right" t-attf-class="{{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
@@ -132,7 +145,20 @@
             </thead>
             <tbody>
                 <tr t-foreach="cost_items" t-as="cost" t-key="cost.id" t-if="cost.billed !== 0 || cost.to_bill !== 0">
-                    <td><t t-esc="cost.name"/></td>
+                    <td>
+                        <a t-if="cost.action" class="o_rightpanel_button"
+                            t-on-click="onProjectActionClick"
+                            t-att-data-action="cost.action.name"
+                            t-att-data-type="cost.action.type or 'action'"
+                            t-att-data-domain="cost.action.domain"
+                            t-att-data-section="cost.action.section"
+                            t-att-data-res-id="cost.action.res_id"
+                            t-att-data-context="cost.action.context"
+                        >
+                            <t t-esc="cost.name"/>
+                        </a>
+                        <t t-esc="cost.name" t-else=""/>
+                    </td>
                     <td align="right" t-attf-class="{{ cost.billed === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost.billed)"/></td>
                     <td align="right" t-attf-class="{{ cost.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost.to_bill)"/></td>
                     <td align="right" t-attf-class="{{ cost.billed + cost.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost.billed + cost.to_bill)"/></td>

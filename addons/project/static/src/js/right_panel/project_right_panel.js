@@ -68,9 +68,24 @@ export default class ProjectRightPanel extends LegacyComponent {
 
     async onProjectActionClick(event) {
         event.stopPropagation();
-        let action = event.currentTarget.dataset.action;
-        const additionalContext = JSON.parse(event.currentTarget.dataset.additional_context || "{}");
-        if (event.currentTarget.dataset.type === "object") {
+        const dataset =  event.currentTarget.dataset;
+        let action = dataset.action;
+        const additionalContext = JSON.parse(dataset.additional_context || "{}");
+        if (dataset.type === "object") {
+            const args = [this.project_id];
+            if (dataset.section) {
+                args.push(dataset.section);
+            }
+            if (dataset.domain) {
+                args.push(JSON.parse(dataset.domain || '[]'));
+            }
+            if (dataset.resId) {
+                args.push(Number(dataset.resId));
+            }
+            let context = {};
+            if (dataset.context) {
+                context = dataset.context;
+            }
             action = await this.rpc({
                 // Use the call_button method in order to have an action
                 // with the correct view naming, i.e. list view is named
@@ -78,10 +93,10 @@ export default class ProjectRightPanel extends LegacyComponent {
                 route: '/web/dataset/call_button',
                 params: {
                     model: 'project.project',
-                    method: event.currentTarget.dataset.action,
-                    args: [this.project_id],
+                    method: action,
+                    args,
                     kwargs: {
-                        context: this.context
+                        context: Object.assign(this.context, context),
                     }
                 }
             });
