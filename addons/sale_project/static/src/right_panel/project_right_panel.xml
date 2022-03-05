@@ -45,6 +45,13 @@
                                 <td align="right"><t t-esc="sale_item.qty_delivered"/> <t t-esc="uom_name"/></td>
                                 <td align="right"><t t-esc="sale_item.qty_invoiced"/> <t t-esc="uom_name"/></td>
                             </tr>
+                            <tr t-if="sale_items.total &gt; sale_items.data.length">
+                                <td>
+                                    <a class="o_rightpanel_button text-bold" t-on-click="onLoadSalesOrderLinesClick">
+                                        Load more
+                                    </a>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
