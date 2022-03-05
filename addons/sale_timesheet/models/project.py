@@ -9,6 +9,8 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
 
+from odoo.addons.sale_timesheet.models.product import GENERAL_TO_SERVICE
+
 # YTI PLEASE SPLIT ME
 class Project(models.Model):
     _inherit = 'project.project'
@@ -363,31 +365,79 @@ class Project(models.Model):
         query._where_params += timesheet_params + employee_mapping_params
         return query
 
-    def _get_profitability_items(self):
-        if not self.user_has_groups('project.group_project_manager'):
-            return {'data': []}
-        data = []
-        if self.allow_billable:
-            profitability = self._get_profitability_common()
-            margin_color = False
-            if not float_is_zero(profitability['margin'], precision_digits=0):
-                margin_color = profitability['margin'] > 0 and 'green' or 'red'
-            data += [{
-                'name': _("Revenues"),
-                'value': format_amount(self.env, profitability['revenues'], self.env.company.currency_id)
-            }, {
-                'name': _("Costs"),
-                'value': format_amount(self.env, profitability['costs'], self.env.company.currency_id)
-            }, {
-                'name': _("Margin"),
-                'color': margin_color,
-                'value': format_amount(self.env, profitability['margin'], self.env.company.currency_id)
-            }]
-        return {
-            'action': self.allow_billable and self.allow_timesheets and "action_view_timesheet",
-            'allow_billable': self.allow_billable,
-            'data': data,
-        }
+    def _get_profitability_items_from_aal(self, profitability_items):
+        if not self.allow_timesheets:
+            total_invoiced = total_to_invoice = 0.0
+            revenue_data = []
+            for revenue in profitability_items['revenues']['data']:
+                if revenue['id'] in ['billable_fixed', 'billable_time', 'billable_milestones']:
+                    continue
+                total_invoiced += revenue['invoiced']
+                total_to_invoice += revenue['to_invoice']
+                revenue_data.append(revenue)
+            profitability_items['revenues'] = {
+                'data': revenue_data,
+                'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
+            }
+            return profitability_items
+        aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
+            [('so_line', 'in', self._get_all_sale_order_items().ids)],
+            ['timesheet_invoice_type', 'timesheet_invoice_id', 'unit_amount', 'amount'],
+            ['timesheet_invoice_type', 'timesheet_invoice_id'],
+            lazy=False)
+        revenues_dict = {}
+        costs_dict = {}
+        total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
+        total_costs = {'billed': 0.0, 'to_bill': 0.0}
+        for res in aa_line_read_group:
+            amount = res['amount']
+            invoice_type = res['timesheet_invoice_type']
+            cost = costs_dict.setdefault(invoice_type, {'billed': 0.0, 'to_bill': 0.0})
+            revenue = revenues_dict.setdefault(invoice_type, {'invoiced': 0.0, 'to_invoice': 0.0})
+            if amount < 0:  # cost
+                cost['billed'] += amount
+                total_costs['billed'] += amount
+            else:  # revenues
+                revenue['invoiced'] += amount
+                total_revenues['invoiced'] += amount
+
+        def convert_dict_into_profitability_data(d, cost=True):
+            profitability_data = []
+            key1, key2 = ['to_bill', 'billed'] if cost else ['to_invoice', 'invoiced']
+            for invoice_type, vals in d.items():
+                if not vals[key1] and not vals[key2]:
+                    continue
+                data = {'id': invoice_type, **vals}
+                profitability_data.append(data)
+            return profitability_data
+
+        def merge_profitability_data(a, b):
+            return {
+                'data': a['data'] + b['data'],
+                'total': {key: a['total'][key] + b['total'][key] for key in a['total'].keys() if key in b['total']}
+            }
+
+        for revenue in profitability_items['revenues']['data']:
+            revenue_id = revenue['id']
+            aal_revenue = revenues_dict.pop(revenue_id, {})
+            revenue['to_invoice'] += aal_revenue.get('to_invoice', 0.0)
+            revenue['invoiced'] += aal_revenue.get('invoiced', 0.0)
+
+        for cost in profitability_items['costs']['data']:
+            cost_id = cost['id']
+            aal_cost = costs_dict.pop(cost_id, {})
+            cost['to_bill'] += aal_cost.get('to_bill', 0.0)
+            cost['billed'] += aal_cost.get('billed', 0.0)
+
+        profitability_items['revenues'] = merge_profitability_data(
+            profitability_items['revenues'],
+            {'data': convert_dict_into_profitability_data(revenues_dict, False), 'total': total_revenues},
+        )
+        profitability_items['costs'] = merge_profitability_data(
+            profitability_items['costs'],
+            {'data': convert_dict_into_profitability_data(costs_dict), 'total': total_costs},
+        )
+        return profitability_items
 
     def _get_profitability_common(self):
         # FIXME: used in project update model
@@ -429,6 +479,9 @@ class Project(models.Model):
             'delivered_timesheet': 'billable_time',
             'delivered_manual': 'billable_manual',
         }
+
+    def _get_profitability_items(self):
+        return self._get_profitability_items_from_aal(super()._get_profitability_items())
 
 
 class ProjectTask(models.Model):

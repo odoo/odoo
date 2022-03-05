@@ -18,8 +18,6 @@ class TestProjectUpdateSaleTimesheet(TestProjectUpdate):
         self.assertEqual(template_values['profitability']['margin_percentage'], "0", "Margin percentage used in the template should be well defined")
 
     def test_project_update_panel_profitability_no_billable(self):
-        panel_data = self.project_pigs.get_panel_data()
-        self.assertEqual(panel_data['profitability_items']['allow_billable'], False, "Project should not be billable by default")
         try:
             self.project_pigs.action_view_timesheet()
         except Exception as e:

@@ -331,14 +331,26 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 34,
             'type': 'service',
             'invoice_policy': 'delivery',
-            'uom_id': cls.env.ref('uom.product_uom_hour').id,
-            'uom_po_id': cls.env.ref('uom.product_uom_hour').id,
+            'uom_id': uom_hour.id,
+            'uom_po_id': uom_hour.id,
             'default_code': 'SERV-DELI4',
             'service_type': 'manual',
             'service_tracking': 'project_only',
             'project_id': False,
             'project_template_id': cls.project_template.id,
             'taxes_id': False,
+            'property_account_income_id': cls.account_sale.id,
+        })
+        cls.product_milestone = cls.env['product.product'].create({
+            'name': 'Milestone Product',
+            'list_price': 20,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'uom_id': uom_hour.id,
+            'uom_po_id': uom_hour.id,
+            'default_code': 'SERV-MILES',
+            'service_type': 'milestones',
+            'service_tracking': 'no',
             'property_account_income_id': cls.account_sale.id,
         })
 

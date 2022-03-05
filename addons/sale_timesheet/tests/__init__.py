@@ -7,6 +7,7 @@ from . import test_sale_timesheet
 from . import test_sale_service
 from . import test_project
 from . import test_project_billing
+from . import test_project_profitability
 from . import test_reinvoice
 from . import test_reporting
 from . import test_project_billing_multicompany
