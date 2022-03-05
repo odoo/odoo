@@ -101,17 +101,17 @@
             <tbody>
                 <tr t-foreach="revenue_items" t-as="revenue" t-key="revenue.name">
                     <td><t t-esc="revenue.name"/></td>
-                    <td align="right" t-attf-class="{{ revenue.invoiced === 0 ? 'text-muted' : ''}}"><t t-esc="revenue.invoiced"/></td>
-                    <td align="right" t-attf-class="{{ revenue.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="revenue.to_invoice"/></td>
-                    <td align="right" t-attf-class="{{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="revenue.invoiced + revenue.to_invoice"/></td>
+                    <td align="right" t-attf-class="{{ revenue.invoiced === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue.invoiced)"/></td>
+                    <td align="right" t-attf-class="{{ revenue.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue.to_invoice)"/></td>
+                    <td align="right" t-attf-class="{{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
                     <td>Total</td>
-                    <td align="right" t-attf-class="{{ revenue_total.invoiced === 0 ? 'text-muted' : ''}}"><t t-esc="revenue_total.invoiced"/></td>
-                    <td align="right" t-attf-class="{{ revenue_total.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="revenue_total.to_invoice"/></td>
-                    <td align="right" t-attf-class="{{ revenue_total.invoiced + revenue_total.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="revenue_total.invoiced + revenue_total.to_invoice"/></td>
+                    <td align="right" t-attf-class="{{ revenue_total.invoiced === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue_total.invoiced)"/></td>
+                    <td align="right" t-attf-class="{{ revenue_total.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue_total.to_invoice)"/></td>
+                    <td align="right" t-attf-class="{{ revenue_total.invoiced + revenue_total.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue_total.invoiced + revenue_total.to_invoice)"/></td>
                 </tr>
             </tfoot>
         </table>
@@ -133,17 +133,17 @@
             <tbody>
                 <tr t-foreach="cost_items" t-as="cost" t-key="cost.name">
                     <td><t t-esc="cost.name"/></td>
-                    <td align="right" t-attf-class="{{ cost.billed === 0 ? 'text-muted' : ''}}"><t t-esc="cost.billed"/></td>
-                    <td align="right" t-attf-class="{{ cost.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="cost.to_bill"/></td>
-                    <td align="right" t-attf-class="{{ cost.billed + cost.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="cost.billed + cost.to_bill"/></td>
+                    <td align="right" t-attf-class="{{ cost.billed === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost.billed)"/></td>
+                    <td align="right" t-attf-class="{{ cost.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost.to_bill)"/></td>
+                    <td align="right" t-attf-class="{{ cost.billed + cost.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost.billed + cost.to_bill)"/></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
                     <td>Total</td>
-                    <td align="right" t-attf-class="{{ cost_total.billed === 0 ? 'text-muted' : ''}}"><t t-esc="cost_total.billed"/></td>
-                    <td align="right" t-attf-class="{{ cost_total.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="cost_total.to_bill"/></td>
-                    <td align="right" t-attf-class="{{ cost_total.billed + cost_total.to_bill  === 0 ? 'text-muted' : ''}}"><t t-esc="cost_total.billed + cost_total.to_bill"/></td>
+                    <td align="right" t-attf-class="{{ cost_total.billed === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost_total.billed)"/></td>
+                    <td align="right" t-attf-class="{{ cost_total.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost_total.to_bill)"/></td>
+                    <td align="right" t-attf-class="{{ cost_total.billed + cost_total.to_bill  === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost_total.billed + cost_total.to_bill)"/></td>
                 </tr>
             </tfoot>
         </table>
@@ -159,9 +159,9 @@
             <thead>
                 <tr>
                     <th style="width: 40%">Margin</th>
-                    <th style="width: 20%; text-align: right;" t-att-class="margin_invoiced_billed &lt; 0 ? 'o_color_red' : 'o_color_green'"><t t-esc="margin_invoiced_billed"/></th>
-                    <th style="width: 20%; text-align: right;" t-att-class="margin_to_invoice_to_bill &lt; 0 ? 'o_color_red' : 'o_color_green'"><t t-esc="margin_to_invoice_to_bill"/></th>
-                    <th style="width: 20%; text-align: right;" t-att-class="margin_total &lt; 0 ? 'o_color_red' : 'o_color_green'"><t t-esc="margin_total"/></th>
+                    <th style="width: 20%; text-align: right;" t-att-class="margin_invoiced_billed &lt; 0 ? 'o_color_red' : 'o_color_green'"><t t-esc="formatMonetary(margin_invoiced_billed)"/></th>
+                    <th style="width: 20%; text-align: right;" t-att-class="margin_to_invoice_to_bill &lt; 0 ? 'o_color_red' : 'o_color_green'"><t t-esc="formatMonetary(margin_to_invoice_to_bill)"/></th>
+                    <th style="width: 20%; text-align: right;" t-att-class="margin_total &lt; 0 ? 'o_color_red' : 'o_color_green'"><t t-esc="formatMonetary(margin_total)"/></th>
                 </tr>
             </thead>
         </table>

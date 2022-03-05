@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { AddMilestone, OpenMilestone } from '@project/js/right_panel/project_utils';
-import { formatFloat } from "@web/fields/formatters";
+import { formatFloat, formatMonetary } from "@web/fields/formatters";
 import { LegacyComponent } from "@web/legacy/legacy_component";
+import { session } from "@web/session";
 
 const { onWillStart, onWillUpdateProps, useState } = owl;
 
@@ -30,6 +31,23 @@ export default class ProjectRightPanel extends LegacyComponent {
 
     formatFloat(value) {
         return formatFloat(value, { digits: [false, 1] });
+    }
+
+    formatMonetary(value, options = {}) {
+        const valueFormatted = formatMonetary(value, {
+            currencyId: this.state.data.currency_id,
+            ...options,
+            'noSymbol': true,
+        });
+        const currency = session.currencies[this.state.data.currency_id];
+        if (!currency) {
+            return valueFormatted;
+        }
+        if (currency.position === "after") {
+            return `${valueFormatted} ${currency.symbol}`;
+        } else {
+            return `${currency.symbol} ${valueFormatted}`;
+        }
     }
 
     async _loadQwebContext() {
