@@ -5,6 +5,7 @@ from . import test_burndown_chart
 from . import test_project_base
 from . import test_project_config
 from . import test_project_flow
+from . import test_project_profitability
 from . import test_project_recurrence
 from . import test_project_sharing
 from . import test_project_sharing_portal_access

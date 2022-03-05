@@ -298,15 +298,15 @@ tour.register('sale_timesheet_tour', {
     content: 'Check the user sees Profitability section',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section:eq(3) .o_rightpanel_data_row:contains('Revenues')",
+    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data > .o_rightpanel_subsection:eq(0) > table > thead > tr > th:eq(0):contains('Revenues')",
     content: 'Check the user sees Profitability subsection row',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section:eq(3) .o_rightpanel_data_row:contains('Costs')",
+    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data > .o_rightpanel_subsection:eq(1) > table > thead > tr > th:eq(0):contains('Costs')",
     content: 'Check the user sees Profitability subsection row',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section:eq(3) .o_rightpanel_data_row:contains('Margin')",
+    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data > .o_rightpanel_subsection:eq(2) > table > thead > tr > th:eq(0):contains('Margin')",
     content: 'Check the user sees Profitability subsection row',
     run: function () {},
 }, {

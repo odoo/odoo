@@ -29,7 +29,7 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
     padding: $o-rightpanel-p-small $o-rightpanel-p $o-rightpanel-p*2 $o-rightpanel-p;
     border-left: 1px solid $gray-300;
     background-color: white;
-
+    min-width: 380px;
 
     .o_rightpanel_section {
         padding-bottom: $o-rightpanel-p;
@@ -138,6 +138,17 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
                     cursor: pointer;
                     padding-left: $o-rightpanel-p-tiny;
                 }
+            }
+
+            .o_rightpanel_subsection {
+                &:not(:last-child) {
+                    padding-bottom: 1rem;
+                }
+
+            }
+            table > tfoot {
+                font-weight: bold;
+                border-top: 1px solid black;
             }
         }
 

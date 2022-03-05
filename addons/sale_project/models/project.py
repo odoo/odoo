@@ -271,6 +271,10 @@ class Project(models.Model):
             'data': self.get_sale_items_data(domain, limit=10, with_action=with_action),
         }
 
+    def _show_profitability(self):
+        self.ensure_one()
+        return self.allow_billable and super()._show_profitability()
+
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):

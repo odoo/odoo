@@ -315,7 +315,6 @@ class Project(models.Model):
         return {
             **panel_data,
             'analytic_account_id': self.analytic_account_id.id,
-            'profitability_items': self._get_profitability_items(),
         }
 
     def _get_sale_order_items_query(self, domain_per_model=None):

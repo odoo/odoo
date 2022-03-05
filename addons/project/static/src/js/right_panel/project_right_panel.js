@@ -16,6 +16,10 @@ export default class ProjectRightPanel extends LegacyComponent {
                 milestones: {
                     data: []
                 },
+                profitability_items: {
+                    costs: { data: [], total: { billed: 0.0, to_bill: 0.0 } },
+                    revenues: { data: [], total: { invoiced: 0.0, to_invoice: 0.0 } },
+                },
                 user: {},
             }
         });

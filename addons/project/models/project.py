@@ -722,15 +722,30 @@ class Project(models.Model):
 
     def get_panel_data(self):
         self.ensure_one()
-        return {
+        if not self.user_has_groups('project.group_project_user'):
+            return {}
+        panel_data = {
             'user': self._get_user_values(),
             'milestones': self._get_milestones(),
             'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
         }
+        if self._show_profitability():
+            panel_data['profitability_items'] = self._get_profitability_items()
+        return panel_data
 
     def _get_user_values(self):
         return {
             'is_project_user': self.user_has_groups('project.group_project_user'),
+        }
+
+    def _show_profitability(self):
+        self.ensure_one()
+        return True
+
+    def _get_profitability_items(self):
+        return {
+            'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
+            'costs': {'data': [], 'total': {'billed': 0.0, 'to_bill': 0.0}},
         }
 
     def _get_milestones(self):

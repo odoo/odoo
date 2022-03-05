@@ -5,40 +5,4 @@
         Create Sales Order
     </button>
 
-    <t t-inherit="project.ProjectRightPanel" t-inherit-mode="extension" owl="1">
-        <xpath expr="//t[@t-call='project.StatButtonsSection']" position="after">
-            <t t-call="sale_timesheet.ProfitabilitySection"/>
-        </xpath>
-    </t>
-
-    <t t-name="sale_timesheet.ProfitabilitySection" owl="1">
-        <t t-if="state.data.user.is_project_user &amp;&amp; state.data.profitability_items.data.length > 0 &amp;&amp; state.data.analytic_account_id">
-            <t t-set="profitability_items" t-value="state.data.profitability_items"/>
-            <div name="profitability" class="o_rightpanel_section">
-                <div class="o_rightpanel_header">
-                    <div class="o_rightpanel_title">
-                        Profitability Forecast
-                    </div>
-                </div>
-
-                <div class="o_rightpanel_data">
-                    <div t-foreach="profitability_items.data" t-as="profitability" t-key="profitability.name" class="o_rightpanel_data_row">
-                        <span class="o_rightpanel_left_col o_rightpanel_left_text" data-toggle="tooltip" title="In the margin forecast, costs and revenues related to the analytical account are taken into account, along with future income based on hours that have been sold but not invoiced yet." t-if="profitability.name == 'Margin'">
-                            <t t-esc="profitability.name"/>
-                        </span>
-                        <span class="o_rightpanel_left_col o_rightpanel_left_text" t-else="">
-                            <t t-esc="profitability.name"/>
-                        </span>
-                        <t t-if="profitability.color">
-                            <span t-attf-class="o_rightpanel_right_col o_color_{{profitability.color}}"><b><t t-esc="profitability.value"/></b></span>
-                        </t>
-                        <t t-else="">
-                            <span class="o_rightpanel_right_col"><t t-esc="profitability.value"/></span>
-                        </t>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </t>
-
 </templates>
