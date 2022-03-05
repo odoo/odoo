@@ -276,6 +276,10 @@ class HrExpense(models.Model):
                 exp.duplicate_expense_ids = [(6, 0, ids)]
                 expenses = expenses - exp
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        self.quantity = 1
+
     @api.onchange('product_id', 'date', 'account_id')
     def _onchange_product_id_date_account_id(self):
         rec = self.env['account.analytic.default'].sudo().account_get(
