@@ -8,7 +8,7 @@ from odoo.addons.project.tests.test_project_profitability import TestProjectProf
 class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon):
     def check_project_profitability_before_creating_and_approving_expense_sheet(self, expense, project, project_profitability_items_empty):
         self.assertDictEqual(
-            project._get_profitability_items(),
+            project._get_profitability_items(False),
             project_profitability_items_empty,
             'No data should be found since the expense is not approved yet.',
         )
@@ -21,7 +21,7 @@ class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon):
         self.assertEqual(expense_sheet.state, 'submit')
 
         self.assertDictEqual(
-            project._get_profitability_items(),
+            project._get_profitability_items(False),
             project_profitability_items_empty,
             'No data should be found since the sheet is not approved yet.',
         )
@@ -48,7 +48,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             self.project_profitability_items_empty)
 
         self.assertDictEqual(
-            self.project._get_profitability_items(),
+            self.project._get_profitability_items(False),
             {
                 'costs': {
                     'data': [{'id': 'expenses', 'to_bill': 0.0, 'billed': -expense.untaxed_amount}],
@@ -60,7 +60,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
 
         expense_sheet.refuse_sheet('Test cancel expense')
         self.assertDictEqual(
-            self.project._get_profitability_items(),
+            self.project._get_profitability_items(False),
             self.project_profitability_items_empty,
             'No data should be found since the sheet is not approved yet.',
         )
