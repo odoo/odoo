@@ -6,8 +6,8 @@
 # Martin Trigaux, 2021
 # Léonie Bouchat <lbo@odoo.com>, 2021
 # sakodoo <sak@odoo.com>, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1441,7 +1441,7 @@ msgstr "Conto di credito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
 msgid "Account Root"
-msgstr ""
+msgstr "Radice conto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
@@ -1751,7 +1751,7 @@ msgstr "Mappatura conti per la posizione fiscale"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
-msgstr ""
+msgstr "Conto ratei"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -1788,7 +1788,7 @@ msgstr "Procedura guidata per gli ordini maturati"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued total"
-msgstr ""
+msgstr "Totale cumulato"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -3413,7 +3413,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__carryover_line_ids
 #: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
 msgid "Carryover lines"
-msgstr ""
+msgstr "Linee di riporto"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -3686,7 +3686,7 @@ msgstr "Piano dei conti"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Chart of accounts set."
-msgstr ""
+msgstr "Piano dei conti impostato."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_bnk_stmt_check
@@ -4731,7 +4731,7 @@ msgstr "Cliente"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Customer Bank Account"
-msgstr ""
+msgstr "Conto bancario cliente"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
@@ -5330,7 +5330,7 @@ msgstr "Sconto (%)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
 msgid "Display Amount"
-msgstr ""
+msgstr "Visualizza importo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -5584,7 +5584,7 @@ msgstr "Scadenza"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Due Amount for"
-msgstr ""
+msgstr "Importo da pagare per"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -5773,6 +5773,9 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
+"Le voci nel futuro sono impostate per essere pubblicate automaticamente per "
+"impostazione predefinita. Seleziona questa casella di controllo per "
+"pubblicarle ora."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6629,6 +6632,8 @@ msgid ""
 "If a payment is still outstanding more than sixty (60) days after the due "
 "payment date,"
 msgstr ""
+"Se un pagamento è ancora in sospeso più di sessanta (60) giorni dopo la data"
+" di scadenza,"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -6922,7 +6927,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In order to validate this bill, you must"
-msgstr ""
+msgstr "Per convalidare questa fattura, è necessario"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -7547,7 +7552,7 @@ msgstr "È abbinato con un estratto conto bancario"
 #: model:ir.model.fields,field_description:account.field_account_move__is_move_sent
 #: model:ir.model.fields,field_description:account.field_account_payment__is_move_sent
 msgid "Is Move Sent"
-msgstr ""
+msgstr "Movimento inviato"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__is_off_balance
@@ -7823,7 +7828,7 @@ msgstr "Conto provvisorio registro"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_code_company_uniq
 msgid "Journal codes must be unique per company."
-msgstr ""
+msgstr "I codici di giornale devono essere unici per ogni azienda."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -8445,7 +8450,7 @@ msgstr "Valuta principale dell'azienda"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Make Accrual Entries"
-msgstr ""
+msgstr "Effettuare registrazioni di ratei"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__reply_to_force_new
@@ -8503,6 +8508,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manuale: Pagare o farsi pagare con qualsiasi metodo al di fuori di Odoo.\n"
+"Acquirer di pagamento: Ogni acquirer di pagamento ha il suo metodo di pagamento. Richiedi una transazione verso una carta grazie a un token di pagamento salvato dal partner al momento dell'acquisto o della sottoscrizione online.\n"
+"Assegno: Paga le fatture con assegno e stampalo da Odoo.\n"
+"Deposito batch: Raccogli diversi assegni di clienti in una volta sola generando e inviando un deposito batch alla tua banca. Il modulo account_batch_payment è necessario.\n"
+"Bonifico SEPA: Paga nella zona SEPA inviando un file di bonifico SEPA alla tua banca. Il modulo account_sepa è necessario.\n"
+"Addebito diretto SEPA: Fatti pagare nella zona SEPA grazie a un mandato che il tuo partner ti avrà conferito. Il modulo account_sepa è necessario.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -11511,7 +11522,7 @@ msgstr "Ricerca movimenti contabili"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__past_months_limit
 msgid "Search Months Limit"
-msgstr ""
+msgstr "Limite dei mesi di ricerca"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -13856,6 +13867,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
+"Registrazione dalla quale è stata creata questa registrazione per imposte "
+"con criterio di cassa."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14299,6 +14312,8 @@ msgid ""
 "The sum of total residual amount propositions and the statement line amount "
 "allowed gap type."
 msgstr ""
+"La somma delle proposte di importo residuo totale e la linea di "
+"dichiarazione importo consentito tipo di gap."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__payment_tolerance_param

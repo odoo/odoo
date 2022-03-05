@@ -23,12 +23,12 @@ msgstr ""
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
 msgid "Event Automated Mailing"
-msgstr "إرسال رسائل الفعاليات تلقائيًا"
+msgstr "إرسال رسائل البريد الإلكتروني للفعاليات تلقائياً "
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_registration
 msgid "Event Registration"
-msgstr "تسجيل الفعالية"
+msgstr "التسجيل للفعالية "
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
@@ -59,7 +59,7 @@ msgstr "الرسائل النصية القصيرة "
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_sms_template
 msgid "SMS Templates"
-msgstr ""
+msgstr "قوالب الرسائل النصية القصيرة "
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
@@ -75,6 +75,10 @@ msgid ""
 "object.event_id.name }} event is starting {{ object.get_date_range_str() }}."
 " We confirm your registration and hope to meet you there."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: يسرنا تذكيرك بأن فعالية {{ object.event_id.name }}"
+" سوف تبدأ في {{ object.get_date_range_str() }}. نحن نؤكد تسجيلك ونأمل في أن "
+"نراك هناك. "
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -83,3 +87,6 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: يسعدنا تأكيد تسجيلك للفعالية {{ "
+"object.event_id.name }}. "

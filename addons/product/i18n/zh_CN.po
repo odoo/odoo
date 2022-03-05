@@ -1334,6 +1334,10 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"在标准价格和 AVCO 中：产品的价值（在 AVCO 中自动计算）。\n"
+"在 FIFO 中：将离开库存的下一个单位的值（自动计算）。\n"
+"用于在购买成本未知时对产品进行估价（例如库存调整）。\n"
+"用于计算销售订单的利润。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -2663,7 +2667,7 @@ msgid ""
 "This configuration of product attributes, values, and exclusions would lead "
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
-msgstr ""
+msgstr "产品属性、值和排除项的这种配置不会导致任何可能的变体。 如果需要，请直接存档或删除您的产品。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -3231,7 +3235,7 @@ msgstr "不能将属性 %s 从产品 %s 调整至产品 %s"
 msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
-msgstr ""
+msgstr "您不能禁用价目表规则，请将其删除或存档其价目表."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
