@@ -39,3 +39,37 @@ class Project(models.Model):
             action["views"] = [[False, 'form']]
             action["res_id"] = expenses.id
         return action
+
+    # ----------------------------
+    #  Project Update
+    # ----------------------------
+    def _get_expenses_profitability_items(self):
+        if not self.analytic_account_id:
+            return {}
+        expenses_read_group = self.env['hr.expense'].sudo()._read_group(
+            [('analytic_account_id', 'in', self.analytic_account_id.ids),
+             ('is_refused', '=', False),
+             ('state', 'in', ['approved', 'done'])],
+            ['untaxed_amount'],
+            [],
+        )
+        if not expenses_read_group or not expenses_read_group[0]['__count']:
+            return {}
+        expense_data = expenses_read_group[0]
+        section_id = 'expenses'
+        return {
+            'costs': {'id': section_id, 'billed': -expense_data['untaxed_amount'], 'to_bill': 0.0},
+        }
+
+    def _get_profitability_items(self, with_action=True):
+        profitability_data = super()._get_profitability_items(with_action)
+        expenses_data = self._get_expenses_profitability_items(with_action)
+        if expenses_data:
+            if 'revenues' in expenses_data:
+                revenues = profitability_data['revenues']
+                revenues['data'].append(expenses_data['revenues'])
+                revenues['total'] = {k: revenues['total'][k] + expenses_data['revenues'][k] for k in ['invoiced', 'to_invoice']}
+            costs = profitability_data['costs']
+            costs['data'].append(expenses_data['costs'])
+            costs['total'] = {k: costs['total'][k] + expenses_data['costs'][k] for k in ['billed', 'to_bill']}
+        return profitability_data
