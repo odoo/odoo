@@ -26,12 +26,12 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         """
         self.assertFalse(self.project_non_billable.allow_billable)
         self.assertDictEqual(
-            self.project_non_billable._get_profitability_items(),
+            self.project_non_billable._get_profitability_items(False),
             self.project_profitability_items_empty,
         )
         self.project_non_billable.write({'sale_line_id': self.so.order_line[0].id})
         self.assertDictEqual(
-            self.project_non_billable._get_profitability_items(),
+            self.project_non_billable._get_profitability_items(False),
             self.project_profitability_items_empty,
             "Even if the project has a sale order item linked the project profitability should not be computed since it is not billable."
         )
@@ -53,7 +53,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         sale_order.action_confirm()
         self.task.write({'sale_line_id': delivery_service_order_line.id})
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(),
+            self.project_task_rate._get_profitability_items(False),
             self.project_profitability_items_empty,
             'No timesheets has been recorded in the task and no product has been deelivered in the SO linked so the project profitability has no data found.'
         )
@@ -78,7 +78,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         self.assertEqual((timesheet1 + timesheet2).so_line, delivery_service_order_line)
         self.assertEqual(delivery_service_order_line.qty_delivered, 0.0, 'The service type is not timesheet but manual so the quantity delivered is not increased by the timesheets linked.')
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(),
+            self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
                     'data': [],
@@ -111,7 +111,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         self.assertFalse(timesheet3.so_line, 'This timesheet should be non billable since the user manually empty the SOL.')
 
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(),
+            self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
                     'data': [],
@@ -150,7 +150,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         self.assertEqual(billable_timesheets.so_line, delivery_timesheet_order_line, 'The SOL of the timesheets should be the one of the task.')
         self.assertEqual(delivery_timesheet_order_line.qty_delivered, timesheet1.unit_amount + timesheet2.unit_amount)
         self.assertEqual(
-            self.project_task_rate._get_profitability_items(),
+            self.project_task_rate._get_profitability_items(False),
             {
                 'revenues': {
                     'data': [
@@ -196,7 +196,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             'unit_amount': 1,
         })
         self.assertEqual(task2_timesheet.so_line, milestone_order_line)
-        profitability_items = self.project_task_rate._get_profitability_items()
+        profitability_items = self.project_task_rate._get_profitability_items(False)
         self.assertFalse([data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'])
         self.assertDictEqual(
             [data for data in profitability_items['costs']['data'] if data['id'] == 'billable_milestones'][0],
@@ -204,12 +204,12 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         )
 
         milestone_order_line.qty_delivered = 1
-        profitability_items = self.project_task_rate._get_profitability_items()
+        profitability_items = self.project_task_rate._get_profitability_items(False)
         self.assertDictEqual(
             [data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'][0],
             {'id': 'billable_milestones', 'to_invoice': milestone_order_line.untaxed_amount_to_invoice, 'invoiced': 0.0},
         )
         task2_timesheet.unlink()
-        profitability_items = self.project_task_rate._get_profitability_items()
+        profitability_items = self.project_task_rate._get_profitability_items(False)
         self.assertFalse([data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'])
         self.assertFalse([data for data in profitability_items['costs']['data'] if data['id'] == 'billable_milestones'])

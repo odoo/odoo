@@ -9,8 +9,6 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
 
-from odoo.addons.sale_timesheet.models.product import GENERAL_TO_SERVICE
-
 # YTI PLEASE SPLIT ME
 class Project(models.Model):
     _inherit = 'project.project'
@@ -308,6 +306,27 @@ class Project(models.Model):
         })
         return action
 
+    def action_profitability_items(self, section_name, domain=None, res_id=False):
+        self.ensure_one()
+        if section_name in ['billable_fixed', 'billable_time', 'billable_milestones', 'billable_manual', 'non_billable']:
+            action = self.action_billable_time_button()
+            action['name'] = _('Timesheets')
+            if domain:
+                action['domain'] = expression.AND([[('project_id', '=', self.id)], domain])
+            action['context'].update(search_default_groupby_timesheet_invoice_type=False, **self.env.context)
+            if res_id:
+                if 'views' in action:
+                    action['views'] = [
+                        (view_id, view_type)
+                        for view_id, view_type in action['views']
+                        if view_type == 'form'
+                    ] or [False, 'form']
+                action['view_mode'] = 'form'
+                if res_id:
+                    action['res_id'] = res_id
+            return action
+        return super().action_profitability_items(section_name, domain, res_id)
+
     # ----------------------------
     #  Project Updates
     # ----------------------------
@@ -372,7 +391,7 @@ class Project(models.Model):
             domain,
         ])
 
-    def _get_profitability_items_from_aal(self, profitability_items):
+    def _get_profitability_items_from_aal(self, profitability_items, with_action=True):
         if not self.allow_timesheets:
             total_invoiced = total_to_invoice = 0.0
             revenue_data = []
@@ -389,9 +408,10 @@ class Project(models.Model):
             return profitability_items
         aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
             self.sudo()._get_profitability_aal_domain(),
-            ['timesheet_invoice_type', 'timesheet_invoice_id', 'unit_amount', 'amount'],
+            ['timesheet_invoice_type', 'timesheet_invoice_id', 'unit_amount', 'amount', 'ids:array_agg(id)'],
             ['timesheet_invoice_type', 'timesheet_invoice_id'],
             lazy=False)
+        can_see_timesheets = with_action and len(self) == 1 and self.user_has_groups('hr_timesheet.group_hr_timesheet_approver')
         revenues_dict = {}
         costs_dict = {}
         total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
@@ -407,6 +427,19 @@ class Project(models.Model):
             else:  # revenues
                 revenue['invoiced'] += amount
                 total_revenues['invoiced'] += amount
+            if can_see_timesheets and invoice_type not in ['other_costs', 'other_revenues']:
+                cost.setdefault('record_ids', []).extend(res['ids'])
+                revenue.setdefault('record_ids', []).extend(res['ids'])
+
+        action_name = None
+        if can_see_timesheets:
+            action_name = 'action_profitability_items'
+
+        def get_timesheets_action(invoice_type, record_ids):
+            action_params = {'name': action_name, 'type': 'object', 'section': invoice_type, 'domain': json.dumps([('id', 'in', record_ids)])}
+            if len(record_ids) == 1:
+                action_params['res_id'] = record_ids[0]
+            return action_params
 
         def convert_dict_into_profitability_data(d, cost=True):
             profitability_data = []
@@ -414,7 +447,14 @@ class Project(models.Model):
             for invoice_type, vals in d.items():
                 if not vals[key1] and not vals[key2]:
                     continue
+                record_ids = vals.pop('record_ids', [])
                 data = {'id': invoice_type, **vals}
+                if record_ids:
+                    if invoice_type not in ['other_costs', 'other_revenues'] and can_see_timesheets:  # action to see the timesheets
+                        action = get_timesheets_action(invoice_type, record_ids)
+                        if not cost:
+                            action['context'] = json.dumps({'search_default_groupby_invoice': 1})
+                        data['action'] = action
                 profitability_data.append(data)
             return profitability_data
 
@@ -429,12 +469,20 @@ class Project(models.Model):
             aal_revenue = revenues_dict.pop(revenue_id, {})
             revenue['to_invoice'] += aal_revenue.get('to_invoice', 0.0)
             revenue['invoiced'] += aal_revenue.get('invoiced', 0.0)
+            record_ids = aal_revenue.get('record_ids', [])
+            if can_see_timesheets and record_ids:
+                action = get_timesheets_action(revenue_id, record_ids)
+                action['context'] = json.dumps({'search_default_groupby_invoice': 1})
+                revenue['action'] = action
 
         for cost in profitability_items['costs']['data']:
             cost_id = cost['id']
             aal_cost = costs_dict.pop(cost_id, {})
             cost['to_bill'] += aal_cost.get('to_bill', 0.0)
             cost['billed'] += aal_cost.get('billed', 0.0)
+            record_ids = aal_cost.get('record_ids', [])
+            if can_see_timesheets and record_ids:
+                cost['action'] = get_timesheets_action(cost_id, record_ids)
 
         profitability_items['revenues'] = merge_profitability_data(
             profitability_items['revenues'],
@@ -487,8 +535,11 @@ class Project(models.Model):
             'delivered_manual': 'billable_manual',
         }
 
-    def _get_profitability_items(self):
-        return self._get_profitability_items_from_aal(super()._get_profitability_items())
+    def _get_profitability_items(self, with_action=True):
+        return self._get_profitability_items_from_aal(
+            super()._get_profitability_items(with_action),
+            with_action
+        )
 
 
 class ProjectTask(models.Model):
