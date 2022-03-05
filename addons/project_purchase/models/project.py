@@ -62,3 +62,27 @@ class Project(models.Model):
                 'sequence': 36,
             })
         return buttons
+
+    def _get_profitability_items(self):
+        profitability_items = super()._get_profitability_items()
+        if self.analytic_account_id:
+            purchase_order_line_read = self.env['purchase.order.line'].sudo().search_read([
+                ('account_analytic_id', 'in', self.analytic_account_id.ids),
+                ('state', '!=', 'cancel'),
+                '|', ('qty_invoiced', '>', 0), ('qty_to_invoice', '>', 0),
+            ], ['qty_invoiced', 'qty_to_invoice', 'price_unit'])
+            if purchase_order_line_read:
+                amount_invoiced = amount_to_invoice = 0.0
+                purchase_order_line_ids = []
+                for pol_read in purchase_order_line_read:
+                    price_unit = pol_read['price_unit']
+                    amount_invoiced -= price_unit * pol_read['qty_invoiced'] if pol_read['qty_invoiced'] > 0 else 0.0
+                    amount_to_invoice -= price_unit * pol_read['qty_to_invoice'] if pol_read['qty_to_invoice'] > 0 else 0.0
+                    purchase_order_line_ids.append(pol_read['id'])
+                costs = profitability_items['costs']
+                section_id = 'purchase_order'
+                purchase_order_costs = {'id': section_id, 'name': _('Purchase Order'), 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
+                costs['data'].append(purchase_order_costs)
+                costs['total']['billed'] += amount_invoiced
+                costs['total']['to_bill'] += amount_to_invoice
+        return profitability_items
