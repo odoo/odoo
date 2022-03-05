@@ -403,6 +403,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.module('Actions in target="inline"');
+
     QUnit.test(
         'form views for actions in target="inline" open in edit mode',
         async function (assert) {
@@ -523,4 +524,110 @@ QUnit.module("ActionManager", (hooks) => {
             assert.strictEqual($(target).find("nav .o_menu_brand").text(), "MAIN APP");
         }
     );
+
+    QUnit.module('Actions in target="main"');
+
+    QUnit.test('can execute act_window actions in target="main"', async function (assert) {
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.containsOnce(target, ".breadcrumb-item");
+        assert.strictEqual(
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            "Partners Action 1"
+        );
+
+        await doAction(webClient, {
+            name: "Another Partner Action",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "list"]],
+            target: "main",
+        });
+
+        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".breadcrumb-item");
+        assert.strictEqual(
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            "Another Partner Action"
+        );
+    });
+
+    QUnit.test('can switch view in an action in target="main"', async function (assert) {
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            name: "Partner Action",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            target: "main",
+        });
+
+        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".breadcrumb-item");
+        assert.strictEqual(
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            "Partner Action"
+        );
+
+        // open first record
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await legacyExtraNextTick();
+
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsN(target, ".breadcrumb-item", 2);
+        assert.strictEqual(
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            "Partner ActionFirst record"
+        );
+    });
+
+    QUnit.test('can restore an action in target="main"', async function (assert) {
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            name: "Partner Action",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            target: "main",
+        });
+
+        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".breadcrumb-item");
+        assert.strictEqual(
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            "Partner Action"
+        );
+
+        // open first record
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await legacyExtraNextTick();
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsN(target, ".breadcrumb-item", 2);
+        assert.strictEqual(
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            "Partner ActionFirst record"
+        );
+
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.containsN(target, ".breadcrumb-item", 3);
+
+        // go back to form view
+        await click(target.querySelectorAll(".breadcrumb-item")[1]);
+        await legacyExtraNextTick();
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsN(target, ".breadcrumb-item", 2);
+        assert.strictEqual(
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            "Partner ActionFirst record"
+        );
+    });
 });
