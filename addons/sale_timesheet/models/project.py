@@ -365,6 +365,13 @@ class Project(models.Model):
         query._where_params += timesheet_params + employee_mapping_params
         return query
 
+    def _get_profitability_aal_domain(self):
+        domain = ['|', ('project_id', 'in', self.ids), ('so_line', 'in', self._fetch_sale_order_item_ids())]
+        return expression.AND([
+            super()._get_profitability_aal_domain(),
+            domain,
+        ])
+
     def _get_profitability_items_from_aal(self, profitability_items):
         if not self.allow_timesheets:
             total_invoiced = total_to_invoice = 0.0
@@ -381,7 +388,7 @@ class Project(models.Model):
             }
             return profitability_items
         aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
-            [('so_line', 'in', self._get_all_sale_order_items().ids)],
+            self.sudo()._get_profitability_aal_domain(),
             ['timesheet_invoice_type', 'timesheet_invoice_id', 'unit_amount', 'amount'],
             ['timesheet_invoice_type', 'timesheet_invoice_id'],
             lazy=False)

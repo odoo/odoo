@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _, _lt
+from odoo.osv import expression
 
 
 class Project(models.Model):
@@ -62,6 +63,12 @@ class Project(models.Model):
                 'sequence': 36,
             })
         return buttons
+
+    def _get_profitability_aal_domain(self):
+        return expression.AND([
+            super()._get_profitability_aal_domain(),
+            ['|', ('move_id', '=', False), ('move_id.purchase_line_id', '=', False)],
+        ])
 
     def _get_profitability_items(self):
         profitability_items = super()._get_profitability_items()
