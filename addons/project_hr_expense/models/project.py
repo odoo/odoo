@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -61,9 +62,15 @@ class Project(models.Model):
             'costs': {'id': section_id, 'billed': -expense_data['untaxed_amount'], 'to_bill': 0.0},
         }
 
-    def _get_profitability_items(self, with_action=True):
-        profitability_data = super()._get_profitability_items(with_action)
-        expenses_data = self._get_expenses_profitability_items(with_action)
+    def _get_profitability_aal_domain(self):
+        return expression.AND([
+            super()._get_profitability_aal_domain(),
+            ['|', ('move_id', '=', False), ('move_id.expense_id', '=', False)],
+        ])
+
+    def _get_profitability_items(self):
+        profitability_data = super()._get_profitability_items()
+        expenses_data = self._get_expenses_profitability_items()
         if expenses_data:
             if 'revenues' in expenses_data:
                 revenues = profitability_data['revenues']

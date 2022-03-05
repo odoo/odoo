@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _lt
+from odoo.osv import expression
 
 
 class Project(models.Model):
@@ -35,6 +36,12 @@ class Project(models.Model):
     # ----------------------------
     #  Project Updates
     # ----------------------------
+
+    def _get_profitability_aal_domain(self):
+        return expression.AND([
+            super()._get_profitability_aal_domain(),
+            [('category', '!=', 'manufacturing_order')],
+        ])
 
     def _get_profitability_items(self):
         profitability_items = super()._get_profitability_items()
