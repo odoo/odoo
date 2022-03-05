@@ -43,8 +43,8 @@ class Project(models.Model):
             [('category', '!=', 'manufacturing_order')],
         ])
 
-    def _get_profitability_items(self):
-        profitability_items = super()._get_profitability_items()
+    def _get_profitability_items(self, with_action=True):
+        profitability_items = super()._get_profitability_items(with_action)
         mrp_category = 'manufacturing_order'
         mrp_aal_read_group = self.env['account.analytic.line'].sudo()._read_group(
             [('account_id', 'in', self.analytic_account_id.ids), ('category', '=', mrp_category)],
@@ -52,12 +52,15 @@ class Project(models.Model):
             ['account_id'],
         )
         if mrp_aal_read_group:
+            can_see_manufactoring_order = with_action and len(self) == 1 and self.user_has_groups('mrp.group_mrp_user')
             mrp_costs = {
                 'id': mrp_category,
                 'name': _lt('Manufacturing Orders'),
                 'billed': sum([res['amount'] for res in mrp_aal_read_group]),
                 'to_bill': 0.0,
             }
+            if can_see_manufactoring_order:
+                mrp_costs['action'] = {'name': 'action_view_mrp_production', 'type': 'object'}
             costs = profitability_items['costs']
             costs['data'].append(mrp_costs)
             costs['total']['billed'] += mrp_costs['billed']
