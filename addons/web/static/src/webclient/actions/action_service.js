@@ -818,7 +818,7 @@ function makeActionManager(env) {
         action.controllers[view.type] = controller;
 
         const updateUIOptions = {
-            clearBreadcrumbs: options.clearBreadcrumbs,
+            clearBreadcrumbs: action.target === 'main' || options.clearBreadcrumbs ,
             onClose: options.onClose,
             stackPosition: options.stackPosition,
         };
