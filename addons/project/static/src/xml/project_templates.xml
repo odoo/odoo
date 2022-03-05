@@ -64,7 +64,7 @@
 
     <t t-name="project.ProfitabilitySection" owl="1">
         <t t-set="profitability_items" t-value="state.data.profitability_items"/>
-        <div name="profitability" class="o_rightpanel_section">
+        <div name="profitability" class="o_rightpanel_section" t-if="profitability_items and (profitability_items.revenues.data.length or profitability_items.costs.data.length)">
             <div class="o_rightpanel_header">
                 <div class="o_rightpanel_title">
                     Profitability
@@ -72,10 +72,10 @@
             </div>
 
             <div class="o_rightpanel_data">
-                <div class="o_rightpanel_subsection">
+                <div class="o_rightpanel_subsection" t-if="profitability_items.revenues.data.length">
                     <t t-call="project.RevenueSection"/>
                 </div>
-                <div class="o_rightpanel_subsection">
+                <div class="o_rightpanel_subsection" t-if="profitability_items.costs.data.length">
                     <t t-call="project.CostSection"/>
                 </div>
                 <div class="o_rightpanel_subsection">
@@ -99,7 +99,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr t-foreach="revenue_items" t-as="revenue" t-key="revenue.name">
+                <tr t-foreach="revenue_items" t-as="revenue" t-key="revenue.id" t-if="revenue.invoiced !== 0 || revenue.to_invoice !== 0">
                     <td><t t-esc="revenue.name"/></td>
                     <td align="right" t-attf-class="{{ revenue.invoiced === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue.invoiced)"/></td>
                     <td align="right" t-attf-class="{{ revenue.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue.to_invoice)"/></td>
@@ -131,7 +131,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr t-foreach="cost_items" t-as="cost" t-key="cost.name">
+                <tr t-foreach="cost_items" t-as="cost" t-key="cost.id" t-if="cost.billed !== 0 || cost.to_bill !== 0">
                     <td><t t-esc="cost.name"/></td>
                     <td align="right" t-attf-class="{{ cost.billed === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost.billed)"/></td>
                     <td align="right" t-attf-class="{{ cost.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost.to_bill)"/></td>
