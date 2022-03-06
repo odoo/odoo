@@ -977,7 +977,7 @@ class SaleOrder(models.Model):
         self.message_post(body=message)
 
     def _recompute_prices(self):
-        lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
+        lines_to_recompute = self._get_update_prices_lines()
         lines_to_recompute.invalidate_recordset(['pricelist_item_id'])
         lines_to_recompute._compute_price_unit()
         # Special case: we want to overwrite the existing discount on _recompute_prices call
@@ -1061,6 +1061,10 @@ class SaleOrder(models.Model):
             "quantities\". For Services, you should modify the Service Invoicing Policy to "
             "'Prepaid'."
         )
+
+    def _get_update_prices_lines(self):
+        """ Hook to exclude specific lines which should not be updated based on price list recomputation """
+        return self.order_line.filtered(lambda line: not line.display_type)
 
     def _get_invoiceable_lines(self, final=False):
         """Return the invoiceable lines for order `self`."""
