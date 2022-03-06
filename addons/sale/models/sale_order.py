@@ -505,10 +505,14 @@ class SaleOrder(models.Model):
         else:
             self.show_update_pricelist = False
 
+    def _get_update_prices_lines(self):
+        """ Hook to exclude specific lines which should not be updated based on price list recomputation """
+        return self.order_line.filtered(lambda line: not line.display_type)
+
     def update_prices(self):
         self.ensure_one()
         lines_to_update = []
-        for line in self.order_line.filtered(lambda line: not line.display_type):
+        for line in self._get_update_prices_lines():
             product = line.product_id.with_context(
                 partner=self.partner_id,
                 quantity=line.product_uom_qty,
