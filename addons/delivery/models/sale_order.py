@@ -38,6 +38,11 @@ class SaleOrder(models.Model):
         if delivery_line:
             self.recompute_delivery_price = True
 
+    def _get_update_prices_lines(self):
+        """ Exclude delivery lines from price list recomputation based on product instead of carrier """
+        lines = super()._get_update_prices_lines()
+        return lines.filtered(lambda line: not line.is_delivery)
+
     def _remove_delivery_line(self):
         """Remove delivery products from the sales orders"""
         delivery_lines = self.order_line.filtered("is_delivery")
