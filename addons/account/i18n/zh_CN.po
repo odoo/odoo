@@ -85,9 +85,9 @@
 # liAnGjiA <liangjia@qq.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 深圳市耀影科技有限公司_QQ1006399173, 2021
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -95,7 +95,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,6 +145,12 @@ msgstr ""
 "       例如180 /（1 - 10％）= 200（不含价格）\n"
 "       例如200 *（1 - 10％）= 180（含价格）\n"
 "        "
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid " The %(lock_type)s lock date is set on %(lock_date)s."
+msgstr "%(lock_type)s 锁定日期设置为 %(lock_date)s。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -266,12 +272,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "- Posted Entries Only"
-msgstr ""
+msgstr "- 仅发布条目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "- Posted and Draft Entries"
-msgstr ""
+msgstr "- 已发布和草稿条目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -653,7 +659,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "<span class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label o_td_label\">匹配发票/账单与</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -2761,7 +2767,7 @@ msgstr "可用日记帐"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
 msgid "Available Partner Bank"
-msgstr ""
+msgstr "可用的合作伙伴银行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
@@ -3867,7 +3873,7 @@ msgstr "公司"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Company Bank Account"
-msgstr ""
+msgstr "公司银行账户"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
@@ -6190,7 +6196,7 @@ msgstr "来自"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "From :"
-msgstr ""
+msgstr "从:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -10222,7 +10228,7 @@ msgstr "发布时间"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Posted Entries only"
-msgstr ""
+msgstr "仅发布条目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -10237,7 +10243,7 @@ msgstr "已过账的会计分录"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Posted and Draft Entries"
-msgstr ""
+msgstr "已发布和草稿条目"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13174,6 +13180,15 @@ msgstr "在您的日记账条目中选择的科目被强制提供外币。您应
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"The accounting date being set prior to the %(lock_type)s lock date "
+"%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
+msgstr ""
+"会计日期被设置在%(lock_type)s锁定日期%(lock_date)s之前，它将在发布时被更改为%(accounting_date)s。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "The accounting date is set prior to the tax lock date which is set on %s. "
 "Hence, the accounting date will be changed to %s."
 msgstr "会计日期设置在 %s 上设置的税金锁定日期之前。因此，会计日期将更改为 %s."
@@ -14362,7 +14377,7 @@ msgstr "至"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "To :"
-msgstr ""
+msgstr "到:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__to_check
@@ -16122,6 +16137,12 @@ msgid ""
 msgstr "保留要求支付固定利息的权利，相当于剩余到期金额的10%."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "tax"
+msgstr "税"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
 msgid "technical field for widget tax-group-custom-field"
 msgstr "widget tax-group-custom-field的技术字段"
@@ -16164,6 +16185,12 @@ msgid ""
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
 msgstr "承诺在约定的时间范围内，尽最大努力在适当的时候提供优质服务. 但是，其任何义务都不能被视为实现结果的义务."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "user"
+msgstr "用户"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

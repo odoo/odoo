@@ -14,7 +14,7 @@
 # Martin Trigaux, 2021
 # Jimmy Li <olga200340@hotmail.com>, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
-# dott.dev <dev@dottdot.com>, 2021
+# dott.dev <dottdot.dev@gmail.com>, 2021
 # Gerard Chen <gerardpublico@gmail.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
@@ -75,6 +75,12 @@ msgstr ""
 "       例如180 / (1 - 10％) = 200 (不含價格)\n"
 "       例如200 * (1 - 10％) = 180 (含價格\n"
 "        "
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid " The %(lock_type)s lock date is set on %(lock_date)s."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -13120,6 +13126,14 @@ msgstr "在您的日記帳傳票中選擇的帳戶強制提供輔助貨幣。您
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"The accounting date being set prior to the %(lock_type)s lock date "
+"%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "The accounting date is set prior to the tax lock date which is set on %s. "
 "Hence, the accounting date will be changed to %s."
 msgstr "會計日期設置在 %s 上設置的稅收鎖定日期之前。因此，會計日期將更改為 %s。"
@@ -16073,6 +16087,12 @@ msgid ""
 msgstr "保留要求支付固定利息的權利，金額為 10% of 剩餘到期金額。"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "tax"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
 msgid "technical field for widget tax-group-custom-field"
 msgstr "widget tax-group-custom-field的技術欄位"
@@ -16115,6 +16135,12 @@ msgid ""
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
 msgstr "承諾在約定的時間範圍內，盡最大努力在適當的時候提供優質服務。但是，其任何義務都不能被視為實現結果的義務。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "user"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

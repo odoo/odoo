@@ -18,14 +18,14 @@
 # Marko Carević <marko.carevic@live.com>, 2021
 # Jasmina Otročak <jasmina@uvid.hr>, 2021
 # Tina Milas, 2021
-# Martin Trigaux, 2021
-# Bole <bole@dajmi5.com>, 2021
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2021
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2021
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2021
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2021
 # Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
 # 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2021
+# Martin Trigaux, 2022
+# Bole <bole@dajmi5.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2021\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,6 +83,12 @@ msgstr ""
 "        npr. 180 / (1 - 10%) = 200 (porez nije uključen u cijenu)\n"
 "        npr. 200 * (1 - 10%) = 180 (porez je uključen u cijenu)\n"
 "        "
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid " The %(lock_type)s lock date is set on %(lock_date)s."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -1027,7 +1033,7 @@ msgstr "<strong>Vezna oznaka:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong>Adresa isporuke</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4596,7 +4602,7 @@ msgstr "Kupac"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_sale_delivery_address
 msgid "Customer Addresses"
-msgstr ""
+msgstr "Adrese kupca"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -5057,14 +5063,14 @@ msgstr "Briši kopiju poruke"
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_shipping_id
 #: model:res.groups,name:account.group_delivery_invoice_address
 msgid "Delivery Address"
-msgstr ""
+msgstr "Adresa dostave"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id
 #: model:ir.model.fields,help:account.field_account_move__partner_shipping_id
 #: model:ir.model.fields,help:account.field_account_payment__partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "Adresa isporuke za trenutni račun."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -9695,7 +9701,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 #, python-format
 msgid "Partners"
-msgstr ""
+msgstr "Partneri"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13126,6 +13132,14 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"The accounting date being set prior to the %(lock_type)s lock date "
+"%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "The accounting date is set prior to the tax lock date which is set on %s. "
 "Hence, the accounting date will be changed to %s."
 msgstr ""
@@ -16056,6 +16070,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "tax"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
 msgid "technical field for widget tax-group-custom-field"
 msgstr ""
@@ -16097,6 +16117,12 @@ msgid ""
 "undertakes to do its best to supply performant services in due time in "
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "user"
 msgstr ""
 
 #. module: account

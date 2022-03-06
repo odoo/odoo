@@ -13,6 +13,7 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
 "PO-Revision-Date: 2021-12-07 11:18+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,11 +35,13 @@ msgid ""
 ") <span attrs=\"{'invisible': [('send_email', '=', False)]}\">and send him "
 "an email</span>."
 msgstr ""
+")<span attrs=\"{'invisible': [('send_email', '=', "
+"False)]}\">，并向他发送电子邮件</span>。"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "<br/> You'll be notified as soon as some new content is posted."
-msgstr ""
+msgstr "<br/> 一旦有一些新的内容发布，你会得到通知。"
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
@@ -53,6 +56,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                你好。<br/><br/>\n"
+"                您已要求订阅邮件列表<strong t-out=\"object.name or ''\"/> 。\n"
+"               <br/><br/>\n"
+"                如需确认，请访问以下链接。 <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"               <br/><br/>\n"
+"                如果这是个错误，或者你没有要求这个动作，请忽略这个消息。\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -67,6 +79,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                你好。<br/><br/>\n"
+"                您已要求退订邮件列表<strong t-out=\"object.name or ''\"/> 。\n"
+"               <br/><br/>\n"
+"                如需确认，请访问以下链接。 <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"               <br/><br/>\n"
+"                如果这是个错误，或者你没有要求这个动作，请忽略这个消息。\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -78,6 +99,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>你好<t t-out=\"object.partner_id.name or ''\"/> 。</p>\n"
+"                <p>请在下面找到{{ object.mail_group_id.name }}邮件列表的准则。</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -142,6 +169,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "<i class=\"fa fa-envelope-o mr-1\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope-o mr-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
@@ -160,12 +189,12 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "<span class=\"bg-warning\">Pending</span>"
-msgstr ""
+msgstr "<span class=\"bg-warning\">待定</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
 msgid "<span class=\"mx-2\">-</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">-</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -173,11 +202,13 @@ msgid ""
 "<span class=\"oe_read_only ml-2 badge badge-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Whitelisted</span>\n"
 "                            <span class=\"oe_read_only ml-2 badge badge-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Banned</span>"
 msgstr ""
+"<span class=\"oe_read_only ml-2 badge badge-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">白名单</span>\n"
+"                            <span class=\"oe_read_only ml-2 badge badge-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">被禁止</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "<span>By thread</span>"
-msgstr ""
+msgstr "<span>通过线</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -185,6 +216,8 @@ msgid ""
 "<span>No Mail Group yet.</span>\n"
 "                    <br/>"
 msgstr ""
+"<span>还没有邮件组。</span>\n"
+"                    <br/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
@@ -221,7 +254,7 @@ msgstr "启用"
 msgid ""
 "Add this email address to white list of people and accept all pending "
 "messages from the same author."
-msgstr ""
+msgstr "将此电子邮件地址添加到白名单中，并接受来自同一作者的所有待处理消息。"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
@@ -237,7 +270,7 @@ msgstr "安全联系人别名"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_fullname
 msgid "Alias Full Name"
-msgstr ""
+msgstr "别名全名"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
@@ -257,7 +290,7 @@ msgstr "模型别名"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "All messages of this group"
-msgstr ""
+msgstr "该组的所有信息"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
@@ -279,7 +312,7 @@ msgstr "总是允许"
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "An email with instructions has been sent."
-msgstr ""
+msgstr "一封带有说明的电子邮件已经发出。"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
@@ -311,7 +344,7 @@ msgstr "作者"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
 msgid "Author Moderation Status"
-msgstr ""
+msgstr "作者修改状态"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
@@ -341,7 +374,7 @@ msgstr "禁止"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Ban the author of the message ("
-msgstr ""
+msgstr "禁止消息的作者("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -349,12 +382,12 @@ msgstr ""
 msgid ""
 "Ban this email address and reject all pending messages from the same author "
 "and send an email to the author"
-msgstr ""
+msgstr "禁止这个电子邮件地址，并拒绝来自同一作者的所有待处理信息，并向作者发送电子邮件"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
 msgid "Banned"
-msgstr ""
+msgstr "禁止"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
@@ -369,17 +402,17 @@ msgstr "日期"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
 msgid "Can Manage"
-msgstr ""
+msgstr "可以管理"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
 msgid "Can manage the members"
-msgstr ""
+msgstr "可以管理成员"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
 msgid "Childs"
-msgstr ""
+msgstr "孩子"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -389,12 +422,12 @@ msgstr "配置自定义域名"
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
 msgid "Confirm subscription to {{ object.name }}"
-msgstr ""
+msgstr "确认对{{对象.名称}}的订阅"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
 msgid "Confirm unsubscription to {{ object.name }}"
-msgstr ""
+msgstr "确认退订{{对象.名称}}。"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
@@ -405,12 +438,12 @@ msgstr "内容"
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
 msgid "Create a Mail Group"
-msgstr ""
+msgstr "创建一个邮件组"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Create a new group"
-msgstr ""
+msgstr "创建新群组"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
@@ -432,7 +465,7 @@ msgstr "创建时间"
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
 msgid "Current user is a moderator of the group"
-msgstr ""
+msgstr "当前用户是该组的版主"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
@@ -473,7 +506,7 @@ msgstr "Email"
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Email %s is invalid"
-msgstr ""
+msgstr "电子邮件%s是无效的"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -500,7 +533,7 @@ msgstr "EMail"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails waiting an action for this group"
-msgstr ""
+msgstr "等待该组行动的电子邮件"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
@@ -536,7 +569,7 @@ msgstr "分组"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Group Message"
-msgstr ""
+msgstr "团体信息"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -547,7 +580,7 @@ msgstr "群组名称"
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Group message can only be linked to mail group. Current model is %s."
-msgstr ""
+msgstr "群发信息只能与邮件组相连。目前的模式是%s。"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
@@ -558,7 +591,7 @@ msgstr "方针"
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_guidelines
 msgid "Guidelines of group {{ object.mail_group_id.name }}"
-msgstr ""
+msgstr "组的准则 {{ object.mail_group_id.name }}."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -598,7 +631,7 @@ msgstr "图像"
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Invalid action for URL generation (%s)"
-msgstr ""
+msgstr "无效的URL生成动作（%s）。"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group_moderation.py:0
@@ -625,7 +658,7 @@ msgstr "禁止的"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
 msgid "Is Group Moderated"
-msgstr ""
+msgstr "组内是否有人主持"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
@@ -674,7 +707,7 @@ msgstr "离开"
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "Let people subscribe to your list online or manually add them here."
-msgstr ""
+msgstr "让人们在线订阅你的名单，或在这里手动添加他们。"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group
@@ -685,36 +718,36 @@ msgstr "邮件组"
 #. module: mail_group
 #: model:res.groups,name:mail_group.group_mail_group_manager
 msgid "Mail Group Administrator"
-msgstr ""
+msgstr "邮件组管理员"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing list subscription"
-msgstr ""
+msgstr "邮件组。邮件列表订阅"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing list unsubscription"
-msgstr ""
+msgstr "邮件组。邮件列表取消订阅"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
 msgid "Mail Group: Send Guidelines"
-msgstr ""
+msgstr "邮件组。发送指南"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_action
 #: model:ir.ui.menu,name:mail_group.mail_group_menu
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Mail Groups"
-msgstr ""
+msgstr "邮件组"
 
 #. module: mail_group
 #: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
 #: model:ir.cron,cron_name:mail_group.ir_cron_mail_notify_group_moderators
 #: model:ir.cron,name:mail_group.ir_cron_mail_notify_group_moderators
 msgid "Mail List: Notify group moderators"
-msgstr ""
+msgstr "邮件列表。通知小组版主"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
@@ -724,17 +757,17 @@ msgstr "邮件消息"
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_member
 msgid "Mailing List Member"
-msgstr ""
+msgstr "邮件列表成员"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message
 msgid "Mailing List Message"
-msgstr ""
+msgstr "邮件列表信息"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_moderation
 msgid "Mailing List black/white list"
-msgstr ""
+msgstr "邮件列表 黑/白名单"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
@@ -746,12 +779,12 @@ msgstr "邮件列表"
 msgid ""
 "Mailing groups are communities that like to discuss a specific topic "
 "together."
-msgstr ""
+msgstr "邮件群组是喜欢一起讨论某个特定话题的社区。"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Mailing-List:"
-msgstr ""
+msgstr "邮件列表。"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
@@ -770,17 +803,17 @@ msgstr "成员"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
 msgid "Members Count"
-msgstr ""
+msgstr "成员数"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Members of this group"
-msgstr ""
+msgstr "这个小组的成员"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
 msgid "Members only"
-msgstr ""
+msgstr "仅限会员"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
@@ -790,7 +823,7 @@ msgstr "消息"
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
 msgid "Message Rejection Explanation"
-msgstr ""
+msgstr "信息拒绝解释"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_action
@@ -800,23 +833,23 @@ msgstr "消息"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
 msgid "Messages Count"
-msgstr ""
+msgstr "留言数"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
 msgid "Messages Per Month"
-msgstr ""
+msgstr "每个月的信息"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Messages are pending moderation"
-msgstr ""
+msgstr "信息正在等待审核"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
 msgid "Messages that need an action"
-msgstr ""
+msgstr "需要采取行动的信息"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -826,13 +859,13 @@ msgstr "管理消息"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate this group"
-msgstr ""
+msgstr "对这一群体进行调控"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Moderated"
-msgstr ""
+msgstr "已审核"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderator_id
@@ -852,13 +885,13 @@ msgstr "管理EMail账户"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderated emails in this group"
-msgstr ""
+msgstr "在这个小组中，经过修改的电子邮件"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Moderated group must have moderators."
-msgstr ""
+msgstr "有节制的小组必须有节制者。"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
@@ -874,12 +907,12 @@ msgstr "管理列表"
 #. module: mail_group
 #: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
 msgid "Moderation Rules"
-msgstr ""
+msgstr "管理规则"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderations"
-msgstr ""
+msgstr "主持人"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_moderator
@@ -909,22 +942,24 @@ msgid ""
 "Need to unsubscribe? <br/>It's right here! <span class=\"fa fa-2x fa-arrow-"
 "down float-right\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
+"需要取消订阅吗？<br/>，就在这里！<span class=\"fa fa-2x fa-arrow-down float-right\" "
+"role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
 msgid ""
 "Newcomers on this moderated group will automatically receive the guidelines."
-msgstr ""
+msgstr "在这个有节制的小组中，新加入的人将自动收到准则。"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "No Members in this list yet!"
-msgstr ""
+msgstr "此列表中还没有成员!"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid "No Messages in this list yet!"
-msgstr ""
+msgstr "此列表中还没有消息!"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
@@ -934,7 +969,7 @@ msgstr "规范化邮件"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
 msgid "Normalized From"
-msgstr ""
+msgstr "标准化开始"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
@@ -944,25 +979,25 @@ msgstr "通知消息"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Notify Members"
-msgstr ""
+msgstr "通知会员"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
 msgid "Number of message in this group"
-msgstr ""
+msgstr "该组中的信息数量"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid ""
 "Only an administrator or a moderator can send guidelines to group members."
-msgstr ""
+msgstr "只有管理员或版主可以向小组成员发送指南。"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Only members can send email to the mailing list."
-msgstr ""
+msgstr "只有会员可以向邮件列表发送电子邮件。"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1010,17 +1045,17 @@ msgstr "业务伙伴"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
 msgid "Partners Member"
-msgstr ""
+msgstr "合作伙伴成员"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
 msgid "Pending Messages"
-msgstr ""
+msgstr "发送待发的消息( D)"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_moderation_count
 msgid "Pending Messages Count"
-msgstr ""
+msgstr "待处理信息数量"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__pending_moderation
@@ -1055,7 +1090,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Post to:"
-msgstr ""
+msgstr "发布到："
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
@@ -1095,12 +1130,12 @@ msgstr "拒绝"
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message_reject
 msgid "Reject Group Message"
-msgstr ""
+msgstr "拒绝群发信息"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject the message"
-msgstr ""
+msgstr "拒绝该信息"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
@@ -1117,22 +1152,22 @@ msgstr "移除带有注释的消息"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Responsible Users"
-msgstr ""
+msgstr "负责任的用户"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "Search Group Message"
-msgstr ""
+msgstr "搜索组信息"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
 msgid "Search Mail Group Member"
-msgstr ""
+msgstr "搜索邮件组成员"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Search Mail group"
-msgstr ""
+msgstr "搜索邮件组"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
@@ -1153,12 +1188,12 @@ msgstr "发送"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Send & Ban"
-msgstr ""
+msgstr "发送和禁止"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Send & Reject"
-msgstr ""
+msgstr "发送和拒绝"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
@@ -1168,12 +1203,12 @@ msgstr "发送EMail"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Send Guidelines"
-msgstr ""
+msgstr "发送指南"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
 msgid "Send an email to the author of the message"
-msgstr ""
+msgstr "向信息的作者发送电子邮件"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
@@ -1213,7 +1248,7 @@ msgstr "订阅"
 msgid ""
 "Template \"mail_group.mail_template_guidelines\" was not found. No email has"
 " been sent. Please contact an administrator to fix this issue."
-msgstr ""
+msgstr "没有找到模板 \"mail_group.mail_template_guidelines\"。没有发送电子邮件。请联系管理员来解决这个问题。"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1224,36 +1259,36 @@ msgstr "谢谢！"
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The \"Authorized Group\" is missing."
-msgstr ""
+msgstr "\"授权组”遗失."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "The email"
-msgstr ""
+msgstr "通过电子邮件。"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "The email \"%s\" is not valid."
-msgstr ""
+msgstr "电子邮件\"%s\"是无效的。"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The group of the message do not match."
-msgstr ""
+msgstr "信息的组别不匹配。"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The guidelines description is empty."
-msgstr ""
+msgstr "准则描述是空的。"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The guidelines description is missing."
-msgstr ""
+msgstr "准则描述缺失。"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
@@ -1275,7 +1310,7 @@ msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.c
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The notification message is missing."
-msgstr ""
+msgstr "通知信息丢失。"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_user_id
@@ -1291,44 +1326,44 @@ msgstr ""
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The partner can not be found."
-msgstr ""
+msgstr "无法找到该伙伴。"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "The record of the message should be the group."
-msgstr ""
+msgstr "信息的记录应该是小组的。"
 
 #. module: mail_group
 #. openerp-web
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "This email is already subscribed."
-msgstr ""
+msgstr "这封邮件已经被订阅了。"
 
 #. module: mail_group
 #. openerp-web
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "This email is not subscribed."
-msgstr ""
+msgstr "此邮件未被订阅。"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "This message can not be moderated"
-msgstr ""
+msgstr "此信息不能被审核"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
 msgid "This partner is already subscribed to the group"
-msgstr ""
+msgstr "该伙伴已经订阅了该组"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Those messages can not be moderated: %s."
-msgstr ""
+msgstr "这些信息不能被审核。%s."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1347,35 +1382,35 @@ msgstr "退订"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Unsubscribe:"
-msgstr ""
+msgstr "退订"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid ""
 "When people send an email to the alias of the list, they will appear here."
-msgstr ""
+msgstr "当人们向名单的别名发送电子邮件时，他们会出现在这里。"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Whitelist"
-msgstr ""
+msgstr "白名单"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
 msgid "Whitelisted"
-msgstr ""
+msgstr "白名单"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Wrong status (%s)"
-msgstr ""
+msgstr "错误的状态（%s）。"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
 msgid "You can create only one rule for a given email address in a group."
-msgstr ""
+msgstr "你只能为一个组中的特定电子邮件地址创建一条规则。"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1385,12 +1420,12 @@ msgstr "您有消息要管理，请您参加诉讼。"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "_______________________________________________"
-msgstr ""
+msgstr "_______________________________________________"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "and send an email to the author ("
-msgstr ""
+msgstr "并向作者发送电子邮件("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -1405,12 +1440,12 @@ msgstr "单位"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"Newsletter\""
-msgstr ""
+msgstr "例如，\"通讯\"。"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "group"
-msgstr ""
+msgstr "群组"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -1423,6 +1458,8 @@ msgid ""
 "members<br/>\n"
 "                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 msgstr ""
+"成员<br/>\n"
+"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1442,17 +1479,17 @@ msgstr "回复"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "subscribed to"
-msgstr ""
+msgstr "订阅产品"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "the list"
-msgstr ""
+msgstr "列表"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "unsubscribed from"
-msgstr ""
+msgstr "联合国的订阅"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups

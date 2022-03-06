@@ -37,10 +37,11 @@
 # Wolfgang Taferner, 2021
 # Chris Egal <sodaswed@web.de>, 2021
 # Oliver Roch <oliver.roch@d9t.de>, 2021
-# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Martin Trigaux, 2021
 # Christian Kubicki, 2022
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# DE T2 <e2f48d4s5vd1s2@outlook.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -48,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: DE T2 <e2f48d4s5vd1s2@outlook.com>, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1436,6 +1437,8 @@ msgstr "Mitarbeiterkategorie"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
 msgid "Choose a cap for this accrual. 0 means no cap."
 msgstr ""
+"Wählen Sie eine Obergrenze für diese Rückstellung. 0 bedeutet keine "
+"Obergrenze."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
@@ -1485,7 +1488,7 @@ msgstr "Unternehmen"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__mode_company_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__mode_company_id
 msgid "Company Mode"
-msgstr ""
+msgstr "Unternehmensmodus"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_comp
@@ -1520,8 +1523,8 @@ msgid ""
 "Could not find an allocation of type %(leave_type)s for the requested time "
 "period."
 msgstr ""
-"Es konnte keine Zuordnung des Typs %(leave_type)sfür den genannten Zeitraum "
-"gefunden werden."
+"Es konnte keine Zuordnung des Typs %(leave_type)s für den genannten Zeitraum"
+" gefunden werden."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2569,7 +2572,7 @@ msgstr "Vormittag"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__multi_employee
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__multi_employee
 msgid "Multi Employee"
-msgstr ""
+msgstr "Mehrere Mitarbeiter"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
@@ -2927,6 +2930,8 @@ msgid ""
 "Only accrue for the time worked by the employee. This is the time when the "
 "employee did not take time off."
 msgstr ""
+"Es wird nur die Zeit angerechnet, die der Arbeitnehmer gearbeitet hat. Das "
+"ist die Zeit, in der der Arbeitnehmer keinen Urlaub genommen hat."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -3142,7 +3147,7 @@ msgstr "Erfordert Zuweisung:"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.resource_calendar_global_leaves_action_from_calendar
 msgid "Resource Time Off"
-msgstr ""
+msgstr "Ressource Auszeit"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
@@ -4208,7 +4213,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
 msgid "You can not start an accrual in the past."
-msgstr ""
+msgstr "Sie können keine Rückstellung in der Vergangenheit bilden."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4278,6 +4283,8 @@ msgstr ""
 "diese Abwesenheit zu genehmigen."
 
 #. module: hr_holidays
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
 msgid "You must give a rate greater than 0 in accrual plan levels."
 msgstr ""
@@ -4331,7 +4338,7 @@ msgstr "und am"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "available"
-msgstr ""
+msgstr "verfügbar"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
@@ -4375,7 +4382,7 @@ msgstr "Tage"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "days of the months"
-msgstr ""
+msgstr "Tage der Monate"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form

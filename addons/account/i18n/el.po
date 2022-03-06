@@ -18,9 +18,9 @@
 # George Roumpie <groumpie@existanze.com>, 2020
 # Alexandros Kapetanios <alexandros@gnugr.org>, 2021
 # Bill Gen <bg.bgeni@gmail.com>, 2021
-# Martin Trigaux, 2021
-# Kostas Goutoudis <goutoudis@gmail.com>, 2021
 # George Tarasidis <george_tarasidis@yahoo.com>, 2021
+# Kostas Goutoudis <goutoudis@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +77,12 @@ msgstr ""
 "-  Ποσοστό που συμπεριλαμβάνεται στη τιμή του φόρου: Το ποσό φόρου είναι μια διαίρεση της τιμής: \n"
 "π.χ. 180 / (1 - 10%) = 200 (δεν περιλαμβάνεται η τιμή)\n"
 "π.χ. 200 * (1 - 10%) = 180 (περιλαμβάνεται η τιμή"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid " The %(lock_type)s lock date is set on %(lock_date)s."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -4573,7 +4579,7 @@ msgstr "Πελάτης"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_sale_delivery_address
 msgid "Customer Addresses"
-msgstr ""
+msgstr "Διευθύνσεις Πελάτη"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -5038,14 +5044,14 @@ msgstr "Διαγραφή Αντίγραφου Μηνύματος"
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_shipping_id
 #: model:res.groups,name:account.group_delivery_invoice_address
 msgid "Delivery Address"
-msgstr ""
+msgstr "Διεύθυνση Παράδοσης"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id
 #: model:ir.model.fields,help:account.field_account_move__partner_shipping_id
 #: model:ir.model.fields,help:account.field_account_payment__partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "Διεύθυνση παράδοσης για το τρέχον τιμολόγιο."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -9692,7 +9698,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 #, python-format
 msgid "Partners"
-msgstr ""
+msgstr "Συνεργάτες"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13113,6 +13119,14 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"The accounting date being set prior to the %(lock_type)s lock date "
+"%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "The accounting date is set prior to the tax lock date which is set on %s. "
 "Hence, the accounting date will be changed to %s."
 msgstr ""
@@ -16056,6 +16070,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "tax"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
 msgid "technical field for widget tax-group-custom-field"
 msgstr ""
@@ -16097,6 +16117,12 @@ msgid ""
 "undertakes to do its best to supply performant services in due time in "
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "user"
 msgstr ""
 
 #. module: account
