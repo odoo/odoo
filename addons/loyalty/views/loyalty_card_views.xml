@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="loyalty_card_view_form" model="ir.ui.view">
+        <field name="name">loyalty.card.view.form</field>
+        <field name="model">loyalty.card</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="expiration_date"/>
+                        <field name="partner_id"/>
+                        <field name="points"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="loyalty_card_view_tree" model="ir.ui.view">
+        <field name="name">loyalty.card.view.tree</field>
+        <field name="model">loyalty.card</field>
+        <field name="arch" type="xml">
+            <tree string="Coupons" create="false" edit="false" delete="false">
+                <field name="code"/>
+                <field name="points" string="Balance"/>
+                <field name="expiration_date"/>
+                <field name="program_id"/>
+                <field name="partner_id"/>
+                <button name="action_coupon_send" string="Send" type="object" icon="fa-paper-plane-o"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="loyalty_card_action" model="ir.actions.act_window">
+        <field name="name">Coupons</field>
+        <field name="res_model">loyalty.card</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('program_id', '=', active_id)]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <h1>No Coupons Found.</h1>
+            <p>There haven't been any coupons generated yet.</p>
+        </field>
+    </record>
+</odoo>

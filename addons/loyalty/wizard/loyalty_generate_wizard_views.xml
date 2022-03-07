@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="loyalty_generate_wizard_view_form" model="ir.ui.view">
+        <field name="name">loyalty.generate.wizard.view.form</field>
+        <field name="model">loyalty.generate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Coupons">
+                <sheet>
+                    <group>
+                        <field name="program_id" invisible="1"/>
+                        <field name="program_type" invisible="1"/>
+                        <field name="mode" widget="radio" attrs="{'invisible': [('program_type', '=', 'ewallet')]}"/>
+                        <field name="customer_ids" widget="many2many_tags_avatar" attrs="{'invisible': [('mode', '=', 'anonymous')]}"/>
+                        <field name="customer_tag_ids" widget="many2many_tags" attrs="{'invisible': [('mode', '=', 'anonymous')]}" options="{'color_field': 'color'}"/>
+                        <separator/>
+                        <field name="coupon_qty" attrs="{'readonly': [('mode', '=', 'selected')], 'required': [('mode', '=', 'anonymous')]}"/>
+                        <label for="points_granted"/>
+                        <span>
+                            <field name="points_granted" class="oe_inline"/>
+                            <field name="points_name" class="oe_inline"/>
+                        </span>
+                        <field name="valid_until"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="generate_coupons" type="object" string="Generate Coupons" class="btn-primary" data-hotkey="q"/>
+                    <button special="cancel" data-hotkey="z" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="loyalty_generate_wizard_action" model="ir.actions.act_window">
+        <field name="name">Generate Coupons</field>
+        <field name="res_model">loyalty.generate.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
