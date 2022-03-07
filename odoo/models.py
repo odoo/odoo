@@ -6387,9 +6387,9 @@ Fields:
         return self.concat(*records_batches)
 
 
-collections.Set.register(BaseModel)
+collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have __reversed__, index or count
-collections.Sequence.register(BaseModel)
+collections.abc.Sequence.register(BaseModel)
 
 class RecordCache(MutableMapping):
     """ A mapping from field names to values, to read and update the cache of a record. """
