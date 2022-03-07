@@ -1274,18 +1274,32 @@ const Wysiwyg = Widget.extend({
                         this._updateEditorUI();
                     });
                     colorpicker.on('color_hover', null, ev => {
+                        console.group('hover');
+                        let s = this.odooEditor.document.getSelection();
+                        console.log(s.anchorNode.tagName || s.anchorNode.textContent, s.anchorOffset, s.focusNode.tagName || s.focusNode.textContent, s.focusOffset)
                         if (hadNonCollapsedSelection) {
                             this.odooEditor.historyResetLatestComputedSelection(true);
                         }
+                        s = this.odooEditor.document.getSelection();
+                        console.log(s.anchorNode.tagName || s.anchorNode.textContent, s.anchorOffset, s.focusNode.tagName || s.focusNode.textContent, s.focusOffset)
                         this.odooEditor.historyPauseSteps();
                         try {
                             this._processAndApplyColor(eventName, ev.data.color);
                         } finally {
                             this.odooEditor.historyUnpauseSteps();
+                            s = this.odooEditor.document.getSelection();
+                            console.log(s.anchorNode.tagName || s.anchorNode.textContent, s.anchorOffset, s.focusNode.tagName || s.focusNode.textContent, s.focusOffset)
+                            console.groupEnd('hover');
                         }
                     });
                     colorpicker.on('color_leave', null, ev => {
+                        console.group('leave');
+                        let s = this.odooEditor.document.getSelection();
+                        console.log(s.anchorNode.tagName || s.anchorNode.textContent, s.anchorOffset, s.focusNode.tagName || s.focusNode.textContent, s.focusOffset)
                         this.odooEditor.historyRevertCurrentStep();
+                        s = this.odooEditor.document.getSelection();
+                        console.log(s.anchorNode.tagName || s.anchorNode.textContent, s.anchorOffset, s.focusNode.tagName || s.focusNode.textContent, s.focusOffset)
+                        console.groupEnd('leave');
                     });
                     colorpicker.on('enter_key_color_colorpicker', null, () => {
                         $dropdown.children('.dropdown-toggle').dropdown('hide');

@@ -650,6 +650,7 @@ export class OdooEditor extends EventTarget {
         if (!this._historyStepsActive) {
             return;
         }
+        console.trace('historyStep');
         this.observerFlush();
         // check that not two unBreakables modified
         if (this._toRollback) {
@@ -749,6 +750,8 @@ export class OdooEditor extends EventTarget {
 
         this._activateContenteditable();
         this.historySetSelection(this._currentStep);
+        this._computeHistorySelection();
+        this._currentStep.selection = undefined;
     }
     /**
      * Undo a step of the history.
