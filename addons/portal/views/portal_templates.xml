@@ -47,7 +47,7 @@
     <template id="language_selector" name="Language Selector">
         <t t-set="active_lang" t-value="list(filter(lambda lg : lg[0] == lang, languages))[0]"/>
         <t t-set="language_selector_visible" t-value="len(languages) &gt; 1"/>
-        <div t-attf-class="js_language_selector #{_div_classes}" t-if="language_selector_visible">
+        <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
             <button t-attf-class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle #{_btn_class}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span t-if="not no_text"
                         class="align-middle"
