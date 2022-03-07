@@ -186,6 +186,16 @@ registerModel({
             }
         },
         /**
+          * @private
+          * @returns {string}
+          */
+        _computeComponentStyle() {
+            const textDirection = this.messaging.locale.textDirection;
+            const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
+            const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
+            return `${offsetFrom}: ${this.visibleOffset}px; ${oppositeFrom}: auto`;
+        },
+        /**
          * @private
          * @returns {boolean}
          */
@@ -368,6 +378,9 @@ registerModel({
         channelInvitationForm: one('ChannelInvitationForm', {
             inverse: 'chatWindow',
             isCausal: true,
+        }),
+        componentStyle: attr({
+            compute: '_computeComponentStyle',
         }),
         /**
          * Determines whether the buttons to start a RTC call should be displayed.
