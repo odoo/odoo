@@ -420,7 +420,7 @@
 </template>
 
 <!-- This template is called whenever the "Fold Ticket Details" option is checked on the website (Customize > Fold Tickets Details) -->
-<template id="fold_register_details" inherit_id="website_event.registration_template" active="False" customize_show="True" name="Fold ticket details">
+<template id="fold_register_details" inherit_id="website_event.registration_template" active="False" name="Fold ticket details">
     <xpath expr="//div[@id='o_wevent_tickets']" position="attributes">
         <attribute name="data-folded-by-default">1</attribute>
     </xpath>

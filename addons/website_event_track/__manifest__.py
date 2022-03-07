@@ -31,6 +31,7 @@
         'views/res_config_settings_view.xml',
         'views/website_visitor_views.xml',
         'views/event_menus.xml',
+        'views/snippets.xml',
     ],
     'demo': [
         'data/event_demo.xml',
