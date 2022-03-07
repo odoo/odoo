@@ -40,7 +40,7 @@ class TestProfitability(TestProjectProfitabilityCommon):
             In this module, the project profitability should have no data.
             So the no revenue and cost should be found.
         """
-        profitability_items = self.project._get_profitability_items()
+        profitability_items = self.project._get_profitability_items(False)
         self.assertDictEqual(
             profitability_items,
             self.project_profitability_items_empty,
