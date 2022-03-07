@@ -17,6 +17,7 @@ export class PopoverView extends Component {
         useComponentToModel({ fieldName: 'component', modelName: 'PopoverView' });
         usePosition(
             () => this.popoverView && this.popoverView.anchorRef && this.popoverView.anchorRef.el,
+            'root',
             {
                 margin: 16,
                 position: this.popoverView.position,
