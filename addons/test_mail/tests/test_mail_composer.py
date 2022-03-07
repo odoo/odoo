@@ -502,6 +502,30 @@ class TestComposerResultsComment(TestMailComposer):
     notification and emails generated during this process. """
 
     @users('employee')
+    def test_mail_composer_document_based(self):
+        """ Tests a document-based mass mailing with the same address mails
+        This should be allowed and not considered as duplicate in this context
+        """
+        attachment_data = self._generate_attachments_data(2)
+        email_to_1 = self.test_record.customer_id.email
+        self.template.write({
+            'auto_delete': False,  # keep sent emails to check content
+            'attachment_ids': [(0, 0, a) for a in attachment_data],
+            'email_to': '%s, %s' % (email_to_1, email_to_1),
+            'report_name': 'TestReport for {{ object.name }}',  # test cursor forces html
+            'report_template': self.test_report.id,
+        })
+        # launch composer in mass mode
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record, add_web=True,
+                                  default_template_id=self.template.id)
+        ))
+        composer = composer_form.save()
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+            composer.with_context(mailing_document_based=True)._action_send_mail()
+        self.assertEqual(len(self._mails), 2, 'Should have sent 2 emails.')
+
+    @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail')
     def test_mail_composer_notifications_delete(self):
         """ Notifications are correctly deleted once sent """
