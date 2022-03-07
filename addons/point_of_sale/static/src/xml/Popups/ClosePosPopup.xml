@@ -4,33 +4,23 @@
     <t t-name="ClosePosPopup" owl="1">
         <div role="dialog" class="modal-dialog">
             <div class="popup close-pos-popup">
-                <header class="title">
-                    CLOSING CONTROL
+                <header>
+                    <div class="title">Closing Session</div>
+                    <div class="total-orders">
+                        Total <t t-esc="ordersDetails.quantity"/> orders:
+                        <span class="amount" t-esc="env.pos.format_currency(ordersDetails.amount)"/>
+                    </div>
                 </header>
                 <main class="body">
-                    <div class="session-overview">
-                        <div class="overview-info">
-                            <div class="info-title column-left">
-                                <span>Total <t t-esc="ordersDetails.quantity"/> orders</span>
-                                <span>Payments</span>
-                                <span>Customer Account</span>
-                            </div>
-                            <div class="info-value column-left">
-                                <span t-esc="env.pos.format_currency(ordersDetails.amount)"/>
-                                <span t-esc="env.pos.format_currency(paymentsAmount)"/>
-                                <span t-esc="env.pos.format_currency(payLaterAmount)"/>
-                            </div>
-                        </div>
-                        <div t-if="openingNotes" class="opening-note">
-                            <t t-esc="openingNotes"/>
-                        </div>
+                    <div t-if="openingNotes" class="opening-note">
+                        <t t-esc="openingNotes"/>
                     </div>
                     <div class="payment-methods-overview">
                         <table>
                             <thead>
                                 <tr>
                                     <th>Payment Method</th>
-                                    <th>Expected</th>
+                                    <th class="right-align">Expected</th>
                                     <th style="width: 25%">Counted</th>
                                     <th style="width: 20%">Difference</th>
                                 </tr>
@@ -39,7 +29,7 @@
                                 <tbody>
                                     <tr>
                                         <td t-esc="defaultCashDetails.name"/>
-                                        <td t-esc="env.pos.format_currency(defaultCashDetails.amount)"/>
+                                        <td t-esc="env.pos.format_currency(defaultCashDetails.amount)" class="right-align"/>
                                         <td class="flex" t-on-input="() => this.handleInputChange(defaultCashDetails.id)">
                                             <input class="pos-input" type="number" t-model.number="state.payments[defaultCashDetails.id].counted"/>
                                             <div class="button icon" t-on-click="openDetailsPopup">
@@ -52,7 +42,7 @@
                                 <tbody class="cash-overview">
                                     <tr>
                                         <td>Opening</td>
-                                        <td t-esc="env.pos.format_currency(defaultCashDetails.opening)"/>
+                                        <td t-esc="env.pos.format_currency(defaultCashDetails.opening)" class="right-align"/>
                                     </tr>
                                     <tr t-foreach="defaultCashDetails.moves" t-as="move" t-key="move.name">
                                         <td>
@@ -61,7 +51,7 @@
                                                 <t t-esc="move.name"/>
                                             </div>
                                         </td>
-                                        <td t-esc="env.pos.format_currency(Math.abs(move.amount))" />
+                                        <td t-esc="env.pos.format_currency(Math.abs(move.amount))" class="right-align"/>
                                     </tr>
                                     <tr t-if="defaultCashDetails.payment_amount">
                                         <td>
@@ -70,14 +60,14 @@
                                                 Payments in <t t-esc="defaultCashDetails.name"/>
                                             </div>
                                         </td>
-                                        <td t-esc="env.pos.format_currency(Math.abs(defaultCashDetails.payment_amount))"/>
+                                        <td t-esc="env.pos.format_currency(Math.abs(defaultCashDetails.payment_amount))" class="right-align"/>
                                     </tr>
                                 </tbody>
                             </t>
                             <tbody t-if="otherPaymentMethods.length &gt; 0">
                                 <tr t-foreach="otherPaymentMethods" t-as="pm" t-key="pm.id">
                                     <td t-esc="pm.name"/>
-                                    <td t-esc="env.pos.format_currency(pm.amount)"/>
+                                    <td t-esc="env.pos.format_currency(pm.amount)" class="right-align"/>
                                     <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
                                     <td t-if="_showDiff" t-on-input="() => this.handleInputChange(pm.id)"><input class="pos-input" type="number" t-model.number="state.payments[pm.id].counted"/></td>
                                     <td t-if="_showDiff" t-esc="env.pos.format_currency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
@@ -86,17 +76,13 @@
                         </table>
                     </div>
                     <textarea placeholder="Notes" class="closing-notes" t-model="state.notes"/>
-                    <div class="accept-closing" t-att-class="{invisible: !hasDifference()}">
-                        <t t-set="_hasUserAuthority" t-value="hasUserAuthority()" />
-                        <input t-att-disabled="!_hasUserAuthority" type="checkbox" id="accept" t-model="state.acceptClosing"/>
-                        <label t-att-class="{disabled: !_hasUserAuthority}" for="accept">Accept payments difference and post a profit/loss journal entry</label>
-                        <div class="warning" t-att-class="{invisible: _hasUserAuthority}">The maximum difference allowed is <t t-esc="env.pos.format_currency(amountAuthorizedDiff)"/>. Please contact your manager to accept the closing difference.</div>
-                    </div>
                 </main>
                 <footer class="footer">
-                    <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancelPopup">Continue Selling</div>
-                    <div class="button" t-on-click="closePos">Keep Session Open</div>
-                    <div class="button" t-att-class="{'disabled': !canCloseSession()}" t-on-click="closeSession">Close Session</div>
+                    <div class="button highlight" t-on-click="onCloseSession">Close Session</div>
+                    <div class="button" t-on-click="closePos" title="Visit the Backend but keep session open">Backend</div>
+                    <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancelPopup">Discard</div>
+                    <div class="small button icon"><i class="fa fa-print" role="img" title="Print the report"/></div>
+                    <div class="small button icon"><i class="fa fa-file-pdf-o" role="img" title="Download the report as PDF"/></div>
                 </footer>
             </div>
             <MoneyDetailsPopup
@@ -104,6 +90,13 @@
                 manualInputCashCount="manualInputCashCount"
                 onConfirm.bind="updateCountedCash"
                 onDiscard.bind="closeDetailsPopup"
+            />
+            <PaymentsDifferencePopup
+                t-if="state.displayPaymentsDifferencePopup"
+                hasUserAuthority.bind="hasUserAuthority"
+                amountAuthorizedDiff="amountAuthorizedDiff"
+                onConfirm.bind="closeSession"
+                onDiscard.bind="closePaymentsDifferencePopup"
             />
         </div>
     </t>

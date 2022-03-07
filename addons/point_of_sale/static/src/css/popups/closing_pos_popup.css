@@ -8,38 +8,39 @@
     padding: 15px 50px;
 }
 
-.pos .close-pos-popup .session-overview {
+.pos .close-pos-popup header {
     display: flex;
-    margin-bottom: 30px;
+    justify-content: space-between;
+    width: auto;
+    height: 65px;
+    background-color: rgb(255, 255, 255);
 }
 
-.pos .close-pos-popup .overview-info {
-    width: 50%;
-    display: flex;
+.pos .close-pos-popup .title {
+    height: inherit;
+    box-sizing: border-box;
+    padding: 20px;
 }
 
-.pos .close-pos-popup .overview-info .info-value {
-    margin-left: 50px;
+.pos .close-pos-popup .total-orders {
+    height: inherit;
+    box-sizing: border-box;
+    padding: 20px;
 }
 
-.pos .close-pos-popup .overview-info span {
-    margin-bottom: 10px;
+.pos .close-pos-popup .total-orders .amount {
+    margin: 0 15px;
 }
 
-.pos .close-pos-popup .column-left {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-
-.pos .close-pos-popup .session-overview .opening-note {
-    margin-left: 70px;
+.pos .close-pos-popup .opening-note {
     color: darkgrey;
     text-align: left;
     font-size: 16px;
-    width: 250px;
+    box-sizing: border-box;
+    width: 100%;
     max-height: 90px;
-    padding-left: 10px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
     border-left: solid 3px darkgrey;
     overflow-y: auto;
     word-break: break-word;
@@ -63,8 +64,16 @@
     display: flex;
 }
 
+.pos .close-pos-popup .right-align {
+    text-align: right;
+    padding-right: 20px;
+}
+
 .pos .close-pos-popup .payment-methods-overview table .pos-input {
-    width: 85px;
+    width: 110px;
+    text-align: right;
+    padding-right: 10px;
+    margin-right: 5px;
 }
 
 .pos .close-pos-popup .payment-methods-overview table .warning {
@@ -75,6 +84,7 @@
 .pos .close-pos-popup .body .button.icon {
     margin: 0;
     float: unset;
+    margin-right: 0 20px 0 20px;
 }
 
 .pos .close-pos-popup .payment-methods-overview table .cash-sign {
@@ -100,16 +110,8 @@
     margin: 20px 0;
 }
 
-.pos .close-pos-popup .accept-closing {
-    text-align: left;
-}
-
 .pos .close-pos-popup .invisible {
     visibility: hidden;
-}
-
-.pos .close-pos-popup .accept-closing label, #accept {
-    cursor: pointer;
 }
 
 .pos .close-pos-popup .accept-closing label.disabled {
@@ -117,18 +119,19 @@
     color: grey;
 }
 
-.pos .close-pos-popup #accept {
-    all: revert;
-    margin-right: 10px;
-}
-
-.pos .close-pos-popup .accept-closing .warning {
-    color: red;
-    font-style: italic;
+.pos .close-pos-popup .footer {
+    box-sizing: border-box;
+    padding-left: 10px;
 }
 
 .pos .close-pos-popup .footer .button {
-    width: 150px;
+    float: left;
+    width: 130px;
+}
+
+.pos .close-pos-popup .footer .small.button {
+    float: right;
+    width: 50px;
 }
 
 .pos .close-pos-popup .footer .button.disabled {

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="PaymentsDifferencePopup" owl="1">
+        <div class="popup payments-difference-popup">
+            <header>
+                Payments difference
+            </header>
+            <t t-set="_hasUserAuthority" t-value="props.hasUserAuthority()" />
+            <main class="body">
+                <span t-if="_hasUserAuthority">
+                    Do you want to accept payments difference and post a profit/loss journal entry?
+                </span>
+                <span t-else="">
+                    The maximum difference allowed is <t t-esc="env.pos.format_currency(props.amountAuthorizedDiff)"/>.<br/> 
+                    Please contact your manager to accept the closing difference.
+                </span>
+            </main>
+            <footer class="footer">
+                <div t-if="_hasUserAuthority" class="button" t-on-click="discard">Discard</div>
+                <div t-if="_hasUserAuthority" class="confirm button highlight" t-on-click="confirm">Confirm</div>
+                <div t-if="!_hasUserAuthority" class="button highlight" t-on-click="discard">OK</div>
+            </footer>
+        </div>
+    </t>
+</templates>
