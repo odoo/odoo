@@ -138,7 +138,7 @@ class HolidaysAllocation(models.Model):
         ('years', 'Years')
         ], compute='_compute_from_holiday_status_id', store=True, string="Unit of time between two intervals", readonly=False,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
-    nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
+    nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True, tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves')
 

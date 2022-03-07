@@ -105,6 +105,7 @@
                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '=', 'hour')]}">Days</span>
                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}">Hours</span>
                             </div>
+                            <field name="nextcall" attrs="{'readonly': [('state', 'not in', ('draft','confirm'))], 'invisible': [('allocation_type', '!=', 'accrual')]}"/>
                         </group>
                         <group name="alloc_right_col">
                             <field name="employee_id" invisible="1" groups="hr_holidays.group_hr_holidays_user"/>
