@@ -16,12 +16,12 @@
                         <img class="img img-fluid my-0 mx-auto" t-att-src="attachmentImage.imageUrl" t-att-alt="attachmentImage.attachment.name" t-attf-style="max-width: min(100%, {{ attachmentImage.width }}px); max-height: {{ attachmentImage.height }}px;"/>
                     </t>
                     <t t-if="attachmentImage.attachment.isUploading">
-                        <div class="o_AttachmentImageUploading d-flex align-items-center justify-content-center" title="Uploading">
+                        <div class="o_AttachmentImageUploading position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
                             <i class="fa fa-spin fa-spinner"/>
                         </div>
                     </t>
                     <t t-if="attachmentImage.attachment.isEditable">
-                        <div class="o_AttachmentImage_imageOverlay text-right p-2 text-white opacity-0 opacity-100-hover">
+                        <div class="o_AttachmentImage_imageOverlay position-absolute top-0 bottom-0 start-0 end-0 text-right p-2 text-white opacity-0 opacity-100-hover">
                             <div class="o_AttachmentImage_action o_AttachmentImage_actionUnlink btn btn-sm btn-dark rounded opacity-75 opacity-100-hover"
                                 t-att-class="{'o-pretty': attachmentImage.attachmentList.composerViewOwner}" t-on-click="attachmentImage.onClickUnlink" title="Remove"
                             >
