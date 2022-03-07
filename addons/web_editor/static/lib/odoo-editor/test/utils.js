@@ -264,7 +264,7 @@ export function customErrorMessage(assertLocation, value, expected) {
     value = value.replace('\u200B', zws);
     expected = expected.replace('\u200B', zws);
 
-    return `[${assertLocation}}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
+    return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
 
 export async function testEditor(Editor = OdooEditor, spec) {
