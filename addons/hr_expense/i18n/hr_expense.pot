@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
-"PO-Revision-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-03-07 12:07+0000\n"
+"PO-Revision-Date: 2022-03-07 12:07+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -130,12 +130,6 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Validated By:</strong>"
-msgstr ""
-
-#. module: hr_expense
-#: model:product.product,name:hr_expense.accomodation_expense_product
-#: model:product.template,name:hr_expense.accomodation_expense_product_product_template
-msgid "Accomodation"
 msgstr ""
 
 #. module: hr_expense
@@ -337,6 +331,11 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
+msgid "Attachments"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "Bank Journal"
 msgstr ""
@@ -368,6 +367,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #, python-format
 msgid "Cancel"
 msgstr ""
@@ -482,21 +482,9 @@ msgid "Currency"
 msgstr ""
 
 #. module: hr_expense
-#: model:product.product,name:hr_expense.allowance_expense_product
-#: model:product.template,name:hr_expense.allowance_expense_product_product_template
-msgid "Daily Allowance"
-msgstr ""
-
-#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Date"
-msgstr ""
-
-#. module: hr_expense
-#: model:product.product,uom_name:hr_expense.allowance_expense_product
-#: model:product.template,uom_name:hr_expense.allowance_expense_product_product_template
-msgid "Days"
 msgstr ""
 
 #. module: hr_expense
@@ -756,7 +744,9 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
 #: model:product.product,name:hr_expense.product_product_fixed_cost
+#: model:product.product,name:hr_expense.product_product_zero_cost
 #: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,name:hr_expense.product_product_zero_cost_product_template
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_activity
@@ -820,12 +810,6 @@ msgid "Explicitly Refused by manager or accountant"
 msgstr ""
 
 #. module: hr_expense
-#: model:product.product,name:hr_expense.trans_expense_product
-#: model:product.template,name:hr_expense.trans_expense_product_product_template
-msgid "Flights, train, bus, taxi, parking"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_follower_ids
 msgid "Followers"
@@ -841,12 +825,6 @@ msgstr ""
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
-
-#. module: hr_expense
-#: model:product.product,name:hr_expense.food_expense_product
-#: model:product.template,name:hr_expense.food_expense_product_product_template
-msgid "Food & beverages"
 msgstr ""
 
 #. module: hr_expense
@@ -1078,12 +1056,6 @@ msgid "Messages"
 msgstr ""
 
 #. module: hr_expense
-#: model:product.product,name:hr_expense.mileage_expense_product
-#: model:product.template,name:hr_expense.mileage_expense_product_product_template
-msgid "Mileage"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__my_activity_date_deadline
 msgid "My Activity Deadline"
@@ -1123,6 +1095,12 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Report"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: hr_expense
@@ -1275,9 +1253,8 @@ msgid "Only Managers and HR Officers can approve expenses"
 msgstr ""
 
 #. module: hr_expense
-#: model:product.product,name:hr_expense.other_expense_product
-#: model:product.template,name:hr_expense.other_expense_product_product_template
-msgid "Other expenses"
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Other Info"
 msgstr ""
 
 #. module: hr_expense
@@ -1676,11 +1653,6 @@ msgid "Submitted"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
-msgid "Subtotal"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Taxes"
@@ -1786,6 +1758,8 @@ msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #, python-format
 msgid "Total"
 msgstr ""
@@ -1830,16 +1804,10 @@ msgid "Unit of Measure"
 msgstr ""
 
 #. module: hr_expense
-#: model:product.product,uom_name:hr_expense.accomodation_expense_product
-#: model:product.product,uom_name:hr_expense.food_expense_product
-#: model:product.product,uom_name:hr_expense.other_expense_product
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
-#: model:product.product,uom_name:hr_expense.trans_expense_product
-#: model:product.template,uom_name:hr_expense.accomodation_expense_product_product_template
-#: model:product.template,uom_name:hr_expense.food_expense_product_product_template
-#: model:product.template,uom_name:hr_expense.other_expense_product_product_template
+#: model:product.product,uom_name:hr_expense.product_product_zero_cost
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
-#: model:product.template,uom_name:hr_expense.trans_expense_product_product_template
+#: model:product.template,uom_name:hr_expense.product_product_zero_cost_product_template
 msgid "Units"
 msgstr ""
 
@@ -2047,12 +2015,6 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
-
-#. module: hr_expense
-#: model:product.product,uom_name:hr_expense.mileage_expense_product
-#: model:product.template,uom_name:hr_expense.mileage_expense_product_product_template
-msgid "km"
 msgstr ""
 
 #. module: hr_expense
