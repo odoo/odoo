@@ -862,6 +862,11 @@ class Task(models.Model):
     _order = "priority desc, sequence, id desc"
     _check_company_auto = True
 
+    def _sms_get_number_fields(self):
+        """ This method returns the fields to use to find the number to use to
+        send an SMS on a record. """
+        return ['partner_phone']
+
     @api.model
     def _get_default_partner_id(self, project=None, parent=None):
         if parent and parent.partner_id:
