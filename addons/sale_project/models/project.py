@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from ast import literal_eval
 
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
@@ -292,6 +291,13 @@ class Project(models.Model):
     def _show_profitability(self):
         self.ensure_one()
         return self.allow_billable and super()._show_profitability()
+
+    def _get_profitability_labels(self):
+        return {
+            **super()._get_profitability_labels(),
+            'service_revenues': _lt('Other Services'),
+            'other_revenues': _lt('Material'),
+        }
 
     def _get_service_policy_to_invoice_type(self):
         return {

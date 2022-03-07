@@ -735,7 +735,11 @@ class Project(models.Model):
         }
         if self._show_profitability():
             panel_data['profitability_items'] = self._get_profitability_items()
+            panel_data['profitability_labels'] = self._get_profitability_labels()
         return panel_data
+
+    def _get_profitability_labels(self):
+        return {}
 
     def _get_user_values(self):
         return {

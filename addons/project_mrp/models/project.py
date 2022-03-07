@@ -37,6 +37,11 @@ class Project(models.Model):
     #  Project Updates
     # ----------------------------
 
+    def _get_profitability_labels(self):
+        labels = super()._get_profitability_labels()
+        labels['manufacturing_order'] = _lt('Manufacturing Orders')
+        return labels
+
     def _get_profitability_aal_domain(self):
         return expression.AND([
             super()._get_profitability_aal_domain(),
@@ -55,7 +60,6 @@ class Project(models.Model):
             can_see_manufactoring_order = with_action and len(self) == 1 and self.user_has_groups('mrp.group_mrp_user')
             mrp_costs = {
                 'id': mrp_category,
-                'name': _lt('Manufacturing Orders'),
                 'billed': sum([res['amount'] for res in mrp_aal_read_group]),
                 'to_bill': 0.0,
             }

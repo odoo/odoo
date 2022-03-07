@@ -3,7 +3,7 @@
 
 import json
 
-from odoo import models, _
+from odoo import models
 
 
 class Project(models.Model):
@@ -53,12 +53,10 @@ class Project(models.Model):
                 total_amount_expense_to_invoice += res['untaxed_amount_to_invoice']
                 total_amount_expense_invoiced += res['untaxed_amount_invoiced']
                 reinvoice_expense_ids += expense_data_per_product_id[product_id]
-        expense_name = _('Expenses')
         section_id = 'expenses'
         expense_data = {
             'costs': {
                 'id': section_id,
-                'name': expense_name,
                 'billed': -amount_billed,
                 'to_bill': 0.0,
             },
@@ -66,7 +64,6 @@ class Project(models.Model):
         if reinvoice_expense_ids:
             expense_data['revenues'] = {
                 'id': section_id,
-                'name': expense_name,
                 'invoiced': total_amount_expense_invoiced,
                 'to_invoice': total_amount_expense_to_invoice,
             }

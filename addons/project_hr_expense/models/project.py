@@ -57,6 +57,12 @@ class Project(models.Model):
     # ----------------------------
     #  Project Update
     # ----------------------------
+
+    def _get_profitability_labels(self):
+        labels = super()._get_profitability_labels()
+        labels['expenses'] = _lt('Expenses')
+        return labels
+
     def _get_expenses_profitability_items(self, with_action=True):
         if not self.analytic_account_id:
             return {}

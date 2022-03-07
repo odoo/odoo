@@ -64,6 +64,7 @@
 
     <t t-name="project.ProfitabilitySection" owl="1">
         <t t-set="profitability_items" t-value="state.data.profitability_items"/>
+        <t t-set="profitability_labels" t-value="state.data.profitability_labels"/>
         <div name="profitability" class="o_rightpanel_section" t-if="profitability_items and (profitability_items.revenues.data.length or profitability_items.costs.data.length)">
             <div class="o_rightpanel_header">
                 <div class="o_rightpanel_title">
@@ -100,6 +101,7 @@
             </thead>
             <tbody>
                 <tr t-foreach="revenue_items" t-as="revenue" t-key="revenue.id" t-if="revenue.invoiced !== 0 || revenue.to_invoice !== 0">
+                    <t t-set="revenue_label" t-value="profitability_labels[revenue.id] or revenue.id"/>
                     <td>
                         <a t-if="revenue.action" class="o_rightpanel_button"
                             t-on-click="onProjectActionClick"
@@ -110,9 +112,9 @@
                             t-att-data-res-id="revenue.action.res_id"
                             t-att-data-context="revenue.action.context"
                         >
-                            <t t-esc="revenue.name"/>
+                            <t t-esc="revenue_label"/>
                         </a>
-                        <t t-esc="revenue.name" t-else=""/>
+                        <t t-esc="revenue_label" t-else=""/>
                     </td>
                     <td align="right" t-attf-class="{{ revenue.invoiced === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue.invoiced)"/></td>
                     <td align="right" t-attf-class="{{ revenue.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(revenue.to_invoice)"/></td>
@@ -145,6 +147,7 @@
             </thead>
             <tbody>
                 <tr t-foreach="cost_items" t-as="cost" t-key="cost.id" t-if="cost.billed !== 0 || cost.to_bill !== 0">
+                    <t t-set="cost_label" t-value="profitability_labels[cost.id] or cost.id"/>
                     <td>
                         <a t-if="cost.action" class="o_rightpanel_button"
                             t-on-click="onProjectActionClick"
@@ -155,9 +158,9 @@
                             t-att-data-res-id="cost.action.res_id"
                             t-att-data-context="cost.action.context"
                         >
-                            <t t-esc="cost.name"/>
+                            <t t-esc="cost_label"/>
                         </a>
-                        <t t-esc="cost.name" t-else=""/>
+                        <t t-esc="cost_label" t-else=""/>
                     </td>
                     <td align="right" t-attf-class="{{ cost.billed === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost.billed)"/></td>
                     <td align="right" t-attf-class="{{ cost.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="formatMonetary(cost.to_bill)"/></td>
