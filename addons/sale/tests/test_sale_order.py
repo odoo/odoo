@@ -637,6 +637,8 @@ class TestSaleOrder(TestSaleCommon):
         `update_prices` is shown as a button to update
         prices when the pricelist was changed.
         """
+        self.env.user.write({'groups_id': [(4, self.env.ref('product.group_discount_per_so_line').id)]})
+
         sale_order = self.sale_order
         so_amount = sale_order.amount_total
         sale_order.update_prices()
