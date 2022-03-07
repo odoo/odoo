@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChannelMemberList" owl="1">
-        <div class="o_ChannelMemberList d-flex flex-column overflow- bg-light" t-attf-class="{{ className }}" t-ref="root">
+        <div class="o_ChannelMemberList d-flex flex-column overflow-auto bg-light" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="channel.orderedOnlineMembers.length > 0">
                 <t t-call="mail.ChannelMemberList_memberList">
                     <t t-set="members" t-value="channel.orderedOnlineMembers"/>
@@ -33,20 +33,21 @@
         <h6 class="m-2"><t t-esc="title"/> - <t t-esc="members.length"/></h6>
         <t t-foreach="members" t-as="member" t-key="member.localId">
             <div class="o_ChannelMemberList_member d-flex align-items-center mx-3 my-1">
-                <div class="o_ChannelMemberList_avatarContainer position-relative flex-shrink-0" t-on-click="() => channel.onClickMemberAvatar(member)">
+                <div class="o_ChannelMemberList_avatarContainer position-relative flex-shrink-0 o_cursor_pointer" t-on-click="() => channel.onClickMemberAvatar(member)">
                     <img class="o_ChannelMemberList_avatar rounded-circle w-100 h-100" t-attf-src="/mail/channel/{{ channel.id }}/partner/{{ member.id }}/avatar_128" alt="Avatar"/>
 
                     <t t-if="member.im_status and member.im_status !== 'im_partner'">
                         <PartnerImStatusIcon
-                            className="'o_ChannelMemberList_partnerImStatusIcon d-flex align-items-center justify-content-center'"
+                            className="'o_ChannelMemberList_partnerImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center text-light'"
                             classNameObj="{
                                 'o-mobile': messaging.device.isMobile,
+                                'small': !messaging.device.isMobile,
                             }"
                             partnerLocalId="member.localId"
                         />
                     </t>
                 </div>
-                <span class="o_ChannelMemberList_name ml-2 flex-column-1 text-truncate" t-on-click="() => channel.onClickMemberName(member)">
+                <span class="o_ChannelMemberList_name ml-2 flex-column-1 text-truncate o_cursor_pointer" t-on-click="() => channel.onClickMemberName(member)">
                     <t t-esc="member.nameOrDisplayName"/>
                 </span>
             </div>
