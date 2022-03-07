@@ -183,7 +183,7 @@ class Applicant(models.Model):
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing')
     application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email or phone or mobile')
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', string='Refuse Reason', tracking=True)
-    meeting_ids = fields.One2many('calendar.event', 'applicant_id', 'Meetings')
+    meeting_ids = fields.Many2many('calendar.event', string='Meetings')
     meeting_display_text = fields.Char(compute='_compute_meeting_display')
     meeting_display_date = fields.Date(compute='_compute_meeting_display')
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
@@ -258,27 +258,39 @@ class Applicant(models.Model):
 
     @api.depends_context('lang')
     @api.depends('meeting_ids', 'meeting_ids.start')
-    def _compute_meeting_display(self):
-        applicant_with_meetings = self.filtered('meeting_ids')
-        (self - applicant_with_meetings).update({
+    def _set_meetings_display(self, applicants, meetings):
+        (self - applicants).write({
             'meeting_display_text': _('No Meeting'),
             'meeting_display_date': ''
         })
-        today = fields.Date.today()
-        for applicant in applicant_with_meetings:
-            count = len(applicant.meeting_ids)
-            dates = applicant.meeting_ids.mapped('start')
-            min_date, max_date = min(dates).date(), max(dates).date()
-            if min_date >= today:
-                applicant.meeting_display_date = min_date
+        now = fields.Datetime.now()
+        for applicant in applicants:
+            applicant_meetings = applicant.meeting_ids | meetings.filtered(lambda m: applicant.email_from in m.partner_ids.mapped('email'))
+            if applicant_meetings:
+                count = len(applicant_meetings)
+                datetimes = applicant_meetings.mapped('start')
+                max_datetime = max(datetimes)
+                upcoming_meetings = list(filter(lambda d: d > now, datetimes))
+                next_datetime = min(upcoming_meetings) if upcoming_meetings else None
+
+                if count == 1:
+                    applicant.meeting_display_text = _('1 Meeting')
+                    applicant.meeting_display_date = max_datetime.date()
+                elif not next_datetime:
+                    applicant.meeting_display_text = _('Last Meeting')
+                    applicant.meeting_display_date = max_datetime.date()
+                else:
+                    applicant.meeting_display_text = _('Next Meeting')
+                    applicant.meeting_display_date = next_datetime.date()
             else:
-                applicant.meeting_display_date = max_date
-            if count == 1:
-                applicant.meeting_display_text = _('1 Meeting')
-            elif applicant.meeting_display_date >= today:
-                applicant.meeting_display_text = _('Next Meeting')
-            else:
-                applicant.meeting_display_text = _('Last Meeting')
+                applicant.meeting_display_text = _('No Meeting')
+                applicant.meeting_display_date = ''
+
+    @api.depends_context('lang')
+    @api.depends('meeting_ids', 'meeting_ids.start')
+    def _compute_meeting_display(self):
+        applicant_with_meetings = self.filtered('meeting_ids')
+        self._set_meetings_display(applicant_with_meetings, applicant_with_meetings.meeting_ids)
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment']._read_group(
@@ -383,7 +395,7 @@ class Applicant(models.Model):
             for applicant in applicants:
                 partners = applicant.partner_id | applicant.user_id.partner_id | applicant.department_id.manager_id.user_id.partner_id
                 self.env['calendar.event'].sudo().with_context(default_applicant_id=applicant.id).create({
-                    'applicant_id': applicant.id,
+                    'applicant_ids': applicant.ids,
                     'partner_ids': [(6, 0, partners.ids)],
                     'user_id': self.env.uid,
                     'name': applicant.name,
@@ -432,7 +444,7 @@ class Applicant(models.Model):
             <p>%(para_1)s<br/>%(para_2)s</p>"""
 
         if alias_id and alias_id.alias_domain and alias_id.alias_name:
-            email = alias_id.display_name 
+            email = alias_id.display_name
             email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
             nocontent_values['email_link'] = email_link
             nocontent_body += """<p class="o_copy_paste_email">%(email_link)s</p>"""
@@ -459,16 +471,31 @@ class Applicant(models.Model):
             @return: Dictionary value for created Meeting view
         """
         self.ensure_one()
+        # if an applicant does not already has associated partner_id create it
+        if not self.partner_id:
+            if not self.partner_name:
+                raise UserError(_('You must define a Contact Name for this applicant.'))
+            self.partner_id = self.env['res.partner'].create({
+                'is_company': False,
+                'type': 'private',
+                'name': self.partner_name,
+                'email': self.email_from,
+                'phone': self.partner_phone,
+                'mobile': self.partner_mobile
+            })
         partners = self.partner_id | self.user_id.partner_id | self.department_id.manager_id.user_id.partner_id
 
         category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window']._for_xml_id('calendar.action_calendar_event')
         res['context'] = {
-            'default_applicant_id': self.id,
+            'default_applicant_ids': self.ids,
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
             'default_name': self.name,
             'default_categ_ids': category and [category.id] or False,
+            'active_id': self.id,
+            'active_model': self._name,
+            'initial_date': self.meeting_display_date or False,
         }
         return res
 
