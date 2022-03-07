@@ -130,6 +130,7 @@ class LunchOrder(models.Model):
 
     def write(self, values):
         merge_needed = 'note' in values or 'topping_ids_1' in values or 'topping_ids_2' in values or 'topping_ids_3' in values
+        default_location_id = self.env.user.last_lunch_location_id and self.env.user.last_lunch_location_id.id or False
 
         if merge_needed:
             lines_to_deactivate = self.env['lunch.order']
@@ -147,6 +148,7 @@ class LunchOrder(models.Model):
                     'product_id': values.get('product_id', line.product_id.id),
                     'note': values.get('note', line.note or False),
                     'toppings': toppings,
+                    'lunch_location_id': values.get('lunch_location_id', default_location_id),
                 })
                 if matching_lines:
                     lines_to_deactivate |= line
@@ -157,11 +159,13 @@ class LunchOrder(models.Model):
 
     @api.model
     def _find_matching_lines(self, values):
+        default_location_id = self.env.user.last_lunch_location_id and self.env.user.last_lunch_location_id.id or False
         domain = [
             ('user_id', '=', values.get('user_id', self.default_get(['user_id'])['user_id'])),
             ('product_id', '=', values.get('product_id', False)),
             ('date', '=', fields.Date.today()),
             ('note', '=', values.get('note', False)),
+            ('lunch_location_id', '=', values.get('lunch_location_id', default_location_id)),
         ]
         toppings = values.get('toppings', [])
         return self.search(domain).filtered(lambda line: (line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3).ids == toppings)
