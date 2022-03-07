@@ -36,7 +36,7 @@ export class ProgressBarField extends Component {
             }
             return value;
         }
-        return part === "max_value" ? 100 : this.props.record.data[this.props.name] || 0;
+        return part === "maxValue" ? 100 : this.props.record.data[this.props.name] || 0;
     }
 
     /**
@@ -52,15 +52,10 @@ export class ProgressBarField extends Component {
             }
             this.state[part] = parsedValue;
         } catch {
-            this.props.record.setInvalidField(this.props.name);
+            this.props.setAsInvalid(this.props.name);
             return;
         }
-        if (this.props.record.data[this.props[part]] !== undefined) {
-            this.props.record.update(this.props[part], parsedValue);
-            this.props.record.update(this.props.name, this.props.value);
-        } else {
-            this.props.record.update(this.props.name, parsedValue);
-        }
+        this.props.update(parsedValue, part);
     }
     onKeyDownValue() {
         debounce.apply(this, [this.updateStateValue, 100]);
@@ -77,22 +72,37 @@ export class ProgressBarField extends Component {
     }
 }
 
+ProgressBarField.defaultProps = {
+    setAsInvalid: () => {},
+};
 ProgressBarField.props = {
     ...standardFieldProps,
     currentValue: { type: String, optional: true },
     maxValue: { type: String, optional: true },
     isCurrentValueEditable: { type: Boolean, optional: true },
     isMaxValueEditable: { type: Boolean, optional: true },
+    setAsInvalid: { type: Function, optional: true },
 };
 ProgressBarField.template = "web.ProgressBarField";
-ProgressBarField.convertAttrsToProps = (attrs) => {
-    return {
+ProgressBarField.extractProps = (fieldName, record, attrs) => {
+    const values = {
         currentValue: attrs.options.current_value,
         maxValue: attrs.options.max_value,
+    };
+    return {
+        ...values,
         isCurrentValueEditable:
             (attrs.options.editable && !attrs.options.edit_max_value) ||
             attrs.options.edit_current_value,
         isMaxValueEditable: attrs.options.edit_max_value,
+        setAsInvalid: record.setInvalidField.bind(record),
+        update: (value, part) => {
+            if (record.data[values[part]] !== undefined) {
+                record.update(values[part], value);
+            } else {
+                record.update(fieldName, value);
+            }
+        },
     };
 };
 ProgressBarField.displayName = _lt("Progress Bar");

@@ -16,23 +16,19 @@ export class BinaryField extends Component {
     setup() {
         this.notification = useService("notification");
         this.state = useState({
-            filename: "",
+            fileName: this.props.fileName || "",
             isValid: true,
         });
         onWillUpdateProps((nextProps) => {
             if (nextProps.readonly) {
-                this.state.filename = "";
+                this.state.fileName = "";
             }
         });
     }
     get file() {
         return {
-            data: this.props.record.data[this.props.name],
-            name:
-                this.state.filename ||
-                this.props.record.data[this.props.filename] ||
-                this.props.filename ||
-                this.props.value,
+            data: this.props.fileData,
+            name: this.state.fileName || this.props.fileData || null,
         };
     }
     async onFileDownload() {
@@ -44,7 +40,7 @@ export class BinaryField extends Component {
                 filename_field: this.file.name,
                 filename: this.file.name || "",
                 download: true,
-                data: isBinarySize(this.props.value) ? null : this.props.value,
+                data: isBinarySize(this.props.fileData) ? null : this.props.fileData,
             },
             url: "/web/content",
         });
@@ -52,12 +48,12 @@ export class BinaryField extends Component {
     onFileRemove() {
         this.state.isValid = true;
         this.props.update(false);
-        this.props.record.update(this.props.filename, false);
     }
-    onFileUploaded(info) {
-        this.state.filename = info.name;
+    onFileUploaded(file) {
+        console.log(file);
+        this.state.fileName = file.name;
         this.state.isValid = true;
-        this.props.update(info.data);
+        this.props.update(file);
     }
     onLoadFailed() {
         this.state.isValid = false;
@@ -73,17 +69,26 @@ BinaryField.components = {
 };
 BinaryField.props = {
     ...standardFieldProps,
-    filename: { type: String, optional: true },
+    fileData: { type: String, optional: true },
+    fileName: { type: String, optional: true },
     acceptedFileExtensions: { type: String, optional: true },
 };
 BinaryField.defaultProps = {
     acceptedFileExtensions: "*",
+    fileData: "",
 };
 BinaryField.template = "web.BinaryField";
-BinaryField.convertAttrsToProps = (attrs) => {
+BinaryField.extractProps = (fieldName, record, attrs) => {
     return {
-        filename: attrs.filename,
+        fileData: record.data[fieldName] || "",
+        fileName: record.data[attrs.filename] || "",
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
+        update: (file) => {
+            record.update(fieldName, file.data || false);
+            if (attrs.filename && attrs.filename !== fieldName) {
+                record.update(attrs.filename, file.name || false);
+            }
+        },
     };
 };
 

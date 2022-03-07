@@ -19,18 +19,11 @@ export class UrlField extends Component {
         }
         return value;
     }
-    get formattedValue() {
-        return typeof this.props.value === "string" ? this.props.value : "";
-    }
     /**
      * @param {Event} ev
      */
     onChange(ev) {
-        let value = ev.target.value;
-        if (this.props.record.fields[this.props.name].trim) {
-            value = value.trim();
-        }
-        this.props.update(value || false);
+        this.props.update(ev.target.value);
     }
 }
 
@@ -43,7 +36,7 @@ UrlField.props = {
 };
 UrlField.displayName = _lt("URL");
 UrlField.supportedTypes = ["char"];
-UrlField.convertAttrsToProps = (attrs) => {
+UrlField.extractProps = (fieldName, record, attrs) => {
     return {
         text: attrs.text,
         websitePath: Boolean(attrs.options.website_path),

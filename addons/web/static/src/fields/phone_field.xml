@@ -3,13 +3,11 @@
 
     <t t-name="web.PhoneField" owl="1">
         <t t-if="props.readonly">
-            <div>
-                <a class="o-phone-field o_field_widget o_form_uri" t-att-href="'tel:'+formattedValue" t-esc="formattedValue"/>
-            </div>
+            <a class="o_form_uri o_phone_link" t-att-href="'tel:'+props.value" t-esc="props.value"/>
         </t>
         <t t-else="">
             <input
-                class="o-phone-field o_input"
+                class="o_input"
                 type="phone"
                 t-att-value="props.value or ''"
                 t-on-change="onChange"

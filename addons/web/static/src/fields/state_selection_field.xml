@@ -16,7 +16,7 @@
                         <span t-if="!props.hideLabel" class="o_status_label" t-esc="label"/>
                     </div>
                 </t>
-                <t t-foreach="options" t-as="option" t-key="option[0]">
+                <t t-foreach="props.options" t-as="option" t-key="option[0]">
                     <DropdownItem t-if="option[0] != props.value" onSelected="() => this.onChange(option[0])">
                         <div class="d-flex align-items-center">
                             <span t-attf-class="{{ 'mx-2 o_status ' + option[0] }} "/>

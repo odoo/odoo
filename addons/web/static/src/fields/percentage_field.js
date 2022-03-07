@@ -16,7 +16,7 @@ export class PercentageField extends Component {
             parsedValue = this.props.parse(ev.target.value);
         } catch (e) {
             // FIXME WOWL check error
-            this.props.record.setInvalidField(this.props.name);
+            this.props.setAsInvalid(this.props.name);
             return;
         }
         this.props.update(parsedValue);
@@ -24,8 +24,17 @@ export class PercentageField extends Component {
 }
 
 PercentageField.template = "web.PercentageField";
+PercentageField.defaultProps = {
+    setAsInvalid: () => {},
+};
 PercentageField.props = {
     ...standardFieldProps,
+    setAsInvalid: { type: Function, optional: true },
+};
+PercentageField.extractProps = (fieldName, record) => {
+    return {
+        setAsInvalid: record.setInvalidField.bind(record),
+    };
 };
 PercentageField.displayName = _lt("Percentage");
 PercentageField.supportedTypes = ["integer", "float"];

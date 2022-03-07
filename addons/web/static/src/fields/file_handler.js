@@ -7,13 +7,6 @@ import { formatFloat } from "./formatters";
 
 const { Component, useRef, useState } = owl;
 
-export const fileTypeMagicWordMap = {
-    "/": "jpg",
-    R: "gif",
-    i: "png",
-    P: "svg+xml",
-};
-
 const DEFAULT_MAX_FILE_SIZE = 128 * 1024 * 1024;
 
 /**
@@ -39,6 +32,7 @@ function getDataURLFromFile(file) {
 
 export class FileUploader extends Component {
     setup() {
+        console.log(this.props);
         this.notification = useService("notification");
         this.id = `o_fileupload_${++FileUploader.nextId}`;
         this.state = useState({

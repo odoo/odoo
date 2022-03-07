@@ -88,7 +88,7 @@ ImageField.components = {
 };
 (ImageField.displayName = _lt("Image")),
     (ImageField.supportedTypes = ["binary"]),
-    (ImageField.convertAttrsToProps = (attrs) => {
+    (ImageField.extractProps = (fieldName, record, attrs) => {
         return {
             previewImage: attrs.preview_image,
             acceptedFileExtensions: attrs.options.accepted_file_extensions,

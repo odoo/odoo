@@ -23,7 +23,7 @@ PercentPieField.props = {
     string: { type: String, optional: true },
 };
 PercentPieField.displayName = _lt("PercentPie");
-PercentPieField.convertAttrsToProps = (attrs) => {
+PercentPieField.extractProps = (fieldName, record, attrs) => {
     return {
         string: attrs.string,
     };

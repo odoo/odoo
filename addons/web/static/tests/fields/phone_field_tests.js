@@ -60,7 +60,7 @@ QUnit.module("Fields", (hooks) => {
             // },
         });
 
-        const phone = target.querySelector("a.o-phone-field");
+        const phone = target.querySelector(".o_field_phone a");
         assert.containsOnce(
             form,
             phone,
@@ -88,7 +88,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         await click(target.querySelector(".o_form_button_save"));
         assert.strictEqual(
-            target.querySelector("a.o-phone-field").innerText,
+            target.querySelector(".o_field_phone a").innerText,
             "new",
             "new value should be displayed properly"
         );
@@ -118,7 +118,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             list,
-            "a.o_field_widget.o_form_uri.o-phone-field",
+            ".o_field_widget a.o_form_uri.o_phone_link",
             2,
             "should have the correct classnames"
         );
@@ -149,7 +149,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsN(
             list,
-            "a.o_field_widget.o_form_uri.o-phone-field",
+            ".o_field_widget a.o_form_uri.o_phone_link",
             2,
             "should still have links with correct classes"
         );

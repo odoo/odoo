@@ -15,7 +15,7 @@ export class MonetaryField extends Component {
             value = this.props.parse(value, { currencyId: this.currencyId });
         } catch (e) {
             isValid = false;
-            this.props.record.setInvalidField(this.props.name);
+            this.props.setAsInvalid(this.props.name);
             if (this.__owl__.app.dev) console.warn(e.message);
         }
         if (isValid) {
@@ -81,9 +81,11 @@ MonetaryField.props = {
     ...standardFieldProps,
     inputType: { type: String, optional: true },
     digits: { type: Array, optional: true },
+    setAsInvalid: { type: Function, optional: true },
 };
 MonetaryField.defaultProps = {
     inputType: "text",
+    setAsInvalid: () => {},
 };
 
 MonetaryField.extractProps = function (fieldName, record, attrs) {
@@ -92,6 +94,7 @@ MonetaryField.extractProps = function (fieldName, record, attrs) {
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits,
+        setAsInvalid: record.setInvallidField,
     };
 };
 

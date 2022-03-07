@@ -22,11 +22,8 @@ export class StateSelectionField extends Component {
     }
     get label() {
         return this.props.value
-            ? this.options.find((o) => o[0] === this.props.value)[1]
-            : this.options[0][1];
-    }
-    get options() {
-        return this.props.record.fields[this.props.name].selection;
+            ? this.props.options.find((o) => o[0] === this.props.value)[1]
+            : this.props.options[0][1];
     }
 
     /**
@@ -48,12 +45,14 @@ StateSelectionField.defaultProps = {
 StateSelectionField.props = {
     ...standardFieldProps,
     hideLabel: { type: Boolean, optional: true },
+    options: Object,
 };
 StateSelectionField.displayName = _lt("Label Selection");
 StateSelectionField.supportedTypes = ["selection"];
-StateSelectionField.convertAttrsToProps = (attrs) => {
+StateSelectionField.extractProps = (fieldName, record, attrs) => {
     return {
         hideLabel: attrs.options.hide_label,
+        options: record.fields[fieldName].selection,
     };
 };
 registry.category("fields").add("state_selection", StateSelectionField);

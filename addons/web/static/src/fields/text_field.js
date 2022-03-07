@@ -40,7 +40,7 @@ export class TextField extends Component {
         this.resize();
     }
     onChange(ev) {
-        this.props.record.update(this.props.name, ev.target.value);
+        this.props.update(ev.target.value);
     }
 }
 

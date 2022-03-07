@@ -12,7 +12,7 @@ export class IntegerField extends Component {
             value = this.props.parse(value);
         } catch (e) {
             isValid = false;
-            this.props.record.setInvalidField(this.props.name);
+            this.props.setAsInvalid(this.props.name);
         }
         if (isValid) {
             this.props.update(value);
@@ -31,14 +31,17 @@ IntegerField.template = "web.IntegerField";
 IntegerField.props = {
     ...standardFieldProps,
     inputType: { type: String, optional: true },
+    setAsInvalid: { type: Function, optional: true },
 };
 IntegerField.defaultProps = {
     inputType: "text",
+    setAsInvalid: () => {},
 };
 IntegerField.isEmpty = () => false;
-IntegerField.convertAttrsToProps = (attrs) => {
+IntegerField.extractProps = (fieldName, record, attrs) => {
     return {
         inputType: attrs.options.type,
+        setAsInvalid: record.setInvalidField.bind(record),
     };
 };
 

@@ -129,14 +129,13 @@ QUnit.module("Fields", (hooks) => {
             "the binary field should not be rendered as a downloadable link in edit"
         );
         assert.strictEqual(
-            target.querySelector('.o_field_widget[name="document"] div.o_field_binary_file span')
-                .innerText,
+            target.querySelector('.o_field_widget[name="document"].o_field_binary span').innerText,
             "coucou.txt",
             "the binary field should display the file name in the input edit mode"
         );
         assert.containsOnce(
             form,
-            ".o_field_binary_file .o_clear_file_button",
+            ".o_field_binary .o_clear_file_button",
             "there shoud be a button to clear the file"
         );
         assert.strictEqual(
@@ -145,15 +144,15 @@ QUnit.module("Fields", (hooks) => {
             "the filename field should have the file name as value"
         );
 
-        await click(target.querySelector(".o_field_binary_file .o_clear_file_button"));
+        await click(target.querySelector(".o_field_binary .o_clear_file_button"));
 
         assert.isNotVisible(
-            target.querySelector(".o_field_binary_file input"),
+            target.querySelector(".o_field_binary input"),
             "the input should be hidden"
         );
         assert.containsOnce(
             form,
-            ".o_field_binary_file .o_select_file_button",
+            ".o_field_binary .o_select_file_button",
             "there should be a button to upload the file"
         );
         assert.strictEqual(
@@ -207,12 +206,12 @@ QUnit.module("Fields", (hooks) => {
             // We need to convert the input type since we can't programmatically set
             // the value of a file input. The patch of the onFileChange will create
             // a file object to be used by the component.
-            target.querySelector(".o_field_binary_file input").setAttribute("type", "text");
-            await editInput(target, ".o_field_binary_file input", "fake_file");
+            target.querySelector(".o_field_binary input").setAttribute("type", "text");
+            await editInput(target, ".o_field_binary input", "fake_file");
             await nextTick();
 
             assert.strictEqual(
-                target.querySelector(".o_field_binary_file span").innerText,
+                target.querySelector(".o_field_binary span").innerText,
                 "fake_file.txt",
                 'displayed value should be changed to "fake_file.txt"'
             );
