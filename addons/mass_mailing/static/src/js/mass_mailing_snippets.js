@@ -205,6 +205,9 @@ options.registry.ImageTools.include({
      * @override
      */
     _getCSSColorValue(color) {
+        if (!color || ColorpickerWidget.isCSSColor(color)) {
+            return color;
+        }
         const doc = this.options.document;
         if (doc && doc.querySelector('.o_mass_mailing_iframe') && !ColorpickerWidget.isCSSColor(color)) {
             const tempEl = doc.body.appendChild(doc.createElement('div'));
