@@ -53,19 +53,6 @@ export class ChatWindow extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Apply visual position of the chat window.
-     *
-     * @private
-     */
-    _applyVisibleOffset() {
-        const textDirection = this.messaging.locale.textDirection;
-        const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
-        const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
-        this.root.el.style[offsetFrom] = this.chatWindow.visibleOffset + 'px';
-        this.root.el.style[oppositeFrom] = 'auto';
-    }
-
-    /**
      * Save the scroll positions of the chat window in the store.
      * This is useful in order to remount chat windows and keep previous
      * scroll positions. This is necessary because when toggling on/off
@@ -113,7 +100,6 @@ export class ChatWindow extends Component {
                 this._inputRef.el.focus();
             }
         }
-        this._applyVisibleOffset();
     }
 
     //--------------------------------------------------------------------------
