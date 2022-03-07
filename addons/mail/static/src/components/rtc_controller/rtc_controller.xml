@@ -32,7 +32,7 @@
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="oi" t-att-class="{
                                     'oi-large': !rtcController.isSmall,
-                                    'fa-headphones: !messaging.rtc.currentRtcSession.isDeaf,
+                                    'fa-headphones': !messaging.rtc.currentRtcSession.isDeaf,
                                     'fa-deaf': messaging.rtc.currentRtcSession.isDeaf,
                                     'text-danger': messaging.rtc.currentRtcSession.isDeaf,
                                 }"/>
