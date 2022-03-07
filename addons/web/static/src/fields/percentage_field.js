@@ -13,7 +13,7 @@ export class PercentageField extends Component {
     onChange(ev) {
         let parsedValue;
         try {
-            parsedValue = this.props.parseValue(ev.target.value);
+            parsedValue = this.props.parse(ev.target.value);
         } catch (e) {
             // FIXME WOWL check error
             this.props.record.setInvalidField(this.props.name);

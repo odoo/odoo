@@ -85,7 +85,7 @@ export class Many2OneField extends Component {
             });
             return nameGet[0][1].split("\n").map((line) => line.trim());
         }
-        return [this.props.formatValue(value)];
+        return [this.props.format(value)];
     }
 
     async loadRecordSource(request) {

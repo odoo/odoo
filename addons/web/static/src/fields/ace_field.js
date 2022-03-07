@@ -57,7 +57,7 @@ export class AceField extends Component {
         this.aceEditor.on("blur", this.onBlur.bind(this));
     }
     patchAce() {
-        const formattedValue = this.props.formatValue(this.props.value) || "";
+        const formattedValue = this.props.format(this.props.value) || "";
         if (this.aceSession.getValue() !== formattedValue) {
             this.aceSession.setValue(formattedValue);
         }

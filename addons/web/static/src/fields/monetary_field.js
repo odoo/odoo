@@ -12,7 +12,7 @@ export class MonetaryField extends Component {
         let isValid = true;
         let value = ev.target.value;
         try {
-            value = this.props.parseValue(value, { currencyId: this.currencyId });
+            value = this.props.parse(value, { currencyId: this.currencyId });
         } catch (e) {
             isValid = false;
             this.props.record.setInvalidField(this.props.name);
@@ -48,7 +48,7 @@ export class MonetaryField extends Component {
     }
 
     get formattedValue() {
-        return this.props.formatValue(this.props.value, {
+        return this.props.format(this.props.value, {
             digits: this.currencyDigits,
             field: this.props.record.fields[this.props.name],
             currencyId: this.currencyId,
@@ -65,7 +65,7 @@ export class MonetaryField extends Component {
         if (this.props.inputType === "number") {
             return this.props.value;
         }
-        return this.props.formatValue(this.props.value, {
+        return this.props.format(this.props.value, {
             digits: this.currencyDigits,
             field: this.props.record.fields[this.props.name],
             noSymbol: true,

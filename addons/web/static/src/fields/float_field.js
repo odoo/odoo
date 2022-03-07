@@ -13,7 +13,7 @@ export class FloatField extends Component {
         let isValid = true;
         let value = ev.target.value;
         try {
-            value = this.props.parseValue(value);
+            value = this.props.parse(value);
         } catch (e) {
             isValid = false;
             this.props.setAsInvalid(this.props.name);
@@ -24,7 +24,7 @@ export class FloatField extends Component {
     }
 
     get formattedValue() {
-        return this.props.formatValue(this.props.value, {
+        return this.props.format(this.props.value, {
             digits: this.props.digits,
             field: this.props.field,
         });

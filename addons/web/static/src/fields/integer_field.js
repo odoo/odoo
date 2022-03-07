@@ -9,7 +9,7 @@ export class IntegerField extends Component {
         let isValid = true;
         let value = ev.target.value;
         try {
-            value = this.props.parseValue(value);
+            value = this.props.parse(value);
         } catch (e) {
             isValid = false;
             this.props.record.setInvalidField(this.props.name);
@@ -21,7 +21,7 @@ export class IntegerField extends Component {
 
     get formattedInputValue() {
         if (this.props.inputType === "number") return this.props.value;
-        return this.props.formatValue(this.props.value, {
+        return this.props.format(this.props.value, {
             field: this.props.record.fields[this.props.name],
         });
     }

@@ -92,8 +92,8 @@ export class Field extends Component {
                 }
             },
             value: this.props.record.data[this.props.name],
-            formatValue: this.formatValue.bind(this),
-            parseValue: this.parseValue.bind(this),
+            format: this.format.bind(this),
+            parse: this.parse.bind(this),
             decorations: decorationMap,
             ...props,
             type: field.type,
@@ -102,7 +102,7 @@ export class Field extends Component {
         };
     }
 
-    formatValue(value, options = {}) {
+    format(value, options = {}) {
         const record = this.props.record;
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];
@@ -126,7 +126,7 @@ export class Field extends Component {
         }
     }
 
-    parseValue(value, options = {}) {
+    parse(value, options = {}) {
         const record = this.props.record;
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];

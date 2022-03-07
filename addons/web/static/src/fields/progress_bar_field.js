@@ -27,7 +27,7 @@ export class ProgressBarField extends Component {
         if (this.props[part]) {
             let value;
             try {
-                value = this.props.parseValue(this.props[part]);
+                value = this.props.parse(this.props[part]);
             } catch {
                 value =
                     (this.props.record.data[this.props[part]] !== undefined &&
