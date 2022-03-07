@@ -91,7 +91,7 @@ MonetaryField.extractProps = function (fieldName, record, attrs) {
         inputType: attrs.type,
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
-        digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options && attrs.options.digits,
+        digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits,
     };
 };
 

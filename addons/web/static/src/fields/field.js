@@ -77,7 +77,7 @@ export class Field extends Component {
             extractedPropsForStandaloneComponent = this.FieldComponent.extractProps(
                 this.props.name,
                 record,
-                activeField.attrs || {}
+                activeField.attrs
             );
         }
 
@@ -189,10 +189,10 @@ Field.parseFieldNode = function (node, fields, viewType) {
         decorations: {}, // populated below
         noLabel: isTruthy(node.getAttribute("nolabel"), true),
         props: {},
-        attrs: {},
+        rawAttrs: {},
         options: evaluateExpr(node.getAttribute("options") || "{}"),
     };
-    const attrs = {
+    fieldInfo.attrs = {
         options: fieldInfo.options,
     };
     for (const attribute of node.attributes) {
@@ -207,14 +207,14 @@ Field.parseFieldNode = function (node, fields, viewType) {
             continue;
         }
 
-        fieldInfo.attrs[attribute.name] = attribute.value;
+        fieldInfo.rawAttrs[attribute.name] = attribute.value;
         if (EXCLUDED_ATTRS.includes(attribute.name)) {
             continue;
         }
-        attrs[attribute.name] = attribute.value;
+        fieldInfo.attrs[attribute.name] = attribute.value;
     }
     if (fieldInfo.FieldComponent.convertAttrsToProps) {
-        fieldInfo.props = fieldInfo.FieldComponent.convertAttrsToProps(attrs);
+        fieldInfo.props = fieldInfo.FieldComponent.convertAttrsToProps(fieldInfo.attrs);
     }
 
     if (!fieldInfo.invisible && X2M_TYPES.includes(field.type)) {
@@ -230,7 +230,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
                     fields: subView.fields,
                 };
             }
-            let viewMode = attrs.mode;
+            let viewMode = fieldInfo.attrs.mode;
             if (!viewMode) {
                 if (fieldInfo.views.list && !fieldInfo.views.kanban) {
                     viewMode = "list";
@@ -260,7 +260,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         // add fields required by specific FieldComponents
         Object.assign(relatedFields, fieldInfo.FieldComponent.fieldsToFetch);
         // special case for color field
-        const colorField = attrs.options.color_field;
+        const colorField = fieldInfo.attrs.options.color_field;
         if (colorField) {
             relatedFields[colorField] = { name: colorField, type: "integer", active: true };
         }
