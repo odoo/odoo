@@ -222,6 +222,7 @@ export function makeLegacyNotificationService(legacyEnv) {
                 type,
                 className,
                 onClose,
+                escape = true,
             }) {
                 if (subtitle) {
                     title = [title, subtitle].filter(Boolean).join(" ");
@@ -240,7 +241,11 @@ export function makeLegacyNotificationService(legacyEnv) {
                     };
                 });
 
-                const removeFn = env.services.notification.add(_.escape(message), {
+                if (escape) {
+                    message = _.escape(message);
+                }
+
+                const removeFn = env.services.notification.add(message, {
                     sticky,
                     title,
                     type,
