@@ -18,7 +18,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 
 const { DateTime } = luxon;
-const { toRaw, xml } = owl;
+const { markRaw, toRaw, xml } = owl;
 
 const preloadedDataRegistry = registry.category("preloadedData");
 
@@ -129,9 +129,10 @@ class RequestBatcherORM extends ORM {
     constructor() {
         super(...arguments);
         this.deleteBatches = {};
-        this.searchReadBatchId = 1;
-        this.searchReadBatches = {};
         this.readBatches = {};
+        this.searchReadBatches = {};
+        this.searchReadBatchId = 1;
+        this.unlinkBatches = {};
     }
 
     /**
@@ -185,7 +186,7 @@ class RequestBatcherORM extends ORM {
      */
     async unlink(resModel, resIds, context) {
         const key = JSON.stringify([resModel, context]);
-        let batch = this.readBatches[key];
+        let batch = this.unlinkBatches[key];
         if (!batch) {
             batch = {
                 deferred: new Deferred(),
@@ -193,15 +194,15 @@ class RequestBatcherORM extends ORM {
                 resIds: [],
                 scheduled: false,
             };
-            this.readBatches[key] = batch;
+            this.unlinkBatches[key] = batch;
         }
-        const prevIds = this.readBatches[key].resIds;
-        this.readBatches[key].resIds = [...new Set([...prevIds, ...resIds])];
+        const prevIds = this.unlinkBatches[key].resIds;
+        this.unlinkBatches[key].resIds = [...new Set([...prevIds, ...resIds])];
 
         if (!batch.scheduled) {
             batch.scheduled = true;
             await Promise.resolve();
-            delete this.readBatches[key];
+            delete this.unlinkBatches[key];
             const result = await super.unlink(resModel, batch.resIds, context);
             batch.deferred.resolve(result);
         }
@@ -209,6 +210,9 @@ class RequestBatcherORM extends ORM {
         return batch.deferred;
     }
 
+    /**
+     * @override
+     */
     async webSearchRead(/*model*/) {
         // FIXME: discriminate on model? (it is always the same in our usecase)
         const batchId = this.searchReadBatchId;
@@ -235,7 +239,12 @@ class RequestBatcherORM extends ORM {
 
 let nextId = 0;
 class DataPoint {
-    constructor(model, params) {
+    /**
+     * @param {RelationalModel} model
+     * @param {Object} [params={}]
+     * @param {Object} [state={}]
+     */
+    constructor(model, params = {}, state = {}) {
         this.id = `datapoint_${nextId++}`;
 
         this.model = model;
@@ -244,13 +253,22 @@ class DataPoint {
         this.activeFields = params.activeFields;
         this.fieldNames = Object.keys(params.activeFields);
         this.context = params.context;
+
+        this.setup(params, state);
     }
+
+    /**
+     * @abstract
+     * @param {Object} params
+     * @param {Object} state
+     */
+    setup() {}
 
     exportState() {
         return {};
     }
 
-    load() {
+    async load() {
         throw new Error("load must be implemented");
     }
 
@@ -292,9 +310,7 @@ class DataPoint {
 }
 
 export class Record extends DataPoint {
-    constructor(model, params, state) {
-        super(...arguments);
-
+    setup(params, state) {
         if ("resId" in params) {
             this.resId = params.resId;
         } else if (state) {
@@ -562,7 +578,15 @@ export class Record extends DataPoint {
         this.model.notify();
     }
 
-    async save(options = { stayInEdition: false }) {
+    /**
+     *
+     * @param {Object} options
+     * @param {boolean} [options.stayInEdition=false]
+     * @param {boolean} [options.noReload=false] prevents the record from
+     *  reloading after changes are applied, typically used to defer the load.
+     * @returns {Promise<boolean>}
+     */
+    async save(options = { stayInEdition: false, noReload: false }) {
         return this.model.mutex.exec(async () => {
             if (this._invalidFields.size > 0) {
                 let invalidStringArr = [];
@@ -577,18 +601,15 @@ export class Record extends DataPoint {
                 this.model.notificationService.add(
                     this.model.env._t("Invalid fields: ") + invalidStringArr.join(", ")
                 );
-                return;
+                return false;
             }
             const changes = this.getChanges();
             const keys = Object.keys(changes);
-            let reload = true;
-            if (this.resId) {
-                if (keys.length > 0) {
-                    await this.model.orm.write(this.resModel, [this.resId], changes);
-                } else {
-                    reload = false;
-                }
-            } else {
+            const hasChanges = !this.resId || keys.length;
+            const shouldReload = hasChanges ? !options.noReload : false;
+            if (this.resId && keys.length) {
+                await this.model.orm.write(this.resModel, [this.resId], changes);
+            } else if (!this.resId) {
                 if (keys.length === 1 && keys[0] === "display_name") {
                     const [resId] = await this.model.orm.call(
                         this.resModel,
@@ -602,14 +623,16 @@ export class Record extends DataPoint {
                 }
                 this.resIds.push(this.resId);
             }
-            if (reload) {
+            if (shouldReload) {
                 await this.load();
+                this.model.trigger("record-updated", { record: this });
                 this.model.notify();
             }
             this.isInQuickCreation = false;
             if (!options.stayInEdition) {
                 this.switchMode("readonly");
             }
+            return true;
         });
     }
 
@@ -814,11 +837,9 @@ export class Record extends DataPoint {
 }
 
 class DynamicList extends DataPoint {
-    constructor(model, params, state) {
-        super(...arguments);
-
+    setup(params, state) {
         this.groupBy = params.groupBy || [];
-        this.domain = params.domain || [];
+        this.domain = markRaw(params.domain || []);
         this.orderBy = params.orderBy || []; // rename orderBy + get back from state
         this.offset = 0;
         this.count = 0;
@@ -973,13 +994,12 @@ class DynamicList extends DataPoint {
 }
 
 export class DynamicRecordList extends DynamicList {
-    constructor(model, params) {
-        super(...arguments);
+    setup(params) {
+        super.setup(...arguments);
 
         /** @type {Record[]} */
         this.records = [];
         this.data = params.data;
-        this.isDirty = false;
     }
 
     get quickCreateRecord() {
@@ -1035,7 +1055,7 @@ export class DynamicRecordList extends DynamicList {
         for (const record of records) {
             this.removeRecord(record);
         }
-        // Relaod the model only if more records should appear on the current page.
+        // Reload the model only if more records should appear on the current page.
         if (this.count && !this.records.length) {
             await this.model.load();
         }
@@ -1048,9 +1068,8 @@ export class DynamicRecordList extends DynamicList {
      * @returns {Record}
      */
     addRecord(record, index) {
-        this.records.splice(Number.isInteger(index) ? index : this.count, 0, record);
+        this.records.splice(Number.isInteger(index) ? index : this.records.length, 0, record);
         this.count++;
-        this.isDirty = true;
         this.model.notify();
         return record;
     }
@@ -1063,7 +1082,6 @@ export class DynamicRecordList extends DynamicList {
         const index = this.records.findIndex((r) => r === record);
         this.records.splice(index, 1);
         this.count--;
-        this.isDirty = true;
         if (this.editedRecord === record) {
             this.editedRecord = null;
         }
@@ -1091,14 +1109,6 @@ export class DynamicRecordList extends DynamicList {
         }
     }
 
-    quickCreateContext(fieldName, value) {
-        const context = { ...this.context };
-        if (fieldName) {
-            context[`default_${fieldName}`] = value;
-        }
-        return context;
-    }
-
     async quickCreate(activeFields, context) {
         const record = this.quickCreateRecord;
         if (record) {
@@ -1113,7 +1123,7 @@ export class DynamicRecordList extends DynamicList {
 
     async _loadRecords() {
         const order = orderByToString(this.orderBy);
-        const { records, length } =
+        const { records: rawRecords, length } =
             this.data ||
             (await this.model.orm.webSearchRead(
                 this.resModel,
@@ -1129,11 +1139,9 @@ export class DynamicRecordList extends DynamicList {
                     ...this.context,
                 }
             ));
-        this.count = length;
-        delete this.data;
 
-        return Promise.all(
-            records.map(async (data) => {
+        const records = await Promise.all(
+            rawRecords.map(async (data) => {
                 data = this._parseServerValues(data);
                 const record = this.model.createDataPoint("record", {
                     resModel: this.resModel,
@@ -1148,14 +1156,19 @@ export class DynamicRecordList extends DynamicList {
                 return record;
             })
         );
+
+        delete this.data;
+        this.count = length;
+
+        return records;
     }
 }
 
 DynamicRecordList.DEFAULT_LIMIT = 80;
 
 export class DynamicGroupList extends DynamicList {
-    constructor(model, params, state) {
-        super(...arguments);
+    setup(params, state) {
+        super.setup(...arguments);
 
         this.groupLimit = params.groupLimit || state.groupLimit || this.constructor.DEFAULT_LIMIT;
         this.groupByInfo = params.groupByInfo || {}; // FIXME: is this something specific to the list view?
@@ -1165,6 +1178,21 @@ export class DynamicGroupList extends DynamicList {
         this.activeFields = params.activeFields;
         this.isGrouped = true;
         this.quickCreateInfo = null; // Lazy loaded;
+    }
+
+    get commonGroupParams() {
+        return {
+            fields: this.fields,
+            activeFields: this.activeFields,
+            resModel: this.resModel,
+            domain: this.domain,
+            groupBy: this.groupBy.slice(1),
+            context: this.context,
+            orderBy: this.orderBy,
+            limit: this.limit,
+            groupByInfo: this.groupByInfo,
+            onRecordWillSwitchMode: this.onRecordWillSwitchMode,
+        };
     }
 
     /**
@@ -1239,21 +1267,14 @@ export class DynamicGroupList extends DynamicList {
             })
         );
         const group = this.model.createDataPoint("group", {
+            ...this.commonGroupParams,
             count: 0,
             value: id,
             displayName,
             aggregates: {},
-            fields: this.fields,
-            activeFields: this.activeFields,
-            resModel: this.resModel,
-            domain: this.domain,
-            groupBy: this.groupBy.slice(1),
             groupByField: this.groupByField,
-            groupByInfo: this.groupByInfo,
             // FIXME
             // groupDomain: this.groupDomain,
-            context: this.context,
-            orderedBy: this.orderBy,
         });
         group.isFolded = false;
         return this.addGroup(group);
@@ -1331,22 +1352,10 @@ export class DynamicGroupList extends DynamicList {
         );
         this.count = length;
 
-        const commonGroupParams = {
-            fields: this.fields,
-            activeFields: this.activeFields,
-            resModel: this.resModel,
-            domain: this.domain,
-            groupBy: this.groupBy.slice(1),
-            context: this.context,
-            orderBy: this.orderBy,
-            limit: this.limit,
-            groupByInfo: this.groupByInfo,
-            onRecordWillSwitchMode: this.onRecordWillSwitchMode,
-        };
         const groupByField = this.groupByField;
         return groups.map((data) => {
             const groupParams = {
-                ...commonGroupParams,
+                ...this.commonGroupParams,
                 aggregates: {},
                 isFolded: !this.openGroupsByDefault,
                 groupByField,
@@ -1447,9 +1456,7 @@ export class DynamicGroupList extends DynamicList {
 DynamicGroupList.DEFAULT_LIMIT = 10;
 
 export class Group extends DataPoint {
-    constructor(model, params, state) {
-        super(...arguments);
-
+    setup(params, state) {
         this.value = params.value;
         this.displayName = params.displayName;
         this.aggregates = params.aggregates;
@@ -1500,14 +1507,7 @@ export class Group extends DataPoint {
     }
 
     getAggregates(fieldName) {
-        if (this.list.isDirty) {
-            const records = this.getAggregableRecords();
-            return fieldName
-                ? records.reduce((acc, r) => acc + r.data[fieldName], 0)
-                : records.length;
-        } else {
-            return fieldName ? this.aggregates[fieldName] || 0 : this.count;
-        }
+        return fieldName ? this.aggregates[fieldName] || 0 : this.count;
     }
 
     getServerValue() {
@@ -1575,9 +1575,7 @@ export class Group extends DataPoint {
      * @see DynamicRecordList.deleteRecords
      */
     async deleteRecords() {
-        const records = await this.list.deleteRecords(...arguments);
-        this.count -= records.length;
-        return records;
+        return this.list.deleteRecords(...arguments);
     }
 
     /**
@@ -1608,20 +1606,18 @@ export class Group extends DataPoint {
     async validateQuickCreate() {
         const record = this.list.quickCreateRecord;
         if (!record) {
-            return;
+            return false;
         }
         await record.save();
-        this.list.removeRecord(record);
-        this.list.addRecord(record, this.list.length);
+        this.addRecord(this.removeRecord(record));
         this.count++;
+        this.list.count++;
         return record;
     }
 }
 
 export class StaticList extends DataPoint {
-    constructor(model, params, state) {
-        super(...arguments);
-
+    setup(params, state) {
         this.isOne2Many = params.field.type === "one2many"; // bof
 
         this.resIds = [...params.resIds] || [];
@@ -1964,7 +1960,6 @@ export class RelationalModel extends Model {
     }
 
     /**
-     *
      * @param {"group" | "list" | "record"} type
      * @param {Record<any, any>} params
      * @param {Record<any, any>} [state={}]

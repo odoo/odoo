@@ -56,21 +56,21 @@
                                     <i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold" />
                                 </span>
                             </div>
-                            <div t-if="!group.isFolded and group.progressValues.length" class="o_kanban_counter">
+                            <div t-if="!group.isFolded and group.progressBars.length" class="o_kanban_counter">
                                 <div class="o_kanban_counter_progress progress">
-                                    <t t-foreach="group.progressValues" t-as="progressData" t-key="progressData.color">
-                                        <div t-if="progressData.count"
+                                    <t t-foreach="group.progressBars" t-as="progressBar" t-key="progressBar.color">
+                                        <div t-if="progressBar.count"
                                             role="progressbar"
                                             class="progress-bar o_bar_has_records"
-                                            t-att-class="{ 'progress-bar-animated progress-bar-striped': group.activeProgressValue === progressData.value }"
-                                            t-attf-class="bg-{{ progressData.color }}"
-                                            t-attf-style="width: {{ progressData.count / (group.count or 1) * 100 }}%;"
+                                            t-att-class="{ 'progress-bar-animated progress-bar-striped': group.progressValue.active === progressBar.value }"
+                                            t-attf-class="bg-{{ progressBar.color }}"
+                                            t-attf-style="width: {{ progressBar.count / (group.count or 1) * 100 }}%;"
                                             aria-valuemin="0"
                                             t-att-aria-valuemax="group.count"
-                                            t-att-aria-valuenow="progressData.count"
-                                            t-attf-data-tooltip="{{ progressData.count }} {{ progressData.string }}"
+                                            t-att-aria-valuenow="progressBar.count"
+                                            t-attf-data-tooltip="{{ progressBar.count }} {{ progressBar.string }}"
                                             data-tooltip-delay="0"
-                                            t-on-click="() => group.filterProgressValue(progressData.value)"
+                                            t-on-click="() => group.filterProgressValue(progressBar.value)"
                                         />
                                     </t>
                                 </div>

@@ -242,41 +242,33 @@ export class KanbanRenderer extends Component {
         if (group.isFolded) {
             classes.push("o_column_folded");
         }
-        if (group.progressValues.length) {
+        if (group.progressBars.length) {
             classes.push("o_kanban_has_progressbar");
             if (!group.isFolded && group.hasActiveProgressValue) {
-                const progressValue = group.progressValues.find(
-                    (d) => d.value === group.activeProgressValue
-                );
-                classes.push("o_kanban_group_show", `o_kanban_group_show_${progressValue.color}`);
+                const progressBar = group.activeProgressBar;
+                classes.push("o_kanban_group_show", `o_kanban_group_show_${progressBar.color}`);
             }
         }
         return classes.join(" ");
     }
 
     getGroupUnloadedCount(group) {
-        let total = group.count;
-        if (group.hasActiveProgressValue) {
-            const progressValue = group.progressValues.find(
-                (d) => d.value === group.activeProgressValue
-            );
-            total = progressValue.count;
-        }
-        return total - group.list.records.length;
+        const progressBar = group.activeProgressBar;
+        const records = group.getAggregableRecords();
+        return (progressBar ? progressBar.count : group.count) - records.length;
     }
 
     getRecordClasses(record, group) {
+        const { model } = this.props.list;
         const classes = ["o_kanban_record"];
-        const { fieldName } = this.props.list.model.progressAttributes || {};
-        if (group && record.data[fieldName]) {
-            const value = record.data[fieldName];
-            const progressValue = group.progressValues.find((p) => p.value === value);
-            classes.push(`oe_kanban_card_${progressValue ? progressValue.color : "muted"}`);
+        if (model.hasProgressBars && group) {
+            const progressBar = group.findProgressValueFromRecord(record);
+            classes.push(`oe_kanban_card_${progressBar.color}`);
         }
         if (this.canResequenceRecords) {
             classes.push("o_record_draggable");
         }
-        if (this.props.list.model.useSampleModel) {
+        if (model.useSampleModel) {
             classes.push("o_sample_data_disabled");
         }
         return classes.join(" ");

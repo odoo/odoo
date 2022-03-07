@@ -7672,7 +7672,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("RPCs when (de)activating kanban view progressbar filters", async (assert) => {
-        assert.expect(8);
+        assert.expect(11);
 
         await makeView({
             type: "kanban",
@@ -7708,10 +7708,13 @@ QUnit.module("Views", (hooks) => {
             "web_search_read",
             "web_search_read",
             // activate filter
+            "web_read_group", // recomputes aggregates
             "web_search_read",
             // activate another filter (switching)
+            "web_read_group", // recomputes aggregates
             "web_search_read",
             // deactivate active filter
+            "web_read_group", // recomputes aggregates
             "web_search_read",
         ]);
     });
@@ -9249,7 +9252,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("filtered column is reloaded when dragging out its last record", async (assert) => {
-        assert.expect(31);
+        assert.expect(32);
 
         await makeView({
             type: "kanban",
@@ -9324,7 +9327,13 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(0), ["4blip", "1yop"]);
         assert.deepEqual(getTooltips(1), ["1 blip", "1 Other"]);
         assert.deepEqual(getCardTexts(1), ["2blip", "3gnap"]);
-        assert.verifySteps(["write", "read", "web_search_read", "/web/dataset/resequence"]);
+        assert.verifySteps([
+            "write",
+            "read_progress_bar",
+            "read", // read happens is delayed by the ORM batcher
+            "web_search_read",
+            "/web/dataset/resequence",
+        ]);
     });
 
     QUnit.skipWOWL("kanban widget supports options parameters", async (assert) => {
