@@ -516,31 +516,10 @@ class SaleOrder(models.Model):
 
     def update_prices(self):
         self.ensure_one()
-        lines_to_update = []
         for line in self._get_update_prices_lines():
-            product = line.product_id.with_context(
-                partner=self.partner_id,
-                quantity=line.product_uom_qty,
-                date=self.date_order,
-                pricelist=self.pricelist_id.id,
-                uom=line.product_uom.id
-            )
-            price_unit = product._get_tax_included_unit_price(
-                line.company_id,
-                line.order_id.currency_id,
-                line.order_id.date_order,
-                'sale',
-                fiscal_position=line.order_id.fiscal_position_id,
-                product_price_unit=line._get_display_price(product),
-                product_currency=line.currency_id
-            )
-            if self.pricelist_id.discount_policy == 'without_discount' and price_unit:
-                price_discount_unrounded = self.pricelist_id.get_product_price(product, line.product_uom_qty, self.partner_id, self.date_order, line.product_uom.id)
-                discount = max(0, (price_unit - price_discount_unrounded) * 100 / price_unit)
-            else:
-                discount = 0
-            lines_to_update.append((1, line.id, {'price_unit': price_unit, 'discount': discount}))
-        self.update({'order_line': lines_to_update})
+            line.product_uom_change()
+            line.discount = 0  # Force 0 as discount for the cases when _onchange_discount directly returns
+            line._onchange_discount()
         self.show_update_pricelist = False
         self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
 
