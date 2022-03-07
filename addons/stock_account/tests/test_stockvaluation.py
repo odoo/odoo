@@ -2806,6 +2806,60 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(move7.stock_valuation_layer_ids.value, 100.0)
         self.assertEqual(self.product1.standard_price, 10)
 
+    def test_average_automated_with_cost_change(self):
+        """ Test of the handling of a cost change with a negative stock quantity with FIFO+AVCO costing method"""
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        # Step 1: Sell (and confirm) 10 units we don't have @ 100
+        self.product1.standard_price = 100
+        move1 = self.env['stock.move'].create({
+            'name': 'Sale 10 units',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move1._action_confirm()
+        move1.quantity_done = 10.0
+        move1._action_done()
+
+        self.assertAlmostEqual(self.product1.quantity_svl, -10.0)
+        self.assertEqual(move1.stock_valuation_layer_ids.value, -1000.0)
+        self.assertAlmostEqual(self.product1.value_svl, -1000.0)
+
+        # Step2: Change product cost from 100 to 10 -> Nothing should appear in inventory
+        # valuation as the quantity is negative
+        self.product1.standard_price = 10
+        self.assertEqual(self.product1.value_svl, -1000.0)
+
+        # Step 3: Make an inventory adjustment to set to total counted value at 0 -> Inventory
+        # valuation should be at 0 with a compensation layer at 900 (1000 - 100)
+        inventory_location = self.product1.property_stock_inventory
+        inventory_location.company_id = self.env.company.id
+
+        move2 = self.env['stock.move'].create({
+            'name': 'Adjustment of 10 units',
+            'location_id': inventory_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 10.0
+        move2._action_done()
+
+        # Check if the move adjustment has correctly been done
+        self.assertAlmostEqual(self.product1.quantity_svl, 0.0)
+        self.assertAlmostEqual(move2.stock_valuation_layer_ids.value, 100.0)
+
+        # Check if the compensation layer is as expected, with final inventory value being 0
+        self.assertAlmostEqual(self.product1.stock_valuation_layer_ids.sorted()[-1].value, 900.0)
+        self.assertAlmostEqual(self.product1.value_svl, 0.0)
+
     def test_average_manual_1(self):
         ''' Set owner on incoming move => no valuation '''
         self.product1.categ_id.property_cost_method = 'average'
@@ -3310,41 +3364,41 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(self.product1.quantity_svl, 15)
         self.assertEqual(self.product1.value_svl, 75)
 
-        # send 20
+        # send 10
         move4 = self.env['stock.move'].create({
             'name': 'out 10',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
             'product_uom': self.uom_unit.id,
-            'product_uom_qty': 20,
+            'product_uom_qty': 10,
         })
         move4._action_confirm()
         move4._action_assign()
-        move4.move_line_ids.qty_done = 20
+        move4.move_line_ids.qty_done = 10
         move4._action_done()
         move4.date = date6
         move4.stock_valuation_layer_ids._write({'create_date': date6})
 
-        self.assertEqual(self.product1.quantity_svl, -5)
-        self.assertEqual(self.product1.value_svl, -25)
+        self.assertEqual(self.product1.quantity_svl, 5)
+        self.assertEqual(self.product1.value_svl, 25.0)
 
         # set the standard price to 7.5
         self.product1.standard_price = 7.5
         self.product1.stock_valuation_layer_ids.sorted()[-1]._write({'create_date': date7})
 
-        # receive 100
+        # receive 90
         move5 = self.env['stock.move'].create({
             'name': 'in 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
             'product_uom': self.uom_unit.id,
-            'product_uom_qty': 100,
+            'product_uom_qty': 90,
         })
         move5._action_confirm()
         move5._action_assign()
-        move5.move_line_ids.qty_done = 100
+        move5.move_line_ids.qty_done = 90
         move5._action_done()
         move5.date = date8
         move5.stock_valuation_layer_ids._write({'create_date': date8})
@@ -3358,8 +3412,8 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).quantity_svl, 30)
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).quantity_svl, 15)
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).quantity_svl, 15)
-        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).quantity_svl, -5)
-        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date7)).quantity_svl, -5)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).quantity_svl, 5)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date7)).quantity_svl, 5)
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date8)).quantity_svl, 95)
 
         # Valuation at date
@@ -3368,7 +3422,7 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).value_svl, 300)
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).value_svl, 150)
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).value_svl, 75)
-        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).value_svl, -25)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).value_svl, 25)
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date8)).value_svl, 712.5)
 
         # edit the done quantity of move1, decrease it
@@ -3383,16 +3437,16 @@ class TestStockValuation(SavepointCase):
         # but the change is still only visible right now
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).value_svl, 100)
 
-        # edit move 4, send 15 instead of 20
+        # edit move 4, send 15 instead of 10
         move4.quantity_done = 15
-        # -(20*5) + (5*7.5)
-        self.assertEqual(sum(move4.stock_valuation_layer_ids.mapped('value')), -62.5)
+        # -(10*5) - (5*7.5)
+        self.assertEqual(sum(move4.stock_valuation_layer_ids.mapped('value')), -87.5)
 
         # the change is only visible right now
-        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).value_svl, -25)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).value_svl, 25)
 
-        self.assertEqual(self.product1.quantity_svl, 95)
-        self.assertEqual(self.product1.value_svl, 712.5)
+        self.assertEqual(self.product1.quantity_svl, 85)
+        self.assertEqual(self.product1.value_svl, 637.5)
 
     def test_at_date_fifo_1(self):
         """ Make some operations at different dates, check that the results of the valuation at
