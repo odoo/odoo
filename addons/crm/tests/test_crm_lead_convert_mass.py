@@ -42,7 +42,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env['crm.lead'].browse(test_leads.ids)
 
-        with self.assertQueryCount(user_sales_manager=139):  # crm only: 136 (often), sometimes +2/+3 on runbot
+        with self.assertQueryCount(user_sales_manager=141):  # crm only: 136 (often), sometimes +2/+3 on runbot // extra queries ~1/week
             test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert)
@@ -166,7 +166,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         test_leads = self._create_leads_batch(count=50, user_ids=[False])
         user_ids = self.assign_users.ids
 
-        with self.assertQueryCount(user_sales_manager=1038):  # 1038 generally on runbot - crm only: 1029
+        with self.assertQueryCount(user_sales_manager=1041):  # 1038 generally on runbot - crm only: 1029 // 1040/41 about once / day on runbot (22h build ?)
             mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
                 'active_model': 'crm.lead',
                 'active_ids': test_leads.ids,
