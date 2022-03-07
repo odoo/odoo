@@ -24,6 +24,6 @@ ActionContainer.components = { ActionDialog };
 ActionContainer.template = xml`
     <t t-name="web.ActionContainer">
       <div class="o_action_manager">
-        <t t-if="info.Component" t-component="info.Component" t-props="info.componentProps" t-key="info.id"/>
+        <t t-if="info.Component" t-component="info.Component" className="'o_action'" t-props="info.componentProps" t-key="info.id"/>
       </div>
     </t>`;
