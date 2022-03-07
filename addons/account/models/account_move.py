@@ -2638,6 +2638,13 @@ class AccountMove(models.Model):
                 elif move.is_purchase_document(include_receipts=True):
                     raise UserError(_("The Bill/Refund date is required to validate this document."))
 
+            # Handle the case when the invoice_date is different from the move date. This is happening when importing
+            # datas on an existing record with a different invoice_date, as the onchange is not triggered during import
+            # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
+            # environment.
+            if move.is_sale_document(include_receipts=True) and move.invoice_date != move.date:
+                move.with_context(check_move_validity=False)._onchange_invoice_date()
+
             # When the accounting date is prior to the tax lock date, move it automatically to the next available date.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
