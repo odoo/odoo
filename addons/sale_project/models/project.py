@@ -275,6 +275,73 @@ class Project(models.Model):
         self.ensure_one()
         return self.allow_billable and super()._show_profitability()
 
+    def _get_service_policy_to_invoice_type(self):
+        return {
+            'ordered_prepaid': 'service_revenues',
+            'delivered_milestones': 'service_revenues',
+            'delivered_manual': 'service_revenues',
+        }
+
+    def _get_revenues_items_from_sol(self):
+        sale_line_read_group = self.env['sale.order.line'].read_group(
+            [
+                ('order_id', 'in', self._get_sale_orders().ids),
+                ('product_id', '!=', False),
+                ('is_expense', '=', False),
+                ('is_downpayment', '=', False),
+                ('state', 'in', ['sale', 'done']),
+                '|', ('qty_to_invoice', '>', 0), ('qty_invoiced', '>', 0),
+            ],
+            ['product_id', 'untaxed_amount_to_invoice', 'untaxed_amount_invoiced'],
+            ['product_id'],
+        )
+        revenues_dict = {}
+        total_to_invoice = total_invoiced = 0.0
+        if sale_line_read_group:
+            sols_per_product = {
+                res['product_id'][0]: (
+                    res['untaxed_amount_to_invoice'],
+                    res['untaxed_amount_invoiced'],
+                    res['ids'],
+                ) for res in sale_line_read_group
+            }
+            product_read_group = self.env['product.product'].read_group(
+                [('id', 'in', list(sols_per_product)), ('expense_policy', '=', 'no')],
+                ['invoice_policy', 'service_type', 'type', 'ids:array_agg(id)'],
+                ['invoice_policy', 'service_type', 'type'],
+                lazy=False,
+            )
+            service_policy_to_invoice_type = self._get_service_policy_to_invoice_type()
+            general_to_service_map = self.env['product.template']._get_general_to_service_map()
+            for res in product_read_group:
+                product_ids = res['ids']
+                service_policy = None
+                if res['type'] == 'service':
+                    service_policy = general_to_service_map.get(
+                        (res['invoice_policy'], res['service_type']),
+                        'ordered_prepaid')
+                for product_id, (amount_to_invoice, amount_invoiced, sol_ids) in sols_per_product.items():
+                    if product_id in product_ids:
+                        invoice_type = service_policy_to_invoice_type.get(service_policy, 'other_revenues')
+                        revenue = revenues_dict.setdefault(invoice_type, {'invoiced': 0.0, 'to_invoice': 0.0})
+                        revenue['to_invoice'] += amount_to_invoice
+                        total_to_invoice += amount_to_invoice
+                        revenue['invoiced'] += amount_invoiced
+                        total_invoiced += amount_invoiced
+        return {
+            'data': [{'id': invoice_type, **vals} for invoice_type, vals in revenues_dict.items()],
+            'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
+        }
+
+    def _get_profitability_items(self):
+        profitability_items = super()._get_profitability_items()
+        revenue_items_from_sol = self._get_revenues_items_from_sol()
+        revenues = profitability_items['revenues']
+        revenues['data'] += revenue_items_from_sol['data']
+        revenues['total']['to_invoice'] += revenue_items_from_sol['total']['to_invoice']
+        revenues['total']['invoiced'] += revenue_items_from_sol['total']['invoiced']
+        return profitability_items
+
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
