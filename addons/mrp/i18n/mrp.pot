@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2021-12-07 10:46+0000\n"
+"POT-Creation-Date: 2022-03-07 12:07+0000\n"
+"PO-Revision-Date: 2022-03-07 12:07+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1701,12 +1701,6 @@ msgid "Expected duration (in minutes)"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid "Expected product tracked by Serial Number."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__datas
 msgid "File Content (base64)"
 msgstr ""
@@ -2734,6 +2728,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "New"
 msgstr ""
@@ -4290,12 +4285,6 @@ msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid "The quantity produced of by-products must be positive."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
 #, python-format
@@ -4631,6 +4620,12 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_exception_decoration
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_decoration
 msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Unable to split with more than the quantity to produce."
 msgstr ""
 
 #. module: mrp
@@ -5232,12 +5227,6 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid "Unable to split with more than the quantity to produce."
 msgstr ""
 
 #. module: mrp
