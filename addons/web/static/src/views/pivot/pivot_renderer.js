@@ -5,16 +5,16 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { PivotGroupByMenu } from "@web/views/pivot/pivot_group_by_menu";
 import fieldUtils from "web.field_utils";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { onWillUpdateProps } = owl;
+const { Component, onWillUpdateProps, useRef } = owl;
 const formatterRegistry = registry.category("formatters");
 
-export class PivotRenderer extends LegacyComponent {
+export class PivotRenderer extends Component {
     setup() {
         this.model = this.props.model;
         this.table = this.model.getTable();
         this.l10n = localization;
+        this.tableRef = useRef("table");
 
         onWillUpdateProps(this.onWillUpdateProps);
     }
@@ -136,7 +136,7 @@ export class PivotRenderer extends LegacyComponent {
             }
             index += 1; // row groupbys column
         }
-        this.el
+        this.tableRef.el
             .querySelectorAll("td:nth-child(" + (index + 1) + ")")
             .forEach((elt) => elt.classList.add("o_cell_hover"));
     }
@@ -144,7 +144,7 @@ export class PivotRenderer extends LegacyComponent {
      * Remove the hover on the columns.
      */
     onMouseLeave() {
-        this.el
+        this.tableRef.el
             .querySelectorAll(".o_cell_hover")
             .forEach((elt) => elt.classList.remove("o_cell_hover"));
     }

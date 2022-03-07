@@ -4,9 +4,9 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { usePosition } from "../position/position_hook";
 import { useDropdownNavigation } from "./dropdown_navigation_hook";
 import { localization } from "../l10n/localization";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const {
+    Component,
     EventBus,
     onWillStart,
     useEffect,
@@ -40,7 +40,7 @@ export const DROPDOWN = Symbol("Dropdown");
 /**
  * @extends Component
  */
-export class Dropdown extends LegacyComponent {
+export class Dropdown extends Component {
     setup() {
         this.state = useState({
             open: this.props.startOpen,

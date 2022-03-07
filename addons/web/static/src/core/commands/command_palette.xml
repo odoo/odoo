@@ -15,8 +15,8 @@
             <div class="o_command_category">
               <t t-foreach="category.commands" t-as="command"  t-key="command.keyId">
                 <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
-                <div t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="() => this.onCommandClicked(commandIndex)" t-on-mouseenter="() => this.onCommandMouseEnter(commandIndex)" t-on-close="() => this.props.closeMe()" t-on-execute-command="() => this.executeCommand(command)">
-                  <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="clearSearchValue" t-props="command.props">
+                <div t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="() => this.onCommandClicked(commandIndex)" t-on-mouseenter="() => this.onCommandMouseEnter(commandIndex)" t-on-close="() => this.props.closeMe()">
+                  <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="clearSearchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
                     <t t-set-slot="name">
                         <span class="o_command_name">
                           <t t-foreach="command.splitName" t-as="name" t-key="name_index">

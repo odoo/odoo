@@ -83,6 +83,7 @@ export function useBus(bus, eventName, callback) {
 // -----------------------------------------------------------------------------
 
 /**
+ * @deprecated
  * The useListener hook offers an alternative to Owl's classical event
  * registration mechanism (with attribute 't-on-eventName' in xml).
  *

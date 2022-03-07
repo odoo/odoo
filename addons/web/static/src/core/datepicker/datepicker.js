@@ -3,9 +3,9 @@
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const {
+    Component,
     onMounted,
     onWillUpdateProps,
     onWillUnmount,
@@ -49,8 +49,9 @@ const luxonFormatToMomentFormat = (format) => {
  * stringified since tempusdominus only works with moment objects.
  * @extends Component
  */
-export class DatePicker extends LegacyComponent {
+export class DatePicker extends Component {
     setup() {
+        this.root = useRef("root");
         this.inputRef = useRef("input");
         this.state = useState({ warning: false });
 
@@ -68,9 +69,9 @@ export class DatePicker extends LegacyComponent {
     }
 
     onMounted() {
-        window.$(this.el).on("show.datetimepicker", () => this.inputRef.el.select());
-        window.$(this.el).on("hide.datetimepicker", () => this.onDateChange());
-        window.$(this.el).on("error.datetimepicker", () => false); // Ignores datepicker errors
+        window.$(this.root.el).on("show.datetimepicker", () => this.inputRef.el.select());
+        window.$(this.root.el).on("hide.datetimepicker", () => this.onDateChange());
+        window.$(this.root.el).on("error.datetimepicker", () => false); // Ignores datepicker errors
 
         this.bootstrapDateTimePicker(this.props);
         this.updateInput();
@@ -91,7 +92,7 @@ export class DatePicker extends LegacyComponent {
     }
 
     onWillUnmount() {
-        window.$(this.el).off(); // Removes all jQuery events
+        window.$(this.root.el).off(); // Removes all jQuery events
 
         this.bootstrapDateTimePicker("destroy");
     }
@@ -169,7 +170,7 @@ export class DatePicker extends LegacyComponent {
             }
             commandOrParams = params;
         }
-        window.$(this.el).datetimepicker(commandOrParams);
+        window.$(this.root.el).datetimepicker(commandOrParams);
     }
 
     //---------------------------------------------------------------------

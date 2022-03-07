@@ -5,9 +5,8 @@ import { createWebClient, doAction, getActionManagerServerData } from "./../help
 import { registerCleanup } from "../../helpers/cleanup";
 import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { errorService } from "@web/core/errors/error_service";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { xml } = owl;
+const { Component, xml } = owl;
 
 let serverData;
 let target;
@@ -23,7 +22,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("error in a client action (at rendering)", async function (assert) {
         assert.expect(4);
-        class Boom extends LegacyComponent {}
+        class Boom extends Component {}
         Boom.template = xml`<div><t t-esc="a.b.c"/></div>`;
         actionRegistry.add("Boom", Boom);
 
@@ -54,7 +53,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         registry.category("services").add("error", errorService);
 
-        class Boom extends LegacyComponent {
+        class Boom extends Component {
             setup() {
                 this.boom = false;
             }

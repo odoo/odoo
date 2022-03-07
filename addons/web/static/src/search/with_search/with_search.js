@@ -3,14 +3,13 @@
 import { useBus, useService } from "@web/core/utils/hooks";
 import { SearchModel } from "@web/search/search_model";
 import { CallbackRecorder, useSetupAction } from "@web/webclient/actions/action_hook";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { onWillStart, onWillUpdateProps, toRaw, useSubEnv } = owl;
+const { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } = owl;
 
 export const SEARCH_KEYS = ["comparison", "context", "domain", "groupBy", "orderBy"];
 const OTHER_SEARCH_KEYS = ["irFilters", "searchViewArch", "searchViewFields", "searchViewId"];
 
-export class WithSearch extends LegacyComponent {
+export class WithSearch extends Component {
     setup() {
         this.Component = this.props.Component;
 

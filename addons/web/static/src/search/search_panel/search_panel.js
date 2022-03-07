@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
-
-const { onMounted, onWillStart, onWillUpdateProps, useState } = owl;
+const { Component, onMounted, onWillStart, onWillUpdateProps, useRef, useState } = owl;
 
 /**
  * Search panel
@@ -13,12 +11,13 @@ const { onMounted, onWillStart, onWillUpdateProps, useState } = owl;
  * values (categories or ungrouped filters) or groups of values (grouped filters).
  * Its state is directly affected by its model (@see SearchModel).
  */
-export class SearchPanel extends LegacyComponent {
+export class SearchPanel extends Component {
     setup() {
         this.state = useState({
             active: {},
             expanded: {},
         });
+        this.root = useRef("root");
         this.scrollTop = 0;
         this.hasImportedState = false;
 
@@ -33,7 +32,7 @@ export class SearchPanel extends LegacyComponent {
         onMounted(() => {
             this.updateGroupHeadersChecked();
             if (this.hasImportedState) {
-                this.el.scroll({ top: this.scrollTop });
+                this.root.el.scroll({ top: this.scrollTop });
             }
         });
 
@@ -58,7 +57,7 @@ export class SearchPanel extends LegacyComponent {
     exportState() {
         const exported = {
             expanded: this.state.expanded,
-            scrollTop: this.el.scrollTop,
+            scrollTop: this.root.el.scrollTop,
         };
         return JSON.stringify(exported);
     }
@@ -182,7 +181,7 @@ export class SearchPanel extends LegacyComponent {
      * headers according to the state of their values.
      */
     updateGroupHeadersChecked() {
-        const groups = this.el.querySelectorAll(":scope .o_search_panel_filter_group");
+        const groups = this.root.el.querySelectorAll(":scope .o_search_panel_filter_group");
         for (const group of groups) {
             const header = group.querySelector(":scope .o_search_panel_group_header input");
             const vals = [...group.querySelectorAll(":scope .o_search_panel_filter_value input")];

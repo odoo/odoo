@@ -3,7 +3,7 @@
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { registry } from "@web/core/registry";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 
 const { useComponent, xml } = owl;
@@ -53,7 +53,6 @@ export function useViewArch(arch, params = {}) {
  * @param  {Function} [params.reload] The function to execute to reload, if a button has data-reload-on-close
  */
 export function useActionLinks({ resModel, reload }) {
-    const selector = `a[type="action"]`;
     const component = useComponent();
     const keepLast = component.env.keepLast;
 
@@ -128,5 +127,10 @@ export function useActionLinks({ resModel, reload }) {
         checkAndCollapseBootstrap(target);
     }
 
-    useListener("click", selector, handler);
+    return (ev) => {
+        const a = ev.target.closest(`a[type="action"]`);
+        if (a && ev.currentTarget.contains(a)) {
+            handler(ev);
+        }
+    };
 }

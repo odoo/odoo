@@ -2,7 +2,8 @@
 
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
-import { LegacyComponent } from "@web/legacy/legacy_component";
+
+const { Component } = owl;
 
 /**
  * @param {Object} params
@@ -16,7 +17,7 @@ export const extractLayoutComponents = (params) => {
     };
 };
 
-export class Layout extends LegacyComponent {
+export class Layout extends Component {
     setup() {
         const { display = {} } = this.env.searchModel || {};
         this.components = extractLayoutComponents(this.env.config);

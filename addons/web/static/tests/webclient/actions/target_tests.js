@@ -17,9 +17,8 @@ import { registerCleanup } from "../../helpers/cleanup";
 import { errorService } from "@web/core/errors/error_service";
 import { useService } from "@web/core/utils/hooks";
 import { ClientErrorDialog } from "@web/core/errors/error_dialogs";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { onMounted, xml } = owl;
+const { Component, onMounted, xml } = owl;
 
 let serverData;
 let target;
@@ -339,7 +338,7 @@ QUnit.module("ActionManager", (hooks) => {
             onUnhandledRejection: () => {},
         });
 
-        class ErrorClientAction extends LegacyComponent {
+        class ErrorClientAction extends Component {
             setup() {
                 throw new Error("my error");
             }
@@ -347,11 +346,11 @@ QUnit.module("ActionManager", (hooks) => {
         ErrorClientAction.template = xml`<div/>`;
         registry.category("actions").add("failing", ErrorClientAction);
 
-        class ClientActionTargetNew extends LegacyComponent {}
+        class ClientActionTargetNew extends Component {}
         ClientActionTargetNew.template = xml`<div class="my_action_new" />`;
         registry.category("actions").add("clientActionNew", ClientActionTargetNew);
 
-        class ClientAction extends LegacyComponent {
+        class ClientAction extends Component {
             setup() {
                 this.action = useService("action");
             }
