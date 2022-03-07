@@ -46,25 +46,27 @@
     </t>
 
     <t t-name="web.GraphView" owl="1">
-        <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
-            <t t-set-slot="control-panel-bottom-left">
-                <t t-call="{{ constructor.buttonTemplate }}"/>
-            </t>
-            <t t-if="model.data">
-                <t t-if="model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
-                    <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
+        <div t-att-class="props.className">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
+                <t t-set-slot="control-panel-bottom-left">
+                    <t t-call="{{ constructor.buttonTemplate }}"/>
                 </t>
-                <Renderer
-                    class="model.useSampleModel ? 'o_sample_data_disabled' : ''"
-                    model="model"
-                    onGraphClicked="(domain) => this.onGraphClicked(domain)"
-                    />
-            </t>
-            <t t-else="" t-call="web.NoContentHelper">
-                <t t-set="title">Invalid data</t>
-                <t t-set="description">Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results</t>
-            </t>
-        </Layout>
+                <t t-if="model.data">
+                    <t t-if="model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
+                        <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
+                    </t>
+                    <Renderer
+                        class="model.useSampleModel ? 'o_sample_data_disabled' : ''"
+                        model="model"
+                        onGraphClicked="(domain) => this.onGraphClicked(domain)"
+                        />
+                </t>
+                <t t-else="" t-call="web.NoContentHelper">
+                    <t t-set="title">Invalid data</t>
+                    <t t-set="description">Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results</t>
+                </t>
+            </Layout>
+        </div>
     </t>
 
 </templates>
