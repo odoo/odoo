@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.BadgeField" owl="1">
-        <span class="badge badge-pill" t-att-class="classFromDecoration" t-esc="formattedValue" />
+        <span t-if="props.value" class="badge badge-pill" t-att-class="classFromDecoration" t-esc="formattedValue" />
     </t>
 
 </templates>
