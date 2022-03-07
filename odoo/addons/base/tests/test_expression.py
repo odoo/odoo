@@ -1611,7 +1611,7 @@ class TestMany2many(TransactionCase):
             SELECT "res_users".id
             FROM "res_users"
             WHERE ("res_users"."id" IN (
-                SELECT "uid" FROM "res_groups_users_rel" WHERE "gid" IN %s
+                SELECT "uid" FROM "res_groups_users_rel" WHERE "gid" IN %s AND "uid" IS NOT NULL
             ))
             ORDER BY "res_users"."id"
         ''']):
@@ -1626,6 +1626,7 @@ class TestMany2many(TransactionCase):
                     FROM "res_groups"
                     WHERE ("res_groups"."color" = %s)
                 )
+                AND "uid" IS NOT NULL
             ))
             ORDER BY "res_users"."id"
         ''']):
@@ -1644,8 +1645,10 @@ class TestMany2many(TransactionCase):
                             FROM "ir_rule"
                             WHERE ("ir_rule"."name"::text LIKE %s)
                         )
+                        AND "group_id" IS NOT NULL
                     ))
                 )
+                AND "uid" IS NOT NULL
             ))
             ORDER BY "res_users"."id"
         ''']):
@@ -1668,6 +1671,7 @@ class TestMany2many(TransactionCase):
                     FROM "res_company"
                     WHERE ("res_company"."name"::text LIKE %s)
                 )
+                AND "user_id" IS NOT NULL
             ))
             ORDER BY "res_users"."id"
         ''']):

@@ -824,12 +824,12 @@ class expression(object):
                         # rewrite condition in terms of ids2
                         subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
                         subquery, subparams = ids2.subselect()
-                        query = 'SELECT "%s" FROM "%s" WHERE "%s" IN (%s)' % (rel_id1, rel_table, rel_id2, subquery)
+                        query = 'SELECT "%s" FROM "%s" WHERE "%s" IN (%s) AND "%s" IS NOT NULL' % (rel_id1, rel_table, rel_id2, subquery, rel_id1)
                         push(('id', subop, (query, subparams)), model, alias, internal=True)
                     else:
                         # rewrite condition in terms of ids2
                         subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
+                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s AND "%s" IS NOT NULL' % (rel_id1, rel_table, rel_id2, rel_id1)
                         ids2 = tuple(it for it in ids2 if it) or (None,)
                         push(('id', subop, (subquery, [ids2])), model, alias, internal=True)
 
