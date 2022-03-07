@@ -804,7 +804,7 @@ class AccountJournal(models.Model):
     def _compute_alias_name(self):
         for record in self:
             record.alias_name = record.alias_id.alias_name
-            
+
     _inverse_alias_name = _inverse_type
 
     # do not depend on 'sequence_id.date_range_ids', because
@@ -962,8 +962,8 @@ class AccountJournal(models.Model):
     def _update_mail_alias(self, vals=None):
         if vals is not None:
             warnings.warn(
-                '`vals` is a deprecated argument of `_update_mail_alias`', 
-                DeprecationWarning, 
+                '`vals` is a deprecated argument of `_update_mail_alias`',
+                DeprecationWarning,
                 stacklevel=2
             )
 
@@ -1375,29 +1375,40 @@ class AccountTax(models.Model):
         base_line = lines.filtered(lambda x: x.repartition_type == 'base')
         if len(base_line) != 1:
             raise ValidationError(_("Invoice and credit note repartition should each contain exactly one line for the base."))
+        tax_lines = lines - base_line
+        if not tax_lines:
+            if base_line.factor_percent == 100:
+                values = {
+                    'repartition_type': 'tax',
+                    'factor_percent': 100.0,
+                    'company_id': base_line.company_id.id,
+                    'country_id': base_line.country_id.id,
+                }
+                self.env['account.tax.repartition.line'].create([
+                    {**values, 'invoice_tax_id': self.id},
+                    {**values, 'refund_tax_id': self.id},
+                ])
+            else:
+                raise ValidationError(_("Invoice and credit note repartition should have at least one tax repartition line."))
 
     @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids')
     def _validate_repartition_lines(self):
         for record in self:
-            invoice_repartition_line_ids = record.invoice_repartition_line_ids.sorted()
-            refund_repartition_line_ids = record.refund_repartition_line_ids.sorted()
-            record._check_repartition_lines(invoice_repartition_line_ids)
-            record._check_repartition_lines(refund_repartition_line_ids)
+            record._check_repartition_lines(record.invoice_repartition_line_ids)
+            record._check_repartition_lines(record.refund_repartition_line_ids)
 
-            if len(invoice_repartition_line_ids) != len(refund_repartition_line_ids):
+            # check consistency between invoice an refund lines
+            if len(record.invoice_repartition_line_ids) != len(record.refund_repartition_line_ids):
                 raise ValidationError(_("Invoice and credit note repartition should have the same number of lines."))
-
-            if not invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax') or \
-                    not refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax'):
-                raise ValidationError(_("Invoice and credit note repartition should have at least one tax repartition line."))
-
-            index = 0
-            while index < len(invoice_repartition_line_ids):
-                inv_rep_ln = invoice_repartition_line_ids[index]
-                ref_rep_ln = refund_repartition_line_ids[index]
-                if inv_rep_ln.repartition_type != ref_rep_ln.repartition_type or inv_rep_ln.factor_percent != ref_rep_ln.factor_percent:
-                    raise ValidationError(_("Invoice and credit note repartitions should match (same percentages, in the same order)."))
-                index += 1
+            if any(
+                inv_rep_ln.repartition_type != ref_rep_ln.repartition_type
+                or inv_rep_ln.factor_percent != ref_rep_ln.factor_percent
+                for inv_rep_ln, ref_rep_ln in zip(
+                    record.invoice_repartition_line_ids.sorted(),
+                    record.refund_repartition_line_ids.sorted(),
+                )
+            ):
+                raise ValidationError(_("Invoice and credit note repartitions should match (same percentages, in the same order)."))
 
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
