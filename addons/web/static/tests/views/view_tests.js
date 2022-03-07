@@ -78,7 +78,7 @@ QUnit.module("Views", (hooks) => {
                 this.template = xml`${this.props.arch}`;
             }
         }
-        ToyView.template = xml`<div t-att-class="class"><t t-call="{{ template }}"/></div>`;
+        ToyView.template = xml`<div t-attf-class="{{class}} {{props.className}}"><t t-call="{{ template }}"/></div>`;
         ToyView.type = "toy";
         ToyView.components = { Banner: OnboardingBanner };
 
@@ -143,9 +143,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "animal",
             type: "toy",
         });
-        assert.containsOnce(target, ".o_toy_view.o_action.o_view_controller");
+        assert.containsOnce(target, ".o_toy_view.o_view_controller");
         assert.strictEqual(
-            target.querySelector(".o_toy_view .toy").innerHTML,
+            target.querySelector(".o_toy_view.toy").innerHTML,
             serverData.views["animal,false,toy"]
         );
     });
@@ -181,7 +181,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
-            target.querySelector(".o_toy_view .toy").innerHTML,
+            target.querySelector(".o_toy_view.toy").innerHTML,
             serverData.views["animal,1,toy"]
         );
     });
@@ -220,7 +220,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
-            target.querySelector(".o_toy_view .toy").innerHTML,
+            target.querySelector(".o_toy_view.toy").innerHTML,
             serverData.views["animal,1,toy"]
         );
     });
@@ -263,7 +263,7 @@ QUnit.module("Views", (hooks) => {
             });
             assert.containsOnce(target, ".o_toy_view");
             assert.strictEqual(
-                target.querySelector(".o_toy_view .toy").innerHTML,
+                target.querySelector(".o_toy_view.toy").innerHTML,
                 serverData.views["animal,false,toy"]
             );
         }
@@ -309,7 +309,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
-            target.querySelector(".o_toy_view .toy").innerHTML,
+            target.querySelector(".o_toy_view.toy").innerHTML,
             serverData.views["animal,1,toy"]
         );
     });
@@ -341,7 +341,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
-            target.querySelector(".o_toy_view .toy").innerHTML,
+            target.querySelector(".o_toy_view.toy").innerHTML,
             `<toy>Specific arch content</toy>`
         );
     });
@@ -378,7 +378,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
-            target.querySelector(".o_toy_view .toy").innerHTML,
+            target.querySelector(".o_toy_view.toy").innerHTML,
             serverData.views["animal,false,toy"]
         );
     });
@@ -419,7 +419,7 @@ QUnit.module("Views", (hooks) => {
             });
             assert.containsOnce(target, ".o_toy_view");
             assert.strictEqual(
-                target.querySelector(".o_toy_view .toy").innerHTML,
+                target.querySelector(".o_toy_view.toy").innerHTML,
                 `<toy>Specific arch content</toy>`
             );
         }
@@ -458,7 +458,7 @@ QUnit.module("Views", (hooks) => {
             });
             assert.containsOnce(target, ".o_toy_view");
             assert.strictEqual(
-                target.querySelector(".o_toy_view .toy").innerHTML,
+                target.querySelector(".o_toy_view.toy").innerHTML,
                 `<toy>Specific arch content</toy>`
             );
         }
@@ -1204,9 +1204,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "animal",
             type: "toy_imp",
         });
-        assert.containsOnce(target, ".o_toy_view .toy_imp");
+        assert.containsOnce(target, ".o_toy_view.toy_imp");
         assert.strictEqual(
-            target.querySelector(".o_toy_view .toy_imp").innerText,
+            target.querySelector(".o_toy_view.toy_imp").innerText,
             "Arch content (id=false)"
         );
     });
@@ -1227,9 +1227,9 @@ QUnit.module("Views", (hooks) => {
             type: "toy",
             viewId: 2,
         });
-        assert.containsOnce(target, ".o_toy_view .toy_imp");
+        assert.containsOnce(target, ".o_toy_view.toy_imp");
         assert.strictEqual(
-            target.querySelector(".o_toy_view .toy_imp").innerText,
+            target.querySelector(".o_toy_view.toy_imp").innerText,
             "Arch content (id=2)"
         );
     });
@@ -1246,9 +1246,9 @@ QUnit.module("Views", (hooks) => {
             arch: `<toy js_class="toy_imp">Specific arch content for specific class</toy>`,
             fields: {},
         });
-        assert.containsOnce(target, ".o_toy_view .toy_imp");
+        assert.containsOnce(target, ".o_toy_view.toy_imp");
         assert.strictEqual(
-            target.querySelector(".o_toy_view .toy_imp").innerText,
+            target.querySelector(".o_toy_view.toy_imp").innerText,
             "Specific arch content for specific class"
         );
     });
@@ -1277,7 +1277,7 @@ QUnit.module("Views", (hooks) => {
                 type: "toy_2",
                 viewId: 2,
             });
-            assert.containsOnce(target, ".o_toy_view .toy_imp", "jsClass from arch prefered");
+            assert.containsOnce(target, ".o_toy_view.toy_imp", "jsClass from arch prefered");
         }
     );
 
@@ -1301,7 +1301,7 @@ QUnit.module("Views", (hooks) => {
                 arch: `<toy js_class="toy_imp"/>`,
                 fields: {},
             });
-            assert.containsOnce(target, ".o_toy_view .toy_imp", "jsClass from arch prefered");
+            assert.containsOnce(target, ".o_toy_view.toy_imp", "jsClass from arch prefered");
         }
     );
 

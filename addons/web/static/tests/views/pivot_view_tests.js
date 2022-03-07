@@ -219,7 +219,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(target.querySelector(".o_pivot_view"), "o_action o_view_controller");
+        assert.hasClass(target.querySelector(".o_pivot_view"), "o_view_controller");
         assert.hasClass(target.querySelector("table"), "o_enable_linking");
         assert.containsOnce(
             target,

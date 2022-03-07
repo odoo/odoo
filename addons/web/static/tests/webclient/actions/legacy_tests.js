@@ -478,10 +478,10 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, "testClientAction");
-        assert.verifySteps(['id: 0 props: {"breadcrumbs":[]}']);
+        assert.verifySteps(['id: 0 props: {"className":"o_action","breadcrumbs":[]}']);
 
         await click(document.getElementById("client_0"));
-        assert.verifySteps(['id: 1 props: {"chain":"never break","breadcrumbs":[]}']);
+        assert.verifySteps(['id: 1 props: {"chain":"never break","className":"o_action","breadcrumbs":[]}']);
     });
 
     QUnit.test("breadcrumbs are correct in stacked legacy client actions", async function (assert) {

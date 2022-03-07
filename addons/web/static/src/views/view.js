@@ -113,6 +113,7 @@ const STANDARD_PROPS = [
 
     "useSampleModel",
     "noContentHelp",
+    "className",
 
     "display",
     "globalState",
@@ -257,6 +258,7 @@ export class View extends Component {
             fields,
             resModel,
             useSampleModel: false,
+            className: `${this.props.className} o_view_controller o_${this.env.config.viewType}_view`,
         };
         if (this.props.globalState) {
             viewProps.globalState = this.props.globalState;
@@ -326,6 +328,7 @@ View.defaultProps = {
     context: {},
     loadActionMenus: false,
     loadIrFilters: false,
+    className: "",
 };
 
 View.searchMenuTypes = ["filter", "groupBy", "favorite"];

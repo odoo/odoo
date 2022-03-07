@@ -33,4 +33,5 @@ export const standardViewProps = {
     resId: { type: Number, optional: 1 },
     resIds: { type: Array, optional: 1 },
     bannerRoute: { type: String, optional: 1 },
+    className: { type: String, optional: 1 },
 };
