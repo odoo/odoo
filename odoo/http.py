@@ -210,7 +210,8 @@ DEFAULT_SESSION = {
 }
 
 # The request mimetypes that transport JSON in their body.
-JSON_MIMETYPES = ('application/json', 'application/json-rpc')
+JSON_MIMETYPE = 'application/json'
+JSON_RPC_MIMETYPES = (JSON_MIMETYPE, 'application/json-rpc')
 
 MISSING_CSRF_WARNING = """\
 No CSRF validation token provided for path %r
@@ -1400,7 +1401,7 @@ class HttpDispatcher(Dispatcher):
 
     @classmethod
     def is_compatible_with(cls, request):
-        return request.httprequest.mimetype not in JSON_MIMETYPES
+        return request.httprequest.mimetype not in JSON_RPC_MIMETYPES
 
     def dispatch(self, endpoint, args):
         """
@@ -1468,7 +1469,7 @@ class JsonRPCDispatcher(Dispatcher):
 
     @classmethod
     def is_compatible_with(cls, request):
-        return request.httprequest.mimetype in JSON_MIMETYPES
+        return request.httprequest.mimetype in JSON_RPC_MIMETYPES
 
     def dispatch(self, endpoint, args):
         """
@@ -1565,6 +1566,49 @@ class JsonRPCDispatcher(Dispatcher):
             ('Content-Type', 'application/json'),
             ('Content-Length', len(body)),
         ])
+
+class JsonDataDispatcher(Dispatcher):
+    routing_type = 'jsondata'
+
+    @classmethod
+    def is_compatible_with(cls, request):
+        return request.httprequest.mimetype == JSON_MIMETYPE
+
+    def dispatch(self, endpoint, args):
+        httprequest = self.request.httprequest
+        body = httprequest.get_data().decode(httprequest.charset)
+        try:
+            self.request.params = dict(json.loads(body), **args)
+        except ValueError:
+            _logger.info('%s: Invalid JSON data\n%s', httprequest.path, body)
+            raise werkzeug.exceptions.BadRequest("Couldn't deserialize request json body.")
+
+        if self.request.db:
+            result = self.request.registry['ir.http']._dispatch(endpoint)
+        else:
+            result = endpoint(**self.request.params)
+
+        if isinstance(result, Response):
+            return result
+
+        return Response(
+            json.dumps(result, ensure_ascii=False),
+            headers=[('Content-Type', 'application/json; charset=utf-8')],
+        )
+
+    def handle_error(self, exc):
+        status_code, data = (
+                 (exc.code, exc.descriptio) if isinstance(exc, HTTPException)
+            else (400, exc.args[0]) if isinstance(exc, UserError)
+            else (403, exc.args[0]) if isinstance(exc, (AccessDenied, AccessError))
+            else (500, InternalServerError.description)
+        )
+
+        return Response(
+            json.dumps(data, ensure_ascii=False),
+            headers=[('Content-Type', 'application/json; charset=utf-8')],
+            status=status_code,
+        )
 
 
 # =========================================================

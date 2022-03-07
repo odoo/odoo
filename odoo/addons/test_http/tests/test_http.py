@@ -301,6 +301,35 @@ class TestHttpEchoReplyJsonWithDB(TestHttpBase):
         self.assertEqual(res.text, '{"jsonrpc": "2.0", "id": 0, "result": {"name": "Thor"}}')
 
 
+class TestHttpJsonData(TestHttpBase):
+    def test_jsondata0_nodb_echo_reply(self):
+        payload = json.dumps({'commander': 'Thor'})
+        res = self.nodb_url_open('/test_http/echo-jsondata', data=payload, headers=CT_JSON)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, payload)
+
+    @mute_logger('odoo.http')
+    def test_jsondata1_nodb_error_500(self):
+        res = self.nodb_url_open('/test_http/error-jsondata-500', data='{}', headers=CT_JSON)
+        self.assertEqual(res.status_code, 500)
+        self.assertEqual(res.text, '"The server encountered an internal'
+            ' error and was unable to complete your request. Either the'
+            ' server is overloaded or there is an error in the application."')
+
+    def test_jsondata2_db_echo_reply(self):
+        payload = json.dumps({'commander': 'Thor'})
+        res = self.db_url_open('/test_http/echo-jsondata', data=payload, headers=CT_JSON)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, payload)
+
+    @mute_logger('odoo.http')
+    def test_jsondata3_db_error_500(self):
+        res = self.db_url_open('/test_http/error-jsondata-500', data='{}', headers=CT_JSON)
+        self.assertEqual(res.status_code, 500)
+        self.assertEqual(res.text, '"The server encountered an internal'
+            ' error and was unable to complete your request. Either the'
+            ' server is overloaded or there is an error in the application."')
+
 @tagged('post_install', '-at_install')
 class TestHttpModels(TestHttpBase):
     def setUp(self):

@@ -73,6 +73,17 @@ class TestHttp(http.Controller):
     def echo_json_context(self, **kwargs):
         return request.env.context
 
+    @http.route('/test_http/echo-jsondata', type='jsondata', auth='none', methods=['POST'], csrf=False)
+    def echo_jsondata(self, **kwargs):
+        return kwargs
+
+    # =====================================================
+    # Errors
+    # =====================================================
+    @http.route('/test_http/error-jsondata-500', type='jsondata', auth='none', csrf=False)
+    def error_jsondata(self, **kwargs):
+        raise ValueError()
+
     # =====================================================
     # Models
     # =====================================================
