@@ -31,7 +31,7 @@ if ($(shapeSelector).first().length) {
         shapeStep.push(wTourUtils.clickOnSnippet(shapeSelector));
     }
     shapeStep.push(wTourUtils.changeOption('BackgroundShape', 'we-toggler', _t('Background Shape')));
-    shapeStep.push(wTourUtils.selectNested('we-select-page', 'BackgroundShape', ':not(.o_we_pager_controls', _t('Background Shape')));
+    shapeStep.push(wTourUtils.selectNested('we-select-page', 'BackgroundShape', ':not(.o_we_pager_controls)', _t('Background Shape')));
 }
 
 const steps = [

@@ -1192,6 +1192,8 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
+        product_ctx = {'seller_id': seller.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
+        self.name = self._get_product_purchase_description(self.product_id.with_context(product_ctx))
 
     @api.onchange('product_id', 'product_qty', 'product_uom')
     def _onchange_suggest_packaging(self):
@@ -1340,7 +1342,7 @@ class PurchaseOrderLine(models.Model):
             lang=partner.lang,
             partner_id=partner.id,
         )
-        name = product_lang.display_name
+        name = product_lang.with_context(seller_id=seller.id).display_name
         if product_lang.description_purchase:
             name += '\n' + product_lang.description_purchase
 

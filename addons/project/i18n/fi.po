@@ -9,7 +9,7 @@
 # Kimmo Lehtonen <leban@netzionale.com>, 2021
 # Marko Happonen <marko.happonen@sprintit.fi>, 2021
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2021
-# Johanna Valkonen <johanna@vividi.fi>, 2021
+# Johanna Valkonen <miujohanna@gmail.com>, 2021
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2021
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2021
@@ -40,7 +40,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
 "Last-Translator: Anni Saarelainen, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
@@ -463,13 +463,6 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                    Collaborators\n"
 "                                </span>"
@@ -512,6 +505,14 @@ msgstr "<span class=\"o_stat_text\">Käyttökate</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
 msgstr ""
 
 #. module: project
@@ -898,6 +899,16 @@ msgid "Assign to Me"
 msgstr "Ota tehtävä vastuullesi"
 
 #. module: project
+#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
+msgid " assignee"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
+msgid " assignees"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -1028,6 +1039,9 @@ msgstr "Ryhmä"
 #: model:project.task,legend_blocked:project.project_task_25
 #: model:project.task,legend_blocked:project.project_task_26
 #: model:project.task,legend_blocked:project.project_task_3
+#: model:project.task,legend_blocked:project.project_task_30
+#: model:project.task,legend_blocked:project.project_task_31
+#: model:project.task,legend_blocked:project.project_task_32
 #: model:project.task,legend_blocked:project.project_task_33
 #: model:project.task,legend_blocked:project.project_task_8
 #: model:project.task,legend_blocked:project.project_task_9
@@ -1086,9 +1100,9 @@ msgstr "Tehtävien edistymiskäyrä"
 #: model:project.task,legend_done:project.project_task_27
 #: model:project.task,legend_done:project.project_task_28
 #: model:project.task,legend_done:project.project_task_29
-#: model:project.task,legend_done:project.project_task_30
-#: model:project.task,legend_done:project.project_task_31
-#: model:project.task,legend_done:project.project_task_32
+#: model:project.task,legend_done:project.project_task_34
+#: model:project.task,legend_done:project.project_task_35
+#: model:project.task,legend_done:project.project_task_36
 #: model:project.task,legend_done:project.project_task_4
 #: model:project.task,legend_done:project.project_task_5
 #: model:project.task,legend_done:project.project_task_6
@@ -2224,6 +2238,9 @@ msgstr "Tarkeä"
 #: model:project.task,legend_normal:project.project_task_31
 #: model:project.task,legend_normal:project.project_task_32
 #: model:project.task,legend_normal:project.project_task_33
+#: model:project.task,legend_normal:project.project_task_34
+#: model:project.task,legend_normal:project.project_task_35
+#: model:project.task,legend_normal:project.project_task_36
 #: model:project.task,legend_normal:project.project_task_4
 #: model:project.task,legend_normal:project.project_task_5
 #: model:project.task,legend_normal:project.project_task_6
@@ -2792,9 +2809,9 @@ msgstr "Tehtävien nimet"
 #: model:project.task,legend_blocked:project.project_task_27
 #: model:project.task,legend_blocked:project.project_task_28
 #: model:project.task,legend_blocked:project.project_task_29
-#: model:project.task,legend_blocked:project.project_task_30
-#: model:project.task,legend_blocked:project.project_task_31
-#: model:project.task,legend_blocked:project.project_task_32
+#: model:project.task,legend_blocked:project.project_task_34
+#: model:project.task,legend_blocked:project.project_task_35
+#: model:project.task,legend_blocked:project.project_task_36
 #: model:project.task,legend_blocked:project.project_task_4
 #: model:project.task,legend_blocked:project.project_task_5
 #: model:project.task,legend_blocked:project.project_task_6
@@ -3112,9 +3129,7 @@ msgid "Open"
 msgstr "Avoin"
 
 #. module: project
-#: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
-#, python-format
 msgid "Open Tasks"
 msgstr "Avoimet tehtävät"
 
@@ -3679,6 +3694,9 @@ msgstr "Vain luku"
 #: model:project.task,legend_done:project.project_task_25
 #: model:project.task,legend_done:project.project_task_26
 #: model:project.task,legend_done:project.project_task_3
+#: model:project.task,legend_done:project.project_task_30
+#: model:project.task,legend_done:project.project_task_31
+#: model:project.task,legend_done:project.project_task_32
 #: model:project.task,legend_done:project.project_task_33
 #: model:project.task,legend_done:project.project_task_8
 #: model:project.task,legend_done:project.project_task_9
@@ -4904,12 +4922,6 @@ msgstr "Kunnes"
 #: model:ir.model.fields,field_description:project.field_project_project__update_ids
 msgid "Update"
 msgstr "Päivitä"
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Updated (Last 30 Days)"
-msgstr ""
 
 #. module: project
 #. openerp-web

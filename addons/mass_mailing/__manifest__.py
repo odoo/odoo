@@ -93,6 +93,10 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'mass_mailing/static/src/scss/mass_mailing.ui.scss',
         ],
+        'web_editor.assets_wysiwyg': [
+            'mass_mailing/static/src/js/snippets.editor.js',
+            'mass_mailing/static/src/js/wysiwyg.js',
+        ],
         'web.assets_common': [
             'mass_mailing/static/src/js/tours/**/*',
         ],

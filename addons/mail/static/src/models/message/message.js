@@ -112,7 +112,10 @@ function factory(dependencies) {
                 }
             }
             if ('partner_ids' in data && this.messaging.currentPartner) {
-                data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.messaging.currentPartner.id);
+                data2.recipients = insertAndReplace(data.partner_ids.map(partner_id => ({ id: partner_id })));
+            }
+            if ('recipients' in data) {
+                data2.recipients = insertAndReplace(data.recipients);
             }
             if ('starred_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);
@@ -457,6 +460,14 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsCurrentPartnerMentioned() {
+            return this.recipients.includes(this.messaging.currentPartner);
+        }
+
+        /**
          * The method does not attempt to cover all possible cases of empty
          * messages, but mostly those that happen with a standard flow. Indeed
          * it is preferable to be defensive and show an empty message sometimes
@@ -747,6 +758,7 @@ function factory(dependencies) {
          * Determine whether the current partner is mentioned.
          */
         isCurrentPartnerMentioned: attr({
+            compute: '_computeIsCurrentPartnerMentioned',
             default: false,
         }),
         /**
@@ -809,6 +821,7 @@ function factory(dependencies) {
             compute: '_computePrettyBody',
             default: "",
         }),
+        recipients: many2many('mail.partner'),
         subject: attr(),
         subtype_description: attr(),
         subtype_id: attr(),

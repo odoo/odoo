@@ -353,10 +353,14 @@
                                      </templates>
                                  </kanban>
                             </field>
-                            <group class="oe_subtotal_footer oe_right">
-                                <field name="tax_totals_json" widget="account-tax-totals-field" nolabel="1" colspan="2"/>
+                            <group>
+                                <group>
+                                    <field name="notes" nolabel="1" placeholder="Define your terms and conditions ..."/>
+                                </group>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="tax_totals_json" widget="account-tax-totals-field" nolabel="1" colspan="2"/>
+                                </group>
                             </group>
-                            <field name="notes" class="oe_inline" placeholder="Define your terms and conditions ..."/>
                             <div class="oe_clear"/>
                         </page>
                         <page string="Other Information" name="purchase_delivery_invoice">

@@ -104,6 +104,7 @@ odoo.define('payment.payment_form_mixin', require => {
                     .scrollIntoView({behavior: 'smooth', block: 'center'});
             }
             this._enableButton(); // Enable button back after it was disabled before processing
+            $('body').unblock(); // The page is blocked at this point, unblock it
         },
 
         /**
@@ -291,7 +292,8 @@ odoo.define('payment.payment_form_mixin', require => {
         _prepareTransactionRouteParams: function (provider, paymentOptionId, flow) {
             return {
                 'payment_option_id': paymentOptionId,
-                'reference_prefix': this.txContext.referencePrefix,
+                'reference_prefix': this.txContext.referencePrefix !== undefined
+                    ? this.txContext.referencePrefix.toString() : null,
                 'amount': this.txContext.amount !== undefined
                     ? parseFloat(this.txContext.amount) : null,
                 'currency_id': this.txContext.currencyId

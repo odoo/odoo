@@ -708,7 +708,15 @@ img::selection {
     background: white;
     color: black;
     height: 100%;
-    padding: 5px 10px;
+    padding: 4px;
+    min-height: 10px;
+    border-radius: 3px;
+}
+
+.oe-bordered-editor>.note-editable {
+    border-width: 1px;
+    padding: 4px;
+    min-height: 180px;
 }
 
 .o_we_no_pointer_events {
@@ -788,6 +796,11 @@ img::selection {
     // Prevent the edited link from being deselected when clicking between
     // buttons in the popover
     user-select: none;
+
+    .o_we_preview_favicon > img {
+        max-height: 16px;
+        max-width: 16px;
+    }
 
     .o_we_url_link {
         word-break: break-all;

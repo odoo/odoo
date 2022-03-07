@@ -794,6 +794,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         picking = sale_order.picking_ids
+        initial_product = sale_order.order_line.product_id
 
         picking_form = Form(picking)
         with picking_form.move_line_ids_without_package.edit(0) as move:
@@ -818,6 +819,12 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(
             so_line_2.price_unit, 0,
             "Shouldn't get the product price as the invoice policy is on qty. ordered")
+
+        # Check the picking didn't change
+        self.assertRecordValues(sale_order.picking_ids.move_lines, [
+            {'product_id': initial_product.id, 'quantity_done': 5},
+            {'product_id': product_inv_on_order.id, 'quantity_done': 5},
+        ])
 
         # Creates a second sale order for 3 product invoiced on qty. ordered.
         sale_order = self._get_new_sale_order(product=product_inv_on_order, amount=3)
@@ -1122,8 +1129,11 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
     def test_17_qty_update_propagation(self):
         """ Creates a sale order, then modifies the sale order lines qty and verifies
-        that quantity changes are correctly propagated to the delivery picking.
+        that quantity changes are correctly propagated to the picking and delivery picking.
         """
+        # Set the delivery in two steps.
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_ship'
         # Sell a product.
         product = self.company_data['product_delivery_no']    # storable
         product.type = 'product'    # storable
@@ -1138,8 +1148,10 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         sale_order.action_confirm()
 
         # Check picking created
-        self.assertEqual(len(sale_order.picking_ids), 1, 'A delivery picking should have been created.')
-        move_out = sale_order.picking_ids.move_lines
+        self.assertEqual(len(sale_order.picking_ids), 2, 'A picking and a delivery picking should have been created.')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        move_pick = sale_order.picking_ids.filtered(lambda p: p.location_dest_id.id != customer_location.id).move_lines
+        move_out = sale_order.picking_ids.filtered(lambda p: p.location_dest_id.id == customer_location.id).move_lines
         self.assertEqual(len(move_out), 1, 'Only one move should be created for a single product.')
         self.assertEqual(move_out.product_uom_qty, 50, 'The move quantity should be the same as the quantity sold.')
 
@@ -1149,7 +1161,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                 (1, sale_order.order_line.id, {'product_uom_qty': 30}),
             ]
         })
-        self.assertEqual(move_out.product_uom_qty, 30, 'The move quantity should have been decreased as the sale order line was.')
+        self.assertEqual(move_pick.product_uom_qty, 30, 'The move quantity should have been decreased as the sale order line was.')
+        self.assertEqual(move_out.product_uom_qty, 30, 'The move quantity should have been decreased as the sale order line and the pick line were.')
+        self.assertEqual(len(sale_order.picking_ids), 2, 'No additionnal picking should have been created.')
 
         # Increase the quantity in the sale order and check the move has been updated.
         sale_order.write({
@@ -1157,4 +1171,5 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                 (1, sale_order.order_line.id, {'product_uom_qty': 40})
             ]
         })
-        self.assertEqual(move_out.product_uom_qty, 40, 'The move quantity should have been increased as the sale order line was.')
+        self.assertEqual(move_pick.product_uom_qty, 40, 'The move quantity should have been increased as the sale order line was.')
+        self.assertEqual(move_out.product_uom_qty, 40, 'The move quantity should have been increased as the sale order line and the pick line were.')

@@ -346,7 +346,7 @@ class ResPartner(models.Model):
               AND NOT acc.deprecated AND acc.company_id = %s
               AND move.state = 'posted'
             GROUP BY partner.id
-            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.user.company_id.id, sign, operand))
+            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.company.id, sign, operand))
         res = self._cr.fetchall()
         if not res:
             return [('id', '=', '0')]
@@ -483,8 +483,8 @@ class ResPartner(models.Model):
     invoice_warn_msg = fields.Text('Message for Invoice')
     # Computed fields to order the partners as suppliers/customers according to the
     # amount of their generated incoming/outgoing account moves
-    supplier_rank = fields.Integer(default=0)
-    customer_rank = fields.Integer(default=0)
+    supplier_rank = fields.Integer(default=0, copy=False)
+    customer_rank = fields.Integer(default=0, copy=False)
 
     def _get_name_search_order_by_fields(self):
         res = super()._get_name_search_order_by_fields()

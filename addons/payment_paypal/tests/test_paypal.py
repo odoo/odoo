@@ -153,3 +153,15 @@ class PaypalForm(PaypalCommon):
         })
         total_fee = self.paypal._compute_fees(100, False, False)
         self.assertEqual(round(total_fee, 2), 3.3, 'Wrong computation of the Paypal fees')
+
+    def test_parsing_pdt_validation_response_returns_notification_data(self):
+        """ Test that the notification data are parsed from the content of a validation response."""
+        response_content = 'SUCCESS\nkey1=val1\nkey2=val+2\n'
+        notification_data = PaypalController._parse_pdt_validation_response(response_content)
+        self.assertDictEqual(notification_data, {'key1': 'val1', 'key2': 'val 2'})
+
+    def test_fail_to_parse_pdt_validation_response_if_not_successful(self):
+        """ Test that no notification data are returned from parsing unsuccessful PDT validation."""
+        response_content = 'FAIL\ndoes-not-matter'
+        notification_data = PaypalController._parse_pdt_validation_response(response_content)
+        self.assertIsNone(notification_data)

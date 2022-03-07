@@ -80,9 +80,11 @@ var BasicView = AbstractView.extend({
      */
     _getFieldWidgetClass: function (viewType, field, attrs) {
         var FieldWidget;
-        if (attrs.widget) {
-            FieldWidget = fieldRegistryOwl.getAny([viewType + "." + attrs.widget, attrs.widget]) ||
-                fieldRegistry.getAny([viewType + "." + attrs.widget, attrs.widget]);
+        if (attrs.widget === "boolean" || (!attrs.widget && field.type === "boolean")) {
+            FieldWidget = fieldRegistry.getAny([viewType + ".boolean", "boolean"]);
+        } else if (attrs.widget) {
+            FieldWidget = fieldRegistry.getAny([viewType + "." + attrs.widget, attrs.widget]) ||
+                fieldRegistryOwl.getAny([viewType + "." + attrs.widget, attrs.widget]);
             if (!FieldWidget) {
                 console.warn("Missing widget: ", attrs.widget, " for field", attrs.name, "of type", field.type);
             }

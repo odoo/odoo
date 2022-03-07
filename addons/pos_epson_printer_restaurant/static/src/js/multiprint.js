@@ -16,7 +16,7 @@ var _super_posmodel = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
     create_printer: function (config) {
         if (config.printer_type === "epson_epos") {
-            return new EpsonPrinter(config.epson_printer_ip);
+            return new EpsonPrinter(config.epson_printer_ip, this);
         } else {
             return _super_posmodel.create_printer.apply(this, arguments);
         }

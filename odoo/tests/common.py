@@ -855,17 +855,25 @@ class ChromeBrowser():
                     return bin_
 
         elif system == 'Windows':
-            # TODO: handle windows platform: https://stackoverflow.com/a/40674915
-            pass
+            bins = [
+                '%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe',
+                '%ProgramFiles(x86)%\\Google\\Chrome\\Application\\chrome.exe',
+                '%LocalAppData%\\Google\\Chrome\\Application\\chrome.exe',
+            ]
+            for bin_ in bins:
+                bin_ = os.path.expandvars(bin_)
+                if os.path.exists(bin_):
+                    return bin_
 
         self._logger.warning("Chrome executable not found")
         raise unittest.SkipTest("Chrome executable not found")
 
     def _spawn_chrome(self, cmd):
-        if os.name != 'posix':
-            return
-
-        pid = os.fork()
+        if os.name == 'nt':
+            proc = subprocess.Popen(cmd, stderr=subprocess.DEVNULL)
+            pid = proc.pid
+        else:
+            pid = os.fork()
         if pid != 0:
             port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
             for _ in range(100):
@@ -949,7 +957,7 @@ class ChromeBrowser():
             version : get chrome and dev tools version
             protocol : get the full protocol
         """
-        command = os.path.join('json', command).strip('/')
+        command = '/'.join(['json', command]).strip('/')
         url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
         self._logger.info("Issuing json command %s", url)
         delay = 0.1

@@ -73,7 +73,8 @@ class Website(Home):
         # prefetch all menus (it will prefetch website.page too)
         top_menu = request.website.menu_id
 
-        homepage = request.website.homepage_id
+        homepage_id = request.website._get_cached('homepage_id')
+        homepage = homepage_id and request.env['website.page'].browse(homepage_id)
         if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/':
             return request.env['ir.http'].reroute(homepage.url)
 
@@ -254,10 +255,11 @@ class Website(Home):
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
         website_id = request.env['website'].get_current_website()
-        if website_id.configurator_done is False:
-            return request.render('website.website_configurator', {'lang': request.env.user.lang})
-        else:
+        if website_id.configurator_done:
             return request.redirect('/')
+        if request.env.lang != website_id.default_lang_id.code:
+            return request.redirect('/%s%s' % (website_id.default_lang_id.url_code, request.httprequest.path))
+        return request.render('website.website_configurator')
 
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
     def social(self, social, **kwargs):
@@ -408,7 +410,7 @@ class Website(Home):
 
         def get_mapping_value(field_type, value, field_meta):
             if field_type == 'text':
-                if value:
+                if value and field_meta.get('truncate', True):
                     value = shorten(value, max_nb_chars, placeholder='...')
                 if field_meta.get('match') and value and term:
                     pattern = '|'.join(map(re.escape, term.split()))

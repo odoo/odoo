@@ -418,7 +418,7 @@ class MailMail(models.Model):
                     except AssertionError as error:
                         if str(error) == IrMailServer.NO_VALID_RECIPIENT:
                             # if we have a list of void emails for email_list -> email missing, otherwise generic email failure
-                            if not email.get('email_to') and failure_type != "RECIPIENT":
+                            if not email.get('email_to') and failure_type != "mail_email_invalid":
                                 failure_type = "mail_email_missing"
                             else:
                                 failure_type = "mail_email_invalid"

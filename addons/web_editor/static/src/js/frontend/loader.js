@@ -19,14 +19,15 @@ exports.loadWysiwyg = loadWysiwyg;
  * @param {object} options The wysiwyg options
  */
 exports.createWysiwyg = async (parent, options, additionnalAssets = []) => {
+    const wysiwygAlias = options.wysiwygAlias || 'web_editor.wysiwyg';
     if (!wysiwygPromise) {
         wysiwygPromise = new Promise(async (resolve) => {
             await loadWysiwyg(additionnalAssets);
             // Wait the loading of the service and his dependencies (use string to
             // avoid parsing of require function).
             const stringFunction = `return new Promise(resolve => {
-                odoo.define('web_editor.wysiwig.loaded', require => {
-                    ` + 'require' + `('web_editor.wysiwyg');
+                odoo.define('${wysiwygAlias}.loaded', require => {
+                    ` + 'require' + `('${wysiwygAlias}');
                     resolve();
                 });
             });`;
@@ -35,7 +36,7 @@ exports.createWysiwyg = async (parent, options, additionnalAssets = []) => {
         });
     }
     await wysiwygPromise;
-    const Wysiwyg = odoo.__DEBUG__.services['web_editor.wysiwyg'];
+    const Wysiwyg = odoo.__DEBUG__.services[wysiwygAlias];
     return new Wysiwyg(parent, options);
 };
 

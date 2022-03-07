@@ -5,6 +5,7 @@ from collections import defaultdict
 
 from odoo import _, fields, models
 from odoo import Command
+from odoo.tools.float_utils import float_compare
 
 
 class StockMoveLine(models.Model):
@@ -41,15 +42,30 @@ class StockMoveLine(models.Model):
             })
         line_by_picking = defaultdict(lambda: self.env['stock.move.line'])
         for line in self:
-            # if not wave and line.orig_picking_id.is_wave:
-                # continue
             line_by_picking[line.picking_id] |= line
         picking_to_wave_vals_list = []
         for picking, lines in line_by_picking.items():
             # Move the entire picking if all the line are taken
-            if lines == picking.move_line_ids:
-                wave.picking_ids = [Command.link(picking.id)]
-                continue
+            line_by_move = defaultdict(lambda: self.env['stock.move.line'])
+            qty_by_move = defaultdict(float)
+            for line in lines:
+                move = line.move_id
+                line_by_move[move] |= line
+                if move.from_immediate_transfer:
+                    qty = line.product_uom_id._compute_quantity(line.qty_done, line.product_id.uom_id, rounding_method='HALF-UP')
+                else:
+                    qty = line.product_qty
+                qty_by_move[line.move_id] += qty
+
+            if lines == picking.move_line_ids and lines.move_id == picking.move_lines:
+                move_complete = True
+                for move, qty in qty_by_move.items():
+                    if float_compare(move.product_qty, qty, precision_rounding=move.product_uom.rounding) != 0:
+                        move_complete = False
+                        break
+                if move_complete:
+                    wave.picking_ids = [Command.link(picking.id)]
+                    continue
 
             # Split the picking in two part to extract only line that are taken on the wave
             picking_to_wave_vals = picking.copy_data({
@@ -57,9 +73,6 @@ class StockMoveLine(models.Model):
                 'move_line_ids': [],
                 'batch_id': wave.id,
             })[0]
-            line_by_move = defaultdict(lambda: self.env['stock.move.line'])
-            for line in lines:
-                line_by_move[line.move_id] |= line
             for move, move_lines in line_by_move.items():
                 picking_to_wave_vals['move_line_ids'] += [Command.link(line.id) for line in lines]
                 # if all the line of a stock move are taken we change the picking on the stock move
@@ -67,7 +80,7 @@ class StockMoveLine(models.Model):
                     picking_to_wave_vals['move_lines'] += [Command.link(move.id)]
                     continue
                 # Split the move
-                qty = sum(lines.mapped('product_qty'))
+                qty = qty_by_move[move]
                 new_move = move._split(qty)
                 new_move[0]['move_line_ids'] = [Command.set(move_lines.ids)]
                 picking_to_wave_vals['move_lines'] += [Command.create(new_move[0])]

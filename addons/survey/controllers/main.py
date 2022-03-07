@@ -78,6 +78,14 @@ class Survey(http.Controller):
         if (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:
             return 'survey_void'
 
+        if answer_sudo:
+            if request.env.user._is_public() and answer_sudo.partner_id:
+                # answers from public user should not have any partner_id; this indicates probably a cookie issue
+                return 'answer_wrong_user'
+            if not request.env.user._is_public() and answer_sudo.partner_id != request.env.user.partner_id:
+                # partner mismatch, probably a cookie issue
+                return 'answer_wrong_user'
+
         if answer_sudo and answer_sudo.deadline and answer_sudo.deadline < datetime.now():
             return 'answer_deadline'
 
@@ -206,10 +214,19 @@ class Survey(http.Controller):
          * a token linked to an answer or generate a new token if access is allowed;
         """
         # Get the current answer token from cookie
+        answer_from_cookie = False
         if not answer_token:
             answer_token = request.httprequest.cookies.get('survey_%s' % survey_token)
+            answer_from_cookie = bool(answer_token)
 
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
+
+        if answer_from_cookie and access_data['validity_code'] in ('answer_wrong_user', 'token_wrong'):
+            # If the cookie had been generated for another user or does not correspond to any existing answer object
+            # (probably because it has been deleted), ignore it and redo the check.
+            # The cookie will be replaced by a legit value when resolving the URL, so we don't clean it further here.
+            access_data = self._get_access_data(survey_token, None, ensure_token=False)
+
         if access_data['validity_code'] is not True:
             return self._redirect_with_error(access_data, access_data['validity_code'])
 

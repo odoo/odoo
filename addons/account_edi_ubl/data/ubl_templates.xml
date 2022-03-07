@@ -120,8 +120,8 @@
                 <cbc:Note t-if="note" t-esc="note"/>
                 <cbc:DocumentCurrencyCode t-esc="record.currency_id.name"/>
                 <cbc:BuyerReference t-esc="record.commercial_partner_id.name"/>
-                <cac:OrderReference t-if="record.invoice_origin">
-                    <cbc:ID t-esc="record.invoice_origin"/>
+                <cac:OrderReference t-if="record.ref">
+                    <cbc:ID t-esc="record.ref"/>
                 </cac:OrderReference>
                 <cac:AccountingSupplierParty t-call="account_edi_ubl.export_ubl_invoice_partner">
                     <t t-set="partner_vals" t-value="supplier_vals"/>

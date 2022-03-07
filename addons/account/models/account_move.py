@@ -49,6 +49,14 @@ class AccountMove(models.Model):
     _check_company_auto = True
     _sequence_index = "journal_id"
 
+    def init(self):
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS account_move_to_check_idx
+            ON account_move(journal_id) WHERE to_check = true;
+            CREATE INDEX IF NOT EXISTS account_move_payment_idx
+            ON account_move(journal_id, state, payment_state, move_type, date);
+        """)
+
     @property
     def _sequence_monthly_regex(self):
         return self.journal_id.sequence_override_regex or super()._sequence_monthly_regex
@@ -406,19 +414,19 @@ class AccountMove(models.Model):
         :param has_tax (bool): Iff any taxes are involved in the lines of the invoice
         :return (datetime.date):
         """
-        tax_lock_date = self.company_id.tax_lock_date
+        lock_dates = self._get_violated_lock_dates(invoice_date, has_tax)
         today = fields.Date.today()
-        lock_violated = invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date
-        if lock_violated:
-            invoice_date = tax_lock_date + timedelta(days=1)
-
+        highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
+        number_reset = self._deduce_sequence_number_reset(highest_name)
+        if lock_dates:
+            invoice_date = lock_dates[-1][0] + timedelta(days=1)
         if self.is_sale_document(include_receipts=True):
-            if lock_violated:
-                return max(invoice_date, today)
-            return invoice_date
-        elif self.is_purchase_document(include_receipts=True):
-            highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
-            number_reset = self._deduce_sequence_number_reset(highest_name)
+            if lock_dates:
+                if not highest_name or number_reset == 'month':
+                    return min(today, date_utils.get_month(invoice_date)[1])
+                elif number_reset == 'year':
+                    return min(today, date_utils.end_of(invoice_date, 'year'))
+        else:
             if not highest_name or number_reset == 'month':
                 if (today.year, today.month) > (invoice_date.year, invoice_date.month):
                     return date_utils.get_month(invoice_date)[1]
@@ -431,14 +439,32 @@ class AccountMove(models.Model):
                     return max(invoice_date, today)
         return invoice_date
 
+    def _get_violated_lock_dates(self, invoice_date, has_tax):
+        """Get all the lock dates affecting the current invoice_date.
+
+        :param invoice_date: The invoice date
+        :param has_tax: If any taxes are involved in the lines of the invoice
+        :return: a list of tuples containing the lock dates affecting this move, ordered chronologically.
+        """
+        locks = []
+        user_lock_date = self.company_id._get_user_fiscal_lock_date()
+        if invoice_date and user_lock_date and invoice_date <= user_lock_date:
+            locks.append((user_lock_date, _('user')))
+        tax_lock_date = self.company_id.tax_lock_date
+        if invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date:
+            locks.append((tax_lock_date, _('tax')))
+        locks.sort()
+        return locks
+
     @api.onchange('invoice_date', 'highest_name', 'company_id')
     def _onchange_invoice_date(self):
         if self.invoice_date:
             if not self.invoice_payment_term_id and (not self.invoice_date_due or self.invoice_date_due < self.invoice_date):
                 self.invoice_date_due = self.invoice_date
 
-            has_tax = bool(self.line_ids.tax_ids or self.line_ids.tax_tag_ids)
-            accounting_date = self._get_accounting_date(self.invoice_date, has_tax)
+            accounting_date = self.invoice_date
+            if not self.is_sale_document(include_receipts=True):
+                accounting_date = self._get_accounting_date(self.invoice_date, self._affect_tax_report())
             if accounting_date != self.date:
                 self.date = accounting_date
                 self._onchange_currency()
@@ -607,6 +633,7 @@ class AccountMove(models.Model):
             'analytic_account_id': tax_line.tax_line_id.analytic and tax_line.analytic_account_id.id,
             'tax_ids': [(6, 0, tax_line.tax_ids.ids)],
             'tax_tag_ids': [(6, 0, tax_line.tax_tag_ids.ids)],
+            'partner_id': tax_line.partner_id.id,
         }
 
     @api.model
@@ -628,6 +655,7 @@ class AccountMove(models.Model):
             'analytic_account_id': tax_vals['analytic'] and base_line.analytic_account_id.id,
             'tax_ids': [(6, 0, tax_vals['tax_ids'])],
             'tax_tag_ids': [(6, 0, tax_vals['tag_ids'])],
+            'partner_id': base_line.partner_id.id,
         }
 
     def _get_tax_force_sign(self):
@@ -758,12 +786,6 @@ class AccountMove(models.Model):
 
             currency = self.env['res.currency'].browse(taxes_map_entry['grouping_dict']['currency_id'])
 
-            # Don't create tax lines with zero balance.
-            if currency.is_zero(taxes_map_entry['amount']):
-                if taxes_map_entry['tax_line'] and not recompute_tax_base_amount:
-                    self.line_ids -= taxes_map_entry['tax_line']
-                continue
-
             # tax_base_amount field is expressed using the company currency.
             tax_base_amount = currency._convert(taxes_map_entry['tax_base_amount'], self.company_currency_id, self.company_id, self.date or fields.Date.context_today(self))
 
@@ -800,7 +822,6 @@ class AccountMove(models.Model):
                     **to_write_on_line,
                     'name': tax.name,
                     'move_id': self.id,
-                    'partner_id': line.partner_id.id,
                     'company_id': line.company_id.id,
                     'company_currency_id': line.company_currency_id.id,
                     'tax_base_amount': tax_base_amount,
@@ -889,6 +910,7 @@ class AccountMove(models.Model):
                     'name': _('%s (rounding)', biggest_tax_line.name),
                     'account_id': biggest_tax_line.account_id.id,
                     'tax_repartition_line_id': biggest_tax_line.tax_repartition_line_id.id,
+                    'tax_tag_ids': [(6, 0, biggest_tax_line.tax_tag_ids.ids)],
                     'exclude_from_invoice_tab': True,
                 })
 
@@ -1793,7 +1815,6 @@ class AccountMove(models.Model):
                                                                 }
             }
         """
-        lang_env = self.with_context(lang=partner.lang).env
         account_tax = self.env['account.tax']
 
         grouped_taxes = defaultdict(lambda: defaultdict(lambda: {'base_amount': 0.0, 'tax_amount': 0.0, 'base_line_keys': set()}))
@@ -1839,8 +1860,8 @@ class AccountMove(models.Model):
                 'tax_group_name': group.name,
                 'tax_group_amount': amounts['tax_amount'],
                 'tax_group_base_amount': amounts['base_amount'],
-                'formatted_tax_group_amount': formatLang(lang_env, amounts['tax_amount'], currency_obj=currency),
-                'formatted_tax_group_base_amount': formatLang(lang_env, amounts['base_amount'], currency_obj=currency),
+                'formatted_tax_group_amount': formatLang(self.env, amounts['tax_amount'], currency_obj=currency),
+                'formatted_tax_group_base_amount': formatLang(self.env, amounts['base_amount'], currency_obj=currency),
                 'tax_group_id': group.id,
                 'group_key': '%s-%s' %(subtotal_title, group.id),
             } for group, amounts in sorted(groups.items(), key=lambda l: l[0].sequence)]
@@ -1855,7 +1876,7 @@ class AccountMove(models.Model):
             subtotals_list.append({
                 'name': subtotal_title,
                 'amount': subtotal_value,
-                'formatted_amount': formatLang(lang_env, subtotal_value, currency_obj=currency),
+                'formatted_amount': formatLang(self.env, subtotal_value, currency_obj=currency),
             })
 
             subtotal_tax_amount = sum(group_val['tax_group_amount'] for group_val in groups_by_subtotal[subtotal_title])
@@ -1865,8 +1886,8 @@ class AccountMove(models.Model):
         return {
             'amount_total': amount_total,
             'amount_untaxed': amount_untaxed,
-            'formatted_amount_total': formatLang(lang_env, amount_total, currency_obj=currency),
-            'formatted_amount_untaxed': formatLang(lang_env, amount_untaxed, currency_obj=currency),
+            'formatted_amount_total': formatLang(self.env, amount_total, currency_obj=currency),
+            'formatted_amount_untaxed': formatLang(self.env, amount_untaxed, currency_obj=currency),
             'groups_by_subtotal': groups_by_subtotal,
             'subtotals': subtotals_list,
             'allow_tax_edition': False,
@@ -1875,11 +1896,24 @@ class AccountMove(models.Model):
     @api.depends('date', 'line_ids.debit', 'line_ids.credit', 'line_ids.tax_line_id', 'line_ids.tax_ids', 'line_ids.tax_tag_ids')
     def _compute_tax_lock_date_message(self):
         for move in self:
-            if move._affect_tax_report() and move.company_id.tax_lock_date and move.date and move.date <= move.company_id.tax_lock_date:
-                move.tax_lock_date_message = _(
-                    "The accounting date is set prior to the tax lock date which is set on %s. "
-                    "Hence, the accounting date will be changed to %s.",
-                    format_date(self.env, move.company_id.tax_lock_date), format_date(self.env, fields.Date.context_today(self)))
+            invoice_date = move.invoice_date or fields.Date.context_today(move)
+            accounting_date = move.date or fields.Date.context_today(move)
+            affects_tax_report = move._affect_tax_report()
+            lock_dates = move._get_violated_lock_dates(accounting_date, affects_tax_report)
+            if lock_dates:
+                accounting_date = move._get_accounting_date(invoice_date, affects_tax_report)
+                lock_date, lock_type = lock_dates[-1]
+                tax_lock_date_message = _(
+                    "The accounting date being set prior to the %(lock_type)s lock date %(lock_date)s,"
+                    " it will be changed to %(accounting_date)s upon posting.",
+                    lock_type=lock_type,
+                    lock_date=format_date(move.env, lock_date),
+                    accounting_date=format_date(move.env, accounting_date))
+                for lock_date, lock_type in lock_dates[:-1]:
+                    tax_lock_date_message += _(" The %(lock_type)s lock date is set on %(lock_date)s.",
+                                               lock_type=lock_type,
+                                               lock_date=format_date(move.env, lock_date))
+                move.tax_lock_date_message = tax_lock_date_message
             else:
                 move.tax_lock_date_message = False
 
@@ -1961,9 +1995,9 @@ class AccountMove(models.Model):
             raise ValidationError(_('Posted journal entry must have an unique sequence number per company.\n'
                                     'Problematic numbers: %s\n') % ', '.join(r[1] for r in res))
 
-    @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date')
+    @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date', 'state')
     def _check_duplicate_supplier_reference(self):
-        moves = self.filtered(lambda move: move.is_purchase_document() and move.ref)
+        moves = self.filtered(lambda move: move.state == 'posted' and move.is_purchase_document() and move.ref)
         if not moves:
             return
 
@@ -2080,7 +2114,7 @@ class AccountMove(models.Model):
             # Shortcut to load the demo data.
             # Doing line.account_id triggers a default_get(['account_id']) that could returns a result.
             # A section / note must not have an account_id set.
-            if not line._cache.get('account_id') and not line.display_type and not line._origin:
+            if not line._cache.get('account_id') and not line._origin:
                 line.account_id = line._get_computed_account() or self.journal_id.default_account_id
             if line.product_id and not line._cache.get('name'):
                 line.name = line._get_computed_name()
@@ -2235,7 +2269,7 @@ class AccountMove(models.Model):
                 raise UserError(_('You cannot edit the journal of an account move if it already has a sequence number assigned.'))
 
             # You can't change the date of a move being inside a locked period.
-            if 'date' in vals and move.date != vals['date']:
+            if move.state == "posted" and 'date' in vals and move.date != vals['date']:
                 move._check_fiscalyear_lock_date()
                 move.line_ids._check_tax_lock_date()
 
@@ -2258,8 +2292,9 @@ class AccountMove(models.Model):
         # You can't change the date of a not-locked move to a locked period.
         # You can't post a new journal entry inside a locked period.
         if 'date' in vals or 'state' in vals:
-            self._check_fiscalyear_lock_date()
-            self.mapped('line_ids')._check_tax_lock_date()
+            posted_move = self.filtered(lambda m: m.state == 'posted')
+            posted_move._check_fiscalyear_lock_date()
+            posted_move.line_ids._check_tax_lock_date()
 
         if ('state' in vals and vals.get('state') == 'posted'):
             for move in self.filtered(lambda m: m.restrict_mode_hash_table and not(m.secure_sequence_number or m.inalterable_hash)).sorted(lambda m: (m.date, m.ref or '', m.id)):
@@ -2657,7 +2692,11 @@ class AccountMove(models.Model):
                 'credit': balance < 0.0 and -balance or 0.0,
             })
 
-            if not is_refund:
+            if not is_refund or self.tax_cash_basis_origin_move_id:
+                # We don't map tax repartition for non-refund operations, nor for cash basis entries.
+                # Indeed, cancelling a cash basis entry usually happens when unreconciling and invoice,
+                # in which case we always want the reverse entry to totally cancel the original one, keeping the same accounts,
+                # tags and repartition lines
                 continue
 
             # ==== Map tax repartition lines ====
@@ -2669,18 +2708,15 @@ class AccountMove(models.Model):
                 refund_repartition_line = tax_repartition_lines_mapping[invoice_repartition_line]
 
                 # Find the right account.
-                if cancel:
-                    account_id = line_vals['account_id']
-                else:
-                    account_id = self.env['account.move.line']._get_default_tax_account(refund_repartition_line).id
-                    if not account_id:
-                        if not invoice_repartition_line.account_id:
-                            # Keep the current account as the current one comes from the base line.
-                            account_id = line_vals['account_id']
-                        else:
-                            tax = invoice_repartition_line.invoice_tax_id
-                            base_line = self.line_ids.filtered(lambda line: tax in line.tax_ids.flatten_taxes_hierarchy())[0]
-                            account_id = base_line.account_id.id
+                account_id = self.env['account.move.line']._get_default_tax_account(refund_repartition_line).id
+                if not account_id:
+                    if not invoice_repartition_line.account_id:
+                        # Keep the current account as the current one comes from the base line.
+                        account_id = line_vals['account_id']
+                    else:
+                        tax = invoice_repartition_line.invoice_tax_id
+                        base_line = self.line_ids.filtered(lambda line: tax in line.tax_ids.flatten_taxes_hierarchy())[0]
+                        account_id = base_line.account_id.id
 
                 tags = refund_repartition_line.tag_ids
                 if line_vals.get('tax_ids'):
@@ -2953,11 +2989,13 @@ class AccountMove(models.Model):
                 elif move.is_purchase_document(include_receipts=True):
                     raise UserError(_("The Bill/Refund date is required to validate this document."))
 
-            # When the accounting date is prior to the tax lock date, move it automatically to today.
+            # When the accounting date is prior to a lock date, change it automatically upon posting.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
-            if (move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date) and (move.line_ids.tax_ids or move.line_ids.tax_tag_ids):
-                move.date = move._get_accounting_date(move.invoice_date or move.date, True)
+            affects_tax_report = move._affect_tax_report()
+            lock_dates = move._get_violated_lock_dates(move.date, affects_tax_report)
+            if lock_dates:
+                move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
                 move.with_context(check_move_validity=False)._onchange_currency()
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
@@ -3142,7 +3180,6 @@ class AccountMove(models.Model):
             custom_layout="mail.mail_notification_paynow",
             model_description=self.with_context(lang=lang).type_name,
             force_email=True,
-            wizard_opened=True
         )
         return {
             'name': _('Send Invoice'),
@@ -3446,15 +3483,18 @@ class AccountMove(models.Model):
     @api.depends('move_type', 'partner_id', 'company_id')
     def _compute_narration(self):
         use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
-        for move in self.filtered(lambda am: not am.narration):
+        for move in self:
             if not use_invoice_terms or not move.is_sale_document(include_receipts=True):
                 move.narration = False
             else:
+                lang = move.partner_id.lang or self.env.user.lang
                 if not move.company_id.terms_type == 'html':
-                    narration = move.company_id.invoice_terms if not is_html_empty(move.company_id.invoice_terms) else ''
+                    narration = move.company_id.with_context(lang=lang).invoice_terms if not is_html_empty(move.company_id.invoice_terms) else ''
                 else:
                     baseurl = self.env.company.get_base_url() + '/terms'
+                    context = {'lang': lang}
                     narration = _('Terms & Conditions: %s', baseurl)
+                    del context
                 move.narration = narration or False
 
 
@@ -3471,7 +3511,7 @@ class AccountMoveLine(models.Model):
         help="The move of this entry line.")
     move_name = fields.Char(string='Number', related='move_id.name', store=True, index=True)
     date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
-    ref = fields.Char(related='move_id.ref', store=True, copy=False, index=True, readonly=False)
+    ref = fields.Char(related='move_id.ref', store=True, copy=False, index=True, readonly=True)
     parent_state = fields.Selection(related='move_id.state', store=True, readonly=True)
     journal_id = fields.Many2one(related='move_id.journal_id', store=True, index=True, copy=False)
     company_id = fields.Many2one(related='move_id.company_id', store=True, readonly=True)
@@ -4538,8 +4578,8 @@ class AccountMoveLine(models.Model):
         moves = lines.mapped('move_id')
         if self._context.get('check_move_validity', True):
             moves._check_balanced()
-        moves._check_fiscalyear_lock_date()
-        lines._check_tax_lock_date()
+        moves.filtered(lambda m: m.state == 'posted')._check_fiscalyear_lock_date()
+        lines.filtered(lambda l: l.parent_state == 'posted')._check_tax_lock_date()
         moves._synchronize_business_models({'line_ids'})
 
         return lines
@@ -4566,11 +4606,11 @@ class AccountMoveLine(models.Model):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
 
             # Check the lock date.
-            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_LOCK_DATE):
+            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_LOCK_DATE):
                 line.move_id._check_fiscalyear_lock_date()
 
             # Check the tax lock date.
-            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_TAX_LOCK_DATE):
+            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_TAX_LOCK_DATE):
                 line._check_tax_lock_date()
 
             # Check the reconciliation.

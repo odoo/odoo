@@ -3,17 +3,16 @@
 # 	* event
 # 
 # Translators:
-# Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
 # Tuan Tran <tmtuan.projects@gmail.com>, 2021
-# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
+# Duy BQ <duybq86@gmail.com>, 2021
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Dao Nguyen <trucdao.uel@gmail.com>, 2021
-# Martin Trigaux, 2021
-# Duy BQ <duybq86@gmail.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
-# Vo Thanh Thuy, 2021
+# Martin Trigaux, 2021
+# Vo Thanh Thuy, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2021\n"
+"Last-Translator: Vo Thanh Thuy, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,18 +32,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
 msgid "# Events"
-msgstr "# Events"
+msgstr "# Sự kiện"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 msgid "# Sent"
-msgstr ""
+msgstr "# Đã gửi"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (sao chép)"
+msgstr "%s (bản sao)"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_foldable_badge
@@ -52,11 +51,13 @@ msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
+"'Thẻ gấp - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
+"object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
 msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'Thẻ gấp - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -64,31 +65,33 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
+"'Vé toàn trang - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'Vé toàn trang - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
 msgid "10-14"
-msgstr ""
+msgstr "10-14"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_3
 msgid "15-18"
-msgstr ""
+msgstr "15-18"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_4
 msgid "18+"
-msgstr ""
+msgstr "18+"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_1
 msgid "5-10"
-msgstr ""
+msgstr "5-10"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -96,6 +99,8 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"<b>Phòng kinh doanh</b> - Để thảo luận phương thức triển khai, cách thức bán"
+" hàng hiệu quả nhất, v.v."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -103,6 +108,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
+"<b>Phòng kỹ thuật</b> - Một phòng dành cho các nhà phát triển Odoo giàu kinh"
+" nghiệm, một phòng dành cho các nhà phát triển mới. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -110,6 +117,8 @@ msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for "
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
 msgstr ""
+"<b>Trước Hội chợ thiết kế là 2 ngày tập huấn dành cho chuyên gia!</b><br> "
+"Chúng tôi đề xuất 3 buổi tập huấn khác nhau, mỗi buổi kéo dài 2 ngày."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -118,6 +127,9 @@ msgid ""
 "more time for thematical meetings, conferences, workshops and tutorial "
 "sessions in the afternoon."
 msgstr ""
+"<b>Các phiên họp toàn thể vào buổi sáng sẽ ngắn hơn</b> và chúng tôi sẽ dành"
+" nhiều thời gian hơn cho các buổi họp theo chuyên đề, hội nghị, hội thảo và "
+"hướng dẫn vào buổi chiều. "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -128,11 +140,15 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>Sự kiện mở cửa cho công chúng!</b> <br> Phí tham dự cho 3 ngày là 49.50€ "
+"(bao gồm cà phê, ăn nhẹ, đồ uống, một bữa tiệc âm nhạc và bia đặc biệt). "
+"<br> Với những người tham gia không muốn đóng phí, sự kiện có cung cấp vé "
+"miễn phí, tuy nhiên không bao gồm đồ ăn và sự kiện buổi tối."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr ""
+msgstr "<b>Phòng hội thảo</b> - Chủ yếu cho nhà phát triển."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -140,6 +156,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">Phát sóng bài phát biểu trực tuyến qua tích hợp Youtube</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -147,6 +165,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">Chia sẻ phần đố vui với người tham dự khi bài phát biểu kết thúc</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -164,6 +184,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Thân gửi <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"    Cảm ơn bạn đã đặt câu hỏi.<br/>\n"
+"    Đây là huy hiệu tham dự sự kiện <t t-out=\"object.event_id.name or ''\">Ra mắt trực tuyến bộ sưu tập OpenWood</t> của bạn.<br/>\n"
+"    Nếu bạn có câu hỏi, vui lòng cho chúng tôi biết.\n"
+"    <br/><br/>\n"
+"    Trân trọng,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -174,11 +206,16 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>Nếu bạn muốn trình bày, vui lòng gửi đề xuất chủ đề trong thời gian sớm "
+"nhất tới Mr. Famke Jenssen tại địa chỉ ngh (a) yourcompany (dot) com để được"
+" duyệt. Bài phát biểu có thể là bài thuyết trình về mô-đun cộng đồng, một "
+"trường hợp thành công, phản hồi về phương pháp, kỹ thuật, v.v. Các bài "
+"thuyết trình bài được thực hiện bằng tiếng Anh.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"End date\"/>"
-msgstr "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"End date\"/>"
+msgstr "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"Ngày kết thúc\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -187,7 +224,7 @@ msgid ""
 "title=\"Confirm Registration\"/>"
 msgstr ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"Confirm Registration\"/>"
+"title=\"Xác nhận đăng ký\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -196,7 +233,7 @@ msgid ""
 "title=\"Confirm Registration\"/>"
 msgstr ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"Confirm Registration\"/>"
+"title=\"Xác nhận đăng ký\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -204,11 +241,13 @@ msgid ""
 "<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle mr-2\"></i>Sự kiện và tất cả các buổi hội thảo "
+"được thực hiện bằng <b>tiếng Anh</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
-msgstr "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
+msgstr "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Đã xác nhận\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -217,13 +256,13 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Hình mũi tên\" "
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Mũi tên\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
-msgstr "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
+msgstr "<i class=\"fa fa-map-marker\" title=\"Địa điểm\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -232,7 +271,7 @@ msgid ""
 "button\" title=\"Confirm Attendance\"/>"
 msgstr ""
 "<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
-"button\" title=\"Confirm Attendance\"/>"
+"button\" title=\"Xác nhận tham dự\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -241,7 +280,7 @@ msgid ""
 "title=\"Confirm Attendance\"/>"
 msgstr ""
 "<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
-"title=\"Confirm Attendance\"/>"
+"title=\"Xác nhận tham dự\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -249,6 +288,8 @@ msgid ""
 "<span class=\"badge badge-secondary o_wevent_badge float-"
 "right\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge badge-secondary o_wevent_badge float-right\">DIỄN "
+"GIẢ</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -256,8 +297,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Các giá trị quy định cho công"
-" ty này.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Giá trị đặt ở đây áp dụng cho"
+" công ty cụ thể. \" groups=\"base.group_multi_company\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -265,14 +306,14 @@ msgid ""
 "<span class=\"text-muted\" states=\"done\">Attended</span>\n"
 "                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
 msgstr ""
-"<span class=\"text-muted\" states=\"done\">Attended</span>\n"
-"                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
+"<span class=\"text-muted\" states=\"done\">Đã tham gia</span>\n"
+"                                    <span class=\"text-muted\" states=\"cancel\">Đã hủy</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span>John Doe</span>"
-msgstr ""
+msgstr "<span>John Doe</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -482,6 +523,210 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and object.event_id.is_published\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Đăng ký của bạn</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Oscar Morgan</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <a t-attf-href=\"{{ object.event_id.website_url }}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                            Xem sự kiện\n"
+"                        </a>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        Xin chào <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"                        Chúng tôi rất vui được nhắc nhở bạn về sự kiện\n"
+"                        <t t-if=\"is_online\">\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">Ra mắt trực tuyến bộ sưu tập OpenWood</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">Ra mắt trực tuyến bộ sưu tập OpenWood</strong>\n"
+"                        </t>\n"
+"                        sắp bắt đầu <strong t-out=\"object.get_date_range_str() or ''\">ngày hôm nay</strong>.\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br/>\n"
+"                        <strong>Thêm sự kiện vào lịch</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo\n"
+"                        </a>\n"
+"                        <br/><br/>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        Chúng tôi xác nhận đăng ký của bạn và mong chờ được gặp bạn,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name or ''\">YourCompany</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            Đội <t t-out=\"object.event_id.name or ''\">Ra mắt trực tuyến bộ sưu tập OpenWood</t> \n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>Từ</strong> <t t-out=\"object.event_id.date_begin_located or ''\">Ngày 4 tháng 5 năm 2021, 7:00:00 sáng</t></div>\n"
+"                                <div><strong>Tới</strong> <t t-out=\"object.event_id.date_end_located or ''\">Ngày 6 tháng 5 năm 2021, 5:00:00 chiều</t></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>Múi giờ</strong> <t t-out=\"object.event_id.date_tz or ''\">Châu Âu/Bỉ</t></i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.street2)\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-out=\"object.event_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.city)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-out=\"object.event_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.state_id.name)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-out=\"object.event_id.address_id.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.zip)\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name or ''\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.country_id.name)\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">Bạn có câu hỏi về sự kiện?</span>\n"
+"                            <div>Hãy liên hệ với ban tổ chức:</div>\n"
+"                            <ul>\n"
+"                                <li t-out=\"event_organizer.name or ''\">YourCompany</li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>Thư: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"/></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>Điện thoại: <t t-out=\"event_organizer.phone or ''\"/></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <hr t-if=\"is_online or event_address\" width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <div t-if=\"is_online\">\n"
+"                        <strong>Để có trải nghiệm di động tốt nhất.</strong>\n"
+"                        <a href=\"/event\">Hãy cài ứng dụng di động</a>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <hr t-if=\"is_online and event_address\" width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <table t-if=\"event_address\" style=\"width:100%;\"><tr><td>\n"
+"                        <div>\n"
+"                            <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                <img t-attf-src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </td></tr></table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table t-if=\"object.company_id\" width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        Được gửi bởi <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"        <t t-if=\"'website_url' in object.event_id and object.event_id.website_url\">\n"
+"            <br/>\n"
+"            Khám phá <a href=\"/event\" style=\"color:#875A7B;\">tất cả sự kiện của chúng tôi</a>.\n"
+"        </t>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -703,32 +948,247 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and object.event_id.is_published\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Đăng ký của bạn</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Oscar Morgan</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <a t-att-href=\"object.event_id.website_url\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                            Xem sự kiện\n"
+"                        </a>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        Xin chào <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"                        Chúng tôi rất vui mừng xác nhận đăng ký của bạn cho sự kiện\n"
+"                        <t t-if=\"is_online\">\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">Ra mắt trực tuyến bộ sưu tập OpenWood</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">Ra mắt trực tuyến bộ sưu tập OpenWood</strong>\n"
+"                        </t>\n"
+"                        cho người tham dự <t t-out=\"object.name or ''\">Oscar Morgan</t>.\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br/>\n"
+"                        <strong>Thêm sự kiện này vào lịch</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo\n"
+"                        </a>\n"
+"                        <br/><br/>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        Mong sớm được gặp bạn,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name or ''\">YourCompany</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            Đội <t t-out=\"object.event_id.name or ''\">Ra mắt trực tuyến bộ sưu tập OpenWood</t> \n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>Từ</strong> <t t-out=\"object.event_id.date_begin_located or ''\">Ngày 4 tháng 5 năm 2021, 7:00:00 sáng</t></div>\n"
+"                                <div><strong>Tới</strong> <t t-out=\"object.event_id.date_end_located or ''\">Ngày 6 tháng 5 năm 2021, 5:00:00 chiều</t></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>Múi giờ</strong> <t t-out=\"object.event_id.date_tz or ''\">Châu Âu/Bỉ</t></i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.street2)\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-out=\"object.event_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.city)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-out=\"object.event_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.state_id.name)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-out=\"object.event_id.address_id.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.zip)\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name or ''\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.country_id.name)\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">Bạn có câu hỏi về sự kiện?</span>\n"
+"                            <div>Hãy liên hệ với ban tổ chức:</div>\n"
+"                            <ul>\n"
+"                                <li><t t-out=\"event_organizer.name or ''\">YourCompany</t></li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>Thư: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>Điện thoại: <t t-out=\"event_organizer.phone or ''\">+1 650-123-4567</t></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <t t-if=\"is_online or event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <div>\n"
+"                            <strong>Để có trải nghiệm di động tốt nhất.</strong>\n"
+"                            <a href=\"/event\">Hãy cài đặt ứng dụng di động</a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <t t-if=\"is_online and event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <t t-if=\"event_address\">\n"
+"                        <table style=\"width:100%;\"><tr><td>\n"
+"                            <div>\n"
+"                                <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                    <img t-attf-src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </td></tr></table>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <t t-if=\"object.company_id\">\n"
+"        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"            Được gửi bởi <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"            <t t-if=\"is_online\">\n"
+"                <br/>\n"
+"                Khám phá <a href=\"/event\" style=\"color:#875A7B;\">tất cả sự kiện của chúng tôi</a>.\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        </table>\n"
+"    </t>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
 #: model:ir.model.fields,help:event.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr ""
-"A description of the ticket that you want to communicate to your customers."
+msgstr "Mô tả vé mà bạn muốn trình bày với khách hàng."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Cần tác vụ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__active
 #: model:ir.model.fields,field_description:event.field_event_registration__active
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Đang hoạt động"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_ids
 msgid "Activities"
-msgstr "Các hoạt động"
+msgstr "Hoạt động"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_2
@@ -739,7 +1199,7 @@ msgstr "Hoạt động"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Hành động ngoại lệ"
+msgstr "Thể hiện hoạt động ngoại lệ "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
@@ -764,23 +1224,23 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
-"Thêm menu điều hướng vào các trang web sự kiện của bạn với lịch trình, bản "
-"nhạc, mẫu đề xuất theo dõi, v.v."
+"Thêm menu điều hướng vào các trang web sự kiện của bạn với lịch trình, bài, "
+"mẫu đề xuất bài, v.v."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Add a note..."
-msgstr "Add a note..."
+msgstr "Thêm ghi chú..."
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Administrator"
-msgstr "Người quản trị"
+msgstr "Quản trị viên"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_exhibitor
 msgid "Advanced Sponsors"
-msgstr "Advanced Sponsors"
+msgstr "Nhà tài trợ cấp cao"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
@@ -797,12 +1257,12 @@ msgstr "Sau sự kiện"
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
 msgid "Age"
-msgstr ""
+msgstr "Tuổi"
 
 #. module: event
 #: model:event.event,name:event.event_6
 msgid "An unpublished event"
-msgstr ""
+msgstr "Sự kiện chưa đăng"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -810,6 +1270,8 @@ msgid ""
 "And this time, we go fully ONLINE! Meet us in our live streams from the comfort of your house.<br>\n"
 "        Special discount codes will be handed out during the various streams, make sure to be there on time."
 msgstr ""
+"Lần này, chúng tôi sẽ phát hoàn toàn trực tuyến! Hãy đón xem buổi live stream của chúng tôi ngay tại nhà.<br>\n"
+"        Mã giảm giá đặc biệt sẽ được phát trong các buổi phát sóng khác nhau, hãy nhớ đến đúng giờ."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -819,7 +1281,7 @@ msgstr "Đã thông báo"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
-msgstr "Đã lưu"
+msgstr "Đã lưu trữ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -827,6 +1289,8 @@ msgid ""
 "Around one hundred ballons will simultaneously take flight and turn the sky "
 "into a beautiful canvas of colours."
 msgstr ""
+"Khoảng 100 quả bóng bay sẽ đồng loạt bay lên và biến bầu trời thành bức "
+"tranh đầy màu sắc."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -854,12 +1318,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
 #: model:ir.model.fields,field_description:event.field_event_registration__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số lượng tập tin đính kèm"
+msgstr "Số tệp đính kèm"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Attendance"
-msgstr "Chấm công"
+msgstr "Tham dự"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__done
@@ -878,12 +1342,12 @@ msgstr "Ngày đã tham dự"
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
-msgstr "Tham dự"
+msgstr "Người tham dự"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
 msgid "Attendee Name"
-msgstr "Tên Người tham dự"
+msgstr "Tên người tham dự"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -894,7 +1358,7 @@ msgstr "Tên Người tham dự"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Attendees"
-msgstr "Người Tham dự"
+msgstr "Người tham dự"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__auto_confirm
@@ -902,14 +1366,13 @@ msgid ""
 "Autoconfirm Registrations. Registrations will automatically be confirmed "
 "upon creation."
 msgstr ""
-"Autoconfirm Registrations. Registrations will automatically be confirmed "
-"upon creation."
+"Tự động xác nhận đăng ký. Đăng ký sẽ được tự động xác nhận sau khi tạo."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Autoconfirmation"
-msgstr "Autoconfirmation"
+msgstr "Xác nhận tự động"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
@@ -920,7 +1383,7 @@ msgstr "Tự động xác nhận đăng ký"
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_available
 msgid "Available Seats"
-msgstr "Sô Chỗ khả dụng"
+msgstr "Số chỗ còn trống"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -928,6 +1391,8 @@ msgid ""
 "Bands like Bar Fighters, Led Slippers and Link Floyd will offer you the show"
 " of the century during our three day event."
 msgstr ""
+"Tại sự kiện 3 ngày của chúng tôi, các ban nhạc Bar Fighters, Led Slippers và"
+" Link Floyd sẽ mang lại cho bạn buổi biểu diễn của thế kỷ."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
@@ -958,7 +1423,7 @@ msgstr "Trước sự kiện"
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__blocked
 #, python-format
 msgid "Blocked"
-msgstr "Đã khóa"
+msgstr "Đã chặn"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_1
@@ -966,28 +1431,30 @@ msgid ""
 "Bloem brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Bloem mang lại sự trung thực và nghiêm túc tới ngành gỗ đồng thời giúp khách"
+" hàng xử lý các loại cây, hoa và nấm."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr "Booked"
+msgstr "Đã đặt chỗ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Booked By"
-msgstr ""
+msgstr "Được đặt bởi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
-msgstr "Booked by"
+msgstr "Đã đặt chỗ bởi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Booth Management"
-msgstr ""
+msgstr "Quản lý gian hàng"
 
 #. module: event
 #: model:event.event,subtitle:event.event_5
@@ -995,11 +1462,13 @@ msgid ""
 "Bring your outdoor field hockey season to the next level by taking the field"
 " at this 9th annual Field Hockey tournament."
 msgstr ""
+"Hãy tham dự giải đấu khúc côn cầu trên sân thường niên lần thứ 9 để đưa mùa "
+"giải khúc côn cầu ngoài trời của bạn lên một tầm cao."
 
 #. module: event
 #: model:event.event,name:event.event_4
 msgid "Business workshops"
-msgstr ""
+msgstr "Hội thảo doanh nghiệp"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_campaign_id
@@ -1014,7 +1483,7 @@ msgstr "Hủy"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Cancel Registration"
-msgstr "Huỷ Đăng ký"
+msgstr "Huỷ đăng ký"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_cancelled
@@ -1033,6 +1502,8 @@ msgid ""
 "Chamber Works reserves the right to cancel, re-name or re-locate the event "
 "or change the dates on which it is held."
 msgstr ""
+"Chamber Works có quyền hủy bỏ, đổi tên hoặc thay đổi địa điểm của sự kiện "
+"hoặc thay đổi ngày tổ chức sự kiện."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__color
@@ -1051,17 +1522,17 @@ msgstr "Đón xem trực tiếp, chúng tôi rất mong gặp các bạn!"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
-msgstr "Thông tin giao dịch"
+msgstr "Liên lạc"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
 msgid "Communication related to event registrations"
-msgstr ""
+msgstr "Thông tin liên quan đến đăng ký sự kiện"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Community Chat Rooms"
-msgstr ""
+msgstr "Phòng chat cộng đồng"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__company_id
@@ -1087,17 +1558,17 @@ msgstr "Hội thảo"
 #: model:event.event,name:event.event_2
 #: model_terms:event.event,description:event.event_2
 msgid "Conference for Architects"
-msgstr "Hội nghị cho kiến trúc sư"
+msgstr "Hội thảo cho kiến trúc sư"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
+msgstr "Hội nghị, hội thảo và tập huấn sẽ được tổ chức tại 6 phòng:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
 msgid "Config Settings"
-msgstr "Thiết lập cấu hình"
+msgstr "Cài đặt cấu hình"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -1113,12 +1584,12 @@ msgstr "Xác nhận"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
-msgstr "Confirm Attendance"
+msgstr "Xác nhận tham dự"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Registration"
-msgstr "Xác nhận Đăng ký"
+msgstr "Xác nhận đăng ký"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__open
@@ -1126,7 +1597,7 @@ msgstr "Xác nhận Đăng ký"
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Confirmed"
-msgstr "Đã được xác nhận"
+msgstr "Đã xác nhận"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -1141,27 +1612,27 @@ msgstr "Quốc gia"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Create Booths and manage their reservations"
-msgstr ""
+msgstr "Tạo gian hàng và quản lý đặt chỗ"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Create an Event"
-msgstr ""
+msgstr "Tạo sự kiện"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
 msgid "Create an Event Stage"
-msgstr ""
+msgstr "Tạo giai đoạn sự kiện"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Create an Event Tag Category"
-msgstr ""
+msgstr "Tạo danh mục thẻ sự kiện"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
 msgid "Create an Event Template"
-msgstr ""
+msgstr "Tạo mẫu sự kiện"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_uid
@@ -1196,7 +1667,7 @@ msgstr "Thời điểm tạo"
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_1
 msgid "Culture"
-msgstr ""
+msgstr "Văn hóa"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -1220,7 +1691,7 @@ msgstr "Ngày"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__days
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__days
 msgid "Days"
-msgstr "Ngày"
+msgstr "Thứ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__seats_max
@@ -1230,9 +1701,8 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
-"Define the number of available tickets. If you have too many registrations "
-"you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
-"as unlimited."
+"Xác định số lượng vé sẽ cung cấp. Nếu bạn có quá nhiều đăng ký, bạn sẽ không"
+" thể tiếp tục bán vé. Đặt 0 để bỏ qua quy tắc này và đặt là không giới hạn."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -1249,7 +1719,7 @@ msgstr "Hội chợ thiết kế Los Angeles"
 #. module: event
 #: model:event.event,subtitle:event.event_4
 msgid "Discover how to grow a sustainable business with our experts."
-msgstr ""
+msgstr "Khám phá cách phát triển doanh nghiệp bền vững cùng các chuyên gia."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -1262,7 +1732,7 @@ msgstr "Tìm hiểu thêm"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_meet
 msgid "Discussion Rooms"
-msgstr "Discussion Rooms"
+msgstr "Phòng thảo luận"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
@@ -1282,7 +1752,7 @@ msgstr "Tên hiển thị"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
-msgstr ""
+msgstr "Trưng bày Nhà tài trợ và Đơn vị triển lãm trong trang sự kiện"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -1300,9 +1770,9 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr ""
-"Trong cuộc hội thảo này, chúng tôi sẽ cung cấp cái nhìn chi tiết, hoàn chỉnh"
-" về các ứng dụng doanh nghiệp. Bạn sẽ biết toàn bộ các lợi ích khi sử dụng "
-"nó."
+"Trong cuộc hội thảo này, chúng tôi sẽ cung cấp tổng quan chi tiết về các ứng"
+" dụng doanh nghiệp. Bạn sẽ biết toàn bộ các lợi ích khi sử dụng các ứng dụng"
+" này."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
@@ -1312,7 +1782,7 @@ msgstr "Email"
 #. module: event
 #: model:ir.model,name:event.model_mail_template
 msgid "Email Templates"
-msgstr "Mẫu Email"
+msgstr "Mẫu email"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -1327,17 +1797,19 @@ msgstr "Ngày kết thúc "
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__pipe_end
 msgid "End Stage"
-msgstr "End Stage"
+msgstr "Kết thúc giai đoạn"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_done
 msgid "Ended"
-msgstr "Kết thúc"
+msgstr "Đã kết thúc"
 
 #. module: event
 #: model:event.event,subtitle:event.event_2
 msgid "Enhance your architectural business and improve professional skills."
 msgstr ""
+"Thúc đẩy hoạt động kinh doanh kiến trúc và nâng cao kỹ năng nghề nghiệp cho "
+"bạn."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -1354,7 +1826,7 @@ msgstr "Sự kiện"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr "Sự kiện gửi thư tự động"
+msgstr "Gửi thư sự kiện tự động"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__event_type_id
@@ -1363,27 +1835,27 @@ msgstr "Sự kiện gửi thư tự động"
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_tree
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Event Category"
-msgstr "Nhóm Sự kiện"
+msgstr "Danh mục sự kiện"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_form
 msgid "Event Category Tag"
-msgstr "Event Category Tag"
+msgstr "Thẻ danh mục sự kiện"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
 msgid "Event End Date"
-msgstr "Ngày Kết thúc Sự kiện"
+msgstr "Ngày kết thúc sự kiện"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Event Gamification"
-msgstr ""
+msgstr "Game hóa sự kiện"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr "Thông tin Sự kiện"
+msgstr "Thông tin sự kiện"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
@@ -1398,12 +1870,12 @@ msgstr "Trình ấn định Gửi thư Sự kiện"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
-msgstr "Tên Sự kiện"
+msgstr "Tên sự kiện"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_calendar
 msgid "Event Organization"
-msgstr "Nhà tổ chức Sự kiện"
+msgstr "Tổ chức sự kiện"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1411,7 +1883,7 @@ msgstr "Nhà tổ chức Sự kiện"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr "Đăng ký Sự kiện"
+msgstr "Đăng ký sự kiện"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0
@@ -1446,36 +1918,36 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_stage
 msgid "Event Stage"
-msgstr "Event Stage"
+msgstr "Giai đoạn sự kiện"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_stage_action
 #: model:ir.ui.menu,name:event.event_stage_menu
 msgid "Event Stages"
-msgstr "Event Stages"
+msgstr "Giai đoạn sự kiện"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Start Date"
-msgstr "Ngày Bắt đầu Sự kiện"
+msgstr "Ngày bắt đầu sự kiện"
 
 #. module: event
 #: model:ir.model,name:event.model_event_tag
 msgid "Event Tag"
-msgstr "Event Tag"
+msgstr "Thẻ sự kiện"
 
 #. module: event
 #: model:ir.model,name:event.model_event_tag_category
 msgid "Event Tag Category"
-msgstr "Event Tag Category"
+msgstr "Danh mục thẻ sự kiện"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_tag_category_action_tree
 #: model:ir.ui.menu,name:event.menu_event_category
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
 msgid "Event Tags Categories"
-msgstr "Event Tags Categories"
+msgstr "Danh mục thẻ sự kiện"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1483,25 +1955,25 @@ msgstr "Event Tags Categories"
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Template"
-msgstr "Event Template"
+msgstr "Mẫu sự kiện"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_ticket
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
 msgid "Event Template Ticket"
-msgstr "Event Template Ticket"
+msgstr "Vé mẫu sự kiện"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr "Event Template Tickets"
+msgstr "Vé mẫu sự kiện"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr "Event Templates"
+msgstr "Mẫu sự kiện"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
@@ -1510,28 +1982,31 @@ msgid ""
 "                    usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                    \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Mẫu sự kiện tổng hợp cấu hình bạn thường dùng và thường\n"
+"                    dựa vào kiểu sự kiện bạn tổ chức (VD: \"Sự kiện\",\n"
+"                    \"Trưng bày trên phố\", \"Hội thảo trực tuyến\", v.v)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
 #: model:ir.model.fields,field_description:event.field_event_event__event_ticket_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__event_ticket_id
 msgid "Event Ticket"
-msgstr "Vé Sự kiện"
+msgstr "Vé sự kiện"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Event Ticket For"
-msgstr ""
+msgstr "Vé sự kiện của"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
 msgid "Event Type"
-msgstr "Kiểu Sự kiện"
+msgstr "Kiểu sự kiện"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
 msgid "Event registrations"
-msgstr "Event registrations"
+msgstr "Đăng ký sự kiện"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
@@ -1539,11 +2014,13 @@ msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
 msgstr ""
+"Các giai đoạn của sự kiện được sử dụng để theo dõi tiến trình của một sự "
+"kiện từ khi bắt đầu cho đến khi kết thúc."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "Event's Ticket"
-msgstr "Vé của Sự kiện"
+msgstr "Vé của sự kiện"
 
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
@@ -1555,17 +2032,17 @@ msgstr "Sự kiện: Trình lập lịch biểu"
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration"
-msgstr "Event: Registration"
+msgstr "Sự kiện: Đăng ký"
 
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr ""
+msgstr "Sự kiện: Huy hiệu đăng ký"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
 msgid "Event: Reminder"
-msgstr "Event: Reminder"
+msgstr "Sự kiện: Nhắc nhở"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1579,12 +2056,12 @@ msgstr "Event: Reminder"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr "Các sự kiện"
+msgstr "Sự kiện"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_event_action_pivot
 msgid "Events Analysis"
-msgstr "Phân tích Sự kiện"
+msgstr "Phân tích sự kiện"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
@@ -1595,7 +2072,7 @@ msgstr "Trình ấn định Gửi thư Sự kiện"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
-msgstr "Events Stage"
+msgstr "Giai đoạn sự kiện"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__auto_confirm
@@ -1603,8 +2080,8 @@ msgid ""
 "Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
-"Sự kiện và đăng ký sẽ tự động được xác nhận khi tạo, giảm bớt dòng chảy cho "
-"các sự kiện đơn giản."
+"Sự kiện và đăng ký sẽ được tự động xác nhận khi tạo, làm giảm nhẹ quy trình "
+"cho các sự kiện đơn giản."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_stage__pipe_end
@@ -1612,6 +2089,8 @@ msgid ""
 "Events will automatically be moved into this stage when they are finished. "
 "The event moved into this stage will automatically be set as green."
 msgstr ""
+"Sự kiện sẽ được chuyển tự động sang giai đoạn này khi kết thúc. Sự kiện được"
+" chuyển sang giai đoạn này sẽ được đặt tự động thành màu xanh."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1621,6 +2100,9 @@ msgid ""
 "of future versions, achievements of the software, workshops, training "
 "sessions, etc...."
 msgstr ""
+"Hằng năm, chúng tôi mời cộng đồng, đối tác và người dùng tới gặp mặt! Đây là"
+" một sự kiện lý tưởng để hội tụ và trình bày các tính năng mới, kế hoạch cho"
+" các phiên bản tiếp theo, thành tựu của phần mềm, hội thảo, tập huấn, v.v."
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -1630,54 +2112,54 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc....\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
-"Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc....\n"
-"            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
+"Hằng năm, chúng tôi mời cộng đồng, đối tác, người dùng sản phẩm tới giao lưu với chúng tôi! Đây là sự kiện lý tưởng để gặp mặt, trình bày tính năng mới, định hướng các phiên bản trong tương lai, thành tựu của phần mềm, hội thảo, buổi tập huấn, v.v.\n"
+"            Sự kiện này cũng là cơ hội để trưng bày thành tựu của các đối tác, phương pháp và sự phát triển của từng khách hàng. Hãy tới tham dự và tận mắt chứng kiến các tính năng thú vị của phiên bản mới!"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Exhibition"
-msgstr "Hội chợ / Triển lãm"
+msgstr "Triển lãm"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Expected"
-msgstr "Được mong đợi"
+msgstr "Dự kiến"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Expected Attendees"
-msgstr "Expected Attendees"
+msgstr "Người tham dự dự kiến"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr "Người tham dự được mong đợi"
+msgstr "Người tham dự dự kiến"
 
 #. module: event
 #: model:event.event,subtitle:event.event_3
 msgid "Experience live music, local food and beverages."
-msgstr ""
+msgstr "Trải nghiệm nhạc sống, đồ ăn và thức uống địa phương."
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
 msgid "Foldable Badge"
-msgstr ""
+msgstr "Thẻ gấp"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid ""
 "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
-msgstr ""
+msgstr "Thẻ gấp - {{ (object.event_id.name or 'Event').replace('/','_') }}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
 msgid "Foldable Badge Example"
-msgstr ""
+msgstr "Ví dụ thẻ gấp"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
 msgid "Folded in Kanban"
-msgstr "Đóng trong Kanban"
+msgstr "Thu gọn trong kanban"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
@@ -1695,7 +2177,7 @@ msgstr "Người theo dõi (Đối tác)"
 #: model:ir.model.fields,help:event.field_event_event__activity_type_icon
 #: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font biểu tượng ví dụ: fa-tasks"
+msgstr "Biểu tượng Font awesome v.d: fa-tasks"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1705,7 +2187,7 @@ msgstr "Font biểu tượng ví dụ: fa-tasks"
 #: model_terms:event.event,description:event.event_5
 #: model_terms:event.event,description:event.event_7
 msgid "For any additional information, please contact us at"
-msgstr "Để biết thêm bất cứ thông tin gì, vui long liên hệ với chúng tôi theo"
+msgstr "Để biết thêm thông tin, vui lòng liên hệ tại"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -1713,19 +2195,20 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
-"Đối với từng sự kiện, bạn có thể định nghĩa số chỗ ngồi đăng ký tối đa (số "
-"người tham dự), vượt quá số lượng này thì sẽ không được phép đăng ký."
+"Đối với từng sự kiện, bạn có thể xác định số chỗ đăng ký tối đa (số người "
+"tham dự), đăng ký sẽ không được chấp nhận nếu vượt quá số này."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
 msgid "For only 10, you gain access to catering. Yum yum."
-msgstr ""
+msgstr "Chỉ cần 10 đô cho một bữa ăn tuyệt ngon."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid ""
 "Foster interactions between attendees by creating virtual conference rooms"
 msgstr ""
+"Thúc đẩy tương tác giữa những người tham dự bằng cách tạo phòng hội nghị ảo"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_0
@@ -1735,12 +2218,12 @@ msgstr "Miễn phí"
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_0
 msgid "Free entrance, no food !"
-msgstr ""
+msgstr "Vào cửa miễn phí, không đồ ăn !"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
 msgid "Freshly created"
-msgstr "Freshly created"
+msgstr "Vừa mới tạo"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
@@ -1748,32 +2231,35 @@ msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your"
 " event registrations."
 msgstr ""
+"Từ bảng thông tin này, bạn có thể báo cáo, phân tích, phát hiện xu hướng của"
+" đăng ký sự kiện. "
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
 msgid "Full Page Ticket"
-msgstr ""
+msgstr "Vé toàn trang"
 
 #. module: event
 #: model:mail.template,report_name:event.event_subscription
 msgid ""
 "Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}"
 msgstr ""
+"Vé toàn trang - {{ (object.event_id.name or 'Event').replace('/','') }}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
 msgid "Full Page Ticket Example"
-msgstr ""
+msgstr "Ví dụ về vé toàn trang"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
 msgid "Fully ended"
-msgstr "Fully ended"
+msgstr "Hoàn toàn kết thúc"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr "Chu trình tính năng của các ứng dụng chính;"
+msgstr "Dòng hoạt động của các ứng dụng chính;"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1784,39 +2270,39 @@ msgstr "Hoạt động tương lai"
 #. module: event
 #: model:event.event.ticket,name:event.event_4_ticket_0
 msgid "General Admission"
-msgstr ""
+msgstr "Vé thường"
 
 #. module: event
 #: model:event.event,subtitle:event.event_0
 msgid "Get Inspired • Stay Connected • Have Fun"
-msgstr ""
+msgstr "Cảm hứng • Kết nối • Vui nhộn"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_state
 msgid "Global communication Status"
-msgstr ""
+msgstr "Trạng thái liên lạc tổng thể"
 
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Great Reno Ballon Race"
-msgstr ""
+msgstr "Cuộc đua khinh khí cầu Great Reno"
 
 #. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
-msgstr "Great! Now all you have to do is wait for your attendees to show up!"
+msgstr "Tuyệt vời! Giờ bạn chỉ cần chờ mọi người tới tham dự!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
 msgid "Green Kanban Label"
-msgstr "Kanban nhãn màu xanh lá"
+msgstr "Nhãn kanban xanh"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_normal
 msgid "Grey Kanban Label"
-msgstr "Kanban nhãn màu xám"
+msgstr "Nhãn kanban xám"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1830,7 +2316,7 @@ msgstr "Nhóm theo"
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "Happy to be Sponsor"
-msgstr "Hạnh phúc khi là nhà tài trợ"
+msgstr "Hân hạnh là nhà tài trợ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__has_message
@@ -1847,11 +2333,12 @@ msgstr "Tham dự xong hội thảo này, người tham dự sẽ có thể:"
 #: model_terms:event.event,description:event.event_3
 msgid "Here it is, the 12th edition of our Live Musical Festival !"
 msgstr ""
+"Xin giới thiệu phiên bản thứ 12 của Lễ hội âm nhạc trực tiếp của chúng tôi!"
 
 #. module: event
 #: model:event.event,name:event.event_5
 msgid "Hockey Tournament"
-msgstr ""
+msgstr "Giải khúc côn cầu"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -1862,22 +2349,22 @@ msgstr "Giờ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (1)"
-msgstr ""
+msgstr "Cách gập (1)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (2)"
-msgstr ""
+msgstr "Cách gập (2)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (3)"
-msgstr ""
+msgstr "Cách gập (3)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (4)"
-msgstr ""
+msgstr "Cách gập (4)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__id
@@ -1912,7 +2399,7 @@ msgstr "Biểu tượng để chỉ ra một hoạt động ngoại lệ."
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction
 #: model:ir.model.fields,help:event.field_event_registration__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạn."
+msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự chú ý của bạn. "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error
@@ -1920,18 +2407,18 @@ msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạ
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error
 #: model:ir.model.fields,help:event.field_event_registration__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
+msgstr "Nếu đánh dấu, một số tin nhắn bị lỗi khi gửi. "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__start_sale_datetime
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
-msgstr ""
+msgstr "Nếu sử dụng tính năng bán vé, cung cấp ngày bắt đầu bán vé sớm nhất."
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "If you don't have this ticket, you will <b>not</b> be allowed entry!"
-msgstr ""
+msgstr "Bạn sẽ <b>không thể</b> vào cửa nếu bạn không có vé này."
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -1939,6 +2426,8 @@ msgid ""
 "If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time\n"
 "                to chat with experienced players and trainers once the tournament is over !"
 msgstr ""
+"Nếu bạn không biết chơi khúc côn cầu thì đây là giới thiệu tuyệt vời về môn thể thao này vì bạn sẽ được xem cách huấn luyện cầu thủ và\n"
+"                trò chuyện với cầu thủ và huấn luyện viên nhiều kinh nghiệm khi giải đấu kết thúc!"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -1949,7 +2438,7 @@ msgstr "Ngay lập tức"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Important ticket information"
-msgstr ""
+msgstr "Thông tin vé quan trọng"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -1969,7 +2458,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__normal
 #, python-format
 msgid "In Progress"
-msgstr "Đang thực hiện"
+msgstr "Đang tiến hành"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -1980,49 +2469,49 @@ msgstr "Khoảng thời gian"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Introduction, CRM, Sales Management"
-msgstr "Giới thiệu, CRM, Quản lý Bán"
+msgstr "Giới thiệu, CRM, Quản lý bán hàng"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Invalid event / ticket choice"
-msgstr "Invalid event / ticket choice"
+msgstr "Lựa chọn sự kiện / vé không hợp lệ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
 msgid "Is Available"
-msgstr "Is Available"
+msgstr "Là còn chỗ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
 msgid "Is Expired"
-msgstr "Đã Hết hạn"
+msgstr "Đã hết hạn"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
 msgid "Is Finished"
-msgstr ""
+msgstr "Là hoàn thành"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
 #: model:ir.model.fields,field_description:event.field_event_registration__message_is_follower
 msgid "Is Follower"
-msgstr "Trở thành người theo dõi"
+msgstr "Là người theo dõi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr "Is One Day"
+msgstr "Là một ngày"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_ongoing
 msgid "Is Ongoing"
-msgstr "Is Ongoing"
+msgstr "Là đang diễn ra"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr "Giá trị tối đa mặc định khi bạn chọn sự kiện này"
+msgstr "Giá trị tối đa mặc định sẽ được chọn khi bạn chọn sự kiện này"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2032,44 +2521,44 @@ msgstr "John DOE"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times !"
-msgstr ""
+msgstr "Hãy tham gia cuộc đua bóng bay lớn nhất từ trước tới nay!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
 #: model_terms:event.event,description:event.event_6
 #: model_terms:ir.ui.view,arch_db:event.event_default_descripton
 msgid "Join us for this 24 hours Event"
-msgstr "Join us for this 24 hours Event"
+msgstr "Hãy tham dự sự kiện 24 giờ này cùng chúng tôi"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Join us for this 3-day Event"
-msgstr ""
+msgstr "Hãy tham dự sự kiện 3 ngày này với chúng tôi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "Giải thích về việc khóa ở Kanban"
+msgstr "Giải thích kanban bị chặn"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr "Kanban đang thực hiện giải thích"
+msgstr "Giải thích kanban đang diễn ra"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__kanban_state
 msgid "Kanban State"
-msgstr "Giai đoạn Kanban"
+msgstr "Trạng thái kanban"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__kanban_state_label
 msgid "Kanban State Label"
-msgstr "Tên giai đoạn Kanban"
+msgstr "Nhãn trạng thái kanban"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_done
 msgid "Kanban Valid Explanation"
-msgstr "Giải thích hợp lệ của Kanban"
+msgstr "Giải thích kanban hợp lệ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event____last_update
@@ -2127,13 +2616,13 @@ msgstr "Hoạt động trễ"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Let's create your first <b>event</b>."
-msgstr ""
+msgstr "Hãy tạo <b>sự kiện</b> đầu tiên."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr "Limit Registrations"
+msgstr "Hạn chế đăng ký"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -2143,23 +2632,23 @@ msgstr "Chỗ ngồi hạn chế"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Live Broadcast"
-msgstr ""
+msgstr "Phát trực tiếp"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_live
 msgid "Live Mode"
-msgstr "Live Mode"
+msgstr "Chế độ trực tiếp"
 
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Live Music Festival"
-msgstr ""
+msgstr "Lễ hội âm nhạc trực tiếp"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__notification_type__mail
 msgid "Mail"
-msgstr "Mail"
+msgstr "Thư"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
@@ -2170,27 +2659,27 @@ msgstr "Đăng ký thư"
 #: model:ir.model.fields,field_description:event.field_event_event__event_mail_ids
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_mail_ids
 msgid "Mail Schedule"
-msgstr "Kế hoạch gửi mail"
+msgstr "Kế hoạch gửi thư"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduler_id
 msgid "Mail Scheduler"
-msgstr "Kế hoạch gửi mail"
+msgstr "Kế hoạch gửi thư"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
-msgstr "Kế hoạch gửi mail"
+msgstr "Kế hoạch gửi thư"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr "Lập kế hoạch thư trên danh mục sự kiện"
+msgstr "Lập kế hoạch thư cho danh mục sự kiện"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
 msgid "Mail Sent"
-msgstr "Mail đã Gửi"
+msgstr "Mail đã gửi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_main_attachment_id
@@ -2201,32 +2690,32 @@ msgstr "Tệp đính kèm chính"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr "Quản lý & amp; xuất bản một lịch trình với các bản nhạc"
+msgstr "Quản lý &amp; đăng lịch trình kèm các bài"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr "Mark as Attending"
+msgstr "Đánh dấu là đang tham dự"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Marketing"
-msgstr "Marketing"
+msgstr "Tiếp thị"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr "Maximum"
+msgstr "Tối đa"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
 msgid "Maximum Attendees"
-msgstr "Số Người tham dự tối đa"
+msgstr "Số người tham dự tối đa"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_max
 msgid "Maximum Attendees Number"
-msgstr "Số Người tham dự tối đa"
+msgstr "Số người tham dự tối đa"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__seats_max
@@ -2238,7 +2727,7 @@ msgstr "Đăng ký tối đa"
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_max
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Maximum Seats"
-msgstr "Maximum Seats"
+msgstr "Số chỗ tối đa"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -2249,13 +2738,13 @@ msgstr "Kênh trung gian"
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error
 msgid "Message Delivery error"
-msgstr "Thông báo gửi đi gặp lỗi"
+msgstr "Gửi tin nhắn bị lỗi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_ids
 msgid "Messages"
-msgstr "Thông báo"
+msgstr "Tin nhắn"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mobile
@@ -2301,7 +2790,7 @@ msgstr "Mới"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Sự kiện lịch hoạt động tiếp theo"
+msgstr "Sự kiện lịch hoạt động kế tiếp"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
@@ -2313,7 +2802,7 @@ msgstr "Hạn chót cho hành động kế tiếp"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_summary
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_summary
 msgid "Next Activity Summary"
-msgstr "Tóm tắt hoạt động tiếp theo"
+msgstr "Tóm tắt hoạt động kế tiếp"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_id
@@ -2324,48 +2813,48 @@ msgstr "Kiểu hoạt động kế tiếp"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 msgid "No Attendees expected yet!"
-msgstr ""
+msgstr "Chưa có người tham dự dự kiến!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 #: model_terms:ir.actions.act_window,help:event.action_registration
 msgid "No Attendees yet!"
-msgstr ""
+msgstr "Chưa có người tham dự!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
 msgid "No Event data yet!"
-msgstr ""
+msgstr "Chưa có dữ liệu sự kiện!"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "No more available seats for this ticket"
-msgstr "Không còn chỗ nào khả dụng cho vé này"
+msgstr "Không còn chỗ cho vé này"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "No more available seats for this ticket."
-msgstr "No more available seats for this ticket."
+msgstr "Không còn chỗ cho vé này."
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "No more available seats."
-msgstr "Không còn chỗ ngồi khả dụng."
+msgstr "Không còn chỗ."
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "No more seats available for this event."
-msgstr "Không còn chỗ ngồi khả dụng cho sự kiện này."
+msgstr "Sự kiện này không còn chỗ."
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "None"
-msgstr "Không dùng"
+msgstr "Không"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__note
@@ -2383,30 +2872,32 @@ msgstr "Ghi chú"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
 msgid "Nothing Scheduled yet!"
-msgstr ""
+msgstr "Chưa có lịch trình!"
 
 #. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Now that your event is ready, click here to move it to another stage."
-msgstr "Now that your event is ready, click here to move it to another stage."
+msgstr ""
+"Sự kiện hiện đã sẵn sàng, hãy bấm vào đây để chuyển sự kiện sang giai đoạn "
+"khác."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số tác vụ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
 msgid "Number of Expected Attendees"
-msgstr "Số Người tham dự được Mong đợi"
+msgstr "Số người tham dự dự kiến"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 msgid "Number of Participants"
-msgstr "Số lượng Người tham dự"
+msgstr "Số người tham dự"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -2424,19 +2915,19 @@ msgstr "Số sự kiện mà đối tác đã tham gia."
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Số thông báo cần xử lý"
+msgstr "Số tin nhắn cần xử lý"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Số lượng tin gửi đi bị lỗi"
+msgstr "Số tin nhắn gửi đi bị lỗi"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_unread_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_unread_counter
 msgid "Number of unread messages"
-msgstr "Số tin chưa đọc"
+msgstr "Số tin nhắn chưa đọc"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2447,11 +2938,13 @@ msgstr "Mục tiêu"
 #: model_terms:event.event,description:event.event_3
 msgid "Once again we assembled the most legendary bands in Rock history."
 msgstr ""
+"Một lần nữa chúng tôi tập hợp những ban nhạc huyền thoại nhất trong lịch sử "
+"nhạc Rock."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ongoing Events"
-msgstr "Ongoing Events"
+msgstr "Sự kiện đang diễn ra"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_1
@@ -2461,7 +2954,7 @@ msgstr "Trực tuyến"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Online Exhibitors"
-msgstr ""
+msgstr "Đơn vị triển lãm trực tuyến"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
@@ -2474,11 +2967,13 @@ msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the"
 " event or change the dates on which it is held."
 msgstr ""
+"OpenElec Applications có quyền hủy bỏ, đổi tên hoặc thay đổi địa điểm của sự"
+" kiện hoặc thay đổi ngày tổ chức sự kiện."
 
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "Ra mắt trực tuyến bộ sưu tập OpenWood"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_2
@@ -2486,11 +2981,13 @@ msgid ""
 "OpenWood brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"OpenWood mang lại sự trung thực và nghiêm túc tới ngành gỗ đồng thời giúp "
+"khách hàng xử lý các loại cây, hoa và nấm."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
 msgid "Organizer"
-msgstr "Nhà Tổ chức"
+msgstr "Nhà tổ chức"
 
 #. module: event
 #: model:event.event,subtitle:event.event_7
@@ -2498,6 +2995,8 @@ msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
 msgstr ""
+"Bộ sưu tập mới nhất của chúng tôi sẽ được ra mắt trực tuyến! Hãy giao lưu "
+"với chúng tôi trên live stream!"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_blocked
@@ -2506,8 +3005,7 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection."
 msgstr ""
-"Override the default value displayed for the blocked state for kanban "
-"selection."
+"Ghi đè giá trị mặc định hiển thị cho giai đoạn bị chặn cho lựa chọn kanban."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_done
@@ -2516,8 +3014,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection."
 msgstr ""
-"Override the default value displayed for the done state for kanban "
-"selection."
+"Ghi đè giá trị mặc định hiển thị cho giai đoạn hoàn thành cho lựa chọn "
+"kanban."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
@@ -2526,8 +3024,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection."
 msgstr ""
-"Override the default value displayed for the normal state for kanban "
-"selection."
+"Ghi đè giá trị mặc định hiển thị cho giai đoạn bình thường cho lựa chọn "
+"kanban."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2548,33 +3046,33 @@ msgstr "Điện thoại"
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid ""
 "Please come <b>at least</b> 30 minutes before the beginning of the event."
-msgstr ""
+msgstr "Vui lòng tới sớm <b>ít nhất</b> 30 phút trước khi sự kiện bắt đầu."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr "Điểm bán lẻ (PoS), Giới thiệu về tuỳ biến báo cáo."
+msgstr "Điểm bán hàng (PoS), Giới thiệu về tuỳ biến báo cáo."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_2
 msgid "Program"
-msgstr "Program"
+msgstr "Chương trình"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr "Quản lý dự án, Quản lý Nhân lực, Quản lý Hợp đồng."
+msgstr "Quản lý dự án, Quản lý nhân lực, Quản lý hợp đồng."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr "Mua sắm, Quản lý Bán &amp; Mua, Kế toán Tài chính."
+msgstr "Mua hàng, Quản lý bán hàng &amp; mua hàng, Kế toán tài chính."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr "Quiz on Tracks"
+msgstr "Đố vui của bài"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -2593,7 +3091,7 @@ msgstr "Quiz on Tracks"
 #: model:event.stage,legend_done:event.event_stage_new
 #, python-format
 msgid "Ready for Next Stage"
-msgstr "Sẵn sàng cho trạng thái kế tiếp"
+msgstr "Sẵn sàng cho giai đoạn kế tiếp"
 
 #. module: event
 #. openerp-web
@@ -2601,12 +3099,14 @@ msgstr "Sẵn sàng cho trạng thái kế tiếp"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
-msgstr "Ready to <b>organize events</b> in a few minutes? Let's get started!"
+msgstr ""
+"Bạn đã sẵn sàng <b>tổ chức sự kiện</b> chỉ trong vài phút chưa? Hãy cùng bắt"
+" đầu!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
 msgid "Red Kanban Label"
-msgstr "Nhãn đỏ Kanban"
+msgstr "Nhãn kanban đỏ"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -2625,17 +3125,17 @@ msgstr "Đăng ký"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Date"
-msgstr "Ngày Mở Đăng ký"
+msgstr "Ngày đăng ký"
 
 #. module: event
 #: model:res.groups,name:event.group_event_registration_desk
 msgid "Registration Desk"
-msgstr "Registration Desk"
+msgstr "Bàn đăng ký"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
 msgid "Registration End"
-msgstr "Registration End"
+msgstr "Kết thúc đăng ký"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2655,12 +3155,12 @@ msgstr "Thư đăng ký"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
-msgstr "Registration Start"
+msgstr "Đăng ký bắt đầu"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
 msgid "Registration Survey"
-msgstr "Khảo sát Đăng ký"
+msgstr "Khảo sát đăng ký"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -2676,7 +3176,7 @@ msgstr "Thư đăng ký"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
 msgid "Registration open"
-msgstr "Registration open"
+msgstr "Đăng ký mở"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -2691,11 +3191,15 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Đăng ký mở nếu:\n"
+"- sự kiện chưa kết thúc\n"
+"- vẫn còn chỗ tham dự sự kiện\n"
+"- vẫn có thể bán vé (nếu sử dụng tính năng bán vé)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr ""
+msgstr "Đăng ký đã bắt đầu"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -2706,19 +3210,19 @@ msgstr "Báo cáo"
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_reserved
 msgid "Reserved Seats"
-msgstr "Số Chỗ đã Xí"
+msgstr "Chỗ đã đặt trước"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__user_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Responsible"
-msgstr "Người phụ trách"
+msgstr "Phụ trách"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_user_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_user_id
 msgid "Responsible User"
-msgstr "Người phụ trách"
+msgstr "Người dùng phụ trách"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
@@ -2739,12 +3243,12 @@ msgstr "Quét thẻ để xác nhận sự tham dự"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr "Schedule & Tracks"
+msgstr "Lịch trình & Bài"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
 msgid "Schedule Date"
-msgstr "Lịch trình ngày"
+msgstr "Lập lịch trình ngày"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -2752,37 +3256,40 @@ msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
 msgstr ""
+"Lên lịch và tổ chức các sự kiện: quản lý đăng ký, gửi email xác nhận tự "
+"động, bán vé, v.v."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
 msgid "Scheduled"
-msgstr "Đã ấn định"
+msgstr "Đã lên lịch trình"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduled_date
 msgid "Scheduled Time"
-msgstr "Thời gian Ấn định"
+msgstr "Thời gian theo kế hoạch"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you !"
 msgstr ""
+"Đây là giải đầu dành cho người hâm mộ khúc côn cầu và những ai hiếu kỳ!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Seats Limit"
-msgstr "Seats Limit"
+msgstr "Giới hạn số chỗ"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_ticket
 msgid "Sell Online"
-msgstr "Bán Trực tuyến"
+msgstr "Bán trực tuyến"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr "Bán vé trên trang web của bạn"
+msgstr "Bán vé trên website của bạn"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2798,7 +3305,7 @@ msgstr "Gửi"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
-msgstr "Gửi qua Email"
+msgstr "Gửi qua email"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_done
@@ -2813,18 +3320,18 @@ msgstr "Đã gửi"
 #: model:ir.model.fields,field_description:event.field_event_tag_category__sequence
 #: model:ir.model.fields,field_description:event.field_event_type__sequence
 msgid "Sequence"
-msgstr "Quy tắc mã"
+msgstr "Trình tự"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
-msgstr "Đặt về Chưa xác nhận"
+msgstr "Đặt về chưa xác nhận"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr "Thiết lập"
+msgstr "Cài đặt "
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_4
@@ -2832,17 +3339,19 @@ msgid ""
 "Shangai Pterocarpus Furniture brings honesty and seriousness to wood "
 "industry while helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Shangai Pterocarpus Furniture mang đến sự trung thực và nghiêm túc cho ngành"
+" gỗ đồng thời giúp khách hàng xử lý các loại cây, hoa và nấm."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Show all records which has next action date is before today"
-msgstr "Hiển thị tất cả dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả hồ sơ có ngày tác vụ kế tiếp trước hôm nay"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
 msgid "Sold Out"
-msgstr "Bán hết"
+msgstr "Hết chỗ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_source_id
@@ -2853,7 +3362,7 @@ msgstr "Nguồn"
 #: model:event.tag,name:event.event_tag_category_2_tag_3
 #: model:event.type,name:event.event_type_2
 msgid "Sport"
-msgstr ""
+msgstr "Thể thao"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__stage_id
@@ -2864,7 +3373,7 @@ msgstr "Giai đoạn"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Stage Description and Tooltips"
-msgstr "Chú thích và Mô tả cho các giai đoạn"
+msgstr "Chú giải và mô tả giai đoạn"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__name
@@ -2874,7 +3383,7 @@ msgstr "Tên giai đoạn"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
 msgid "Stage description"
-msgstr "Stage description"
+msgstr "Mô tả giai đoạn"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_1
@@ -2898,7 +3407,7 @@ msgstr "Ngày bắt đầu"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
 msgid "Start sale date"
-msgstr "Start sale date"
+msgstr "Ngày bắt đầu bán hàng"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -2916,8 +3425,8 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Trạng thái dựa trên hoạt động\n"
-"Quá hạn: Ngày đến hạn phải được chuyển\n"
-"Hôm nay: Hôm nay là ngày phải thực hiện\n"
+"Quá hạn: Đã quá hạn chót\n"
+"Hôm nay: Hôm nay là ngày hoạt động\n"
 "Kế hoạch: Các hoạt động trong tương lai."
 
 #. module: event
@@ -2926,8 +3435,8 @@ msgid ""
 "Tag color. No color means no display in kanban or front-end, to distinguish "
 "internal tags from public categorization tags."
 msgstr ""
-"Tag color. No color means no display in kanban or front-end, to distinguish "
-"internal tags from public categorization tags."
+"Màu thẻ. Không màu nghĩa là không hiển thị trong kanban hoặc front-end, để "
+"phân biệt thẻ nội bộ với thẻ danh mục công cộng."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__tag_ids
@@ -2935,17 +3444,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type__tag_ids
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "Tags"
-msgstr "Từ khóa"
+msgstr "Thẻ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Task in progress. Click to block or set as done."
-msgstr "Nhiệm vụ đang thực hiện. Ấn để khóa hoặc chọn như đã hoàn tất."
+msgstr "Nhiệm vụ đang thực hiện. Bấm để chặn hoặc đặt là xong. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Task is blocked. Click to unblock or set as done."
-msgstr "Nhiệm vụ đã khóa. Ấn để mở nó hoặc chọn như đã hoàn tất."
+msgstr "Nhiệm vụ đã chặn. Bấm để bỏ chặn hoặc đặt là xong. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_type_id
@@ -2960,7 +3469,7 @@ msgstr "Mẫu"
 #: model:ir.model.fields,field_description:event.field_event_mail__template_model_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__template_model_id
 msgid "Template Model"
-msgstr ""
+msgstr "Mô hình mẫu"
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -2968,6 +3477,8 @@ msgid ""
 "The Great Reno Balloon Race is the world's largest free hot-air ballooning "
 "event."
 msgstr ""
+"Cuộc đua khinh khí cầu Great Reno là sự kiện khinh khí cầu miễn phí lớn nhất"
+" thế giới."
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -2975,6 +3486,8 @@ msgid ""
 "The best Hockey teams of the country will compete for the national Hockey "
 "trophy."
 msgstr ""
+"Các đội khúc côn cầu xuất sắc nhất của cả nước sẽ tranh cúp Quốc gia khúc "
+"côn cầu."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -2982,22 +3495,24 @@ msgid ""
 "The best aeronauts of the world will gather on this event to offer you the "
 "most spectacular show."
 msgstr ""
+"Các phi hành gia có tên tuổi trên thế giới sẽ hội tụ trong sự kiện này để "
+"cống hiến cho bạn một màn trình diễn ngoạn mục nhất."
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
-msgstr "Ngày kết thúc không thể sớm hơn ngày bắt đầu."
+msgstr "Ngày đóng không thể sớm hơn ngày bắt đầu."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_cancelled
 msgid "The event has been cancelled"
-msgstr "The event has been cancelled"
+msgstr "Sự kiện đã bị hủy"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_announced
 msgid "The event has been publicly announced"
-msgstr "The event has been publicly announced"
+msgstr "Sự kiện đã được thông báo cho công chúng"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
@@ -3005,6 +3520,8 @@ msgid ""
 "The event is sold out if no more seats are available on event. If ticketing "
 "is used and all tickets are sold out, the event will be sold out."
 msgstr ""
+"Sự kiện là hết chỗ nếu không còn chỗ cho sự kiện. Nếu sử dụng tính năng bán "
+"vé và tất cả vé đã bán hết, sự kiện cũng được coi là hết chỗ."
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -3012,6 +3529,8 @@ msgid ""
 "The finest OpenWood furnitures are coming to your house in a brand new "
 "collection"
 msgstr ""
+"Các sản phẩm nội thất tinh xảo của OpenWood sắp tới ngôi nhà của bạn trong "
+"bộ sưu tập mới nhất"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -3020,22 +3539,25 @@ msgid ""
 "The following tickets cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Các vé sau không thể xóa khi được liên kết với một hoặc nhiều đăng ký:\n"
+"-%s"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_booked
 msgid "The place has been reserved"
-msgstr "The place has been reserved"
+msgstr "Chỗ đã được đặt trước"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first !"
 msgstr ""
+"Chúng tôi đặt sự an toàn của người tham dự và các phi hành gia lên hàng đầu."
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "The stop date cannot be earlier than the start date."
-msgstr "The stop date cannot be earlier than the start date."
+msgstr "Ngày dừng không thể sớm hơn ngày bắt đầu."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3044,6 +3566,9 @@ msgid ""
 "methodology or developments. Be there and see directly from the source the "
 "features of the version 12!"
 msgstr ""
+"Sự kiện này cũng là cơ hội để giới thiệu các nghiên cứu điển hình, phương "
+"pháp hoặc sự phát triển của các đối tác của chúng tôi. Hãy tham gia và tận "
+"mắt xem các tính năng của phiên bản 12!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -3051,19 +3576,21 @@ msgid ""
 "This event is fully online and FREE, if you have paid for tickets, you should get a refund.<br>\n"
 "        It will require a good Internet connection to get the best video quality."
 msgstr ""
+"Sự kiện trực tuyến và MIỄN PHÍ, nếu bạn đã thanh toán tiền vé, bạn sẽ được hoàn tiền.<br>\n"
+"        Bạn nên có kết nối Internet tốt để xem video có chất lượng tốt nhất."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,help:event.field_event_type__ticket_instructions
 msgid "This information will be printed on your tickets."
-msgstr ""
+msgstr "Thông tin này sẽ được in trên vé."
 
 #. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "This is the <b>name</b> your guests will see when registering."
-msgstr "This is the <b>name</b> your guests will see when registering."
+msgstr "Đây là <b>tên</b> mà khách sẽ thấy khi đăng ký."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3071,6 +3598,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories !"
 msgstr ""
+"Một nơi hoàn hảo để dành thời gian với gia đình. Chúng tôi bảo đảm bạn sẽ có"
+" những kỷ niệm khó quên tại đây!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3078,6 +3607,8 @@ msgid ""
 "This is the perfect place for spending a nice time with your friends while "
 "listening to some of the most iconic rock songs of all times!"
 msgstr ""
+"Một nơi hoàn hảo để dành thời gian cho bạn bè trong khi nghe các bài hát "
+"rock biểu tượng của mọi thời đại!"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -3089,34 +3620,34 @@ msgstr "This operator is not supported"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "This step is done. Click to block or set in progress."
-msgstr "Đây là bước hoàn tất. Bấm vào khóa hoặc chuyển trạng thái."
+msgstr "Bước này đã hoàn tất. Bấm để chặn hoặc đặt là đang tiến hành."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
 msgid "Ticket"
-msgstr "Thẻ hỗ trợ"
+msgstr "Vé"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Ticket Extra Instructions"
-msgstr ""
+msgstr "Hướng dẫn thêm về vé"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
 msgid "Ticket Instructions"
-msgstr ""
+msgstr "Hướng dẫn vé"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Ticket Intructions"
-msgstr ""
+msgstr "Hướng dẫn vé"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ticket Type"
-msgstr "Loại thẻ"
+msgstr "Loại vé"
 
 #. module: event
 #. openerp-web
@@ -3126,8 +3657,7 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
-"Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
-"new one."
+"Loại vé cho phép bạn phân biệt người tham dự. Hãy <b>tạo</b> loại mới."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_ticket_ids
@@ -3136,12 +3666,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Tickets"
-msgstr "Thẻ"
+msgstr "Vé"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Tickets can be printed or scanned directly from your phone."
-msgstr ""
+msgstr "Có thể in vé hoặc quét trực tiếp từ điện thoại."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -3164,12 +3694,12 @@ msgstr "Tổng"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Total Registrations for this Event"
-msgstr "Total Registrations for this Event"
+msgstr "Tổng đăng ký cho sự kiện này"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
-msgstr "Theo vết và Lên chương trình"
+msgstr "Các bài và lịch trình sự kiện"
 
 #. module: event
 #: model:event.type,name:event.event_type_1
@@ -3182,16 +3712,18 @@ msgid ""
 "Tree Dealers brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Tree Dealers mang đến sự trung thực và nghiêm túc cho ngành gỗ đồng thời "
+"giúp khách hàng xử lý các loại cây, hoa và nấm."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
 msgid "Trigger"
-msgstr "Bộ khởi động"
+msgstr "Kích hoạt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type
 msgid "Trigger "
-msgstr "Bộ khởi động"
+msgstr "Kích hoạt"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_3
@@ -3202,7 +3734,7 @@ msgstr "Loại"
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,help:event.field_event_registration__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
+msgstr "Kiểu  hoạt động ngoại lệ trên hồ sơ."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__draft
@@ -3214,13 +3746,13 @@ msgstr "Chưa xác nhận"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr "Đặt chỗ Chưa xác nhận"
+msgstr "Đặt chỗ chưa xác nhận"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Unconfirmed Seats"
-msgstr "Unconfirmed Seats"
+msgstr "Chỗ chưa xác nhận"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -3228,11 +3760,13 @@ msgid ""
 "Under this technical menu you will find all scheduled communication related "
 "to your events."
 msgstr ""
+"Trong menu kỹ thuật này, bạn sẽ tìm thấy tất cả trao đổi liên lạc được lên "
+"kế hoạch có liên quan tới sự kiện."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr "Hiểu về các phân hệ;"
+msgstr "Hiểu về các mô-đun khác nhau;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -3246,7 +3780,7 @@ msgstr "Đơn vị"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
-msgstr "Tin chưa đọc"
+msgstr "Tin nhắn chưa đọc"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_unread_counter
@@ -3262,29 +3796,29 @@ msgstr "Sự kiện sắp diễn ra từ hôm nay"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
-msgstr "Sắp diễn ra / Đang chạy"
+msgstr "Sắp diễn ra/Đang diễn ra"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Use Event Tag Categories to classify and organize your event tags."
-msgstr ""
+msgstr "Dùng danh mục thẻ sự kiện để phân loại và tổ chức các thẻ sự kiện."
 
 #. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
-msgstr "Use the <b>breadcrumbs</b> to go back to your kanban overview."
+msgstr "Sử dụng đường dẫn <b>breadcrumb</b> để quay lại tổng quan kanban."
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
 msgid "Use this report to compare or aggregate event performances."
-msgstr ""
+msgstr "Dùng báo cáo này để so sánh hoặc tổng hợp hiệu quả các sự kiện."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
 msgid "Used Seats"
-msgstr "Used Seats"
+msgstr "Chỗ đã dùng"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -3297,25 +3831,25 @@ msgstr "Người dùng"
 #: model:event.event.ticket,name:event.event_3_ticket_1
 #: model:event.event.ticket,name:event.event_7_ticket_2
 msgid "VIP"
-msgstr ""
+msgstr "VIP"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Value should be True or False (not %s)"
-msgstr "Value should be True or False (not %s)"
+msgstr "Giá trị phải là Đúng hoặc Sai (không phải %s)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 msgid "Venue"
-msgstr "Venue"
+msgstr "Địa điểm"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
-msgstr "CẢNH BÁO: Lỗi Trình lập lịch sự kiện cho sự kiện: %s"
+msgstr "CẢNH BÁO: Lỗi trình lập lịch sự kiện cho sự kiện: %s"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -3324,11 +3858,12 @@ msgid ""
 "Wait until Attendees register to your Event or create their registrations "
 "manually."
 msgstr ""
+"Đợi tới lúc đăng ký Người tham dự cho sự kiện hoặc tạo đăng ký thủ công."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr "Quản lý Kho, Hoạch định Sản xuất (MRP) &amp; Bán, Xuất/Nhập dữ liệu."
+msgstr "Quản lý nhà kho, Sản xuất (MRP) &amp; Bán hàng, Xuất/Nhập khẩu."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3338,18 +3873,20 @@ msgid ""
 "We reserve the right to cancel, re-name or re-locate the event or change the"
 " dates on which it is held in case the weather fails us."
 msgstr ""
+"Chúng tôi có quyền hủy bỏ, đổi tên hoặc thay đổi địa điểm của sự kiện hoặc "
+"thay đổi ngày tổ chức nếu thời tiết xấu."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
 msgid "Website Messages"
-msgstr "Thông báo Website"
+msgstr "Tin nhắn website"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__website_message_ids
 #: model:ir.model.fields,help:event.field_event_registration__website_message_ids
 msgid "Website communication history"
-msgstr "Lịch sử thông tin liên lạc website"
+msgstr "Lịch sử liên lạc website"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__weeks
@@ -3360,7 +3897,7 @@ msgstr "Tuần"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
-msgstr ""
+msgstr "Có gì mới?"
 
 #. module: event
 #. openerp-web
@@ -3370,18 +3907,18 @@ msgid ""
 "When will your event take place? <b>Select</b> the start and end dates "
 "<b>and click Apply</b>."
 msgstr ""
-"When will your event take place? <b>Select</b> the start and end dates "
-"<b>and click Apply</b>."
+"Sự kiện sẽ diễn ra khi nào? <b>Chọn</b> ngày bắt đầu và kết thúc <b>và bấm "
+"Áp dụng</b>."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr "Whether event has begun"
+msgstr "Liệu sự kiện đã bắt đầu"
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
 msgid "You are truly among the best."
-msgstr ""
+msgstr "Bạn quả thực là những người xuất sắc nhất"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3389,8 +3926,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
-"Bạn cũng có thể thêm một mô tả để giúp cộng sự của bạn hiểu về ý nghĩa và "
-"mục đích của giai đoạn."
+"Bạn cũng có thể thêm mô tả để giúp đỡ đồng nghiệp hiểu ý nghĩa và mục đích "
+"của giai đoạn. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3398,34 +3935,34 @@ msgid ""
 "You can define here labels that will be displayed for the state instead\n"
 "                            of the default labels in the kanban view."
 msgstr ""
-"You can define here labels that will be displayed for the state instead\n"
-"                            of the default labels in the kanban view."
+"Tại đây bạn có thể xác định nhãn sẽ hiển thị cho trạng thái thay vì\n"
+"                            nhãn mặc định trong dạng xem kanban."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for {{ object.event_id.name }}"
-msgstr ""
+msgstr "Thẻ của bạn cho {{ object.event_id.name }}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at {{ object.event_id.name }}"
-msgstr ""
+msgstr "Đăng ký của bạn tại {{ object.event_id.name }}"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr "e.g. Conference for Architects"
+msgstr "VD: Hội thảo cho kiến trúc sư"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr ""
+msgstr "VD: Hội nghị trực tuyến"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "e.g. VIP Ticket"
-msgstr ""
+msgstr "VD: Vé VIP"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3435,7 +3972,7 @@ msgstr "events@odoo.com"
 #. module: event
 #: model_terms:event.event,description:event.event_7
 msgid "events@penwood.example.com"
-msgstr ""
+msgstr "events@penwood.example.com"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3443,7 +3980,7 @@ msgstr ""
 #: model_terms:event.event,description:event.event_3
 #: model_terms:event.event,description:event.event_5
 msgid "events@yourcompany.com"
-msgstr ""
+msgstr "events@yourcompany.com"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -3455,7 +3992,7 @@ msgstr "trong %d ngày"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "next month"
-msgstr "tháng tiếp theo"
+msgstr "tháng tới"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -3467,7 +4004,7 @@ msgstr "tuần tới"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
-msgstr "on %(date)s"
+msgstr "vào %(date)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started
@@ -3475,11 +4012,12 @@ msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
 msgstr ""
+"đăng ký đã bắt đầu nếu ngày giờ hiện tại sau ngày bắt đầu sớm nhất của vé."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "reserved +"
-msgstr "reserved +"
+msgstr "đã đặt chỗ +"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3502,9 +4040,9 @@ msgstr "ngày mai"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "unconfirmed"
-msgstr "unconfirmed"
+msgstr "chưa xác nhận"
 
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"

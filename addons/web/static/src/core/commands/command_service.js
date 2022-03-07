@@ -51,6 +51,7 @@ export const commandService = {
         let isPaletteOpened = false;
 
         hotkeyService.add("control+k", openMainPalette, {
+            bypassEditableProtection: true,
             global: true,
         });
 

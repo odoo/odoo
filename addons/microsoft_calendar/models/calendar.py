@@ -16,6 +16,7 @@ ATTENDEE_CONVERTER_O2M = {
     'accepted': 'accepted'
 }
 ATTENDEE_CONVERTER_M2O = {
+    'none': 'needsAction',
     'notResponded': 'needsAction',
     'tentativelyAccepted': 'tentative',
     'declined': 'declined',
@@ -105,7 +106,7 @@ class Meeting(models.Model):
         values = {
             **default_values,
             'name': microsoft_event.subject or _("(No title)"),
-            'description': plaintext2html(microsoft_event.bodyPreview),
+            'description': microsoft_event.body['content'],
             'location': microsoft_event.location and microsoft_event.location.get('displayName') or False,
             'user_id': microsoft_event.owner(self.env).id,
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, self.default_get(['privacy'])['privacy']),
@@ -174,7 +175,7 @@ class Meeting(models.Model):
             if email in attendees_by_emails:
                 # Update existing attendees
                 commands_attendee += [(1, attendees_by_emails[email].id, {'state': state})]
-            else:
+            elif attendee[1]:
                 # Create new attendees
                 partner = attendee[1]
                 commands_attendee += [(0, 0, {'state': state, 'partner_id': partner.id})]

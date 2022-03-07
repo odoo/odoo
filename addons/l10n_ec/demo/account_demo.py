@@ -20,4 +20,6 @@ class AccountChartTemplate(models.Model):
             data[f'{cid}_demo_invoice_2']['l10n_latam_document_type_id'] = document_type
             data[f'{cid}_demo_invoice_3']['l10n_latam_document_type_id'] = document_type
             data[f'{cid}_demo_invoice_followup']['l10n_latam_document_type_id'] = document_type
+            data[f'{cid}_demo_invoice_5']['l10n_latam_document_number'] = '001-001-00001'
+            data[f'{cid}_demo_invoice_equipment_purchase']['l10n_latam_document_number'] = '001-001-00002'
         return model, data

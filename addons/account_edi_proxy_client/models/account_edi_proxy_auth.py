@@ -17,7 +17,7 @@ class OdooEdiProxyAuth(requests.auth.AuthBase):
 
     def __init__(self, user=False):
         self.id_client = user and user.id_client or False
-        self.refresh_token = user and user.refresh_token or False
+        self.refresh_token = user and user.sudo().refresh_token or False
 
     def __call__(self, request):
         # We don't sign request that still don't have a id_client/refresh_token

@@ -42,10 +42,10 @@ class PrintResultGenerator {
 }
 
 var PrinterMixin = {
-    init: function() {
+    init: function (pos) {
         this.receipt_queue = [];
         this.printResultGenerator = new PrintResultGenerator();
-        this.htmlToImgLetterRendering = false; // Whether to render each letter seperately. Necessary if letter-spacing is used.
+        this.pos = pos;
     },
 
     /**
@@ -99,12 +99,13 @@ var PrinterMixin = {
             html2canvas(self.receipt[0], {
                 onparsed: function(queue) {
                     queue.stack.ctx.height = Math.ceil(self.receipt.outerHeight() + self.receipt.offset().top);
+                    queue.stack.ctx.width = Math.ceil(self.receipt.outerWidth() + 2 * self.receipt.offset().left);
                 },
                 onrendered: function (canvas) {
                     $('.pos-receipt-print').empty();
                     resolve(self.process_canvas(canvas));
                 },
-                letterRendering: self.htmlToImgLetterRendering,
+                letterRendering: self.pos.htmlToImgLetterRendering(),
             })
         });
         return promise;
@@ -131,9 +132,7 @@ var PrinterMixin = {
 
 var Printer = core.Class.extend(PrinterMixin, {
     init: function (url, pos) {
-        PrinterMixin.init.call(this, arguments);
-        this.pos = pos;
-        this.htmlToImgLetterRendering = pos.htmlToImgLetterRendering();
+        PrinterMixin.init.call(this, pos);
         this.connection = new Session(undefined, url || 'http://localhost:8069', { use_cors: true});
     },
 

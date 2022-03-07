@@ -5476,3 +5476,40 @@ class StockMove(TransactionCase):
         self.assertEqual(move.reserved_availability, 2)
         # check forecast_availability expressed in product base uom
         self.assertEqual(move.forecast_availability, 24)
+
+    def test_SML_location_selection(self):
+        """
+        Suppose the setting 'Storage Categories' disabled and the option 'Show Detailed Operations'
+        for operation 'Internal Transfer' enabled.
+        A user creates an internal transfer from F to T, confirms it then adds a SML and selects
+        another destination location L (with L a child of T). When the user completes the field
+        `qty_done`, the onchange should n't change the destination location L
+        """
+
+        self.env.user.write({'groups_id': [(3, self.env.ref('stock.group_stock_storage_categories').id)]})
+        internal_transfer = self.env.ref('stock.picking_type_internal')
+        internal_transfer.show_operations = True
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': internal_transfer.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.product_consu.name,
+            'product_id': self.product_consu.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'picking_id': picking.id,
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+        })
+
+        picking.action_confirm()
+
+        with Form(picking) as form:
+            with form.move_line_ids_without_package.edit(0) as line:
+                line.location_dest_id = self.stock_location.child_ids[0]
+                line.qty_done = 1
+
+        self.assertEqual(picking.move_line_ids_without_package.location_dest_id, self.stock_location.child_ids[0])

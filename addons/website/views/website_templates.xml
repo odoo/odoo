@@ -1867,8 +1867,7 @@
 <template id="language_selector_add_language">
     <a t-attf-class="o_add_language d-none #{dropdown and 'd-sm-block dropdown-item' or 'd-sm-inline-block list-inline-item'}"
        groups="website.group_website_publisher"
-       t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
-        <t t-set="url_return" t-value="quote_plus(url_for('', '[lang]') + '?' + keep_query())"/>
+       t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{quote_plus(url_for('', '[lang]') + '?' + keep_query())}">
         <i class="fa fa-plus-circle"/>
         <span>Add a language...</span>
     </a>
@@ -2135,7 +2134,7 @@
     </script>
 </template>
 <template id="default_xml">
-    &lt;?xml version="1.0" encoding="utf-8"?&gt;
+    <t t-translation="off">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</t>
 </template>
 <template id="default_css">
     <style type="text/css">
@@ -2159,7 +2158,7 @@
     </style>
 </template>
 <template id="default_csv">
-    1,2,3
+    <t t-translation="off">1,2,3</t>
 </template>
 
 <!-- PAGE 404 -->
@@ -2331,18 +2330,19 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </url>
 </template>
 
-<template id="sitemap_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<template id="sitemap_xml"><t t-translation="off">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</t>
 <urlset t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <t t-out="content"/>
 </urlset>
 </template>
 
-<template id="sitemap_index_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<template id="sitemap_index_xml"><t t-translation="off">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <sitemapindex t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap t-translation="off" t-foreach="pages" t-as="page">
     <loc><t t-esc="url_root"/>sitemap-<t t-esc="page"/>.xml</loc>
   </sitemap>
 </sitemapindex>
+</t>
 </template>
 
 <template id="website_search_box" name="Website Searchbox">

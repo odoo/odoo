@@ -4,10 +4,6 @@
     position: absolute;
 }
 
-.oe-noscroll {
-    overflow: hidden !important;
-}
-
 /* toolbar styling */
 
 .oe-toolbar {
@@ -218,6 +214,7 @@ li.oe-nested {
     flex: 1 1 auto;
     overflow: auto;
     padding: 5px 0;
+    overscroll-behavior: contain;
 }
 
 .oe-commandbar-groupName,  .oe-commandbar-noResult {

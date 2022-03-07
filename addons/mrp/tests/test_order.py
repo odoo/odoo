@@ -2188,6 +2188,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(wo_1.state, 'ready')
 
         wo_1.button_start()
+        wo_1.qty_producing = 10
         self.assertEqual(mo.state, 'progress')
         wo_1.button_finish()
 
@@ -2215,9 +2216,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo_2.state, 'progress')
         wo_4, wo_5, wo_6 = mo_2.workorder_ids
 
-        self.assertEqual(wo_4.state, 'ready')
-        wo_4.button_start()
-        wo_4.button_finish()
+        self.assertEqual(wo_4.state, 'cancel')
 
         wo_5.button_start()
         self.assertEqual(mo_2.state, 'progress')

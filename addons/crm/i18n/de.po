@@ -6,7 +6,7 @@
 # Martin Trigaux, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Raymond Vetter, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +62,7 @@ msgstr " Aufteilung von %(assigned)s Leads auf %(team_count)s Teams."
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(assigned)s leads allocated to %(team_name)s team."
-msgstr ""
+msgstr "%(assigned)s Leads zugewiesen an das %(team_name)s Team."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -82,6 +82,8 @@ msgstr "%(duplicates)s doppelte Leads wurden zusammengeführt."
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
 msgstr ""
+"%(members_assigned)sLeads unter %(member_count)s Vertriebsmitarbeitern "
+"zugewiesen."
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -484,7 +486,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/forecast/forecast_kanban_column_quick_create.js:0
 #, python-format
 msgid "Add next %s"
-msgstr ""
+msgstr "%s hinzufügen"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_domain
@@ -492,6 +494,8 @@ msgid ""
 "Additional filter domain when fetching unassigned leads to allocate to the "
 "team."
 msgstr ""
+"Zusätzlicher Filterbereich beim Abrufen von nicht zugewiesenen Leads, um "
+"diese dem Team zuzuordnen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -554,7 +558,7 @@ msgstr "Archiviert"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Assign Documentation"
-msgstr ""
+msgstr "Dokumentation zuweisen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -601,7 +605,7 @@ msgstr "Zuweisung Datum"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_domain
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_domain
 msgid "Assignment Domain"
-msgstr ""
+msgstr "Zuweisungs-Domain"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -612,7 +616,7 @@ msgstr "Zuweisungsregeln"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Assignment domain for team %(team)s is incorrectly formatted"
-msgstr ""
+msgstr "Zuweisungsbereich für Team %(team)s ist falsch formatiert"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -628,12 +632,12 @@ msgstr "# Anhänge"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_auto_enabled
 msgid "Auto Assignment"
-msgstr ""
+msgstr "Automatische Zuweisung"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_action
 msgid "Auto Assignment Action"
-msgstr ""
+msgstr "Automatische Zuweisungsaktion"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_interval_type
@@ -643,7 +647,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_run_datetime
 msgid "Auto Assignment Next Execution Date"
-msgstr ""
+msgstr "Automatische Zuweisung Nächstes Ausführungsdatum"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__automated_probability
@@ -658,17 +662,17 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
 msgid "Blacklist"
-msgstr "Schwarze Liste"
+msgstr "Sperrliste"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr "Telefon auf der schwarzen Liste ist mobil"
+msgstr "Telefon auf der Sperrliste ist Mobiltelefon"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr "Telefon auf der schwarzen Liste ist Telefon"
+msgstr "Telefon auf der Sperrliste ist Festnetz"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -984,7 +988,7 @@ msgstr "Einen Lead erstellen"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Create a Lost Reason"
-msgstr ""
+msgstr "Einen Verlustgrund erstellen"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
@@ -1148,6 +1152,8 @@ msgstr "Beschreibung"
 msgid ""
 "Did you know emails sent to  generate opportunities in your pipeline?<br>"
 msgstr ""
+"Wussten Sie, dass E-Mails, die an einen Alias gesendet werden, Opportunities"
+" in Ihrer Pipeline generieren?<br>"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -1623,8 +1629,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Wenn die Emailadresse geblacklistet ist, dann erhält der Kontakt keine "
-"Massen-mails mehr."
+"Wenn die E-Mail-Adresse auf der Sperrliste steht, erhält der Kontakt keine "
+"Massen-Mailings mehr."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized_blacklisted
@@ -1632,8 +1638,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Wenn die bereinigte Rufnummer auf der schwarzen Liste steht, erhält der "
-"Kontakt keine Massen-SMS mehr, egal von welcher Liste"
+"Wenn die bereinigte Rufnummer auf der Sperrliste steht, erhält der Kontakt "
+"keine Massen-SMS mehr, egal von welcher Liste"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1664,10 +1670,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Zeigt an, ob eine bereinigte Telefonnummer auf der schwarzen Liste eine "
+"Zeigt an, ob eine bereinigte Telefonnummer auf der Speerliste eine "
 "Mobilfunknummer ist. Hilft bei der Unterscheidung, welche Nummer auf der "
-"schwarzen Liste steht, wenn es in einem Modell sowohl ein Handy- als auch "
-"ein Telefonfeld gibt."
+"Sperrliste steht, wenn es in einem Modell sowohl ein Handy- als auch ein "
+"Telefonfeld gibt."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -1676,10 +1682,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Zeigt an, ob es sich bei einer auf der schwarzen Liste stehenden bereinigten"
-" Telefonnummer um eine Telefonnummer handelt. Hilft bei der Unterscheidung, "
-"welche Nummer auf der schwarzen Liste steht, wenn es in einem Modell sowohl "
-"ein Handy- als auch ein Telefonfeld gibt."
+"Zeigt an, ob es sich bei einer auf der Sperrliste stehenden bereinigten "
+"Telefonnummer um eine Festnetznummer handelt. Hilft bei der Unterscheidung, "
+"welche Nummer auf der Sperrliste steht, wenn es in einem Modell sowohl ein "
+"Handy- als auch ein Festnetzfeld gibt."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1698,6 +1704,8 @@ msgid ""
 "Invalid repeat frequency. Consider changing frequency type instead of using "
 "large numbers."
 msgstr ""
+"Ungültige Wiederholungsfrequenz. Überlegen Sie, ob Sie die Art der "
+"Häufigkeit ändern wollen, anstatt große Zahlen zu verwenden."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
@@ -1823,7 +1831,7 @@ msgstr "Interessent zuweisen"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Lead Assignment requested by %(user_name)s"
-msgstr ""
+msgstr "Lead-Zuweisung angefordert von %(user_name)s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_max
@@ -1873,7 +1881,7 @@ msgstr "Interessenten Scoring Startdatum in String"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Lead assigned to this member those last 30 days"
-msgstr ""
+msgstr "Diesem Mitglied in den letzten 30 Tagen zugewiesene Leads"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1888,6 +1896,8 @@ msgid ""
 "Lead/Opportunities automatic assignment is limited to managers or "
 "administrators"
 msgstr ""
+"Die automatische Zuweisung von Leads/Opportunities ist auf Manager oder "
+"Administratoren beschränkt."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -1978,6 +1988,8 @@ msgid ""
 "Leads team allocation should be done for at least 0.2 or maximum 30 work "
 "days, not %.2f."
 msgstr ""
+"Die Zuteilung von Teamleitern sollte für mindestens 0,2 oder maximal 30 "
+"Arbeitstage erfolgen, nicht %.2f."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2125,6 +2137,9 @@ msgid ""
 "action button. Automatic configures a cron running repeatedly assignment in "
 "all teams."
 msgstr ""
+"Bei der manuellen Zuweisung können Sie die Zuweisung über eine "
+"Aktionsschaltfläche in der Teamformularansicht auslösen. Konfiguriert "
+"automatisch einen Cron, der die Zuweisung in allen Teams wiederholt."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
@@ -2174,6 +2189,8 @@ msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
 msgstr ""
+"Mitgliederzuweisungsbereich für Benutzer %(user)s und Team %(team)s ist "
+"falsch formatiert"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2375,6 +2392,8 @@ msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
 msgstr ""
+"Dem Team %(team_name)s wurde kein Lead zugewiesen, da kein nicht "
+"zugewiesener Lead zu seinem Zuständigkeitsbereich passt."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2393,6 +2412,9 @@ msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
 msgstr ""
+"Keinem Team oder Vertriebsmitarbeiter sind Leads zugewiesen. Überprüfen Sie "
+"die Konfiguration Ihrer Sales-Teams und -mitarbeiter sowie die nicht "
+"zugewiesenen Leads."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2413,6 +2435,8 @@ msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
 msgstr ""
+"Keine Zuordnung von Leads an Sales-Mitarbeiter, da keine nicht zugeordneten "
+"Leads zu ihren Bereichen passen."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2441,7 +2465,7 @@ msgstr "Keine nächste Aktivität geplant"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "No opportunity to display!"
-msgstr ""
+msgstr "Kein Verkaufschance anzuzeigen!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -2488,6 +2512,8 @@ msgid ""
 "Number of interval type between each cron run (e.g. each 2 days or each 4 "
 "days)"
 msgstr ""
+"Anzahl der Intervalltypen zwischen den einzelnen Cron-Läufen (z. B. alle 2 "
+"Tage oder alle 4 Tage)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
@@ -2589,7 +2615,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph_forecast
 msgid "Opportunities Forecast"
-msgstr ""
+msgstr "Prognose Verkaufschancen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
@@ -2744,12 +2770,12 @@ msgstr "Partner-E-Mail wird aktualisiert"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_phone_update
 msgid "Partner Phone will Update"
-msgstr ""
+msgstr "Partnertelefon wird aktualisiert"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
 msgid "Partner is blacklisted"
-msgstr "Kontakt ist geblacklisted"
+msgstr "Partner steht auf Sperrliste"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -2760,7 +2786,7 @@ msgstr "Telefon"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr "Telefon auf der schwarzen Liste"
+msgstr "Telefon auf der Sperrliste"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_phone_state
@@ -2819,7 +2845,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
 msgid "Pls Start Date"
-msgstr ""
+msgstr "Pls Startdatum"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_contact
@@ -2956,7 +2982,7 @@ msgstr "Wiederholen alle"
 #: code:addons/crm/models/res_config_settings.py:0
 #, python-format
 msgid "Repeat frequency should be positive."
-msgstr ""
+msgstr "Wiederholungsfrequenz sollte positiv sein."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__auto
@@ -3431,8 +3457,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Diese E-Mail ist auf der Blacklist für Massenmails. Klicken Sie zum Aufheben"
-" der Blacklist."
+"Diese E-Mail-Adresse steht auf der Sperrliste für Massen-Mailings. Klicken, "
+"um sie von der Sperrliste zu entfernen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
@@ -3473,8 +3499,8 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"Diese Rufnummer steht auf der Blacklist für SMS-Marketing. Klicken Sie zum "
-"Aufheben der Sperrliste."
+"Diese Rufnummer steht auf der Sperrliste für SMS-Marketing. Klicken,  um sie"
+" von der Sperrliste zu entfernen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold
@@ -3653,6 +3679,8 @@ msgid ""
 "Use Lost Reasons to report on why opportunities are lost (e.g.\"Undercut by "
 "competitors\")."
 msgstr ""
+"Verwenden Sie \"Verlustgründe\", um über die Gründe für den Verlust von "
+"Verkaufschancen zu berichten (z. B. \"Unterbietung durch Wettbewerber\")."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__each_exist_or_create
@@ -3800,7 +3828,7 @@ msgstr "Wochen"
 #. module: crm
 #: model:mail.template,name:crm.mail_template_demo_crm_lead
 msgid "Welcome Demo"
-msgstr ""
+msgstr "Willkommens-Demo"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0 model:crm.stage,name:crm.stage_lead4

@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,18 +79,22 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%(wrong_vat)s] for %(record_label)s either failed the VIES "
-"VAT validation check or did not respect the expected format "
-"%(expected_format)s."
+"The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
 msgstr ""
+"ІПН [%(wrong_vat)s] для %(record_label)s здається недійсним. \n"
+"Примітка: очікуваний формат %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"The VAT number [%(wrong_vat)s] for %(record_label)s either failed the VIES "
+"VAT validation check or did not respect the expected format "
+"%(expected_format)s."
 msgstr ""
+"ІПН [%(wrong_vat)s] для %(record_label)s або не пройшов перевірку перевірки "
+"ПДВ VIES, або не відповідав очікуваному формату%(expected_format)s."
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -98,6 +103,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
 msgstr ""
+"Країна, виявлена для цього іноземного ІПН, не збігається з країною, "
+"установленою в цій схемі оподаткування."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
@@ -109,7 +116,7 @@ msgstr "ПДВ"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vat
 msgid "VAT/Tax ID"
-msgstr ""
+msgstr "ID ПДВ/податку"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
@@ -126,10 +133,10 @@ msgstr "Перевірте номери ПДВ за допомогою євро�
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "схема оподаткування [%s]"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "партнер [%s]"

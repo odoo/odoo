@@ -7,7 +7,6 @@ import base64
 import datetime
 import email
 import email.policy
-import html2text
 import idna
 import logging
 import re
@@ -227,7 +226,10 @@ class IrMailServer(models.Model):
         elif not host:
             mail_server, smtp_from = self.sudo()._find_mail_server(smtp_from)
 
+        if not mail_server:
+            mail_server = self.env['ir.mail_server']
         ssl_context = None
+
         if mail_server:
             smtp_server = mail_server.smtp_host
             smtp_port = mail_server.smtp_port
@@ -315,7 +317,7 @@ class IrMailServer(models.Model):
             local, at, domain = smtp_user.rpartition('@')
             if at:
                 smtp_user = local + at + idna.encode(domain).decode('ascii')
-            connection.login(smtp_user, smtp_password or '')
+            mail_server._smtp_login(connection, smtp_user, smtp_password or '')
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
@@ -327,6 +329,18 @@ class IrMailServer(models.Model):
         connection.smtp_from = smtp_from
 
         return connection
+
+    def _smtp_login(self, connection, smtp_user, smtp_password):
+        """Authenticate the SMTP connection.
+
+        Can be overridden in other module for different authentication methods.Can be
+        called on the model itself or on a singleton.
+
+        :param connection: The SMTP connection to authenticate
+        :param smtp_user: The user to used for the authentication
+        :param smtp_password: The password to used for the authentication
+        """
+        connection.login(smtp_user, smtp_password)
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                     attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
@@ -396,7 +410,7 @@ class IrMailServer(models.Model):
 
         email_body = ustr(body)
         if subtype == 'html' and not body_alternative:
-            msg.add_alternative(html2text.html2text(email_body), subtype='plain', charset='utf-8')
+            msg.add_alternative(tools.html2plaintext(email_body), subtype='plain', charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         elif body_alternative:
             msg.add_alternative(ustr(body_alternative), subtype=subtype_alternative, charset='utf-8')
@@ -437,15 +451,19 @@ class IrMailServer(models.Model):
         Used for the "header from" address when no other has been received.
 
         :return str/None:
-            Combines config parameters ``mail.default.from`` and
+            If the config parameter ``mail.default.from`` contains
+            a full email address, return it.
+            Otherwise, combines config parameters ``mail.default.from`` and
             ``mail.catchall.domain`` to generate a default sender address.
 
             If some of those parameters is not defined, it will default to the
             ``--email-from`` CLI/config parameter.
         """
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        domain = get_param('mail.catchall.domain')
         email_from = get_param("mail.default.from")
+        if email_from and "@" in email_from:
+            return email_from
+        domain = get_param("mail.catchall.domain")
         if email_from and domain:
             return "%s@%s" % (email_from, domain)
         return tools.config.get("email_from")

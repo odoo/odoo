@@ -34,5 +34,7 @@ class MrpProductionBackorder(models.TransientModel):
         return self.mrp_production_ids.with_context(skip_backorder=True).button_mark_done()
 
     def action_backorder(self):
+        ctx = dict(self.env.context)
+        ctx.pop('default_mrp_production_ids', None)
         mo_ids_to_backorder = self.mrp_production_backorder_line_ids.filtered(lambda l: l.to_backorder).mrp_production_id.ids
-        return self.mrp_production_ids.with_context(skip_backorder=True, mo_ids_to_backorder=mo_ids_to_backorder).button_mark_done()
+        return self.mrp_production_ids.with_context(ctx, skip_backorder=True, mo_ids_to_backorder=mo_ids_to_backorder).button_mark_done()

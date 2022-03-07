@@ -2,6 +2,8 @@
 import requests
 import logging
 
+from markupsafe import Markup
+
 from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
@@ -179,7 +181,7 @@ class EtherpadLiteClient:
     def setHtmlFallbackText(self, padID, html):
         try:
             # Prevents malformed HTML errors
-            html_wellformed = '<html><body>' + html + '</body></html>'
+            html_wellformed = Markup("<html><body>%s</body></html>") % html
             return self.setHtml(padID, html_wellformed)
         except Exception:
             _logger.exception('Falling back to setText. SetHtml failed with message:')

@@ -529,3 +529,34 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_to': '2021-09-08',
             'number_of_days': 3,
         })
+
+    def test_company_leaves(self):
+        # First expired allocation
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Allocation',
+            'holiday_type': 'company',
+            'mode_company_id': self.env.company.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'number_of_days': 20,
+            'state': 'confirm',
+            'date_from': '2021-01-01',
+        })
+        allocation.action_validate()
+
+        req1_form = Form(self.env['hr.leave'].sudo())
+        req1_form.employee_ids.add(self.employee_emp)
+        req1_form.employee_ids.add(self.employee_hrmanager)
+        req1_form.holiday_status_id = self.holidays_type_1
+        req1_form.request_date_from = fields.Date.to_date('2021-12-06')
+        req1_form.request_date_to = fields.Date.to_date('2021-12-08')
+
+        self.assertEqual(req1_form.number_of_days, 3)
+        req1_form.save().action_approve()
+
+        req2_form = Form(self.env['hr.leave'].sudo())
+        req2_form.employee_ids.add(self.employee_hruser)
+        req2_form.holiday_status_id = self.holidays_type_1
+        req2_form.request_date_from = fields.Date.to_date('2021-12-06')
+        req2_form.request_date_to = fields.Date.to_date('2021-12-08')
+
+        self.assertEqual(req2_form.number_of_days, 3)

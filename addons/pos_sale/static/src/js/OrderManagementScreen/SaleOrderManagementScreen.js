@@ -77,7 +77,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             const { confirmed, payload: selectedOption } = await this.showPopup('SelectionPopup',
                 {
                     title: this.env._t('What do you want to do?'),
-                    list: [{id:"0", label: "Apply a down payment", item: false}, {id:"1", label: "Settle the order", item: true}],
+                    list: [{id:"0", label: this.env._t("Apply a down payment"), item: false}, {id:"1", label: this.env._t("Settle the order"), item: true}],
                 });
 
             if(confirmed){
@@ -146,6 +146,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         pos: this.env.pos,
                         order: this.env.pos.get_order(),
                         product: this.env.pos.db.get_product_by_id(line.product_id[0]),
+                        description: line.name,
                         price: line.price_unit,
                         tax_ids: orderFiscalPos ? undefined : line.tax_id,
                         price_manually_set: true,
@@ -187,39 +188,50 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
               }
               else {
                 // apply a downpayment
-                let lines = sale_order.order_line;
-                let tab = [];
+                if (this.env.pos.config.down_payment_product_id){
 
-                for (let i=0; i<lines.length; i++) {
-                    tab[i] = {
-                        'product_name': lines[i].product_id[1],
-                        'product_uom_qty': lines[i].product_uom_qty,
-                        'price_unit': lines[i].price_unit,
-                        'total': lines[i].price_total,
-                    };
+                    let lines = sale_order.order_line;
+                    let tab = [];
+
+                    for (let i=0; i<lines.length; i++) {
+                        tab[i] = {
+                            'product_name': lines[i].product_id[1],
+                            'product_uom_qty': lines[i].product_uom_qty,
+                            'price_unit': lines[i].price_unit,
+                            'total': lines[i].price_total,
+                        };
+                    }
+
+                    let down_payment = sale_order.amount_total;
+                    const { confirmed, payload } = await this.showPopup('NumberPopup', {
+                        title: sprintf(this.env._t("Percentage of %s"), this.env.pos.format_currency(sale_order.amount_total)),
+                        startingValue: 0,
+                    });
+                    if (confirmed){
+                        down_payment = sale_order.amount_total * parse.float(payload) / 100;
+                    }
+
+
+                    let new_line = new models.Orderline({}, {
+                        pos: this.env.pos,
+                        order: this.env.pos.get_order(),
+                        product: this.env.pos.db.get_product_by_id(this.env.pos.config.down_payment_product_id[0]),
+                        price: down_payment,
+                        price_manually_set: true,
+                        sale_order_origin_id: clickedOrder,
+                        down_payment_details: tab,
+                    });
+                    new_line.set_unit_price(down_payment);
+                    this.env.pos.get_order().add_orderline(new_line);
                 }
-
-                let down_payment = sale_order.amount_total;
-                const { confirmed, payload } = await this.showPopup('NumberPopup', {
-                    title: sprintf(this.env._t("Percentage of %s"), this.env.pos.format_currency(sale_order.amount_total)),
-                    startingValue: 0,
-                });
-                if (confirmed){
-                    down_payment = sale_order.amount_total * parse.float(payload) / 100;
+                else {
+                    const title = this.env._t('No down payment product');
+                    const body = this.env._t(
+                        "It seems that you didn't configure a down payment product in your point of sale.\
+                        You can go to your point of sale configuration to choose one."
+                    );
+                    await this.showPopup('ErrorPopup', { title, body });
                 }
-
-
-                let new_line = new models.Orderline({}, {
-                    pos: this.env.pos,
-                    order: this.env.pos.get_order(),
-                    product: this.env.pos.db.get_product_by_id(this.env.pos.config.down_payment_product_id[0]),
-                    price: down_payment,
-                    price_manually_set: true,
-                    sale_order_origin_id: clickedOrder,
-                    down_payment_details: tab,
-                });
-                new_line.set_unit_price(down_payment);
-                this.env.pos.get_order().add_orderline(new_line);
               }
 
               currentPOSOrder.trigger('change');

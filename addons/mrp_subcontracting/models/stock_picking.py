@@ -39,9 +39,14 @@ class StockPicking(models.Model):
         for move in self.move_lines.filtered(lambda move: move.is_subcontract):
             # Auto set qty_producing/lot_producing_id of MO wasn't recorded
             # manually (if the flexible + record_component or has tracked component)
-            if any(production._has_been_recorded() for production in move._get_subcontract_production()):
+            productions = move._get_subcontract_production()
+            recorded_productions = productions.filtered(lambda p: p._has_been_recorded())
+            recorded_qty = sum(recorded_productions.mapped('qty_producing'))
+            sm_done_qty = sum(productions._get_subcontract_move().mapped('quantity_done'))
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_compare(recorded_qty, sm_done_qty, precision_digits=rounding) >= 0:
                 continue
-            production = move._get_subcontract_production()
+            production = productions - recorded_productions
             if not production:
                 continue
             if len(production) > 1:

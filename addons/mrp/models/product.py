@@ -188,12 +188,13 @@ class ProductProduct(models.Model):
                 qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
-                component_res = qties.get(component.id, {
-                    "virtual_available": component.virtual_available,
-                    "qty_available": component.qty_available,
-                    "incoming_qty": component.incoming_qty,
-                    "outgoing_qty": component.outgoing_qty,
-                    "free_qty": component.free_qty,
+                rounding = component.uom_id.rounding
+                component_res = res.get(component.id, {
+                    "virtual_available": float_round(component.virtual_available, precision_rounding=rounding),
+                    "qty_available": float_round(component.qty_available, precision_rounding=rounding),
+                    "incoming_qty": float_round(component.incoming_qty, precision_rounding=rounding),
+                    "outgoing_qty": float_round(component.outgoing_qty, precision_rounding=rounding),
+                    "free_qty": float_round(component.free_qty, precision_rounding=rounding),
                 })
                 ratios_virtual_available.append(component_res["virtual_available"] / qty_per_kit)
                 ratios_qty_available.append(component_res["qty_available"] / qty_per_kit)
@@ -261,3 +262,14 @@ class ProductProduct(models.Model):
             if not any(ptav in self.product_template_attribute_value_ids for ptav in iter_ptav):
                 return False
         return True
+
+    def _count_returned_sn_products(self, sn_lot):
+        res = self.env['stock.move.line'].search_count([
+            ('lot_id', '=', sn_lot.id),
+            ('qty_done', '=', 1),
+            ('state', '=', 'done'),
+            ('production_id', '=', False),
+            ('location_id.usage', '=', 'production'),
+            ('move_id.unbuild_id', '!=', False),
+        ])
+        return super()._count_returned_sn_products(sn_lot) + res

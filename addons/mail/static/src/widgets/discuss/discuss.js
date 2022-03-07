@@ -31,14 +31,23 @@ export const DiscussWidget = AbstractAction.extend({
 
         this._lastPushStateActiveThread = null;
         this.env = Component.env;
-        Component.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
+        Component.env.services.messaging.modelManager.messagingCreatedPromise.then(async () => {
             const messaging = Component.env.services.messaging.modelManager.messaging;
             const initActiveId = this.options.active_id ||
                 (this.action.context && this.action.context.active_id) ||
                 (this.action.params && this.action.params.default_active_id) ||
                 'mail.box_inbox';
             this.discuss = messaging.discuss;
-            this.discuss.update({ initActiveId });
+            this.discuss.update({ initActiveId, isOpen: true });
+            // Wait for messaging to be initialized to make sure the system
+            // knows of the "init thread" if it exists.
+            await messaging.initializedPromise;
+            if (!this.discuss.isInitThreadHandled) {
+                this.discuss.update({ isInitThreadHandled: true });
+                if (!this.discuss.thread) {
+                    this.discuss.openInitThread();
+                }
+            }
         });
     },
     /**

@@ -118,7 +118,7 @@ class ProductProduct(models.Model):
         digits='Product Price',
         groups="base.group_user",
         help="""In Standard Price & AVCO: value of the product (automatically computed in AVCO).
-        In FIFO: value of the last unit that left the stock (automatically computed).
+        In FIFO: value of the next unit that will leave the stock (automatically computed).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""")
     volume = fields.Float('Volume', digits='Volume')
@@ -370,11 +370,7 @@ class ProductProduct(models.Model):
         if 'product_template_attribute_value_ids' in values:
             # `_get_variant_id_for_combination` depends on `product_template_attribute_value_ids`
             self.clear_caches()
-        if 'active' in values:
-            # prefetched o2m have to be reloaded (because of active_test)
-            # (eg. product.template: product_variant_ids)
-            self.flush()
-            self.invalidate_cache()
+        elif 'active' in values:
             # `_get_first_possible_variant_id` depends on variants active state
             self.clear_caches()
         return res
@@ -462,10 +458,10 @@ class ProductProduct(models.Model):
             args.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super(ProductProduct, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
-    @api.depends_context('display_default_code')
+    @api.depends_context('display_default_code', 'seller_id')
     def _compute_display_name(self):
         # `display_name` is calling `name_get()`` which is overidden on product
-        # to depend on `display_default_code`
+        # to depend on `display_default_code` and `seller_id`
         return super()._compute_display_name()
 
     def name_get(self):
@@ -513,8 +509,8 @@ class ProductProduct(models.Model):
             variant = product.product_template_attribute_value_ids._get_combination_name()
 
             name = variant and "%s (%s)" % (product.name, variant) or product.name
-            sellers = []
-            if partner_ids:
+            sellers = self.env['product.supplierinfo'].sudo().browse(self.env.context.get('seller_id')) or []
+            if not sellers and partner_ids:
                 product_supplier_info = supplier_info_by_template.get(product.product_tmpl_id, [])
                 sellers = [x for x in product_supplier_info if x.product_id and x.product_id == product]
                 if not sellers:
@@ -761,7 +757,7 @@ class ProductPackaging(models.Model):
     name = fields.Char('Product Packaging', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
     product_id = fields.Many2one('product.product', string='Product', check_company=True)
-    qty = fields.Float('Contained Quantity', default=1, help="Quantity of products contained in the packaging.")
+    qty = fields.Float('Contained Quantity', default=1, digits='Product Unit of Measure', help="Quantity of products contained in the packaging.")
     barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification. Scan this packaging barcode from a transfer in the Barcode app to move all the contained units")
     product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', index=True)
@@ -782,19 +778,10 @@ class ProductPackaging(models.Model):
         # per package might be a float, leading to incorrect results. For example:
         # 8 % 1.6 = 1.5999999999999996
         # 5.4 % 1.8 = 2.220446049250313e-16
-        if (
-            product_qty
-            and packaging_qty
-            and float_compare(
-                product_qty / packaging_qty,
-                float_round(product_qty / packaging_qty, precision_rounding=1.0),
-                precision_rounding=default_uom.rounding
-            )
-            != 0
-        ):
-            return float_round(
-                product_qty / packaging_qty, precision_rounding=1.0, rounding_method=rounding_method
-            ) * packaging_qty
+        if product_qty and packaging_qty:
+            rounded_qty = float_round(product_qty / packaging_qty, precision_rounding=1.0,
+                                  rounding_method=rounding_method) * packaging_qty
+            return rounded_qty if float_compare(rounded_qty, product_qty, precision_rounding=default_uom.rounding) else product_qty
         return product_qty
 
     def _find_suitable_product_packaging(self, product_qty, uom_id):

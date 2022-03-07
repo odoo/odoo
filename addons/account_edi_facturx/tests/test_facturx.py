@@ -82,7 +82,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                         </SpecifiedTradeProduct>
                         <SpecifiedLineTradeAgreement>
                             <GrossPriceProductTradePrice>
-                                <ChargeAmount currencyID="Gol">1100.000</ChargeAmount>
+                                <ChargeAmount currencyID="Gol">275.000</ChargeAmount>
                                 <AppliedTradeAllowanceCharge>
                                     <ChargeIndicator>
                                         <Indicator>true</Indicator>
@@ -90,6 +90,9 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                                     <CalculationPercent>20.0</CalculationPercent>
                                 </AppliedTradeAllowanceCharge>
                             </GrossPriceProductTradePrice>
+                            <NetPriceProductTradePrice>
+                                <ChargeAmount currencyID="Gol">220.000</ChargeAmount>
+                            </NetPriceProductTradePrice>
                         </SpecifiedLineTradeAgreement>
                         <SpecifiedLineTradeDelivery>
                             <BilledQuantity>5.0</BilledQuantity>
@@ -131,7 +134,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                         </ApplicableTradeTax>
                         <SpecifiedTradePaymentTerms>
                             <DueDateDateTime>
-                                <DateTimeString>20170101</DateTimeString>
+                                <DateTimeString format="102">20170101</DateTimeString>
                             </DueDateDateTime>
                         </SpecifiedTradePaymentTerms>
                         <SpecifiedTradeSettlementHeaderMonetarySummation>
@@ -163,8 +166,8 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
         })
 
         applied_xpath = '''
-            <xpath expr="//GrossPriceProductTradePrice/ChargeAmount" position="replace">
-                <ChargeAmount currencyID="Gol">1000.000</ChargeAmount>
+            <xpath expr="//NetPriceProductTradePrice/ChargeAmount" position="replace">
+                <ChargeAmount currencyID="Gol">200.000</ChargeAmount>
             </xpath>
             <xpath expr="//SpecifiedLineTradeSettlement" position="replace">
                 <SpecifiedLineTradeSettlement>
@@ -193,7 +196,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                     </ApplicableTradeTax>
                     <SpecifiedTradePaymentTerms>
                         <DueDateDateTime>
-                            <DateTimeString>20170101</DateTimeString>
+                            <DateTimeString format="102">20170101</DateTimeString>
                         </DueDateDateTime>
                     </SpecifiedTradePaymentTerms>
                     <SpecifiedTradeSettlementHeaderMonetarySummation>

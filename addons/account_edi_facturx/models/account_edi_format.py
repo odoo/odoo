@@ -3,7 +3,7 @@
 from odoo import api, models, fields, tools, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, is_html_empty, str2bool
 from odoo.tests.common import Form
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 
 from datetime import datetime
 from lxml import etree
@@ -164,8 +164,7 @@ class AccountEdiFormat(models.Model):
         invoice.move_type = default_move_type
 
         # self could be a single record (editing) or be empty (new).
-        with Form(invoice.with_context(default_move_type=default_move_type,
-                                       account_predictive_bills_disable_prediction=True)) as invoice_form:
+        with Form(invoice.with_context(default_move_type=default_move_type)) as invoice_form:
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
             invoice_form.partner_id = self._retrieve_partner(
                 name=_find_value(f"//ram:{partner_type}/ram:Name"),
@@ -195,7 +194,20 @@ class AccountEdiFormat(models.Model):
                 # Currency.
                 currency_str = elements[0].attrib.get('currencyID', None)
                 if currency_str:
-                    invoice_form.currency_id = self._retrieve_currency(currency_str)
+                    currency = self._retrieve_currency(currency_str)
+                    if currency and not currency.active:
+                        error_msg = _('The currency (%s) of the document you are uploading is not active in this database.\n'
+                                      'Please activate it before trying again to import.', currency.name)
+                        error_action = {
+                            'view_mode': 'form',
+                            'res_model': 'res.currency',
+                            'type': 'ir.actions.act_window',
+                            'target': 'new',
+                            'res_id': currency.id,
+                            'views': [[False, 'form']]
+                        }
+                        raise RedirectWarning(error_msg, error_action, _('Display the currency'))
+                    invoice_form.currency_id = currency
 
                     # Store xml total amount.
                     amount_total_import = total_amount * refund_sign

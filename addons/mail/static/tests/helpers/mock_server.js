@@ -105,6 +105,9 @@ MockServer.include({
         if (route === '/mail/init_messaging') {
             return this._mockRouteMailInitMessaging();
         }
+        if (route === '/mail/load_message_failures') {
+            return this._mockRouteMailLoadMessageFailures();
+        }
         if (route === '/mail/history/messages') {
             const { min_id, max_id, limit } = args;
             return this._mockRouteMailMessageHistory(min_id, max_id, limit);
@@ -407,6 +410,15 @@ MockServer.include({
      */
     _mockRouteMailInitMessaging() {
         return this._mockResUsers_InitMessaging([this.currentUserId]);
+    },
+    /**
+     * Simulates the `/mail/load_message_failures` route.
+     *
+     * @private
+     * @returns {Object[]}
+     */
+    _mockRouteMailLoadMessageFailures() {
+        return this._mockResPartner_MessageFetchFailed(this.currentPartnerId);
     },
     /**
      * Simulates the `/mail/history/messages` route.
@@ -1362,12 +1374,17 @@ MockServer.include({
             const trackingValueIds = this._getRecords('mail.tracking.value', [
                 ['id', 'in', message.tracking_value_ids],
             ]);
+            const partners = this._getRecords(
+                'res.partner',
+                [['id', 'in', message.partner_ids]],
+            );
             const response = Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
                 author_id: formattedAuthor,
                 history_partner_ids: historyPartnerIds,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
+                recipients: partners.map(p => ({ id: p.id, name: p.name })),
                 tracking_value_ids: trackingValueIds,
             });
             if (message.subtype_id) {
@@ -2088,7 +2105,7 @@ MockServer.include({
             current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
             current_user_id: this.currentUserId,
             current_user_settings: this._mockResUsersSettings_FindOrCreateForUser(user.id),
-            mail_failures: this._mockResPartner_MessageFetchFailed(user.partner_id),
+            mail_failures: [],
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
             partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId).get(this.partnerRootId),

@@ -5,15 +5,15 @@
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -370,7 +370,7 @@ msgstr ""
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Vertel ons wat u van onze dienstverlening vindt</strong><br/>\n"
+"                    <strong>Vertel ons wat je van onze dienstverlening vindt</strong><br/>\n"
 "                    <span style=\"text-color: #888888\">(klik op één van deze smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
@@ -399,7 +399,7 @@ msgstr ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            Wij waarderen je feedback. Het helpt ons om continu te verbeteren.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat je ticket naar de fase <b t-out=\"object.stage_id.name or ''\">In progress</b></span> is verplaatst.\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat je ticket naar de fase <b t-out=\"object.stage_id.name or ''\">In progress</b>is verplaatst.</span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
 "                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Dit klantenonderzoek wordt <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> verzonden zolang de taak in de <b t-out=\"object.stage_id.name or ''\">In progress</b> fase.</span> is\n"
@@ -523,15 +523,6 @@ msgstr "<span class=\"fa fa-user mr-2\" aria-label=\"Partner\" title=“Relatie�
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
-msgstr ""
-"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">Maak taken aan door een e-mail te sturen naar </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Maak taken aan door een e-mail te sturen naar </span>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                    Collaborators\n"
 "                                </span>"
@@ -587,6 +578,17 @@ msgstr "<span class=\"o_stat_text\">Bruto marge</span>"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
 msgstr "<span class=\"o_stat_text\">in herhaling</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
+msgstr ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Maak taken aan door een e-mail te sturen naar </span>\n"
+"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Maak taken aan door een e-mail te sturen naar </span>\n"
+"<span class=\"font-weight-bold oe_edit_only\">Maak taken aan door een e-mail te sturen naar </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -983,6 +985,16 @@ msgid "Assign to Me"
 msgstr "Aan mij toewijzen"
 
 #. module: project
+#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
+msgid " assignee"
+msgstr " toegewezen"
+
+#. module: project
+#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
+msgid " assignees"
+msgstr " toegewezen personen"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -1118,6 +1130,9 @@ msgstr "Blok"
 #: model:project.task,legend_blocked:project.project_task_25
 #: model:project.task,legend_blocked:project.project_task_26
 #: model:project.task,legend_blocked:project.project_task_3
+#: model:project.task,legend_blocked:project.project_task_30
+#: model:project.task,legend_blocked:project.project_task_31
+#: model:project.task,legend_blocked:project.project_task_32
 #: model:project.task,legend_blocked:project.project_task_33
 #: model:project.task,legend_blocked:project.project_task_8
 #: model:project.task,legend_blocked:project.project_task_9
@@ -1176,9 +1191,9 @@ msgstr "Burndown grafiek"
 #: model:project.task,legend_done:project.project_task_27
 #: model:project.task,legend_done:project.project_task_28
 #: model:project.task,legend_done:project.project_task_29
-#: model:project.task,legend_done:project.project_task_30
-#: model:project.task,legend_done:project.project_task_31
-#: model:project.task,legend_done:project.project_task_32
+#: model:project.task,legend_done:project.project_task_34
+#: model:project.task,legend_done:project.project_task_35
+#: model:project.task,legend_done:project.project_task_36
 #: model:project.task,legend_done:project.project_task_4
 #: model:project.task,legend_done:project.project_task_5
 #: model:project.task,legend_done:project.project_task_6
@@ -1677,7 +1692,7 @@ msgstr ""
 "Definieert de zichtbaarheid van de taken van het project:\n"
 "- Uitgenodigde werknemers: werknemers mogen alleen het gevolgde project en de gevolgde taken zien.\n"
 "- Alle werknemers: werknemers kunnen alle projecten en taken zien.\n"
-"- Uitgenodigde portalgebruikers en alle werknemers: werknemers mogen alles zien. Uitgenodigde portalgebruikers kunnen het project en de taken zien gevolgd door \n"
+"- Uitgenodigde portaalgebruikers en alle werknemers: werknemers mogen alles zien. Uitgenodigde portaalgebruikers kunnen het project en de taken zien gevolgd door \n"
 "    hen of door iemand van hun bedrijf."
 
 #. module: project
@@ -2364,6 +2379,9 @@ msgstr "Belangrijk"
 #: model:project.task,legend_normal:project.project_task_31
 #: model:project.task,legend_normal:project.project_task_32
 #: model:project.task,legend_normal:project.project_task_33
+#: model:project.task,legend_normal:project.project_task_34
+#: model:project.task,legend_normal:project.project_task_35
+#: model:project.task,legend_normal:project.project_task_36
 #: model:project.task,legend_normal:project.project_task_4
 #: model:project.task,legend_normal:project.project_task_5
 #: model:project.task,legend_normal:project.project_task_6
@@ -2439,7 +2457,7 @@ msgstr "Uitgenodigde werknemers"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all employees"
-msgstr "Uitgenodigde portalgebruikers en alle werknemers"
+msgstr "Uitgenodigde portaalgebruikers en alle werknemers"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
@@ -2940,9 +2958,9 @@ msgstr "Naam van de taak"
 #: model:project.task,legend_blocked:project.project_task_27
 #: model:project.task,legend_blocked:project.project_task_28
 #: model:project.task,legend_blocked:project.project_task_29
-#: model:project.task,legend_blocked:project.project_task_30
-#: model:project.task,legend_blocked:project.project_task_31
-#: model:project.task,legend_blocked:project.project_task_32
+#: model:project.task,legend_blocked:project.project_task_34
+#: model:project.task,legend_blocked:project.project_task_35
+#: model:project.task,legend_blocked:project.project_task_36
 #: model:project.task,legend_blocked:project.project_task_4
 #: model:project.task,legend_blocked:project.project_task_5
 #: model:project.task,legend_blocked:project.project_task_6
@@ -3260,9 +3278,7 @@ msgid "Open"
 msgstr "Open"
 
 #. module: project
-#: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
-#, python-format
 msgid "Open Tasks"
 msgstr "Open taken"
 
@@ -3858,6 +3874,9 @@ msgstr "Alleen lezen"
 #: model:project.task,legend_done:project.project_task_25
 #: model:project.task,legend_done:project.project_task_26
 #: model:project.task,legend_done:project.project_task_3
+#: model:project.task,legend_done:project.project_task_30
+#: model:project.task,legend_done:project.project_task_31
+#: model:project.task,legend_done:project.project_task_32
 #: model:project.task,legend_done:project.project_task_33
 #: model:project.task,legend_done:project.project_task_8
 #: model:project.task,legend_done:project.project_task_9
@@ -4593,7 +4612,7 @@ msgstr "Taak fase veranderd"
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr "Taak fases"
+msgstr "Taakfases"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4787,9 +4806,9 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
-"Het project kan niet worden gedeeld met de ontvanger (s) omdat de privacy "
-"van het project te beperkt is. Stel de privacy in op 'Zichtbaar door klanten"
-" te volgen' om het voor de ontvanger (s) toegankelijk te maken."
+"Het project kan niet worden gedeeld met de ontvanger(s) omdat de privacy van"
+" het project te beperkt is. Stel de privacy in 'Zichtbaar door klanten' om "
+"voor de ontvanger(s) toegankelijk te maken."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4799,9 +4818,9 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
-"Het project kan niet worden gedeeld met de ontvanger(s) omdat de privacy van"
-" het project te beperkt is. Stel de privacy in 'Zichtbaar door klanten' om "
-"voor de ontvanger(s) toegankelijk te maken."
+"De taak kan niet worden gedeeld met de ontvanger(s) omdat de privacy van het"
+" project te beperkt is. Stel de privacy in 'Zichtbaar door klanten' om voor "
+"de ontvanger(s) toegankelijk te maken."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5106,12 +5125,6 @@ msgstr "T/m"
 #: model:ir.model.fields,field_description:project.field_project_project__update_ids
 msgid "Update"
 msgstr "Bijwerken"
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Updated (Last 30 Days)"
-msgstr "Bijgewerkt (afgelopen 30 dagen)"
 
 #. module: project
 #. openerp-web

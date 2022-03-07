@@ -10745,10 +10745,10 @@ var core_helpers = function() {
 	helpers$1.getMaximumWidth = function(domNode) {
 		var container = helpers$1._getParentNode(domNode);
 		if (!container) {
-			return domNode.clientWidth;
+			return domNode.getBoundingClientRect().width;  // Odoo customization
 		}
 
-		var clientWidth = container.clientWidth;
+		var clientWidth = container.getBoundingClientRect().width;  // Odoo customization
 		var paddingLeft = helpers$1._calculatePadding(container, 'padding-left', clientWidth);
 		var paddingRight = helpers$1._calculatePadding(container, 'padding-right', clientWidth);
 
@@ -10759,10 +10759,10 @@ var core_helpers = function() {
 	helpers$1.getMaximumHeight = function(domNode) {
 		var container = helpers$1._getParentNode(domNode);
 		if (!container) {
-			return domNode.clientHeight;
+			return domNode.getBoundingClientRect().height;  // Odoo customization
 		}
 
-		var clientHeight = container.clientHeight;
+		var clientHeight = container.getBoundingClientRect().height;  // Odoo customization
 		var paddingTop = helpers$1._calculatePadding(container, 'padding-top', clientHeight);
 		var paddingBottom = helpers$1._calculatePadding(container, 'padding-bottom', clientHeight);
 

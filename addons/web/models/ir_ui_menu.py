@@ -32,6 +32,7 @@ class IrUiMenu(models.Model):
                     "actionModel": False,
                     "webIcon": None,
                     "webIconData": None,
+                    "backgroundImage": menu.get('backgroundImage'),
                 }
             else:
                 action = menu['action']

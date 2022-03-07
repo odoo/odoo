@@ -7,7 +7,7 @@
 # Richard Mathot <rim@odoo.com>, 2021
 # Vallen Delobel <edv@odoo.com>, 2021
 # Chaplet34 <charleskolie2@gmail.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -264,7 +264,7 @@ msgstr "Révoquer"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Revoke All"
-msgstr ""
+msgstr "Tout révoquer"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
@@ -327,6 +327,9 @@ msgid ""
 "                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"L'authentification à deux facteurs (\"2FA\") est un système de double authentification.\n"
+"La première se fait avec votre mot de passe et la seconde avec un code que vous obtenez depuis une application mobile dédiée.\n"
+"Les plus populaires incluent Authy, Google Authenticator ou Microsoft Authenticator."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -335,6 +338,9 @@ msgid ""
 "                            The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                            Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"L'authentification à deux facteurs (\"2FA\") est un système de double authentification.\n"
+"La première se fait avec votre mot de passe et la seconde avec un code que vous obtenez depuis une application mobile dédiée.\n"
+"Les plus populaires incluent Authy, Google Authenticator ou Microsoft Authenticator."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
@@ -395,7 +401,7 @@ msgid "Verification Code"
 msgstr "Code de vérification"
 
 #. module: auth_totp
-#: code:addons/auth_totp/controllers/home.py:0
+#: code:addons/auth_totp/models/res_users.py:0
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"

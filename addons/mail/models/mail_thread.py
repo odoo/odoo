@@ -22,6 +22,7 @@ from email import message_from_string, policy
 from lxml import etree
 from werkzeug import urls
 from xmlrpc import client as xmlrpclib
+from markupsafe import Markup
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError
@@ -1532,8 +1533,11 @@ class MailThread(models.AbstractModel):
         """
         # find normalized emails and exclude aliases (to avoid subscribing alias emails to records)
         normalized_email = tools.email_normalize(email)
+        if not normalized_email:
+            return self.env['res.users']
+
         catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
-        if normalized_email and catchall_domain:
+        if catchall_domain:
             left_part = normalized_email.split('@')[0] if normalized_email.split('@')[1] == catchall_domain.lower() else False
             if left_part:
                 if self.env['mail.alias'].sudo().search_count([('alias_name', '=', left_part)]):
@@ -2342,9 +2346,8 @@ class MailThread(models.AbstractModel):
             user = author_user
             if add_sign:
                 signature = user.signature
-        else:
-            if add_sign:
-                signature = "<p>-- <br/>%s</p>" % author.name
+        elif add_sign and author.name:
+                signature = Markup("<p>-- <br/>%s</p>") % author.name
 
         # company value should fall back on env.company if:
         # - no company_id field on record
@@ -2563,7 +2566,8 @@ class MailThread(models.AbstractModel):
         for group_name, group_func, group_data in groups:
             group_data.setdefault('notification_group_name', group_name)
             group_data.setdefault('notification_is_customer', False)
-            group_data.setdefault('has_button_access', True)
+            is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=msg_vals)['is_thread_notification']
+            group_data.setdefault('has_button_access', is_thread_notification)
             group_button_access = group_data.setdefault('button_access', {})
             group_button_access.setdefault('url', access_link)
             group_button_access.setdefault('title', view_title)
@@ -2583,6 +2587,15 @@ class MailThread(models.AbstractModel):
                 result.append(group_data)
 
         return result
+
+    def _notify_get_recipients_thread_info(self, msg_vals=None):
+        """ Tool method to compute thread info used in ``_notify_classify_recipients``
+        and its sub-methods. """
+        res_model = msg_vals['model'] if msg_vals and 'model' in msg_vals else self._name
+        res_id = msg_vals['res_id'] if msg_vals and 'res_id' in msg_vals else self.ids[0] if self.ids else False
+        return {
+            'is_thread_notification': res_model and (res_model != 'mail.thread') and res_id
+        }
 
     def _notify_email_recipient_values(self, recipient_ids):
         """ Format email notification recipient values to store on the notification

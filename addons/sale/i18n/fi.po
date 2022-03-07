@@ -7,7 +7,7 @@
 # Marko Happonen <marko.happonen@sprintit.fi>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2021
-# Johanna Valkonen <johanna@vividi.fi>, 2021
+# Johanna Valkonen <miujohanna@gmail.com>, 2021
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2021
 # Simo Suurla <simo@suurla.fi>, 2021
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021
@@ -20,7 +20,6 @@
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2021
 # Eppu Tuominen <eppu.tuominen@emsystems.fi>, 2021
 # Martin Trigaux, 2021
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2021
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2021
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2021
@@ -31,15 +30,16 @@
 # Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2021
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
+"POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1388,8 +1388,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
-msgid "Credit card (via Stripe)"
-msgstr "Luottokortti (Stripe)"
+msgid "Credit & Debit card (via Stripe)"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -2137,7 +2137,7 @@ msgstr "Laskutuksen tila"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
-msgstr "Lasku toimituksen jälkeen, perustuu vain toimitettuihin määriin."
+msgstr "Laskutetaan toimitettuja määriä jälkikäteen."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -3305,6 +3305,11 @@ msgstr "Viite"
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request."
 msgstr "Viite dokumenttiin joka loi tämän myyntitilauspyynnön."
+
+#. module: sale
+#: model:ir.model,name:sale.model_account_payment_register
+msgid "Register Payment"
+msgstr "Kirjaa maksu"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -4658,7 +4663,7 @@ msgstr "Kirjoita uusi yrityksen nimi tai katso ehdotukset."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
 msgid "You can invoice them before they are delivered."
-msgstr "Voit laskuttaa ne ennen toimitusta."
+msgstr "Laskutetaan tilattuja määriä mahdollisesti etukäteen."
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4753,6 +4758,13 @@ msgid ""
 msgstr ""
 "Tarjous sisältää tuotteita yrityksestä %(product_company)s, kun taas tarjouksesi kuuluu yritykselle %(quote_company)s. \n"
 "Vaihda tarjouksesi yritystä tai poista tuotteet muilta yrityksiltä (%(bad_products)s)."
+
+#. module: sale
+#: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+#: model:ir.cron,cron_name:sale.send_invoice_cron
+#: model:ir.cron,name:sale.send_invoice_cron
+msgid "automatic invoicing: send ready invoice"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

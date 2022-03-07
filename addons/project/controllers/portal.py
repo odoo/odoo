@@ -11,7 +11,7 @@ from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.tools import groupby as groupbyelem
 
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, AND
 
 from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 
@@ -58,6 +58,9 @@ class ProjectCustomerPortal(CustomerPortal):
 
         Task = request.env['project.task']
         if access_token:
+            Task = Task.sudo()
+        elif not request.env.user._is_public():
+            domain = AND([domain, request.env['ir.rule']._compute_domain(Task._name, 'read')])
             Task = Task.sudo()
 
         # task count
@@ -373,8 +376,11 @@ class ProjectCustomerPortal(CustomerPortal):
         if search and search_in:
             domain += self._task_get_search_domain(search_in, search)
 
+        TaskSudo = request.env['project.task'].sudo()
+        domain = AND([domain, request.env['ir.rule']._compute_domain(TaskSudo._name, 'read')])
+
         # task count
-        task_count = request.env['project.task'].search_count(domain)
+        task_count = TaskSudo.search_count(domain)
         # pager
         pager = portal_pager(
             url="/my/tasks",
@@ -386,7 +392,7 @@ class ProjectCustomerPortal(CustomerPortal):
         # content according to pager and archive selected
         order = self._task_get_order(order, groupby)
 
-        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        tasks = TaskSudo.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
         request.session['my_tasks_history'] = tasks.ids[:100]
 
         groupby_mapping = self._task_get_groupby_mapping()

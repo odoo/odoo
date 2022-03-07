@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="project.view_project"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="sale_line_id" optional="hide" widget="sale_order_many2one" readonly="1"/>
+                <field name="sale_line_id" optional="hide" readonly="1"/>
             </xpath>
         </field>
     </record>
@@ -54,7 +54,7 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_recurring_tasks']" position="before">
-                <button class="d-none d-md-inline oe_stat_button"
+                <button class="oe_stat_button"
                         type="object" name="action_view_so" icon="fa-dollar"
                         attrs="{'invisible': [('sale_order_id', '=', False)]}"
                         string="Sales Order"

@@ -125,7 +125,7 @@ class Digest(models.Model):
             digest.next_run_date = digest._get_next_run_date()
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
-        rendered_body = self.env['mail.render.mixin']._render_template(
+        rendered_body = self.env['mail.render.mixin'].with_context(preserve_comments=True)._render_template(
             'digest.digest_mail_main',
             'digest.digest',
             self.ids,

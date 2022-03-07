@@ -280,7 +280,7 @@ class PosConfig(models.Model):
         for config in self:
             if config.cash_rounding and config.rounding_method.strategy != 'add_invoice_line':
                 selection_value = "Add a rounding line"
-                for key, val in self.env["account.cash.rounding"]._fields["stategy"]._description_selection(config.env):
+                for key, val in self.env["account.cash.rounding"]._fields["strategy"]._description_selection(config.env):
                     if key == "add_invoice_line":
                         selection_value = val
                         break

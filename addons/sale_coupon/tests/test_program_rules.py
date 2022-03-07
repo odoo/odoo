@@ -226,6 +226,54 @@ class TestProgramRules(TestSaleCouponCommon):
         self.assertIn(self.immediate_promotion_program, order._get_applicable_programs())
         self.assertEqual(len(order.order_line.ids), 3, "The promo offer should have been applied as we're between the validity dates")
 
+    def test_program_rules_date(self):
+        # Test case: Based on the validity dates
+
+        # VFE NOTE the .rule_id is necessary to ensure the dates constraints doesn't raise
+        # because the orm applies the related inverse one by one, raising the constraint...
+        self.immediate_promotion_program.rule_id.write({
+            'rule_date_from': Date.to_string((datetime.now() - timedelta(days=7))),
+            'rule_date_to': Date.to_string((datetime.now() - timedelta(days=2))),
+        })
+
+        order = self.empty_order
+        order.write({
+            'date_order': Date.to_string((datetime.now() - timedelta(days=5))),
+        })
+        order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            }),
+            (0, False, {
+                'product_id': self.product_B.id,
+                'name': '2 Product B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        order.recompute_coupon_lines()
+        self.assertNotIn(self.immediate_promotion_program, order._get_applicable_programs())
+        self.assertEqual(len(order.order_line.ids), 2, "The promo offert shouldn't have been applied we're not between the validity dates")
+
+        self.immediate_promotion_program.rule_id.write({
+            'rule_date_from': Date.to_string((datetime.now() + timedelta(days=2))),
+            'rule_date_to': Date.to_string((datetime.now() + timedelta(days=7))),
+        })
+        order.recompute_coupon_lines()
+        self.assertNotIn(self.immediate_promotion_program, order._get_applicable_programs())
+        self.assertEqual(len(order.order_line.ids), 2, "The promo offert shouldn't have been applied we're not between the validity dates")
+
+        self.immediate_promotion_program.rule_id.write({
+            'rule_date_from': Date.to_string((datetime.now() - timedelta(days=2))),
+            'rule_date_to': Date.to_string((datetime.now() + timedelta(days=2))),
+        })
+        order.recompute_coupon_lines()
+        self.assertIn(self.immediate_promotion_program, order._get_applicable_programs())
+        self.assertEqual(len(order.order_line.ids), 3, "The promo offer should have been applied as we're between the validity dates")
+
     def test_program_rules_coupon_qty_and_amount_remove_not_eligible(self):
         ''' This test will:
                 * Check quantity and amount requirements works as expected (since it's slightly different from a promotion_program)

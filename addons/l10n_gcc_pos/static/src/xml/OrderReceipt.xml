@@ -99,7 +99,7 @@
         <xpath expr="//t[@t-if='isSimple(line)']/div/span[hasclass('price_display')]" position="attributes">
             <attribute name="t-if">!receipt.is_gcc_country</attribute>
         </xpath>
-        <xpath expr="//t[@t-if='isSimple(line)']/div/span[hasclass('price_display')]" position="after">
+        <xpath expr="//t[@t-if='isSimple(line)']/WrappedProductNameLines" position="after">
             <div class="responsive-price" t-if="receipt.is_gcc_country">
                 <div class="pos-receipt-left-padding" style="display: inline-flex;">
                     <div t-translation="off">Taxes / الضرائب</div>:<span t-esc="env.pos.format_currency_no_symbol(line.tax)" style="margin-left: 5px"/>

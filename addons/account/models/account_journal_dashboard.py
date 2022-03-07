@@ -188,7 +188,8 @@ class account_journal(models.Model):
                 next_date = start_date + timedelta(days=7)
                 query += " UNION ALL ("+select_sql_clause+" and invoice_date_due >= '"+start_date.strftime(DF)+"' and invoice_date_due < '"+next_date.strftime(DF)+"')"
                 start_date = next_date
-
+        # Ensure results returned by postgres match the order of data list
+        query += " ORDER BY aggr_date ASC"
         self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
         is_sample_data = True
@@ -244,9 +245,9 @@ class account_journal(models.Model):
             last_balance = last_statement.balance_end
             has_at_least_one_statement = bool(last_statement)
             bank_account_balance, nb_lines_bank_account_balance = self._get_journal_bank_account_balance(
-                domain=[('move_id.state', '=', 'posted')])
+                domain=[('parent_state', '=', 'posted')])
             outstanding_pay_account_balance, nb_lines_outstanding_pay_account_balance = self._get_journal_outstanding_payments_account_balance(
-                domain=[('move_id.state', '=', 'posted')])
+                domain=[('parent_state', '=', 'posted')])
 
             self._cr.execute('''
                 SELECT COUNT(st_line.id)

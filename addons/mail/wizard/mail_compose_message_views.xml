@@ -69,7 +69,7 @@
                                     'required':[('reply_to_mode', '!=', 'update'), ('composition_mode', '=', 'mass_mail')]}"/>
                     </group>
                     <field name="can_edit_body" invisible="1"/>
-                    <field name="body" options="{'style-inline': true}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
+                    <field name="body" class="oe-bordered-editor" options="{'style-inline': true}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
                     <group col="4">
                         <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                         <field name="template_id" options="{'no_create': True}"

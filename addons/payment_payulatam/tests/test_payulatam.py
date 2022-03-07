@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
+from odoo.tests.common import HttpCase
 from odoo.tools import mute_logger
 
 from .common import PayULatamCommon
@@ -13,7 +14,22 @@ from ..models.payment_acquirer import SUPPORTED_CURRENCIES
 
 
 @tagged('post_install', '-at_install')
-class PayULatamTest(PayULatamCommon):
+class PayULatamTest(PayULatamCommon, HttpCase):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super(PayULatamTest, cls).setUpClass(chart_template_ref=chart_template_ref)
+
+        # typical data posted by payulatam after client has successfully paid
+        cls.payulatam_post_confirmation_approved_data = {
+            'currency': cls.currency.name,
+            'reference_sale': cls.reference,
+            'response_message_pol': 'APPROVED',
+            'sign': '6b4728ddb01317af58f92b8accdb4a42',
+            'state_pol': '4',
+            'transaction_id': '7008bc34-8258-4857-b866-7d4d7982bd73',
+            'value': str(cls.amount)
+        }
 
     def test_compatibility_with_supported_currencies(self):
         """ Test that the PayULatam acquirer is compatible with all supported currencies. """
@@ -67,6 +83,7 @@ class PayULatamTest(PayULatamCommon):
             'buyerEmail': self.partner.email,
             'buyerFullName': self.partner.name,
             'responseUrl': self._build_url(PayuLatamController._return_url),
+            'confirmationUrl': self._build_url(PayuLatamController._webhook_url),
             'test': str(1),  # testing is always performed in test mode
         }
         expected_values['signature'] = self.payulatam._payulatam_generate_sign(
@@ -144,3 +161,57 @@ class PayULatamTest(PayULatamCommon):
         self.env['payment.transaction']._handle_feedback_data('payulatam', payulatam_post_data)
         self.assertEqual(tx.state, 'done', 'Payulatam: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'Payulatam: wrong txn_id after receiving a valid pending notification')
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_confirmation_webhook_approved(self):
+        tx = self.create_transaction(flow='redirect')
+        self.assertEqual(tx.state, 'draft')
+
+        res = self.url_open(PayuLatamController._webhook_url,
+                            self.payulatam_post_confirmation_approved_data)
+        self.assertEqual(res.status_code, 200, 'Should be OK')
+        self.assertEqual(res.text, '', "Body should be empty")
+        self.assertEqual(tx.state, 'done')
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_confirmation_webhook_approved_bad_signature(self):
+        tx = self.create_transaction(flow='redirect')
+        self.assertEqual(tx.state, 'draft')
+
+        post_data = self.payulatam_post_confirmation_approved_data
+        post_data['sign'] = "wrong signature"
+
+        res = self.url_open(PayuLatamController._webhook_url,
+                            post_data)
+        self.assertEqual(res.status_code, 200, 'Should be OK')
+        self.assertEqual(tx.state, 'draft')
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_confirmation_webhook_declined(self):
+        tx = self.create_transaction(flow='redirect')
+        self.assertEqual(tx.state, 'draft')
+
+        post_data = self.payulatam_post_confirmation_approved_data
+        post_data['state_pol'] = '6'
+        post_data['response_message_pol'] = 'DECLINED'
+        post_data['sign'] = '98af78d27847dcb5120b1dabd9208a43'
+        res = self.url_open(PayuLatamController._webhook_url,
+                            post_data)
+        self.assertEqual(res.status_code, 200, 'Should be OK')
+        self.assertEqual(res.text, '', "Body should be empty")
+        self.assertEqual(tx.state, 'cancel')
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_confirmation_webhook_expired(self):
+        tx = self.create_transaction(flow='redirect')
+        self.assertEqual(tx.state, 'draft')
+
+        post_data = self.payulatam_post_confirmation_approved_data
+        post_data['state_pol'] = '5'
+        post_data['response_message_pol'] = 'EXPIRED'
+        post_data['sign'] = 'bde4704e76963d2a8cb6f7bce84b1391'
+        res = self.url_open(PayuLatamController._webhook_url,
+                            post_data)
+        self.assertEqual(res.status_code, 200, 'Should be OK')
+        self.assertEqual(res.text, '', "Body should be empty")
+        self.assertEqual(tx.state, 'cancel')

@@ -271,10 +271,12 @@ body.editor_enable.editor_has_snippets {
             border-radius: 0;
             padding: 0.375rem 0.75rem;
             font-size: $o-we-font-size;
-            font-family: $o-we-font-family;
             font-weight: 400;
             line-height: 1;
 
+            &:not(.fa) {
+                font-family: $o-we-font-family;
+            }
             &.btn-primary {
                 @include button-variant($o-brand-primary, $o-brand-primary);
             }
@@ -508,8 +510,7 @@ body.editor_enable.editor_has_snippets {
             .btn {
                 @extend %we-generic-button;
                 display: flex;
-                padding-top: $o-we-sidebar-content-field-height * .12;
-                padding-bottom: $o-we-sidebar-content-field-height * .12;
+                padding: ($o-we-sidebar-content-field-height * .12) ($o-we-sidebar-content-field-button-group-button-spacing - 2);
             }
 
             we-customizeblock-option {
@@ -548,7 +549,7 @@ body.editor_enable.editor_has_snippets {
                         position: absolute !important;
                         padding: 0;
 
-                        we-button {
+                        we-button:not(.fa) {
                             text-align: left;
                             font-family: Roboto, "Montserrat", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
                             font-size: 12px;

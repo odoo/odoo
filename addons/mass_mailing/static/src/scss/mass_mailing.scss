@@ -1,9 +1,16 @@
-.o_form_view.o_mass_mailing_mailing_form .o_notebook .tab-content .tab-pane .o_mail_body {
-    // cancel the padding of the form_sheet
-    margin-top: -$o-sheet-cancel-hpadding;
-    margin-left: -$o-sheet-cancel-hpadding;
-    margin-right: -$o-sheet-cancel-hpadding;
-    margin-bottom: -40px;
+.o_form_view.o_mass_mailing_mailing_form {
+
+    input.o_field_char.o_field_widget {
+        padding-right: 30px; // Avoid overlapping subject text on emoji widget
+    }
+
+    .o_notebook .tab-content .tab-pane .o_mail_body {
+        // cancel the padding of the form_sheet
+        margin-top: -$o-sheet-cancel-hpadding;
+        margin-left: -$o-sheet-cancel-hpadding;
+        margin-right: -$o-sheet-cancel-hpadding;
+        margin-bottom: -40px;
+    }
 }
 
 @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
@@ -25,14 +32,6 @@
     .o_mass_mailing_mailing_group {
         margin-top: $o-sheet-cancel-tpadding + 33px;
     }
-    .o_mail_add_emoji {
-        float: none;
-        display: inline-block;
-        bottom: 0;
-    }
-    input.o_field_char.o_field_widget {
-        min-width: 86%;
-    }
     .o_FormRenderer_chatterContainer {
         margin: 0;
         max-width: unset;
@@ -51,6 +50,16 @@
         }
         > .o_dropdown_more {
             width: 135px;
+        }
+    }
+    // For large devices, limit the width of subject and adjust the emoji widget accordingly
+    @include media-breakpoint-up(md) {
+        input.o_field_char.o_field_widget {
+            min-width: 86%;
+        }
+        .o_mail_add_emoji {
+            right: 14%;
+            bottom: 4px;
         }
     }
 }

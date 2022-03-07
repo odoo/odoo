@@ -78,7 +78,7 @@
                         <!-- === Payment icon list === -->
                         <t t-call="payment.icon_list"/>
                         <!-- === Help message === -->
-                        <div t-if="acquirer.pre_msg"
+                        <div t-if="not is_html_empty(acquirer.pre_msg)"
                              t-out="acquirer.pre_msg"
                              class="text-muted ml-3"/>
                     </div>
@@ -201,7 +201,7 @@
                         <!-- === Payment icon list === -->
                         <t t-call="payment.icon_list"/>
                         <!-- === Help message === -->
-                        <div t-if="acquirer.pre_msg"
+                        <div t-if="not is_html_empty(acquirer.pre_msg)"
                              t-out="acquirer.pre_msg"
                              class="text-muted ml-3"/>
                     </div>
@@ -335,21 +335,24 @@
         <!-- Variables description:
             - 'tx' - The transaction whose status must be displayed
         -->
-        <div t-if="tx.state == 'pending'" class="alert alert-warning alert-dismissible">
-            <span t-if='tx.acquirer_id.sudo().pending_msg'
-                  t-out="tx.acquirer_id.sudo().pending_msg"/>
+        <div t-if="tx.state == 'pending' and not is_html_empty(tx.acquirer_id.sudo().pending_msg)"
+             class="alert alert-warning alert-dismissible">
+            <span t-out="tx.acquirer_id.sudo().pending_msg"/>
             <button class="close" data-dismiss="alert" title="Dismiss">×</button>
         </div>
-        <div t-elif="tx.state == 'authorized'" class="alert alert-success alert-dismissible">
-            <span t-if='tx.acquirer_id.sudo().auth_msg' t-out="tx.acquirer_id.sudo().auth_msg"/>
+        <div t-elif="tx.state == 'authorized' and not is_html_empty(tx.acquirer_id.sudo().auth_msg)"
+             class="alert alert-success alert-dismissible">
+            <span t-out="tx.acquirer_id.sudo().auth_msg"/>
             <button class="close" data-dismiss="alert" title="Dismiss">×</button>
         </div>
-        <div t-elif="tx.state == 'done'" class="alert alert-success alert-dismissible">
-            <span t-if='tx.acquirer_id.sudo().done_msg' t-out="tx.acquirer_id.sudo().done_msg"/>
+        <div t-elif="tx.state == 'done' and not is_html_empty(tx.acquirer_id.sudo().done_msg)"
+             class="alert alert-success alert-dismissible">
+            <span t-out="tx.acquirer_id.sudo().done_msg"/>
             <button class="close" data-dismiss="alert" title="Dismiss">×</button>
         </div>
-        <div t-elif="tx.state == 'cancel'" class="alert alert-danger alert-dismissible">
-            <span t-if='tx.acquirer_id.sudo().cancel_msg' t-out="tx.acquirer_id.sudo().cancel_msg"/>
+        <div t-elif="tx.state == 'cancel' and not is_html_empty(tx.acquirer_id.sudo().cancel_msg)"
+             class="alert alert-danger alert-dismissible">
+            <span t-out="tx.acquirer_id.sudo().cancel_msg"/>
             <button class="close" data-dismiss="alert" title="Dismiss">×</button>
         </div>
         <span t-if="tx.state_message" t-esc="tx.state_message"/>

@@ -264,7 +264,7 @@ def translate_xml_node(node, callback, parse, serialize):
 
         # translate the attributes of the node
         for key, val in node.attrib.items():
-            if val and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node):
+            if nonspace(val) and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node):
                 node.set(key, callback(val.strip()) or val)
 
     process(node)

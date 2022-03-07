@@ -23,7 +23,7 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         select_ = '''
-            MIN(l.id) AS id,
+            -MIN(l.id) AS id,
             l.product_id AS product_id,
             t.uom_id AS product_uom,
             sum(l.qty) AS product_uom_qty,

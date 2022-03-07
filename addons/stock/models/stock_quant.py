@@ -79,16 +79,16 @@ class StockQuant(models.Model):
     quantity = fields.Float(
         'Quantity',
         help='Quantity of products in this quant, in the default unit of measure of the product',
-        readonly=True)
+        readonly=True, digits='Product Unit of Measure')
     reserved_quantity = fields.Float(
         'Reserved Quantity',
         default=0.0,
         help='Quantity of reserved products in this quant, in the default unit of measure of the product',
-        readonly=True, required=True)
+        readonly=True, required=True, digits='Product Unit of Measure')
     available_quantity = fields.Float(
         'Available Quantity',
         help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
-        compute='_compute_available_quantity')
+        compute='_compute_available_quantity', digits='Product Unit of Measure')
     in_date = fields.Datetime('Incoming Date', readonly=True, required=True, default=fields.Datetime.now)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     on_hand = fields.Boolean('On Hand', store=False, search='_search_on_hand')
@@ -109,7 +109,7 @@ class StockQuant(models.Model):
     inventory_date = fields.Date(
         'Scheduled Date', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
-    inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False)
+    inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False, default=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated')
     user_id = fields.Many2one(
         'res.users', 'Assigned To', help="User assigned to do product count.")
@@ -241,11 +241,6 @@ class StockQuant(models.Model):
             if any(field for field in vals.keys() if field not in allowed_fields):
                 raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
-            res = super(StockQuant, self).write(vals)
-            if res and self.env.context.get('inventory_report_mode'):
-                # update context to prevent recursive write call
-                self.with_context({'inventory_report_mode': False}).action_apply_inventory()
-            return res
         return super(StockQuant, self).write(vals)
 
     def action_view_stock_moves(self):
@@ -297,6 +292,8 @@ class StockQuant(models.Model):
         return action
 
     def action_apply_inventory(self):
+        # Update the context to prevent recursive call from write method
+        self = self.with_context({'inventory_report_mode': False})
         products_tracked_without_lot = []
         for quant in self:
             rounding = quant.product_uom_id.rounding
@@ -611,7 +608,11 @@ class StockQuant(models.Model):
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
 
-        incoming_dates = [d for d in quants.mapped('in_date') if d]
+        if location_id.should_bypass_reservation():
+            incoming_dates = []
+        else:
+            incoming_dates = [quant.in_date for quant in quants if quant.in_date and
+                              float_compare(quant.quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0]
         if in_date:
             incoming_dates += [in_date]
         # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
@@ -959,7 +960,7 @@ class QuantPackage(models.Model):
     _order = 'name'
 
     name = fields.Char(
-        'Package Reference', copy=False, index=True,
+        'Package Reference', copy=False, index=True, required=True,
         default=lambda self: self.env['ir.sequence'].next_by_code('stock.quant.package') or _('Unknown Pack'))
     quant_ids = fields.One2many('stock.quant', 'package_id', 'Bulk Content', readonly=True,
         domain=['|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0)])
@@ -1001,7 +1002,7 @@ class QuantPackage(models.Model):
         else:
             packs = self.search([('quant_ids', operator, value)])
         if packs:
-            return [('id', 'parent_of', packs.ids)]
+            return [('id', 'in', packs.ids)]
         else:
             return [('id', '=', False)]
 

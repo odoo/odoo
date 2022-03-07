@@ -45,7 +45,7 @@ class CrmTeam(models.Model):
             user = self.env.user
         else:
             user = self.env['res.users'].sudo().browse(user_id)
-        valid_cids = [False] + user.company_ids.ids
+        valid_cids = [False] + [c for c in user.company_ids.ids if c in self.env.companies.ids]
 
         # 1- find in user memberships - note that if current user in C1 searches
         # for team belonging to a user in C1/C2 -> only results for C1 will be returned

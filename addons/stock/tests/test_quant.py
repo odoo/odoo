@@ -3,7 +3,9 @@
 
 from contextlib import closing
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
+from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
@@ -687,3 +689,110 @@ class StockQuant(TransactionCase):
         self.assertEqual(quants[0][0].reserved_quantity, 2)
         # The last one should then be taken in stock_location/subloc3 since the first location doesn't have enough products
         self.assertEqual(quants[1][0].reserved_quantity, 1)
+
+    def test_in_date_6(self):
+        """
+        One P in stock, P is delivered. Later on, a stock adjustement adds one P. This test checks
+        the date value of the related quant
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
+
+        move = self.env['stock.move'].create({
+            'name': 'OUT 1 product',
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.quantity_done = 1
+        move._action_done()
+
+
+        tomorrow = fields.Datetime.now() + timedelta(days=1)
+        with patch.object(fields.Datetime, 'now', lambda: tomorrow):
+            move = self.env['stock.move'].create({
+                'name': 'IN 1 product',
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product.uom_id.id,
+                'location_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': self.stock_location.id,
+            })
+            move._action_confirm()
+            move._action_assign()
+            move.quantity_done = 1
+            move._action_done()
+
+            quant = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('location_id', '=', self.stock_location.id), ('quantity', '>', 0)])
+            self.assertEqual(quant.in_date, tomorrow)
+
+    def test_quant_creation(self):
+        """
+        This test ensures that, after an internal transfer, the values of the created quand are correct
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10.0)
+
+        move = self.env['stock.move'].create({
+            'name': 'Move 1 product',
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_subloc2.id,
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.quantity_done = 1
+        move._action_done()
+
+        quant = self.gather_relevant(self.product, self.stock_subloc2)
+        self.assertFalse(quant.inventory_quantity_set)
+
+    def test_unpack_and_quants_merging(self):
+        """
+        When unpacking a package, if there are already some quantities of the
+        packed product in the stock, the quant of the on hand quantity and the
+        one of the package should be merged
+        """
+        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        picking_type_in = self.env.ref('stock.picking_type_in')
+
+        self.env['stock.quant']._update_available_quantity(self.product, stock_location, 1.0)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_in.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': stock_location.id,
+            'move_lines': [(0, 0, {
+                'name': 'In 10 x %s' % self.product.name,
+                'product_id': self.product.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': stock_location.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product.uom_id.id,
+            })],
+        })
+        picking.action_confirm()
+
+        package = self.env['stock.quant.package'].create({
+            'name': 'Super Package',
+        })
+        picking.move_lines.move_line_ids.write({
+            'qty_done': 10,
+            'result_package_id': package.id,
+        })
+        picking.button_validate()
+
+        package.unpack()
+
+        quant = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('on_hand', '=', True)])
+        self.assertEqual(len(quant), 1)
+        # The quants merging is processed thanks to a SQL query (see StockQuant._merge_quants).
+        # At that point, the ORM is not aware of the new value. So we need to invalidate the
+        # cache to ensure that the value will be the newest
+        quant.invalidate_cache(fnames=['quantity'], ids=quant.ids)
+        self.assertEqual(quant.quantity, 11)

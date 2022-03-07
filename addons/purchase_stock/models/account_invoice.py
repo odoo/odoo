@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_compare, float_is_zero
-from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_compare
 
 
 class AccountMove(models.Model):
@@ -72,23 +71,7 @@ class AccountMove(models.Model):
                         valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_in())
 
                     if valuation_stock_moves:
-                        valuation_price_unit_total = 0
-                        valuation_total_qty = 0
-                        for val_stock_move in valuation_stock_moves:
-                            # In case val_stock_move is a return move, its valuation entries have been made with the
-                            # currency rate corresponding to the original stock move
-                            valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
-                            svl = val_stock_move.with_context(active_test=False).mapped('stock_valuation_layer_ids').filtered(lambda l: l.quantity)
-                            layers_qty = sum(svl.mapped('quantity'))
-                            layers_values = sum(svl.mapped('value'))
-                            valuation_price_unit_total += line.company_currency_id._convert(
-                                layers_values, move.currency_id,
-                                move.company_id, valuation_date, round=False,
-                            )
-                            valuation_total_qty += layers_qty
-
-                        if float_is_zero(valuation_total_qty, precision_rounding=line.product_uom_id.rounding or line.product_id.uom_id.rounding):
-                            raise UserError(_('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % line.product_id.display_name)
+                        valuation_price_unit_total, valuation_total_qty = valuation_stock_moves._get_valuation_price_and_qty(line, move.currency_id)
                         valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                         valuation_price_unit = line.product_id.uom_id._compute_price(valuation_price_unit, line.product_uom_id)
 
@@ -142,6 +125,7 @@ class AccountMove(models.Model):
                     vals = {
                         'name': line.name[:64],
                         'move_id': move.id,
+                        'partner_id': move.commercial_partner_id.id,
                         'currency_id': line.currency_id.id,
                         'product_id': line.product_id.id,
                         'product_uom_id': line.product_uom_id.id,
@@ -162,6 +146,7 @@ class AccountMove(models.Model):
                     vals = {
                         'name': line.name[:64],
                         'move_id': move.id,
+                        'partner_id': move.commercial_partner_id.id,
                         'currency_id': line.currency_id.id,
                         'product_id': line.product_id.id,
                         'product_uom_id': line.product_uom_id.id,

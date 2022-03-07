@@ -44,8 +44,9 @@
                             </div>
                         </group>
                     </group>
-                    <label for="default_note"/>
-                    <field name="default_note"/>
+                    <group>
+                        <field name="default_note"/>
+                    </group>
                     <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
                 </sheet>
             </form>
@@ -126,7 +127,7 @@
                             <field name="user_id"/>
                         </group>
                     </group>
-                    <field name="note" placeholder="Log a note..."/>
+                    <field name="note" class="oe-bordered-editor" placeholder="Log a note..."/>
                     <footer>
                         <field name="id" invisible="1"/>
                         <button id="mail_activity_schedule" string="Schedule" name="action_close_dialog" type="object" class="btn-primary"

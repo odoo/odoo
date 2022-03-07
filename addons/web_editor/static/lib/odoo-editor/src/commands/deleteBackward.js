@@ -20,7 +20,6 @@ import {
     prepareUpdate,
     setSelection,
     splitTextNode,
-    isUnbreakable,
     isMediaElement,
     isVisibleEmpty,
 } from '../utils/utils.js';
@@ -45,15 +44,20 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     // Do remove the character, then restore the state of the surrounding parts.
     const restore = prepareUpdate(parentNode, firstSplitOffset, parentNode, secondSplitOffset);
     const isSpace = !isVisibleStr(middleNode) && !isInPre(middleNode);
+    const isZWS = middleNode.nodeValue === '\u200B';
     middleNode.remove();
     restore();
 
     // If the removed element was not visible content, propagate the backspace.
     if (
+        isZWS ||
         isSpace &&
         getState(parentNode, firstSplitOffset, DIRECTIONS.LEFT).cType !== CTYPES.CONTENT
     ) {
         parentNode.oDeleteBackward(firstSplitOffset, alreadyMoved);
+        if (isZWS) {
+            fillEmpty(parentNode);
+        }
         return;
     }
 
@@ -62,6 +66,7 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
 };
 
 HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+    const contentIsZWS = this.textContent === '\u200B';
     let moveDest;
     if (offset) {
         const leftNode = this.childNodes[offset - 1];
@@ -120,9 +125,9 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
              * <=>  <p>abc[]<i>def</i></p> + BACKSPACE
              */
             const parentOffset = childNodeIndex(this);
-            if (!nodeSize(this)) {
-                const visible = isVisible(this);
 
+            if (!nodeSize(this) || contentIsZWS) {
+                const visible = isVisible(this) && !contentIsZWS;
                 const restore = prepareUpdate(...boundariesOut(this));
                 this.remove();
                 restore();

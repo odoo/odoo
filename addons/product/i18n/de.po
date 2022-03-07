@@ -7,7 +7,7 @@
 # Chris Egal <sodaswed@web.de>, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Raymond Vetter, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -192,7 +192,7 @@ msgstr "<strong>Menge</strong>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "<strong>Sales Order Line Quantities (price per unit)</strong>"
-msgstr ""
+msgstr "<strong>Sales Order Line Quantities (price per unit)</strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -474,6 +474,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Basispreis für die Berechnung.\n"
+"Verkaufspreis: Der Basispreis wird der Verkaufspreis sein.\n"
+"Einstandspreis: Der Basispreis ist der Einstandspreis.\n"
+"Andere Preisliste : Berechnung des Basispreises auf der Grundlage einer anderen Preisliste."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -501,7 +505,7 @@ msgstr "Schrank mit Türen"
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "Kan Bild 1024 herangezoomt werden"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
@@ -541,7 +545,7 @@ msgstr "Unterkategorien"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "Label Layout auswählen"
 
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
@@ -695,7 +699,7 @@ msgstr "Enthaltene Menge"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "Eckschreibtisch Links Sitzen"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -1002,7 +1006,7 @@ msgstr "Dauer"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr ""
+msgstr "Dymo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -1056,7 +1060,7 @@ msgstr "Berechnungsregel für diese Position der Preisliste"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr ""
+msgstr "Zusätzlicher Inhalt"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1350,7 +1354,7 @@ msgstr "Importvorlage für Lieferantenpreislisten"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
@@ -1728,7 +1732,7 @@ msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_count
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_item_count
 msgid "Number of price rules"
-msgstr ""
+msgstr "Anzahl der Preisregeln"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_unread_counter
@@ -2165,7 +2169,7 @@ msgstr "Produktvorlage"
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
 #: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
 msgid "Product Tooltip"
-msgstr ""
+msgstr "Produkt Tooltip"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__detailed_type
@@ -2274,7 +2278,7 @@ msgstr "Einkaufsbeschreibung"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase UoM"
-msgstr ""
+msgstr "Kaufmengeneinheit"
 
 #. module: product
 #. openerp-web
@@ -2579,6 +2583,7 @@ msgstr "Die interne Referenz '%s' existiert bereits."
 #, python-format
 msgid "The Type of this product doesn't match the Detailed Type"
 msgstr ""
+"Der Typ dieses Produkts stimmt nicht mit dem detaillierten Typ überein"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2725,6 +2730,18 @@ msgstr "Es sind keine weiteren Kombinationen möglich."
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 msgid "This comes from the product form."
 msgstr "Dies kommt vom Produktformular"
+
+#. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Diese Konfiguration von Produktattributen, Werten und Ausschlüssen würde zu "
+"keiner möglichen Variante führen. Bitte archivieren oder löschen Sie Ihr "
+"Produkt direkt, wenn dies beabsichtigt ist."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2980,22 +2997,22 @@ msgstr "Bild der Variante"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr ""
+msgstr "Variant Image 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr ""
+msgstr "Variant Image 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr ""
+msgstr "Variant Image 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr ""
+msgstr "Variant Image 512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3310,6 +3327,14 @@ msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr ""
 "SIe können das Attribut %s nicht vom Produkt %s zum Produkt %s verschieben."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

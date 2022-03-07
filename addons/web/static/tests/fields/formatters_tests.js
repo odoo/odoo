@@ -30,6 +30,8 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloat(106500, options), "1€06€500?00");
 
         assert.strictEqual(formatFloat(1500, { thousandsSep: "" }), "1500.00");
+        assert.strictEqual(formatFloat(-1.01), "-1.01");
+        assert.strictEqual(formatFloat(-0.01), "-0.01");
 
         assert.strictEqual(formatFloat(38.0001, { noTrailingZeros: true }), "38");
         assert.strictEqual(formatFloat(38.1, { noTrailingZeros: true }), "38.1");

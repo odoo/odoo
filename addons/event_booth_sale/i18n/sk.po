@@ -3,7 +3,11 @@
 #   * event_booth_sale
 # 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2021
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Jan Prokop, 2022
+# Martin Trigaux, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2021\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +31,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Skladovateľný produkt je produkt, ktorý je evidovaný v sklade. Musí byť nainštalovaná aplikácia Sklad.\n"
+"Spotrebný materiál nie je evidovaný v sklade.\n"
+"Služba je nemateriálny produkt ktorý poskytujete."
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_ids
@@ -74,7 +81,7 @@ msgstr ""
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušené"
 
 #. module: event_booth_sale
 msgid "Configure an event booth"
@@ -93,12 +100,12 @@ msgstr ""
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_email
 msgid "Contact Email"
-msgstr ""
+msgstr "Kontaktný email"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_mobile
@@ -108,7 +115,7 @@ msgstr ""
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_name
 msgid "Contact Name"
-msgstr ""
+msgstr "Meno kontaktu"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_phone
@@ -119,41 +126,41 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__create_uid
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Vytvoril"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__create_date
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Vytvorené"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__currency_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__currency_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Mena"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__partner_id
 msgid "Customer"
-msgstr ""
+msgstr "Zákazník"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
 msgid "Details"
-msgstr ""
+msgstr "Podrobnosti"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__display_name
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovaný názov"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_id
 msgid "Event"
-msgstr ""
+msgstr "Udalosť"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_booth
@@ -197,12 +204,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__image_1920
 msgid "Image"
-msgstr ""
+msgstr "Obrázok"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__is_event_booth
@@ -212,30 +219,30 @@ msgstr ""
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__is_paid
 msgid "Is Paid"
-msgstr ""
+msgstr "Je zaplatené"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Vstup účtovnej knihy"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator____last_update
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Posledná úprava"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__write_uid
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Naposledy upravoval"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__write_date
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Naposledy upravované"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
@@ -245,12 +252,12 @@ msgstr "Ok"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_id
 msgid "Order Reference"
-msgstr ""
+msgstr "Referencia objednávky"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
 msgid "Paid"
-msgstr ""
+msgstr "Zaplatené"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_pending_ids
@@ -262,12 +269,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__price
 msgid "Price"
-msgstr ""
+msgstr "Cena"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price_reduce
 msgid "Price Reduce"
-msgstr ""
+msgstr "Cenové zníženie"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_product_product
@@ -276,23 +283,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__product_id
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Šablóna produktu"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_product_product__detailed_type
 #: model:ir.model.fields,field_description:event_booth_sale.field_product_template__detailed_type
 msgid "Product Type"
-msgstr ""
+msgstr "Typ produktu"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
 msgid "Registrations"
-msgstr ""
+msgstr "Registrácie"
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
@@ -308,23 +315,23 @@ msgstr ""
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
 msgid "Sale Order"
-msgstr ""
+msgstr "Objednávka predaja"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__sale_order_line_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__sale_order_line_id
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Riadok objednávky predaja"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Objednávka "
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Položka objednávok"
 
 #. module: event_booth_sale
 #: model:ir.actions.act_window,name:event_booth_sale.event_booth_configurator_action
@@ -347,7 +354,7 @@ msgstr ""
 #. module: event_booth_sale
 #: model:product.product,uom_name:event_booth_sale.product_product_event_booth
 msgid "Units"
-msgstr ""
+msgstr "Jednotky"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,help:event_booth_sale.field_sale_order_line__event_booth_pending_ids

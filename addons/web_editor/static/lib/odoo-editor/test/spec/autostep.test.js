@@ -5,8 +5,13 @@ const timeoutPromise = ms =>
         setTimeout(() => resolve(), ms);
     });
 
-const appendSpan = element => {
+const appendSpan = (element, id = 1) => {
+    // The ID is necessary to prevent the editor to merge elements together:
+    // If multiple spans are sibblings and nothing differentiates them,
+    // the Editor will try to merge them.
     const span = document.createElement('SPAN');
+    span.id = 'id-' + id;
+    span.textContent = '*';
     element.append(span);
 };
 
@@ -38,7 +43,7 @@ describe('Autostep', () => {
                     );
                 });
             },
-            contentAfter: '<p>a[]<span></span></p>',
+            contentAfter: '<p>a[]<span id="id-1">*</span></p>',
         });
     });
     it('should not record a change not made through the editor itself', async function () {
@@ -63,7 +68,7 @@ describe('Autostep', () => {
                     );
                 });
             },
-            contentAfter: '<p>a[]<span></span></p>',
+            contentAfter: '<p>a[]<span id="id-1">*</span></p>',
         });
     });
     it('should record changes not made through the editor itself once reactivated', async function () {
@@ -79,9 +84,9 @@ describe('Autostep', () => {
                 await timeoutPromise(20);
 
                 editor.automaticStepUnactive('test');
-                appendSpan(editor.editable.querySelector('p'));
+                appendSpan(editor.editable.querySelector('p'), 1);
                 editor.automaticStepActive('test');
-                appendSpan(editor.editable.querySelector('p'));
+                appendSpan(editor.editable.querySelector('p'), 2);
 
                 await timeoutPromise(120).then(() => {
                     window.chai.assert.strictEqual(
@@ -91,7 +96,7 @@ describe('Autostep', () => {
                     );
                 });
             },
-            contentAfter: '<p>a[]<span></span><span></span></p>',
+            contentAfter: '<p>a[]<span id="id-1">*</span><span id="id-2">*</span></p>',
         });
     });
     it('should record a change not made through the editor itself if not everyone has reactivated autostep', async function () {
@@ -102,10 +107,10 @@ describe('Autostep', () => {
                 const originalHistoryLength = editor._historySteps.length;
                 editor.automaticStepUnactive('test');
                 editor.automaticStepUnactive('test2');
-                appendSpan(editor.editable.querySelector('p'));
+                appendSpan(editor.editable.querySelector('p'), 1);
                 editor.automaticStepActive('test');
 
-                appendSpan(editor.editable.querySelector('p'));
+                appendSpan(editor.editable.querySelector('p'), 2);
 
                 await timeoutPromise(120).then(() => {
                     window.chai.assert.strictEqual(
@@ -115,7 +120,7 @@ describe('Autostep', () => {
                     );
                 });
             },
-            contentAfter: '<p>a[]<span></span><span></span></p>',
+            contentAfter: '<p>a[]<span id="id-1">*</span><span id="id-2">*</span></p>',
         });
     });
 
@@ -133,11 +138,11 @@ describe('Autostep', () => {
 
                 editor.automaticStepUnactive('test');
                 editor.automaticStepUnactive('test2');
-                appendSpan(editor.editable.querySelector('p'));
+                appendSpan(editor.editable.querySelector('p'), 1);
                 editor.automaticStepActive('test');
-                appendSpan(editor.editable.querySelector('p'));
+                appendSpan(editor.editable.querySelector('p'), 2);
                 editor.automaticStepActive('test2');
-                appendSpan(editor.editable.querySelector('p'));
+                appendSpan(editor.editable.querySelector('p'), 3);
 
                 await timeoutPromise(120).then(() => {
                     window.chai.assert.strictEqual(
@@ -147,7 +152,7 @@ describe('Autostep', () => {
                     );
                 });
             },
-            contentAfter: '<p>a[]<span></span><span></span><span></span></p>',
+            contentAfter: '<p>a[]<span id="id-1">*</span><span id="id-2">*</span><span id="id-3">*</span></p>',
         });
     });
 });

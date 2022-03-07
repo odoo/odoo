@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
 # Raymond Vetter, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Raymond Vetter, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -312,6 +312,11 @@ msgstr "Administrator"
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__name
 msgid "Alert Name"
 msgstr "Alarm-Name"
+
+#. module: lunch
+#: model:lunch.alert,name:lunch.alert_office_3
+msgid "Alert for Office 3"
+msgstr "Warnung für Büro 3"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
@@ -688,7 +693,7 @@ msgstr "Anzeigename"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_reorder_button
 msgid "Display Reorder Button"
-msgstr ""
+msgstr "Schaltfläche \"Neu bestellen\" anzeigen"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_drinks
@@ -1151,6 +1156,36 @@ msgid "Lunch: Send by email"
 msgstr "Lunch: per E-Mail senden"
 
 #. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_224
+msgid "Lunch: alert chat notification (Alert for Office 3)"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_225
+msgid "Lunch: send automatic email to Coin gourmand"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_221
+msgid "Lunch: send automatic email to Lunch Supplier"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_226
+msgid "Lunch: send automatic email to Pizza Inn"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_228
+msgid "Lunch: send automatic email to Sushi Shop"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_227
+msgid "Lunch: send automatic email to The Corner"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Hauptanhänge"
@@ -1520,6 +1555,11 @@ msgid "Pizza Vegetarian"
 msgstr "Pizza vegetarisch"
 
 #. module: lunch
+#: model_terms:lunch.alert,message:lunch.alert_office_3
+msgid "Please order"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__price
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -1824,6 +1864,7 @@ msgstr ""
 "Sie wird beim Senden der automatischen E-Mail als \"von\" verwendet."
 
 #. module: lunch
+#: code:addons/lunch/models/lunch_order.py:0
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "The vendor related to this order is not available today."

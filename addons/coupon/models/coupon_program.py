@@ -137,7 +137,12 @@ class CouponProgram(models.Model):
             return True
 
     def _get_valid_products(self, products):
-        if self.rule_products_domain:
+        """Get valid products for the program.
+
+        :param products: records of product.product
+        :return: valid products recordset
+        """
+        if self.rule_products_domain and self.rule_products_domain != "[]":
             domain = ast.literal_eval(self.rule_products_domain)
             return products.filtered_domain(domain)
         return products

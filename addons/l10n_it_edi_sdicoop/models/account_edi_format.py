@@ -3,7 +3,7 @@
 
 from odoo import models, _, _lt
 from odoo.exceptions import UserError
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError, DEFAULT_SERVER_URL
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 from lxml import etree
 import base64
@@ -22,15 +22,15 @@ class AccountEdiFormat(models.Model):
     def _cron_receive_fattura_pa(self):
         ''' Check the proxy for incoming invoices.
         '''
-        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+        proxy_users = self.env['account_edi_proxy_client.user'].search([('edi_format_id', '=', self.env.ref('l10n_it_edi.edi_fatturaPA').id)])
+
+        if proxy_users._get_demo_state() == 'demo':
             return
 
-        server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
-        proxy_users = self.env['account_edi_proxy_client.user'].search([('edi_format_id', '=', self.env.ref('l10n_it_edi.edi_fatturaPA').id)])
         for proxy_user in proxy_users:
             company = proxy_user.company_id
             try:
-                res = proxy_user._make_request(server_url + '/api/l10n_it_edi/1/in/RicezioneInvoice',
+                res = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice',
                                                params={'recipient_codice_fiscale': company.l10n_it_codice_fiscale})
             except AccountEdiProxyError as e:
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
@@ -52,20 +52,30 @@ class AccountEdiFormat(models.Model):
                     _logger.info('Received file badly formatted, skipping: \n %s', file)
                     continue
 
-                invoice = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(fattura['filename'], tree)
-                self.env['ir.attachment'].create({
+                invoice = self.env['account.move'].create({'move_type': 'in_invoice'})
+                attachment = self.env['ir.attachment'].create({
                     'name': fattura['filename'],
                     'raw': file,
                     'type': 'binary',
                     'res_model': 'account.move',
                     'res_id': invoice.id
                 })
-
+                if not self.env.context.get('test_skip_commit'):
+                    self.env.cr.commit() #In case something fails after, we still have the attachment
+                # So that we don't delete the attachment when deleting the invoice
+                attachment.res_id = False
+                attachment.res_model = False
+                invoice.unlink()
+                invoice = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(fattura['filename'], tree)
+                attachment.write({'res_model': 'account.move',
+                                  'res_id': invoice.id})
                 proxy_acks.append(id_transaction)
+                if not self.env.context.get('test_skip_commit'):
+                    self.env.cr.commit()
 
             if proxy_acks:
                 try:
-                    proxy_user._make_request(server_url + '/api/l10n_it_edi/1/ack',
+                    proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/ack',
                                             params={'transaction_ids': proxy_acks})
                 except AccountEdiProxyError as e:
                     _logger.error('Error while receiving file from SdiCoop: %s', e)
@@ -110,6 +120,13 @@ class AccountEdiFormat(models.Model):
 
         return super()._support_batching(move=move, state=state, company=company)
 
+    def _get_batch_key(self, move, state):
+        # OVERRIDE
+        if self.code != 'fattura_pa':
+            return super()._get_batch_key(move, state)
+
+        return move.move_type, bool(move.l10n_it_edi_transaction)
+
     def _l10n_it_post_invoices_step_1(self, invoices):
         ''' Send the invoices to the proxy.
         '''
@@ -129,7 +146,7 @@ class AccountEdiFormat(models.Model):
             })
             invoice.l10n_it_edi_attachment_id = attachment
 
-            if len(invoice.commercial_partner_id.l10n_it_pa_index or '') == 6:
+            if invoice._is_commercial_partner_pa():
                 invoice.message_post(
                     body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
                 )
@@ -146,7 +163,7 @@ class AccountEdiFormat(models.Model):
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
                 'blocking_level': 'error'} for invoice in invoices}
 
-        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+        if proxy_user._get_demo_state() == 'demo':
             responses = {filename: {'id_transaction': 'demo'} for invoice in invoices}
         else:
             try:
@@ -168,7 +185,6 @@ class AccountEdiFormat(models.Model):
     def _l10n_it_post_invoices_step_2(self, invoices):
         ''' Check if the sent invoices have been processed by FatturaPA.
         '''
-        server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
         to_check = {i.l10n_it_edi_transaction: i for i in invoices}
         to_return = {}
         company = invoices.company_id
@@ -178,12 +194,12 @@ class AccountEdiFormat(models.Model):
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
                 'blocking_level': 'error'} for invoice in invoices}
 
-        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+        if proxy_user._get_demo_state() == 'demo':
             # simulate success and bypass ack
             return {invoice: {'attachment': invoice.l10n_it_edi_attachment_id} for invoice in invoices}
         else:
             try:
-                responses = proxy_user._make_request(server_url + '/api/l10n_it_edi/1/in/TrasmissioneFatture',
+                responses = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/TrasmissioneFatture',
                                                     params={'ids_transaction': list(to_check.keys())})
             except AccountEdiProxyError as e:
                 return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
@@ -209,21 +225,41 @@ class AccountEdiFormat(models.Model):
                 to_return[invoice] = {'error': _('You are not allowed to check the status of this invoice.'), 'blocking_level': 'error'}
                 continue
 
+            if not response.get('file'): # It means there is no status update, so we can skip it
+                document = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'fattura_pa')
+                to_return[invoice] = {'error': document.error, 'blocking_level': document.blocking_level}
+                continue
             xml = proxy_user._decrypt_data(response['file'], response['key'])
             response_tree = etree.fromstring(xml)
             if state == 'ricevutaConsegna':
-                to_return[invoice] = {'error': _('The invoice has been succesfully transmitted. The addressee has 15 days to accept or reject it.')}
+                if invoice._is_commercial_partner_pa():
+                    to_return[invoice] = {'error': _('The invoice has been succesfully transmitted. The addressee has 15 days to accept or reject it.')}
+                else:
+                    to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
             elif state == 'notificaScarto':
                 errors = [element.find('Descrizione').text for element in response_tree.xpath('//Errore')]
                 to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
+                invoice.l10n_it_edi_transaction = False
             elif state == 'notificaMancataConsegna':
-                to_return[invoice] = {
-                    'error': _('The E-invoice is not delivered to the addressee. The Exchange System is\
-                    unable to deliver the file to the Public Administration. The Exchange System will\
-                    contact the PA to report the problem and request that they provide a solution. \
-                    During the following 15 days, the Exchange System will try to forward the FatturaPA\
-                    file to the Administration in question again.'),
-                }
+                if invoice._is_commercial_partner_pa():
+                    to_return[invoice] = {'error': _(
+                        'The invoice has been issued, but the delivery to the Public Administration'
+                        ' has failed. The Exchange System will contact them to report the problem'
+                        ' and request that they provide a solution.'
+                        ' During the following 10 days, the Exchange System will try to forward the'
+                        ' FatturaPA file to the Public Administration in question again.'
+                        ' Should this also fail, the System will notify Odoo of the failed delivery,'
+                        ' and you will be required to send the invoice to the Administration'
+                        ' through another channel, outside of the Exchange System.')}
+                else:
+                    to_return[invoice] = {'success': True, 'attachment': invoice.l10n_it_edi_attachment_id}
+                    invoice._message_log(body=_(
+                        'The invoice has been issued, but the delivery to the Addressee has'
+                        ' failed. You will be required to send a courtesy copy of the invoice'
+                        ' to your customer through another channel, outside of the Exchange'
+                        ' System, and promptly notify him that the original is deposited'
+                        ' in his personal area on the portal "Invoices and Fees" of the'
+                        ' Revenue Agency.'))
             elif state == 'notificaEsito':
                 outcome = response_tree.find('Esito').text
                 if outcome == 'EC01':
@@ -231,21 +267,22 @@ class AccountEdiFormat(models.Model):
                 else:  # ECO2
                     to_return[invoice] = {'error': _('The invoice was refused by the addressee.'), 'blocking_level': 'error'}
             elif state == 'NotificaDecorrenzaTermini':
-                to_return[invoice] = {'error': _('Expiration of the maximum term for communication of acceptance/refusal'), 'blocking_level': 'error'}
+                to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
             proxy_acks.append(id_transaction)
 
-        try:
-            proxy_user._make_request(server_url + '/api/l10n_it_edi/1/ack',
-                                     params={'transaction_ids': proxy_acks})
-        except AccountEdiProxyError as e:
-            # Will be ignored and acked again next time.
-            _logger.error('Error while acking file to SdiCoop: %s', e)
+        if proxy_acks:
+            try:
+                proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/ack',
+                                        params={'transaction_ids': proxy_acks})
+            except AccountEdiProxyError as e:
+                # Will be ignored and acked again next time.
+                _logger.error('Error while acking file to SdiCoop: %s', e)
 
         return to_return
 
     def _post_fattura_pa(self, invoices):
         # OVERRIDE
-        if not invoices.l10n_it_edi_transaction:
+        if not invoices[0].l10n_it_edi_transaction:
             return self._l10n_it_post_invoices_step_1(invoices)
         else:
             return self._l10n_it_post_invoices_step_2(invoices)
@@ -279,8 +316,7 @@ class AccountEdiFormat(models.Model):
             'EI03': {'error': _lt('Unauthorized user'), 'blocking_level': 'error'},
         }
 
-        server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
-        result = proxy_user._make_request(server_url + '/api/l10n_it_edi/1/out/SdiRiceviFile', params={'files': files})
+        result = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/out/SdiRiceviFile', params={'files': files})
 
         # Translate the errors.
         for filename in result.keys():

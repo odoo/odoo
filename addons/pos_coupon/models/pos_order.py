@@ -39,7 +39,7 @@ class PosOrder(models.Model):
         unused_coupon_ids = unused_coupon_ids or []
 
         self.env["coupon.coupon"].browse(unused_coupon_ids).write({"state": "new"})
-        self.write(
+        self.sudo().write(
             {
                 "applied_program_ids": [(4, i) for i in self.lines.program_id.ids],
                 "used_coupon_ids": [(4, i) for i in self.lines.coupon_id.ids],
@@ -48,7 +48,7 @@ class PosOrder(models.Model):
                     for i in (
                         self.env["coupon.program"]
                         .browse(program_ids_to_generate_coupons)
-                        ._generate_coupons(self.partner_id.id)
+                        .sudo()._generate_coupons(self.partner_id.id)
                     ).ids
                 ],
             }
@@ -64,7 +64,11 @@ class PosOrder(models.Model):
 
     def _get_fields_for_order_line(self):
         fields = super(PosOrder, self)._get_fields_for_order_line()
-        fields.append('is_program_reward')
+        fields.extend({
+            'is_program_reward',
+            'coupon_id',
+            'program_id',
+        })
         return fields
 
 class PosOrderLine(models.Model):

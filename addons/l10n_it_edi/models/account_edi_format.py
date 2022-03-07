@@ -102,6 +102,9 @@ class AccountEdiFormat(models.Model):
             if not invoice_line.display_type and len(invoice_line.tax_ids) != 1:
                 raise UserError(_("You must select one and only one tax by line."))
 
+        if any(line.quantity < 0 for line in invoice.invoice_line_ids):
+            errors.append(_("All quantities should be positive."))
+
         for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
                 errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
@@ -152,7 +155,7 @@ class AccountEdiFormat(models.Model):
         if invoice.l10n_it_einvoice_id:
             invoice.l10n_it_einvoice_id.unlink()
         res = invoice.invoice_generate_xml()
-        if len(invoice.commercial_partner_id.l10n_it_pa_index or '') == 6:
+        if invoice._is_commercial_partner_pa():
             invoice.message_post(
                 body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
             )
@@ -278,8 +281,7 @@ class AccountEdiFormat(models.Model):
 
             # Setup the context for the Invoice Form
             invoice_ctx = invoice.with_company(company) \
-                                 .with_context(default_move_type=move_type,
-                                               account_predictive_bills_disable_prediction=True)
+                                 .with_context(default_move_type=move_type)
 
             # move could be a single record (editing) or be empty (new).
             with Form(invoice_ctx) as invoice_form:
@@ -466,14 +468,14 @@ class AccountEdiFormat(models.Model):
                                             invoice_line_form.product_id = product
                                             break
                                     if partner:
-                                        product_supplier = self.env['product.supplierinfo'].search([('name', '=', partner.id), ('product_code', '=', code.text)])
+                                        product_supplier = self.env['product.supplierinfo'].search([('name', '=', partner.id), ('product_code', '=', code.text)], limit=1)
                                         if product_supplier and product_supplier.product_id:
                                             invoice_line_form.product_id = product_supplier.product_id
                                             break
                                 if not invoice_line_form.product_id:
                                     for element_code in elements_code:
                                         code = element_code.xpath('.//CodiceValore')[0]
-                                        product = self.env['product.product'].search([('default_code', '=', code.text)])
+                                        product = self.env['product.product'].search([('default_code', '=', code.text)], limit=1)
                                         if product:
                                             invoice_line_form.product_id = product
                                             break

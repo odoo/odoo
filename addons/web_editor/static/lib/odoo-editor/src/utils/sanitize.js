@@ -13,6 +13,7 @@ import {
     isMediaElement,
     getDeepRange,
     isUnbreakable,
+    isUnremovable
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -51,11 +52,11 @@ export function areSimilarElements(node, node2) {
     ) {
         return false;
     }
-    if (node.tagName == 'LI' && node.classList.contains('oe-nested')) {
+    if (node.tagName === 'LI' && node.classList.contains('oe-nested')) {
         return (
             node.lastElementChild &&
             node2.firstElementChild &&
-            getListMode(node.lastElementChild) == getListMode(node2.firstElementChild)
+            getListMode(node.lastElementChild) === getListMode(node2.firstElementChild)
         );
     }
     if (['UL', 'OL'].includes(node.tagName)) {
@@ -103,8 +104,32 @@ class Sanitize {
             node = nodeP;
         }
 
+        // Remove zero-width spaces added by `fillEmpty` when there is content.
+        if (
+            node.nodeType === Node.TEXT_NODE &&
+            node.textContent.includes('\u200B') &&
+            (
+                node.textContent.length > 1 ||
+                // There can be multiple ajacent text nodes, in which case the
+                // zero-width space is not needed either, despite being alone
+                // (length === 1) in its own text node.
+                Array.from(node.parentNode.childNodes).find(
+                    sibling =>
+                        sibling !== node &&
+                        sibling.nodeType === Node.TEXT_NODE &&
+                        sibling.length > 0
+                )
+            ) &&
+            !isBlock(node.parentElement)
+        ) {
+            const restoreCursor = preserveCursor(this.root.ownerDocument);
+            node.textContent = node.textContent.replace('\u200B', '');
+            node.parentElement.removeAttribute("oe-zws-empty-inline");
+            restoreCursor();
+        }
+
         // Remove empty blocks in <li>
-        if (node.nodeName == 'P' && node.parentElement.tagName == 'LI') {
+        if (node.nodeName === 'P' && node.parentElement.tagName === 'LI') {
             const next = node.nextSibling;
             const pnode = node.parentElement;
             if (isEmptyBlock(node)) {

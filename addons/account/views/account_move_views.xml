@@ -349,18 +349,18 @@
                     <field name="tax_line_id" string="Originator Tax"/>
                     <field name="reconcile_model_id"/>
                     <separator/>
-                    <filter string="Unposted" name="unposted" domain="[('move_id.state', '=', 'draft')]" help="Unposted Journal Items"/>
-                    <filter string="Posted" name="posted" domain="[('move_id.state', '=', 'posted')]" help="Posted Journal Items"/>
+                    <filter string="Unposted" name="unposted" domain="[('parent_state', '=', 'draft')]" help="Unposted Journal Items"/>
+                    <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items"/>
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('move_id.to_check', '=', True)]"/>
                     <separator/>
                     <filter string="Unreconciled" domain="[('full_reconcile_id', '=', False), ('balance', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
                     <separator/>
-                    <filter string="Sales" name="sales" domain="[('move_id.journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
-                    <filter string="Purchases" name="purchases" domain="[('move_id.journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
-                    <filter string="Bank" name="bank" domain="[('move_id.journal_id.type', '=', 'bank')]" context="{'default_journal_type': 'bank'}"/>
-                    <filter string="Cash" name="cash" domain="[('move_id.journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
-                    <filter string="Miscellaneous" domain="[('move_id.journal_id.type', '=', 'general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
+                    <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
+                    <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
+                    <filter string="Bank" name="bank" domain="[('journal_id.type', '=', 'bank')]" context="{'default_journal_type': 'bank'}"/>
+                    <filter string="Cash" name="cash" domain="[('journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
+                    <filter string="Miscellaneous" domain="[('journal_id.type', '=', 'general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
                     <separator/>
                     <filter string="Payable" domain="[('account_id.internal_type', '=', 'payable')]" help="From Payable accounts" name="payable"/>
                     <filter string="Receivable" domain="[('account_id.internal_type', '=', 'receivable')]" help="From Receivable accounts" name="receivable"/>
@@ -999,6 +999,8 @@
                                         <field name="account_internal_type" invisible="1"/>
                                         <field name="account_internal_group" invisible="1"/>
                                     </kanban>
+
+                                    <!-- Form view to cover mobile use -->
                                     <form>
                                         <sheet>
                                             <field name="product_uom_category_id" invisible="1"/>
@@ -1007,11 +1009,13 @@
                                             <group>
                                                 <field name="partner_id" invisible="1"/>
                                                 <field name="company_id" invisible="1"/>
+                                                <field name="debit" invisible="1"/>
+                                                <field name="credit" invisible="1"/>
                                                 <field name="product_id" widget="many2one_barcode"/>
                                                 <field name="quantity"/>
                                                 <field name="product_uom_id" groups="uom.group_uom"/>
                                                 <field name="price_unit"/>
-                                                <field name="discount" groups="product.group_discount_per_so_line"/>
+                                                <field name="discount" string="Disc.%"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </group>
                                             <group>
@@ -1024,6 +1028,10 @@
                                             <label for="name" string="Section" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
                                             <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
                                             <field name="name" widget="text"/>
+                                            <group>
+                                                <field name="price_subtotal" string="Subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                                <field name="price_total" string="Total" groups="account.group_show_line_subtotals_tax_included"/>
+                                            </group>
                                         </sheet>
                                     </form>
                                 </field>
@@ -1211,7 +1219,7 @@
                                                widget="email"
                                                attrs="{'invisible': ['|', ('move_type', 'not in', ('in_invoice', 'in_refund')), ('invoice_source_email', '=', False)]}"/>
                                         <field name="auto_post"
-                                               attrs="{'readonly': ['|',('reversed_entry_id', '!=', False),('state','!=','draft')]}"/>
+                                               attrs="{'readonly': [('state','!=','draft')]}"/>
                                         <field name="to_check"/>
                                     </group>
                                 </group>
@@ -1221,7 +1229,7 @@
                                 <group id="other_tab_entry_group">
                                     <group name="misc_group">
                                         <field name="auto_post"
-                                               attrs="{'invisible': [('move_type', '!=', 'entry')], 'readonly': ['|',('reversed_entry_id', '!=', False),('state','!=','draft')]}"/>
+                                               attrs="{'invisible': [('move_type', '!=', 'entry')], 'readonly': [('state','!=','draft')]}"/>
                                         <field name="reversed_entry_id"
                                                attrs="{'invisible': [('move_type', '!=', 'entry')]}"/>
                                         <field name="to_check"
@@ -1439,7 +1447,7 @@
             <field name="context">{'journal_type':'general', 'search_default_posted':1}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
-            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('parent_state', '!=', 'cancel')]</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>

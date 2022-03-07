@@ -168,6 +168,14 @@ class LunchSupplier(models.Model):
             }
             for _ in range(len(vals_list))
         ])
+        self.env['ir.model.data'].sudo().create([{
+            'name': f'lunch_supplier_cron_sa_{cron.ir_actions_server_id.id}',
+            'module': 'lunch',
+            'res_id': cron.ir_actions_server_id.id,
+            'model': 'ir.actions.server',
+            # noupdate is set to true to avoid to delete record at module update
+            'noupdate': True,
+        } for cron in crons])
         for vals, cron in zip(vals_list, crons):
             vals['cron_id'] = cron.id
 
@@ -192,8 +200,10 @@ class LunchSupplier(models.Model):
 
     def unlink(self):
         crons = self.cron_id.sudo()
+        server_actions = crons.ir_actions_server_id
         super().unlink()
         crons.unlink()
+        server_actions.unlink()
 
     def toggle_active(self):
         """ Archiving related lunch product """

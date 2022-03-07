@@ -166,7 +166,7 @@ class MailRenderMixin(models.AbstractModel):
             r"""( # Group 1: element up to url in style
                 <[^>]+\bstyle=" # Element with a style attribute
                 [^"]+\burl\( # Style attribute contains "url(" style
-                (?:&\#34;|')?) # url style may start with (escaped) quote: capture it
+                (?:&\#34;|'|&quot;)?) # url style may start with (escaped) quote: capture it
             ( # Group 2: url itself
                 /(?:[^'")]|(?!&\#34;))+ # stop at the first closing quote
         )""", re.VERBOSE), _sub_relative2absolute, html)
@@ -276,8 +276,11 @@ class MailRenderMixin(models.AbstractModel):
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
             try:
-                render_result = self.env['ir.qweb']._render(html.fragment_fromstring(
-                    template_src, create_parent='div'), variables, raise_on_code=is_restricted)
+                render_result = self.env['ir.qweb']._render(
+                    html.fragment_fromstring(template_src, create_parent='div'),
+                    variables,
+                    raise_on_code=is_restricted,
+                )
                 # remove the rendered tag <div> that was added in order to wrap potentially multiples nodes into one.
                 render_result = render_result[5:-6]
             except QWebCodeFound:

@@ -800,7 +800,7 @@ exports.PosModel = Backbone.Model.extend({
                 if (self.db.add_partners(partners)) {   // check if the partners we got were real updates
                     resolve();
                 } else {
-                    reject('Failed in updating partners.');
+                    reject(new Error('Failed in updating partners.'));
                 }
             }, function (type, err) { reject(); });
         });
@@ -1823,7 +1823,7 @@ exports.Orderline = Backbone.Model.extend({
         this.selected = false;
         this.description = '';
         this.price_extra = 0;
-        this.full_product_name = '';
+        this.full_product_name = options.description || '';
         this.id = orderline_id++;
         this.customerNote = this.customerNote || '';
 
@@ -1930,7 +1930,7 @@ exports.Orderline = Backbone.Model.extend({
     },
     // sets a discount [0,100]%
     set_discount: function(discount){
-        var parsed_discount = isNaN(parseFloat(discount)) ? 0 : field_utils.parse.float('' + discount);
+        var parsed_discount = typeof(discount) === 'number' ? discount : isNaN(parseFloat(discount)) ? 0 : field_utils.parse.float('' + discount);
         var disc = Math.min(Math.max(parsed_discount || 0, 0),100);
         this.discount = disc;
         this.discountStr = '' + disc;
@@ -2011,7 +2011,8 @@ exports.Orderline = Backbone.Model.extend({
         }
 
         // just like in sale.order changing the quantity will recompute the unit price
-        if(! keep_price && ! this.price_manually_set){
+        if (!keep_price && !this.price_manually_set && !(
+            this.pos.config.product_configurator && _.some(this.product.attribute_line_ids, (id) => id in this.pos.attributes_by_ptal_id))){
             this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity(), this.get_price_extra()));
             this.order.fix_tax_included_price(this);
         }
@@ -3334,15 +3335,23 @@ exports.Order = Backbone.Model.extend({
     /* ---- Payment Lines --- */
     add_paymentline: function(payment_method) {
         this.assert_editable();
-        var newPaymentline = new exports.Paymentline({},{order: this, payment_method:payment_method, pos: this.pos});
-        newPaymentline.set_amount(this.get_due());
-        this.paymentlines.add(newPaymentline);
-        this.select_paymentline(newPaymentline);
-        if(this.pos.config.cash_rounding){
-          this.selected_paymentline.set_amount(0);
-          this.selected_paymentline.set_amount(this.get_due());
+        if (this.electronic_payment_in_progress()) {
+            return false;
+        } else {
+            var newPaymentline = new exports.Paymentline({},{order: this, payment_method:payment_method, pos: this.pos});
+            newPaymentline.set_amount(this.get_due());
+            this.paymentlines.add(newPaymentline);
+            this.select_paymentline(newPaymentline);
+            if(this.pos.config.cash_rounding){
+              this.selected_paymentline.set_amount(0);
+              this.selected_paymentline.set_amount(this.get_due());
+            }
+
+            if (payment_method.payment_terminal) {
+                newPaymentline.set_payment_status('pending');
+            }
+            return newPaymentline;
         }
-        return newPaymentline;
     },
     get_paymentlines: function(){
         return this.paymentlines.models;

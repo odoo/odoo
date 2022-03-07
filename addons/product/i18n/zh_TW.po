@@ -1321,14 +1321,10 @@ msgstr "為供應商價格表匯入範本"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
-"在標準價格 + AVCO 中：產品價值（以 AVCO 自動計算）。\n"
-"        在 FIFO 中：離開庫存的最後一個單位的值（自動計算）。\n"
-"        用於在採購成本不為人知時對產品進行估價（例如庫存調整）。\n"
-"        用於計算銷售訂單的毛利率。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -2652,6 +2648,15 @@ msgid "This comes from the product form."
 msgstr "此處源自產品表單。"
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "這是所有屬性額外價格的總和"
@@ -3208,6 +3213,14 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr "不能將屬性 %s 從產品 %s 移動到產品 %s。"
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

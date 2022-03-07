@@ -208,7 +208,7 @@ class ResourceCalendar(models.Model):
                                  help="Average hours per day a resource is supposed to work with this calendar.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
+        default=lambda self: self._context.get('tz') or self.env.user.tz or self.env.ref('base.user_admin').tz or 'UTC',
         help="This field is used in order to define in which timezone the resources will work.")
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
@@ -602,12 +602,14 @@ class ResourceCalendar(models.Model):
         def interval_dt(interval):
             return interval[1 if match_end else 0]
 
+        tz = resource.tz if resource else self.tz
         if resource is None:
             resource = self.env['resource.resource']
 
         if not dt.tzinfo or search_range and not (search_range[0].tzinfo and search_range[1].tzinfo):
             raise ValueError('Provided datetimes needs to be timezoned')
-        dt = dt.astimezone(timezone(self.tz))
+
+        dt = dt.astimezone(timezone(tz))
 
         if not search_range:
             range_start = dt + relativedelta(hour=0, minute=0, second=0)

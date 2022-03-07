@@ -167,17 +167,17 @@ export class CustomFilterItem extends Component {
                 condition.value = 0;
                 break;
             }
-            case "date": {
+            case "date":
+            case "datetime": {
                 condition.value = [DateTime.local()];
                 if (operator.symbol === "between") {
                     condition.value.push(DateTime.local());
                 }
-                break;
-            }
-            case "datetime": {
-                condition.value = [DateTime.fromFormat("00:00:00", "hh:mm:ss")];
-                if (operator.symbol === "between") {
-                    condition.value.push(DateTime.fromFormat("23:59:59", "hh:mm:ss"));
+                if (genericType === "datetime") {
+                    condition.value[0].set({ hour: 0, minute: 0, second: 0 });
+                    if (operator.symbol === "between") {
+                        condition.value[1].set({ hour: 23, minute: 59, second: 59 });
+                    }
                 }
                 break;
             }

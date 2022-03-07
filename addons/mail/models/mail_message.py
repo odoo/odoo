@@ -680,7 +680,7 @@ class Message(models.Model):
         thread._check_can_update_message_content(self)
         self.body = body
         if not attachment_ids:
-            self.attachment_ids.unlink()
+            self.attachment_ids._delete_and_notify()
         else:
             message_values = {
                 'model': self.model,
@@ -969,6 +969,7 @@ class Message(models.Model):
                 'is_discussion': message_sudo.subtype_id.id == com_id,
                 'subtype_description': message_sudo.subtype_id.description,
                 'is_notification': vals['message_type'] == 'user_notification',
+                'recipients': [{'id': p.id, 'name': p.name} for p in message_sudo.partner_ids],
             })
             if vals['model'] and self.env[vals['model']]._original_module:
                 vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)

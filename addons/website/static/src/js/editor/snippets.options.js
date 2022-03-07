@@ -825,6 +825,90 @@ options.registry.BackgroundShape.include({
     }
 });
 
+options.registry.ReplaceMedia.include({
+    /**
+     * Adds an anchor to the url.
+     * Here "anchor" means a specific section of a page.
+     *
+     * @see this.selectClass for parameters
+     */
+    setAnchor(previewMode, widgetValue, params) {
+        const linkEl = this.$target[0].parentElement;
+        let url = linkEl.getAttribute('href');
+        url = url.split('#')[0];
+        linkEl.setAttribute('href', url + widgetValue);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'setAnchor') {
+            const parentEl = this.$target[0].parentElement;
+            if (parentEl.tagName === 'A') {
+                const href = parentEl.getAttribute('href') || '';
+                return href ? `#${href.split('#')[1]}` : '';
+            }
+            return '';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'media_link_anchor_opt') {
+            const parentEl = this.$target[0].parentElement;
+            const linkEl = parentEl.tagName === 'A' ? parentEl : null;
+            const href = linkEl ? linkEl.getAttribute('href') : false;
+            return href && href.startsWith('/');
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Fills the dropdown with the available anchors for the page referenced in
+     * the href.
+     *
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        await this._super(...arguments);
+
+        const oldURLWidgetEl = uiFragment.querySelector('[data-name="media_url_opt"]');
+
+        const URLWidgetEl = document.createElement('we-urlpicker');
+        // Copy attributes
+        for (const {name, value} of oldURLWidgetEl.attributes) {
+            URLWidgetEl.setAttribute(name, value);
+        }
+        URLWidgetEl.title = _t("Hint: Type '/' to search an existing page and '#' to link to an anchor.");
+        oldURLWidgetEl.replaceWith(URLWidgetEl);
+
+        const hrefValue = this.$target[0].parentElement.getAttribute('href');
+        if (!hrefValue || !hrefValue.startsWith('/')) {
+            return;
+        }
+        const urlWithoutAnchor = hrefValue.split('#')[0];
+        const selectEl = document.createElement('we-select');
+        selectEl.dataset.name = 'media_link_anchor_opt';
+        selectEl.dataset.dependencies = 'media_url_opt';
+        selectEl.dataset.noPreview = 'true';
+        selectEl.setAttribute('string', _t("⌙ Page Anchor"));
+        const anchors = await wUtils.loadAnchors(urlWithoutAnchor);
+        for (const anchor of anchors) {
+            const weButtonEl = document.createElement('we-button');
+            weButtonEl.dataset.setAnchor = anchor;
+            weButtonEl.textContent = anchor;
+            selectEl.append(weButtonEl);
+        }
+        URLWidgetEl.after(selectEl);
+    },
+});
+
 options.registry.BackgroundVideo = options.Class.extend({
 
     //--------------------------------------------------------------------------
@@ -1514,7 +1598,7 @@ options.registry.Carousel = options.Class.extend({
         this.$controls.removeClass('d-none');
         const $active = $items.filter('.active');
         this.$indicators.append($('<li>', {
-            'data-target': '#' + $active.attr('id'),
+            'data-target': '#' + this.$target.attr('id'),
             'data-slide-to': $items.length,
         }));
         this.$indicators.append(' ');

@@ -13,6 +13,7 @@
         const self = this;
         // When clicking on "Add", create a new record in form view
         this.$buttons.on('click', 'button.o-calendar-button-new', () => {
+            // TODO: switch to ir.action.act_window in master
             return self.do_action('calendar.action_calendar_event_notify', {
                 additional_context: self.context,
             });

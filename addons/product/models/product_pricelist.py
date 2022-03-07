@@ -5,8 +5,8 @@ from itertools import chain
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr, format_datetime
-from odoo.tools.misc import get_lang
+from odoo.tools import format_datetime
+from odoo.tools.misc import formatLang, get_lang
 
 
 class Pricelist(models.Model):
@@ -94,7 +94,7 @@ class Pricelist(models.Model):
     def _compute_price_rule_get_items(self, products_qty_partner, date, uom_id, prod_tmpl_ids, prod_ids, categ_ids):
         self.ensure_one()
         # Load all rules
-        self.env['product.pricelist.item'].flush(['price', 'currency_id', 'company_id'])
+        self.env['product.pricelist.item'].flush(['price', 'currency_id', 'company_id', 'active'])
         self.env.cr.execute(
             """
             SELECT
@@ -109,6 +109,7 @@ class Pricelist(models.Model):
                 AND (item.pricelist_id = %s)
                 AND (item.date_start IS NULL OR item.date_start<=%s)
                 AND (item.date_end IS NULL OR item.date_end>=%s)
+                AND (item.active = TRUE)
             ORDER BY
                 item.applied_on, item.min_quantity desc, categ.complete_name desc, item.id desc
             """,
@@ -480,23 +481,7 @@ class PricelistItem(models.Model):
                 item.name = _("All Products")
 
             if item.compute_price == 'fixed':
-                decimal_places = self.env['decimal.precision'].precision_get('Product Price')
-                if item.currency_id.position == 'after':
-                    item.price = "%s %s" % (
-                        float_repr(
-                            item.fixed_price,
-                            decimal_places,
-                        ),
-                        item.currency_id.symbol,
-                    )
-                else:
-                    item.price = "%s %s" % (
-                        item.currency_id.symbol,
-                        float_repr(
-                            item.fixed_price,
-                            decimal_places,
-                        ),
-                    )
+                item.price = formatLang(item.env, item.fixed_price, monetary=True, dp="Product Price", currency_obj=item.currency_id)
             elif item.compute_price == 'percentage':
                 item.price = _("%s %% discount", item.percent_price)
             else:
@@ -605,9 +590,12 @@ class PricelistItem(models.Model):
         res = super(PricelistItem, self).write(values)
         # When the pricelist changes we need the product.template price
         # to be invalided and recomputed.
-        self.flush()
-        self.invalidate_cache()
+        self.env['product.template'].invalidate_cache(['price'])
+        self.env['product.product'].invalidate_cache(['price'])
         return res
+
+    def toggle_active(self):
+        raise ValidationError(_("You cannot disable a pricelist rule, please delete it or archive its pricelist instead."))
 
     def _is_applicable_for(self, product, qty_in_product_uom):
         """Check whether the current rule is valid for the given product & qty.

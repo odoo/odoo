@@ -67,7 +67,7 @@ class AccountEdiFormat(models.Model):
         def _find_value(xpath, element=tree):
             return self._find_value(xpath, element, namespaces)
 
-        with Form(invoice.with_context(account_predictive_bills_disable_prediction=True)) as invoice_form:
+        with Form(invoice) as invoice_form:
             # Reference
             elements = tree.xpath('//cbc:ID', namespaces=namespaces)
             if elements:
@@ -89,7 +89,7 @@ class AccountEdiFormat(models.Model):
 
             # Currency
             currency = self._retrieve_currency(_find_value('//cbc:DocumentCurrencyCode'))
-            if currency:
+            if currency and currency.active:
                 invoice_form.currency_id = currency
 
             # Incoterm
@@ -98,11 +98,12 @@ class AccountEdiFormat(models.Model):
                 invoice_form.invoice_incoterm_id = self.env['account.incoterms'].search([('code', '=', elements[0].text)], limit=1)
 
             # Partner
+            counterpart = 'Customer' if invoice_form.move_type in ('out_invoice', 'out_refund') else 'Supplier'
             invoice_form.partner_id = self._retrieve_partner(
-                name=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Name'),
-                phone=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Telephone'),
-                mail=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:ElectronicMail'),
-                vat=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:CompanyID'),
+                name=_find_value(f'//cac:Accounting{counterpart}Party/cac:Party//cbc:Name'),
+                phone=_find_value(f'//cac:Accounting{counterpart}Party/cac:Party//cbc:Telephone'),
+                mail=_find_value(f'//cac:Accounting{counterpart}Party/cac:Party//cbc:ElectronicMail'),
+                vat=_find_value(f'//cac:Accounting{counterpart}Party/cac:Party//cbc:CompanyID'),
             )
 
             # Lines

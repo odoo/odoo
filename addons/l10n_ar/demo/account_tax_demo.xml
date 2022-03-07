@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="ri_tax_other_taxes_ventas" model="account.tax">
+    <record id="ri_tax_other_taxes_ventas" model="account.tax" context="{'allowed_company_ids': [ref('company_ri')]}">
         <field name="name">Other Tax</field>
         <field name="description">Other Tax</field>
         <field name="sequence">4</field>
@@ -42,7 +42,7 @@
         <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
-    <record id="ri_tax_other_taxes_compras" model="account.tax">
+    <record id="ri_tax_other_taxes_compras" model="account.tax" context="{'allowed_company_ids': [ref('company_ri')]}">
         <field name="name">Other Tax</field>
         <field name="description">Other Tax</field>
         <field name="sequence">4</field>

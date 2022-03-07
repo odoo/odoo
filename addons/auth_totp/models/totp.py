@@ -20,7 +20,7 @@ class TOTP:
     def __init__(self, key):
         self._key = key
 
-    def match(self, code, t=None, window=TIMESTEP):
+    def match(self, code, t=None, window=TIMESTEP, timestep=TIMESTEP):
         """
         :param code: authenticator code to check against this key
         :param int t: current timestamp (seconds)
@@ -32,8 +32,8 @@ class TOTP:
         if t is None:
             t = time.time()
 
-        low = int((t - window) / TIMESTEP)
-        high = int((t + window) / TIMESTEP) + 1
+        low = int((t - window) / timestep)
+        high = int((t + window) / timestep) + 1
 
         return next((
             counter for counter in range(low, high)

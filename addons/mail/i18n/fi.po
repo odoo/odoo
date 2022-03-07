@@ -6,7 +6,7 @@
 # Mikko Salmela <salmemik@gmail.com>, 2021
 # Kari Lindgren <karisatu@gmail.com>, 2021
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2021
-# Johanna Valkonen <johanna@vividi.fi>, 2021
+# Johanna Valkonen <miujohanna@gmail.com>, 2021
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2021
 # Simo Suurla <simo@suurla.fi>, 2021
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021
@@ -26,20 +26,20 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2021
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2021
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
-# Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
+# Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021\n"
+"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -504,11 +504,6 @@ msgid "<strong>Recommended Activities</strong>"
 msgstr "<strong>Ehdotetut toimenpiteet</strong>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:0
-msgid "A channel of type 'chat' cannot have more than two users."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_defaults
 msgid ""
@@ -526,6 +521,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_partner_partner_or_guest_exists
 msgid "A channel member must be a partner or a guest."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "A channel of type 'chat' cannot have more than two users."
 msgstr ""
 
 #. module: mail
@@ -1244,7 +1245,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_blacklist_action
 msgid "Blacklisted Email Addresses"
-msgstr ""
+msgstr "Mustalla listalla olevat sähköpostiosoitteet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -1408,6 +1409,13 @@ msgstr "Kopio"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
 msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/rtc_call_viewer/rtc_call_viewer.js:0
+#, python-format
+msgid "Change Layout"
+msgstr "Muuta asettelu"
 
 #. module: mail
 #. openerp-web
@@ -2802,6 +2810,8 @@ msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr ""
+"Viimeinen paikkamerkkilauseke, joka kopioidaan ja liitetään haluttuun "
+"mallikenttään."
 
 #. module: mail
 #. openerp-web
@@ -3973,7 +3983,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr ""
+msgstr "Mail Render Mixin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__template_id
@@ -5033,7 +5043,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__null_value
 #: model:ir.model.fields,help:mail.field_mail_template__null_value
 msgid "Optional value to use if the target field is empty"
-msgstr ""
+msgstr "Valinnainen arvo, jota käytetään, jos kohdekenttä on tyhjä"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
@@ -6031,6 +6041,8 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
+"Valitse kohdekenttä liittyvästä asiakirjamallista.\n"
+"Jos se on suhdekenttä, voit valita kohdekentän suhteen määränpäästä."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -6611,13 +6623,6 @@ msgid "The FullScreen mode was denied by the browser"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/rtc_call_viewer/rtc_call_viewer.js:0
-#, python-format
-msgid "Change Layout"
-msgstr "Muuta asettelu"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid ""
@@ -6768,6 +6773,8 @@ msgstr "Tämä toiminto lähettää sähköpostin."
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
+"Tämä sähköposti on joukkopostitusten mustalla listalla. Napsauta "
+"poistaaksesi mustalta listalta."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -6782,6 +6789,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
+"Tätä kenttää käytetään sähköpostiosoitteiden hakuun, koska ensisijainen "
+"sähköpostiosoite voi sisältää muutakin kuin vain sähköpostiosoitteen."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__public
@@ -7448,6 +7457,8 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
+"Kun suhdekenttä on valittu ensimmäiseksi kenttään, voit valita tämän kentän "
+"kohdekentän kohdeasiakirjamallissa (alamallissa)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__sub_object
@@ -7458,6 +7469,8 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"Kun suhdekenttä valitaan ensimmäiseksi kenttään, tämä kenttä näyttää "
+"asiakirjamallin, johon suhde menee."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__is_log

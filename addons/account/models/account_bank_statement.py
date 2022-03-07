@@ -508,6 +508,7 @@ class AccountBankStatementLine(models.Model):
     # == Business fields ==
     move_id = fields.Many2one(
         comodel_name='account.move',
+        auto_join=True,
         string='Journal Entry', required=True, readonly=True, ondelete='cascade',
         check_company=True)
     statement_id = fields.Many2one(
@@ -862,12 +863,14 @@ class AccountBankStatementLine(models.Model):
         for i, st_line in enumerate(st_lines):
             counterpart_account_id = counterpart_account_ids[i]
 
-            to_write = {'statement_line_id': st_line.id}
+            to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration}
             if 'line_ids' not in vals_list[i]:
                 to_write['line_ids'] = [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals(counterpart_account_id=counterpart_account_id)]
 
             st_line.move_id.write(to_write)
 
+            # Otherwise field narration will be recomputed silently (at next flush) when writing on partner_id
+            self.env.remove_to_compute(st_line.move_id._fields['narration'], st_line.move_id)
         return st_lines
 
     def write(self, vals):
@@ -1002,11 +1005,13 @@ class AccountBankStatementLine(models.Model):
             for line in other_lines:
                 line_ids_commands.append((2, line.id))
 
-            st_line.move_id.write({
-                'partner_id': st_line.partner_id.id,
+            st_line_vals = {
                 'currency_id': (st_line.foreign_currency_id or journal_currency or company_currency).id,
                 'line_ids': line_ids_commands,
-            })
+            }
+            if st_line.move_id.partner_id != st_line.partner_id:
+                st_line_vals['partner_id'] = st_line.partner_id.id
+            st_line.move_id.write(st_line_vals)
 
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
@@ -1236,8 +1241,8 @@ class AccountBankStatementLine(models.Model):
         if not self.partner_id:
             rec_overview_partners = set(overview['counterpart_line'].partner_id.id
                                         for overview in reconciliation_overview
-                                        if overview.get('counterpart_line') and overview['counterpart_line'].partner_id)
-            if len(rec_overview_partners) == 1:
+                                        if overview.get('counterpart_line'))
+            if len(rec_overview_partners) == 1 and rec_overview_partners != {False}:
                 self.line_ids.write({'partner_id': rec_overview_partners.pop()})
 
         # Refresh analytic lines.

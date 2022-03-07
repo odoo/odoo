@@ -7,7 +7,7 @@ from collections import defaultdict
 from datetime import timedelta, datetime
 from random import randint
 
-from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_amount
 from odoo.osv.expression import OR
@@ -41,13 +41,13 @@ PROJECT_TASK_READABLE_FIELDS = {
     'legend_normal',
     'legend_blocked',
     'legend_done',
+    'user_ids',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'partner_id',
     'partner_email',
-    'user_ids',
     'date_deadline',
     'tag_ids',
     'sequence',
@@ -151,15 +151,32 @@ class Project(models.Model):
     _check_company_auto = True
 
     def _compute_attached_docs_count(self):
-        Attachment = self.env['ir.attachment']
+        self.env.cr.execute(
+            """
+            WITH docs AS (
+                 SELECT res_id as id, count(*) as count
+                   FROM ir_attachment
+                  WHERE res_model = 'project.project'
+                    AND res_id IN %(project_ids)s
+               GROUP BY res_id
+
+              UNION ALL
+
+                 SELECT t.project_id as id, count(*) as count
+                   FROM ir_attachment a
+                   JOIN project_task t ON a.res_model = 'project.task' AND a.res_id = t.id
+                  WHERE t.project_id IN %(project_ids)s
+               GROUP BY t.project_id
+            )
+            SELECT id, sum(count)
+              FROM docs
+          GROUP BY id
+            """,
+            {"project_ids": tuple(self.ids)}
+        )
+        docs_count = dict(self.env.cr.fetchall())
         for project in self:
-            project.doc_count = Attachment.search_count([
-                '|',
-                '&',
-                ('res_model', '=', 'project.project'), ('res_id', '=', project.id),
-                '&',
-                ('res_model', '=', 'project.task'), ('res_id', 'in', project.task_ids.ids)
-            ])
+            project.doc_count = docs_count.get(project.id, 0)
 
     def _compute_task_count(self):
         task_data = self.env['project.task'].read_group(
@@ -435,6 +452,9 @@ class Project(models.Model):
                 # set the parent to the duplicated task
                 defaults['parent_id'] = old_to_new_tasks.get(task.parent_id.id, False)
             new_task = task.copy(defaults)
+            # If child are created before parent (ex sub_sub_tasks)
+            new_child_ids = [old_to_new_tasks[child.id] for child in task.child_ids if child.id in old_to_new_tasks]
+            tasks.browse(new_child_ids).write({'parent_id': new_task.id})
             old_to_new_tasks[task.id] = new_task.id
             tasks += new_task
 
@@ -689,7 +709,7 @@ class Project(models.Model):
         self.ensure_one()
         buttons = [{
             'icon': 'tasks',
-            'text': _('Tasks'),
+            'text': _lt('Tasks'),
             'number': self.task_count,
             'action_type': 'action',
             'action': 'project.act_project_project_2_project_task_all',
@@ -702,7 +722,7 @@ class Project(models.Model):
         if self.user_has_groups('project.group_project_rating'):
             buttons.append({
                 'icon': 'smile-o',
-                'text': _('Customer Satisfaction'),
+                'text': _lt('Customer Satisfaction'),
                 'number': '%s %%' % (self.rating_percentage_satisfaction),
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
@@ -712,7 +732,7 @@ class Project(models.Model):
         if self.user_has_groups('project.group_project_manager'):
             buttons.append({
                 'icon': 'area-chart',
-                'text': _('Burndown Chart'),
+                'text': _lt('Burndown Chart'),
                 'action_type': 'action',
                 'action': 'project.action_project_task_burndown_chart_report',
                 'additional_context': json.dumps({
@@ -723,7 +743,7 @@ class Project(models.Model):
             })
             buttons.append({
                 'icon': 'users',
-                'text': _('Collaborators'),
+                'text': _lt('Collaborators'),
                 'number': self.collaborator_count,
                 'action_type': 'action',
                 'action': 'project.project_collaborator_action',
@@ -736,11 +756,11 @@ class Project(models.Model):
         if self.user_has_groups('analytic.group_analytic_accounting'):
             buttons.append({
                 'icon': 'usd',
-                'text': _('Gross Margin'),
+                'text': _lt('Gross Margin'),
                 'number': format_amount(self.env, self.analytic_account_balance, self.company_id.currency_id),
                 'action_type': 'object',
                 'action': 'action_view_analytic_account_entries',
-                'show': True,
+                'show': bool(self.analytic_account_id),
                 'sequence': 18,
             })
         return buttons
@@ -918,7 +938,7 @@ class Task(models.Model):
         help="Sum of the time planned of all the sub-tasks linked to this task. Usually less than or equal to the initially planned time of this task.")
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
-        string='Assignees', default=lambda self: self.env.user, context={'active_test': False}, tracking=True)
+        string='Assignees', default=lambda self: not self.env.user.share and self.env.user, context={'active_test': False}, tracking=True)
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names')
     # Second Many2many containing the actual personal stage for the current user
@@ -1393,8 +1413,9 @@ class Task(models.Model):
             (In other words, this compute is only used in project sharing views to see all assignees for each task)
         """
         if self.ids:
-            # fetch 'user_ids' in superuser mode (and override value in cache)
-            self._read(['user_ids'])
+            # fetch 'user_ids' in superuser mode (and override value in cache
+            # browse is useful to avoid miscache because of the newIds contained in self
+            self.browse(self.ids)._read(['user_ids'])
         for task in self.with_context(prefetch_fields=False):
             task.portal_user_names = ', '.join(task.user_ids.mapped('name'))
 
@@ -1673,6 +1694,8 @@ class Task(models.Model):
         if 'active' in vals and not vals.get('active') and any(self.mapped('recurrence_id')):
             # TODO: show a dialog to stop the recurrence
             raise UserError(_('You cannot archive recurring tasks. Please disable the recurrence first.'))
+        if 'recurrence_id' in vals and vals.get('recurrence_id') and any(not task.active for task in self):
+            raise UserError(_('Archived tasks cannot be recurring. Please unarchive the task first.'))
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals.update(self.update_date_end(vals['stage_id']))
@@ -2066,15 +2089,16 @@ class Task(models.Model):
         action = {
             'res_model': 'project.task',
             'type': 'ir.actions.act_window',
-            'context': {**self._context, 'default_depend_on_ids': [Command.link(self.id)]},
+            'context': {**self._context, 'default_depend_on_ids': [Command.link(self.id)], 'show_project_update': False},
+            'domain': [('depend_on_ids', '=', self.id)],
         }
         if self.dependent_tasks_count == 1:
             action['view_mode'] = 'form'
             action['res_id'] = self.dependent_ids.id
+            action['views'] = [(False, 'form')]
         else:
             action['name'] = _('Dependent Tasks')
             action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph,activity'
-            action['domain'] = [('depend_on_ids', '=', self.id)]
         return action
 
     def action_recurring_tasks(self):

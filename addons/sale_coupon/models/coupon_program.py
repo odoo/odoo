@@ -12,7 +12,7 @@ class CouponProgram(models.Model):
     # The api.depends is handled in `def modified` of `sale_coupon/models/sale_order.py`
     def _compute_order_count(self):
         for program in self:
-            program.order_count = self.env['sale.order.line'].search_count([('product_id', '=', program.discount_line_product_id.id)])
+            program.order_count = self.env['sale.order.line'].sudo().search_count([('product_id', '=', program.discount_line_product_id.id)])
 
     def action_view_sales_orders(self):
         self.ensure_one()
@@ -102,7 +102,12 @@ class CouponProgram(models.Model):
         return self.filtered(lambda program: program.promo_code_usage == 'code_needed' and program.promo_code != order.promo_code)
 
     def _filter_unexpired_programs(self, order):
-        return self.filtered(lambda program: program.maximum_use_number == 0 or program.total_order_count < program.maximum_use_number)
+        return self.filtered(
+            lambda program: program.maximum_use_number == 0
+            or program.total_order_count < program.maximum_use_number
+            or program
+            in (order.code_promo_program_id + order.no_code_promo_program_ids)
+        )
 
     def _filter_programs_on_partners(self, order):
         return self.filtered(lambda program: program._is_valid_partner(order.partner_id))
@@ -120,7 +125,7 @@ class CouponProgram(models.Model):
             products_qties[line.product_id] += line.product_uom_qty
         valid_program_ids = list()
         for program in self:
-            if not program.rule_products_domain:
+            if not program.rule_products_domain or program.rule_products_domain == "[]":
                 valid_program_ids.append(program.id)
                 continue
             valid_products = program._get_valid_products(products)
@@ -141,14 +146,17 @@ class CouponProgram(models.Model):
         Returns the programs when the reward is actually in the order lines
         """
         programs = self.env['coupon.program']
+        order_products = order.order_line.product_id
         for program in self:
-            if program.reward_type == 'product' and \
-               not order.order_line.filtered(lambda line: line.product_id == program.reward_product_id):
+            if program.reward_type == 'product' and program.reward_product_id not in order_products:
                 continue
-            elif program.reward_type == 'discount' and program.discount_apply_on == 'specific_products' and \
-               not order.order_line.filtered(lambda line: line.product_id in program.discount_specific_product_ids):
+            elif (
+                program.reward_type == 'discount'
+                and program.discount_apply_on == 'specific_products'
+                and not any(discount_product in order_products for discount_product in program.discount_specific_product_ids)
+            ):
                 continue
-            programs |= program
+            programs += program
         return programs
 
     def _filter_programs_from_common_rules(self, order, next_order=False):

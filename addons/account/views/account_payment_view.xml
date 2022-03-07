@@ -269,17 +269,24 @@
 
                                 <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Customer Bank Account"
                                         attrs="{
-                                            'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)],
+                                            'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','customer'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                            'readonly': [('state', '!=', 'draft')]
+                                            'readonly': [('state', '!=', 'draft')],
                                         }"/>
 
                                 <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Vendor Bank Account"
                                         attrs="{
-                                            'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)],
+                                            'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                            'readonly': [('state', '!=', 'draft')]
+                                            'readonly': [('state', '!=', 'draft')],
                                         }"/>
+
+                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Company Bank Account" readonly="1"
+                                        attrs="{
+                                            'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('is_internal_transfer', '=', True), ('payment_type', '=', 'outbound')],
+                                            'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
+                                        }"/>
+
                                 <field name="destination_journal_id" context="{'default_partner_id': partner_id}"
                                        attrs="{'invisible': [('is_internal_transfer', '=', False)],
                                        'readonly': [('state', '!=', 'draft')], 'required': [('is_internal_transfer', '=', True),('state', '=', 'draft')]}"/>

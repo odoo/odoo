@@ -1200,3 +1200,28 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         order2.recompute_coupon_lines()
         self.assertEqual(order2.amount_total, 22.5, "10% discount should be applied")
         self.assertEqual(len(order2.order_line.ids), 2, "discount should be applied")
+
+    def test_program_maximum_use_number_last_order(self):
+        # reuse p1 with a different promo code and a maximum_use_number of 1
+        self.p1.promo_code = 'promo1'
+        self.p1.maximum_use_number = 1
+
+        # check that the discount is applied on the first order
+        order = self.empty_order
+        self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+        self.env['sale.coupon.apply.code'].sudo().apply_coupon(order, 'promo1')
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 22.5, "10% discount should be applied")
+        self.assertEqual(len(order.order_line.ids), 2, "discount should be applied")
+
+        # duplicating to mimic website behavior (each refresh to /shop/cart
+        # recompute coupon lines if website_sale_coupon is installed)
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 22.5, "10% discount should be applied")
+        self.assertEqual(len(order.order_line.ids), 2, "discount should be applied")
+        # applying the code again should return that it has been expired.
+        self.assertDictEqual(self.env['sale.coupon.apply.code'].sudo().apply_coupon(order, 'promo1'), {'error': 'Promo code promo1 has been expired.'})

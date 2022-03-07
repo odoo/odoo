@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * mass_mailing_sale
+# 	* mass_mailing_sale
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Eneli Õigus <enelioigus@gmail.com>, 2018
+# Algo Kärp <algokarp@gmail.com>, 2022
+# Piia Paurson <piia@avalah.ee>, 2022
+# Eneli Õigus <enelioigus@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2018\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,32 +23,74 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mail_mass_mailing_view_form
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "INVOICED"
+msgstr "ARVELDATUD"
+
+#. module: mass_mailing_sale
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
 msgid "Invoiced"
 msgstr "Arveldatud"
 
 #. module: mass_mailing_sale
-#: model:ir.model.fields,field_description:mass_mailing_sale.field_mail_mass_mailing__sale_invoiced_amount
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_invoiced_amount
 msgid "Invoiced Amount"
 msgstr "Arveldatud kogus"
 
 #. module: mass_mailing_sale
-#: model:ir.model,name:mass_mailing_sale.model_mail_mass_mailing
+#: model:ir.model,name:mass_mailing_sale.model_mailing_mailing
 msgid "Mass Mailing"
 msgstr "E-posti turundus"
 
 #. module: mass_mailing_sale
-#: model:ir.model.fields,field_description:mass_mailing_sale.field_mail_mass_mailing__sale_quotation_count
-msgid "Quotation Count"
-msgstr ""
+#: model:mailing.mailing,sms_subject:mass_mailing_sale.mass_mail_sale_order_0
+msgid "Our last promotions, just for you !"
+msgstr "Meie viimased pakkumised just teile!"
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mail_mass_mailing_view_form
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "QUOTATIONS"
+msgstr "PAKKUMISED"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_quotation_count
+msgid "Quotation Count"
+msgstr "Pakkumiste arv"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_quotation_count
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
 msgid "Quotations"
 msgstr "Pakkumised"
 
 #. module: mass_mailing_sale
-#: model:mail.mass_mailing,name:mass_mailing_sale.mass_mail_sale_order_0
-#: model:utm.source,name:mass_mailing_sale.mass_mail_sale_order_0_utm_source
-msgid "Sale Newsletter"
+#: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_invoiced_amount
+msgid "Revenues"
+msgstr "Tulud"
+
+#. module: mass_mailing_sale
+#: model:mailing.mailing,name:mass_mailing_sale.mass_mail_sale_order_0
+msgid "Sale Promotion 1"
+msgstr "Müügipakkumine 1"
+
+#. module: mass_mailing_sale
+#: model:ir.model,name:mass_mailing_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Müügitellimus"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,help:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
+msgid "Selection to determine the winner mailing that will be sent."
+msgstr ""
+
+#. module: mass_mailing_sale
+#: model:ir.model,name:mass_mailing_sale.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "UTM kampaania"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
+msgid "Winner Selection"
 msgstr ""

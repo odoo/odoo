@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-11 09:26+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "<b>Communication: </b>"
-msgstr "<b>الشرح: </b>"
+msgstr "<b>التواصل: </b>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -31,17 +32,17 @@ msgid ""
 "Pay Now</span>"
 msgstr ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
-"سدد الآن</span>"
+"ادفع الآن</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Pay Now"
-msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/> سدد الآن"
+msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/> ادفع الآن "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
-msgstr "<i class=\"fa fa-fw fa-check-circle\"/> مدفوع"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> تم الدفع "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -54,8 +55,8 @@ msgid ""
 "<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
 "to be able to use them."
 msgstr ""
-"<i class=\"fa fa-info\"/> لقد قمت بتسجيل بطاقات ائتمان، سجل الدخول لتتمكن من"
-" استخدامهم."
+"<i class=\"fa fa-info\"/> لقد قمت بتسجيل بطاقات ائتمان. سجل الدخول لتتمكن من"
+" استخدامها. "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -64,7 +65,7 @@ msgid ""
 "remove\"/><span class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-danger\"><i class=\"fa fa-fw fa-"
-"remove\"/><span class=\"d-none d-md-inline\"> ملغي</span></span>"
+"remove\"/><span class=\"d-none d-md-inline\"> تم الإلغاء</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -74,8 +75,7 @@ msgid ""
 "Payment</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-"
-"clock-o\"/><span class=\"d-none d-md-inline\"> في انتظار "
-"السداد</span></span>"
+"clock-o\"/><span class=\"d-none d-md-inline\"> بانتظار الدفع</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -84,7 +84,7 @@ msgid ""
 "check\"/><span class=\"d-none d-md-inline\"> Authorized</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-primary\"><i class=\"fa fa-fw fa-"
-"check\"/><span class=\"d-none d-md-inline\"> مقبول</span></span>"
+"check\"/><span class=\"d-none d-md-inline\"> مُصرّح به</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -93,7 +93,7 @@ msgid ""
 "check\"/><span class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
-"check\"/><span class=\"d-none d-md-inline\"> مدفوع</span></span>"
+"check\"/><span class=\"d-none d-md-inline\"> تم الدفع</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -101,6 +101,8 @@ msgid ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> معكوس</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -117,33 +119,35 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>لم يتم العثور على خيار دفع مناسب.</strong><br/>\n"
+"                                إذا كنت تظن أنه هناك خطأ ما، رجاءً تواصل مع مدير الموقع الإلكتروني. "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Close"
-msgstr "اغلاق"
+msgstr "إغلاق "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
-msgstr "لقد انتهيت، تمت معالجة عملية السداد الإلكتروني بنجاح. شكراً لطلبك."
+msgstr "لقد انتهيت، تمت معالجة عملية الدفع عبر الإنترنت بنجاح. شكراً لطلبك. "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay Now"
-msgstr "السداد الآن"
+msgstr "ادفع الآن "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay now"
-msgstr "سدد الآن"
+msgstr "ادفع الآن "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Pay with"
-msgstr "السداد بـ"
+msgstr "الدفع عن طريق "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -153,7 +157,7 @@ msgstr "الحالة"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr "حدث خطأ أثناء معالجة عملية السداد: الفاتورة غير صالحة."
+msgstr "حدث خطأ أثناء معالجة عملية الدفع: الفاتورة غير صالحة. "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -161,15 +165,15 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
-"حدث خطأ أثناء معالجة عملية السداد: هناك مشكلة في بيانات البطاقة الإئتمانية."
+"حدث خطأ أثناء معالجة عملية الدفع: هناك مشكلة في تصديق معرف البطاقة "
+"الائتمانية. "
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr "حدث خطأ أثناء معالجة عملية السداد: فشلت المعاملة.<br/>"
+msgstr "حدث خطأ أثناء معالجة عملية الدفع: فشلت المعاملة.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr ""
-"حدث خطأ أثناء معالجة عملية الدفع: بيانات البطاقة الائتمانية غير صالحة."
+msgstr "حدث خطأ أثناء معالجة عملية الدفع: معرف البطاقة الائتمانية غير صالح. "
