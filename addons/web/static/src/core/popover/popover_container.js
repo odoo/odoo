@@ -21,12 +21,19 @@ class PopoverController extends Component {
 
     get popoverProps() {
         return {
-            close: this.props.close,
             target: this.target,
             position: this.props.position,
             popoverClass: this.props.popoverClass,
         };
     }
+
+    get popoverComponentProps() {
+        return {
+            close: this.props.close,
+            ...this.props.props,
+        };
+    }
+
     get target() {
         if (typeof this.props.target === "string") {
             return document.querySelector(this.props.target);
@@ -56,7 +63,7 @@ PopoverController.defaultProps = {
 };
 PopoverController.template = xml/*xml*/ `
     <Popover t-props="popoverProps">
-        <t t-component="props.Component" t-props="props.props"/>
+        <t t-component="props.Component" t-props="popoverComponentProps"/>
     </Popover>
 `;
 

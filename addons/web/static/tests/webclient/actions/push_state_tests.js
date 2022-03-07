@@ -12,9 +12,8 @@ import {
     patchWithCleanup,
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { xml } = owl;
+const { Component, xml } = owl;
 
 let serverData;
 let target;
@@ -77,7 +76,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("actions can push state", async (assert) => {
         assert.expect(5);
-        class ClientActionPushes extends LegacyComponent {
+        class ClientActionPushes extends Component {
             setup() {
                 this.router = useService("router");
             }
@@ -105,7 +104,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("actions override previous state", async (assert) => {
         assert.expect(5);
-        class ClientActionPushes extends LegacyComponent {
+        class ClientActionPushes extends Component {
             setup() {
                 this.router = useService("router");
             }
@@ -134,7 +133,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("actions override previous state from menu click", async (assert) => {
         assert.expect(3);
-        class ClientActionPushes extends LegacyComponent {
+        class ClientActionPushes extends Component {
             setup() {
                 this.router = useService("router");
             }

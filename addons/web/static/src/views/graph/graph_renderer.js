@@ -7,9 +7,8 @@ import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
 import { useAssets } from "@web/core/assets";
 import { renderToString } from "@web/core/utils/render";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { onWillUnmount, useEffect, useRef } = owl;
+const { Component, onWillUnmount, useEffect, useRef } = owl;
 
 const NO_DATA = _lt("No data");
 
@@ -39,10 +38,11 @@ function shortenLabel(label) {
     return shortLabel;
 }
 
-export class GraphRenderer extends LegacyComponent {
+export class GraphRenderer extends Component {
     setup() {
         this.model = this.props.model;
 
+        this.rootRef = useRef("root");
         this.canvasRef = useRef("canvas");
         this.containerRef = useRef("container");
 
@@ -99,16 +99,16 @@ export class GraphRenderer extends LegacyComponent {
      */
     customTooltip(data, metaData, tooltipModel) {
         const { measure, measures, disableLinking, mode } = metaData;
-        this.el.style.cursor = "";
+        this.rootRef.el.style.cursor = "";
         this.removeTooltips();
         if (tooltipModel.opacity === 0 || tooltipModel.dataPoints.length === 0) {
             return;
         }
         if (!disableLinking && mode !== "line") {
-            this.el.style.cursor = "pointer";
+            this.rootRef.el.style.cursor = "pointer";
         }
         const chartAreaTop = this.chart.chartArea.top;
-        const viewContentTop = this.el.getBoundingClientRect().top;
+        const viewContentTop = this.rootRef.el.getBoundingClientRect().top;
         const innerHTML = renderToString("web.GraphRenderer.CustomTooltip", {
             maxWidth: getMaxWidth(this.chart.chartArea),
             measure: measures[measure].string,
@@ -548,7 +548,7 @@ export class GraphRenderer extends LegacyComponent {
         if (this.legendTooltip || text === fullText) {
             return;
         }
-        const viewContentTop = this.el.getBoundingClientRect().top;
+        const viewContentTop = this.rootRef.el.getBoundingClientRect().top;
         const legendTooltip = Object.assign(document.createElement("div"), {
             className: "o_tooltip_legend",
             innerText: fullText,

@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-const hasOwnProperty = Object.prototype.hasOwnProperty;
-
 /**
  * @deprecated
  * This component SHOULD NOT be used!
@@ -41,11 +39,8 @@ export class LegacyComponent extends owl.Component {
             return null;
         }
 
-        if (hasOwnProperty.call(bdom, "component")) {
-            return bdom.component.el;
-        } else {
-            return bdom.firstNode();
-        }
+        const el = (bdom.component && bdom.component.el) || bdom.firstNode();
+        return el.nodeType === Node.ELEMENT_NODE ? el : null;
     }
     /**
      * Add a new method to owl Components to ensure that no performed RPC is

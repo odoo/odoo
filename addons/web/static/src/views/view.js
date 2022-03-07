@@ -8,9 +8,8 @@ import { deepCopy } from "@web/core/utils/objects";
 import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/helpers/view_hook";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
+const { Component, onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config
@@ -125,7 +124,7 @@ const STANDARD_PROPS = [
     "searchModel",
 ];
 
-export class View extends LegacyComponent {
+export class View extends Component {
     setup() {
         const { arch, fields, resModel, searchViewArch, searchViewFields, type } = this.props;
 
@@ -153,7 +152,7 @@ export class View extends LegacyComponent {
             },
         });
 
-        useActionLinks({ resModel });
+        this.handleActionLinks = useActionLinks({ resModel });
 
         onWillStart(this.onWillStart);
         onWillUpdateProps(this.onWillUpdateProps);
