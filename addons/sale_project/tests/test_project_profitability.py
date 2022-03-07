@@ -57,7 +57,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
     def test_project_profitability(self):
         self.assertFalse(self.project.allow_billable, 'The project should be non billable.')
         self.assertDictEqual(
-            self.project._get_profitability_items(),
+            self.project._get_profitability_items(False),
             self.project_profitability_items_empty,
             'No data for the project profitability should be found since the project is not billable, so no SOL is linked to the project.'
         )
@@ -65,7 +65,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         self.assertTrue(self.project.allow_billable, 'The project should be billable.')
         self.project.sale_line_id = self.delivery_service_order_line
         self.assertDictEqual(
-            self.project._get_profitability_items(),
+            self.project._get_profitability_items(False),
             self.project_profitability_items_empty,
             'No data for the project profitability should be found since no product is delivered in the SO linked.'
         )
@@ -77,7 +77,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             ['billable_manual', 'service_revenues'],
             'invoice_type="billable_manual" if sale_timesheet is installed otherwise it is equal to "service_revenues"')
         self.assertDictEqual(
-            self.project._get_profitability_items(),
+            self.project._get_profitability_items(False),
             {
                 'revenues': {
                     'data': [
@@ -122,7 +122,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             ['billable_manual', 'service_revenues'],
             'invoice_type="billable_manual" if sale_timesheet is installed otherwise it is equal to "service_revenues"')
         self.assertDictEqual(
-            self.project._get_profitability_items(),
+            self.project._get_profitability_items(False),
             {
                 'revenues': {
                     'data': [
@@ -163,7 +163,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             ['billable_manual', 'service_revenues'],
             'invoice_type="billable_manual" if sale_timesheet is installed otherwise it is equal to "service_revenues"')
         self.assertDictEqual(
-            self.project._get_profitability_items(),
+            self.project._get_profitability_items(False),
             {
                 'revenues': {
                     'data': [
@@ -197,7 +197,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         credit_notes = invoices._reverse_moves()
         credit_notes.action_post()
         self.assertDictEqual(
-            self.project._get_profitability_items(),
+            self.project._get_profitability_items(False),
             {
                 'revenues': {
                     'data': [
@@ -226,6 +226,6 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
 
         self.sale_order._action_cancel()
         self.assertDictEqual(
-            self.project._get_profitability_items(),
+            self.project._get_profitability_items(False),
             self.project_profitability_items_empty,
         )

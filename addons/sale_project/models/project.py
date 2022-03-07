@@ -105,6 +105,24 @@ class Project(models.Model):
             })
         return action_window
 
+    def action_profitability_items(self, section_name, domain=None, res_id=False):
+        if section_name in ['service_revenues', 'other_revenues']:
+            view_types = ['list', 'kanban', 'form']
+            action = {
+                'name': _('Sales Order Items'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'sale.order.line',
+                'context': {'no_create': True},
+            }
+            if res_id:
+                action['res_id'] = res_id
+                view_types = ['form']
+            else:
+                action['domain'] = domain
+            action['views'] = [(False, v) for v in view_types]
+            return action
+        return super().action_profitability_items(section_name, domain, res_id)
+
     @api.depends('sale_order_id.invoice_status', 'tasks.sale_order_id.invoice_status')
     def _compute_has_any_so_with_nothing_to_invoice(self):
         """Has any Sale Order whose invoice_status is set as No"""
@@ -282,7 +300,7 @@ class Project(models.Model):
             'delivered_manual': 'service_revenues',
         }
 
-    def _get_revenues_items_from_sol(self):
+    def _get_revenues_items_from_sol(self, with_action=True):
         sale_line_read_group = self.env['sale.order.line'].read_group(
             [
                 ('order_id', 'in', self._get_sale_orders().ids),
@@ -292,9 +310,10 @@ class Project(models.Model):
                 ('state', 'in', ['sale', 'done']),
                 '|', ('qty_to_invoice', '>', 0), ('qty_invoiced', '>', 0),
             ],
-            ['product_id', 'untaxed_amount_to_invoice', 'untaxed_amount_invoiced'],
+            ['product_id', 'ids:array_agg(id)', 'untaxed_amount_to_invoice', 'untaxed_amount_invoiced'],
             ['product_id'],
         )
+        display_sol_action = with_action and len(self) == 1 and self.user_has_groups('sales_team.group_sale_salesman')
         revenues_dict = {}
         total_to_invoice = total_invoiced = 0.0
         if sale_line_read_group:
@@ -328,14 +347,26 @@ class Project(models.Model):
                         total_to_invoice += amount_to_invoice
                         revenue['invoiced'] += amount_invoiced
                         total_invoiced += amount_invoiced
+                        if display_sol_action and invoice_type in ['service_revenues', 'other_revenues']:
+                            revenue.setdefault('record_ids', []).extend(sol_ids)
+
+            if display_sol_action:
+                section_name = 'other_revenues'
+                other_revenues = revenues_dict.get(section_name, {})
+                sol_ids = other_revenues.pop('record_ids', [])
+                if sol_ids:
+                    action_params = {'name': 'action_profitability_items', 'type': 'object', 'section': section_name, 'domain': json.dumps(domain)}
+                    if len(sol_ids) == 1:
+                        action_params['res_id'] = sol_ids[0]
+                    other_revenues['action'] = action_params
         return {
             'data': [{'id': invoice_type, **vals} for invoice_type, vals in revenues_dict.items()],
             'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
         }
 
-    def _get_profitability_items(self):
-        profitability_items = super()._get_profitability_items()
-        revenue_items_from_sol = self._get_revenues_items_from_sol()
+    def _get_profitability_items(self, with_action=True):
+        profitability_items = super()._get_profitability_items(with_action)
+        revenue_items_from_sol = self._get_revenues_items_from_sol(with_action)
         revenues = profitability_items['revenues']
         revenues['data'] += revenue_items_from_sol['data']
         revenues['total']['to_invoice'] += revenue_items_from_sol['total']['to_invoice']
