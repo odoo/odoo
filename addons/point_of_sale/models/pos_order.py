@@ -575,6 +575,7 @@ class PosOrder(models.Model):
 
             pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(destination_id, self.lines, picking_type, self.partner_id)
             pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
+            return pickings
 
     def add_payment(self, data):
         """Create a new payment for the order"""
