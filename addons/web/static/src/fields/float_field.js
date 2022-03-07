@@ -53,7 +53,7 @@ FloatField.defaultProps = {
 FloatField.isEmpty = () => false;
 FloatField.extractProps = (fieldName, record, attrs) => {
     return {
-        setAsInvalid: record.setInvalidField,
+        setAsInvalid: record.setInvalidField.bind(record),
         field: record.fields[fieldName], // To remove
         inputType: attrs.type,
         // Sadly, digits param was available as an option and an attr.
