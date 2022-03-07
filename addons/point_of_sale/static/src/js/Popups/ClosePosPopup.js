@@ -40,7 +40,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 this.amountAuthorizedDiff = closingData.amount_authorized_diff;
 
                 // component state and refs definition
-                const state = {notes: '', acceptClosing: false, payments: {}};
+                const state = {notes: '', payments: {}};
                 if (this.cashControl) {
                     state.payments[this.defaultCashDetails.id] = {counted: 0, difference: -this.defaultCashDetails.amount, number: 0};
                 }
@@ -84,7 +84,6 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             }
             this.state.payments[paymentId].difference =
                 this.env.pos.round_decimals_currency(this.state.payments[paymentId].counted - expectedAmount);
-            this.state.acceptClosing = false;
         }
         updateCountedCash({ total, moneyDetailsNotes, moneyDetails }) {
             this.state.payments[this.defaultCashDetails.id].counted = total;
@@ -95,7 +94,6 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             }
             this.manualInputCashCount = false;
             this.moneyDetails = moneyDetails;
-            this.state.acceptClosing = false;
             this.closeDetailsPopup();
         }
         hasDifference() {
@@ -105,8 +103,28 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             const absDifferences = Object.entries(this.state.payments).map(pm => Math.abs(pm[1].difference));
             return this.isManager || this.amountAuthorizedDiff == null || Math.max(...absDifferences) <= this.amountAuthorizedDiff;
         }
-        canCloseSession() {
-            return !this.cashControl || !this.hasDifference() || this.state.acceptClosing;
+        async onCloseSession() {
+            if (!this.cashControl || !this.hasDifference()) {
+                this.closeSession();
+            } else if (this.hasUserAuthority()) {
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Payments Difference'),
+                    body: this.env._t('Do you want to accept payments difference and post a profit/loss journal entry?'),
+                });
+                if (confirmed) {
+                    this.closeSession();
+                }
+            } else {
+                await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Payments Difference'),
+                    body: _.str.sprintf(
+                        this.env._t('The maximum difference allowed is %s.\n\
+                        Please contact your manager to accept the closing difference.'),
+                        this.env.pos.format_currency(this.amountAuthorizedDiff)
+                    ),
+                    confirmText: this.env._t('OK'),
+                })
+            }
         }
         canCancel() {
             return true;
@@ -120,7 +138,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             this.trigger('close-pos');
         }
         async closeSession() {
-            if (this.canCloseSession() && !this.closeSessionClicked) {
+            if (!this.closeSessionClicked) {
                 this.closeSessionClicked = true;
                 let response;
                 if (this.cashControl) {
