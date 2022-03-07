@@ -6,7 +6,6 @@ import logging
 from odoo import api, fields, models, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError
-from psycopg2 import IntegrityError
 from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
 
@@ -56,6 +55,10 @@ class Country(models.Model):
              "(in reports for example), while this field is used to modify the input form for "
              "addresses.")
     currency_id = fields.Many2one('res.currency', string='Currency')
+    enforce_cities = fields.Boolean(
+        string='Enforce Cities',
+        help="Check this box to ensure every address created in that country has a 'City' chosen "
+             "in the list of the country's cities.")
     image_url = fields.Char(
         compute="_compute_image_url", string="Flag",
         help="Url of static flag image",
