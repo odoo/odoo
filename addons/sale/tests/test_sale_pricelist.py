@@ -71,6 +71,18 @@ class TestSaleOrder(TestSaleCommon):
             'percent_price': 20,
         })
 
+        # Create a pricelist without discount policy: percentage on all products
+        cls.pricelist_discount_excl_global = cls.env['product.pricelist'].create({
+            'name': 'Pricelist C',
+            'discount_policy': 'without_discount',
+            'company_id': cls.env.company.id,
+            'item_ids': [(0, 0, {
+                'applied_on': '3_global',
+                'compute_price': 'percentage',
+                'percent_price': 54,
+            })],
+        })
+
         # create a generic Sale Order with all classical products and empty pricelist
         cls.sale_order = SaleOrder.create({
             'partner_id': cls.partner_a.id,
@@ -164,18 +176,7 @@ class TestSaleOrder(TestSaleCommon):
 
     def test_sale_change_of_pricelists_excluded_value_discount(self):
         """ Test SO with the pricelist 'discount displayed' and check displayed percentage value after multiple changes of pricelist """
-
-        # Create a pricelist without discount policy: percentage on all products
-        pricelist_discount_excl_global = self.env['product.pricelist'].create({
-            'name': 'Pricelist C',
-            'discount_policy': 'without_discount',
-            'company_id': self.env.company.id,
-            'item_ids': [(0, 0, {
-                'applied_on': '3_global',
-                'compute_price': 'percentage',
-                'percent_price': 54,
-            })],
-        })
+        self.env.user.write({'groups_id': [(4, self.env.ref('product.group_discount_per_so_line').id)]})
 
         # Create a product with a very low price
         amazing_product = self.env['product.product'].create({
@@ -200,7 +201,7 @@ class TestSaleOrder(TestSaleCommon):
         })
 
         # Change the pricelist
-        sale_order.write({'pricelist_id': pricelist_discount_excl_global.id})
+        sale_order.write({'pricelist_id': self.pricelist_discount_excl_global.id})
         # Update Prices
         sale_order.update_prices()
 
@@ -220,5 +221,81 @@ class TestSaleOrder(TestSaleCommon):
         )
         self.assertFalse(
             sale_order.order_line.tax_id,
+            "Wrong tax applied for specified product & pricelist"
+        )
+
+    def test_sale_change_of_pricelists_excluded_value_discount_on_tax_included_price_mapped_to_tax_excluded_price(self):
+        self.env.user.write({'groups_id': [(4, self.env.ref('product.group_discount_per_so_line').id)]})
+
+        # setting up the taxes:
+        tax_a = self.tax_sale_a.copy()
+        tax_b = self.tax_sale_a.copy()
+        tax_a.price_include = True
+        tax_b.amount = 6
+
+        # setting up fiscal position:
+        fiscal_pos = self.fiscal_pos_a.copy()
+        fiscal_pos.auto_apply = True
+        country = self.env["res.country"].search([('name', '=', 'Belgium')], limit=1)
+        fiscal_pos.country_id = country
+        fiscal_pos.tax_ids = [
+            (0, None,
+             {
+                 'tax_src_id': tax_a.id,
+                 'tax_dest_id': tax_b.id
+             })
+        ]
+
+        # setting up partner:
+        self.partner_a.country_id = country
+
+        # creating product:
+
+        my_product = self.env['product.product'].create({
+            'name': 'my Product',
+            'lst_price': 115,
+            'taxes_id': [tax_a.id]
+        })
+
+        # creating SO
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+            'order_line': [(0, 0, {
+                'name': my_product.name,
+                'product_id': my_product.id,
+                'product_uom_qty': 1,
+                'product_uom': my_product.uom_id.id,
+            })],
+        })
+
+        # Apply fiscal position
+
+        sale_order.fiscal_position_id = fiscal_pos.id
+        # Change the pricelist
+        sale_order.write({'pricelist_id': self.pricelist_discount_excl_global.id})
+        # Update Prices
+        sale_order.update_prices()
+
+
+        # Check that the discount displayed is the correct one
+        self.assertEqual(
+            sale_order.order_line.discount, 54,
+            "Wrong discount computed for specified product & pricelist"
+        )
+        # Additional to check for overall consistency
+        self.assertEqual(
+            sale_order.order_line.price_unit, 100,
+            "Wrong unit price computed for specified product & pricelist"
+        )
+        self.assertEqual(
+            sale_order.order_line.price_subtotal, 46,
+            "Wrong subtotal price computed for specified product & pricelist"
+        )
+        self.assertEqual(
+            sale_order.order_line.tax_id.id, tax_b.id,
             "Wrong tax applied for specified product & pricelist"
         )
