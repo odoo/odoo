@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
 
@@ -46,6 +48,23 @@ class Project(models.Model):
             action_window['res_id'] = purchase_orders.id
         return action_window
 
+    def action_profitability_items(self, section_name, domain=None, res_id=False):
+        if section_name == 'purchase_order':
+            action = {
+                'name': _('Purchase Order Items'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'purchase.order.line',
+                'views': [[False, 'tree'], [False, 'form']],
+                'domain': domain,
+                'context': {
+                    'create': False,
+                },
+            }
+            if res_id:
+                action['res_id'] = res_id
+            return action
+        return super().action_profitability_items(section_name, domain, res_id)
+
     # ----------------------------
     #  Project Updates
     # ----------------------------
@@ -70,8 +89,8 @@ class Project(models.Model):
             ['|', ('move_id', '=', False), ('move_id.purchase_line_id', '=', False)],
         ])
 
-    def _get_profitability_items(self):
-        profitability_items = super()._get_profitability_items()
+    def _get_profitability_items(self, with_action=True):
+        profitability_items = super()._get_profitability_items(with_action)
         if self.analytic_account_id:
             purchase_order_line_read = self.env['purchase.order.line'].sudo().search_read([
                 ('account_analytic_id', 'in', self.analytic_account_id.ids),
@@ -89,6 +108,11 @@ class Project(models.Model):
                 costs = profitability_items['costs']
                 section_id = 'purchase_order'
                 purchase_order_costs = {'id': section_id, 'name': _('Purchase Order'), 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
+                if with_action and purchase_order_line_ids and self.user_has_groups('purchase.group_purchase_user'):
+                    action = {'name': 'action_profitability_items', 'type': 'object', 'section': section_id, 'domain': json.dumps([('id', 'in', purchase_order_line_ids)])}
+                    if len(purchase_order_line_ids) == 1:
+                        action['res_id'] = purchase_order_line_ids[0]
+                    purchase_order_costs['action'] = action
                 costs['data'].append(purchase_order_costs)
                 costs['total']['billed'] += amount_invoiced
                 costs['total']['to_bill'] += amount_to_invoice
