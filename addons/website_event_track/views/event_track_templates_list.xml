@@ -74,8 +74,7 @@
 <template id="session_topbar_tag"
     inherit_id="website_event_track.session_topbar"
     name="Filter by Tags"
-    active="True"
-    customize_show="True">
+    active="True">
     <xpath expr="//ul[hasclass('o_wesession_topbar_filters')]" position="inside">
         <t t-foreach="tag_categories" t-as="tag_category">
             <li t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" class="nav-item dropdown mr-2 my-1">
@@ -104,8 +103,7 @@
 <template id="session_topbar_wishlist"
     inherit_id="website_event_track.session_topbar"
     name="Allow Wishlists"
-    active="True"
-    customize_show="True">
+    active="True">
     <xpath expr="//ul[hasclass('o_wesession_topbar_filters')]" position="inside">
     </xpath>
 </template>
