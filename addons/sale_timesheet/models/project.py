@@ -5,7 +5,7 @@ import json
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
 
@@ -383,6 +383,14 @@ class Project(models.Model):
         ])
         query._where_params += timesheet_params + employee_mapping_params
         return query
+
+    def _get_profitability_labels(self):
+        return {
+            **super()._get_profitability_labels(),
+            'billable_fixed': _lt('Timesheets (Fixed Price)'),
+            'billable_time': _lt('Timesheets (Billed on Timesheets)'),
+            'non_billable': _lt('Timesheets (Non Billable)'),
+        }
 
     def _get_profitability_aal_domain(self):
         domain = ['|', ('project_id', 'in', self.ids), ('so_line', 'in', self._fetch_sale_order_item_ids())]

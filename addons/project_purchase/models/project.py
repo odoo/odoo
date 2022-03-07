@@ -89,6 +89,11 @@ class Project(models.Model):
             ['|', ('move_id', '=', False), ('move_id.purchase_line_id', '=', False)],
         ])
 
+    def _get_profitability_labels(self):
+        labels = super()._get_profitability_labels()
+        labels['purchase_order'] = _lt('Purchase Orders')
+        return labels
+
     def _get_profitability_items(self, with_action=True):
         profitability_items = super()._get_profitability_items(with_action)
         if self.analytic_account_id:
@@ -107,7 +112,7 @@ class Project(models.Model):
                     purchase_order_line_ids.append(pol_read['id'])
                 costs = profitability_items['costs']
                 section_id = 'purchase_order'
-                purchase_order_costs = {'id': section_id, 'name': _('Purchase Order'), 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
+                purchase_order_costs = {'id': section_id, 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
                 if with_action and purchase_order_line_ids and self.user_has_groups('purchase.group_purchase_user'):
                     action = {'name': 'action_profitability_items', 'type': 'object', 'section': section_id, 'domain': json.dumps([('id', 'in', purchase_order_line_ids)])}
                     if len(purchase_order_line_ids) == 1:
