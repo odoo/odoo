@@ -52,7 +52,6 @@ import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
 import { commandService } from "@web/core/commands/command_service";
 import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 import { standaloneAdapter } from "web.OwlCompatibility";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, onMounted, xml } = owl;
 
@@ -317,7 +316,7 @@ export async function loadState(env, state) {
 
 export function getActionManagerServerData() {
     // additional basic client action
-    class TestClientAction extends LegacyComponent {}
+    class TestClientAction extends Component {}
     TestClientAction.template = xml`
       <div class="test_client_action">
         ClientAction_<t t-esc="props.action.params?.description"/>

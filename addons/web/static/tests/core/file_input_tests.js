@@ -8,6 +8,8 @@ import { getFixture, mount } from "../helpers/utils";
 
 const serviceRegistry = registry.category("services");
 
+let target;
+
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------
@@ -23,10 +25,6 @@ async function createFileInput(config) {
     serviceRegistry.add("http", fakeHTTPService);
 
     const env = await makeTestEnv();
-    const target = getFixture();
-    if (config.onUploaded) {
-        target.addEventListener("uploaded", config.onUploaded);
-    }
 
     const fileInput = await mount(FileInput, target, {
         env,
@@ -39,7 +37,11 @@ async function createFileInput(config) {
 // Tests
 // -----------------------------------------------------------------------------
 
-QUnit.module("Components", () => {
+QUnit.module("Components", ({ beforeEach }) => {
+    beforeEach(() => {
+        target = getFixture();
+    });
+
     // This module cannot be tested as thoroughly as we want it to be:
     // browsers do not let scripts programmatically assign values to inputs
     // of type file
@@ -48,7 +50,7 @@ QUnit.module("Components", () => {
     QUnit.test("Upload a file: default props", async function (assert) {
         assert.expect(6);
 
-        const fileInput = await createFileInput({
+        await createFileInput({
             mockPost: (route, params) => {
                 assert.deepEqual(params, {
                     csrf_token: odoo.csrf_token,
@@ -59,10 +61,10 @@ QUnit.module("Components", () => {
             },
             props: {},
         });
-        const input = fileInput.el.querySelector("input");
+        const input = target.querySelector("input");
 
         assert.strictEqual(
-            fileInput.el.innerText.trim().toUpperCase(),
+            target.querySelector(".o_file_input").innerText.trim().toUpperCase(),
             "CHOOSE FILE",
             "File input total text should match its given inner element's text"
         );
@@ -77,13 +79,20 @@ QUnit.module("Components", () => {
     QUnit.test("Upload a file: custom attachment", async function (assert) {
         assert.expect(6);
 
-        const fileInput = await createFileInput({
+        await createFileInput({
             props: {
                 accepted_file_extensions: ".png",
                 action: "/web/binary/upload_attachment",
                 id: 5,
                 model: "res.model",
                 multi_upload: true,
+                onUpload(files) {
+                    assert.strictEqual(
+                        files.length,
+                        0,
+                        "'files' property should be an empty array"
+                    );
+                },
             },
             mockPost: (route, params) => {
                 assert.deepEqual(params, {
@@ -95,15 +104,8 @@ QUnit.module("Components", () => {
                 assert.step(route);
                 return "[]";
             },
-            onUploaded(ev) {
-                assert.strictEqual(
-                    ev.detail.files.length,
-                    0,
-                    "'files' property should be an empty array"
-                );
-            },
         });
-        const input = fileInput.el.querySelector("input");
+        const input = target.querySelector("input");
 
         assert.strictEqual(input.accept, ".png", "Input should now only accept pngs");
 

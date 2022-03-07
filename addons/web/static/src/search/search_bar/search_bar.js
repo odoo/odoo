@@ -6,19 +6,19 @@ import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { fuzzyTest } from "@web/core/utils/search";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { useExternalListener, useState } = owl;
+const { Component, useExternalListener, useRef, useState } = owl;
 const parsers = registry.category("parsers");
 
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text"];
 
 let nextItemId = 1;
 
-export class SearchBar extends LegacyComponent {
+export class SearchBar extends Component {
     setup() {
         this.fields = this.env.searchModel.searchViewFields;
         this.searchItems = this.env.searchModel.getSearchItems((f) => f.type === "field");
+        this.root = useRef("root");
 
         // core state
         this.state = useState({
@@ -221,7 +221,7 @@ export class SearchBar extends LegacyComponent {
      * @param {number} [index]
      */
     focusFacet(index) {
-        const facets = this.el.getElementsByClassName("o_searchview_facet");
+        const facets = this.root.el.getElementsByClassName("o_searchview_facet");
         if (facets.length) {
             if (!index) {
                 facets[facets.length - 1].focus();
@@ -295,7 +295,7 @@ export class SearchBar extends LegacyComponent {
                 break;
             }
             case "ArrowRight": {
-                const facets = this.el.getElementsByClassName("o_searchview_facet");
+                const facets = this.root.el.getElementsByClassName("o_searchview_facet");
                 if (facetIndex === facets.length - 1) {
                     this.inputRef.el.focus();
                 } else {
@@ -441,7 +441,7 @@ export class SearchBar extends LegacyComponent {
      * @param {MouseEvent} ev
      */
     onWindowClick(ev) {
-        if (this.items.length && !this.el.contains(ev.target)) {
+        if (this.items.length && !this.root.el.contains(ev.target)) {
             this.resetState();
         }
     }

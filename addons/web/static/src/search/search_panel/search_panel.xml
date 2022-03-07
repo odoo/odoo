@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web.SearchPanel" owl="1">
-    <div class="o_search_panel" t-att-class="env.searchModel.searchPanelInfo.className">
+    <div class="o_search_panel" t-att-class="env.searchModel.searchPanelInfo.className" t-ref="root">
         <section t-foreach="sections" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >

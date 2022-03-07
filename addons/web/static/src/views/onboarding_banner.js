@@ -3,16 +3,15 @@
 import { loadAssets } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 import { useActionLinks } from "@web/views/helpers/view_hook";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { markup, onWillStart, xml } = owl;
+const { Component, markup, onWillStart, xml } = owl;
 
-export class OnboardingBanner extends LegacyComponent {
+export class OnboardingBanner extends Component {
     setup() {
         this.rpc = useService("rpc");
         this.user = useService("user");
         const resModel = "searchModel" in this.env ? this.env.searchModel.resModel : undefined;
-        useActionLinks({
+        this.handleActionLinks = useActionLinks({
             resModel,
             reload: async () => {
                 this.bannerHTML = await this.loadBanner(this.env.config.bannerRoute);
@@ -53,5 +52,5 @@ export class OnboardingBanner extends LegacyComponent {
     }
 }
 
-OnboardingBanner.template = xml`<div class="w-100" t-out="bannerHTML"/>`;
+OnboardingBanner.template = xml`<div class="w-100" t-on-click="handleActionLinks" t-out="bannerHTML"/>`;
 OnboardingBanner.props = {};

@@ -4,7 +4,6 @@ import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, mount, nextTick } from "../../helpers/utils";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, xml } = owl;
 
@@ -132,8 +131,8 @@ QUnit.test("close callback", async (assert) => {
 QUnit.test("sub component triggers close", async (assert) => {
     assert.containsOnce(fixture, ".o_popover_container");
 
-    class Comp extends LegacyComponent {}
-    Comp.template = xml`<div id="comp" t-on-click="() => this.trigger('popover-closed')">in popover</div>`;
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp" t-on-click="() => this.props.close()">in popover</div>`;
 
     popovers.add(popoverTarget, Comp, {});
     await nextTick();

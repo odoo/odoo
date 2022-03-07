@@ -13,9 +13,8 @@ import { legacyExtraNextTick, nextTick } from "../../helpers/utils";
 import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { xml } = owl;
+const { Component, xml } = owl;
 const actionRegistry = registry.category("actions");
 
 let serverData;
@@ -444,7 +443,7 @@ QUnit.module("ActionManager", (hooks) => {
         async function (assert) {
             assert.expect(3);
             const slowWillStartDef = testUtils.makeTestPromise();
-            class ClientAction extends LegacyComponent {
+            class ClientAction extends Component {
                 setup() {
                     owl.onWillStart(() => slowWillStartDef);
                 }
@@ -592,7 +591,7 @@ QUnit.module("ActionManager", (hooks) => {
         let def = Promise.resolve();
 
         let id = 1;
-        class ToyView extends LegacyComponent {
+        class ToyView extends Component {
             setup() {
                 this.id = id++;
                 assert.step(JSON.stringify(this.props.state || "no state"));

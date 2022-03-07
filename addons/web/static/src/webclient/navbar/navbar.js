@@ -6,9 +6,8 @@ import { useService, useBus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler } from "@web/core/utils/components";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { onWillDestroy, useExternalListener, useEffect, useRef } = owl;
+const { Component, onWillDestroy, useExternalListener, useEffect, useRef } = owl;
 const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
@@ -31,11 +30,12 @@ MenuDropdown.props.xmlid = {
     optional: true,
 };
 
-export class NavBar extends LegacyComponent {
+export class NavBar extends Component {
     setup() {
         this.currentAppSectionsExtra = [];
         this.actionService = useService("action");
         this.menuService = useService("menu");
+        this.root = useRef("root");
         this.appSubMenus = useRef("appSubMenus");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
         onWillDestroy(() => debouncedAdapt.cancel());
@@ -95,7 +95,8 @@ export class NavBar extends LegacyComponent {
      *     By the end of this method another render may occur depending on the adaptation result.
      */
     async adapt() {
-        if (!this.el) {
+        if (!this.root.el) {
+            /** @todo do we still need this check? */
             // currently, the promise returned by 'render' is resolved at the end of
             // the rendering even if the component has been destroyed meanwhile, so we
             // may get here and have this.el unset
