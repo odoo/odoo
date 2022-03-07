@@ -16,7 +16,7 @@ export class FloatField extends Component {
             value = this.props.parseValue(value);
         } catch (e) {
             isValid = false;
-            this.props.record.setInvalidField(this.props.name);
+            this.props.setAsInvalid(this.props.name);
         }
         if (isValid) {
             this.props.update(value);
@@ -26,7 +26,7 @@ export class FloatField extends Component {
     get formattedValue() {
         return this.props.formatValue(this.props.value, {
             digits: this.props.digits,
-            field: this.props.record.fields[this.props.name],
+            field: this.props.field,
         });
     }
 
@@ -43,13 +43,18 @@ FloatField.props = {
     ...standardFieldProps,
     inputType: { type: String, optional: true },
     digits: { type: Array, optional: true },
+    setAsInvalid: { type: Function, optional: true },
+    field: { type: Object, optional: true },
 };
 FloatField.defaultProps = {
     inputType: "text",
+    setAsInvalid: () => {},
 };
 FloatField.isEmpty = () => false;
-FloatField.convertAttrsToProps = (attrs) => {
+FloatField.extractProps = (fieldName, record, attrs) => {
     return {
+        setAsInvalid: record.setInvalidField,
+        field: record.fields[fieldName], // To remove
         inputType: attrs.type,
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
