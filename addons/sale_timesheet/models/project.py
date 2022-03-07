@@ -421,6 +421,15 @@ class Project(models.Model):
             })
         return result
 
+    def _get_service_policy_to_invoice_type(self):
+        return {
+            **super()._get_service_policy_to_invoice_type(),
+            'ordered_prepaid': 'billable_fixed',
+            'delivered_milestones': 'billable_milestones',
+            'delivered_timesheet': 'billable_time',
+            'delivered_manual': 'billable_manual',
+        }
+
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
