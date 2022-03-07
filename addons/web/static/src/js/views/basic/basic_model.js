@@ -3298,14 +3298,14 @@ var BasicModel = AbstractModel.extend({
         var type;
         for (var fieldName in fields) {
             type = fields[fieldName].type;
-
+            var dataFieldName = data[fieldName];
             if (type === 'many2many' || type === 'one2many') {
-                if (!data[fieldName]) {
+                if (!dataFieldName || !this.localData[dataFieldName]) {
                     // skip if this field is empty
                     continue;
                 }
                 commands[fieldName] = [];
-                var list = this.localData[data[fieldName]];
+                var list = this.localData[dataFieldName];
                 if (options.changesOnly && (!list._changes || !list._changes.length)) {
                     // if only changes are requested, skip if there is no change
                     continue;
