@@ -7,6 +7,7 @@ import subprocess
 from unittest import skipIf
 from odoo import tools
 from odoo.modules.module import get_resource_path
+from odoo.tests import tagged
 
 from . import lint_case
 
@@ -18,6 +19,7 @@ except IOError:
     eslint = None
 
 @skipIf(eslint is None, "eslint tool not found on this system")
+@tagged("test_themes")
 class TestESLint(lint_case.LintCase):
 
     longMessage = True
