@@ -100,6 +100,13 @@ class Meeting(models.Model):
         if recurrence_update_setting == 'self_only' and 'start' in values:
             self._check_recurrence_overlapping(values['start'])
 
+        # if a single event becomes the base event of a recurrency, it should be first
+        # removed from the Outlook calendar.
+        if 'recurrency' in values and values['recurrency']:
+            for e in self.filtered(lambda e: not e.recurrency and not e.recurrence_id):
+                e._microsoft_delete(e._get_organizer(), e.ms_organizer_event_id, timeout=3)
+                e.microsoft_id = False
+
         notify_context = self.env.context.get('dont_notify', False)
         res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
 
