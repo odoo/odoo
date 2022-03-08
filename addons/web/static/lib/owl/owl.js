@@ -266,10 +266,14 @@
             this[eventKey] = data;
             this.addEventListener(evName, listener, { capture });
         }
+        function remove() {
+            delete this[eventKey];
+            this.removeEventListener(evName, listener, { capture });
+        }
         function update(data) {
             this[eventKey] = data;
         }
-        return { setup, update };
+        return { setup, update, remove };
     }
     // Synthetic handler: a form of event delegation that allows placing only one
     // listener per event type.
@@ -286,7 +290,10 @@
             _data[currentId] = data;
             this[eventKey] = _data;
         }
-        return { setup, update: setup };
+        function remove() {
+            delete this[eventKey];
+        }
+        return { setup, update: setup, remove };
     }
     function nativeToSyntheticEvent(eventKey, event) {
         let dom = event.target;
@@ -1279,6 +1286,75 @@
     }
     function html(str) {
         return new VHtml(str);
+    }
+
+    function createCatcher(eventsSpec) {
+        let setupFns = [];
+        let removeFns = [];
+        for (let name in eventsSpec) {
+            let index = eventsSpec[name];
+            let { setup, remove } = createEventHandler(name);
+            setupFns[index] = setup;
+            removeFns[index] = remove;
+        }
+        let n = setupFns.length;
+        class VCatcher {
+            constructor(child, handlers) {
+                this.afterNode = null;
+                this.child = child;
+                this.handlers = handlers;
+            }
+            mount(parent, afterNode) {
+                this.parentEl = parent;
+                this.afterNode = afterNode;
+                this.child.mount(parent, afterNode);
+                for (let i = 0; i < n; i++) {
+                    let origFn = this.handlers[i][0];
+                    const self = this;
+                    this.handlers[i][0] = function (ev) {
+                        const target = ev.target;
+                        let currentNode = self.child.firstNode();
+                        const afterNode = self.afterNode;
+                        while (currentNode !== afterNode) {
+                            if (currentNode.contains(target)) {
+                                return origFn.call(this, ev);
+                            }
+                            currentNode = currentNode.nextSibling;
+                        }
+                    };
+                    setupFns[i].call(parent, this.handlers[i]);
+                }
+            }
+            moveBefore(other, afterNode) {
+                this.afterNode = null;
+                this.child.moveBefore(other ? other.child : null, afterNode);
+            }
+            patch(other, withBeforeRemove) {
+                if (this === other) {
+                    return;
+                }
+                this.handlers = other.handlers;
+                this.child.patch(other.child, withBeforeRemove);
+            }
+            beforeRemove() {
+                this.child.beforeRemove();
+            }
+            remove() {
+                for (let i = 0; i < n; i++) {
+                    removeFns[i].call(this.parentEl);
+                }
+                this.child.remove();
+            }
+            firstNode() {
+                return this.child.firstNode();
+            }
+            toString() {
+                return this.child.toString();
+            }
+        }
+        return function (child, handlers) {
+            return new VCatcher(child, handlers);
+        };
     }
 
     function mount$1(vnode, fixture, afterNode = null) {
@@ -2733,24 +2809,31 @@
     function tokenize(expr) {
         const result = [];
         let token = true;
-        while (token) {
-            expr = expr.trim();
-            if (expr) {
-                for (let tokenizer of TOKENIZERS) {
-                    token = tokenizer(expr);
-                    if (token) {
-                        result.push(token);
-                        expr = expr.slice(token.size || token.value.length);
-                        break;
+        let error;
+        let current = expr;
+        try {
+            while (token) {
+                current = current.trim();
+                if (current) {
+                    for (let tokenizer of TOKENIZERS) {
+                        token = tokenizer(current);
+                        if (token) {
+                            result.push(token);
+                            current = current.slice(token.size || token.value.length);
+                            break;
+                        }
                     }
                 }
-            }
-            else {
-                token = false;
+                else {
+                    token = false;
+                }
             }
         }
-        if (expr.length) {
-            throw new Error(`Tokenizer error: could not tokenize "${expr}"`);
+        catch (e) {
+            error = e; // Silence all errors and throw a generic error below
+        }
+        if (current.length || error) {
+            throw new Error(`Tokenizer error: could not tokenize \`${expr}\``);
         }
         return result;
     }
@@ -2955,7 +3038,7 @@
         }, params);
     }
     class CodeTarget {
-        constructor(name) {
+        constructor(name, on) {
             this.indentLevel = 0;
             this.loopLevel = 0;
             this.code = [];
@@ -2966,6 +3049,7 @@
             this.refInfo = {};
             this.shouldProtectScope = false;
             this.name = name;
+            this.on = on || null;
         }
         addLine(line, idx) {
             const prefix = new Array(this.indentLevel + 2).join("  ");
@@ -3015,7 +3099,7 @@
             this.targets = [];
             this.target = new CodeTarget("template");
             this.translatableAttributes = TRANSLATABLE_ATTRS;
-            this.staticCalls = [];
+            this.staticDefs = [];
             this.helpers = new Set();
             this.translateFn = options.translateFn || ((s) => s);
             if (options.translatableAttributes) {
@@ -3058,8 +3142,8 @@
             if (this.templateName) {
                 mainCode.push(`// Template name: "${this.templateName}"`);
             }
-            for (let { id, template } of this.staticCalls) {
-                mainCode.push(`const ${id} = getTemplate(${template});`);
+            for (let { id, expr } of this.staticDefs) {
+                mainCode.push(`const ${id} = ${expr};`);
             }
             // define all blocks
             if (this.blocks.length) {
@@ -3095,19 +3179,21 @@
             }
             return code;
         }
-        compileInNewTarget(prefix, ast, ctx) {
+        compileInNewTarget(prefix, ast, ctx, on) {
             const name = this.generateId(prefix);
             const initialTarget = this.target;
-            const target = new CodeTarget(name);
+            const target = new CodeTarget(name, on);
             this.targets.push(target);
             this.target = target;
-            const subCtx = createContext(ctx);
-            this.compileAST(ast, subCtx);
+            this.compileAST(ast, createContext(ctx));
             this.target = initialTarget;
             return name;
         }
-        addLine(line) {
-            this.target.addLine(line);
+        addLine(line, idx) {
+            this.target.addLine(line, idx);
+        }
+        define(varName, expr) {
+            this.addLine(`const ${varName} = ${expr};`);
         }
         generateId(prefix = "") {
             this.ids[prefix] = (this.ids[prefix] || 0) + 1;
@@ -3149,10 +3235,13 @@
                 blockExpr = `toggler(${tKeyExpr}, ${blockExpr})`;
             }
             if (block.isRoot && !ctx.preventRoot) {
+                if (this.target.on) {
+                    blockExpr = this.wrapWithEventCatcher(blockExpr, this.target.on);
+                }
                 this.addLine(`return ${blockExpr};`);
             }
             else {
-                this.addLine(`let ${block.varName} = ${blockExpr};`);
+                this.define(block.varName, blockExpr);
             }
         }
         /**
@@ -3180,7 +3269,7 @@
                     if (!mapping.has(tok.varName)) {
                         const varId = this.generateId("v");
                         mapping.set(tok.varName, varId);
-                        this.addLine(`const ${varId} = ${tok.value};`);
+                        this.define(varId, tok.value);
                     }
                     tok.value = mapping.get(tok.varName);
                 }
@@ -3319,7 +3408,7 @@
                 this.blocks.push(block);
                 if (ast.dynamicTag) {
                     const tagExpr = this.generateId("tag");
-                    this.addLine(`let ${tagExpr} = ${compileExpr(ast.dynamicTag)};`);
+                    this.define(tagExpr, compileExpr(ast.dynamicTag));
                     block.dynamicTagName = tagExpr;
                 }
             }
@@ -3401,10 +3490,10 @@
                 const { hasDynamicChildren, baseExpr, expr, eventType, shouldNumberize, shouldTrim, targetAttr, specialInitTargetAttr, } = ast.model;
                 const baseExpression = compileExpr(baseExpr);
                 const bExprId = this.generateId("bExpr");
-                this.addLine(`const ${bExprId} = ${baseExpression};`);
+                this.define(bExprId, baseExpression);
                 const expression = compileExpr(expr);
                 const exprId = this.generateId("expr");
-                this.addLine(`const ${exprId} = ${expression};`);
+                this.define(exprId, expression);
                 const fullExpression = `${bExprId}[${exprId}]`;
                 let idx;
                 if (specialInitTargetAttr) {
@@ -3414,7 +3503,7 @@
                 else if (hasDynamicChildren) {
                     const bValueId = this.generateId("bValue");
                     tModelSelectedExpr = `${bValueId}`;
-                    this.addLine(`let ${tModelSelectedExpr} = ${fullExpression}`);
+                    this.define(tModelSelectedExpr, fullExpression);
                 }
                 else {
                     idx = block.insertData(`${fullExpression}`, "attr");
@@ -3462,14 +3551,14 @@
                     const children = block.children.slice();
                     let current = children.shift();
                     for (let i = codeIdx; i < code.length; i++) {
-                        if (code[i].trimStart().startsWith(`let ${current.varName} `)) {
-                            code[i] = code[i].replace(`let ${current.varName}`, current.varName);
+                        if (code[i].trimStart().startsWith(`const ${current.varName} `)) {
+                            code[i] = code[i].replace(`const ${current.varName}`, current.varName);
                             current = children.shift();
                             if (!current)
                                 break;
                         }
                     }
-                    this.target.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
+                    this.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
                 }
             }
         }
@@ -3557,14 +3646,14 @@
                     const children = block.children.slice();
                     let current = children.shift();
                     for (let i = codeIdx; i < code.length; i++) {
-                        if (code[i].trimStart().startsWith(`let ${current.varName} `)) {
-                            code[i] = code[i].replace(`let ${current.varName}`, current.varName);
+                        if (code[i].trimStart().startsWith(`const ${current.varName} `)) {
+                            code[i] = code[i].replace(`const ${current.varName}`, current.varName);
                             current = children.shift();
                             if (!current)
                                 break;
                         }
                     }
-                    this.target.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
+                    this.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
                 }
                 // note: this part is duplicated from end of compilemulti:
                 const args = block.children.map((c) => c.varName).join(", ");
@@ -3585,10 +3674,10 @@
             const l = `l_block${block.id}`;
             const c = `c_block${block.id}`;
             this.helpers.add("prepareList");
-            this.addLine(`const [${keys}, ${vals}, ${l}, ${c}] = prepareList(${compileExpr(ast.collection)});`);
+            this.define(`[${keys}, ${vals}, ${l}, ${c}]`, `prepareList(${compileExpr(ast.collection)});`);
             // Throw errors on duplicate keys in dev mode
             if (this.dev) {
-                this.addLine(`const keys${block.id} = new Set();`);
+                this.define(`keys${block.id}`, `new Set()`);
             }
             this.addLine(`for (let ${loopVar} = 0; ${loopVar} < ${l}; ${loopVar}++) {`);
             this.target.indentLevel++;
@@ -3605,7 +3694,7 @@
             if (!ast.hasNoValue) {
                 this.addLine(`ctx[\`${ast.elem}_value\`] = ${keys}[${loopVar}];`);
             }
-            this.addLine(`let key${this.target.loopLevel} = ${ast.key ? compileExpr(ast.key) : loopVar};`);
+            this.define(`key${this.target.loopLevel}`, ast.key ? compileExpr(ast.key) : loopVar);
             if (this.dev) {
                 // Throw error on duplicate keys in dev mode
                 this.addLine(`if (keys${block.id}.has(key${this.target.loopLevel})) { throw new Error(\`Got duplicate key in t-foreach: \${key${this.target.loopLevel}}\`)}`);
@@ -3615,8 +3704,8 @@
             if (ast.memo) {
                 this.target.hasCache = true;
                 id = this.generateId();
-                this.addLine(`let memo${id} = ${compileExpr(ast.memo)}`);
-                this.addLine(`let vnode${id} = cache[key${this.target.loopLevel}];`);
+                this.define(`memo${id}`, compileExpr(ast.memo));
+                this.define(`vnode${id}`, `cache[key${this.target.loopLevel}];`);
                 this.addLine(`if (vnode${id}) {`);
                 this.target.indentLevel++;
                 this.addLine(`if (shallowEqual(vnode${id}.memo, memo${id})) {`);
@@ -3644,7 +3733,7 @@
         }
         compileTKey(ast, ctx) {
             const tKeyExpr = this.generateId("tKey_");
-            this.addLine(`const ${tKeyExpr} = ${compileExpr(ast.expr)};`);
+            this.define(tKeyExpr, compileExpr(ast.expr));
             ctx = createContext(ctx, {
                 tKeyExpr,
                 block: ctx.block,
@@ -3689,14 +3778,14 @@
                         const children = block.children.slice();
                         let current = children.shift();
                         for (let i = codeIdx; i < code.length; i++) {
-                            if (code[i].trimStart().startsWith(`let ${current.varName} `)) {
-                                code[i] = code[i].replace(`let ${current.varName}`, current.varName);
+                            if (code[i].trimStart().startsWith(`const ${current.varName} `)) {
+                                code[i] = code[i].replace(`const ${current.varName}`, current.varName);
                                 current = children.shift();
                                 if (!current)
                                     break;
                             }
                         }
-                        this.target.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
+                        this.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
                     }
                 }
                 const args = block.children.map((c) => c.varName).join(", ");
@@ -3727,7 +3816,7 @@
             const key = `key + \`${this.generateComponentKey()}\``;
             if (isDynamic) {
                 const templateVar = this.generateId("template");
-                this.addLine(`const ${templateVar} = ${subTemplate};`);
+                this.define(templateVar, subTemplate);
                 block = this.createBlock(block, "multi", ctx);
                 this.helpers.add("call");
                 this.insertBlock(`call(this, ${templateVar}, ctx, node, ${key})`, block, {
@@ -3738,7 +3827,7 @@
             else {
                 const id = this.generateId(`callTemplate_`);
                 this.helpers.add("getTemplate");
-                this.staticCalls.push({ id, template: subTemplate });
+                this.staticDefs.push({ id, expr: `getTemplate(${subTemplate})` });
                 block = this.createBlock(block, "multi", ctx);
                 this.insertBlock(`${id}.call(this, ctx, node, ${key})`, block, {
                     ...ctx,
@@ -3832,26 +3921,25 @@
         compileComponent(ast, ctx) {
             let { block } = ctx;
             // props
-            const hasSlotsProp = "slots" in ast.props;
+            const hasSlotsProp = "slots" in (ast.props || {});
             const props = [];
-            const propExpr = this.formatPropObject(ast.props);
+            const propExpr = this.formatPropObject(ast.props || {});
             if (propExpr) {
                 props.push(propExpr);
             }
             // slots
-            const hasSlot = !!Object.keys(ast.slots).length;
             let slotDef = "";
-            if (hasSlot) {
+            if (ast.slots) {
                 let ctxStr = "ctx";
                 if (this.target.loopLevel || !this.hasSafeContext) {
                     ctxStr = this.generateId("ctx");
                     this.helpers.add("capture");
-                    this.addLine(`const ${ctxStr} = capture(ctx);`);
+                    this.define(ctxStr, `capture(ctx)`);
                 }
                 let slotStr = [];
                 for (let slotName in ast.slots) {
-                    const slotAst = ast.slots[slotName].content;
-                    const name = this.compileInNewTarget("slot", slotAst, ctx);
+                    const slotAst = ast.slots[slotName];
+                    const name = this.compileInNewTarget("slot", slotAst.content, ctx, slotAst.on);
                     const params = [`__render: ${name}, __ctx: ${ctxStr}`];
                     const scope = ast.slots[slotName].scope;
                     if (scope) {
@@ -3877,7 +3965,7 @@
             let propVar;
             if ((slotDef && (ast.dynamicProps || hasSlotsProp)) || this.dev) {
                 propVar = this.generateId("props");
-                this.addLine(`const ${propVar} = ${propString};`);
+                this.define(propVar, propString);
                 propString = propVar;
             }
             if (slotDef && (ast.dynamicProps || hasSlotsProp)) {
@@ -3889,7 +3977,7 @@
             let expr;
             if (ast.isDynamic) {
                 expr = this.generateId("Comp");
-                this.addLine(`let ${expr} = ${compileExpr(ast.name)};`);
+                this.define(expr, compileExpr(ast.name));
             }
             else {
                 expr = `\`${ast.name}\``;
@@ -3910,8 +3998,27 @@
             if (ast.isDynamic) {
                 blockExpr = `toggler(${expr}, ${blockExpr})`;
             }
+            // event handling
+            if (ast.on) {
+                blockExpr = this.wrapWithEventCatcher(blockExpr, ast.on);
+            }
             block = this.createBlock(block, "multi", ctx);
             this.insertBlock(blockExpr, block, ctx);
+        }
+        wrapWithEventCatcher(expr, on) {
+            this.helpers.add("createCatcher");
+            let name = this.generateId("catcher");
+            let spec = {};
+            let handlers = [];
+            for (let ev in on) {
+                let handlerId = this.generateId("hdlr");
+                let idx = handlers.push(handlerId) - 1;
+                spec[ev] = idx;
+                const handler = this.generateHandlerCode(ev, on[ev]);
+                this.define(handlerId, handler);
+            }
+            this.staticDefs.push({ id: name, expr: `createCatcher(${JSON.stringify(spec)})` });
+            return `${name}(${expr}, [${handlers.join(",")}])`;
         }
         compileTSlot(ast, ctx) {
             this.helpers.add("callSlot");
@@ -3934,12 +4041,16 @@
             else {
                 if (dynamic) {
                     let name = this.generateId("slot");
-                    this.addLine(`const ${name} = ${slotName};`);
+                    this.define(name, slotName);
                     blockString = `toggler(${name}, callSlot(ctx, node, key, ${name}), ${dynamic}, ${scope})`;
                 }
                 else {
                     blockString = `callSlot(ctx, node, key, ${slotName}, ${dynamic}, ${scope})`;
                 }
+            }
+            // event handling
+            if (ast.on) {
+                blockString = this.wrapWithEventCatcher(blockString, ast.on);
             }
             if (block) {
                 this.insertAnchor(block);
@@ -3961,7 +4072,7 @@
             if (this.target.loopLevel || !this.hasSafeContext) {
                 ctxStr = this.generateId("ctx");
                 this.helpers.add("capture");
-                this.addLine(`const ${ctxStr} = capture(ctx);`);
+                this.define(ctxStr, `capture(ctx);`);
             }
             const blockString = `component(Portal, {target: ${ast.target},slots: {'default': {__render: ${name}, __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx)`;
             if (block) {
@@ -4095,8 +4206,8 @@
         const ref = node.getAttribute("t-ref");
         node.removeAttribute("t-ref");
         const nodeAttrsNames = node.getAttributeNames();
-        const attrs = {};
-        const on = {};
+        let attrs = null;
+        let on = null;
         let model = null;
         for (let attr of nodeAttrsNames) {
             const value = node.getAttribute(attr);
@@ -4104,6 +4215,7 @@
                 if (attr === "t-on") {
                     throw new Error("Missing event name with t-on directive");
                 }
+                on = on || {};
                 on[attr.slice(5)] = value;
             }
             else if (attr.startsWith("t-model")) {
@@ -4141,6 +4253,7 @@
                     targetAttr: isCheckboxInput ? "checked" : "value",
                     specialInitTargetAttr: isRadioInput ? "checked" : null,
                     eventType,
+                    hasDynamicChildren: false,
                     shouldTrim: hasTrimMod && (isOtherInput || isTextarea),
                     shouldNumberize: hasNumberMod && (isOtherInput || isTextarea),
                 };
@@ -4161,6 +4274,7 @@
                 if (tModel && ["t-att-value", "t-attf-value"].includes(attr)) {
                     tModel.hasDynamicChildren = true;
                 }
+                attrs = attrs || {};
                 attrs[attr] = value;
             }
         }
@@ -4311,7 +4425,7 @@
             if (ast && ast.type === 11 /* TComponent */) {
                 return {
                     ...ast,
-                    slots: { default: { content: tcall } },
+                    slots: { default: { content: tcall, scope: null, on: null, attrs: null } },
                 };
             }
         }
@@ -4395,7 +4509,6 @@
     // -----------------------------------------------------------------------------
     // Error messages when trying to use an unsupported directive on a component
     const directiveErrorMap = new Map([
-        ["t-on", "t-on is no longer supported on components. Consider passing a callback in props."],
         [
             "t-ref",
             "t-ref is no longer supported on components. Consider exposing only the public part of the component's API through a callback prop.",
@@ -4424,18 +4537,26 @@
         node.removeAttribute("t-props");
         const defaultSlotScope = node.getAttribute("t-slot-scope");
         node.removeAttribute("t-slot-scope");
-        const props = {};
+        let on = null;
+        let props = null;
         for (let name of node.getAttributeNames()) {
             const value = node.getAttribute(name);
             if (name.startsWith("t-")) {
-                const message = directiveErrorMap.get(name.split("-").slice(0, 2).join("-"));
-                throw new Error(message || `unsupported directive on Component: ${name}`);
+                if (name.startsWith("t-on-")) {
+                    on = on || {};
+                    on[name.slice(5)] = value;
+                }
+                else {
+                    const message = directiveErrorMap.get(name.split("-").slice(0, 2).join("-"));
+                    throw new Error(message || `unsupported directive on Component: ${name}`);
+                }
             }
             else {
+                props = props || {};
                 props[name] = value;
             }
         }
-        const slots = {};
+        let slots = null;
         if (node.hasChildNodes()) {
             const clone = node.cloneNode(true);
             // named slots
@@ -4463,32 +4584,36 @@
                 slotNode.remove();
                 const slotAst = parseNode(slotNode, ctx);
                 if (slotAst) {
-                    const slotInfo = { content: slotAst };
-                    const attrs = {};
+                    let on = null;
+                    let attrs = null;
+                    let scope = null;
                     for (let attributeName of slotNode.getAttributeNames()) {
                         const value = slotNode.getAttribute(attributeName);
                         if (attributeName === "t-slot-scope") {
-                            slotInfo.scope = value;
+                            scope = value;
                             continue;
                         }
-                        attrs[attributeName] = value;
+                        else if (attributeName.startsWith("t-on-")) {
+                            on = on || {};
+                            on[attributeName.slice(5)] = value;
+                        }
+                        else {
+                            attrs = attrs || {};
+                            attrs[attributeName] = value;
+                        }
                     }
-                    if (Object.keys(attrs).length) {
-                        slotInfo.attrs = attrs;
-                    }
-                    slots[name] = slotInfo;
+                    slots = slots || {};
+                    slots[name] = { content: slotAst, on, attrs, scope };
                 }
             }
             // default slot
             const defaultContent = parseChildNodes(clone, ctx);
             if (defaultContent) {
-                slots.default = { content: defaultContent };
-                if (defaultSlotScope) {
-                    slots.default.scope = defaultSlotScope;
-                }
+                slots = slots || {};
+                slots.default = { content: defaultContent, on, attrs: null, scope: defaultSlotScope };
             }
         }
-        return { type: 11 /* TComponent */, name, isDynamic, dynamicProps, props, slots };
+        return { type: 11 /* TComponent */, name, isDynamic, dynamicProps, props, slots, on };
     }
     // -----------------------------------------------------------------------------
     // Slots
@@ -4499,15 +4624,24 @@
         }
         const name = node.getAttribute("t-slot");
         node.removeAttribute("t-slot");
-        const attrs = {};
+        let attrs = null;
+        let on = null;
         for (let attributeName of node.getAttributeNames()) {
             const value = node.getAttribute(attributeName);
-            attrs[attributeName] = value;
+            if (attributeName.startsWith("t-on-")) {
+                on = on || {};
+                on[attributeName.slice(5)] = value;
+            }
+            else {
+                attrs = attrs || {};
+                attrs[attributeName] = value;
+            }
         }
         return {
             type: 14 /* TSlot */,
             name,
             attrs,
+            on,
             defaultContent: parseChildNodes(node, ctx),
         };
     }
@@ -4767,20 +4901,22 @@
         const node = getCurrent();
         const renderFn = node.renderFn;
         const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.renderFn = decorate(() => {
-            fn.call(node.component);
+        fn = decorate(fn.bind(node.component), "onWillRender");
+        node.renderFn = () => {
+            fn();
             return renderFn();
-        }, "onWillRender");
+        };
     }
     function onRendered(fn) {
         const node = getCurrent();
         const renderFn = node.renderFn;
         const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.renderFn = decorate(() => {
+        fn = decorate(fn.bind(node.component), "onRendered");
+        node.renderFn = () => {
             const result = renderFn();
-            fn.call(node.component);
+            fn();
             return result;
-        }, "onRendered");
+        };
     }
     function onError(callback) {
         const node = getCurrent();
@@ -4882,7 +5018,7 @@
         const { __render, __ctx, __scope } = slots[name] || {};
         const slotScope = Object.create(__ctx || {});
         if (__scope) {
-            slotScope[__scope] = extra || {};
+            slotScope[__scope] = extra;
         }
         const slotBDom = __render ? __render.call(__ctx.__owl__.component, slotScope, parent, key) : null;
         if (defaultContent) {
@@ -5038,6 +5174,7 @@
         LazyValue,
         safeOutput,
         bind,
+        createCatcher,
     };
 
     const bdom = { text, createBlock, list, multi, html, toggler, component, comment };
@@ -5390,9 +5527,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta.2';
-    __info__.date = '2022-03-03T15:22:41.826Z';
-    __info__.hash = 'e4fdd32';
+    __info__.version = '2.0.0-beta.3';
+    __info__.date = '2022-03-08T11:47:57.414Z';
+    __info__.hash = 'c356351';
     __info__.url = 'https://github.com/odoo/owl';
 
 
