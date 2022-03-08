@@ -28,10 +28,10 @@ export class WebsiteEditorClientAction extends Component {
         }, () => [this.props.action.context.params]);
 
         useEffect(() => {
-            this.iframe.el.addEventListener('load', () => {
+            const onPageLoaded = () => {
                 this.currentUrl = this.iframe.el.contentDocument.location.href;
                 this.currentTitle = this.iframe.el.contentDocument.title;
-                history.pushState({}, this.currentTitle, this.currentUrl);
+                history.replaceState({}, this.currentTitle, this.currentUrl);
                 this.title.setParts({ action: this.currentTitle });
 
                 this.websiteService.pageDocument = this.iframe.el.contentDocument;
@@ -40,8 +40,11 @@ export class WebsiteEditorClientAction extends Component {
                     this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
                     $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
                 });
-            });
-        });
+            };
+
+            this.iframe.el.addEventListener('load', () => onPageLoaded());
+            return this.iframe.el.removeEventListener('load', () => onPageLoaded());
+        }, () => []);
     }
 
     get websiteId() {
