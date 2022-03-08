@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 TEMPLATES = {
     'generic_coa': {'name': 'Generic Chart Template', 'country': None, 'modules': ['account']},
     'be': {'name': 'BE Belgian PCMN', 'country': 'base.be', 'modules': ['l10n_be']},
+    'it': {'name': 'IT', 'country': 'base.it', 'modules': ['l10n_it']},
     'fr': {'name': 'FR', 'country': 'base.fr', 'modules': ['l10n_fr']},
     'ch': {'name': 'CH', 'country': 'base.ch', 'modules': ['l10n_ch']},
     'de': {'name': 'DE', 'country': 'base.de', 'modules': ['l10n_de']},
@@ -164,10 +165,11 @@ class AccountChartTemplate(models.AbstractModel):
 
         irt_cursor = IrTranslationImport(self._cr, True)
         for model, data in defer(list(data.items())):
+            _logger.info("Loading model %s ...", model)
             translate_vals = defaultdict(list)
             create_vals = []
             for xml_id, record in data.items():
-                xml_id = "account.%s" % xml_id if '.' not in xml_id else xml_id
+                xml_id = f"{'account.' if '.' not in xml_id else ''}{xml_id}"
                 for translate, value in list(record.items()):
                     if '@' in translate:
                         if value:
@@ -189,9 +191,9 @@ class AccountChartTemplate(models.AbstractModel):
                     'values': deref(record, self.env[model]),
                     'noupdate': True,
                 })
-            _logger.debug('Loading model %s', model)
+            _logger.info('Loading records for model %s...', model)
             created = self.env[model].sudo()._load_records(create_vals)
-            _logger.debug('Loaded model %s', model)
+            _logger.info('Loaded records for model %s', model)
             for vals, record in zip(create_vals, created):
                 for translation in translate_vals[vals['xml_id']]:
                     irt_cursor.push({**translation, 'res_id': record.id})
@@ -229,8 +231,11 @@ class AccountChartTemplate(models.AbstractModel):
 
         try:
             with open(path, 'r', encoding="utf-8") as csv_file:
-                _logger.info('loading %s', '/'.join(path_parts))
-                return {f"{cid}_{row['id']}": sanitize_csv(row) for row in csv.DictReader(csv_file)}
+                relative_path = '/'.join(path_parts)
+                _logger.info('loading %s', relative_path)
+                ret = {f"{cid}_{row['id']}": sanitize_csv(row) for row in csv.DictReader(csv_file)}
+                _logger.info('loaded %s', relative_path)
+                return ret
         except OSError as e:
             if path:
                 _logger.info("Error reading CSV file %s: %s", path, e)
@@ -238,15 +243,15 @@ class AccountChartTemplate(models.AbstractModel):
                 _logger.debug("No file %s found for template '%s'", file_name, module)
             return {}
 
-    def _post_load_data(self, template_code, company):
-        company = (company or self.env.company)
+    def _setup_utility_bank_accounts(self, template_code, company, bank_prefix, code_digits):
+        """
+            Define basic bank accounts for the company.
+            - Suspense Account
+            - Outstanding Receipts/Payments Accounts
+            - Cash Difference Gain/Loss Accounts
+            - Liquidity Transfer Account
+        """
         cid = company.id
-
-        template_data = self._get_template_data(template_code, company)
-        code_digits = template_data.get('code_digits', 6)
-        bank_prefix = template_data.get('bank_account_code_prefix', '')
-        company.write({key: val for key, val in template_data.items() if not key.startswith("property_")})
-
         accounts_data = {
             'account_journal_suspense_account_id': {
                 'company_id': cid,
@@ -268,6 +273,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
                 'reconcile': True,
             },
+            'default_cash_difference_income_account_id': {
+                'company_id': cid,
+                'name': _("Cash Difference Gain"),
+                'prefix': '999',
+                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+                'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
+            },
             'default_cash_difference_expense_account_id': {
                 'company_id': cid,
                 'name': _("Cash Difference Loss"),
@@ -275,16 +287,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'user_type_id': self.env.ref('account.data_account_type_expenses').id,
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
             },
-            'default_cash_difference_income_account_id': {
-                'company_id': cid,
-                'name': _("Cash Difference Gain"),
-                'prefix': '999',
-                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
-                'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
-            }
         }
 
-        # If the chart_template has no parent, create the single company.transfer_account_id
+        # Transfer account: if the chart_template has no parent, create the single company.transfer_account_id
         if not TEMPLATES[template_code].get('parent_id'):
             accounts_data['transfer_account_id'] = {
                 'company_id': cid,
@@ -294,7 +299,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'reconcile': True,
             }
 
-        # Create needed company's bank accounts
+        # Create needed company's bank accounts described above
         for company_attr_name, account_data in accounts_data.items():
             if not getattr(company, company_attr_name, False):
                 if not 'code' in account_data:
@@ -305,13 +310,40 @@ class AccountChartTemplate(models.AbstractModel):
                     self.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': account_id}])
                 setattr(company, company_attr_name, account_id)
 
-        # Apply the suspense account to the bank and cash journals
-        for journal in (self.env.ref(xml_id) for xml_id in (f"account.{cid}_bank", f"account.{cid}_cash")):
-            journal.suspense_account_id = company.account_journal_suspense_account_id
+        # Set newly created Cash difference and Suspense accounts to the Cash and Bank journals
+        self.env.ref(f"account.{cid}_cash").suspense_account_id = company.account_journal_suspense_account_id
+        self.env.ref(f"account.{cid}_cash").profit_account_id = company.default_cash_difference_income_account_id
+        self.env.ref(f"account.{cid}_bank").suspense_account_id = company.account_journal_suspense_account_id
+        self.env.ref(f"account.{cid}_bank").loss_account_id = company.default_cash_difference_expense_account_id
 
-        # Create the current year earning account if it wasn't present in the CoA
+        # Uneffected earnings account on the company (if not present yet)
         company.get_unaffected_earnings_account()
 
+    def _post_load_data(self, template_code, company):
+        company = (company or self.env.company)
+        cid = company.id
+
+        template_data = self._get_template_data(template_code, company)
+        code_digits = template_data.get('code_digits', 6)
+        bank_prefix = template_data.get('bank_account_code_prefix', '')
+
+        # Apply template data to the company
+        company.write({key: val for key, val in template_data.items() if not key.startswith("property_")})
+
+        # Create utility bank_accounts
+        self._setup_utility_bank_accounts(template_code, company, bank_prefix, code_digits)
+
+        # Set newly created journals as defaults for the company
+        if not company.tax_cash_basis_journal_id:
+            company.tax_cash_basis_journal_id = self.env.ref(f'account.{cid}_caba')
+        if not company.currency_exchange_journal_id:
+            company.currency_exchange_journal_id = self.env.ref(f'account.{cid}_exch')
+
+        # Setup default Income/Expense Accounts on Sale/Purchase journals
+        self.env.ref(f"account.{cid}_sale").default_account_id = self.env.ref(template_data.get('property_account_income_categ_id'))
+        self.env.ref(f"account.{cid}_purchase").default_account_id = self.env.ref(template_data.get('property_account_expense_categ_id'))
+
+        # Set default Purchase and Sale taxes on the company
         if not company.account_sale_tax_id:
             company.account_sale_tax_id = self.env['account.tax'].search([
                 ('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', cid)], limit=1).id
@@ -332,22 +364,22 @@ class AccountChartTemplate(models.AbstractModel):
         ]:
             value = template_data.get(field)
             if value:
-                self.env['ir.property']._set_default(field, model, self.env.ref(f"account.{cid}_{value}").id, company=company)
+                self.env['ir.property']._set_default(field, model, self.env.ref(value).id, company=company)
 
     def _get_template_data(self, template_code, company):
+        cid = (company or self.env.company).id
         return {
-            'code_digits': 6,
             'bank_account_code_prefix': '1014',
             'cash_account_code_prefix': '1015',
             'transfer_account_code_prefix': '1017',
-            'property_account_receivable_id': 'receivable',
-            'property_account_payable_id': 'payable',
-            'property_account_expense_categ_id': 'expense',
-            'property_account_income_categ_id': 'income',
-            'property_account_expense_id': 'expense',
-            'property_account_income_id': 'income',
-            'property_tax_payable_account_id': 'tax_payable',
-            'property_tax_receivable_account_id': 'tax_receivable',
+            'property_account_receivable_id': f'account.{cid}_receivable',
+            'property_account_payable_id': f'account.{cid}_payable',
+            'property_account_expense_categ_id': f'account.{cid}_expense',
+            'property_account_income_categ_id': f'account.{cid}_income',
+            'property_account_expense_id': f'account.{cid}_expense',
+            'property_account_income_id': f'account.{cid}_income',
+            'property_tax_payable_account_id': f'account.{cid}_tax_payable',
+            'property_tax_receivable_account_id': f'account.{cid}_tax_receivable',
             # Only LU -- 'property_advance_tax_payment_account_id': '',
         }
 
@@ -382,7 +414,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _('Customer Invoices'),
                 'type': 'sale',
                 'code': _('INV'),
-                'default_account_id': f"account.{cid}_income",
                 'show_on_dashboard': True,
                 'color': 11,
                 'sequence': 5,
@@ -391,7 +422,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _('Vendor Bills'),
                 'type': 'purchase',
                 'code': _('BILL'),
-                'default_account_id': f"account.{cid}_expense",
                 'show_on_dashboard': True,
                 'color': 11,
                 'sequence': 6,
@@ -420,28 +450,26 @@ class AccountChartTemplate(models.AbstractModel):
             f"{cid}_cash": {
                 'name': _('Cash'),
                 'type': 'cash',
-                'profit_account_id': f'account.{cid}_cash_diff_income',
+                'show_on_dashboard': True,
+                'sequence': 11
             },
             f"{cid}_bank": {
                 'name': _('Bank'),
                 'type': 'bank',
-                'loss_account_id': f'account.{cid}_cash_diff_expense',
+                'show_on_dashboard': True,
+                'sequence': 12
             },
         }
 
     def _get_res_company(self, template_code, company):
         cid = (company or self.env.company).id
         return {
-            self.env.company.get_external_id[cid]: {
+            company.get_external_id()[cid]: {
                 'currency_id': 'base.USD',
                 'account_fiscal_country_id': 'base.us',
-                'default_cash_difference_income_account_id': f'account.{cid}_cash_diff_income',
-                'default_cash_difference_expense_account_id': f'account.{cid}_cash_diff_expense',
                 'account_default_pos_receivable_account_id': f'account.{cid}_pos_receivable',
                 'income_currency_exchange_account_id': f'account.{cid}_income_currency_exchange',
                 'expense_currency_exchange_account_id': f'account.{cid}_expense_currency_exchange',
-                'tax_cash_basis_journal_id': f'account.{cid}_caba',
-                'currency_exchange_journal_id': f'account.{cid}_exch',
                 # only MX ?? -- 'account_cash_basis_base_account_id': f'',
             }
         }

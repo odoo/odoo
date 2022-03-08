@@ -10,22 +10,18 @@ class AccountChartTemplate(models.AbstractModel):
 
     @delegate_to_super_if_code_doesnt_match
     def _get_template_data(self, template_code, company):
+        cid = (company or self.env.company).id
         return {
-            'bank_account_code_prefix': '550',
-            'cash_account_code_prefix': '570',
-            'transfer_account_code_prefix': '580',
-            'currency_id': 'base.EUR',
-            'country_id': 'base.be',
-            'property_account_receivable_id': 'a400',
-            'property_account_payable_id': 'a440',
-            'property_account_expense_categ_id': 'a600',
-            'property_account_income_categ_id': 'a7000',
-            'expense_currency_exchange_account_id': 'a654',
-            'income_currency_exchange_account_id': 'a754',
-            'property_tax_payable_account_id': 'a4512',
-            'property_tax_receivable_account_id': 'a4112',
-            'default_pos_receivable_account_id': 'a4001',
-            'account_journal_suspense_account_id': 'a499',
+            'bank_account_code_prefix': f'account.{cid}_550',
+            'cash_account_code_prefix': f'account.{cid}_570',
+            'transfer_account_code_prefix': f'account.{cid}_580',
+            'account_journal_suspense_account_id': f'account.{cid}_a499',
+            'property_account_receivable_id': f'account.{cid}_a400',
+            'property_account_payable_id': f'account.{cid}_a440',
+            'property_account_expense_categ_id': f'account.{cid}_a600',
+            'property_account_income_categ_id': f'account.{cid}_a7000',
+            'property_tax_payable_account_id': f'account.{cid}_a4512',
+            'property_tax_receivable_account_id': f'account.{cid}_a4112',
         }
 
     def _get_chart_template_data(self, template_code, company):
@@ -36,17 +32,15 @@ class AccountChartTemplate(models.AbstractModel):
 
     @delegate_to_super_if_code_doesnt_match
     def _get_res_company(self, template_code, company):
-        # cid = company.id
+        cid = (company or self.env.company).id
         return {
-            company.get_metadata()[0]['xmlid']: {
+            company.get_external_id()[cid]: {
                 'currency_id': "base.EUR",
+                'country_id': 'base.be',
                 'account_fiscal_country_id': "base.be",
-                # 'default_cash_difference_income_account_id': f'account.{cid}_cash_diff_income',
-                # 'default_cash_difference_expense_account_id': f'account.{cid}_cash_diff_expense',
-                # 'account_cash_basis_base_account_id': f'account.{cid}_cash_diff_income',  # TODO
-                # 'account_default_pos_receivable_account_id': f'account.{cid}_cash_diff_income',  # TODO
-                # 'income_currency_exchange_account_id': f'account.{cid}_income_currency_exchange',
-                # 'expense_currency_exchange_account_id': f'account.{cid}_expense_currency_exchange',
+                'account_default_pos_receivable_account_id': f'account.{cid}_a4001',
+                'income_currency_exchange_account_id': f'account.{cid}_a754',
+                'expense_currency_exchange_account_id': f'account.{cid}_a654',
             }
         }
 

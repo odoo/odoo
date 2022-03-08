@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
+from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
@@ -9,6 +9,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
+        breakpoint()
         super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.currency_data_3 = cls.setup_multi_currency_data({
@@ -547,6 +548,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference': 0.0
         }])
 
+        breakpoint()
         self.assertRecordValues(payments, [
             {
                 'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',

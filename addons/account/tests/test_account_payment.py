@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged, new_test_user
+from odoo.tests import tagged
 from odoo.tests.common import Form
 
 
@@ -9,6 +9,11 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
+        breakpoint()
+        print(f"bank_journal={cls.company_data['default_journal_bank'].name}")
+        print(f"inbound_payment_method_line={cls.inbound_payment_method_line.id}")
+        print(f"outbound_payment_method_loute={cls.outbound_payment_method_loute.id}")
+
         super().setUpClass(chart_template_ref=chart_template_ref)
 
         company = cls.company_data['default_journal_bank'].company_id
@@ -132,7 +137,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
         # ==== Check editing the account.move.line ====
 
-        liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
+        liquidity_lines, counterpart_lines, _writeoff_lines = payment._seek_for_lines()
         payment.move_id.write({
             'line_ids': [
                 (1, counterpart_lines.id, {
@@ -603,7 +608,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
         # ==== Check editing the account.move.line ====
 
-        liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
+        liquidity_lines, counterpart_lines, _writeoff_lines = payment._seek_for_lines()
         payment.move_id.write({
             'line_ids': [
                 (1, counterpart_lines.id, {
@@ -710,7 +715,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'partner_type': 'customer',
             'destination_account_id': self.company_data['default_account_receivable'].id,
         })
-        liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
+        liquidity_lines, counterpart_lines, _writeoff_lines = payment._seek_for_lines()
 
         self.assertRecordValues(payment, [{
             'is_reconciled': False,

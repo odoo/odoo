@@ -7,7 +7,6 @@ import csv
 import re
 from itertools import groupby
 from pathlib import Path
-from pprint import pformat
 
 from lxml import etree
 
@@ -16,6 +15,45 @@ from odoo.tools.safe_eval import safe_eval
 
 self = locals().get('self') or {}
 env = locals().get('env') or {}
+
+
+def pformat(item, level=0, stream=None):
+    stream = stream or io.StringIO()
+    if isinstance(item, (Field, Record)):
+        stream.write(pformat(item.get('children', {}), level=level))
+    elif isinstance(item, (tuple, list)):
+        start, end = '[]' if isinstance(item, list) else '()'
+        is_o2m = all([isinstance(sub, (tuple, list))
+                      and 2 <= len(sub) <= 3
+                      and all([isinstance(x, int) for x in sub[:2]])
+                      for sub in item])
+        stream.write(indent(level, start + '\n'))
+        for i, subitem in enumerate(item):
+            if is_o2m:
+                subitem = list(subitem)
+                if subitem == [5, 0, 0]:
+                    value_str = Unquoted("Command.clear()")
+                elif len(subitem) == 3 and isinstance(subitem[2], Record):
+                    if subitem[0] == Command.CREATE:
+                        value_str = Unquoted("Command.create(" + pformat(subitem[2], level+1).strip() + ")")
+            else:
+                value_str = repr(subitem)
+            stream.write(indent(level + 1, f"{value_str}{',' if i < len(item) else ''}\n"))
+        stream.write(indent(level, end))
+    elif isinstance(item, dict):
+        stream.write(indent(level, '{\n'))
+        for i, (key, subitem) in enumerate(item.items()):
+            if isinstance(subitem, Field):
+                value = subitem._value
+            else:
+                value = subitem
+            value_str = pformat(value, level + 1).lstrip()
+            stream.write(indent(level + 1, f"{repr(key)}: {value_str}{',' if i < len(item) else ''}\n"))
+        stream.write(indent(level, '}\n'))
+    else:
+        stream.write(indent(level, repr(item)))
+    return stream.getvalue()
+
 
 # Classes -----------------------------------------------
 
@@ -27,16 +65,6 @@ class Node(dict):
         children = self.get('children') or []
         children.append(child)
         self['children'] = children
-
-    def pformat(self, level=0):
-        stream = io.StringIO()
-        self.pprint(level, stream)
-        return stream.getvalue()
-
-    def pprint(self, level=0, stream=None):
-        stream = stream or sys.stdout
-        for child in self.get('children', []):
-            child.pprint(level + 1, stream)
 
 class Field(Node):
     def __init__(self, el):
@@ -59,23 +87,6 @@ class Field(Node):
             self._value = None
             self.value_type = None
 
-    def pprint(self, level=0, stream=None):
-        stream = stream or sys.stdout
-        if self.value_type:
-            if isinstance(self._value, (tuple, list, dict)):
-                lines = pformat(self._value).split('\n')
-                value_str = ''.join([f"\n{indent(level+1, line)}" for line in lines])
-            else:
-                value_str = repr(self._value)
-            stream.write(indent(level, f"{repr(self['id'])}: {value_str.lstrip()},\n"))
-        elif self.get('children'):
-            stream.write(indent(level, f"{repr(self['id'])}: [\n"))
-            stream.write(indent(level + 1, "Command.clear(),\n"))
-            for child in self.get('children', []):
-                stream.write(indent(level + 1, "Command.create("))
-                child.pprint(level + 1, stream, start_indent=False)
-                stream.write("),\n")
-            stream.write(indent(level, "]\n"))
 
 # Records -----------------------------------------------
 
@@ -112,35 +123,25 @@ class Record(Node):
             child['id'] = 'account_default_pos_receivable_account_id'
         return child
 
-    def pprint(self, level=0, stream=None, start_indent=True):
-        stream = stream or sys.stdout
-        stream.write(indent(start_indent and level or 0, "{\n"))
-        for key, value in self['children'].items():
-            if isinstance(value, Field):
-                value.pprint(level+1, stream)
-            else:
-                stream.write(indent(level + 1, f"{repr(key)}: {repr(value)},\n"))
-        stream.write(indent(level, "}") + ('\n' if start_indent else ''))
-
     def cleanup_o2m(self, child, cls=None):
         value = child._value
+
         def cleanup_sub(fields, cls):
             sub = cls({'id': None, 'model': cls._from}, cls.__name__)
             for key, value in fields.items():
                 sub.append(Field({'id': key, 'eval': repr(value)}))
-            return Unquoted(sub.pformat())
+            return sub
+
         if isinstance(value, (tuple, list)):
             for i, sub in enumerate(value):
-                if list(sub) == [5, 0, 0]:
-                    value[i] = Unquoted("Command.clear()")
-                elif (isinstance(sub, (list, tuple)) and
-                      len(sub) == 3 and
-                      sub[0] == Command.CREATE and
-                      sub[1] == 0 and
-                      isinstance(sub[2], dict)):
+                if (isinstance(sub, (list, tuple)) and
+                    len(sub) == 3 and
+                    sub[0] == Command.CREATE and
+                    sub[1] == 0 and
+                    isinstance(sub[2], dict)):
                     if cls:
                         sub = [sub[0], sub[1], cleanup_sub(sub[2], cls)]
-                    value[i] = Unquoted(f"Command.create({repr(sub[2])})")
+                        value[i] = sub
                 elif (isinstance(sub, (list, tuple)) and
                       len(sub) == 3 and
                       sub[0] == Command.SET and
@@ -148,7 +149,7 @@ class Record(Node):
                       isinstance(sub[2], list)):
                     if cls:
                         sub = [sub[0], sub[1], [cleanup_sub(x, cls) for x in sub[2]]]
-                    value[i] = Unquoted(f"Command.set({repr(sub[2])})")
+                        value[i] = sub
         return value
 
 class Unquoted(str):
@@ -197,6 +198,12 @@ class AccountTax(Record):
 
 class AccountTaxRepartitionLine(Record):
     _from = 'account.tax.repartition.line'
+    def cleanup(self, child):
+        child = super().cleanup(child)
+        record_id = child.get('id')
+        if record_id == 'account_id':
+            child._value = Unquoted(f"f'account.{{cid}}_{child._value}'")
+        return child
 
 class AccountFiscalPosition(Record):
     _from = 'account.fiscal.position'
@@ -371,7 +378,7 @@ def convert_records_to_function(module, all_records, model, function_name, cid=T
                  indent(2, "return "))
     if model == 'account.chart.template':
         for _id, record in records.items():
-            stream.write(record.pformat(2).lstrip())
+            stream.write(pformat(record, level=2).lstrip())
     else:
         stream.write("{\n")
         for i, (_id, record) in enumerate(records.items()):
@@ -380,7 +387,7 @@ def convert_records_to_function(module, all_records, model, function_name, cid=T
                 key = Unquoted(f"f'{{cid}}_{record['id'].replace('.', '_')}'")
             else:
                 key = record['id']
-            value = record.pformat(3).strip()
+            value = pformat(record, level=3).strip()
             if not is_last:
                 value += ','
             stream.write(indent(3, f"{key}: {value}\n"))

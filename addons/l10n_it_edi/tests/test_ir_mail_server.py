@@ -43,7 +43,7 @@ class PecMailServerTests(AccountEdiTestCommon):
     def setUpClass(cls):
         """ Setup the test class with a PEC mail server and a fake fatturaPA content """
 
-        super().setUpClass(chart_template_ref='l10n_it.l10n_it_chart_template_generic',
+        super().setUpClass(chart_template_ref='it',
                            edi_format_ref='l10n_it_edi.edi_fatturaPA')
 
         # Use the company_data_2 to test that the e-invoice is imported for the right company

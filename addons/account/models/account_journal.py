@@ -670,12 +670,6 @@ class AccountJournal(models.Model):
             if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
 
-        if journal.type == 'general':
-            if journal.code == _('EXCH') and not journal.company_id.currency_exchange_journal_id:
-                journal.company_id.currency_exchange_journal_id = journal
-            if journal.code == _('CABA') and not journal.company_id.tax_cash_basis_journal_id:
-                journal.company_id.tax_cash_basis_journal_id = journal
-
         return journals
 
     def set_bank_account(self, acc_number, bank_id=None):
