@@ -487,15 +487,20 @@
             data-color-prefix="bg-"/>
     </div>
 
-    <!-- COLOR, BORDER | .s_three_columns | .s_comparisons -->
+    <!-- COLOR | .s_three_columns | .s_comparisons -->
     <div data-js="Box"
          data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
-         data-target=".card">
-        <we-colorpicker string="Colors"
+         data-target=".card-body">
+        <we-colorpicker string="Background Color"
             data-select-style="true"
             data-no-transparency="true"
             data-css-property="background-color"
             data-color-prefix="bg-"/>
+    </div>
+    <!-- BORDER | .s_three_columns | .s_comparisons -->
+    <div data-js="Box"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
+         data-target=".card">
         <t t-call="mass_mailing.snippet_options_border_widgets">
             <t t-set="so_rounded_no_dependencies" t-value="True"/>
         </t>
