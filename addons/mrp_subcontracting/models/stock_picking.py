@@ -37,54 +37,6 @@ class StockPicking(models.Model):
     # Action methods
     # -------------------------------------------------------------------------
 
-    def action_done(self):
-        res = super(StockPicking, self).action_done()
-        productions = self.env['mrp.production']
-        for picking in self:
-            for move in picking.move_lines:
-                if not move.is_subcontract:
-                    continue
-                production = move.move_orig_ids.production_id
-                if move._has_tracked_subcontract_components():
-                    move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel')).move_line_ids.unlink()
-                    move_finished_ids = move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
-                    for ml in move.move_line_ids:
-                        ml.copy({
-                            'picking_id': False,
-                            'production_id': move_finished_ids.production_id.id,
-                            'move_id': move_finished_ids.id,
-                            'qty_done': ml.qty_done,
-                            'result_package_id': False,
-                            'location_id': move_finished_ids.location_id.id,
-                            'location_dest_id': move_finished_ids.location_dest_id.id,
-                        })
-                else:
-                    wizards_vals = []
-                    for move_line in move.move_line_ids:
-                        wizards_vals.append({
-                            'production_id': production.id,
-                            'qty_producing': move_line.qty_done,
-                            'product_uom_id': move_line.product_uom_id.id,
-                            'finished_lot_id': move_line.lot_id.id,
-                            'consumption': 'strict',
-                        })
-                    wizards = self.env['mrp.product.produce'].with_context(default_production_id=production.id).create(wizards_vals)
-                    wizards._generate_produce_lines()
-                    wizards._record_production()
-                productions |= production
-            for subcontracted_production in productions:
-                if subcontracted_production.state == 'progress':
-                    subcontracted_production.post_inventory()
-                else:
-                    subcontracted_production.button_mark_done()
-                # For concistency, set the date on production move before the date
-                # on picking. (Tracability report + Product Moves menu item)
-                minimum_date = min(picking.move_line_ids.mapped('date'))
-                production_moves = subcontracted_production.move_raw_ids | subcontracted_production.move_finished_ids
-                production_moves.write({'date': minimum_date - timedelta(seconds=1)})
-                production_moves.move_line_ids.write({'date': minimum_date - timedelta(seconds=1)})
-        return res
-
     def action_record_components(self):
         self.ensure_one()
         for move in self.move_lines:

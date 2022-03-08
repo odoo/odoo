@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import timedelta
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
@@ -46,17 +47,6 @@ class StockMove(models.Model):
             default = {}
         default['location_id'] = self.picking_id.location_id.id
         return super(StockMove, self).copy(default=default)
-
-    def write(self, values):
-        """ If the initial demand is updated then also update the linked
-        subcontract order to the new quantity.
-        """
-        if 'product_uom_qty' in values:
-            if self.env.context.get('cancel_backorder') is False:
-                return super(StockMove, self).write(values)
-            self.filtered(lambda m: m.is_subcontract and
-            m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty(values['product_uom_qty'])
-        return super(StockMove, self).write(values)
 
     def action_show_details(self):
         """ Open the produce wizard in order to register tracked components for
@@ -130,6 +120,56 @@ class StockMove(models.Model):
         res |= super(StockMove, self - move_to_not_merge)._action_confirm(merge=merge, merge_into=merge_into)
         if subcontract_details_per_picking:
             self.env['stock.picking'].concat(*list(subcontract_details_per_picking.keys())).action_assign()
+        return res
+
+    def _action_done(self, cancel_backorder=False):
+        subcontract_moves = self.filtered(lambda x: x.is_subcontract)
+        res = super(StockMove, self - subcontract_moves)._action_done(cancel_backorder=cancel_backorder)
+        productions = self.env['mrp.production']
+        for picking in subcontract_moves.picking_id:
+            for move in picking.move_lines.filtered(lambda x: x.picking_id == picking):
+                if not move.is_subcontract:
+                    continue
+                production = move.move_orig_ids.production_id
+                if move._has_tracked_subcontract_components():
+                    move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel')).move_line_ids.unlink()
+                    move_finished_ids = move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+                    for ml in move.move_line_ids:
+                        ml.copy({
+                            'picking_id': False,
+                            'production_id': move_finished_ids.production_id.id,
+                            'move_id': move_finished_ids.id,
+                            'qty_done': ml.qty_done,
+                            'result_package_id': False,
+                            'location_id': move_finished_ids.location_id.id,
+                            'location_dest_id': move_finished_ids.location_dest_id.id,
+                        })
+                else:
+                    wizards_vals = []
+                    for move_line in move.move_line_ids:
+                        wizards_vals.append({
+                            'production_id': production.id,
+                            'qty_producing': move_line.qty_done,
+                            'product_uom_id': move_line.product_uom_id.id,
+                            'finished_lot_id': move_line.lot_id.id,
+                            'consumption': 'strict',
+                        })
+                    wizards = self.env['mrp.product.produce'].with_context(default_production_id=production.id).create(wizards_vals)
+                    wizards._generate_produce_lines()
+                    wizards._record_production()
+                productions |= production
+            for subcontracted_production in productions:
+                if subcontracted_production.state == 'progress':
+                    subcontracted_production.post_inventory()
+                else:
+                    subcontracted_production.button_mark_done()
+                # For concistency, set the date on production move before the date
+                # on picking. (Tracability report + Product Moves menu item)
+                minimum_date = min(picking.move_line_ids.mapped('date'))
+                production_moves = subcontracted_production.move_raw_ids | subcontracted_production.move_finished_ids
+                production_moves.write({'date': minimum_date - timedelta(seconds=1)})
+                production_moves.move_line_ids.write({'date': minimum_date - timedelta(seconds=1)})
+        res += super(StockMove, subcontract_moves)._action_done(cancel_backorder=cancel_backorder)
         return res
 
     def _action_record_components(self):
