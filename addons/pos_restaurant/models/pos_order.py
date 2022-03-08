@@ -105,14 +105,7 @@ class PosOrder(models.Model):
             'payment_status'
             ]
 
-    def _get_payment_lines(self, orders):
-        """Add account_bank_statement_lines to the orders.
-
-        The function doesn't return anything but adds the results directly to the orders.
-
-        :param orders: orders for which the payment_lines are to be requested.
-        :type orders: pos.order.
-        """
+    def _get_payments_lines_list(self, orders):
         payment_lines = self.env['pos.payment'].search_read(
                 domain = [('pos_order_id', 'in', [po['id'] for po in orders])],
                 fields = self._get_fields_for_payment_lines())
@@ -124,6 +117,17 @@ class PosOrder(models.Model):
 
             del payment_line['id']
             extended_payment_lines.append([0, 0, payment_line])
+        return extended_payment_lines
+
+    def _get_payment_lines(self, orders):
+        """Add account_bank_statement_lines to the orders.
+
+        The function doesn't return anything but adds the results directly to the orders.
+
+        :param orders: orders for which the payment_lines are to be requested.
+        :type orders: pos.order.
+        """
+        extended_payment_lines = self._get_payments_lines_list(orders)
         for order_id, payment_lines in groupby(extended_payment_lines, key=lambda x:x[2]['pos_order_id']):
             next(order for order in orders if order['id'] == order_id[0])['statement_ids'] = list(payment_lines)
 
