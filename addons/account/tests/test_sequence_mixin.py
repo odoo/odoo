@@ -173,6 +173,8 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             'partner_id': 1,
             'invoice_date': '2016-01-01',
         })
+        for doc in (invoice, invoice2, refund, refund2):
+            doc._onchange_partner_id()
         (invoice + invoice2).move_type = 'out_invoice'
         (refund + refund2).move_type = 'out_refund'
         all_moves = (entry + entry2 + invoice + invoice2 + refund + refund2)

@@ -2140,6 +2140,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'debit': 100.0,
                     'credit': 0.0,
                     'account_id': self.company_data['default_account_revenue'].id,
+                    'partner_id': self.partner_a.id,
                     'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
                 }),
 
@@ -2148,6 +2149,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'debit': 33.33,
                     'credit': 0.0,
                     'account_id': self.cash_basis_transfer_account.id,
+                    'partner_id': self.partner_a.id,
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.refund_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
                 }),
 
@@ -2156,6 +2158,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'debit': 0.0,
                     'credit': 133.33,
                     'account_id': self.extra_receivable_account_1.id,
+                    'partner_id': self.partner_a.id,
                 }),
             ]
         })

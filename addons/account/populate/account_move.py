@@ -98,6 +98,7 @@ class AccountMove(models.Model):
             def get_line(account, label, balance=None, balance_sign=False, exclude_from_invoice_tab=False):
                 company_currency = account.company_id.currency_id
                 currency = self.env['res.currency'].browse(currency_id)
+                partner = self.env['res.partner'].browse(partner_id)
                 balance = balance or balance_sign * round(random.uniform(0, 1000))
                 amount_currency = company_currency._convert(balance, currency, account.company_id, date)
                 return (0, 0, {
@@ -105,7 +106,7 @@ class AccountMove(models.Model):
                     'debit': balance > 0 and balance or 0,
                     'credit': balance < 0 and -balance or 0,
                     'account_id': account.id,
-                    'partner_id': partner_id,
+                    'partner_id': partner.commercial_partner_id.id,
                     'currency_id': currency_id,
                     'amount_currency': amount_currency,
                     'exclude_from_invoice_tab': exclude_from_invoice_tab,
