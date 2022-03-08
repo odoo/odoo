@@ -2049,12 +2049,11 @@ var SnippetsMenu = Widget.extend({
         }
 
         // Prepare the functions
-        var functions = {
-            is: function ($from) {
-                return $from.is(selector) && $from.filter(filterFunc).length !== 0;
-            },
-        };
+        const functions = {};
         if (noCheck) {
+            functions.is = function ($from) {
+                return $from.is(selector) && $from.filter(filterFunc).length !== 0;
+            };
             functions.closest = function ($from, parentNode) {
                 return $from.closest(selector, parentNode).filter(filterFunc);
             };
@@ -2062,6 +2061,11 @@ var SnippetsMenu = Widget.extend({
                 return ($from ? dom.cssFind($from, selector) : $(selector)).filter(filterFunc);
             };
         } else {
+            functions.is = function ($from) {
+                return $from.is(selector)
+                    && self.getEditableArea().find($from).addBack($from).length !== 0
+                    && $from.filter(filterFunc).length !== 0;
+            };
             functions.closest = function ($from, parentNode) {
                 var parents = self.getEditableArea().get();
                 return $from.closest(selector, parentNode).filter(function () {
