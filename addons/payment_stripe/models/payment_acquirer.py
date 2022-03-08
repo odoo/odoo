@@ -153,7 +153,7 @@ class PaymentAcquirer(models.Model):
         }
 
     def _get_stripe_webhook_url(self):
-        return self.get_base_url() + StripeController._webhook_url
+        return url_join(self.get_base_url(), StripeController._webhook_url)
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
