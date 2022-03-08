@@ -37,7 +37,8 @@ export class XMLParser {
 
     parseXML(arch) {
         const parser = new DOMParser();
-        const xml = parser.parseFromString(arch, "text/xml");
+        const cleanedArch = arch.replaceAll(/&amp;nbsp;/g, "");
+        const xml = parser.parseFromString(cleanedArch, "text/xml");
         if (hasParsingError(xml)) {
             throw new Error(
                 `An error occured while parsing ${arch}: ${xml.getElementsByTagName("parsererror")}`

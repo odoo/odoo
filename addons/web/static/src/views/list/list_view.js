@@ -422,8 +422,12 @@ export class ListView extends LegacyComponent {
                     resIds.length < total
                 ) {
                     this.notificationService.add(
-                        this.env._t(
-                            `Only the first ${total} records have been deleted (out of ${resIds.length} selected)`
+                        sprintf(
+                            this.env._t(
+                                `Only the first %d records have been deleted (out of %d selected)`
+                            ),
+                            total,
+                            resIds.length
                         ),
                         { title: this.env._t("Warning") }
                     );

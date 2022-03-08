@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useListener } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
 
 /**
@@ -474,7 +473,7 @@ export const useSortable = (params) => {
         },
         () => toDependencies(setup())
     );
-    useListener("mousedown", (ev) => {
+    useExternalListener(window, "mousedown", (ev) => {
         if (!enabled || !ev.target.closest(fullSelector)) {
             return;
         }

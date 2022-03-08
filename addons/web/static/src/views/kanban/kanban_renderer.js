@@ -21,9 +21,8 @@ import { isAllowedDateField } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { markup, useState, useRef } = owl;
+const { Component, markup, useState, useRef } = owl;
 const { COLORS } = ColorList;
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
@@ -35,7 +34,7 @@ const isNull = (value) => [null, undefined].includes(value);
 
 const formatterRegistry = registry.category("formatters");
 
-export class KanbanRenderer extends LegacyComponent {
+export class KanbanRenderer extends Component {
     setup() {
         const { arch, cards, className, fields, xmlDoc, examples } = this.props.archInfo;
         this.cards = cards;
@@ -148,8 +147,9 @@ export class KanbanRenderer extends LegacyComponent {
 
     getValue(record, fieldName) {
         const field = record.fields[fieldName];
+        const value = record.data[fieldName];
         const formatter = formatterRegistry.get(field.type);
-        return formatter(this.getRawValue(record, fieldName), { field });
+        return formatter(value, { field });
     }
 
     get canMoveRecords() {
@@ -264,6 +264,10 @@ export class KanbanRenderer extends LegacyComponent {
         if (model.hasProgressBars && group) {
             const progressBar = group.findProgressValueFromRecord(record);
             classes.push(`oe_kanban_card_${progressBar.color}`);
+        }
+        if (this.props.archInfo.cardColorField) {
+            const value = record.data[this.props.archInfo.cardColorField];
+            classes.push(this.getColorClass(value));
         }
         if (this.canResequenceRecords) {
             classes.push("o_record_draggable");
@@ -400,11 +404,9 @@ export class KanbanRenderer extends LegacyComponent {
         });
     }
 
-    selectColor(record, colorIndex) {
-        // TODO
-        console.warn("TODO: Update record", record.id, {
-            [this.props.archInfo.colorField]: colorIndex,
-        });
+    async selectColor(record, colorIndex) {
+        await record.update(this.props.archInfo.colorField, colorIndex);
+        await record.save();
     }
 
     triggerAction(record, group, params) {
@@ -521,14 +523,14 @@ export class KanbanRenderer extends LegacyComponent {
     /**
      * Returns the class name of a record according to its color.
      */
-    kanban_color(value) {
-        return `oe_kanban_color_${this.kanban_getcolor(value)}`;
+    getColorClass(value) {
+        return `oe_kanban_color_${this.getColorIndex(value)}`;
     }
 
     /**
      * Returns the index of a color determined by a given record.
      */
-    kanban_getcolor(value) {
+    getColorIndex(value) {
         if (typeof value === "number") {
             return Math.round(value) % this.colors.length;
         } else if (typeof value === "string") {

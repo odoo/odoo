@@ -77,6 +77,10 @@ const editRecord = async () => {
 const discardRecord = async () => {
     await click(target, ".o_kanban_quick_create .o_kanban_cancel");
 };
+const toggleRecordDropdown = async (recordIndex) => {
+    const group = target.querySelectorAll(`.o_kanban_record`)[recordIndex];
+    await click(group, ".o_dropdown_kanban .dropdown-toggle");
+};
 
 // Column
 const createColumn = async () => {
@@ -6634,16 +6638,14 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("edit the kanban color with the colorpicker", async (assert) => {
-        assert.expect(5);
-
-        let writeOnColor;
+    QUnit.test("edit the kanban color with the colorpicker", async (assert) => {
+        assert.expect(6);
 
         serverData.models.category.records[0].color = 12;
 
         await makeView({
             type: "kanban",
-            model: "category",
+            resModel: "category",
             serverData,
             arch:
                 "<kanban>" +
@@ -6666,40 +6668,36 @@ QUnit.module("Views", (hooks) => {
                 "</t>" +
                 "</templates>" +
                 "</kanban>",
-            async mockRPC(route, args) {
-                if (args.method === "write" && "color" in args.args[1]) {
-                    writeOnColor = true;
+            async mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.step(`write-color-${args[1].color}`);
                 }
             },
         });
 
-        let $firstRecord = target.querySelector(".o_kanban_record:first-child");
+        await toggleRecordDropdown(0);
 
         assert.containsNone(
             target,
             ".o_kanban_record.oe_kanban_color_12",
             "no record should have the color 12"
         );
-        assert.strictEqual(
-            $firstRecord.find(".oe_kanban_colorpicker").length,
-            1,
+        assert.containsOnce(
+            target,
+            ".o_kanban_record:first-child .oe_kanban_colorpicker",
             "there should be a color picker"
         );
-        assert.strictEqual(
-            $firstRecord.find(".oe_kanban_colorpicker").children().length,
+        assert.containsN(
+            target,
+            ".o_kanban_record:first-child .oe_kanban_colorpicker > *",
             12,
             "the color picker should have 12 children (the colors)"
         );
 
-        // Set a color
-        testUtils.kanban.toggleRecordDropdown($firstRecord);
-        await click($firstRecord.find(".oe_kanban_colorpicker a.oe_kanban_color_9"));
-        assert.ok(writeOnColor, "should write on the color field");
-        $firstRecord = target.querySelector(".o_kanban_record:first-child"); // First record is reloaded here
-        assert.ok(
-            $firstRecord.is(".oe_kanban_color_9"),
-            "the first record should have the color 9"
-        );
+        await click(target, ".oe_kanban_colorpicker a.oe_kanban_color_9");
+
+        assert.verifySteps(["write-color-9"], "should write on the color field");
+        assert.hasClass(target.querySelector(".o_kanban_record:first-child"), "oe_kanban_color_9");
     });
 
     QUnit.skipWOWL("load more records in column", async (assert) => {

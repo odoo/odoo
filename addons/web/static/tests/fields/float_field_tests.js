@@ -1,15 +1,13 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, triggerEvent } from "../helpers/utils";
-import { makeView, setupViewRegistries } from "../views/helpers";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { registry } from "@web/core/registry";
+import { click, editInput, getFixture, triggerEvent } from "../helpers/utils";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 let target;
 
-// WOWL remove after adapting tests
-let createView, FormView, testUtils;
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();

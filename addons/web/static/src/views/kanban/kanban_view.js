@@ -42,6 +42,10 @@ const TRANSPILED_EXPRESSIONS = [
             }, record)`;
         },
     },
+    // `kanban_color(value)` => `getColorClass(record)`
+    { regex: /\bkanban_color\(([^)]*)\)/g, value: `getColorClass($1)` },
+    // `kanban_getcolor(value)` => `getColor(record)`
+    { regex: /\bkanban_getcolor\(([^)]*)\)/g, value: `getColorIndex($1)` },
     // `record.prop.value` => `getValue(record,'prop')`
     { regex: /\brecord\.(\w+)\.value\b/g, value: `getValue(record, '$1')` },
     // `record.prop.raw_value` => `getRawValue(record,'prop')`
@@ -104,6 +108,7 @@ export class KanbanArchParser extends XMLParser {
         const tooltips = {};
         let kanbanBoxTemplate = makeEl("<t />");
         let colorField = "color";
+        let cardColorField = null;
         let hasHandleWidget = null;
         const activeFields = {};
 
@@ -218,7 +223,11 @@ export class KanbanArchParser extends XMLParser {
 
         transfers.forEach((transfer) => transfer());
 
-        // Color picker
+        // Color and color picker
+        const { color } = extractAttributes(kanbanBox, ["color"]);
+        if (color) {
+            cardColorField = color;
+        }
         for (const el of kanbanBox.getElementsByClassName("oe_kanban_colorpicker")) {
             const field = el.getAttribute("data-field");
             if (field) {
@@ -273,6 +282,7 @@ export class KanbanArchParser extends XMLParser {
             recordsDraggable,
             limit: limit && parseInt(limit, 10),
             progressAttributes,
+            cardColorField,
             xmlDoc: applyDefaultAttributes(kanbanBox),
             fields: activeFields,
             tooltips,
