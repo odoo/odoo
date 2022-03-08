@@ -29,6 +29,6 @@ class Profiling(Controller):
         context = {
             'profile': profile,
             'url_root': request.httprequest.url_root,
-            'cdn': icp.get_param('speedscope_cdn', "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/")
+            'cdn': icp.sudo().get_param('speedscope_cdn', "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/")
         }
         return request.render('web.view_speedscope_index', context)
