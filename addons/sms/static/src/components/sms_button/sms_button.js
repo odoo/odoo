@@ -1,22 +1,26 @@
 /** @odoo-module **/
 
-import { useActionLinks } from "@web/views/helpers/view_hook";
+import { _lt } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 const { Component } = owl;
 
 export class SendSMSButton extends Component {
     setup() {
-        // This helper might be useful to trigger doAction correctly
-        // and show the compose sms window
-        useActionLinks({
-            actionContext: {
-                ...this.props.record.context,
-                default_res_id: this.props.record.resId,
-                default_res_model: this.props.record.resModel,
-                default_composition_mode: "comment",
-                default_number_field_name: "phone",
-            },
-        });
+        this.action = useService("action");
+        this.title = _lt('Send SMS Text Message');
+    }
+    onClick() {
+        //TODO Must be checked
+        const action = {
+            type: "ir.actions.act_window",
+            name: this.title,
+            res_id: this.props.record.resId,
+            res_model: "sms.composer",
+            target: "new",
+            views: [[false, "form"]],
+        };
+        this.action.doAction(action);
     }
 };
 SendSMSButton.template = "sms.SendSMSButton";

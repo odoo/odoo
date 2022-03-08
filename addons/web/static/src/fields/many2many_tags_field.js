@@ -12,11 +12,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 const { Component } = owl;
 
 export class Many2ManyTagsField extends Component {
-    setup() {
-        // console.log({ ...this.props.value });
-    }
     get tags() {
-        // console.log(this.props.value.records);
         const colorField = this.props.colorField;
         return this.props.value.records
             .filter((record) => !colorField || record.data[colorField])
