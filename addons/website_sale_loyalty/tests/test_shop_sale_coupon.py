@@ -90,7 +90,6 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
             })],
         })
 
-        self.env.ref("website_sale.search_count_box").write({"active": True})
         self.start_tour("/", 'shop_sale_loyalty', login="admin")
 
     def test_02_admin_shop_gift_card_tour(self):

@@ -154,12 +154,6 @@
         </t>
     </template>
 
-    <template id="search_count_box" inherit_id="website.website_search_box" active="False" customize_show="True" name="Show # found">
-        <xpath expr="//button[contains(@t-att-class, 'oe_search_button')]" position="inside">
-            <span t-if='search' class='oe_search_found'> <small>(<t t-esc="search_count or 0"/> found)</small></span>
-        </xpath>
-    </template>
-
     <template id="products_item" name="Products item">
         <form action="/shop/cart/update" method="post" class="oe_product_cart h-100 d-flex"
             t-att-data-publish="product.website_published and 'on' or 'off'"
