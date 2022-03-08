@@ -53,7 +53,7 @@ export function useViewArch(arch, params = {}) {
  * @param  {String} params.resModel The default resModel to which actions will apply
  * @param  {Function} [params.reload] The function to execute to reload, if a button has data-reload-on-close
  */
-export function useActionLinks({ resModel, reload, actionContext }) {
+export function useActionLinks({ resModel, reload }) {
     const component = useComponent();
     const keepLast = component.env.keepLast;
 
@@ -110,13 +110,10 @@ export function useActionLinks({ resModel, reload, actionContext }) {
                 name: target.getAttribute("title") || target.textContent.trim(),
                 type: "ir.actions.act_window",
                 res_model: data.model || resModel,
-                target: data.target || "current",
+                target: "current",
                 views,
                 domain: data.domain ? evaluateExpr(data.domain) : [],
             };
-            if (actionContext) {
-                action.context = actionContext;
-            }
             if (resId) {
                 action.res_id = resId;
             }
