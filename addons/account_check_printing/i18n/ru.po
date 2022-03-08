@@ -1,27 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-#
+# 
 # Translators:
-# Denis Baranov <baranov@itlibertas.com>, 2019
-# Martin Trigaux, 2019
+# Collex100, 2017
+# 55f05a7bf4d36f8dbc16dc9b88d69520_d3dc437 <fe9c437e1f9ce01665bb1582f8774bf6_482841>, 2017
+# Алексей Билькевич (belskiy) <mmmbrsk@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Sergey Vilizhanin, 2018
+# Max Belyanin <maxbelyanin@gmail.com>, 2018
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
-#
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2020
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2020
+# Martin Trigaux, 2021
+# ILMIR <karamov@it-projects.info>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: ILMIR <karamov@it-projects.info>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -164,6 +170,7 @@ msgstr "Отображаемое Имя"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
+#: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Перейти к панели конфигурации"
@@ -177,8 +184,8 @@ msgstr "Номер"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
-"In order to print multiple checks at once, they must belong to the same bank "
-"journal."
+"In order to print multiple checks at once, they must belong to the same bank"
+" journal."
 msgstr ""
 "Для того, чтобы распечатать несколько чеков одновременно, они должны "
 "принадлежать одному банковскому журналу."
@@ -218,17 +225,11 @@ msgstr "Ручная нумерация"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Acquirers: Each payment acquirer has its own Payment Method. Request "
-"a transaction on/to a card thanks to a payment token saved by the partner "
-"when buying or subscribing online.\n"
+"Payment Acquirers: Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and "
-"submitting a batch deposit to your bank. Module account_batch_payment is "
-"necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
-"Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
-"partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 
 #. module: account_check_printing
@@ -285,8 +286,8 @@ msgstr ""
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
-"Please enter the number of the first pre-printed check that you are about to "
-"print on."
+"Please enter the number of the first pre-printed check that you are about to"
+" print on."
 msgstr ""
 "Пожалуйста введите сперва номер пред печатной проверки которую вы "
 "собираетесь напечатать."
@@ -306,8 +307,8 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
-"Предпочтительный способ оплаты при оплате этому поставщику. Это используется "
-"для фильтрации счетов поставщиков по предпочтительному способу оплаты для "
+"Предпочтительный способ оплаты при оплате этому поставщику. Это используется"
+" для фильтрации счетов поставщиков по предпочтительному способу оплаты для "
 "массовой регистрации платежей. Варианты использования: создание банковских "
 "файлов для пакетных переводов, проведение чеков."
 
@@ -354,12 +355,10 @@ msgstr "правое поле"
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid ""
-"Select the format corresponding to the check paper you will be printing your "
-"checks on.\n"
+"Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
-"Выберите формат, соответствующий бумаге чека, на которой Вы будете "
-"печатать.\n"
+"Выберите формат, соответствующий бумаге чека, на которой Вы будете печатать.\n"
 "Для того, чтобы выключить функцию печати, выберите 'None'."
 
 #. module: account_check_printing
@@ -380,7 +379,7 @@ msgid ""
 "Invoicing/Accounting Settings and try again."
 msgstr ""
 "Что-то пошло не так с макетом чека, выберите другой макет в настройках "
-"Актирования / Бухгалтерского учета и повторите попытку."
+"выставления счетов / бух учета и повторите попытку."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -430,10 +429,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Эта опция позволяет вам печатать метку с датой на чеке в соответствии с "
-"CPA.\n"
-"Отключите этот параметр, если на предварительно распечатанном чеке есть "
-"метка с датой."
+"Эта опция позволяет вам печатать метку с датой на чеке в соответствии с CPA.\n"
+"Отключите этот параметр, если на предварительно распечатанном чеке есть метка с датой."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -458,5 +455,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
-"Вы должны выбрать макет чека. Для этого перейдите в настройки Актирования / "
-"Бухгалтерского учета, найдите «Макет чеков» и установите его."
+"Вы должны выбрать макет чека. Для этого перейдите в «Настройки выставления "
+"счетов / бух учета», найдите «Макет чеков» и установите его."

@@ -1,22 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * snailmail_account
-#
+# 	* snailmail_account
+# 
 # Translators:
-# Martin Trigaux, 2018
-#
+# M Palau <mpalau@tda.ad>, 2019
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2020
+# Carles Antoli <carlesantoli@hotmail.com>, 2021
+# Martin Trigaux, 2021
+# jabelchi, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: jabelchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: snailmail_account
@@ -28,8 +32,7 @@ msgstr ""
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
 msgid ""
-"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title="
-"\"Make sure you have enough Stamps on your account.\"/>\n"
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
 "                                )"
 msgstr ""
 
@@ -53,11 +56,8 @@ msgstr ""
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
 msgid ""
-"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!"
-"=', 0)]}\"> to: </span>\n"
-"                                <span class=\"text-danger\" attrs="
-"\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address "
-"is incomplete: </span>"
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> to: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address is incomplete: </span>"
 msgstr ""
 
 #. module: snailmail_account
@@ -80,7 +80,7 @@ msgstr "Empreses"
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ajustos de configuració"
+msgstr "Configuració"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -108,6 +108,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_partner_ids
 #, python-format

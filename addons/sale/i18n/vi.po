@@ -1,32 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale
-#
+# 
 # Translators:
-# Jean-Charles Drubay <jcdrubay@gmail.com>, 2019
-# Nguyen Quang Toan <nqtoan@dqn.vn>, 2019
-# son dang <son.dang@doda100.com>, 2019
-# Minh Nguyen <ndminh210994@gmail.com>, 2019
-# Martin Trigaux, 2019
-# fanha99 <fanha99@hotmail.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
-# Dao Nguyen <trucdao.uel@gmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
-#
+# Jean-Charles Drubay <jcdrubay@gmail.com>, 2020
+# Dao Nguyen <trucdao.uel@gmail.com>, 2020
+# Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
+# Thang Duong Bao <nothingctrl@gmail.com>, 2020
+# Manh Vu <vuducmanh96vp@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
+# Duy BQ <duybq86@gmail.com>, 2022
+# fanha99 <fanha99@hotmail.com>, 2022
+# Dung Nguyen Thi <dungnt@trobz.com>, 2022
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2022
+# Martin Trigaux, 2022
+# Vo Thanh Thuy, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
+"POT-Creation-Date: 2022-03-07 12:08+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Vo Thanh Thuy, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale
@@ -39,7 +41,7 @@ msgstr "/ Tháng"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr "Dữ liệu đã được nạp"
+msgstr " Đã tìm nạp dữ liệu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
@@ -64,7 +66,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr "'CHIẾU LỆ - %s' % (object.name)"
+msgstr "'DỰ TOÁN - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -82,15 +84,14 @@ msgstr ""
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
 msgstr ""
-"<b>Gửi báo giá</b> cho chính bạn để kiểm tra những thứ khách hàng sẽ nhận "
-"được. "
+"<b>Send the quote</b> to yourself and check what the customer will receive."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "<b>Set a price</b>."
-msgstr "<b>Định giá</b>."
+msgstr "<b>Set a price</b>."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -99,21 +100,16 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
 "        Hello,\n"
 "        <br/><br/>\n"
-"        <t t-set=\"transaction\" t-value=\"object."
-"get_portal_last_transaction()\"/>\n"
-"        Your order <strong t-out=\"object.name or ''\">S00049</strong> "
-"amounting in <strong t-out=\"format_amount(object.amount_total, object."
-"currency_id) or ''\">$ 10.00</strong>\n"
-"        <t t-if=\"object.state == 'sale' or (transaction and transaction."
-"state in ('done', 'authorized'))\">\n"
+"        <t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\"/>\n"
+"        Your order <strong t-out=\"object.name or ''\">S00049</strong> amounting in <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</strong>\n"
+"        <t t-if=\"object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))\">\n"
 "            has been confirmed.<br/>\n"
 "            Thank you for your trust!\n"
 "        </t>\n"
 "        <t t-elif=\"transaction and transaction.state == 'pending'\">\n"
 "            is pending. It will be confirmed when the payment is received.\n"
 "            <t t-if=\"object.reference\">\n"
-"                Your payment reference is <strong t-out=\"object.reference "
-"or ''\"/>.\n"
+"                Your payment reference is <strong t-out=\"object.reference or ''\"/>.\n"
 "            </t>\n"
 "        </t>\n"
 "        <br/><br/>\n"
@@ -122,16 +118,13 @@ msgid ""
 "    </p>\n"
 "<t t-if=\"hasattr(object, 'website_id') and object.website_id\">\n"
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
-"border-collapse: collapse;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
 "                <td style=\"width: 150px;\"><strong>Products</strong></td>\n"
 "                <td/>\n"
-"                <td width=\"15%\" align=\"center\"><strong>Quantity</"
-"strong></td>\n"
+"                <td width=\"15%\" align=\"center\"><strong>Quantity</strong></td>\n"
 "                <td width=\"20%\" align=\"right\"><strong>\n"
-"                <t t-if=\"object.user_id.has_group('account."
-"group_show_line_subtotals_tax_excluded')\">\n"
+"                <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
 "                    VAT Excl.\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
@@ -141,56 +134,38 @@ msgid ""
 "            </tr>\n"
 "        </table>\n"
 "        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
-"            <t t-if=\"(not hasattr(line, 'is_delivery') or not line."
-"is_delivery) and line.display_type in ['line_section', 'line_note']\">\n"
-"                <table width=\"100%\" style=\"color: #454748; font-size: "
-"12px; border-collapse: collapse;\">\n"
+"            <t t-if=\"(not hasattr(line, 'is_delivery') or not line.is_delivery) and line.display_type in ['line_section', 'line_note']\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
 "                    <t t-set=\"loop_cycle_number\" t-value=\"0\"/>\n"
-"                    <tr t-att-style=\"'background-color: #f2f2f2' if "
-"loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value="
-"\"loop_cycle_number + 1\"/>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
 "                        <td colspan=\"4\">\n"
-"                            <t t-if=\"line.display_type == "
-"'line_section'\">\n"
-"                                <strong t-out=\"line.name or ''\">Taking "
-"care of Trees Course</strong>\n"
+"                            <t t-if=\"line.display_type == 'line_section'\">\n"
+"                                <strong t-out=\"line.name or ''\">Taking care of Trees Course</strong>\n"
 "                            </t>\n"
 "                            <t t-elif=\"line.display_type == 'line_note'\">\n"
-"                                <i t-out=\"line.name or ''\">Taking care of "
-"Trees Course</i>\n"
+"                                <i t-out=\"line.name or ''\">Taking care of Trees Course</i>\n"
 "                            </t>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </table>\n"
 "            </t>\n"
-"            <t t-elif=\"(not hasattr(line, 'is_delivery') or not line."
-"is_delivery)\">\n"
-"                <table width=\"100%\" style=\"color: #454748; font-size: "
-"12px; border-collapse: collapse;\">\n"
+"            <t t-elif=\"(not hasattr(line, 'is_delivery') or not line.is_delivery)\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
 "                    <t t-set=\"loop_cycle_number\" t-value=\"0\"/>\n"
-"                    <tr t-att-style=\"'background-color: #f2f2f2' if "
-"loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value="
-"\"loop_cycle_number + 1\"/>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 150px;\">\n"
-"                            <img t-attf-src=\"/web/image/product.product/"
-"{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; "
-"object-fit: contain;\" alt=\"Product image\"/>\n"
+"                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                        </td>\n"
-"                        <td align=\"left\" t-out=\"line.product_id.name or "
-"''\">\tTaking care of Trees Course</td>\n"
-"                        <td width=\"15%\" align=\"center\" t-out=\"line."
-"product_uom_qty or ''\">1</td>\n"
+"                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tTaking care of Trees Course</td>\n"
+"                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
 "                        <td width=\"20%\" align=\"right\"><strong>\n"
-"                        <t t-if=\"object.user_id.has_group('account."
-"group_show_line_subtotals_tax_excluded')\">\n"
-"                            <t t-out=\"format_amount(line."
-"price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
+"                        <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
+"                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <t t-out=\"format_amount(line."
-"price_reduce_taxinc, object.currency_id) or ''\">$ 10.00</t>\n"
+"                            <t t-out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ 10.00</t>\n"
 "                        </t>\n"
 "                        </strong></td>\n"
 "                    </tr>\n"
@@ -198,77 +173,53 @@ msgid ""
 "            </t>\n"
 "        </t>\n"
 "    </div>\n"
-"    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, "
-"'carrier_id') and object.carrier_id\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
-"border-spacing: 0px 4px;\" align=\"right\">\n"
+"    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\"><strong>Delivery:</strong></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\" t-out=\"format_amount(object.amount_delivery, object."
-"currency_id) or ''\">$ 0.00</td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Delivery:</strong></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>SubTotal:</"
-"strong></td>\n"
-"                <td style=\"width: 10%;\" align=\"right\" t-out="
-"\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</"
-"td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>SubTotal:</strong></td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
-"border-spacing: 0px 4px;\" align=\"right\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\"><strong>SubTotal:</strong></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\" t-out=\"format_amount(object.amount_untaxed, object."
-"currency_id) or ''\">$ 10.00</td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>SubTotal:</strong></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
-"border-spacing: 0px 4px;\" align=\"right\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>Taxes:</"
-"strong></td>\n"
-"                <td style=\"width: 10%;\" align=\"right\" t-out="
-"\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Taxes:</strong></td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\"><strong>Total:</strong></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\" t-out=\"format_amount(object.amount_total, object."
-"currency_id) or ''\">$ 10.00</td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Total:</strong></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
-"    <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: "
-"0px;\">\n"
+"    <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td style=\"padding-top: 10px;\">\n"
 "                    <strong>Bill to:</strong>\n"
-"                    <t t-out=\"object.partner_invoice_id.street or ''\">1201 "
-"S Figueroa St</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.city or ''\">Los "
-"Angeles</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.state_id.name or "
-"''\">California</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.zip or ''\">90015</"
-"t>\n"
-"                    <t t-out=\"object.partner_invoice_id.country_id.name or "
-"''\">United States</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.street or ''\">1201 S Figueroa St</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.city or ''\">Los Angeles</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.state_id.name or ''\">California</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.zip or ''\">90015</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.country_id.name or ''\">United States</t>\n"
 "                </td>\n"
 "            </tr>\n"
 "            <tr>\n"
@@ -278,37 +229,28 @@ msgid ""
 "                        <t t-out=\"transaction.token_id.name or ''\"/>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        <t t-out=\"transaction.acquirer_id.sudo().name or "
-"''\"/>\n"
+"                        <t t-out=\"transaction.acquirer_id.sudo().name or ''\"/>\n"
 "                    </t>\n"
-"                    (<t t-out=\"format_amount(transaction.amount, object."
-"currency_id) or ''\">$ 10.00</t>)\n"
+"                    (<t t-out=\"format_amount(transaction.amount, object.currency_id) or ''\">$ 10.00</t>)\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
-"    <div t-if=\"object.partner_shipping_id and not object.only_services\" "
-"style=\"margin: 0px; padding: 0px;\">\n"
+"    <div t-if=\"object.partner_shipping_id and not object.only_services\" style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
 "                    <br/>\n"
 "                    <strong>Ship to:</strong>\n"
-"                    <t t-out=\"object.partner_shipping_id.street or "
-"''\">1201 S Figueroa St</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.city or ''\">Los "
-"Angeles</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.state_id.name or "
-"''\">California</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.zip or ''\">90015</"
-"t>\n"
-"                    <t t-out=\"object.partner_shipping_id.country_id.name or "
-"''\">United States</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.zip or ''\">90015</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.country_id.name or ''\">United States</t>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
-"        <table t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\" "
-"width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"        <table t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\" width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
 "                    <strong>Shipping Method:</strong>\n"
@@ -317,8 +259,7 @@ msgid ""
 "                        (Free)\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        (<t t-out=\"format_amount(object.carrier_id."
-"fixed_price, object.currency_id) or ''\">$ 10.00</t>)\n"
+"                        (<t t-out=\"format_amount(object.carrier_id.fixed_price, object.currency_id) or ''\">$ 10.00</t>)\n"
 "                    </t>\n"
 "                </td>\n"
 "            </tr>\n"
@@ -331,22 +272,16 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
 "        Xin chào,\n"
 "        <br/><br/>\n"
-"        <t t-set=\"transaction\" t-value=\"object."
-"get_portal_last_transaction()\"/>\n"
-"        Đơn hàng của bạn <strong t-out=\"object.name or ''\">S00049</strong> "
-"có giá trị là <strong t-out=\"format_amount(object.amount_total, object."
-"currency_id) or ''\">$ 10.00</strong>\n"
-"        <t t-if=\"object.state == 'sale' or (transaction and transaction."
-"state in ('done', 'authorized'))\">\n"
+"        <t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\"/>\n"
+"        Đơn hàng của bạn <strong t-out=\"object.name or ''\">S00049</strong> có giá trị là <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</strong>\n"
+"        <t t-if=\"object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))\">\n"
 "            đã được xác nhận.<br/>\n"
 "            Cảm ơn bạn đã tin tưởng!\n"
 "        </t>\n"
 "        <t t-elif=\"transaction and transaction.state == 'pending'\">\n"
-"            đang chờ. Đơn hàng sẽ được xác nhận khi chúng tôi nhận được "
-"thanh toán.\n"
+"            đang chờ. Đơn hàng sẽ được xác nhận khi chúng tôi nhận được thanh toán.\n"
 "            <t t-if=\"object.reference\">\n"
-"                Mã thanh toán của bạn là <strong t-out=\"object.reference or "
-"''\"/>.\n"
+"                Mã thanh toán của bạn là <strong t-out=\"object.reference or ''\"/>.\n"
 "            </t>\n"
 "        </t>\n"
 "        <br/><br/>\n"
@@ -355,16 +290,13 @@ msgstr ""
 "    </p>\n"
 "<t t-if=\"hasattr(object, 'website_id') and object.website_id\">\n"
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
-"border-collapse: collapse;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
 "                <td style=\"width: 150px;\"><strong>Sản phẩm</strong></td>\n"
 "                <td/>\n"
-"                <td width=\"15%\" align=\"center\"><strong>Số lượng</"
-"strong></td>\n"
+"                <td width=\"15%\" align=\"center\"><strong>Số lượng</strong></td>\n"
 "                <td width=\"20%\" align=\"right\"><strong>\n"
-"                <t t-if=\"object.user_id.has_group('account."
-"group_show_line_subtotals_tax_excluded')\">\n"
+"                <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
 "                    Chưa bao gồm VAT.\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
@@ -374,56 +306,38 @@ msgstr ""
 "            </tr>\n"
 "        </table>\n"
 "        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
-"            <t t-if=\"(not hasattr(line, 'is_delivery') or not line."
-"is_delivery) and line.display_type in ['line_section', 'line_note']\">\n"
-"                <table width=\"100%\" style=\"color: #454748; font-size: "
-"12px; border-collapse: collapse;\">\n"
+"            <t t-if=\"(not hasattr(line, 'is_delivery') or not line.is_delivery) and line.display_type in ['line_section', 'line_note']\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
 "                    <t t-set=\"loop_cycle_number\" t-value=\"0\"/>\n"
-"                    <tr t-att-style=\"'background-color: #f2f2f2' if "
-"loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value="
-"\"loop_cycle_number + 1\"/>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
 "                        <td colspan=\"4\">\n"
-"                            <t t-if=\"line.display_type == "
-"'line_section'\">\n"
-"                                <strong t-out=\"line.name or ''\">Khóa học "
-"chăm sóc cây xanh</strong>\n"
+"                            <t t-if=\"line.display_type == 'line_section'\">\n"
+"                                <strong t-out=\"line.name or ''\">Khóa học chăm sóc cây xanh</strong>\n"
 "                            </t>\n"
 "                            <t t-elif=\"line.display_type == 'line_note'\">\n"
-"                                <i t-out=\"line.name or ''\">Khóa học chăm "
-"sóc cây xanh</i>\n"
+"                                <i t-out=\"line.name or ''\">Khóa học chăm sóc cây xanh</i>\n"
 "                            </t>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </table>\n"
 "            </t>\n"
-"            <t t-elif=\"(not hasattr(line, 'is_delivery') or not line."
-"is_delivery)\">\n"
-"                <table width=\"100%\" style=\"color: #454748; font-size: "
-"12px; border-collapse: collapse;\">\n"
+"            <t t-elif=\"(not hasattr(line, 'is_delivery') or not line.is_delivery)\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
 "                    <t t-set=\"loop_cycle_number\" t-value=\"0\"/>\n"
-"                    <tr t-att-style=\"'background-color: #f2f2f2' if "
-"loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value="
-"\"loop_cycle_number + 1\"/>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 150px;\">\n"
-"                            <img t-attf-src=\"/web/image/product.product/"
-"{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; "
-"object-fit: contain;\" alt=\"Product image\"/>\n"
+"                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                        </td>\n"
-"                        <td align=\"left\" t-out=\"line.product_id.name or "
-"''\">\tKhóa học chăm sóc cây xanh</td>\n"
-"                        <td width=\"15%\" align=\"center\" t-out=\"line."
-"product_uom_qty or ''\">1</td>\n"
+"                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tKhóa học chăm sóc cây xanh</td>\n"
+"                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
 "                        <td width=\"20%\" align=\"right\"><strong>\n"
-"                        <t t-if=\"object.user_id.has_group('account."
-"group_show_line_subtotals_tax_excluded')\">\n"
-"                            <t t-out=\"format_amount(line."
-"price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
+"                        <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
+"                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <t t-out=\"format_amount(line."
-"price_reduce_taxinc, object.currency_id) or ''\">$ 10.00</t>\n"
+"                            <t t-out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ 10.00</t>\n"
 "                        </t>\n"
 "                        </strong></td>\n"
 "                    </tr>\n"
@@ -431,77 +345,53 @@ msgstr ""
 "            </t>\n"
 "        </t>\n"
 "    </div>\n"
-"    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, "
-"'carrier_id') and object.carrier_id\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
-"border-spacing: 0px 4px;\" align=\"right\">\n"
+"    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\"><strong>Giao hàng:</strong></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\" t-out=\"format_amount(object.amount_delivery, object."
-"currency_id) or ''\">$ 0.00</td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Giao hàng:</strong></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>Tổng phụ:</"
-"strong></td>\n"
-"                <td style=\"width: 10%;\" align=\"right\" t-out="
-"\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</"
-"td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Tổng phụ:</strong></td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
-"border-spacing: 0px 4px;\" align=\"right\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\"><strong>Tổng phụ:</strong></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\" t-out=\"format_amount(object.amount_untaxed, object."
-"currency_id) or ''\">$ 10.00</td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Tổng phụ:</strong></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
-"border-spacing: 0px 4px;\" align=\"right\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>Thuế:</"
-"strong></td>\n"
-"                <td style=\"width: 10%;\" align=\"right\" t-out="
-"\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Thuế:</strong></td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\"><strong>Tổng:</strong></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\" t-out=\"format_amount(object.amount_total, object."
-"currency_id) or ''\">$ 10.00</td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Tổng:</strong></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
-"    <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: "
-"0px;\">\n"
+"    <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td style=\"padding-top: 10px;\">\n"
 "                    <strong>Gửi hóa đơn tới:</strong>\n"
-"                    <t t-out=\"object.partner_invoice_id.street or ''\">1201 "
-"S Figueroa St</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.city or ''\">Los "
-"Angeles</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.state_id.name or "
-"''\">California</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.zip or ''\">90015</"
-"t>\n"
-"                    <t t-out=\"object.partner_invoice_id.country_id.name or "
-"''\">United States</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.street or ''\">1201 S Figueroa St</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.city or ''\">Los Angeles</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.state_id.name or ''\">California</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.zip or ''\">90015</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.country_id.name or ''\">United States</t>\n"
 "                </td>\n"
 "            </tr>\n"
 "            <tr>\n"
@@ -511,37 +401,28 @@ msgstr ""
 "                        <t t-out=\"transaction.token_id.name or ''\"/>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        <t t-out=\"transaction.acquirer_id.sudo().name or "
-"''\"/>\n"
+"                        <t t-out=\"transaction.acquirer_id.sudo().name or ''\"/>\n"
 "                    </t>\n"
-"                    (<t t-out=\"format_amount(transaction.amount, object."
-"currency_id) or ''\">$ 10.00</t>)\n"
+"                    (<t t-out=\"format_amount(transaction.amount, object.currency_id) or ''\">$ 10.00</t>)\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
-"    <div t-if=\"object.partner_shipping_id and not object.only_services\" "
-"style=\"margin: 0px; padding: 0px;\">\n"
+"    <div t-if=\"object.partner_shipping_id and not object.only_services\" style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
 "                    <br/>\n"
 "                    <strong>Vận chuyển tới:</strong>\n"
-"                    <t t-out=\"object.partner_shipping_id.street or "
-"''\">1201 S Figueroa St</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.city or ''\">Los "
-"Angeles</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.state_id.name or "
-"''\">California</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.zip or ''\">90015</"
-"t>\n"
-"                    <t t-out=\"object.partner_shipping_id.country_id.name or "
-"''\">United States</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.zip or ''\">90015</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.country_id.name or ''\">United States</t>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
-"        <table t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\" "
-"width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"        <table t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\" width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
 "                    <strong>Phương thức vận chuyển:</strong>\n"
@@ -550,8 +431,7 @@ msgstr ""
 "                        (Miễn phí)\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        (<t t-out=\"format_amount(object.carrier_id."
-"fixed_price, object.currency_id) or ''\">$ 10.00</t>)\n"
+"                        (<t t-out=\"format_amount(object.carrier_id.fixed_price, object.currency_id) or ''\">$ 10.00</t>)\n"
 "                    </t>\n"
 "                </td>\n"
 "            </tr>\n"
@@ -565,30 +445,23 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
 "        Hello,\n"
 "        <br/><br/>\n"
 "        Your\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> "
-"<strong t-out=\"object.name or ''\">S00052</strong>\n"
+"            Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (with reference: <t t-out=\"object.origin or ''\"/> )\n"
 "            </t>\n"
-"            amounting in <strong t-out=\"format_amount(object.amount_total, "
-"object.pricelist_id.currency_id) or ''\">$ 10.00</strong> is available.\n"
+"            amounting in <strong t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</strong> is available.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">quotation</t> <strong t-out=\"object."
-"name or ''\"/>\n"
+"            <t t-out=\"doc_name or ''\">quotation</t> <strong t-out=\"object.name or ''\"/>\n"
 "            <t t-if=\"object.origin\">\n"
-"                (with reference: <t t-out=\"object.origin or ''\">S00052</"
-"t> )\n"
+"                (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            amounting in <strong t-out=\"format_amount(object.amount_total, "
-"object.pricelist_id.currency_id) or ''\">$ 10.00</strong> is ready for "
-"review.\n"
+"            amounting in <strong t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</strong> is ready for review.\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
@@ -599,30 +472,23 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
 "        Xin chào,\n"
 "        <br/><br/>\n"
 "        Hiện\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            Hóa đơn chiếu lệ cho <t t-out=\"doc_name or ''\">báo giá</t> "
-"<strong t-out=\"object.name or ''\">S00052</strong>\n"
+"            Hóa đơn chiếu lệ cho <t t-out=\"doc_name or ''\">báo giá</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (với mã tham chiếu: <t t-out=\"object.origin or ''\"/> )\n"
 "            </t>\n"
-"            có giá trị là <strong t-out=\"format_amount(object.amount_total, "
-"object.pricelist_id.currency_id) or ''\">$ 10.00</strong> đã có.\n"
+"            có giá trị là <strong t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</strong> đã có.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">báo giá</t> <strong t-out=\"object."
-"name or ''\"/>\n"
+"            <t t-out=\"doc_name or ''\">báo giá</t> <strong t-out=\"object.name or ''\"/>\n"
 "            <t t-if=\"object.origin\">\n"
-"                (với mã tham chiếu: <t t-out=\"object.origin or ''\">S00052</"
-"t> )\n"
+"                (với mã tham chiếu: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            có giá trị là <strong t-out=\"format_amount(object.amount_total, "
-"object.pricelist_id.currency_id) or ''\">$ 10.00</strong> đã sẵn sàng để xem "
-"lại.\n"
+"            có giá trị là <strong t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</strong> đã sẵn sàng để xem lại.\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        Đừng ngại liên hệ với chúng tôi nếu bạn có câu hỏi. \n"
@@ -634,8 +500,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr ""
-"<i class=\"fa fa-comment\"/> Liên hệ với chúng tôi để nhận báo giá mới."
+msgstr "<i class=\"fa fa-comment\"/> Liên hệ với chúng tôi để nhận báo giá mới."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -654,12 +519,8 @@ msgstr "<i class=\"fa fa-download\"/> Tải xuống"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid ""
-"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done"
-"\"/>Done"
-msgstr ""
-"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done"
-"\"/>Xong"
+msgid "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Done"
+msgstr "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Xong"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -684,11 +545,11 @@ msgstr "<i class=\"fa fa-fw fa-remove\"/> Đã hủy"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_lead_partner_kanban_view
 msgid ""
-"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" title="
-"\"Sales orders\"/>"
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
+"title=\"Sales orders\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" title="
-"\"Sales orders\"/>"
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
+"title=\"Sales orders\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -703,7 +564,7 @@ msgstr "<i class=\"fa fa-times\"/> Từ chối"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires on</b></small>"
-msgstr "<small><b class=\"text-muted\">Ưu đãi này hết hạn vào</b></small>"
+msgstr "<small><b class=\"text-muted\">This offer expires on</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -732,12 +593,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" groups="
-"\"base.group_multi_company\" role=\"img\"/>"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" groups="
-"\"base.group_multi_company\" role=\"img\"/>"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -751,7 +612,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr "<span class=\"o_form_label\">Email xác nhận</span>"
+msgstr "<span class=\"o_form_label\">Xác nhận Email</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -764,8 +625,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                                <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Khách hàng</span>\n"
-"                                <span class=\"o_stat_text\">Xem trước</span>"
+"<span class=\"o_stat_text\">Xem trước</span>\n"
+"                                <span class=\"o_stat_text\">khách hàng</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -781,40 +642,32 @@ msgstr "<span class=\"oe_read_only\">/ Tháng</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</"
-"span>\n"
-"                                <span groups=\"account."
-"group_show_line_subtotals_tax_included\">Total Price</span>"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Số tiền</"
-"span>\n"
-"                                <span groups=\"account."
-"group_show_line_subtotals_tax_included\">Tổng tiền</span>"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Số tiền</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Tổng tiền</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</"
-"span>\n"
-"                            <span groups=\"account."
-"group_show_line_subtotals_tax_included\">Total Price</span>"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Số tiền</"
-"span>\n"
-"                            <span groups=\"account."
-"group_show_line_subtotals_tax_included\">Tổng giá</span>"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
-msgstr "<span>AĐược chấp nhận thay mặt cho:</span>"
+msgstr "<span>Được chấp nhận thay mặt cho:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By paying this proposal, I agree to the following terms:</span>"
 msgstr ""
-"<span>Bằng cách thanh toán báo giá này, tôi đồng ý với các điều khoản sau::</"
-"span>"
+"<span>Bằng cách thanh toán báo giá này, tôi đồng ý với các điều khoản "
+"sau:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -825,7 +678,7 @@ msgstr "<span>Khi ký đề xuất này, tôi đồng ý với các điều kho�
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Disc.%</span>"
-msgstr "<span>C.khấu%</span>"
+msgstr "<span>G.Giá.%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -835,7 +688,7 @@ msgstr "<span>Đối với tổng của:</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr "<span>Hoá đơn Chiếu lệ # </span>"
+msgstr "<span>Hoá đơn chiếu lệ # </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -866,7 +719,7 @@ msgstr "<strong class=\"mr16\">Thành tiền</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr "<strong class=\"text-muted\">Nhân viên kinh doanh</strong>"
+msgstr "<strong class=\"text-muted\">Người bán</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -887,12 +740,10 @@ msgstr "<strong>Ghi chú Vị thế tài chính:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                        If you believe that it is an error, "
-"please contact the website administrator."
+"                                        If you believe that it is an error, please contact the website administrator."
 msgstr ""
 "<strong>Không tìm thấy tùy chọn thanh toán phù hợp.</strong><br/>\n"
-"                                        Nếu bạn tin đây là lỗi, vui lòng "
-"liên hệ quản trị website. "
+"                                        Nếu bạn tin đây là lỗi, vui lòng liên hệ quản trị website. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -950,13 +801,13 @@ msgstr "Một đơn hàng được xác nhận cần phải có ngày xác nhậ
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
 msgid ""
-"A standard invoice is issued with all the order lines ready for "
-"invoicing,         according to their invoicing policy (based on ordered or "
-"delivered quantity)."
+"A standard invoice is issued with all the order lines ready for invoicing,"
+"         according to their invoicing policy (based on ordered or delivered "
+"quantity)."
 msgstr ""
-"Hóa đơn tiêu chuẩn được xuất với tất cả dòng đơn hàng đã sẵn sàng cho lập "
-"hóa đơn,         dựa theo chính sách xuất hóa đơn (dựa trên số lượng được "
-"đặt hàng hay được giao hàng). "
+"A standard invoice is issued with all the order lines ready for invoicing,"
+"         according to their invoicing policy (based on ordered or delivered "
+"quantity)."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -969,8 +820,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Lựa chọn cách đóng gói các đơn đặt hàng và bán với số lượng là bội số của số "
-"đơn vị cho mỗi gói."
+"Lựa chọn cách đóng gói các đơn đặt hàng và bán với số lượng là bội số của số"
+" đơn vị cho mỗi gói."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -990,21 +841,16 @@ msgstr "Cảnh báo truy cập"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be "
-"automatically computed by mechanism :\n"
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted "
-"expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
-"this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Dựa trên cài đặt của dự án, lượng công việc đã thực hiện có thể được tính "
-"theo :\n"
+"Dựa trên cài đặt của dự án, lượng công việc đã thực hiện có thể được tính theo :\n"
 "  - Thủ công: số lượng được ghi nhận thủ công ở mỗi dòng\n"
 "  - Phân tích chi phí: số lượng dựa trên tổng các khoản chi phí đã ghi nhận\n"
-"  - Thời gian biểu: theo số lượng tổng giờ đã được ghi nhận của các công "
-"việc liên kết với nội dung trên đơn hàng\n"
+"  - Thời gian biểu: theo số lượng tổng giờ đã được ghi nhận của các công việc liên kết với nội dung trên đơn hàng\n"
 "  - Chuyển kho: số lượng dựa trên số lượng mã phiếu kho đã xác nhận\n"
 
 #. module: sale
@@ -1035,7 +881,7 @@ msgstr "Các hoạt động"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Thể hiện hoạt động ngoại lệ "
+msgstr "Hành động ngoại lệ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -1071,12 +917,12 @@ msgstr "Thêm khu vực"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr "Thêm một số biến thể vào đơn hàng từ dạng lưới"
+msgstr "Add several variants to an order from a grid"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr "Địa chỉ trên Đơn bán hàng"
+msgstr "Địa chỉ trên đơn bán hàng"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1091,7 +937,7 @@ msgstr "Cho phép bạn gửi hoá đơn Chiếu lệ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr "Đồng bộ Amazon"
+msgstr "Đồng bộ hóa Amazon"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
@@ -1113,12 +959,10 @@ msgstr "Giá trị các báo giá chờ xuất hoá đơn"
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
-"                ordered quantities, and the invoicing policy is based on "
-"ordered quantities."
+"                ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
 "Đơn hàng sẽ được bán gia tăng khi số lượng được giao lớn hơn số lượng \n"
-"                đặt hàng ban đầu và chính sách xuất hóa đơn dựa vào số lượng "
-"được đặt hàng. "
+"                đặt hàng ban đầu và chính sách xuất hóa đơn dựa vào số lượng được đặt hàng. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -1169,12 +1013,10 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
-"                to sell extra hours when all ordered hours have been "
-"consumed."
+"                to sell extra hours when all ordered hours have been consumed."
 msgstr ""
 "Ví dụ, nếu bạn bán số giờ dịch vụ trả trước, Odoo sẽ đề xuất bạn\n"
-"                bán thêm số giờ khi tất cả số giờ đặt hàng đã được sử dụng "
-"hết. "
+"                bán thêm số giờ khi tất cả số giờ đặt hàng đã được sử dụng hết. "
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1209,8 +1051,7 @@ msgstr "Hóa đơn tự động"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Automatic email sent after the customer has signed or paid online"
-msgstr ""
-"Email tự động được gửi sau khi khách hàng đã ký hoặc thanh toán trực tuyến"
+msgstr "Tự động gửi email sau khi khách hàng đã ký hoặc thanh toán trực tuyến"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__journal_name
@@ -1237,8 +1078,8 @@ msgstr "Khóa tin nhắn"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Boost your sales with two kinds of discount programs: promotions and coupon "
-"codes. Specific conditions can be set (products, customers, minimum purchase "
-"amount, period). Rewards can be discounts (% or amount) or free products."
+"codes. Specific conditions can be set (products, customers, minimum purchase"
+" amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
 "Tăng doanh số bán hàng của bạn với hai loại chương trình giảm giá: khuyến "
 "mãi và mã giảm giá. Điều kiện cụ thể có thể được thiết lập (sản phẩm, khách "
@@ -1271,7 +1112,7 @@ msgstr "Hủy"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel Sales Order"
-msgstr "Xóa đơn bán hàng"
+msgstr "Cancel Sales Order"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1295,13 +1136,13 @@ msgid ""
 "Check this box if you send quotations to your customers rather than "
 "confirming orders straight away."
 msgstr ""
-"Đánh dấu hộp này nếu bạn gửi báo giá cho khách hàng thay vì xác định đơn "
-"hàng ngay. "
+"Check this box if you send quotations to your customers rather than "
+"confirming orders straight away."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose between electronic signatures or online payments."
-msgstr "Chọn chữ ký điện tử hoặc thanh toán trực tuyến. "
+msgstr "Choose between electronic signatures or online payments."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
@@ -1318,7 +1159,7 @@ msgstr "Bấm để thêm một số sản phẩm hoặc dịch vào báo giá c
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 msgid "Click to define an invoicing target"
-msgstr "Bấm để xác định mục tiêu tạo hóa đơn"
+msgstr "Click to define an invoicing target"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1423,8 +1264,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Việc chuyển đổi qua lại giữa các đơn vị đo lường chỉ có thể xảy ra nếu chúng "
-"thuộc cùng một nhóm. Việc chuyển đổi sẽ dựa trên tỉ lệ."
+"Việc chuyển đổi qua lại giữa các đơn vị đo lường chỉ có thể xảy ra nếu chúng"
+" thuộc cùng một nhóm. Việc chuyển đổi sẽ dựa trên tỉ lệ."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_coupon
@@ -1446,7 +1287,7 @@ msgstr "Tạo Hoá đơn"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
 msgid "Create a customer invoice"
-msgstr "Tạo một hóa đơn khách hàng"
+msgstr "Tạo một hóa đơn bán hàng"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -1480,8 +1321,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Tạo hóa đơn, ghi nhận thanh toán và theo dõi thảo luận với khách hàng của "
-"bạn."
+"Tạo hóa đơn, ghi nhận thanh toán và tiếp tục theo dõi thảo luận với khách "
+"hàng của bạn."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1490,7 +1331,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__create_uid
 msgid "Created by"
-msgstr "Được tạo bởi"
+msgstr "Tạo bởi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_date
@@ -1512,8 +1353,8 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
-"Ngày tạo đơn hàng nháp/đã gửi,\n"
-"Ngày xác nhận của đơn hàng được xác nhận. "
+"Creation date of draft/sent orders,\n"
+"Confirmation date of confirmed orders."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
@@ -1536,7 +1377,7 @@ msgstr "Tỷ giá"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr "Giá trị tùy chỉnh"
+msgstr "Custom Values"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
@@ -1577,7 +1418,7 @@ msgstr "Khách hàng thực tế"
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr "Ngành của khách hàng"
+msgstr "Customer Industry"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1592,7 +1433,7 @@ msgstr "Tham chiếu của Khách hàng"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Customer Signature"
-msgstr "Chữ ký khách hàng"
+msgstr "Chữ ký của khách hàng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1619,7 +1460,7 @@ msgstr "Điều chỉnh bố cục báo giá của bạn."
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
-msgstr "Tùy chỉnh báo giá và đơn hàng. "
+msgstr "Customize your quotes and orders."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -1654,7 +1495,7 @@ msgstr "Ngày:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "Khấu trừ khoản trả trước"
+msgstr "Khấu trừ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1690,7 +1531,7 @@ msgstr "Đã giao"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_manual
 msgid "Delivered Manually"
-msgstr "Cung cấp thủ công"
+msgstr "Đã giao thủ công"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
@@ -1701,7 +1542,7 @@ msgstr "Số lượng Đã giao"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Delivered Quantity: %s"
-msgstr "Số lượng đã giao: %s"
+msgstr "Delivered Quantity: %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
@@ -1732,7 +1573,7 @@ msgstr "Phương thức giao hàng"
 #: model:ir.model.fields,help:sale.field_account_move__partner_shipping_id
 #: model:ir.model.fields,help:sale.field_account_payment__partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr "Địa chỉ giao hàng cho hoá đơn hiện hành."
+msgstr "Địa chỉ giao hàng cho hoá đơn hiện tại."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1742,10 +1583,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Ngày giao hàng bạn có thể hứa với khách hàng, được tính từ thời gian dẫn tối "
-"thiểu của các dòng đặt hàng trong trường hợp sản phẩm dịch vụ. Trong trường "
-"hợp vận chuyển, chính sách vận chuyển của đơn hàng sẽ được tính đến để sử "
-"dụng thời gian dẫn tối thiểu hoặc tối đa của các dòng đơn hàng."
+"Delivery date you can promise to the customer, computed from the minimum "
+"lead time of the order lines in case of Service products. In case of "
+"shipping, the shipping policy of the order will be taken into account to "
+"either use the minimum or maximum lead time of the order lines."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
@@ -1762,7 +1603,7 @@ msgstr "Mô tả"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Disc.%"
-msgstr "C.khấu%"
+msgstr "CK.%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -1800,12 +1641,12 @@ msgstr "Loại hiển thị"
 #: code:addons/sale/static/src/js/sale_order_view.js:0
 #, python-format
 msgid "Do you want to apply this discount to all order lines?"
-msgstr "Bạn có muốn áp dụng chiết khấu này cho tất cả dòng đơn hàng? "
+msgstr "Do you want to apply this discount to all order lines?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Documentation"
-msgstr "Tài liệu hướng dẫn "
+msgstr "Tài liệu"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_order_confirmation_state__done
@@ -1839,13 +1680,13 @@ msgstr "Sản phẩm Tiền đặt cọc"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s"
-msgstr "Trả trước: %s"
+msgstr "Đặt cọc: %s"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Down Payments"
-msgstr "Khoản trả trước"
+msgstr "Đặt cọc"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1885,7 +1726,7 @@ msgstr "Báo giá dự thảo"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Draft invoices for this order will be cancelled."
-msgstr "Hóa đơn nháp cho đơn hàng này sẽ bị hủy. "
+msgstr "Draft invoices for this order will be cancelled."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -1895,6 +1736,7 @@ msgstr "Easypost Connector"
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/product_configurator_widget.js:0
+#: code:addons/sale/static/src/js/product_configurator_widget.js:0
 #, python-format
 msgid "Edit Configuration"
 msgstr "Chỉnh sửa cấu hình"
@@ -1902,17 +1744,17 @@ msgstr "Chỉnh sửa cấu hình"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__digital_signature
 msgid "Electronic signature"
-msgstr "Chữ ký điện tử"
+msgstr "Electronic signature"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_email_account
 msgid "Email"
-msgstr "Tên đăng nhập / Email"
+msgstr "Email"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Trợ lý hướng dẫn soạn email"
+msgstr "Đồ thuật soạn thảo email"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_mail_template_id
@@ -1927,14 +1769,14 @@ msgstr "Ngày dự kiến"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr "Dự kiến: "
+msgstr "Được mong đợi:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
 #: model:ir.model.fields,help:sale.field_product_template__expense_policy
 msgid ""
-"Expenses and vendor bills can be re-invoiced to a customer.With this option, "
-"a validated expense can be re-invoice to a customer at its cost or sales "
+"Expenses and vendor bills can be re-invoiced to a customer.With this option,"
+" a validated expense can be re-invoice to a customer at its cost or sales "
 "price."
 msgstr ""
 "Chi phí và hóa đơn nhà cung cấp có thể được lập lại hóa đơn cho khách hàng. "
@@ -1954,14 +1796,15 @@ msgstr "Bộ lọc mở rộng"
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/product_configurator_widget.js:0
+#: code:addons/sale/static/src/js/product_configurator_widget.js:0
 #, python-format
 msgid "External Link"
-msgstr "Liên kết ngoài"
+msgstr "Liên kết bên ngoài"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr "Giá trị thêm"
+msgstr "Extra Values"
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -1983,11 +1826,12 @@ msgstr "Vị thế tài chính"
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
-"customers or sales orders/invoices.The default value comes from the customer."
+"customers or sales orders/invoices.The default value comes from the "
+"customer."
 msgstr ""
-"Vị trí tài chính được sử dụng để điều chỉnh thuế và tài khoản cho các khách "
-"hàng cụ thể hoặc các đơn bán hàng/hóa đơn. Giá trị mặc định đến từ phía "
-"khách hàng. "
+"Fiscal positions are used to adapt taxes and accounts for particular "
+"customers or sales orders/invoices.The default value comes from the "
+"customer."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2002,7 +1846,7 @@ msgstr "Người theo dõi (Đối tác)"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Biểu tượng Font awesome v.d: fa-tasks"
+msgstr "Font biểu tượng ví dụ: fa-tasks"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
@@ -2021,9 +1865,10 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Từ báo cáo này, bạn có thể có cái nhìn tổng quan về tổng tiền đã lập hóa đơn "
-"cho khách hàng của bạn. Công cụ tìm kiếm có thể được dùng để cá nhân hóa báo "
-"cáo Hóa đơn và hơn nữa là để, đáp ứng việc phân tích theo nhu cầu của bạn."
+"Từ báo cáo này, bạn có thể có cái nhìn tổng quan về tổng tiền đã lập hóa đơn"
+" cho khách hàng của bạn. Công cụ tìm kiếm có thể được dùng để cá nhân hóa "
+"báo cáo Hóa đơn và hơn nữa là để, đáp ứng việc phân tích theo nhu cầu của "
+"bạn."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2039,16 +1884,17 @@ msgstr "Hoạt động tương lai"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr "Tạo liên kết thanh toán bán hàng"
+msgstr "Generate Sales Payment Link"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr "Tạo liên kết thanh toán"
+msgstr "Generate a Payment Link"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Generate the invoice automatically when the online payment is confirmed"
+msgid ""
+"Generate the invoice automatically when the online payment is confirmed"
 msgstr "Tự động tạo hóa đơn khi thanh toán online được xác nhận"
 
 #. module: sale
@@ -2061,7 +1907,7 @@ msgstr "Nhận cảnh báo ở Đơn bán hàng đối với sản phẩm hoặc
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
-msgstr "Tốt lắm, hãy tiếp tục. "
+msgstr "Good job, let's continue."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2088,12 +1934,12 @@ msgstr "Có tin nhắn"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
-msgstr "Có bảng giá đã thay đổi"
+msgstr "Has Pricelist Changed"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr "Có khoản trả trước"
+msgstr "Has down payments"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2150,8 +1996,7 @@ msgstr "Nếu đúng, có thể sử dụng đóng gói cho đơn bán hàng"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
-msgstr ""
-"Nếu bạn thay đổi bảng giá, chỉ những dòng mới được thêm mới bị ảnh hưởng. "
+msgstr "If you change the pricelist, only newly added lines will be affected."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2200,7 +2045,7 @@ msgstr "Địa chỉ xuất hoá đơn"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
 msgid "Invoice Alert"
-msgstr "Cảnh báo hóa đơn"
+msgstr "Invoice Alert"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
@@ -2252,8 +2097,8 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"Doanh thu hóa đơn cho tháng hiện tại. Đây là số tiền mà kênh bán hàng đã lập "
-"hoá đơn trong tháng này. Nó được sử dụng để tính toán tỷ lệ tiến triển của "
+"Doanh thu hóa đơn cho tháng hiện tại. Đây là số tiền mà kênh bán hàng đã lập"
+" hoá đơn trong tháng này. Nó được sử dụng để tính toán tỷ lệ tiến triển của "
 "doanh thu hiện tại và mục tiêu trên chế độ xem kanban."
 
 #. module: sale
@@ -2280,7 +2125,7 @@ msgstr "SL đã xuất Hoá đơn"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
-msgstr "SL đã xuất hóa đơn: %s"
+msgstr "Invoiced Quantity: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2311,8 +2156,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
-"Hoá đơn sẽ được tạo ở trạng thái dự thảo để bạn có thể xem xét lại trước khi "
-"xác nhận."
+"Hoá đơn sẽ được tạo ở trạng thái dự thảo để bạn có thể xem xét lại trước khi"
+" xác nhận."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -2325,7 +2170,7 @@ msgstr "Xuất hóa đơn"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address:"
-msgstr "Địa chỉ xuất hóa đơn: "
+msgstr "Địa chỉ xuất hoá đơn"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -2343,7 +2188,7 @@ msgstr "Mục tiêu hóa đơn"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address:"
-msgstr "Địa chỉ xuất hóa đơn và giao hàng: "
+msgstr "Địa chỉ xuất hóa đơn và địa chỉ giao hàng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -2367,7 +2212,8 @@ msgstr "Đã hết hạn"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
-msgid "Is true if the sales order line comes from an expense or a vendor bills"
+msgid ""
+"Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
 "Đúng nếu chi tiết đơn hàng đến từ một khoản chi phí hoặc một hóa đơn nhà "
 "cung cấp"
@@ -2391,7 +2237,7 @@ msgstr "Không được phép xác nhận đơn đặt hàng ở các trạng th
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
 msgid "Journal Entry"
-msgstr "Bút toán "
+msgstr "Bút toán sổ nhật ký"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
@@ -2454,14 +2300,14 @@ msgstr "Cho phép khách hàng đăng nhập để xem các tài liệu của h�
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
-msgstr "Hãy gửi báo giá. "
+msgstr "Let's send the quote."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
-msgstr "Hiện tại, hãy giữ chữ ký điện tử. "
+msgstr "Lets keep electronic signature for now."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2484,7 +2330,7 @@ msgstr "Đã khoá"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Looks good. Let's continue."
-msgstr "Tốt lắm. Hãy tiếp tục. "
+msgstr "Có vẻ tốt. Hãy tiếp tục."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -2520,19 +2366,13 @@ msgstr "Thiết lập số lượng thủ công trên đơn hàng"
 #: model:ir.model.fields,help:sale.field_product_product__service_type
 #: model:ir.model.fields,help:sale.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered "
-"quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related "
-"timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation "
-"and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Đặt số lượng thứ tự theo cách thủ công: Hoá đơn dựa trên số lượng được nhập "
-"theo cách thủ công, mà không cần tạo tài khoản phân tích.\n"
-"Hợp đồng chấm công: Hóa đơn dựa trên số giờ được theo dõi trên bảng chấm "
-"công có liên quan.\n"
-"Tạo một nhiệm vụ và theo dõi giờ: Tạo một nhiệm vụ trên xác nhận đơn đặt "
-"hàng bán hàng và theo dõi giờ làm việc."
+"Đặt số lượng thứ tự theo cách thủ công: Hoá đơn dựa trên số lượng được nhập theo cách thủ công, mà không cần tạo tài khoản phân tích.\n"
+"Hợp đồng chấm công: Hóa đơn dựa trên số giờ được theo dõi trên bảng chấm công có liên quan.\n"
+"Tạo một nhiệm vụ và theo dõi giờ: Tạo một nhiệm vụ trên xác nhận đơn đặt hàng bán hàng và theo dõi giờ làm việc."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
@@ -2542,7 +2382,7 @@ msgstr "Biên Lợi nhuận"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr "Đánh dấu báo giá là đã gửi"
+msgstr "Đánh dấu báo giá đã gửi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -2627,6 +2467,9 @@ msgstr "Tên của người đã được giao cho SO này."
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
+#: code:addons/sale/models/sale_order.py:0
+#: code:addons/sale/models/sale_order.py:0
+#: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "New"
 msgstr "Mới"
@@ -2639,7 +2482,7 @@ msgstr "Báo giá Mới"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Sự kiện lịch hoạt động kế tiếp"
+msgstr "Sự kiện lịch hoạt động tiếp theo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
@@ -2680,7 +2523,7 @@ msgstr "Không tìm thấy đơn hàng nào phải lên hóa đơn"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr "Không tìm thấy đơn hàng để bán gia tăng. "
+msgstr "No orders to upsell found."
 
 #. module: sale
 #. openerp-web
@@ -2713,7 +2556,7 @@ msgstr "Không còn gì để Xuất Hoá đơn"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr "Bây giờ, chúng ta sẽ tạo báo giá mẫu. "
+msgstr "Now, we'll create a sample quote."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -2777,11 +2620,11 @@ msgstr "Khi mời"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid ""
-"Once the quotation is confirmed by the customer, it becomes a sales order."
-"<br> You will be able to create an invoice and collect the payment."
+"Once the quotation is confirmed by the customer, it becomes a sales "
+"order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"Once the quotation is confirmed by the customer, it becomes a sales order."
-"<br> You will be able to create an invoice and collect the payment."
+"Sau khi báo giá được xác nhận bởi khách hàng, nó sẽ trở thành một đơn đặt "
+"hàng. <br> Bạn sẽ có thể tạo hóa đơn và thu tiền thanh toán."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2790,8 +2633,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
-"Sau khi báo giá được xác nhận, nó sẽ trở thành một đơn đặt hàng. <br> Bạn sẽ "
-"có thể tạo hóa đơn và thu tiền thanh toán."
+"Sau khi báo giá được xác nhận, nó sẽ trở thành một đơn đặt hàng. <br> Bạn sẽ"
+" có thể tạo hóa đơn và thu tiền thanh toán."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -2811,22 +2654,22 @@ msgstr "Ký nhận trực tuyến"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr "Chỉ đơn hàng nháp có thể được trực tiếp đánh dấu là đã gửi. "
+msgstr "Only draft orders can be marked as sent directly."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
-"Chỉ cho phép một Giá trị tùy chỉnh cho mỗi Giá trị thuộc tính trong mỗi Dòng "
-"đơn bán hàng. "
+"Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
+#: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
-msgstr "Mở ứng dụng Bán hàng để gửi báo giá đầu tiên trong nháy mắt. "
+msgstr "Open Sales app to send your first quotation in a few clicks."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2843,7 +2686,7 @@ msgstr "Đơn hàng #"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Order Confirmation"
-msgstr "Xác nhận đơn hàng"
+msgstr "Order Confirmation"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
@@ -2851,6 +2694,7 @@ msgid "Order Count"
 msgstr "Số đơn hàng"
 
 #. module: sale
+#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_order__date_order
 #: model:ir.model.fields,field_description:sale.field_sale_report__date
@@ -2886,7 +2730,7 @@ msgstr "Trạng thái Đơn hàng"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr "Đơn hàng bán gia tnag8"
+msgstr "Đơn hàng bán gia tăng"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2903,7 +2747,7 @@ msgstr "Đơn hàng chờ hóa đơn"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr "Số lượng đã đặt: %(old_qty)s -> %(new_qty)s"
+msgstr "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -2912,8 +2756,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
-"Ordered Quantity: Invoice quantities ordered by the customer.\n"
-"Delivered Quantity: Invoice quantities delivered to the customer."
+"Số lượng đặt hàng: Số lượng hóa đơn đặt hàng của khách hàng.\n"
+"Số lượng đã giao: Số lượng hóa đơn được giao cho khách hàng."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -2947,12 +2791,12 @@ msgstr "Thông tin khác"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr "Dịch vụ thanh toán khác"
+msgstr "Other payment acquirer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr "Mã token nhận dạng PDT"
+msgstr "PDT Identity Token"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -3038,7 +2882,7 @@ msgstr "Giao dịch thanh toán"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
-msgstr "Điều khoản thanh toán"
+msgstr "Các điều khoản thanh toán"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_user_type
@@ -3049,7 +2893,7 @@ msgstr "Loại người dùng Paypal"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Please define an accounting sales journal for the company %s (%s)."
-msgstr "Vui lòng xác định sổ kế toán bán hàng cho công ty %s (%s). "
+msgstr "Vui lòng xác định 1 nhật kí bán hàng cho công ty %s (%s)."
 
 #. module: sale
 #. openerp-web
@@ -3081,7 +2925,7 @@ msgstr "Giảm Giá gồm Thuế"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__price_subtotal
 msgid "Price Subtotal"
-msgstr "In Thành tiền"
+msgstr "Giá thành tiền"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__pricelist_id
@@ -3171,7 +3015,7 @@ msgstr "Bản mẫu sản phẩm"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr "Đơn vị sản phẩm chỉ đọc"
+msgstr "Product Uom Readonly"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
@@ -3188,7 +3032,7 @@ msgstr "Biến thể sản phẩm"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist <b>%s<b> "
-msgstr "Giá sản phẩm đã được tính lại dựa theo bảng giá <b>%s<b>"
+msgstr "Product prices have been recomputed according to pricelist <b>%s<b> "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3207,7 +3051,7 @@ msgstr "Sản phẩm"
 #. module: sale
 #: model:ir.model,name:sale.model_report_sale_report_saleproforma
 msgid "Proforma Report"
-msgstr "Báo cáo hóa đơn tạm"
+msgstr "Báo cáo chiếu lệ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -3232,7 +3076,7 @@ msgstr "SL Đặt hàng"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr "SL sẽ giao"
+msgstr "Qty To Deliver"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
@@ -3255,7 +3099,7 @@ msgstr "Số lượng"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_qty_configurator
 msgid "Quantity visible in configurator"
-msgstr "Số lượng hiển thị trong cấu hình"
+msgstr "Quantity visible in configurator"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3285,7 +3129,7 @@ msgstr "Báo giá / Đơn hàng"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr "Số lần báo giá"
+msgstr "Tổng số báo giá"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -3325,7 +3169,7 @@ msgstr "Báo giá đã gửi"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr "Báo giá đã xem bởi khách hàng %s"
+msgstr "Quotation viewed by customer %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3369,14 +3213,15 @@ msgstr "Chi phí Tái xuất hoá đơn"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr "Hiển thị chính sách xuất lại hóa đơn"
+msgstr "Re-Invoice Policy visible"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr "Tính lại toàn bộ giá cả dựa vào bảng giá này"
+msgstr "Recompute all prices based on this pricelist"
 
 #. module: sale
+#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Reference"
@@ -3386,6 +3231,11 @@ msgstr "Mã phiếu"
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request."
 msgstr "Tham chiếu của tài liệu mà dẫn đến đơn hàng này."
+
+#. module: sale
+#: model:ir.model,name:sale.model_account_payment_register
+msgid "Register Payment"
+msgstr "Ghi nhận thanh toán"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -3420,7 +3270,8 @@ msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
-"Yêu cầu một thanh toán trực tuyến của khách hàng dể xác thực hóa đơn tự động."
+"Yêu cầu một thanh toán trực tuyến của khách hàng dể xác thực hóa đơn tự "
+"động."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3443,8 +3294,7 @@ msgstr "Người phụ trách"
 msgid ""
 "Revenue target for the current month (untaxed total of confirmed invoices)."
 msgstr ""
-"Mục tiêu doanh thu của tháng hiện tại (tổng chưa thuế của hóa đơn đã xác "
-"nhận). "
+"Revenue target for the current month (untaxed total of confirmed invoices)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -3455,7 +3305,7 @@ msgstr "Doanh thu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr "Doanh thu được tạo từ chiến dịch"
+msgstr "Revenues generated by the campaign"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -3563,7 +3413,7 @@ msgstr "Đơn bán hàng"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "Hủy đơn bán hàng"
+msgstr "Sales Order Cancel"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -3607,7 +3457,7 @@ msgstr "Các chi tiết Kinh doanh liên quan đến một Đơn bán hàng củ
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr "Đơn hàn"
+msgstr "Đơn hàng"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
@@ -3737,12 +3587,12 @@ msgstr "Mã bảo mật"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
-msgstr "Chọn một sản phẩm, hoặc tạo mới"
+msgstr "Chọn một sản phẩm, hoặc tạo mới."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
-msgstr "Chọn thuộc tính sản phẩm và các sản phẩm tùy chọn từ đơn bán hàng"
+msgstr "Select product attributes and optional products from the sales order"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3791,7 +3641,7 @@ msgstr "Gửi email cụ thể cho sản phẩm sau khi hóa đơn được xác
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send a quotation to test the customer portal."
-msgstr "Gửi một báo giá để kiểm thử cổng thông tin khách hàng"
+msgstr "Gửi một báo giá để kiểm thử cổng thông tin khách hàng."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3907,7 +3757,7 @@ msgstr "Ký bởi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
 msgid "Signed On"
-msgstr "Ký vào"
+msgstr "Signed On"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -3942,6 +3792,7 @@ msgstr "Email Đặc trưng"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
+#: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Stage"
 msgstr "Giai đoạn"
@@ -3951,7 +3802,7 @@ msgstr "Giai đoạn"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr "Bắt đầu bằng cách kiểm tra dữ liệu của công ty."
+msgstr "Bắt đầu bằng cách kiểm tra dữ liệu của công ty bạn."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
@@ -4022,7 +3873,7 @@ msgstr "Tổng cộng tổng chưa thuế"
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
-msgstr "Thẻ"
+msgstr "Tag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
@@ -4068,8 +3919,8 @@ msgid ""
 "Technical Field, True if the pricelist was changed;\n"
 " this will then display a recomputation button"
 msgstr ""
-"Trường kỹ thuật, Đúng nếu bảng giá đã đổi;\n"
-" việc này sẽ hiển thị nút tính toán lại"
+"Technical Field, True if the pricelist was changed;\n"
+" this will then display a recomputation button"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
@@ -4082,8 +3933,8 @@ msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
 msgstr ""
-"Trường kỹ thuật để lọc các loại thuế khả dụng dựa theo quốc gia tài chính và "
-"vị trí tài chính. "
+"Trường kỹ thuật để lọc các loại thuế khả dụng dựa theo quốc gia tài chính và"
+" vị trí tài chính. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4100,6 +3951,7 @@ msgid "Terms & Conditions format"
 msgstr "Định dạng Điều khoản & Điều kiện"
 
 #. module: sale
+#: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
@@ -4169,52 +4021,42 @@ msgid ""
 "The delivery date is sooner than the expected date.You may be unable to "
 "honor the delivery date."
 msgstr ""
-"Ngày giao hàng sớm hơn dự kiến. Bạn có thể không ghi nhận được ngày giao "
-"hàng. "
+"The delivery date is sooner than the expected date.You may be unable to "
+"honor the delivery date."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
-msgstr "Khoản cố định sẽ được lập hóa đơn trước, không bao gồm thuế. "
+msgstr "The fixed amount to be invoiced in advance, taxes excluded."
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they "
-"have already been used in quotations or sales orders in another company:\n"
+"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
 "%s\n"
-"You can archive these products and recreate them with your company "
-"restriction instead, or leave them as shared product."
+"You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Các sản phẩm sau không thể chỉ giới hạn cho công ty %s vì đã được sử dụng "
-"trong báo giá hoặc đơn bán hàng của công ty khác:\n"
+"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
 "%s\n"
-"Bạn có thể lưu trữ những sản phẩm này và tạo lại chúng với hạn chế cho công "
-"ty bạn, hoặc đặt là sản phẩm chia sẻ. "
+"You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
 msgid ""
-"The invoice is generated automatically and available in the customer portal "
-"when the transaction is confirmed by the payment acquirer.\n"
-"The invoice is marked as paid and the payment is registered in the payment "
-"journal defined in the configuration of the payment acquirer.\n"
-"This mode is advised if you issue the final invoice at the order and not "
-"after the delivery."
+"The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment acquirer.\n"
+"The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
+"This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
-"Hóa đơn được tạo tự động và có sẵn trong cổng thông tin của khách hàng khi "
-"giao dịch được xác nhận bởi người mua thanh toán.\n"
-"Hóa đơn được đánh dấu là đã thanh toán và thanh toán được đăng ký trong nhật "
-"ký thanh toán được xác định trong cấu hình của người nhận thanh toán.\n"
-"Chế độ này được khuyến nghị nếu bạn phát hành hóa đơn cuối cùng theo đơn đặt "
-"hàng chứ không phải sau khi giao hàng."
+"Hóa đơn được tạo tự động và có sẵn trong cổng thông tin của khách hàng khi giao dịch được xác nhận bởi người mua thanh toán.\n"
+"Hóa đơn được đánh dấu là đã thanh toán và thanh toán được đăng ký trong nhật ký thanh toán được xác định trong cấu hình của người nhận thanh toán.\n"
+"Chế độ này được khuyến nghị nếu bạn phát hành hóa đơn cuối cùng theo đơn đặt hàng chứ không phải sau khi giao hàng."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
-"The margin is computed as the sum of product sales prices minus the cost set "
-"in their detail form."
+"The margin is computed as the sum of product sales prices minus the cost set"
+" in their detail form."
 msgstr ""
 "Biên lợi nhuận được tính bằng tổng giá bán trừ giá vốn được thiết lập trên "
 "form sản phẩm."
@@ -4223,7 +4065,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr "Đơn hàng không ở trạng thái yêu cầu chữ ký khách hàng. "
+msgstr "The order is not in a state requiring customer signature."
 
 #. module: sale
 #: code:addons/sale/models/payment_transaction.py:0
@@ -4232,14 +4074,14 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
-"Đơn hàng không được xác nhận mặc dù nhận được phản hồi từ dịch vụ thanh toán "
-"(%s): tổng đơn hàng là %r nhưng dịch vụ thanh toán đáp lại là %r. "
+"The order was not confirmed despite response from the acquirer (%s): order "
+"total is %r but acquirer replied with %r."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr "Số lượng được đặt đã được cập nhật. "
+msgstr "The ordered quantity has been updated."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -4249,8 +4091,7 @@ msgstr "Các giao tiếp thanh toán của lệnh bán này."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
-msgstr ""
-"Phần trăm của khoản tiền sẽ được xuất hóa đơn trước, không bao gồm thuế. "
+msgstr "The percentage of amount to be invoiced in advance, taxes excluded."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4267,15 +4108,16 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
-"The product used to invoice a down payment should have an invoice policy set "
-"to \"Ordered quantities\". Please update your deposit product to be able to "
-"create a deposit invoice."
+"The product used to invoice a down payment should have an invoice policy set"
+" to \"Ordered quantities\". Please update your deposit product to be able to"
+" create a deposit invoice."
 msgstr ""
 "Sản phẩm được sử dụng để xuất hoá đơn cho một khoản tiền đặt cọc/ứng trước "
 "phải có chính sách xuất hoá đơn \"Theo số lượng đặt hàng\". Vui lòng cập "
 "nhật lại sản phẩm để có thể xuất hoá đơn đặt cọc."
 
 #. module: sale
+#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The provided parameters are invalid."
@@ -4284,8 +4126,8 @@ msgstr "Các tham số được cung cấp không hợp lệ. "
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
 msgid ""
-"The rate of the currency to the currency of rate 1 applicable at the date of "
-"the order"
+"The rate of the currency to the currency of rate 1 applicable at the date of"
+" the order"
 msgstr "Tỷ giá tiền tệ so với tiền tệ của tỷ lệ 1 áp dụng tại ngày đặt hàng"
 
 #. module: sale
@@ -4311,22 +4153,14 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the "
-"\"truck\" icon (top-right of your screen) and follow instructions.\n"
-"- You should modify the invoicing policy of your product: Open the product, "
-"go to the \"Sales\" tab and modify invoicing policy from \"delivered "
-"quantities\" to \"ordered quantities\". For Services, you should modify the "
-"Service Invoicing Policy to 'Prepaid'."
+"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
 "Không có gì để xuất hóa đơn!\n"
 "\n"
 "(Các) lý do của hành vi này có thể là:\n"
-"- Bạn nên giao sản phẩm trước khi xuất hóa đơn:            Nhấp vào biểu "
-"tượng \"xe tải\" (trên cùng bên phải màn hình) và làm theo hướng dẫn.\n"
-"- Bạn nên sửa đổi chính sách xuất hóa đơn cho sản phẩm: Mở sản phẩm, đi tới "
-"tab \"Bán hàng\" và sửa đổi chính sách lập hóa đơn từ \"số lượng đã giao\" "
-"thành \"số lượng đặt hàng\". Đối với dịch vụ, bạn nên sửa đổi chính sách "
-"xuất hóa đơn dịch vụ thành 'Trả trước'."
+"- Bạn nên giao sản phẩm trước khi xuất hóa đơn:            Nhấp vào biểu tượng \"xe tải\" (trên cùng bên phải màn hình) và làm theo hướng dẫn.\n"
+"- Bạn nên sửa đổi chính sách xuất hóa đơn cho sản phẩm: Mở sản phẩm, đi tới tab \"Bán hàng\" và sửa đổi chính sách lập hóa đơn từ \"số lượng đã giao\" thành \"số lượng đặt hàng\". Đối với dịch vụ, bạn nên sửa đổi chính sách xuất hóa đơn dịch vụ thành 'Trả trước'."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4343,8 +4177,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_account_payment__campaign_id
 #: model:ir.model.fields,help:sale.field_sale_order__campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts, "
-"e.g. Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
 msgstr ""
 "Đây là cái tên giúp bạn kiểm soát giữa các chiến dịch marketing khác nhau: "
 "ví dụ Chiến dịch mùa thu, Sự kiện đặc biệt dịp Giáng sinh"
@@ -4355,8 +4189,8 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
-"Đây là ngày giao hàng đã hứa với khách hàng. Nếu được đặt, lệnh giao hàng sẽ "
-"được lên lịch dựa trên ngày này thay vì thời gian dẫn sản phẩm."
+"Đây là ngày giao hàng đã hứa với khách hàng. Nếu được đặt, lệnh giao hàng sẽ"
+" được lên lịch dựa trên ngày này thay vì thời gian dẫn sản phẩm."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -4364,7 +4198,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_account_payment__medium_id
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Đây là phương thức gửi, ví dụ. Bưu thiếp, Email, hoặc Banner quảng cáo"
+msgstr "Đây là phương thức như Thẻ bưu điện, Email hoặc Banner quảng cáo"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__source_id
@@ -4375,8 +4209,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
-"Đây là nguồn ví dụ như Bộ tìm kiếm Google, tên miền khác, hoặc một cái tên "
-"trong danh sách email"
+"Đây là nguồn của liên kết, ví dụ: Công cụ tìm kiếm, tên miền khác hoặc tên "
+"của danh sách email"
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4385,23 +4219,24 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
-"Sản phẩm được đóng gói theo %(pack_size).2f %(pack_name)s. Bạn nên bán "
-"%(quantity).2f %(unit)s. "
+"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
+"%(quantity).2f %(unit)s."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman,"
+" partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
 "Báo cáo này thực hiện việc phân tích trên báo giá và đơn hàng của bạn. Kiểm "
-"tra doanh thu bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau (nhân viên "
-"bán hàng, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện phân tích "
-"trên đơn hàng mà chưa xuất hoá đơn. Nếu bạn muốn phân tích đơn hàng đã xuất "
-"hoá đơn, bạn nên sử dụng báo cáo Phân tích hoá đơn trong ứng dụng Kế toán."
+"tra doanh thu bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau (nhân viên"
+" bán hàng, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện phân "
+"tích trên đơn hàng mà chưa xuất hoá đơn. Nếu bạn muốn phân tích đơn hàng đã "
+"xuất hoá đơn, bạn nên sử dụng báo cáo Phân tích hoá đơn trong ứng dụng Kế "
+"toán."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -4413,10 +4248,11 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Báo cáo này thực hiện việc phân tích trên báo giá và đơn hàng của bạn. Kiểm "
-"tra doanh thu bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau (nhân viên "
-"bán hàng, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện phân tích "
-"trên đơn hàng mà chưa xuất hoá đơn. Nếu bạn muốn phân tích đơn hàng đã xuất "
-"hoá đơn, bạn nên sử dụng báo cáo Phân tích hoá đơn trong ứng dụng Kế toán."
+"tra doanh thu bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau (nhân viên"
+" bán hàng, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện phân "
+"tích trên đơn hàng mà chưa xuất hoá đơn. Nếu bạn muốn phân tích đơn hàng đã "
+"xuất hoá đơn, bạn nên sử dụng báo cáo Phân tích hoá đơn trong ứng dụng Kế "
+"toán."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -4428,15 +4264,17 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Báo cáo này thực hiện việc phân tích trên báo giá và đơn hàng của bạn. Kiểm "
-"tra doanh thu bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau (nhân viên "
-"bán hàng, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện phân tích "
-"trên đơn hàng mà chưa xuất hoá đơn. Nếu bạn muốn phân tích đơn hàng đã xuất "
-"hoá đơn, bạn nên sử dụng báo cáo Phân tích hoá đơn trong ứng dụng Kế toán."
+"tra doanh thu bán hàng và sắp xếp nó theo tiêu chí nhóm khác nhau (nhân viên"
+" bán hàng, đối tác, sản phẩm,...). Sử dụng báo cáo này để thực hiện phân "
+"tích trên đơn hàng mà chưa xuất hoá đơn. Nếu bạn muốn phân tích đơn hàng đã "
+"xuất hoá đơn, bạn nên sử dụng báo cáo Phân tích hoá đơn trong ứng dụng Kế "
+"toán."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
-msgstr "Việc này sẽ cập nhật tất cả đơn giá dựa theo bảng giá mới được đặt. "
+msgstr ""
+"This will update all unit prices based on the currently set pricelist."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -4465,8 +4303,8 @@ msgid ""
 "menu *Action*."
 msgstr ""
 "Để gửi lời mời trong chế độ B2B, hãy mở một số liên lạc hoặc chọn một số "
-"người trong chế độ xem danh sách và nhấp vào tùy chọn 'Quản lý truy cập cổng "
-"thông tin' trong menu thả xuống * Hành động *."
+"người trong chế độ xem danh sách và nhấp vào tùy chọn 'Quản lý truy cập cổng"
+" thông tin' trong menu thả xuống * Hành động *."
 
 #. module: sale
 #. openerp-web
@@ -4476,8 +4314,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
-"Để tăng tốc xác nhận đơn hàng, chúng ta có thể kích hoạt chữ ký điện tử hoặc "
-"thanh toán. "
+"To speed up order confirmation, we can activate electronic signatures or "
+"payments."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4504,7 +4342,7 @@ msgstr "Tổng thuế"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Excluded"
-msgstr "Tổng đã gồm thuế"
+msgstr "Total Tax Excluded"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4521,7 +4359,7 @@ msgstr "Kiểm soát dịch vụ"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tracking"
-msgstr "Theo dõi"
+msgstr "Theo vết"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
@@ -4633,7 +4471,7 @@ msgstr "Đơn vị"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
-msgstr "Cập nhật giá"
+msgstr "Update Prices"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4660,7 +4498,7 @@ msgstr "Xác nhận báo giá"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Variant Grid Entry"
-msgstr "Mục nhập lưới biến thể"
+msgstr "Sổ lưới biến thể"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -4718,7 +4556,7 @@ msgstr "Lịch sử thông tin liên lạc website"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
-msgstr "Viết tên công ty để tạo, hoặc xem gợi ý. "
+msgstr "Write a company name to create one, or see suggestions."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
@@ -4752,14 +4590,13 @@ msgid ""
 "                or check every order and invoice them one by one."
 msgstr ""
 "Bạn có thể chọn tất cả các đơn đặt hàng và gửi hóa đơn theo lô, <br>\n"
-"                 hoặc kiểm tra từng đơn hàng và gửi hóa đơn cho từng người "
-"một."
+"                 hoặc kiểm tra từng đơn hàng và gửi hóa đơn cho từng người một."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
 msgid ""
-"You can set here the communication type that will appear on sales orders.The "
-"communication will be given to the customer when they choose the payment "
+"You can set here the communication type that will appear on sales orders.The"
+" communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
 "Bạn có thể đặt ở đây loại giao tiếp sẽ xuất hiện trên đơn đặt hàng. Giao "
@@ -4779,12 +4616,10 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
-"                    whether it's a storable product, a consumable or a "
-"service."
+"                    whether it's a storable product, a consumable or a service."
 msgstr ""
 "Bạn phải xác định sản phẩm cho mọi thứ bạn bán hoặc mua,\n"
-"                    cho dù đó là sản phẩm lưu trữ được, hàng tiêu dùng hay "
-"dịch vụ."
+"                    cho dù đó là sản phẩm lưu trữ được, hàng tiêu dùng hay dịch vụ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4816,15 +4651,18 @@ msgstr "Đơn đặt hàng không ở trạng thái để bị từ chối."
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas "
-"your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from "
-"other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"Báo giá của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi "
-"báo giá của bạn thuộc về công ty %(quote_company)s. \n"
-" Vui lòng thay đổi công ty trong báo giá của bạn hoặc xóa sản phẩm từ các "
-"công ty khác (%(bad_products)s)."
+"Báo giá của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi báo giá của bạn thuộc về công ty %(quote_company)s. \n"
+" Vui lòng thay đổi công ty trong báo giá của bạn hoặc xóa sản phẩm từ các công ty khác (%(bad_products)s)."
+
+#. module: sale
+#: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+#: model:ir.cron,cron_name:sale.send_invoice_cron
+#: model:ir.cron,name:sale.send_invoice_cron
+msgid "automatic invoicing: send ready invoice"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -4858,14 +4696,14 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
 msgid ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
-"a' }})"
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
+" }})"
 msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
 msgid ""
-"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and (ctx."
-"get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ object."
-"name or 'n/a' }})"
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
+"object.name or 'n/a' }})"
 msgstr ""

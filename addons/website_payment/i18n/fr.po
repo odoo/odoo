@@ -1,21 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_payment
-#
+# 	* website_payment
+# 
 # Translators:
-# Martin Trigaux, 2018
+# lucasdeliege <deliegelucas@gmail.com>, 2016
+# Martin Trigaux, 2021
+# Jonathan Castillo <jcs@odoo.com>, 2021
+# RHTodoo, 2021
+# Clément Watthez <cwa@odoo.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_payment
@@ -23,8 +29,7 @@ msgstr ""
 msgid ""
 ".\n"
 "                        <br/>\n"
-"                        We appreciate your support for our organization as "
-"such.\n"
+"                        We appreciate your support for our organization as such.\n"
 "                        <br/>\n"
 "                        Regards."
 msgstr ""
@@ -32,22 +37,22 @@ msgstr ""
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Comment:</b>"
-msgstr "<b>Commentaires :</b>"
+msgstr "Commentaires"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donation Date:</b>"
-msgstr "<b>Date du don :</b>"
+msgstr "<b>Date du don\\:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donor Email:</b>"
-msgstr "<b>Email du donateur :</b>"
+msgstr "<b>Email du donateur\\:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donor Name:</b>"
-msgstr "<b>Nom du donateur :</b>"
+msgstr "<b>Nom du donateur\\:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -63,9 +68,10 @@ msgstr "<b>Méthode de paiement :</b>"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please "
-"contact the website administrator."
+"                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>Aucune option de paiement appropriée n'a pu être trouvée.</strong><br/>\n"
+"Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur du site web."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -99,6 +105,7 @@ msgstr ""
 
 #. module: website_payment
 #. openerp-web
+#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
 #, python-format
 msgid "Amount"
@@ -153,6 +160,7 @@ msgstr "Pays..."
 
 #. module: website_payment
 #. openerp-web
+#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -278,6 +286,8 @@ msgid ""
 "Name\n"
 "                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"Nom\n"
+"                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #: code:addons/website_payment/controllers/portal.py:0

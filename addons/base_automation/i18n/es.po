@@ -1,28 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_automation
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Luis González <lgonzalez@vauxoo.com>, 2019
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
+# Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Carles Antoli <carlesantoli@hotmail.com>, 2017
+# Sergio Flores <vitavitae1@gmail.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# oihane <oihanecruce@gmail.com>, 2017
+# José Vicente <txusev@gmail.com>, 2017
+# Ivan Nieto <ivan.n.s@tuta.io>, 2017
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Antonio Trueba, 2017
+# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
+# Miguel Orueta <mo@landoo.es>, 2017
+# e2f <projects@e2f.com>, 2018
+# Raquel Iciarte <ric@odoo.com>, 2018
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
-# Hbto [ Vauxoo ] <hbto@vauxoo.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
-#
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2019
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
+# Martin Trigaux, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# marcescu, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_automation
@@ -33,6 +50,8 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -171,15 +190,12 @@ msgstr "Días"
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
-"                                    You can put a negative number if you "
-"need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 "
-"minutes before a meeting."
+"                                    You can put a negative number if you need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
 "Retraso después de fecha de activación.\n"
 "Puede colocar un número negativo si necesita un retraso ante de la \n"
-"fecha de activación, como enviar un recordatorio de 15 minutos antes de una "
-"reunión."
+"fecha de activación, como enviar un recordatorio de 15 minutos antes de una reunión."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -204,12 +220,14 @@ msgstr "Desactivar acción"
 #, python-format
 msgid ""
 "Disabling this automated action will enable you to continue your workflow\n"
-"                but any data created after this could potentially be "
-"corrupted,\n"
-"                as you are effectively disabling a customization that may "
-"set\n"
+"                but any data created after this could potentially be corrupted,\n"
+"                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Deshabilitar esta acción automatizada le permitirá con su flujo de trabajo\n"
+"                pero cualquier data creada después de esto podría estar dañada\n"
+"                ya que está deshabilitando la personalización configurada en los\n"
+"                campos importantes o requeridos."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -280,10 +298,11 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
+"If present, this condition must be satisfied before the update of the "
+"record."
 msgstr ""
-"Si está presente, esta condición debe satisfacerse antes de la actualización "
-"del registro."
+"Si está presente, esta condición debe satisfacerse antes de la actualización"
+" del registro."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
@@ -308,7 +327,7 @@ msgstr "Última actualización el"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
 msgid "Least Delay Msg"
-msgstr "Mínimo de retraso del mensaje"
+msgstr "Mensaje de retraso mínimo"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
@@ -360,8 +379,8 @@ msgstr "Nota"
 msgid ""
 "Note that this action can be trigged up to %d minutes after its schedule."
 msgstr ""
-"Ten en cuenta que esta acción se puede activar hasta %d minutos después de "
-"su programación."
+"Tenga en cuenta que esta acción se puede activar hasta %d minutos después de"
+" su programación."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -391,8 +410,8 @@ msgstr "Al actualizar"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__help
 msgid ""
-"Optional help text for the users with a description of the target view, such "
-"as its usage and purpose."
+"Optional help text for the users with a description of the target view, such"
+" as its usage and purpose."
 msgstr ""
 "Texto de ayuda opcional para los usuarios con una descripción de la vista "
 "destino, como su uso y su propósito."
@@ -403,8 +422,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
 msgstr ""
-"Proporciona el campo utilizado para vincular el registro recién creado en el "
-"registro utilizado por la acción del servidor."
+"Proporcione el campo utilizado para vincular el registro recién creado en el"
+" registro utilizado por la acción del servidor."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -424,7 +443,7 @@ msgstr "Secuencia"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "Acción de servidor"
+msgstr "Acción del servidor"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
@@ -472,17 +491,17 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
-"El \"%(trigger_value)s\" %(trigger_label)s solo se puede utilizar con el "
+"El \"%(trigger_value)s\" %(trigger_label)s solo puede ser utilizado con el "
 "tipo de acción \"%(state_value)s\""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
 msgid ""
-"The action will be triggered if and only if one of these fields is updated."
-"If empty, all fields are watched."
+"The action will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
 msgstr ""
-"La acción se activará si y solo si uno de estos campos se actualiza. Si está "
-"vacío, se observan todos los campos."
+"La acción se activará si y solo si uno de estos campos se actualiza. Si está"
+" vacío, se observan todos los campos."
 
 #. module: base_automation
 #. openerp-web
@@ -492,6 +511,8 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
+"El error ocurrió durante la ejecución de la acción automatizada.\n"
+"                    \""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -516,21 +537,17 @@ msgid ""
 "- 'Execute Python Code': a block of python code that will be executed\n"
 "- 'Create': create a new record with new values\n"
 "- 'Update a Record': update the values of a record\n"
-"- 'Execute several actions': define an action that triggers several other "
-"server actions\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
 "- 'Send Email': automatically send an email (Discuss)\n"
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"Tipo de acción de servidor. Los valores que están disponibles son:\n"
-"- 'Ejecutar código Python': el bloque de código Python será ejecutado\n"
-"- 'Crear o duplicar un nuevo registro': crea un nuevo registro con nuevos "
-"valores, o duplica uno existente en la base de datos\n"
+"Tipo de acción de servidor. Están disponibles los siguientes valores:\n"
+"- 'Ejecutar código Python': un bloque de código Python que será ejecutado\n"
+"- 'Crear o duplicar un nuevo registro': crea un nuevo registro con nuevos valores, o duplica uno existente en la base de datos\n"
 "- 'Actualizar un registro': actualiza los valores de un registro\n"
-"- 'Ejecutar varias acciones': define una acción que lanza otras acciones de "
-"servidor\n"
-"- 'Enviar un correo electrónico': envía automáticamente un correo "
-"electrónico (Conversaciones)\n"
+"- 'Ejecutar varias acciones': define una acción que lanza varias otras acciones de servidor\n"
+"- 'Enviar un correo electrónico': envía automáticamente un correo electrónico (Conversaciones)\n"
 "- 'Añadir seguidores': añade seguidores a un registro (Conversaciones)\n"
 "- 'Crear próxima actividad': crea una actividad (Conversaciones)"
 
@@ -544,13 +561,13 @@ msgstr "Uso"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
 msgid ""
-"Use 'Specific User' to always assign the same user on the next activity. Use "
-"'Generic User From Record' to specify the field name of the user to choose "
+"Use 'Specific User' to always assign the same user on the next activity. Use"
+" 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
 "Use 'Usuario específico' para asignar siempre el mismo usuario en la "
-"siguiente actividad. Use 'Usuario genérico del registro' para especificar el "
-"nombre del campo del usuario para elegir en el registro."
+"siguiente actividad. Use 'Usuario genérico del registro' para especificar el"
+" nombre del campo del usuario para elegir en el registro."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -561,23 +578,16 @@ msgstr "Usar calendario"
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific Sales Team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"Utiliza acciones automatizadas para activar acciones de forma automática "
-"para\n"
-"                  Varias pantallas. Ejemplo: un cliente potencial creado por "
-"un usuario específico \n"
-"                  puede configurarse automáticamente a un equipo de ventas "
-"específico, o una\n"
-"                  oportunidad que todavía tiene estado pendiente después de "
-"14 días podría\n"
-"                  desencadenar un recordatorio automático por correo "
-"electrónico."
+"Utilice acciones automatizadas para activar acciones automáticamente para\n"
+"                 Varias pantallas. Ejemplo: un cliente potencial creado por un usuario específico puede\n"
+"                 configurarse automáticamente a un equipo de ventas específico, o un\n"
+"                 oportunidad que todavía tiene estado pendiente después de 14 días podría\n"
+"                 desencadenar un recordatorio automático por correo electrónico."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
@@ -590,6 +600,7 @@ msgid "Value Mapping"
 msgstr "Mapeo de valores"
 
 #. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
@@ -617,12 +628,10 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                                  If present, will be checked by the "
-"scheduler. If empty, will be checked at creation and update."
+"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 "Cuando la condición debe ser activada.\n"
-"Si esta presente, será revisada por el programador. Si esta vacío, será "
-"revisada en la creación y actualización."
+"Si esta presente, será revisada por el programador. Si esta vacío, será revisada en la creación y actualización."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -632,12 +641,12 @@ msgstr "Si no está marcado, la regla está oculta y no se ejecutará."
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
 msgid ""
-"Write Python code that the action will execute. Some variables are available "
-"for use; help about python expression is given in the help tab."
+"Write Python code that the action will execute. Some variables are available"
+" for use; help about python expression is given in the help tab."
 msgstr ""
-"Escribe el código de Python que ejecutará la acción. Algunas variables están "
-"disponibles para su uso; La ayuda sobre la expresión de Python se encuentra "
-"en la pestaña de ayuda."
+"Escribe el código de Python que ejecutará la acción. Algunas variables están"
+" disponibles para su uso; La ayuda sobre la expresión de Python se encuentra"
+" en la pestaña de ayuda."
 
 #. module: base_automation
 #. openerp-web
@@ -646,7 +655,7 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
-"Puedes pedirle a un administrador que desactive o corrija esta acción "
+"Puede pedirle a un administrador que desactive o corrija esta acción "
 "automatizada."
 
 #. module: base_automation
@@ -655,7 +664,7 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
-"Puedes deshabilitar esta acción automatizada o editarla para resolver el "
+"Puede deshabilitar esta acción automatizada o editarla para resolver el "
 "problema."
 
 #. module: base_automation
@@ -665,3 +674,5 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"No puede enviar un correo, agregar seguidores o crear una actividad para el "
+"registro borrado. Simplemente no funciona."

@@ -1,40 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_presence
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# JOSE ALEJANDRO ECHEVERRI VALENCIA <josealejandroeche@gmail.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
+# Jose Alejandro Echeverri Valencia <josealejandroeche@gmail.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
-#
+# Jon Perez <jop@odoo.com>, 2020
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Martin Trigaux, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
+"PO-Revision-Date: 2019-03-20 14:57+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,"
-"<br/><br/>\n"
-"                    Exception made if there was a mistake of ours, it seems "
-"that you are not at your office and there is not request of time off from "
-"you.<br/>\n"
-"                    Please, take appropriate measures in order to carry out "
-"this work absence.<br/>\n"
-"                    Do not hesitate to contact your manager or the human "
-"resource department.\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
+"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br/>\n"
+"                    Please, take appropriate measures in order to carry out this work absence.<br/>\n"
+"                    Do not hesitate to contact your manager or the human resource department.\n"
 "                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
@@ -105,15 +102,12 @@ msgstr "Empleados"
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
 #, python-format
 msgid ""
-"Exception made if there was a mistake of ours, it seems that you are not at "
-"your office and there is not request of time off from you.\n"
+"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.\n"
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
-"Excepción hecha si hubo un error de nuestra parte, parece que no estás en tu "
-"oficina y no hay alguna solicitud de tiempo personal de ti.\n"
-"Por favor, toma las medidas apropiadas con el fin de llevar a cabo esta "
-"ausencia laboral.\n"
+"Excepción hecha si hubo un error de nuestra parte, parece que no estás en tu oficina y no hay alguna solicitud de tiempo personal de ti.\n"
+"Por favor, toma las medidas apropiadas con el fin de llevar a cabo esta ausencia laboral.\n"
 "No dudes en contactar a tu gerente o al departamento de recursos humanos."
 
 #. module: hr_presence
@@ -126,7 +120,7 @@ msgstr ""
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
-msgstr "Presencia RRHH Última fecha de cálculo"
+msgstr "Presencia RRHH Fecha de último cálculo"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
@@ -199,7 +193,7 @@ msgstr ""
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional mobile for this employee."
-msgstr "No hay teléfono celular profesional para este empleado."
+msgstr "No hay móvil profesional para este empleado."
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -224,6 +218,8 @@ msgid "Users Log"
 msgstr "Registro de Usuarios"
 
 #. module: hr_presence
+#: code:addons/hr_presence/models/hr_employee.py:0
+#: code:addons/hr_presence/models/hr_employee.py:0
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."

@@ -1,30 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_project
-#
+# 
 # Translators:
-# e2f <projects@e2f.com>, 2021
-# bb76cd9ac0cb7e20167a14728edb858b, 2021
-# fr trans <e2ffr05@hotmail.com>, 2021
+# e2f <projects@e2f.com>, 2020
+# bb76cd9ac0cb7e20167a14728edb858b, 2020
+# fr trans <e2ffr05@hotmail.com>, 2020
+# Nancy Bolognesi <nb@microcom.ca>, 2020
+# Eloïse Stilmant <est@odoo.com>, 2020
+# Nathan Grognet <ngr@odoo.com>, 2020
 # Martin Trigaux, 2021
-# Nancy Bolognesi <nb@microcom.ca>, 2021
-# Eloïse Stilmant <est@odoo.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
-# Nathan Grognet <ngr@odoo.com>, 2021
-# Grégory Schreiner, 2022
-#
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
+# Alexandra Jubert <aju@odoo.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Grégory Schreiner, 2022\n"
+"PO-Revision-Date: 2020-02-13 10:47+0000\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_project
@@ -36,7 +36,7 @@ msgstr "Créer une facture"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr "Créer à la commande"
+msgstr "Créer une commande"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -56,12 +56,12 @@ msgstr "Tâche Générée"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "A une commande à facturer"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
 msgid "Has a SO with an invoice status of No"
-msgstr ""
+msgstr "A une commande dont le statut de facturation est à Non"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -70,7 +70,7 @@ msgid ""
 "Invoice as soon as this service is sold, and create a task in an existing "
 "project to track the time spent."
 msgstr ""
-"Facturez dès que ce service est vendu, et créez une tâche dans un projet "
+"Facturer dès que le service est vendu et créer une tâche dans un projet "
 "existant pour suivre le temps passé."
 
 #. module: sale_project
@@ -115,12 +115,12 @@ msgstr "Nouveau"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "No Sales Order"
-msgstr ""
+msgstr "Pas de Bon de Commande"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "No Sales Order Item"
-msgstr ""
+msgstr "Pas de Ligne de Vente"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -141,18 +141,11 @@ msgstr "Nombre de factures"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,help:sale_project.field_product_template__service_tracking
 msgid ""
-"On Sales order confirmation, this product can generate a project and/or "
-"task.         From those, you can track the service you are selling.\n"
-"         'In sale order's project': Will use the sale order's configured "
-"project if defined or fallback to         creating a new project based on "
-"the selected template."
+"On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
+"         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
-"A la confirmation du bon de commande, ce produit peut générer un projet et/"
-"ou une tâche. Depuis ceux-ci, vous pouvez suivre le service que vous "
-"vendez.\n"
-"         'Dans un projet de bon de commande': utilisera un projet configuré "
-"sur le bon de commande si celui-ci est défini ou, à défaut, créera une "
-"nouveau projet à partir du modèle sélectionné."
+"A la confirmation du bon de commande, ce produit peut générer un projet et/ou une tâche. Depuis ceux-ci, vous pouvez suivre le service que vous vendez.\n"
+"         'Dans un projet de bon de commande': utilisera un projet configuré sur le bon de commande si celui-ci est défini ou, à défaut, créera une nouveau projet à partir du modèle sélectionné."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -216,7 +209,7 @@ msgstr "Bon de commande"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Nombre de commandes"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -229,12 +222,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
 msgid "Sales Order"
-msgstr "Commande"
+msgstr "Bon de commande"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 msgid "Sales Order Id"
-msgstr ""
+msgstr "Ref. Commande"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -259,7 +252,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Ligne de Commande"
+msgstr "Ligne de bons de commande"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__is_service
@@ -273,20 +266,21 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales Orders"
-msgstr ""
+msgstr "Bons de commandes"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
 msgid ""
-"Sales order item to which the project is linked. Link the timesheet entry to "
-"the sales order item defined on the project. Only applies on tasks without "
+"Sales order item to which the project is linked. Link the timesheet entry to"
+" the sales order item defined on the project. Only applies on tasks without "
 "sale order item defined, and if the employee is not in the 'Employee/Sales "
 "Order Item Mapping' of the project."
 msgstr ""
-"Ligne de vente à laquelle le projet est lié. Liez cette entrée de feuille de "
-"temps à la ligne de vente définie sur le projet. S'applique uniquement aux "
-"tâches n'ayant pas de ligne de vente définie, et si l'employé n'est pas dans "
-"le mapping 'employés/lignes de vente' du projet."
+"Item de bon de commande auquel le projet est lié. Liez cette entrée de "
+"feuille de temps à l'item de bon de commande défini sur le projet. "
+"S'applique uniquement aux tâches n'ayant pas d'item de bon de commande "
+"défini, et si l'employé n'est pas dans le mapping 'employés/items de bon de "
+"commande' du projet."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -331,8 +325,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,help:sale_project.field_product_template__project_template_id
 msgid ""
-"Select a billable project to be the skeleton of the new created project when "
-"selling the current product. Its stages and tasks will be duplicated."
+"Select a billable project to be the skeleton of the new created project when"
+" selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
 "Sélectionnez un projet facturable comme squelette du nouveau projet créé "
 "lors de la vente du produit. Ses étapes et tâches seront dupliquées."
@@ -411,8 +405,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
-"Le produit %s ne devrait pas avoir de modèle de projet car il va générer une "
-"tâche dans un projet global."
+"Le produit %s ne devrait pas avoir de modèle de projet car il va générer une"
+" tâche dans un projet global."
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -421,8 +415,8 @@ msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
-"Cette tâche a été créée à partir de: <a href=# data-oe-model=sale.order data-"
-"oe-id=%d>%s</a> (%s)"
+"Cette tâche a été créée à partir de: <a href=# data-oe-model=sale.order "
+"data-oe-id=%d>%s</a> (%s)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice

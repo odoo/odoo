@@ -1,22 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-#
+# 
+# Translators:
+# Cozmin Candea <office@terrabit.ro>, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2019
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Martin Trigaux, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: resource
+#: code:addons/resource/models/resource.py:0
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "%s (copy)"
@@ -26,7 +34,7 @@ msgstr "%s (copie)"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
 #: model:ir.model.fields,field_description:resource.field_resource_resource__active
 msgid "Active"
-msgstr "Activ"
+msgstr "Activ(a)"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__afternoon
@@ -182,7 +190,7 @@ msgstr "Dată sfârșit"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
 msgid "Explanation"
-msgstr "Explicație"
+msgstr "Explicaţie"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
@@ -264,8 +272,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Dacă câmpul activ este setat pe Fals, vă permite să ascundeți resursa fără "
-"să o ștergeți."
+"Daca campul activ este setat pe Fals, va va permite sa ascundeti "
+"inregistrarea resursei fara a o sterge."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__active
@@ -525,7 +533,7 @@ msgstr "Duminică"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 1 week calendar"
-msgstr "Treceți la calendarul de 1 săptămână"
+msgstr "Treceți la calendarul de o săptămână"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -553,8 +561,8 @@ msgstr ""
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
 msgstr ""
-"Data de începere a perioadei libere trebuie să fie mai devreme decât data de "
-"încheiere."
+"Data de începere a perioadei libere trebuie să fie mai devreme decât data de"
+" încheiere."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -579,8 +587,8 @@ msgid ""
 msgstr ""
 "Acest câmp este utilizat pentru a calcula durata preconizată a unei comenzi "
 "de lucru la acest centru de lucru. De exemplu, dacă o comandă de lucru "
-"durează o oră și factorul de eficiență este de 100%, atunci durata așteptată "
-"va fi de o oră. Dacă factorul de eficiență este de 200%, totuși durata "
+"durează o oră și factorul de eficiență este de 100%, atunci durata așteptată"
+" va fi de o oră. Dacă factorul de eficiență este de 200%, totuși durata "
 "așteptată va fi de 30 de minute."
 
 #. module: resource
@@ -689,7 +697,8 @@ msgstr "Numărul săptămânii"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
-"Whether this should be computed as a time off or as work time (eg: formation)"
+"Whether this should be computed as a time off or as work time (eg: "
+"formation)"
 msgstr ""
 "Dacă acest lucru ar trebui calculat ca timp liber sau ca timp de lucru (de "
 "exemplu: formare)"

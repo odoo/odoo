@@ -1,24 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_edi
-#
+# 
 # Translators:
-# Chaplet34 <charleskolie2@gmail.com>, 2021
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
+# Chaplet34 <charleskolie2@gmail.com>, 2020
+# Moka Tourisme <hello@mokatourisme.fr>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Thomas Deleval <thd@odoo.com>, 2021
 # Gwladys Jouble <g.jouble@vieconnect.io>, 2021
-# Martin Trigaux, 2022
-#
+# Martin Trigaux, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"PO-Revision-Date: 2020-08-21 13:29+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_edi
@@ -65,14 +70,10 @@ msgstr ""
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
 msgid ""
-"Blocks the current operation of the document depending on the error "
-"severity:\n"
-"  * Info: the document is not blocked and everything is working as it "
-"should.\n"
-"  * Warning: there is an error that doesn't prevent the current Electronic "
-"Invoicing operation to succeed.\n"
-"  * Error: there is an error that blocks the current Electronic Invoicing "
-"operation."
+"Blocks the current operation of the document depending on the error severity:\n"
+"  * Info: the document is not blocked and everything is working as it should.\n"
+"  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
 
 #. module: account_edi
@@ -170,14 +171,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_document_ids
 msgid "Edi Document"
-msgstr "Document Edi"
+msgstr "Editer le document"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_count
 msgid "Edi Error Count"
-msgstr "Nombre d'erreurs Edi"
+msgstr "Editer le nombre d'erreurs"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
@@ -189,7 +190,7 @@ msgstr ""
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
 msgid "Edi Format"
-msgstr "Format Edi"
+msgstr "Editer le format"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
@@ -210,7 +211,7 @@ msgstr "Appuyer sur le bouton annuler"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr "Services web Edi à traiter"
+msgstr "Editer les services web à traiter"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_journal_form_inherited
@@ -417,9 +418,10 @@ msgstr ""
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
-"The text of the last error that happened during Electronic Invoice operation."
+"The text of the last error that happened during Electronic Invoice "
+"operation."
 msgstr ""
-"Le test de la dernière erreur qui s'est produite lors de l'opération de "
+"Le teste de la dernière erreur qui s'est produite lors de l'opération de "
 "facturation électronique."
 
 #. module: account_edi
@@ -449,8 +451,8 @@ msgstr "Avertissement"
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid ""
-"You can't edit the following journal entry %s because an electronic document "
-"has already been sent. Please use the 'Request EDI Cancellation' button "
+"You can't edit the following journal entry %s because an electronic document"
+" has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
 "Vous ne pouvez éditer les entrées du journal suivant %s car un document "

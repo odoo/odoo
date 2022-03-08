@@ -1,27 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* membership
-#
+# 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
-# Volkan AĞAOĞLU <cerber@canver.net>, 2019
-#
+# Volkan AĞAOĞLU <cerber@canver.net>, 2017
+# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
+# selim kartal <kartalselim37@gmail.com>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# abc Def <hdogan1974@gmail.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# Ediz Duman <neps1192@gmail.com>, 2020
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Martin Trigaux, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Volkan AĞAOĞLU <cerber@canver.net>, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: membership
@@ -42,18 +48,16 @@ msgstr "# Bekleyen"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period"
-"\"/><strong> From: </strong>"
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> From: </strong>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period"
-"\"/><strong> From: </strong>"
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> From: </strong>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
-msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
-msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -134,7 +138,7 @@ msgstr "İptalEdilen Üye"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Category"
-msgstr "Kategori"
+msgstr "Kategorisi"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_product__membership
@@ -147,7 +151,7 @@ msgstr "Ürünün üyelik için uygun olup olmadığını kontrol edin."
 #: model:ir.model.fields,field_description:membership.field_report_membership__company_id
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
@@ -162,7 +166,7 @@ msgstr "Kontak"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_tree
 msgid "Contacts"
-msgstr "Kontaklar"
+msgstr "Kişiler"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__create_uid
@@ -174,7 +178,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__create_date
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturulma zamanı"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__membership_state
@@ -275,7 +279,7 @@ msgstr "Ücretsiz Üye"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
 msgid "From"
-msgstr "Başlangıç"
+msgstr "Kimden:"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -330,8 +334,7 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -339,8 +342,7 @@ msgstr ""
 " gösterir-üye olmayan: herhangi bir üyelik. \n"
 " uygulanmış değil ortak bir-iptal üye: onun üyeliği. \n"
 " iptal etti bir üyesi-eski üye: üye, Üyelik tarihi süresi sona erdi. \n"
-"-bekleyen üye: üye kim üyelik için başvuran ve kimin fatura oluşturulması "
-"için gidiyor. \n"
+"-bekleyen üye: üye kim üyelik için başvuran ve kimin fatura oluşturulması için gidiyor. \n"
 "-faturalanan üye: üyesi olan fatura oluşturduğunuz. \n"
 " ödeyen üye : Üyelik ücreti ödedi bir üye."
 
@@ -351,8 +353,7 @@ msgid ""
 "-Non Member: A member who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
@@ -360,8 +361,7 @@ msgstr ""
 "- Üye Değil: Herhangi bir üyelik için başvuruda bulunmamış üye.\n"
 "- Üyelik İptal : Üyeliğini iptal etmiş üye.\n"
 "- Eski Üye : Üyelik tarihi dolmuş üye.\n"
-"- Üyelik Bekleyen : Üyelik için başvuruda bulunmuş ve henüz fatura "
-"kesilmemiş üye.\n"
+"- Üyelik Bekleyen : Üyelik için başvuruda bulunmuş ve henüz fatura kesilmemiş üye.\n"
 "- Faturalı Üye: Faturası kesilmiş üye.\n"
 "- Ücretli Üye : Üyelik bedelini ödemiş üye."
 
@@ -561,12 +561,10 @@ msgstr "Üyedeğil"
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                  Current Membership Status, Discussions and History of "
-"Membership, etc."
+"                  Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                  Current Membership Status, Discussions and History of "
-"Membership, etc."
+"                  Current Membership Status, Discussions and History of Membership, etc."
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__old
@@ -617,7 +615,7 @@ msgstr "Ürün Şablonu"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__quantity
 msgid "Quantity"
-msgstr "Miktar"
+msgstr "Adet"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
@@ -634,7 +632,7 @@ msgstr "Yapılan Ciro"
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Salesperson"
-msgstr "Satış Temsilcisi"
+msgstr "Satış Personeli"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__free_member
@@ -647,7 +645,7 @@ msgstr "Eğer ücretsiz üyelik vermek istiyorsanız seçin."
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Start Date"
-msgstr "Başlangıç Tarihi"
+msgstr "Başlama Tarih"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -708,7 +706,7 @@ msgstr "Bu, bekleyen fatura ve toplam bekleyen sütunları görüntüler"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
 msgid "To"
-msgstr "Bitiş"
+msgstr "Alıcı"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter

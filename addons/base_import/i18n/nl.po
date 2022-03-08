@@ -1,33 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-#
+# 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Eric Geens <ericgeens@yahoo.com>, 2016
 # Thomas Pot <thomas@open2bizz.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Cas Vissers <c.vissers@brahoo.nl>, 2019
 # Wynand Tastenhoye <wta@odoo.com>, 2019
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-#
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported"
@@ -71,8 +74,8 @@ msgstr "Matching met subvelden toestaan"
 #, python-format
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is "
-"transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 "Er is een onbekend probleem opgetreden tijdens het importeren (mogelijk "
@@ -115,7 +118,7 @@ msgstr "Batch limiet"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr "Annuleer"
 
 #. module: base_import
 #. openerp-web
@@ -145,6 +148,7 @@ msgstr "Kolom naam"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Comma"
 msgstr "Komma"
@@ -160,7 +164,8 @@ msgstr "Opmerkingen"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 msgstr ""
 "Kon URL niet ophalen: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
@@ -221,6 +226,7 @@ msgstr "Valuta"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
 msgstr "Database ID"
@@ -277,6 +283,9 @@ msgstr "Punt"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Download"
 msgstr "Downloaden"
@@ -329,6 +338,7 @@ msgstr "Excel-bestanden worden aanbevolen omdat de opmaak automatisch is."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
 msgstr "Externe ID"
@@ -346,6 +356,9 @@ msgstr "Bestand"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "File Column"
 msgstr "Bestandskolom"
@@ -361,6 +374,7 @@ msgid "File Type"
 msgstr "Bestandstype"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
@@ -397,8 +411,8 @@ msgstr "Opmaak"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Found invalid image data, images should be imported as either URLs or base64-"
-"encoded data."
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
 msgstr ""
 "Foutieve afbeelding data gevonden, afbeeldingen moeten geïmporteerd worden "
 "als URL's of base64-geëncodeerde data."
@@ -456,11 +470,9 @@ msgid ""
 "                    simpler especially when the file has many columns."
 msgstr ""
 "Als het bestand bevat\n"
-"                    de kolomnamen, kan Odoo proberen de . automatisch te "
-"detecteren\n"
+"                    de kolomnamen, kan Odoo proberen de . automatisch te detecteren\n"
 "                    veld dat overeenkomt met de kolom. Dit maakt invoer\n"
-"                    eenvoudiger, vooral wanneer het bestand veel kolommen "
-"heeft."
+"                    eenvoudiger, vooral wanneer het bestand veel kolommen heeft."
 
 #. module: base_import
 #. openerp-web
@@ -488,7 +500,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import"
-msgstr "Importeer"
+msgstr "Importeren"
 
 #. module: base_import
 #. openerp-web
@@ -563,7 +575,7 @@ msgstr "Foutieve celwaarde op rij %(row)s, kolom %(col)s: %(cell_value)s"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Label"
-msgstr "Label"
+msgstr "Omschrijving"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -648,7 +660,7 @@ msgstr "Bestand laden..."
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 #, python-format
 msgid "Model"
-msgstr "Type"
+msgstr "Model"
 
 #. module: base_import
 #. openerp-web
@@ -742,7 +754,7 @@ msgstr "Res Model"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Resume"
-msgstr "CV"
+msgstr "Hervatten"
 
 #. module: base_import
 #. openerp-web
@@ -753,6 +765,7 @@ msgstr "Zoek een veld..."
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "See possible values"
@@ -845,7 +858,7 @@ msgstr "Standaardvelden"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr "Start vanaf regel"
+msgstr "Start vanaf lijn"
 
 #. module: base_import
 #. openerp-web
@@ -969,7 +982,7 @@ msgstr "Tekstscheidingsteken:"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
-msgstr "Het bestand bevat blokkerende fouten (zie hieronder)"
+msgstr "Het bestand bevat blokkeringsfouten (zie hieronder)"
 
 #. module: base_import
 #. openerp-web
@@ -1011,7 +1024,7 @@ msgstr "Scheidingsteken voor duizendtallen:"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "To import multiple values, separate them by a comma"
-msgstr "Om meerdere waarden te importeren, scheidt je ze door een komma"
+msgstr "Om meerdere waarden te importeren, scheidt u ze door een komma"
 
 #. module: base_import
 #. openerp-web
@@ -1037,11 +1050,10 @@ msgstr "Soort"
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid ""
-"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
-"Het \"{extension}\" bestand kon niet geladen worden: de module \"{modname}\" "
-"vereist Python."
+"Het \"{extension}\" bestand kon niet geladen worden: de module \"{modname}\""
+" vereist Python."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1141,7 +1153,7 @@ msgstr ""
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
-"Je kunt een bestand niet testen of opnieuw laden voordat de import hervat is."
+"U kan een bestand niet testen of opnieuw laden voordat de import hervat is."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1172,6 +1184,7 @@ msgstr "partij"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"

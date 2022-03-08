@@ -1,27 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
-# sejun huang <sejun.huang@gmail.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # bluce Lan <bluce.lan@gmail.com>, 2019
-#
+# Martin Trigaux, 2020
+# sejun huang <sejun.huang@gmail.com>, 2020
+# Benson <Benson.Dr@Gmail.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: bluce Lan <bluce.lan@gmail.com>, 2019\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/"
-"zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: snailmail
@@ -101,9 +101,10 @@ msgstr "雙面"
 #. module: snailmail
 #. openerp-web
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "Buy credits"
-msgstr "購買點數"
+msgstr "購買信用"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
@@ -179,7 +180,7 @@ msgstr "公司"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置設定"
+msgstr "設定"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
@@ -309,9 +310,7 @@ msgid ""
 "If you want to re-send them, click Cancel now, then click on the "
 "notification and review them one by one by clicking on the red paper-plane "
 "next to each message."
-msgstr ""
-"如果要重新發送，請點選“立即取消”，然後點選通知並通過點選每條訊息旁邊的紅色紙"
-"飛機逐一查看。"
+msgstr "如果要重新發送，請點選“立即取消”，然後點選通知並通過點選每條訊息旁邊的紅色紙飛機逐一查看。"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__pending
@@ -387,9 +386,7 @@ msgstr "消息通知"
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr ""
-"消息類型：電子信件用於 信件消息， 通知使用者系統消息，評論用於其他消息，例如"
-"使用者回覆"
+msgstr "消息類型：電子信件用於 信件消息， 通知使用者系統消息，評論用於其他消息，例如使用者回覆"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -432,8 +429,7 @@ msgstr "可選的列印和附加的報表"
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid ""
 "Our service cannot read your letter due to its format.<br/>\n"
-"                Please modify the format of the template or update your "
-"settings\n"
+"                Please modify the format of the template or update your settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
 "由於格式原因，我們的服務無法讀取您的信件。<br/>\n"
@@ -505,7 +501,7 @@ msgstr "發送者"
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
 #, python-format
 msgid "Snailmail"
-msgstr "snailmail"
+msgstr "郵寄信件"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_confirm
@@ -549,7 +545,7 @@ msgstr "snailmail信件"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_fields
 msgid "Snailmail Missing Required Fields"
-msgstr "Snailmail 缺少必填欄位"
+msgstr "Snailmail 缺少必填字段"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_price
@@ -589,7 +585,7 @@ msgstr "移動信件:處理信件隊列"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "State"
-msgstr "狀態"
+msgstr "省份"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -633,8 +629,8 @@ msgstr "收件人地址不完整"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid ""
-"The attachment of the letter could not be sent. Please check its content and "
-"contact the support if the problem persists."
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
 msgstr "無法發送信件的附件。如果問題仍然存在，請檢查其內容並聯繫支持人員。"
 
 #. module: snailmail
@@ -670,7 +666,8 @@ msgstr "文件已正確郵寄。<br>跟踪 ID 為 %s"
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid ""
-"The letter could not be sent due to insufficient credits on your IAP account."
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
 msgstr "由於您的 IAP 帳戶中的點數額度不足，因此無法發送該信函。"
 
 #. module: snailmail
@@ -704,12 +701,11 @@ msgstr "更新合作夥伴地址"
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
 "If the letter is correctly sent, the status goes in 'Sent',\n"
-"If not, it will got in state 'Error' and the error message will be displayed "
-"in the field 'Error Message'."
+"If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
-"建立信件後，狀態為“待處理”。\n"
+"創建信件後，狀態為“待處理”。\n"
 "如果信件被正確發送，狀態進入“已發送”，\n"
-"如果沒有，它將進入“錯誤”狀態，錯誤消息將顯示在“錯誤消息”欄位中。"
+"如果沒有，它將進入“錯誤”狀態，錯誤消息將顯示在“錯誤消息”字段中。"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
@@ -722,9 +718,7 @@ msgstr "你即將發送這個"
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
-msgstr ""
-"您沒有為此服務註冊的IAP帳戶。<br>請訪問<a href=%s target=\"new\">iap.odoo."
-"com</a>以獲得免費信用。"
+msgstr "您沒有為此服務註冊的IAP帳戶。<br>請訪問<a href=%s target=\"new\">iap.odoo.com</a>以獲得免費信用。"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -732,9 +726,7 @@ msgstr ""
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
-msgstr ""
-"您沒有足夠的積分來執行此操作.<br>請轉到您的<a href=%s target=\"new\">iap帳戶"
-"</a>。"
+msgstr "您沒有足夠的積分來執行此操作.<br>請轉到您的<a href=%s target=\"new\">iap帳戶</a>。"
 
 #. module: snailmail
 #. openerp-web

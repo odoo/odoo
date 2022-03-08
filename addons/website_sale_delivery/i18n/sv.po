@@ -1,51 +1,54 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_delivery
-#
+# 	* website_sale_delivery
+# 
 # Translators:
-# Martin Trigaux, 2018
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
-# Robin Chatfield <robin.chatfield@gmail.com>, 2018
+# Kristoffer Grundström <lovaren@gmail.com>, 2018
+# fah_odoo <fah@odoo.com>, 2019
+# Martin Trigaux, 2020
+# Kim Asplund <kim.asplund@gmail.com>, 2020
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Robin Chatfield <robin.chatfield@gmail.com>, 2018\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "<b>Shipping Method: </b>"
-msgstr "<b>Leveranssätt: </b> "
+msgstr "<b>Leveransmetod\\: </b> "
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_description
 msgid ""
-"A description of the Product that you want to communicate to your customers. "
-"This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
 "En beskrivning av produkten som du vill kommunicera till dina kunder. Den "
-"här beskrivningen kopieras på alla Försäljnings, Leverans ordrar och på kund "
-"faktura och krediterings dokument."
+"här beskrivningen kopieras på alla Försäljnings, Leverans ordrar och på kund"
+" faktura och krediterings dokument."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__can_publish
 msgid "Can Publish"
-msgstr "Kan publicera"
+msgstr "Kan Publicera"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose a delivery method"
-msgstr "Välj ett leveranssätt"
+msgstr "Välj en leveransmetod"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
@@ -55,7 +58,7 @@ msgstr "Land"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "DHL Shipping Methods"
-msgstr "DHL leveranser"
+msgstr "DHL Leverans Metoder"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__amount_delivery
@@ -65,7 +68,7 @@ msgstr "Antal att leverera"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
 msgid "Delivery will be updated after choosing a new delivery method"
-msgstr "Leverans uppdateras efter val av leveranssätt"
+msgstr "Leverans uppdateras efter val av leveransmetod"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
@@ -80,22 +83,22 @@ msgstr "Beskrivning"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr "Beskrivning visas i eCommerce och onlineofferter."
+msgstr "Beskrivning visas i eCommerce och online offerter."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr "Beskrivning för onlineofferter"
+msgstr "Beskrivning för Online Offerter"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Easypost Shipping Methods"
-msgstr "Easypost leveranser"
+msgstr "Easypost Leverans Metoder"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "FedEx Shipping Methods"
-msgstr "FedEx leveranser"
+msgstr "FedEx Leverans Metoder"
 
 #. module: website_sale_delivery
 #. openerp-web
@@ -108,7 +111,7 @@ msgstr "Fri"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
 msgid "Is Published"
-msgstr "Är publicerad"
+msgstr "Är Publicerad"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:0
@@ -124,8 +127,8 @@ msgstr ""
 #: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address. "
-"Please contact us for more information."
+"No shipping method is available for your current order and shipping address."
+" Please contact us for more information."
 msgstr ""
 "Ingen leveransmetod är tillgänglig för aktuell order och leveransadress. \n"
 "Vänligen kontakta oss för mer information."
@@ -143,19 +146,19 @@ msgstr "Begränsa publicering på denna webbplats."
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Order"
+msgstr "Kundorder"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 msgid "Select to compute delivery rate"
-msgstr "Välj för att räkna ut leveranskostnad"
+msgstr "Välj för att räkna ut leverans kostnad"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr "Leveranssätt"
+msgstr "Leveransmetoder"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:0
@@ -176,7 +179,7 @@ msgstr "Den fullständiga URL för åtkomst av dokument via webbplatsen."
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Shipping Methods"
-msgstr "USPS leveranser"
+msgstr "USPS Leverans Metoder"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
@@ -196,4 +199,4 @@ msgstr "Webbplatsens URL"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "bpost Shipping Methods"
-msgstr "bpost leveranser"
+msgstr "bpost Leverans Metoder"

@@ -1,30 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-#
+# 
 # Translators:
-# xlu <xlu@seznam.cz>, 2019
-# Martin Trigaux, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
-#
+# xlu <xlu@seznam.cz>, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Martin Trigaux, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Michal Veselý <michal@veselyberanek.net>, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: resource
+#: code:addons/resource/models/resource.py:0
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "%s (copy)"
@@ -63,8 +65,8 @@ msgid ""
 "Are you sure you want to switch this calendar to 2 weeks calendar ? All "
 "entries will be lost"
 msgstr ""
-"Opravdu chcete přepnout tento kalendář na dvoutýdenní? Všechny položky budou "
-"ztraceny"
+"Opravdu chcete přepnout tento kalendář na dvoutýdenní? Všechny položky budou"
+" ztraceny"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -260,8 +262,8 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
-"Pokud je prázdné, jedná se o obecné volné dny pro společnost. Pokud je "
-"nastaven zdroj, volné dny jsou pouze pro tento prostředek."
+"Zda by to mělo být počítáno jako volný den, nebo jako pracovní doba (např. "
+"formace)"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -409,7 +411,7 @@ msgstr "Zdroj volných dní"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Zdroj podrobnosti volných dní"
+msgstr "Podrobnosti o volném čase zdroje"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
@@ -434,7 +436,7 @@ msgstr "Zdroje"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr "Zdroje volných dní"
+msgstr "Zdroj volných dní"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -578,8 +580,8 @@ msgid ""
 "minutes."
 msgstr ""
 "Toto pole se používá k výpočtu očekávané doby trvání pracovního příkazu v "
-"tomto pracovním středisku. Pokud například pracovní příkaz trvá jednu hodinu "
-"a faktor efektivity je 100 %, pak očekávaná doba trvání bude jedna hodina. "
+"tomto pracovním středisku. Pokud například pracovní příkaz trvá jednu hodinu"
+" a faktor efektivity je 100 %, pak očekávaná doba trvání bude jedna hodina. "
 "Pokud je však faktor efektivity 200 %, bude očekávaná doba trvání 30 minut."
 
 #. module: resource
@@ -604,7 +606,7 @@ msgstr "Čtvrteční ráno"
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Time Off"
-msgstr "Volné dny"
+msgstr "Volno"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -688,7 +690,8 @@ msgstr "Číslo týdne"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
-"Whether this should be computed as a time off or as work time (eg: formation)"
+"Whether this should be computed as a time off or as work time (eg: "
+"formation)"
 msgstr ""
 "Zda by to mělo být počítáno jako volný den nebo jako pracovní doba (např. "
 "formace)"

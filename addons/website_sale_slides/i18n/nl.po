@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_slides
-#
+# 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Martin Trigaux, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-#
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"PO-Revision-Date: 2019-03-20 15:01+0000\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_slides
@@ -35,11 +37,13 @@ msgstr "<i class=\"fa fa-shopping-cart\"/>Toevoegen aan winkelmandje"
 #: model:ir.model.fields,help:website_sale_slides.field_product_product__detailed_type
 #: model:ir.model.fields,help:website_sale_slides.field_product_template__detailed_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory "
-"app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Een voorraad product is een product waarvan je voorraad beheerd. De voorraad app moet geïnstalleerd worden.\n"
+"Een verbruiksproduct, is een product waarvoor geen voorraad wordt bijgehouden.\n"
+"Een dienst is een immateriëel product dat je verkoopt."
 
 #. module: website_sale_slides
 #: code:addons/website_sale_slides/models/product_product.py:0
@@ -66,7 +70,7 @@ msgstr "Schaf een cursus aan."
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Buy the course to validate your answers!"
-msgstr "Koop de cursus om je antwoorden te controleren!"
+msgstr "Koop de cursus om uw antwoorden te valideren!"
 
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
@@ -93,7 +97,7 @@ msgstr "Opleiding niet te koop"
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__channel_ids
 msgid "Courses"
-msgstr "Opleidingen"
+msgstr "Cursussen"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__currency_id
@@ -103,7 +107,7 @@ msgstr "Valuta"
 #. module: website_sale_slides
 #: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
 msgid "Defines how people can enroll to your Course."
-msgstr ""
+msgstr "Definieert hoe mensen zich kunnen inschrijven voor uw cursus."
 
 #. module: website_sale_slides
 #. openerp-web
@@ -126,8 +130,8 @@ msgid ""
 "Leaving the course and re-enrolling afterwards means that you'll be charged "
 "again."
 msgstr ""
-"Wanneer u de opleiding verlaat en u opnieuw wilt inschrijven zult u de "
-"opleiding opnieuw moeten kopen."
+"Wanneer u de cursus verlaat en u opnieuw wilt inschrijven zult u de cursus "
+"opnieuw moeten kopen."
 
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
@@ -139,7 +143,7 @@ msgstr ""
 #: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "On Invitation"
-msgstr ""
+msgstr "Op uitnodiging"
 
 #. module: website_sale_slides
 #. openerp-web
@@ -175,13 +179,13 @@ msgstr "Product"
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Productsjabloon"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__detailed_type
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_template__detailed_type
 msgid "Product Type"
-msgstr ""
+msgstr "Productsoort"
 
 #. module: website_sale_slides
 #: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
@@ -193,7 +197,7 @@ msgstr "Product is vereist voor een betalingskanaal."
 #: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Public"
-msgstr ""
+msgstr "Openbaar"
 
 #. module: website_sale_slides
 #: model:ir.ui.menu,name:website_sale_slides.website_slides_menu_report_revenues
@@ -235,7 +239,7 @@ msgstr ""
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "This course is paid."
-msgstr "Deze opleiding is betalend."
+msgstr "Deze cursus is betalend."
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_tree_report
@@ -251,12 +255,12 @@ msgstr "Totale omzet"
 #: model:product.product,uom_name:website_sale_slides.default_product_course
 #: model:product.template,uom_name:website_sale_slides.default_product_course_product_template
 msgid "Units"
-msgstr "Stuks"
+msgstr "Eenheden"
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_website
 msgid "Website"
-msgstr ""
+msgstr "Website"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message

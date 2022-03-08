@@ -1,25 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Fabien Pinckaers <fp@openerp.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
+# Martin Trigaux, 2020
+# Fabien Pinckaers <fp@openerp.com>, 2020
+# Nicolas Roussey <nro@odoo.com>, 2020
+# Lucas Deliege <lud@odoo.com>, 2020
+# Xavier Belmere <Info@cartmeleon.com>, 2020
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Nathan Grognet <ngr@odoo.com>, 2020
+# gdp Odoo <gdp@odoo.com>, 2020
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
+# Luc N, 2021
+# Clément Watthez <cwa@odoo.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
 # Gwladys Jouble <g.jouble@vieconnect.io>, 2021
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"PO-Revision-Date: 2020-12-11 11:03+0000\n"
 "Last-Translator: Gwladys Jouble <g.jouble@vieconnect.io>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: event_crm
@@ -95,7 +105,7 @@ msgstr "Attribuer automatiquement les pistes créées à ce commercial."
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
 msgid "Company"
-msgstr "Entreprise"
+msgstr "Société"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__lead_count
@@ -150,10 +160,8 @@ msgid ""
 "Attended: when attendance is confirmed and registration set to done;"
 msgstr ""
 "Création: à la création du participant;\n"
-"Confirmation: lorsqu'un participant est confirmé, manuellement ou "
-"automatiquement ; \n"
-"A participé: lorsque la participation est confirmée et l'enregistrement est "
-"terminé;"
+"Confirmation: lorsqu'un participant est confirmé, manuellement ou automatiquement ; \n"
+"A participé: lorsque la participation est confirmée et l'enregistrement est terminé;"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
@@ -213,17 +221,17 @@ msgid ""
 "not set, no event category restriction will be applied."
 msgstr ""
 "Filtrer les participants afin d'inclure ceux de la catégorie d'événement "
-"spécifique. Si non paramétré, aucune restriction de catégorie d'événement ne "
-"sera appliquée."
+"spécifique. Si non paramétré, aucune restriction de catégorie d'événement ne"
+" sera appliquée."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
 msgid ""
-"Filter the attendees to include those of this specific event. If not set, no "
-"event restriction will be applied."
+"Filter the attendees to include those of this specific event. If not set, no"
+" event restriction will be applied."
 msgstr ""
-"Filtrer les participants afin d'inclure ceux de cet événement spécifique. Si "
-"non paramétré, aucune restriction d'événement ne sera appliquée."
+"Filtrer les participants afin d'inclure ceux de cet événement spécifique. Si"
+" non paramétré, aucune restriction d'événement ne sera appliquée."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -343,6 +351,7 @@ msgstr "Opportunité"
 
 #. module: event_crm
 #: code:addons/event_crm/models/event_registration.py:0
+#: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Participants"
 msgstr "Participants"
@@ -389,12 +398,10 @@ msgstr "Les enregistrements déclenchent la règle qui a créé cette piste"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
 msgid ""
-"Restrict the trigger of this rule to events belonging to a specific "
-"company.\n"
+"Restrict the trigger of this rule to events belonging to a specific company.\n"
 "If not set, no company restriction will be applied."
 msgstr ""
-"Restreindre le déclenchement de cette règle à des événements qui "
-"appartiennent à une entreprise spécifique.\n"
+"Restreindre le déclenchement de cette règle à des événements qui appartiennent à une entreprise spécifique.\n"
 "Si non paramétré, aucune restriction ne sera appliquée."
 
 #. module: event_crm
@@ -450,6 +457,7 @@ msgid "Trigger Type"
 msgstr "Type de déclencheur"
 
 #. module: event_crm
+#: code:addons/event_crm/models/event_registration.py:0
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Updated registrations"

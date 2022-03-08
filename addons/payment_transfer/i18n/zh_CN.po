@@ -1,30 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_transfer
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-#
+# Jeffery CHEN <jeffery9@gmail.com>, 2018
+# Martin Trigaux, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
+# snow wang <147156565@qq.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_transfer
 #: model_terms:ir.ui.view,arch_db:payment_transfer.transfer_transaction_status
 msgid "<strong>Communication: </strong>"
-msgstr ""
+msgstr "<strong>沟通:</strong>"
 
 #. module: payment_transfer
 #: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__qr_code
@@ -34,13 +36,13 @@ msgstr "启用二维码"
 #. module: payment_transfer
 #: model:ir.model.fields,help:payment_transfer.field_payment_acquirer__qr_code
 msgid "Enable the use of QR-codes when paying by wire transfer."
-msgstr ""
+msgstr "在用电汇付款时，启用二维码的使用。"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "没有发现与参考文献%s相匹配的交易。"
 
 #. module: payment_transfer
 #: model_terms:ir.ui.view,arch_db:payment_transfer.transfer_transaction_status
@@ -50,7 +52,7 @@ msgstr "或者用你的银行应用扫描我。"
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "付款收单单位"
+msgstr "付款收单方"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
@@ -60,18 +62,18 @@ msgstr "付款交易"
 #. module: payment_transfer
 #: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
 msgid "Provider"
-msgstr "供应商"
+msgstr "服务商"
 
 #. module: payment_transfer
 #: model:ir.model.fields,help:payment_transfer.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+msgstr "与该收单机构一起使用的支付服务提供商"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_transaction.py:0
 #, python-format
 msgid "The customer has selected %(acq_name)s to make the payment."
-msgstr ""
+msgstr "客户选择了%(acq_name)s来进行支付。"
 
 #. module: payment_transfer
 #: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer

@@ -1,27 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_timesheet
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Chris <krystof.reklamy13@gmail.com>, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
-#
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2021
+# Michal Veselý <michal@veselyberanek.net>, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
+# Martin Trigaux, 2021
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account_move.py:0
@@ -32,10 +34,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Record timesheets\n"
 "                </p><p>\n"
-"                    You can register and track your workings hours by "
-"project every\n"
-"                    day. Every time spent on a project will become a cost "
-"and can be re-invoiced to\n"
+"                    You can register and track your workings hours by project every\n"
+"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
 "                    customers if required.\n"
 "                </p>\n"
 "            "
@@ -49,8 +49,8 @@ msgstr "Objednávky kandidátů"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__billable_percentage
 msgid ""
-"% of timesheets that are billable compared to the total number of timesheets "
-"linked to the AA of the project, rounded to the unit."
+"% of timesheets that are billable compared to the total number of timesheets"
+" linked to the AA of the project, rounded to the unit."
 msgstr ""
 
 #. module: sale_timesheet
@@ -72,11 +72,11 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title="
-"\"Arrow\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title="
-"\"Arrow\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -130,21 +130,16 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be "
-"automatically computed by mechanism :\n"
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted "
-"expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
-"this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Podle konfigurace produktu může být dodané množství automaticky vypočítáno "
-"pomocí mechanismu:\n"
+"Podle konfigurace produktu může být dodané množství automaticky vypočítáno pomocí mechanismu:\n"
 "- Ruční: množství je nastaveno ručně na lince\n"
 "- Analytické z nákladů: množství je množství z účtovaných nákladů\n"
-"- Časový rozvrh: množství je součtem hodin zaznamenaných na úkolech "
-"spojených s touto prodejní linkou\n"
+"- Časový rozvrh: množství je součtem hodin zaznamenaných na úkolech spojených s touto prodejní linkou\n"
 "- Skladové pohyby: množství pochází z potvrzených vychystávání\n"
 
 #. module: sale_timesheet
@@ -188,8 +183,8 @@ msgid ""
 "An employee cannot be selected more than once in the mapping. Please remove "
 "duplicate(s) and try again."
 msgstr ""
-"Zaměstnance nelze pro mapování vybrat více než jednou. Vymažte duplikát(y) a "
-"zkuste to znovu."
+"Zaměstnance nelze pro mapování vybrat více než jednou. Vymažte duplikát(y) a"
+" zkuste to znovu."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__analytic_account_id
@@ -475,7 +470,7 @@ msgstr "Zaměstnanec"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr "Zaměstnanecká sazba"
+msgstr "Míra zaměstnanců"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -486,14 +481,10 @@ msgstr "Zaměstnanec, který má pracovní rozvrhy na projektu."
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
 msgid ""
 "Employee/Sale Order Item Mapping:\n"
-" Defines to which sales order item an employee's timesheet entry will be "
-"linked.By extension, it defines the rate at which an employee's time on the "
-"project is billed."
+" Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
 "Mapování položek zaměstnanců / prodejních objednávek:\n"
-" Definuje, s jakou položkou prodejní objednávky bude položka časového "
-"rozvrhu zaměstnance propojena. Rozšířením definuje rychlost, jakou je čas "
-"zaměstnance na projektu účtován."
+" Definuje, s jakou položkou prodejní objednávky bude položka časového rozvrhu zaměstnance propojena. Rozšířením definuje rychlost, jakou je čas zaměstnance na projektu účtován."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
@@ -518,7 +509,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr "Má více možností"
+msgstr "Má více sol"
 
 #. module: sale_timesheet
 #: model:product.product,uom_name:sale_timesheet.time_product
@@ -540,8 +531,8 @@ msgstr "ID"
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #, python-format
 msgid ""
-"In the margin forecast, costs and revenues related to the analytical account "
-"are taken into account, along with future income based on hours that have "
+"In the margin forecast, costs and revenues related to the analytical account"
+" are taken into account, along with future income based on hours that have "
 "been sold but not invoiced yet."
 msgstr ""
 
@@ -567,8 +558,8 @@ msgstr ""
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
-"Invoice based on timesheets (delivered quantity) on projects or tasks you'll "
-"create later on."
+"Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
+" create later on."
 msgstr ""
 
 #. module: sale_timesheet
@@ -691,17 +682,14 @@ msgstr "Řádky"
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_type
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered "
-"quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related "
-"timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation "
-"and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Manuálně nastavené veličiny na objednávku: Faktura na základě ručně zadaného "
-"množství, bez vytvoření analytického účtu. Časové výkazy na zakázce: Faktura "
-"na základě zapsaných hodin na příslušném časovém výkazu. Tvorba úkolu k "
-"ověření platnosti objednávky a sledování pracovní doby."
+"Manuálně nastavené veličiny na objednávku: Faktura na základě ručně zadaného"
+" množství, bez vytvoření analytického účtu. Časové výkazy na zakázce: "
+"Faktura na základě zapsaných hodin na příslušném časovém výkazu. Tvorba "
+"úkolu k ověření platnosti objednávky a sledování pracovní doby."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -728,12 +716,12 @@ msgstr "Mé projekty"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "No Invoice"
-msgstr ""
+msgstr "Bez faktury"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "No Sales Order"
-msgstr ""
+msgstr "Žádná prodejní objednávka"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -765,7 +753,7 @@ msgstr "Úkoly, které nelze účtovat"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_count
 msgid "Number of timesheets"
-msgstr "Počet časových rozvrhů"
+msgstr "Počet pracovních výkazu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
@@ -779,8 +767,8 @@ msgid ""
 msgstr ""
 "Fakturovány budou pouze pracovní výkazy, které z tohoto období dosud nebyly "
 "fakturovány (a případně ověřeny). Není-li období uvedeno, budou fakturovány "
-"všechny pracovní výkazy, které ještě nebyly fakturovány (a případně ověřeny) "
-"bez rozdílu."
+"všechny pracovní výkazy, které ještě nebyly fakturovány (a případně ověřeny)"
+" bez rozdílu."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1040,6 +1028,7 @@ msgstr "Datum potvrzení prodejní objednávky"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
+#: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__so_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1064,16 +1053,16 @@ msgstr "Zakázky"
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
-"Sales order lines define milestones of the project to invoice by setting the "
-"delivered quantity."
+"Sales order lines define milestones of the project to invoice by setting the"
+" delivered quantity."
 msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
-"Sales order lines define milestones of the project to invoice by setting the "
-"delivered quantity. Create a project for the order with a task for each "
+"Sales order lines define milestones of the project to invoice by setting the"
+" delivered quantity. Create a project for the order with a task for each "
 "sales order line to track the time spent."
 msgstr ""
 
@@ -1081,8 +1070,8 @@ msgstr ""
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
-"Sales order lines define milestones of the project to invoice by setting the "
-"delivered quantity. Create a task in an existing project to track the time "
+"Sales order lines define milestones of the project to invoice by setting the"
+" delivered quantity. Create a task in an existing project to track the time "
 "spent."
 msgstr ""
 
@@ -1090,9 +1079,9 @@ msgstr ""
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
-"Sales order lines define milestones of the project to invoice by setting the "
-"delivered quantity. Create an empty project for the order to track the time "
-"spent."
+"Sales order lines define milestones of the project to invoice by setting the"
+" delivered quantity. Create an empty project for the order to track the time"
+" spent."
 msgstr ""
 
 #. module: sale_timesheet
@@ -1141,8 +1130,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__project_template_id
 msgid ""
-"Select a billable project to be the skeleton of the new created project when "
-"selling the current product. Its stages and tasks will be duplicated."
+"Select a billable project to be the skeleton of the new created project when"
+" selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
 "Vyberte zúčtovatelný projekt, který bude kostrou nově vytvořeného projektu "
 "při prodeji aktuálního produktu. Jeho fáze a úkoly budou duplikovány."
@@ -1243,6 +1232,9 @@ msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
@@ -1253,14 +1245,10 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid ""
-"The Sales Order cannot be created because you did not enter some employees "
-"that entered timesheets on this project. Please list all the relevant "
-"employees before creating the Sales Order.\n"
+"The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
-"Objednávku odběratele nelze vytvořit, protože jste nezadali některé "
-"zaměstnance, kteří zadali časové rozvrhy v tomto projektu. Před vytvořením "
-"prodejní objednávky uveďte všechny příslušné zaměstnance.\n"
+"Objednávku odběratele nelze vytvořit, protože jste nezadali některé zaměstnance, kteří zadali časové rozvrhy v tomto projektu. Před vytvořením prodejní objednávky uveďte všechny příslušné zaměstnance.\n"
 "Chybějící zaměstnanci: %s"
 
 #. module: sale_timesheet
@@ -1308,8 +1296,8 @@ msgid ""
 "The task rate is perfect if you would like to bill different services to "
 "different customers at different rates. The fixed rate is perfect if you "
 "bill a service at a fixed rate per hour or day worked regardless of the "
-"employee who performed it. The employee rate is preferable if your employees "
-"deliver the same service at a different rate. For instance, junior and "
+"employee who performed it. The employee rate is preferable if your employees"
+" deliver the same service at a different rate. For instance, junior and "
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
@@ -1334,10 +1322,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale_timesheet.field_account_payment__timesheet_encode_uom_id
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid ""
-"This will set the unit of measure used to encode timesheet. This will simply "
-"provide tools\n"
-"        and widgets to help the encoding. All reporting will still be "
-"expressed in hours (default value)."
+"This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
+"        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
 "Tím se nastaví měrná jednotka použitá pro kódování časového rozvrhu. To "
 "jednoduše poskytne nástroje a widgety pro pomoc s kódováním. Veškeré "
@@ -1366,12 +1352,12 @@ msgstr "Časové služby"
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
 msgid "Timesheet"
-msgstr "Výkaz"
+msgstr "Pracovní výkaz"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Náklady na časový rozvrh"
+msgstr "Náklady podle pracovního výkazu"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
@@ -1389,7 +1375,7 @@ msgstr "Doba trvání podle pracovního výkazu"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_encode_uom_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Jednotka pro kódování pracovního výkazu"
+msgstr "Jednotka pro kódování časového rozvrhu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
@@ -1431,7 +1417,7 @@ msgstr "Činnosti pracovního výkazu spojené s tímto prodejem"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 #, python-format
 msgid "Timesheets"
-msgstr "Časové přehledy"
+msgstr "Pracovní výkazy"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
@@ -1507,13 +1493,13 @@ msgstr "Celkem:"
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_type
 msgid "Track Service"
-msgstr "Trasovací služba"
+msgstr "Sledujte službu"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
 msgid ""
-"Track your working hours by projects every day and invoice this time to your "
-"customers."
+"Track your working hours by projects every day and invoice this time to your"
+" customers."
 msgstr ""
 "Sledujte svou pracovní dobu podle projektů každý den a fakturujte tuto dobu "
 "svým zákazníkům."
@@ -1589,7 +1575,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot remove a timesheet that has already been invoiced."
-msgstr "Nelze odebrat pracovní výkaz, který již byl fakturován."
+msgstr "Nelze odebrat časový rozvrh, který již byl fakturován."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:0

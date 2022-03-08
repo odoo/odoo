@@ -1,27 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
-#
+# Martin Trigaux, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -101,6 +98,7 @@ msgstr "З обох сторін"
 
 #. module: snailmail
 #. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "Buy credits"
@@ -210,7 +208,7 @@ msgstr "Фонове зображення"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__create_uid
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__create_uid
 msgid "Created by"
-msgstr "Створив"
+msgstr "Створено"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_date
@@ -218,7 +216,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__create_date
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_cancel
@@ -391,8 +389,8 @@ msgid ""
 "comment for other messages such as user replies"
 msgstr ""
 "Тип повідомлення: електронна пошта для повідомлення електронної пошти, "
-"сповіщення для системного повідомлення, коментар до інших повідомлень, таких "
-"як відповіді користувачів"
+"сповіщення для системного повідомлення, коментар до інших повідомлень, таких"
+" як відповіді користувачів"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -435,13 +433,11 @@ msgstr "Необов'язковий звіт для друку та додава
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid ""
 "Our service cannot read your letter due to its format.<br/>\n"
-"                Please modify the format of the template or update your "
-"settings\n"
+"                Please modify the format of the template or update your settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
 "Наш сервіс не може прочитати ваш лист через його формат.<br/>\n"
-"                Будь ласка, змініть формат шаблону або оновіть "
-"налаштування,\n"
+"                Будь ласка, змініть формат шаблону або оновіть налаштування,\n"
 " щоб автоматично додати титульну сторінку до всіх листів."
 
 #. module: snailmail
@@ -462,7 +458,7 @@ msgstr "Друкувати в кольорі"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr "Контакт поля Qweb"
+msgstr "Контакт Qweb поля"
 
 #. module: snailmail
 #. openerp-web
@@ -638,8 +634,8 @@ msgstr "Адреса отримувача не заповнена"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid ""
-"The attachment of the letter could not be sent. Please check its content and "
-"contact the support if the problem persists."
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
 msgstr ""
 "Додаток листа не може бути надісланий. Перевірте його вміст і зверніться до "
 "служби підтримки, якщо проблема не зникне."
@@ -679,10 +675,11 @@ msgstr "Документ надіслано поштою.<br> Id відстеж�
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid ""
-"The letter could not be sent due to insufficient credits on your IAP account."
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
 msgstr ""
-"Лист не вдалося надіслати через недостатнє надходження коштів на ваш рахунок "
-"IAP."
+"Лист не вдалося надіслати через недостатнє надходження коштів на ваш рахунок"
+" IAP."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -715,13 +712,11 @@ msgstr "Оновіть адресу партнера"
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
 "If the letter is correctly sent, the status goes in 'Sent',\n"
-"If not, it will got in state 'Error' and the error message will be displayed "
-"in the field 'Error Message'."
+"If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
 "Коли лист створено, статус стає \"Очікує\".\n"
 "Якщо лист надіслано, статус стає \"Надіслано\",\n"
-"Якщо ні, то він отримає стан \"Помилка\", і повідомлення про помилку "
-"з'явиться у полі \"Повідомлення про помилку\"."
+"Якщо ні, то він отримає стан \"Помилка\", і повідомлення про помилку з'явиться у полі \"Повідомлення про помилку\"."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
@@ -735,9 +730,9 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
-"У вас немає облікового запису IAP, зареєстрованого для цієї послуги."
-"<br>Перейдіть до<a href=%s target=\"new\">iap.odoo.com</a> щоби вимагати "
-"безкоштовні кредити."
+"У вас немає облікового запису IAP, зареєстрованого для цієї "
+"послуги.<br>Перейдіть до<a href=%s target=\"new\">iap.odoo.com</a> щоби "
+"вимагати безкоштовні кредити."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0

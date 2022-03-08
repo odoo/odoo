@@ -1,27 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# fanha99 <fanha99@hotmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
-# Dao Nguyen <trucdao.uel@gmail.com>, 2019
-#
+# fanha99 <fanha99@hotmail.com>, 2020
+# Thang Duong Bao <nothingctrl@gmail.com>, 2020
+# Duy BQ <duybq86@gmail.com>, 2020
+# Dung Nguyen Thi <dungnt@trobz.com>, 2020
+# Martin Trigaux, 2021
+# Vo Thanh Thuy, 2022
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
+"PO-Revision-Date: 2018-08-02 11:17+0000\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_stock
@@ -30,6 +31,8 @@ msgid "% On-Time Delivery"
 msgstr "% Giao hàng đúng hẹn"
 
 #. module: purchase_stock
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -48,11 +51,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" groups="
-"\"base.group_multi_company\"/>"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Các giá trị được đặt ở đây là "
-"dành riêng cho công ty.\" aria-label=\"Các giá trị được đặt ở đây là dành "
+"<span class=\"fa fa-lg fa-building-o\" title=\"Các giá trị được đặt ở đây là"
+" dành riêng cho công ty.\" aria-label=\"Các giá trị được đặt ở đây là dành "
 "riêng cho công ty.\" groups=\"base.group_multi_company\"/>"
 
 #. module: purchase_stock
@@ -77,7 +80,7 @@ msgstr "<span class=\"o_stat_text\">Mua hàng</span>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_value\">%</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -94,20 +97,18 @@ msgstr "<strong>Địa chỉ giao hàng</strong>"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be "
-"automatically computed by mechanism :\n"
+"According to product configuration, the received quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Theo cấu hình sản phẩm, số lượng nhận được có thể được tính toán tự động "
-"theo cơ chế:\n"
+"Theo cấu hình sản phẩm, số lượng nhận được có thể được tính toán tự động theo cơ chế:\n"
 "  - Thủ công: số lượng được điền tay theo dòng\n"
 "  - Di chuyển kho: số lượng đến từ các phiếu kho đã xác nhận\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
 msgid "Action"
-msgstr "Hành động"
+msgstr "Thực hiện"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_report__avg_receipt_delay
@@ -212,8 +213,9 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
-"Phụ thuộc vào phân hệ đã được cài đặt, sẽ cho phép bạn xác định quy tắc cung "
-"ứng của sản phẩm: nó sẽ được mua, sản xuất, cung ứng theo yêu cầu, vv."
+"Phụ thuột các Module đã cài đặt, điều này sẽ cho phép bạn chỉ định các tuyến"
+" đường cho sản phẩm: liệu nó sẽ được mua, sản xuất, bổ sung theo đơn đặt "
+"hàng, vv"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -267,8 +269,8 @@ msgstr "Các ngoại lệ:"
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
-"For the product %s, the warehouse of the operation type (%s) is inconsistent "
-"with the location (%s) of the reordering rule (%s). Change the operation "
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
 
@@ -280,7 +282,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
 msgid "Forecasted Issue"
-msgstr ""
+msgstr "Vấn đề được dự báo"
 
 #. module: purchase_stock
 #. openerp-web
@@ -369,8 +371,8 @@ msgstr "Có thể cần xử lý thủ công."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier "
-"to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
 msgstr ""
 "Biên độ lỗi cho thời gian chờ của nhà cung cấp. Khi hệ thống tạo đơn đặt "
 "hàng để cung ứng lại các sản phẩm, chúng sẽ được lên lịch trước đó nhiều "
@@ -400,8 +402,8 @@ msgstr "Chưa có dữ liệu nào"
 #: code:addons/purchase_stock/models/account_invoice.py:0
 #, python-format
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of "
-"%s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
 msgstr ""
 "Hệ thống không thể tạo các bút toán anglo saxon. Tổng giá trị của %s là 0."
 
@@ -676,29 +678,29 @@ msgstr ""
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
-"There is no matching vendor price to generate the purchase order for product "
-"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
-"Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product"
+" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
+" Go on the product form and complete the list of vendors."
 msgstr ""
-"Không có giá nhà cung cấp phù hợp để tạo đơn đặt hàng cho sản phẩm %s (không "
-"xác định nhà cung cấp, số lượng tối thiểu không đạt, ngày không hợp "
-"lệ, ...). Đi vào danh mục sản phẩm và bổ sung danh sách các nhà cung cấp."
+"Không có giá nhà cung cấp phù hợp để tạo đơn đặt hàng cho sản phẩm %s (không"
+" xác định nhà cung cấp, số lượng tối thiểu không đạt, ngày không hợp lệ, "
+"...). Đi vào danh mục sản phẩm và bổ sung danh sách các nhà cung cấp."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your "
-"vendors to deliver to your customers. A product to dropship will generate a "
-"purchase request for quotation once the sales order confirmed. This is a on-"
-"demand flow. The requested delivery address will be the customer delivery "
-"address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your"
+" vendors to deliver to your customers. A product to dropship will generate a"
+" purchase request for quotation once the sales order confirmed. This is a "
+"on-demand flow. The requested delivery address will be the customer delivery"
+" address and not your warehouse."
 msgstr ""
 "Điều này cho biết thêm một tuyến đường dropshipping để áp dụng trên các sản "
 "phẩm để yêu cầu các nhà cung cấp của bạn cung cấp cho khách hàng của bạn. "
 "Một sản phẩm để dropship sẽ tạo ra một yêu cầu mua hàng để báo giá khi đơn "
-"hàng đã được xác nhận. Đây là một luồng theo yêu cầu. Địa chỉ giao hàng được "
-"yêu cầu sẽ là địa chỉ giao hàng của khách hàng chứ không phải là nhà kho của "
-"bạn."
+"hàng đã được xác nhận. Đây là một luồng theo yêu cầu. Địa chỉ giao hàng được"
+" yêu cầu sẽ là địa chỉ giao hàng của khách hàng chứ không phải là nhà kho "
+"của bạn."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -733,7 +735,8 @@ msgstr "Điều chuyển"
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been done."
+"Unable to cancel purchase order %s as some receptions have already been "
+"done."
 msgstr ""
 "Không thể huỷ đơn mua hàng %s khi mà đã nhận một phần hay toàn bộ hàng hoá "
 "theo đơn hàng này."

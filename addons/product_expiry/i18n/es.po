@@ -1,23 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_expiry
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
+# José Vicente <txusev@gmail.com>, 2016
+# e2f <projects@e2f.com>, 2018
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2019
+# Miquel Torner <miq@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
-#
+# Martin Trigaux, 2020
+# Lucia Pacheco <lpo@odoo.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_expiry
@@ -126,7 +131,7 @@ msgstr "Descartar"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
 msgid "Display Expiration Dates on Delivery Slips"
-msgstr "Mostrar fecha de caducidad en las notas de remisión"
+msgstr "Mostrar fecha de caducidad en la nota de remisión"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
@@ -183,7 +188,7 @@ msgstr "Incluir las fechas de caducidad en la nota de remisión"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
 msgid "Last Modified on"
-msgstr "Última modificación el"
+msgstr "Última modificación en"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
@@ -203,7 +208,7 @@ msgstr "Lote"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Lote/Número de serie"
+msgstr "Lote/Nº de serie"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
@@ -215,7 +220,7 @@ msgid ""
 msgstr ""
 "Número de días después de la recepción de los productos (del proveedor o de "
 "las existencias después de la producción) después de los cuales los bienes "
-"pueden representar un riesgo y no se deben consumir. Se registrará sobre el "
+"pueden representar un riesgo y no se deben consumir. Se calculará sobre el "
 "número de lote/serie."
 
 #. module: product_expiry
@@ -237,17 +242,17 @@ msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
-"Número de días antes de la fecha de caducidad después de los cuales se deben "
-"retirar los bienes de las existencias. Se registrará sobre el número de lote/"
-"serie."
+"Número de días antes de la fecha de caducidad después de los cuales se deben"
+" retirar los bienes de las existencias. Se registrará sobre el número de "
+"lote/serie."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
 msgid ""
 "Number of days before the Expiration Date after which the goods starts "
-"deteriorating, without being dangerous yet. It will be computed on the lot/"
-"serial number."
+"deteriorating, without being dangerous yet. It will be computed on the "
+"lot/serial number."
 msgstr ""
 "Número de días antes de la fecha de caducidad después de los cuales los "
 "bienes se empiezan a deteriorar sin llegar a representar un peligro. Se "
@@ -344,8 +349,8 @@ msgid ""
 "removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
 "Es la fecha en la que las mercancías con este número de serie deben "
-"retirarse del stock. Esta fecha se utilizará en la estrategia de eliminación "
-"de la FIFO."
+"retirarse del stock. Esta fecha se utilizará en la estrategia de eliminación"
+" de la FIFO."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
@@ -379,13 +384,13 @@ msgstr "Consumir antes de"
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
 msgid ""
-"When this box is ticked, you have the possibility to specify dates to manage "
-"product expiration, on the product and on the corresponding lot/serial "
+"When this box is ticked, you have the possibility to specify dates to manage"
+" product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
-"Cuando se selecciona esta casilla puedes especificar fechas para administrar "
-"la caducidad de un producto, ya sea en el producto o en los números de lote/"
-"serie."
+"Cuando se selecciona esta casilla puedes especificar fechas para administrar"
+" la caducidad de un producto, ya sea en el producto o en los números de "
+"lote/serie."
 
 #. module: product_expiry
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
@@ -401,10 +406,8 @@ msgstr ""
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 #, python-format
 msgid ""
-"You are going to deliver the product %(product_name)s, %(lot_name)s which is "
-"expired.\n"
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""
-"Se va a entregar el producto %(product_name)s.%(lot_name)s que está "
-"caducado.\n"
+"Se va a entregar el producto %(product_name)s.%(lot_name)s que está caducado.\n"
 "¿Confirmas la acción?"

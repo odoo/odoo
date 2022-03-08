@@ -1,23 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_coupon
-#
+# 
 # Translators:
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-#
+# Duy BQ <duybq86@gmail.com>, 2020
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Martin Trigaux, 2021
+# Dung Nguyen Thi <dungnt@trobz.com>, 2021
+# Dao Nguyen <trucdao.uel@gmail.com>, 2021
+# Vo Thanh Thuy, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2019\n"
+"PO-Revision-Date: 2017-02-15 11:47+0000\n"
+"Last-Translator: Vo Thanh Thuy, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_coupon
@@ -40,7 +45,7 @@ msgstr "Phiếu giảm giá"
 #. module: website_sale_coupon
 #: model:ir.model,name:website_sale_coupon.model_coupon_program
 msgid "Coupon Program"
-msgstr "Chương trình phiếu giảm giá"
+msgstr "Chương trình phiếu khuyến mãi"
 
 #. module: website_sale_coupon
 #: model:ir.ui.menu,name:website_sale_coupon.menu_coupon_type_config
@@ -51,7 +56,8 @@ msgstr "Chương trình phiếu giảm giá"
 #. module: website_sale_coupon
 #: model:ir.model,name:website_sale_coupon.model_coupon_share
 msgid "Create links that apply a coupon and redirect to a specific page"
-msgstr "Tạo đường link áp dụng phiếu giảm giá và chuyển hướng tới trang cụ thể"
+msgstr ""
+"Tạo đường link áp dụng phiếu giảm giá và chuyển hướng tới trang cụ thể"
 
 #. module: website_sale_coupon
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_share__create_uid
@@ -81,7 +87,7 @@ msgstr "Tên hiển thị"
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_share_view_form
 msgid "Done"
-msgstr "Hoàn thành"
+msgstr "Đã xong"
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_share_view_form
@@ -96,7 +102,7 @@ msgstr "ID"
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
 msgid "Invalid or expired promo code."
-msgstr "Mã không hợp lệ hoặc quá hạn. "
+msgstr "Mã khuyến mãi không hợp lệ hoặc đã quá hạn. "
 
 #. module: website_sale_coupon
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_share____last_update
@@ -149,7 +155,7 @@ msgstr "Chuyển hướng"
 #: model:ir.model.fields,help:website_sale_coupon.field_coupon_program__website_id
 #: model:ir.model.fields,help:website_sale_coupon.field_coupon_share__program_website_id
 msgid "Restrict publishing to this website."
-msgstr "Hạn chế đăng trên website này."
+msgstr "Hạn chế phát hành cho website này"
 
 #. module: website_sale_coupon
 #: model:ir.model,name:website_sale_coupon.model_sale_order
@@ -163,6 +169,7 @@ msgid "Share"
 msgstr "Chia sẻ"
 
 #. module: website_sale_coupon
+#: code:addons/website_sale_coupon/wizard/sale_coupon_share.py:0
 #: code:addons/website_sale_coupon/wizard/sale_coupon_share.py:0
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_share_view_form
 #, python-format
@@ -178,7 +185,8 @@ msgstr "Chia sẻ liên kết"
 #: code:addons/website_sale_coupon/controllers/main.py:0
 #, python-format
 msgid ""
-"The coupon will be automatically applied when you add something in your cart."
+"The coupon will be automatically applied when you add something in your "
+"cart."
 msgstr "Phiếu giảm giá sẽ được tự động áp dụng khi bạn thêm hàng vào giỏ. "
 
 #. module: website_sale_coupon
@@ -202,18 +210,16 @@ msgstr "Website được chia sẻ phải tương ứng với website của chư
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__website_id
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_share__website_id
 msgid "Website"
-msgstr "Website"
+msgstr "Trang web"
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_share_view_form
 msgid ""
 "You can share this promotion with your customers.\n"
-"                            It will be applied at checkout when the customer "
-"uses this link."
+"                            It will be applied at checkout when the customer uses this link."
 msgstr ""
 "Bạn có thể chia sẻ khuyến mãi này với khách hàng.\n"
-"                            Khuyến mãi này sẽ được áp dụng lúc thanh toán "
-"khi khách hàng sử dụng đường link này. "
+"                            Khuyến mãi này sẽ được áp dụng lúc thanh toán khi khách hàng sử dụng đường link này. "
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result

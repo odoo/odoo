@@ -1,20 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-#
+# 
+# Translators:
+# Cozmin Candea <office@terrabit.ro>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"PO-Revision-Date: 2017-12-13 14:57+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: sale_management
 #: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
@@ -29,7 +36,7 @@ msgstr "<span>Opțiuni</span>"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
 msgid "Active"
-msgstr "Activ"
+msgstr "Activ(a)"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -120,7 +127,7 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversia între Unitățile de Măsura pot avea loc numai dacă ele aparțin "
+"Conversia între unitățile de măsură pot avea loc numai dacă ele aparțin "
 "aceleiași categorii. Conversia va fi făcută pe baza proporțiilor."
 
 #. module: sale_management
@@ -172,14 +179,10 @@ msgstr "Descriere"
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid ""
 "Design your quotation templates using building blocks<br/>\n"
-"                            <em attrs=\"{'invisible': "
-"[('module_sale_quotation_builder','=',False)]}\">Warning: this option will "
-"install the Website app.</em>"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
 "Proiectați-vă șabloanele de ofertare folosind blocuri de construcție<br/>\n"
-"                            <em attrs=\"{'invisible': "
-"[('module_sale_quotation_builder','=',False)]}\">Atenție: această opțiune va "
-"instala aplicația Website.</em>"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Atenție: această opțiune va instala aplicația Website.</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -230,8 +233,8 @@ msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
-"Produs interzis, preț unitar, cantitate și UoM pe linia de ofertă de vânzare "
-"neresponsabilă"
+"Produs interzis, preț unitar, cantitate și UoM pe linia de ofertă de vânzare"
+" neresponsabilă"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -333,7 +336,7 @@ msgstr "Plata online"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
 msgid "Online Signature"
-msgstr "Semnătură online"
+msgstr "Semnătura online"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
@@ -435,7 +438,7 @@ msgstr "Oferta expiră după"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove"
-msgstr "Elimină"
+msgstr "Elimina"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -448,7 +451,8 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
-"Solicitați o semnătură online clientului pentru a confirma automat comenzile."
+"Solicitați o semnătură online clientului pentru a confirma automat "
+"comenzile."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
@@ -506,9 +510,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
-"Vindeți același produs în diferite dimensiuni sau culori? Încercați grila de "
-"produse și completați comenzile cu cantități multiple din fiecare variantă. "
-"Această caracteristică există și în aplicația Achiziție."
+"Vindeți același produs în diferite dimensiuni sau culori? Încercați grila de"
+" produse și completați comenzile cu cantități multiple din fiecare variantă."
+" Această caracteristică există și în aplicația Achiziție."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -607,15 +611,12 @@ msgstr "UM"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign "
-"online.\n"
+"                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Utilizați șabloane pentru a crea oferte profesional lustruite în câteva "
-"minute.\n"
-"Trimiteți aceste oferte prin e-mail și permiteți clienților dvs. să se "
-"conecteze online.\n"
-" Utilizați cross-selling și reduceri pentru a împinge și a crește vânzările."
+"Utilizați șabloane pentru a crea oferte profesional lustruite în câteva minute.\n"
+"                 Trimiteți aceste oferte prin e-mail și permiteți clienților dvs. să se conecteze online.\n"
+"                 Utilizați cross-selling și reduceri pentru a împinge și a crește vânzările."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
@@ -638,15 +639,11 @@ msgstr ""
 #: code:addons/sale_management/models/sale_order.py:0
 #, python-format
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas "
-"your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from "
-"other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"Oferta dvs. conține produse de la companie %(product_company)s în timp ce "
-"oferta dvs. aparține companiei %(quote_company)s. \n"
-" Vă rugăm să schimbați compania din ofertă sau să eliminați produsele din "
-"alte companii(%(bad_products)s)."
+"Oferta dvs. conține produse de la companie %(product_company)s în timp ce oferta dvs. aparține companiei %(quote_company)s. \n"
+" Vă rugăm să schimbați compania din ofertă sau să eliminați produsele din alte companii(%(bad_products)s)."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -658,10 +655,8 @@ msgstr "Șablonul dvs. nu poate conține produse de la mai multe companii."
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid ""
-"Your template contains products from company %(product_company)s whereas "
-"your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from "
-"other companies."
+"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
+" Please change the company of your template or remove the products from other companies."
 msgstr ""
 
 #. module: sale_management

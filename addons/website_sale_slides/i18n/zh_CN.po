@@ -1,27 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_slides
-#
+# 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
-# Youfu Sheng <wdmsyf@sina.com>, 2019
-# Martin Trigaux, 2019
-# Felix Yuen <fyu@odoo.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
 # Mandy Choy <mnc@odoo.com>, 2019
-#
+# Felix Yuen <fyu@odoo.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Martin Trigaux, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Mandy Choy <mnc@odoo.com>, 2019\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2019-03-20 15:01+0000\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_slides
@@ -38,11 +39,13 @@ msgstr "<i class=\"fa fa-shopping-cart\"/> 添加到购物车"
 #: model:ir.model.fields,help:website_sale_slides.field_product_product__detailed_type
 #: model:ir.model.fields,help:website_sale_slides.field_product_template__detailed_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory "
-"app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"可库存商品是指在库存中受存量管控的产品。 要使用此项目你必须安装库存模块。\n"
+"可消耗商品是指不受库存量管控的产品。\n"
+"服务是指你提供的非产品类服务业务。"
 
 #. module: website_sale_slides
 #: code:addons/website_sale_slides/models/product_product.py:0
@@ -55,21 +58,21 @@ msgstr ""
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "Buy Course"
-msgstr ""
+msgstr "购买课程"
 
 #. module: website_sale_slides
 #. openerp-web
 #: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Buy course"
-msgstr ""
+msgstr "购买课程"
 
 #. module: website_sale_slides
 #. openerp-web
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Buy the course to validate your answers!"
-msgstr ""
+msgstr "购买课程用于验证您的答案！"
 
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
@@ -91,7 +94,7 @@ msgstr ""
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "Course Not Buyable"
-msgstr ""
+msgstr "课程不可购买"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__channel_ids
@@ -119,7 +122,7 @@ msgstr "注册政策"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
 msgid "Free Preview"
-msgstr ""
+msgstr "免费预览"
 
 #. module: website_sale_slides
 #. openerp-web
@@ -128,7 +131,7 @@ msgstr ""
 msgid ""
 "Leaving the course and re-enrolling afterwards means that you'll be charged "
 "again."
-msgstr ""
+msgstr "离开课程并在之后重新注册意味着您将再次被收费。"
 
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
@@ -140,7 +143,7 @@ msgstr ""
 #: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "On Invitation"
-msgstr ""
+msgstr "应邀"
 
 #. module: website_sale_slides
 #. openerp-web
@@ -152,7 +155,7 @@ msgstr ""
 #. module: website_sale_slides
 #: model:ir.model.fields.selection,name:website_sale_slides.selection__slide_channel__enroll__payment
 msgid "On payment"
-msgstr ""
+msgstr "付款时"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
@@ -176,25 +179,25 @@ msgstr "产品"
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "产品模板"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__detailed_type
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_template__detailed_type
 msgid "Product Type"
-msgstr ""
+msgstr "产品类型"
 
 #. module: website_sale_slides
 #: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
 msgid "Product is required for on payment channels."
-msgstr ""
+msgstr "支付渠道需要产品。"
 
 #. module: website_sale_slides
 #. openerp-web
 #: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Public"
-msgstr ""
+msgstr "公开"
 
 #. module: website_sale_slides
 #: model:ir.ui.menu,name:website_sale_slides.website_slides_menu_report_revenues
@@ -224,7 +227,7 @@ msgstr "登录"
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Sign in and buy the course to take the quiz"
-msgstr ""
+msgstr "登录并购买课程以参加测试"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
@@ -236,7 +239,7 @@ msgstr ""
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "This course is paid."
-msgstr ""
+msgstr "本课程收费。"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_tree_report
@@ -246,18 +249,18 @@ msgstr ""
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_sale_revenues
 msgid "Total revenues"
-msgstr ""
+msgstr "总收入"
 
 #. module: website_sale_slides
 #: model:product.product,uom_name:website_sale_slides.default_product_course
 #: model:product.template,uom_name:website_sale_slides.default_product_course_product_template
 msgid "Units"
-msgstr "件"
+msgstr "单位"
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_website
 msgid "Website"
-msgstr ""
+msgstr "网站"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
@@ -267,14 +270,14 @@ msgstr ""
 #. module: website_sale_slides
 #: model:ir.actions.act_window,name:website_sale_slides.sale_report_action_slides
 msgid "eLearning Revenues"
-msgstr ""
+msgstr "在线学习收入"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.sale_report_view_graph_slides
 msgid "eLearning Sales Analysis"
-msgstr ""
+msgstr "在线学习销售分析<br>"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "to download resources"
-msgstr ""
+msgstr "下载资源"

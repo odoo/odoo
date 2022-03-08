@@ -1,41 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_crm
-#
+# 	* website_crm
+# 
 # Translators:
-# Martin Trigaux, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
-# lasch a <bmail440@gmail.com>, 2018
 # Zou Haojun <haojunzou84@gmail.com>, 2018
 # Jan-Eric Lindh <jelindh@gmail.com>, 2018
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
+# Kristoffer Grundström <lovaren@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Kim Asplund <kim.asplund@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Jan-Eric Lindh <jelindh@gmail.com>, 2018\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
 msgid "# Leads"
-msgstr "# leads"
+msgstr "# Leads"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
 msgid "# Page Views"
-msgstr "# sidvisningar"
+msgstr "# Sidvisningar"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Contact Form</span>"
-msgstr "<span class=\"o_form_label\">Kontaktformulär</span>"
+msgstr "<span class=\"o_form_label\">Kontakt Formulär</span>"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -64,7 +66,7 @@ msgstr "OCR / Meddelande rad 1"
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurationsinställningar"
+msgstr "Konfigurations Inställningar"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -74,30 +76,34 @@ msgstr "Kontakta oss"
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
 msgid "Default Sales Team"
-msgstr "Standard säljteam"
+msgstr "Standardsäljlaget"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
-msgstr "Det säljteam som standard tilldelas nya leads via kontaktformuläret."
+msgstr ""
+"Standardförsäljningsteam för nya potentiella kunder som skapats genom "
+"kontaktformuläret."
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Teams"
-msgstr "Standard säljteam"
+msgstr "Standard Försäljnings Team"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
-msgstr "Standard säljare"
+msgstr "Standard Försäljare"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
-msgstr "Den säljare som standard tilldelas nya leads via kontaktformuläret."
+msgstr ""
+"Standardförsäljare för nya potentiella kunder som skapats genom "
+"kontaktformuläret."
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
@@ -110,7 +116,7 @@ msgstr "Kundämnen/affärsmöjligheter"
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
 msgid "Leads"
-msgstr "Leads"
+msgstr "Kundämnen"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
@@ -120,7 +126,7 @@ msgstr ""
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "New messages are managed as leads or opportunities in your CRM app."
-msgstr "Nya meddelanden hanteras som leads eller möjligheter i ditt CRM."
+msgstr "Nya meddelanden hanteras som leads eller möjligheter i din CRM-app."
 
 #. module: website_crm
 #: model_terms:ir.actions.act_window,help:website_crm.crm_lead_action_from_visitor
@@ -138,7 +144,7 @@ msgid ""
 "Please set a Sales Team for the website. Otherwise you can't follow related "
 "events."
 msgstr ""
-"Ange ett säljteam för webbplatsen. Annars kan du inte följa relaterade "
+"Ställ in ett säljteam för webbplatsen. Annars kan du inte följa relaterade "
 "händelser."
 
 #. module: website_crm
@@ -147,7 +153,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 #, python-format
 msgid "Sales Team"
-msgstr "Säljteam"
+msgstr "Säljlag"
 
 #. module: website_crm
 #. openerp-web
@@ -160,7 +166,7 @@ msgstr "Säljare"
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
 msgid "Web Visitors"
-msgstr "Besökare"
+msgstr "Web besökare"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_merge_summary_inherit_website
@@ -180,7 +186,7 @@ msgstr "Webbplatsens kontaktformulär"
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website_visitor
 msgid "Website Visitor"
-msgstr "Besökare"
+msgstr "Webplats Besökare"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form

@@ -1,32 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * analytic
-#
+# 	* analytic
+# 
 # Translators:
-# Manel Fernandez <manelfera@outlook.com>, 2019
-# Martin Trigaux, 2019
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
-# Quim - eccit <quim@eccit.com>, 2019
 # Sandra Franch <sandra.franch@upc.edu>, 2019
-#
+# Arnau Ros, 2019
+# Quim - eccit <quim@eccit.com>, 2019
+# Susanna Pujol, 2020
+# Martin Trigaux, 2021
+# jabelchi, 2021
+# AncesLatino2004, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 12:56+0000\n"
-"Last-Translator: Sandra Franch <sandra.franch@upc.edu>, 2019\n"
+"Last-Translator: AncesLatino2004, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "<span class=\"o_stat_text\">Gross Margin</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">El marge brut</span>"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -191,12 +195,12 @@ msgstr "Pla de comptes analítics"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
 msgid "Childrens"
-msgstr "Nens"
+msgstr "nens"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr "Feu clic per afegir un nou grup analític."
+msgstr "Fes clic per afegir un nou de compte analític."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -227,8 +231,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"La conversió entre les unitats de mesura només és possible si pertanyen a la "
-"mateixa categoria. La conversió es basarà en les ràtios establertes."
+"La conversió entre les unitats de mesura només poden passar si pertanyen a "
+"la mateixa categoria. La conversió es basarà amb les ràtios establertes."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -300,7 +304,7 @@ msgstr "Descripció"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__display_name
 msgid "Display Name"
-msgstr "Mostrar Nom"
+msgstr "Nom a mostrar"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
@@ -315,7 +319,7 @@ msgstr "Seguidors (Clients)"
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
 msgid "Gross Margin"
-msgstr ""
+msgstr "El marge brut"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
@@ -367,8 +371,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to "
-"analyse\n"
+"                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
 "En Odoo, les comandes de venda i els projectes s'implementaran utilitzant "
@@ -510,15 +513,13 @@ msgstr "Referència"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
+"                invoices. Customer invoices can be created based on sales orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Els ingressos es crearan automàticament quan creï factures de client. Les "
-"factures de client es poden crear basades en les comandes de venda (factures "
-"de preu fix), en les parts d'hores (basades en el treball realitzat) o en "
+"factures de client es poden crear basades en les comandes de venda (factures"
+" de preu fix), en les parts d'hores (basades en el treball realitzat) o en "
 "les despeses (per exemple, refacturació de despeses de viatge)."
 
 #. module: analytic
@@ -529,7 +530,7 @@ msgstr "Cerca línies analítiques"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
 msgid "Search Analytic Tags"
-msgstr ""
+msgstr "Cerca etiquetes analítiques"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
@@ -544,7 +545,8 @@ msgstr "Etiquetes"
 
 #. module: analytic
 #: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
-msgid "The percentage of an analytic distribution should be between 0 and 100."
+msgid ""
+"The percentage of an analytic distribution should be between 0 and 100."
 msgstr ""
 "El tant per cent d'una distribució analítica hauria de ser entre 0 i 100"
 
@@ -555,11 +557,13 @@ msgid ""
 "The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
 msgstr ""
+"El compte seleccionat pertany a una altra empresa que no sigui la per a la "
+"qual esteu provant de crear un element analític"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "This allows you to classify your analytic accounts."
-msgstr ""
+msgstr "Això us permet classificar els vostres comptes analítics."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -584,7 +588,7 @@ msgstr "Comptador de missatges no llegits"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
 msgid "UoM Category"
-msgstr ""
+msgstr "Categoria UoM"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id

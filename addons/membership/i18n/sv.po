@@ -1,27 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * membership
-#
+# 	* membership
+# 
 # Translators:
-# Martin Trigaux, 2018
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# Kristoffer Grundström <lovaren@gmail.com>, 2018
 # Haojun Zou <apollo_zhj@msn.com>, 2018
 # Zou Haojun <haojunzou84@gmail.com>, 2018
-# Kim Asplund <kim.asplund@gmail.com>, 2018
 # lynnliuying <lynn.liu1971@gmail.com>, 2018
+# Michael Tanzi <michael.tanzi@vertel.se>, 2020
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2020
+# Martin Trigaux, 2021
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
+# Kim Asplund <kim.asplund@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: lynnliuying <lynn.liu1971@gmail.com>, 2018\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: membership
@@ -42,18 +45,14 @@ msgstr "Väntar"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period"
-"\"/><strong> From: </strong>"
-msgstr ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period"
-"\"/><strong>Från:</strong>"
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> From: </strong>"
+msgstr "Från"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
-msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
-msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -122,14 +121,14 @@ msgstr "Avbryt medlemskapsdatum"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_cancel
 msgid "Cancel date"
-msgstr "Avbruted datum"
+msgstr "Cancellera datum"
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__canceled
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__canceled
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__canceled
 msgid "Cancelled Member"
-msgstr "Avbruten medlemskap"
+msgstr "Cancellerade medlemmar"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
@@ -186,7 +185,7 @@ msgstr "Aktuellt medlemskapsstatus"
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_state
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_state
 msgid "Current Membership Status"
-msgstr "Aktuell medlemsstatus"
+msgstr "Aktuell medlemskaps status"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -199,7 +198,7 @@ msgstr "Kunder"
 #: model:ir.model.fields,help:membership.field_res_partner__membership_start
 #: model:ir.model.fields,help:membership.field_res_users__membership_start
 msgid "Date from which membership becomes active."
-msgstr "Datum när medlemskapet blev aktivt."
+msgstr "Datum från vilket medlemskapet blir aktivt."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__date
@@ -218,7 +217,7 @@ msgstr "Datum då medlemskapet avbröts"
 #: model:ir.model.fields,help:membership.field_res_partner__membership_stop
 #: model:ir.model.fields,help:membership.field_res_users__membership_stop
 msgid "Date until which membership remains active."
-msgstr "Datum till vilket medlemskap fortfarande förblir aktivt."
+msgstr "Datum till vilket medlemskap förblir aktivt."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__display_name
@@ -330,17 +329,15 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
-"Det indikerar medlemsstatus.\n"
+"Det indikerar medlemskapets status.\n"
 "-Icke medlem: En partner som inte har ansökt om något medlemskap.\n"
 "-Avbruten medlem: En medlem som har annullerat sitt medlemskap.\n"
 "-Före detta medlem: En medlem vars medlemskap har gått ut.\n"
-"-Väntar på medlemskap: En medlem som har ansökt om medlemskap vars faktura "
-"kommer att skapas.\n"
+"-Väntar på medlemskap: En medlem som har ansökt om medlemskap vars faktura kommer att skapas.\n"
 "-Fakturerad medlem: En medlem vars faktura har skapats.\n"
 "-Betalande medlem: En medlem som har betalat medlemsavgiften."
 
@@ -351,24 +348,22 @@ msgid ""
 "-Non Member: A member who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
 "Det indikerar medlemsstatus.\n"
 "-Icke medlem: En medlem som inte har ansökt om något medlemskap.\n"
-"-Avbruten Medlem: En medlem som har annullerat sitt medlemskap.\n"
+"-Cancelled Medlem: En medlem som har annullerat sitt medlemskap.\n"
 "-Före detta medlem: En medlem vars medlemskap har gått ut.\n"
-"-Väntar på medlemskap: En medlem som har ansökt om medlemskap vars faktura "
-"kommer att skapas.\n"
+"-Väntar på medlemskap: En medlem som har ansökt om medlemskap vars faktura kommer att skapas.\n"
 "-Fakturerad medlem: En medlem vars faktura har skapats.\n"
 "-Betalande medlem: En medlem som har betalat medlemsbeloppet."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date
 msgid "Join Date"
-msgstr "Anslutnings datum"
+msgstr "Gå med datum"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
@@ -515,7 +510,7 @@ msgstr "Startdatum för medlemskap"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership State"
-msgstr "Medlemskaps tillstånd"
+msgstr "Medlemsstatus"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__state
@@ -561,11 +556,9 @@ msgstr "Icke medlem"
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                  Current Membership Status, Discussions and History of "
-"Membership, etc."
+"                  Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
-"Odoo hjälper dig att enkelt spåra alla aktiviteter relaterade till en "
-"medlem:\n"
+"Odoo hjälper dig att enkelt spåra alla aktiviteter relaterade till en medlem:\n"
 "Aktuell medlemsstatus, diskussioner och historia om medlemskap etc."
 
 #. module: membership

@@ -1,38 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_sms
-#
+# 
 # Translators:
 # Martin Trigaux, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
 # Murat Kaplan <muratk@projetgrup.com>, 2019
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Buket Şeker <buket_skr@hotmail.com>, 2019
-#
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
+# Tugay Hatıl <tugayh@projetgrup.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
+"PO-Revision-Date: 2019-12-16 11:11+0000\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: stock_sms
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
 msgid ""
 "\n"
-"                {{ (object.company_id.name + ': We are glad to inform you "
-"that your order n° ' + object.origin + ' has been shipped.' if object.origin "
-"else object.company_id.name + ': We are glad to inform you that your order "
-"has been shipped.') + (' Your tracking reference is ' + (object."
-"carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and "
-"object.carrier_tracking_ref else '') }}\n"
+"                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
 
@@ -156,9 +152,7 @@ msgstr "Transfer"
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
-"                This feature can easily be disabled from the Settings of "
-"Inventory or by clicking on \"Disable SMS\".<br/>"
+"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
 "Bu Teslimat Siparişini SMS Metin Mesajı ile onaylamak üzeresiniz.<br/>\n"
-"                 Bu özellik Envanter Ayarları'ndan veya \"SMS'yi Devre Dışı "
-"Bırak\" düğmesine tıklayarak kolayca devre dışı bırakılabilir.<br/>"
+"                 Bu özellik Envanter Ayarları'ndan veya \"SMS'yi Devre Dışı Bırak\" düğmesine tıklayarak kolayca devre dışı bırakılabilir.<br/>"

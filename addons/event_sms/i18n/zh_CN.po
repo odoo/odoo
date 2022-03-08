@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_sms
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Xiaohai <pengyb@gmail.com>, 2019
+# 稀饭~~ <wangwhai@qq.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
-# 演奏王 <wangwhai@qq.com>, 2019
-#
+# Xiaohai <pengyb@gmail.com>, 2019
+# Martin Trigaux, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: 演奏王 <wangwhai@qq.com>, 2019\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2019-12-16 11:02+0000\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event_sms
@@ -74,10 +75,13 @@ msgstr "发送"
 #: model:sms.template,body:event_sms.sms_template_data_event_reminder
 msgid ""
 "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name }}: We are excited to remind you that the {{ object."
-"event_id.name }} event is starting {{ object.get_date_range_str() }}. We "
-"confirm your registration and hope to meet you there."
+"user.env.company.name }}: We are excited to remind you that the {{ "
+"object.event_id.name }} event is starting {{ object.get_date_range_str() }}."
+" We confirm your registration and hope to meet you there."
 msgstr ""
+"{{ object.event_id.organizer_id.name 或 object.event_id.company_id.name 或 "
+"user.env.company.name }}。我们很高兴地提醒您，{{ object.event_id.name }}活动即将开始{{ "
+"object.get_date_range_str() }}。我们确认您的注册，并希望能在那里见到您。"
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -86,3 +90,5 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name 或 object.event_id.company_id.name 或 "
+"user.env.company.name }}。我们很高兴确认您对{{ object.event_id.name }}活动的注册。"

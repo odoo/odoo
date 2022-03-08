@@ -1,34 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_iap_lead_website
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Bohdan Lisnenko, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
-#
+# Martin Trigaux, 2021
+# Bohdan Lisnenko, 2021
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"PO-Revision-Date: 2021-12-07 11:22+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid ""
-"1 credit is consumed per visitor matching the website traffic conditions and "
-"whose company can be identified.<br/>"
+"1 credit is consumed per visitor matching the website traffic conditions and"
+" whose company can be identified.<br/>"
 msgstr ""
 "1 кредит споживається на відвідувача, який відповідає умовам руху на веб-"
 "сайті і чию компанію можна ідентифікувати.<br/>"
@@ -126,7 +123,7 @@ msgstr "Створив"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_for
@@ -206,7 +203,7 @@ msgstr "Галузі"
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__write_uid
@@ -273,8 +270,8 @@ msgstr "Лід/Нагода"
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__industry_tag_ids
 msgid "Leave empty to always match. Odoo will not create lead if no match"
 msgstr ""
-"Залиште порожнім, щоб завжди співставляти. Odoo не буде створювати лід, якщо "
-"немає співставлення"
+"Залиште порожнім, щоб завжди співставляти. Odoo не буде створювати лід, якщо"
+" немає співставлення"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__0
@@ -298,7 +295,7 @@ msgstr "Дозволено максимально 5 контактів!"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__1
 msgid "Medium"
-msgstr "Середній"
+msgstr "Канал"
 
 #. module: crm_iap_lead_website
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
@@ -329,8 +326,8 @@ msgstr "Кількість створених нагод"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__country_ids
 msgid ""
-"Only visitors of following countries will be converted into leads/"
-"opportunities (using GeoIP)."
+"Only visitors of following countries will be converted into "
+"leads/opportunities (using GeoIP)."
 msgstr ""
 "Тільки відвідувачі наступних країн будуть конвертовані у ліди/нагоди (за "
 "допомогою GeoIP)."
@@ -338,7 +335,8 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__state_ids
 msgid ""
-"Only visitors of following states will be converted into leads/opportunities."
+"Only visitors of following states will be converted into "
+"leads/opportunities."
 msgstr ""
 "Тільки відвідувачі з наступних країн будуть перетворені на ліди/нагоди."
 
@@ -386,8 +384,8 @@ msgid ""
 "with /page"
 msgstr ""
 "Regex для відстеження сторінок веб-сайтів. Залиште порожнім, щоби "
-"відстежувати весь веб-сайт, або щоби націлити домашню сторінку. Приклад: /"
-"page* для відстеження всіх сторінок, які починаються з /page"
+"відстежувати весь веб-сайт, або щоби націлити домашню сторінку. Приклад: "
+"/page* для відстеження всіх сторінок, які починаються з /page"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__website_id
@@ -470,11 +468,11 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__suffix
 msgid ""
-"This will be appended in name of generated lead so you can identify lead/"
-"opportunity is generated with this rule"
+"This will be appended in name of generated lead so you can identify "
+"lead/opportunity is generated with this rule"
 msgstr ""
-"Це буде додано до назви створеного ліда, так що ви можете визначити, що лід/"
-"нагода генерується за допомогою цього правила"
+"Це буде додано до назви створеного ліда, так що ви можете визначити, що "
+"лід/нагода генерується за допомогою цього правила"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__to_process

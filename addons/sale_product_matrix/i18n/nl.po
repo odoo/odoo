@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_product_matrix
-#
+# 
 # Translators:
 # Martin Trigaux, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-#
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Antoine Gilard <ang@odoo.com>, 2020
+# Julien Goergen <jgo@odoo.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"PO-Revision-Date: 2019-12-16 11:09+0000\n"
+"Last-Translator: Julien Goergen <jgo@odoo.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_product_matrix
@@ -30,13 +33,11 @@ msgstr "Product modus toevoegen"
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
 #: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
 msgid ""
-"Configurator: choose attribute values to add the matching         product "
-"variant to the order.\n"
+"Configurator: choose attribute values to add the matching         product variant to the order.\n"
 "Grid: add several variants at once from the grid of attribute values"
 msgstr ""
-"Configurator: kies kenmerkwaarden om de bijbehorende productvariant aan de "
-"order toe te voegen.\n"
-"Matrix: voeg meerdere varianten tegelijk toe uit de matrix van kenmerkwaarden"
+"Configurator: kies attribuutwaarden om de bijbehorende productvariant aan de bestelling toe te voegen.\n"
+"Grid: voeg meerdere varianten tegelijk toe uit het grid van attribuutwaarden"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
@@ -46,7 +47,7 @@ msgstr "Matrix productsjabloon"
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
 msgid "Grid Update"
-msgstr "Matrix update"
+msgstr "Grid update"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__report_grids
@@ -65,7 +66,7 @@ msgstr "Matrix lokale opslag"
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
 msgid "Order Grid Entry"
-msgstr "Ordermatrix ingave"
+msgstr "Order grid ingave"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
@@ -104,14 +105,15 @@ msgid ""
 "If grid_update, will be loaded on the SO. \n"
 "If not, represents the matrix to open."
 msgstr ""
-"Technische opslag van matrix.\n"
+"Technische opslag van grid.\n"
 "Indien grid_update, wordt dit geladen op de verkooporder.\n"
 "Indien niet grid_update stelt het de matrix voor om te openen."
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
-msgstr "Of de rasterweergave een nieuwe matrix bevat om toe te voegen of niet."
+msgstr ""
+"Of de rasterweergave een nieuwe matrix bevat om toe te voegen of niet."
 
 #. module: sale_product_matrix
 #: code:addons/sale_product_matrix/models/sale_order.py:0
@@ -119,5 +121,5 @@ msgstr "Of de rasterweergave een nieuwe matrix bevat om toe te voegen of niet."
 msgid ""
 "You cannot change the quantity of a product present in multiple sale lines."
 msgstr ""
-"Je kunt de hoeveelheid van een aanwezig product niet veranderen in meerdere "
+"U kan de hoeveelheid van een aanwezig product niet veranderen in meerdere "
 "verkooporderregels."

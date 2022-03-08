@@ -1,28 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-#
+# Antoine Gilard <ang@odoo.com>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
+#: code:addons/resource/models/resource.py:0
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "%s (copy)"
@@ -37,7 +40,7 @@ msgstr "Actief"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__afternoon
 msgid "Afternoon"
-msgstr "Middag"
+msgstr "Namiddag"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
@@ -52,7 +55,7 @@ msgid ""
 "Are you sure you want to switch this calendar to 1 week calendar ? All "
 "entries will be lost"
 msgstr ""
-"Ben je zeker dat je de kalender weergave naar 1 week wilt wisselen? Alle "
+"Bent u zeker dat u de kalender weergave naar 1 week wilt wisselen? Alle "
 "boekingen gaan verloren"
 
 #. module: resource
@@ -61,7 +64,7 @@ msgid ""
 "Are you sure you want to switch this calendar to 2 weeks calendar ? All "
 "entries will be lost"
 msgstr ""
-"Ben je zeker dat je de kalender weergave naar 2 weken wilt wisselen? Alle "
+"Bent u zeker dat u de kalender weergave naar 2 weken wilt wisselen? Alle "
 "boekingen gaan verloren"
 
 #. module: resource
@@ -222,7 +225,7 @@ msgstr "Vrijdagochtend"
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
 msgstr ""
-"Geeft de reeks van deze regels wanneer ze getoond wordt in de resource "
+"Geeft de reeks van deze lijnen wanneer ze getoond wordt in de resource "
 "kalender."
 
 #. module: resource
@@ -280,7 +283,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
-"Indien het actief veld is uitgevinkt heb je de mogelijkheid om de werktijd "
+"Indien het actief veld is uitgevinkt heeft u de mogelijkheid om de werktijd "
 "te verbergen, zonder deze te verwijderen."
 
 #. module: resource
@@ -385,7 +388,8 @@ msgstr "Reden"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Gekoppelde gebruikersnaam voor de resource om zijn toegang te beheren."
+msgstr ""
+"Gekoppelde gebruikersnaam voor de resource om zijn toegang te beheren."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
@@ -492,7 +496,7 @@ msgstr "Sectie"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__sequence
 msgid "Sequence"
-msgstr "Reeks"
+msgstr "Volgorder"
 
 #. module: resource
 #: code:addons/resource/models/res_company.py:0
@@ -559,7 +563,7 @@ msgstr "De huidige week (van %s t/m %s ) komt overeen met die %s."
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
-msgstr "De startdatum van het verlof moet eerder zijn dan de einddatum."
+msgstr "De startdatum van de vrije tijd moet eerder zijn dan de einddatum."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -619,7 +623,7 @@ msgstr "Soort tijd"
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
 msgid "Time efficiency must be strictly positive"
-msgstr "Tijdefficiëntie moet positief zijn"
+msgstr "Tijdsefficiëntie moet positief zijn"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
@@ -693,10 +697,11 @@ msgstr "Weeknummer"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
-"Whether this should be computed as a time off or as work time (eg: formation)"
+"Whether this should be computed as a time off or as work time (eg: "
+"formation)"
 msgstr ""
-"Of dit berekend moet worden als afwezige tijd of als werktijd (bijvoorbeeld: "
-"formatie)"
+"Of dit berekend moet worden als afwezige tijd of als werktijd (bijvoorbeeld:"
+" formatie)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -755,7 +760,7 @@ msgstr "Werktijden"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "You can't delete section between weeks."
-msgstr "Je kunt geen sectie verwijderen tussen weken."
+msgstr "U kan geen sectie verwijderen tussen weken."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0

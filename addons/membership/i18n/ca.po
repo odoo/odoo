@@ -1,28 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * membership
-#
+# 	* membership
+# 
 # Translators:
-# Manel Fernandez <manelfera@outlook.com>, 2018
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2018
 # Martin Trigaux, 2019
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
-# Quim - eccit <quim@eccit.com>, 2019
 # Sandra Franch <sandra.franch@upc.edu>, 2019
 # M Palau <mpalau@tda.ad>, 2019
-#
+# Arnau Ros, 2019
+# Quim - eccit <quim@eccit.com>, 2021
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# jabelchi, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: M Palau <mpalau@tda.ad>, 2019\n"
+"Last-Translator: jabelchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: membership
@@ -43,18 +46,16 @@ msgstr "Núm. esperant"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period"
-"\"/><strong> From: </strong>"
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> From: </strong>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period"
-"\"/><strong> De: </strong>"
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> De: </strong>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
-msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
-msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -226,7 +227,7 @@ msgstr "Data fins a la qual el soci roman actiu."
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership__display_name
 msgid "Display Name"
-msgstr "Mostrar Nom"
+msgstr "Nom a mostrar"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_earned
@@ -332,8 +333,7 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -341,8 +341,7 @@ msgstr ""
 "- No membre: Una empresa que no ha sol·licitat cap afiliació.\n"
 "- Membre cancel·lat: Un membre que ha cancel·lat la seva afiliació.\n"
 "- Antic membre: Un membre que la seva afiliació ha expirat.\n"
-"- Membre en espera: Un membre que ha sol·licitat l'afiliació i que la seva "
-"factura va crear-se.\n"
+"- Membre en espera: Un membre que ha sol·licitat l'afiliació i que la seva factura va crear-se.\n"
 "- Membre facturat: Un membre que se li ha creat la seva factura.\n"
 "- Membre pagat: Un membre que ha pagat la seva quota d'afiliació."
 
@@ -353,8 +352,7 @@ msgid ""
 "-Non Member: A member who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
@@ -362,8 +360,7 @@ msgstr ""
 "- No membre: empresa que no ha sol·licitat cap afiliació.\n"
 "- Membre cancel·lat: membre que ha cancel·lat la seva afiliació.\n"
 "- Antic membre: membre amb l'afiliació expirada.\n"
-"- Membre en espera: membre que ha sol·licitat l'afiliació i està a l'espera "
-"de la creació de la factura corresponent.\n"
+"- Membre en espera: membre que ha sol·licitat l'afiliació i està a l'espera de la creació de la factura corresponent.\n"
 "- Membre facturat: membre amb factura creada.\n"
 "- Membre pagat: membre que ha pagat la quota d'afiliació."
 
@@ -563,11 +560,9 @@ msgstr "No soci"
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                  Current Membership Status, Discussions and History of "
-"Membership, etc."
+"                  Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
-"Odoo l'ajuda a rastrejar fàcilment totes les activitats relacionades amb un "
-"membre: \n"
+"Odoo l'ajuda a rastrejar fàcilment totes les activitats relacionades amb un membre: \n"
 "                  Estat actual de l'afiliació, discussions i historial, etc."
 
 #. module: membership

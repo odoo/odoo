@@ -1,27 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_subcontracting
-#
+# 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2019
 # Xavier Brochard <xavier@alternatif.org>, 2019
-# Marie Willemyns <mwi@odoo.com>, 2019
 # a270031086f2a0d3514bc0cb507b48f6, 2019
-#
+# omaodoo <oma@odoo.com>, 2019
+# e2f <projects@e2f.com>, 2020
+# Marie Willemyns <mwi@odoo.com>, 2020
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
+# Luc N, 2020
+# Mathieu Germain <mgm@odoo.com>, 2021
+# Martin Trigaux, 2021
+# Cécile Collart <cco@odoo.com>, 2021
+# sakodoo <sak@odoo.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: a270031086f2a0d3514bc0cb507b48f6, 2019\n"
+"POT-Creation-Date: 2022-03-07 12:07+0000\n"
+"PO-Revision-Date: 2019-06-12 12:35+0000\n"
+"Last-Translator: sakodoo <sak@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mrp_subcontracting
@@ -185,6 +191,7 @@ msgid "Reserved"
 msgstr "Réservé"
 
 #. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
@@ -397,3 +404,13 @@ msgstr ""
 #, python-format
 msgid "You must enter a serial number for each line of %s"
 msgstr "Vous devez encodez un numéro pour chaque ligne de %s"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"Vous devez indiquer une quantité consommée différente de zéro pour au moins "
+"un de vos composants."

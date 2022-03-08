@@ -1,30 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* digest
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# fanha99 <fanha99@hotmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Thang Duong Bao <nothingctrl@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Minh Nguyen <ndminh210994@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
-# Dao Nguyen <trucdao.uel@gmail.com>, 2019
-#
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
+# Thang Duong Bao <nothingctrl@gmail.com>, 2020
+# Minh Nguyen <ndminh210994@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
+# Duy BQ <duybq86@gmail.com>, 2021
+# Vo Thanh Thuy, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
+"PO-Revision-Date: 2019-03-20 14:56+0000\n"
+"Last-Translator: Vo Thanh Thuy, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: digest
@@ -61,7 +60,8 @@ msgstr "Đã kích hoạt"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
-msgstr "Thêm người dùng mới làm người nhận email định kỳ với các số liệu chính"
+msgstr ""
+"Thêm người dùng mới làm người nhận email định kỳ với các số liệu chính"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
@@ -109,7 +109,7 @@ msgstr "Người dùng đã kết nối"
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_uid
 #: model:ir.model.fields,field_description:digest.field_digest_tip__create_uid
 msgid "Created by"
-msgstr "Được tạo bởi"
+msgstr "Tạo bởi"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_date
@@ -125,7 +125,7 @@ msgstr "Tiền tệ"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Custom"
-msgstr ""
+msgstr "Tùy chỉnh"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__daily
@@ -135,7 +135,7 @@ msgstr "Hàng ngày"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Deactivate"
-msgstr ""
+msgstr "Vô hiệu"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__state__deactivated
@@ -190,7 +190,7 @@ msgstr "Tên hiển thị"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Email Address"
-msgstr ""
+msgstr "Địa chỉ email"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -205,11 +205,11 @@ msgstr "Nhóm theo"
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
 msgid ""
-"Have a question about a document? Click on the responsible user's picture to "
-"start a conversation. If his avatar has a green dot, he is online."
+"Have a question about a document? Click on the responsible user's picture to"
+" start a conversation. If his avatar has a green dot, he is online."
 msgstr ""
-"Have a question about a document? Click on the responsible user's picture to "
-"start a conversation. If his avatar has a green dot, he is online."
+"Have a question about a document? Click on the responsible user's picture to"
+" start a conversation. If his avatar has a green dot, he is online."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
@@ -263,13 +263,13 @@ msgstr "Giá trị kết nối của người dùng Kpi"
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Last 24 hours"
-msgstr ""
+msgstr "24 giờ qua"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Last 30 Days"
-msgstr "30 ngày gần đây"
+msgstr "30 ngày qua"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -314,7 +314,8 @@ msgstr "Tên"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid ""
-"New users are automatically added as recipient of the following digest email."
+"New users are automatically added as recipient of the following digest "
+"email."
 msgstr ""
 "Người dùng mới được tự động thêm vào dưới dạng người nhận email thông báo "
 "sau."
@@ -461,7 +462,7 @@ msgstr "Tip: Speed up your workflow with shortcuts"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "Title"
-msgstr ""
+msgstr "Tiêu đề"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
@@ -505,6 +506,8 @@ msgid ""
 "We have noticed you did not connect these last few days. We have "
 "automatically switched your preference to %(new_perioridicy_str)s Digests."
 msgstr ""
+"Chúng tôi phát hiện ra bạn đã không kết nối trong vài ngày qua. Chúng tôi đã"
+" tự động đổi tùy chọn của bạn thành tóm tắt %(new_perioridicy_str)s"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__weekly
@@ -525,15 +528,11 @@ msgstr ""
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid ""
-"When following documents, use the pencil icon to fine-tune the information "
-"you want to receive.\n"
-"Follow a project / sales team to keep track of this project's tasks / this "
-"team's opportunities."
+"When following documents, use the pencil icon to fine-tune the information you want to receive.\n"
+"Follow a project / sales team to keep track of this project's tasks / this team's opportunities."
 msgstr ""
-"When following documents, use the pencil icon to fine-tune the information "
-"you want to receive.\n"
-"Follow a project / sales team to keep track of this project's tasks / this "
-"team's opportunities."
+"When following documents, use the pencil icon to fine-tune the information you want to receive.\n"
+"Follow a project / sales team to keep track of this project's tasks / this team's opportunities."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
@@ -548,22 +547,22 @@ msgstr "Your Odoo Periodic Digest"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "e.g. Your Weekly Digest"
-msgstr ""
+msgstr "VD: Tóm tắt hàng tuần"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "monthly"
-msgstr ""
+msgstr "hàng tháng"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "quarterly"
-msgstr ""
+msgstr "hàng quý"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "weekly"
-msgstr ""
+msgstr "hàng tuần"

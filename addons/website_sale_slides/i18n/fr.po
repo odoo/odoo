@@ -1,23 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_slides
-#
+# 
 # Translators:
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
-# Martin Trigaux, 2019
-#
+# Laura Piraux <lap@odoo.com>, 2020
+# Nicolas JEUDY <njeudy@panda-chi.io>, 2020
+# Fred Gilson <fgi@odoo.com>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Alexandra Jubert <aju@odoo.com>, 2021
+# Ludvig Auvens <lau@odoo.com>, 2021
+# Martin Trigaux, 2021
+# Thomas Deleval <thd@odoo.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"PO-Revision-Date: 2019-03-20 15:01+0000\n"
+"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_sale_slides
@@ -34,11 +42,13 @@ msgstr "<i class=\"fa fa-shopping-cart\"/> Ajouter au panier"
 #: model:ir.model.fields,help:website_sale_slides.field_product_product__detailed_type
 #: model:ir.model.fields,help:website_sale_slides.field_product_template__detailed_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory "
-"app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Un article stockable est un article dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
+"Un article consommable, par contre, est un article pour lequel le stock n'est pas géré.\n"
+"Un service est un produit immatériel que vous fournissez."
 
 #. module: website_sale_slides
 #: code:addons/website_sale_slides/models/product_product.py:0
@@ -138,7 +148,7 @@ msgstr ""
 #: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "On Invitation"
-msgstr ""
+msgstr "Sur invitation "
 
 #. module: website_sale_slides
 #. openerp-web
@@ -150,7 +160,7 @@ msgstr ""
 #. module: website_sale_slides
 #: model:ir.model.fields.selection,name:website_sale_slides.selection__slide_channel__enroll__payment
 msgid "On payment"
-msgstr "Payant"
+msgstr "En cours de paiment"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
@@ -174,25 +184,25 @@ msgstr "Article"
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Modèle d'article"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__detailed_type
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_template__detailed_type
 msgid "Product Type"
-msgstr ""
+msgstr "Type d'article"
 
 #. module: website_sale_slides
 #: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
 msgid "Product is required for on payment channels."
-msgstr "Un article est requis pour les parcours payants"
+msgstr "Un produit est requis pour les parcours payant"
 
 #. module: website_sale_slides
 #. openerp-web
 #: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Public"
-msgstr ""
+msgstr "Public"
 
 #. module: website_sale_slides
 #: model:ir.ui.menu,name:website_sale_slides.website_slides_menu_report_revenues
@@ -203,7 +213,7 @@ msgstr "Revenus"
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_kanban
 msgid "Sales"
-msgstr "Vente"
+msgstr "Ventes"
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_sale_order
@@ -250,12 +260,12 @@ msgstr "Revenu total"
 #: model:product.product,uom_name:website_sale_slides.default_product_course
 #: model:product.template,uom_name:website_sale_slides.default_product_course_product_template
 msgid "Units"
-msgstr "Unité(s)"
+msgstr "Unités"
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_website
 msgid "Website"
-msgstr ""
+msgstr "Site web"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message

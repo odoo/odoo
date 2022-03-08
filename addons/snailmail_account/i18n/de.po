@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail_account
-#
+# 
 # Translators:
 # Philipp Hug <philipp@hug.cx>, 2019
-# Martin Trigaux, 2019
-# Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
-# Leon Grill <leg@odoo.com>, 2019
-#
+# Chris Egal <sodaswed@web.de>, 2019
+# Leon Grill <leg@odoo.com>, 2020
+# Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: snailmail_account
@@ -34,12 +35,10 @@ msgstr ""
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
 msgid ""
-"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title="
-"\"Make sure you have enough Stamps on your account.\"/>\n"
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
 "                                )"
 msgstr ""
-"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title="
-"\"Stellen Sie sicher, dass Sie genug Briefmarken in Ihrem Konto haben.\"/>\n"
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Stellen Sie sicher, dass Sie genug Briefmarken in Ihrem Konto haben.\"/>\n"
 "                                )"
 
 #. module: snailmail_account
@@ -59,24 +58,17 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"text-danger\">\n"
-"                                    Einige Kundenadressen sind "
-"unvollständig.\n"
+"                                    Einige Kundenadressen sind unvollständig.\n"
 "                                </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
 msgid ""
-"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!"
-"=', 0)]}\"> to: </span>\n"
-"                                <span class=\"text-danger\" attrs="
-"\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address "
-"is incomplete: </span>"
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> to: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address is incomplete: </span>"
 msgstr ""
-"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!"
-"=', 0)]}\"> an: </span>\n"
-"                                <span class=\"text-danger\" attrs="
-"\"{'invisible': [('invalid_addresses', '=', 0)]}\"> Die Kundenadresse ist "
-"unvollständig: </span>"
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> an: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> Die Kundenadresse ist unvollständig: </span>"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_invoice_send
@@ -100,7 +92,7 @@ msgstr "Unternehmen"
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurationseinstellungen"
+msgstr "Konfiguration "
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -128,6 +120,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_partner_ids
 #, python-format
@@ -158,12 +151,12 @@ msgstr "Rechnung versandt"
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__write_date

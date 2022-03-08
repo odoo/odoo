@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail_account
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-#
+# Thomas Pot <thomas@open2bizz.nl>, 2019
+# Martin Trigaux, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: snailmail_account
@@ -31,12 +33,10 @@ msgstr ""
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
 msgid ""
-"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title="
-"\"Make sure you have enough Stamps on your account.\"/>\n"
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
 "                                )"
 msgstr ""
-"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Waarschuwing\" "
-"title=\"Zorg ervoor dat u genoeg postzegels hebt op uw account.\"/>\n"
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Waarschuwing\" title=\"Zorg ervoor dat u genoeg postzegels hebt op uw account.\"/>\n"
 "                                )"
 
 #. module: snailmail_account
@@ -45,8 +45,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"De waardes die u hier instelt "
-"zijn bedrijf specifiek.\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"De waardes die u hier instelt"
+" zijn bedrijf specifiek.\"/>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -62,17 +62,11 @@ msgstr ""
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
 msgid ""
-"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!"
-"=', 0)]}\"> to: </span>\n"
-"                                <span class=\"text-danger\" attrs="
-"\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address "
-"is incomplete: </span>"
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> to: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address is incomplete: </span>"
 msgstr ""
-"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!"
-"=', 0)]}\"> naar: </span>\n"
-"                                <span class=\"text-danger\" attrs="
-"\"{'invisible': [('invalid_addresses', '=', 0)]}\"> Het adres van de klant "
-"is onvolledig: </span>"
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> naar: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> Het adres van de klant is onvolledig: </span>"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_invoice_send
@@ -85,8 +79,8 @@ msgid ""
 "Allows to send the document by Snailmail (conventional posting delivery "
 "service)"
 msgstr ""
-"Maakt het mogelijk om het document per Snailmail te verzenden (conventionele "
-"postbezorgservice)"
+"Maakt het mogelijk om het document per Snailmail te verzenden (conventionele"
+" postbezorgservice)"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_company
@@ -124,6 +118,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_partner_ids
 #, python-format
@@ -186,7 +181,7 @@ msgstr "Verzenden via post"
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_snailmail_confirm_invoice
 msgid "Snailmail Confirm Invoice"
-msgstr "Snailmail factuur bevestigen."
+msgstr "Snailmail factuur bevestigen"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost

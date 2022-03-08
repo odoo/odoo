@@ -1,28 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment
-#
+# 
 # Translators:
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Martin Trigaux, 2019
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
-#
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
+# trendspotter <jirka.p@volny.cz>, 2021
+# Martin Trigaux, 2021
+# Michal Veselý <michal@veselyberanek.net>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-27 13:30+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
@@ -46,8 +46,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
-"<h3>Prosíme o úhradu: </h3><ul><li>Banka: %s</li><li>Číslo účtu: %s</"
-"li><li>Vlastník účtu: %s</li></ul>"
+"<h3>Prosíme o úhradu: </h3><ul><li>Banka: %s</li><li>Číslo účtu: "
+"%s</li><li>Vlastník účtu: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -56,8 +56,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/>Zpět na Můj účet"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
 msgstr ""
 
 #. module: payment
@@ -68,11 +67,11 @@ msgstr "<i class=\"fa fa-trash\"/>Smazat"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_kanban
 msgid ""
-"<span class=\"badge badge-primary oe_inline o_enterprise_label\">Enterprise</"
-"span>"
+"<span class=\"badge badge-primary oe_inline "
+"o_enterprise_label\">Enterprise</span>"
 msgstr ""
-"<span class=\"badge badge-primary oe_inline o_enterprise_label\">Enterprise</"
-"span>"
+"<span class=\"badge badge-primary oe_inline "
+"o_enterprise_label\">Enterprise</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -87,8 +86,8 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid ""
-"<span><i class=\"fa fa-arrow-right\"/> How to configure your PayPal account</"
-"span>"
+"<span><i class=\"fa fa-arrow-right\"/> How to configure your PayPal "
+"account</span>"
 msgstr ""
 
 #. module: payment
@@ -103,14 +102,14 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid "<strong>No suitable payment acquirer could be found.</strong>"
-msgstr "<strong>Nepodařilo se najít žádného vhodného příjemce plateb.</strong>"
+msgstr ""
+"<strong>Nepodařilo se najít žádného vhodného příjemce plateb.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please "
-"contact the website administrator."
+"                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
 "<strong>Nebyla nalezena žádná vhodná možnost platby.</strong><br/>\n"
 "Pokud se domníváte, že se jedná o chybu, kontaktujte prosím správce webu."
@@ -119,21 +118,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund "
-"is still pending in a\n"
-"                        few minutes, please check your payment acquirer "
-"configuration."
+"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
+"                        few minutes, please check your payment acquirer configuration."
 msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid ""
-"<strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</"
-"em> button is not supported.\n"
+"<strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Upozornění</strong> Vytvoření příjemce platby z tlačítka "
-"<em>VYTVOŔIT</em> není podporováno.\n"
+"<strong>Upozornění</strong> Vytvoření příjemce platby z tlačítka <em>VYTVOŔIT</em> není podporováno.\n"
 "Místo toho použijte akci <em>Duplikovat</em>."
 
 #. module: payment
@@ -142,8 +137,8 @@ msgid ""
 "<strong>Warning</strong> Make sure your are logged in as the right partner "
 "before making this payment."
 msgstr ""
-"<strong>Upozornění</strong> Před provedením této platby se ujistěte, že jste "
-"přihlášeni jako správný partner."
+"<strong>Upozornění</strong> Před provedením této platby se ujistěte, že jste"
+" přihlášeni jako správný partner."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -179,7 +174,8 @@ msgstr "K vytvoření nové platební transakce je vyžadován token."
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
+msgid ""
+"A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
 msgstr "Transakce s odkazem%(ref)sbyla zahájena (%(acq_name)s)."
 
 #. module: payment
@@ -379,7 +375,7 @@ msgstr "Banka"
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Bankovní účty"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__journal_name
@@ -409,7 +405,7 @@ msgstr "Hash zpětného volání"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr "Metoda zpětného volání"
+msgstr "metoda zpětného volání"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
@@ -460,8 +456,7 @@ msgid ""
 "you are sure you can ship the goods to them."
 msgstr ""
 "Zachytit částku z Odoo, když je dodávka dokončena.\n"
-"Tuto funkci použijte, pokud chcete zákazníkům účtovat z karet pouze tehdy, "
-"když jste si jisti, že jim můžete zboží odeslat."
+"Tuto funkci použijte, pokud chcete zákazníkům účtovat z karet pouze tehdy, když jste si jisti, že jim můžete zboží odeslat."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -506,7 +501,7 @@ msgstr "Barva"
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Communication"
-msgstr ""
+msgstr "Komunikace"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -892,7 +887,8 @@ msgstr "Pokud platba nebyla potvrzena, můžete nás kontaktovat."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid ""
-"If you believe that it is an error, please contact the website administrator."
+"If you believe that it is an error, please contact the website "
+"administrator."
 msgstr "Pokud se domníváte, že se jedná o chybu, obraťte se na správce webu."
 
 #. module: payment
@@ -913,8 +909,7 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the acquirer."
 msgstr ""
-"V testovacím režimu je prostřednictvím testovacího platebního rozhraní "
-"zpracována falešná platba.\n"
+"V testovacím režimu je prostřednictvím testovacího platebního rozhraní zpracována falešná platba.\n"
 "Tento režim se doporučuje při nastavování nabyvatele."
 
 #. module: payment
@@ -1106,8 +1101,8 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
-"Pro tuto společnost nebyl nalezen žádný způsob ruční platby. Vytvořte si jej "
-"prosím z nabídky Platební pořizovatel."
+"Pro tuto společnost nebyl nalezen žádný způsob ruční platby. Vytvořte si jej"
+" prosím z nabídky Platební pořizovatel."
 
 #. module: payment
 #. openerp-web
@@ -1358,7 +1353,7 @@ msgstr "Způsob platby"
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment_method_line
 msgid "Payment Methods"
-msgstr "Způsoby platby"
+msgstr "Platební podmínky"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
@@ -1488,7 +1483,7 @@ msgstr ""
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Please use the order name as communication reference."
-msgstr ""
+msgstr "Jako komunikační odkaz použijte název objednávky."
 
 #. module: payment
 #. openerp-web
@@ -1540,6 +1535,7 @@ msgid "Reference must be unique!"
 msgstr "Odkaz musí být jedinečný!"
 
 #. module: payment
+#: code:addons/payment/models/account_payment.py:0
 #: code:addons/payment/models/account_payment.py:0
 #: code:addons/payment/models/payment_transaction.py:0
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
@@ -1634,6 +1630,8 @@ msgstr "Číselná řada"
 
 #. module: payment
 #. openerp-web
+#: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/js/manage_form.js:0
 #: code:addons/payment/static/src/js/manage_form.js:0
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
@@ -1871,7 +1869,8 @@ msgid ""
 "The message displayed if the order is successfully done after the payment "
 "process"
 msgstr ""
-"Zpráva, která se zobrazí, pokud je objednávka úspěšně provedena po zaplacení."
+"Zpráva, která se zobrazí, pokud je objednávka úspěšně provedena po "
+"zaplacení."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
@@ -1926,7 +1925,8 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_acquirer__inline_form_view_id
 msgid ""
 "The template rendering the inline payment form when making a direct payment"
-msgstr "Šablona vykreslující formulář inline platby při provádění přímé platby"
+msgstr ""
+"Šablona vykreslující formulář inline platby při provádění přímé platby"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1987,16 +1987,14 @@ msgstr "Není za co platit."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__allow_tokenization
 msgid ""
-"This controls whether customers can save their payment methods as payment "
-"tokens.\n"
-"A payment token is an anonymous link to the payment method details saved in "
-"the\n"
+"This controls whether customers can save their payment methods as payment tokens.\n"
+"A payment token is an anonymous link to the payment method details saved in the\n"
 "acquirer's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
 "Tím se řídí, zda mohou zákazníci ukládat své platební metody jako platební "
 "žetony. Platební token je anonymní odkaz na údaje o platební metodě uložené "
-"v databázi acquirera, který umožňuje zákazníkovi znovu jej použít při dalším "
-"nákupu."
+"v databázi acquirera, který umožňuje zákazníkovi znovu jej použít při dalším"
+" nákupu."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -2139,6 +2137,7 @@ msgstr "Varování!"
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method."
 msgstr "Váš způsob platby nemůžeme smazat."
@@ -2169,7 +2168,7 @@ msgstr "Váš způsob platby nemůžeme uložit."
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
-msgstr "Zpracováváme vaši platbu, prosím čekejte..."
+msgstr "Zpracováváme vaši platbu, prosím čekejte ..."
 
 #. module: payment
 #. openerp-web
@@ -2183,7 +2182,8 @@ msgstr "Čekáme na platbu příjemce, aby platbu potvrdil."
 msgid ""
 "Whether a payment token should be created when post-processing the "
 "transaction"
-msgstr "Zda má být při následném zpracování transakce vytvořen platební token."
+msgstr ""
+"Zda má být při následném zpracování transakce vytvořen platební token."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
@@ -2206,8 +2206,7 @@ msgstr "Kliknutím zde můžete být přesměrováni na stránku s potvrzením."
 #: code:addons/payment/models/account_journal.py:0
 #, python-format
 msgid ""
-"You can't delete a payment method that is linked to an acquirer in the "
-"enabled or test state.\n"
+"You can't delete a payment method that is linked to an acquirer in the enabled or test state.\n"
 "Linked acquirer(s): %s"
 msgstr ""
 

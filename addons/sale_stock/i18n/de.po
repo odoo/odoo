@@ -1,37 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-#
+# 
 # Translators:
-# Wolfgang Taferner, 2019
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
+# Renzo Meister, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Fabian Liesch <fabian.liesch@gmail.com>, 2017
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
+# Katharina Moritz <kmo@e2f.com>, 2017
+# Andi, 2017
+# e2f FFE <e2f_de_FFE@outlook.com>, 2018
+# Wolfgang Taferner, 2018
+# Bülent Tiknas <btiknas@googlemail.com>, 2018
 # Rudolf Schnapka <rs@techno-flex.de>, 2019
-# darenkster <inactive+darenkster@transifex.com>, 2019
-# Andi, 2019
-# Katharina Moritz <kmo@e2f.com>, 2019
-# Bülent Tiknas <btiknas@googlemail.com>, 2019
-# e2f FFE <e2f_de_FFE@outlook.com>, 2019
-# Luc Muller <lmuller@ityou.de>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
 # Leon Grill <leg@odoo.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
 # e2f <projects@e2f.com>, 2019
-# Martin Trigaux, 2019
 # Henry Mineehen <info@mineehen.de>, 2019
-#
+# Anja Funk <anja.funk@afimage.de>, 2020
+# Tobias Arndt, 2020
+# Kevin Harrings <kha@odoo.com>, 2021
+# Felix Schubert <felix.schubert@go-erp.com>, 2021
+# Robert Förster <hello@suppliot.eu>, 2021
+# Daniel Kieneswenger <daniel.kieneswenger@gmail.com>, 2021
+# Chris Egal <sodaswed@web.de>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Henry Mineehen <info@mineehen.de>, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
@@ -46,28 +54,28 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>in Vorbereitung</b>"
+msgstr "In Vorbereitung"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr "<i class=\"fa fa-fw fa-times\"/> <b>abgebrochen</b>"
+msgstr "<i class=\"fa fa-fw fa-times\"/> <b>Abgebrochen</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
-msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>versandt</b>"
+msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>Versandt</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" role=\"img\" aria-label=\"Values set here are company-specific."
-"\" groups=\"base.group_multi_company\"/>"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" role=\"img\" aria-label=\"Values set here are company-specific."
-"\" groups=\"base.group_multi_company\"/>"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -103,36 +111,27 @@ msgstr "<strong>Incoterm:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__product_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory "
-"app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Ein lagerfähiges Produkt ist ein Produkt, für das Sie den Lagerbestand "
-"verwalten. Die Inventar App muss installiert sein.\n"
-"Ein Verbrauchsgut ist ein Produkt, für das der Lagerbestand nicht verwaltet "
-"wird.\n"
+"Ein lagerfähiges Produkt ist ein Produkt, für das Sie den Lagerbestand verwalten. Die Inventar App muss installiert sein.\n"
+"Ein Verbrauchsgut ist ein Produkt, für das der Lagerbestand nicht verwaltet wird.\n"
 "Eine Dienstleistung ist ein von Ihnen bereitgestelltes immaterielles Produkt."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be "
-"automatically computed by mechanism :\n"
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted "
-"expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
-"this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Je nach Produktkonfiguration kann die Liefermenge automatisch durch einen "
-"Mechanismus berechnet werden:\n"
+"Je nach Produktkonfiguration kann die Liefermenge automatisch durch einen Mechanismus berechnet werden:\n"
 "  - Manuell: Die Menge wird manuell auf der Linie eingestellt\n"
-"  - Analytik von Aufwendungen: Die Menge ist die Mengensumme aus gebuchten "
-"Aufwendungen\n"
-"  - Arbeitszeitblatt: Die Menge ist die Summe der Stunden, die für Aufgaben "
-"erfasst wurden, die mit dieser Verkaufslinie verbunden sind.\n"
+"  - Analytik von Aufwendungen: Die Menge ist die Mengensumme aus gebuchten Aufwendungen\n"
+"  - Arbeitszeitblatt: Die Menge ist die Summe der Stunden, die für Aufgaben erfasst wurden, die mit dieser Verkaufslinie verbunden sind.\n"
 "  - Lagerbewegungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
 
 #. module: sale_stock
@@ -196,7 +195,7 @@ msgstr "Fertigstellungstermin des ersten Lieferauftrags."
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurationseinstellungen"
+msgstr "Konfiguration "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -221,7 +220,7 @@ msgstr "Zustellalarm"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr "Lieferaufträge"
+msgstr "Warenauslieferung"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -249,7 +248,7 @@ msgstr "Lieferbedingungen auf Angeboten und Rechnungen anzeigen"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr "Lieferbedingungen für Aufträgen und Rechnungen anzeigen"
+msgstr "Lieferbedingungen auf Angebote und Rechnungen anzeigen"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -306,7 +305,7 @@ msgstr "Erwartet:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
 msgid "Forecast Expected Date"
-msgstr ""
+msgstr "Voraussichtliches Datum"
 
 #. module: sale_stock
 #. openerp-web
@@ -332,8 +331,8 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Bei \"Alle Produkte auf einmal liefern\" wird die Lieferzeit auf die längste "
-"Lieferzeit aller Produkte gesetzt. Andernfalls auf diejenige des zuerst "
+"Bei \"Alle Produkte auf einmal liefern\" wird die Lieferzeit auf die längste"
+" Lieferzeit aller Produkte gesetzt. Andernfalls auf diejenige des zuerst "
 "lieferbaren Produktes."
 
 #. module: sale_stock
@@ -421,7 +420,7 @@ msgid ""
 msgstr ""
 "Toleranztage bei Zusagen für Lieferversprechen. Produkte werden um diesen "
 "Toleranzzeitraum (in Tagen) früher ausgeliefert als vereinbart, um "
-"unerwartetem Verzug in der Lieferkette entgegenzuwirken."
+"unerwartetem Verzug in der Versorgungskette entgegen zu wirken."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -429,13 +428,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Toleranztage bei Zusagen für Lieferversprechen. Produkte werden um diesen "
-"Toleranzzeitraum (in Tagen) früher beschafft und ausgeliefert als vereinbart "
-"um unerwartetem Verzug in der Versorgungskette entgegen zu wirken. (Je nach "
-"Kunde mit Vorsicht einsetzen!)"
+"Toleranzzeitraum (in Tagen) früher beschafft und ausgeliefert als vereinbart"
+" um unerwartetem Verzug in der Versorgungskette entgegen zu wirken. (Je nach"
+" Kunde mit Vorsicht einsetzen!)"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -515,7 +514,7 @@ msgstr "Angebote"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "Verbleibende Nachfrage verfügbar unter"
 
 #. module: sale_stock
 #. openerp-web
@@ -558,7 +557,7 @@ msgstr "Verkaufsanalysebericht"
 #: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
-msgstr "Verkaufsauftrag "
+msgstr "Verkaufsauftrag"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
@@ -568,7 +567,7 @@ msgstr "Kundenauftrag stornieren"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Kundenauftragszeile"
+msgstr "Auftragsposition"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
@@ -636,8 +635,8 @@ msgid ""
 "Some products have already been delivered. Returns can be created from the "
 "Delivery Orders."
 msgstr ""
-"Einige Produkte wurden bereits ausgeliefert. Retourbuchungen können über die "
-"Lieferungen erstellt werden."
+"Einige Produkte wurden bereits ausgeliefert. Retourbuchungen können über die"
+" Lieferungen erstellt werden."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -682,10 +681,8 @@ msgstr "Die Lieferung"
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
-"strong>,\n"
-"                        You should probably update the partner on this "
-"document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
+"                        You should probably update the partner on this document."
 msgstr ""
 "Die Lieferadresse wurde im Kundenauftrag <br/> geändert\n"
 "Von <strong>\"%s\"</strong> in <strong>\"%s\"</strong>,\n"

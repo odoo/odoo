@@ -1,33 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-#
+# 
 # Translators:
-# Jeanphy <hzh0292@qq.com>, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# 苏州远鼎 <tiexinliu@126.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# Martin Trigaux, 2019
-#
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
+# 稀饭~~ <wangwhai@qq.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Martin Trigaux, 2021
+# 深圳市耀影科技有限公司_QQ1006399173, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported"
@@ -40,7 +43,7 @@ msgstr "%d 记录被成功导入"
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
-msgstr "在文件中只找到一列，这通常意味着文件分隔符不正确"
+msgstr "文件中仅有一栏，这经常意味着文件分隔符不正确"
 
 #. module: base_import
 #. openerp-web
@@ -61,7 +64,7 @@ msgstr "高级"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Allow matching with subfields"
-msgstr ""
+msgstr "允许与子字段匹配"
 
 #. module: base_import
 #. openerp-web
@@ -69,12 +72,11 @@ msgstr ""
 #, python-format
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is "
-"transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
-"导入过程中出现未知问题（可能连接丢失、数据超过限制或内存超过限制）。如果问题"
-"是暂时的，请重试。如果问题仍然发生，尝试拆分文件，而不是立即导入它。"
+"导入过程中出现未知问题（可能连接丢失、数据超过限制或内存超过限制）。如果问题是暂时的，请重试。如果问题仍然发生，尝试拆分文件，而不是立即导入它。"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -96,7 +98,7 @@ msgstr "基础导入对照"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch Import"
-msgstr ""
+msgstr "批量导入"
 
 #. module: base_import
 #. openerp-web
@@ -110,7 +112,7 @@ msgstr "批量限制"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Cancel"
-msgstr "取消日期"
+msgstr "取消"
 
 #. module: base_import
 #. openerp-web
@@ -129,7 +131,7 @@ msgstr "栏位 %s 包含非法数据(值: %s)"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "栏位 %s 包含不正确的值。 出错行 %d: %s"
+msgstr "栏位 %s 包含非法数据。值 %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -138,6 +140,7 @@ msgstr "栏位标签"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Comma"
@@ -154,7 +157,8 @@ msgstr "注释"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 msgstr "无法检索 URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
@@ -183,7 +187,7 @@ msgstr "创建新值"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
@@ -213,6 +217,7 @@ msgid "Currency"
 msgstr "币种"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
@@ -270,6 +275,9 @@ msgstr "点"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Download"
 msgstr "下载"
@@ -304,7 +312,7 @@ msgstr "日期语法错误 [%s:L%d]: %s"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Estimated time left:"
-msgstr ""
+msgstr "估计剩余时间。"
 
 #. module: base_import
 #. openerp-web
@@ -321,6 +329,7 @@ msgid "Excel files are recommended as formatting is automatic."
 msgstr "建议使用Excel文件，因为格式是自动的。"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
@@ -339,6 +348,9 @@ msgstr "文件"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "File Column"
 msgstr "文件标题字段"
@@ -355,6 +367,7 @@ msgstr "文件类型"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
 msgstr "文件大小超出设定的最大值 (%s bytes)"
@@ -362,14 +375,14 @@ msgstr "文件大小超出设定的最大值 (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "文件的检查或导入， 原始二进制编码（不是base64编码）"
+msgstr "文件的审核或导入， 原始二进制编码（不是base64编码）"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "在中断前完成当前批次的工作..."
 
 #. module: base_import
 #. openerp-web
@@ -383,14 +396,14 @@ msgstr "对于 CSV 格式的文件, 您可能需要选择正确的分隔符."
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Formatting"
-msgstr ""
+msgstr "格式化"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Found invalid image data, images should be imported as either URLs or base64-"
-"encoded data."
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
 msgstr "发现无效的图像数据，图像应该用URL或 base64编码的数据来导入。"
 
 #. module: base_import
@@ -445,6 +458,10 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"如果该文件包含\n"
+"                    列名，Odoo可以尝试自动检测列所对应的\n"
+"                    与该列对应的字段。这使得导入\n"
+"                    更加简单，特别是当文件有很多列时。"
 
 #. module: base_import
 #. openerp-web
@@ -453,16 +470,14 @@ msgstr ""
 msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
-msgstr ""
-"如果模型使用openchatter，则历史跟踪将在导入期间设置订阅并发送通知，但会导致导"
-"入速度变慢。"
+msgstr "如果模型使用openchatter，则历史跟踪将在导入期间设置订阅并发送通知，但会导致导入速度变慢。"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr ""
+msgstr "图片尺寸过大，导入的图片必须小于4200万像素"
 
 #. module: base_import
 #. openerp-web
@@ -489,7 +504,7 @@ msgstr "导入文件"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Import file has no content or is corrupt"
-msgstr ""
+msgstr "导入文件没有内容或已损坏"
 
 #. module: base_import
 #. openerp-web
@@ -513,9 +528,7 @@ msgid ""
 "Import timed out. Please retry. If you still encounter this issue, the file "
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
-msgstr ""
-"导入超时。请重试。如果仍然遇到此问题，则该文件针对系统配置来说可能太大，请尝"
-"试对其进行分割（每个文件导入更少的记录）。"
+msgstr "导入超时。请重试。如果仍然遇到此问题，则该文件针对系统配置来说可能太大，请尝试对其进行分割（每个文件导入更少的记录）。"
 
 #. module: base_import
 #. openerp-web
@@ -529,7 +542,7 @@ msgstr "导入文件"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Importing"
-msgstr ""
+msgstr "导入中"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -563,7 +576,7 @@ msgstr "标签"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
 msgid "Last Modified on"
-msgstr "最后更改日"
+msgstr "最后修改日"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -584,7 +597,7 @@ msgstr "最后更改日"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
@@ -605,7 +618,7 @@ msgstr "最后更新者"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_date
 msgid "Last Updated on"
-msgstr "更新时间"
+msgstr "最后更新时间"
 
 #. module: base_import
 #. openerp-web
@@ -619,7 +632,7 @@ msgstr "加载文件"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Loading file..."
-msgstr ""
+msgstr "载入文件..."
 
 #. module: base_import
 #. openerp-web
@@ -634,7 +647,7 @@ msgstr "模型"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "发生多个错误"
 
 #. module: base_import
 #. openerp-web
@@ -671,7 +684,7 @@ msgstr "未找到对应的资料"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for the following"
-msgstr ""
+msgstr "没有发现以下的匹配记录"
 
 #. module: base_import
 #. openerp-web
@@ -733,9 +746,10 @@ msgstr "搜索字段..."
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "See possible values"
-msgstr "查看可能的值"
+msgstr "查看所有可能的值"
 
 #. module: base_import
 #. openerp-web
@@ -763,21 +777,21 @@ msgstr "分隔符："
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to:"
-msgstr ""
+msgstr "设置为。"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: False"
-msgstr ""
+msgstr "设置为假"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: True"
-msgstr ""
+msgstr "设置为真"
 
 #. module: base_import
 #. openerp-web
@@ -791,7 +805,7 @@ msgstr "将值设置为空"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Sheet:"
-msgstr ""
+msgstr "表:"
 
 #. module: base_import
 #. openerp-web
@@ -817,7 +831,7 @@ msgstr "空格键"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Standard Fields"
-msgstr ""
+msgstr "标准字段"
 
 #. module: base_import
 #. openerp-web
@@ -831,7 +845,7 @@ msgstr "开始行"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Stop Import"
-msgstr ""
+msgstr "停止导入"
 
 #. module: base_import
 #. openerp-web
@@ -845,7 +859,7 @@ msgstr "建议字段"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Tab"
-msgstr "页卡"
+msgstr "选项卡"
 
 #. module: base_import
 #. openerp-web
@@ -955,21 +969,21 @@ msgstr "该文件包含异常错误（见下文）"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains non-blocking warnings (see below)"
-msgstr ""
+msgstr "该文件包含非阻塞性警告（见下文）。"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "The file will be imported by batches"
-msgstr ""
+msgstr "该文件将被分批导入"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "这一栏将在字段中串联起"
 
 #. module: base_import
 #. openerp-web
@@ -990,7 +1004,7 @@ msgstr "千分位分隔符:"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "To import multiple values, separate them by a comma"
-msgstr ""
+msgstr "要导入多个值，请用逗号分隔它们"
 
 #. module: base_import
 #. openerp-web
@@ -1016,8 +1030,7 @@ msgstr "类型"
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid ""
-"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr "无法装载 \"{extension}\"  文件:需要Python 模块 \"{modname}\""
 
 #. module: base_import
@@ -1089,7 +1102,7 @@ msgstr "值2"
 msgid ""
 "Warning: ignores the labels line, empty lines and lines composed only of "
 "empty cells"
-msgstr ""
+msgstr "警告：忽略标签行、空行和仅由空单元格组成的行。"
 
 #. module: base_import
 #. openerp-web
@@ -1117,7 +1130,7 @@ msgstr "在继续导入前你可以测试或重新载入你的文件。"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "您必须配置至少一个要导入的字段"
+msgstr "You must configure at least one field to import"
 
 #. module: base_import
 #. openerp-web
@@ -1131,17 +1144,18 @@ msgstr "在多行处的匹配"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at row"
-msgstr ""
+msgstr "在行"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "batch"
-msgstr ""
+msgstr "批量"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"
@@ -1159,17 +1173,17 @@ msgstr "分钟"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "more)"
-msgstr ""
+msgstr "更多)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "out of"
-msgstr ""
+msgstr "之外"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr "未知编码错误 %s"
+msgstr "未知错误代码 %s"

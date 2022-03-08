@@ -1,29 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_forum
-#
+# 
 # Translators:
-# Jakub Lohnisky <jakub@lepremier.cz>, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Martin Trigaux, 2019
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
-#
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
+# Jakub Lohnisky <jakub@lepremier.cz>, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# Martin Trigaux, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# Damian Brencic <brencicdamian12313@gmail.com>, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_forum
 #. openerp-web
@@ -34,6 +36,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid " Flagged"
@@ -129,17 +132,20 @@ msgstr "%d karma vyžadována pro snížení úrovně hlasováním."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to edit a post."
 msgstr "%d karma vyžadována k úpravě příspěvku."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to flag a post."
 msgstr "%d karma vyžadována k označení příspěvku vlaječkou."
 
 #. module: website_forum
+#: code:addons/website_forum/controllers/main.py:0
 #: code:addons/website_forum/controllers/main.py:0
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
@@ -245,12 +251,10 @@ msgstr "O 65% více šancí získat odpověď"
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
 "<b class=\"d-block\">You have a pending post</b>\n"
-"                        Please wait for a moderator to validate your "
-"previous post to be allowed replying questions."
+"                        Please wait for a moderator to validate your previous post to be allowed replying questions."
 msgstr ""
 "<b class=\"d-block\">Máte čekající příspěvek</b>\n"
-"Počkejte, až moderátor potvrdí předchozí příspěvek, aby mohl odpovědět na "
-"otázky."
+"Počkejte, až moderátor potvrdí předchozí příspěvek, aby mohl odpovědět na otázky."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -293,8 +297,8 @@ msgstr ""
 msgid ""
 "<b>Answers should not start debates</b> This community Q&amp;A is not a "
 "discussion group. Please avoid holding debates in your answers as they tend "
-"to dilute the essence of questions and answers. For brief discussions please "
-"use commenting facility."
+"to dilute the essence of questions and answers. For brief discussions please"
+" use commenting facility."
 msgstr ""
 "<b>Odpovědi by neměly začít debaty</b>. Tyto komunitní otázky a odpovědi "
 "nejsou diskusní skupinou. Vyhněte se, abyste ve svých odpovědích pořádali "
@@ -307,8 +311,8 @@ msgstr ""
 msgid ""
 "<b>Answers shouldn't just point to other Questions</b>. Instead add a "
 "question comment indication \"Possible duplicate of...\". However, it's ok "
-"to include links to other questions or answers providing relevant additional "
-"information."
+"to include links to other questions or answers providing relevant additional"
+" information."
 msgstr ""
 "<b>Odpovědi by neměly jen odkazovat na jiné otázky</b>. Místo toho přidejte "
 "poznámku s poznámkou k otázce \"Možný duplikát ...\". Je však v pořádku "
@@ -319,8 +323,8 @@ msgstr ""
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid ""
-"<b>Answers shouldn't just point to other questions</b>.Instead add a comment "
-"indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to "
+"<b>Answers shouldn't just point to other questions</b>.Instead add a comment"
+" indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to "
 "include links to other questions or answers providing relevant additional "
 "information."
 msgstr ""
@@ -333,8 +337,8 @@ msgstr ""
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid ""
-"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the "
-"solution description text in your answer, even if it's just a copy/paste. "
+"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the"
+" solution description text in your answer, even if it's just a copy/paste. "
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
 msgstr ""
@@ -348,8 +352,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid ""
 "<b>Before you ask - please make sure to search for a similar question.</b> "
-"You can search questions by their title or tags. It’s also OK to answer your "
-"own question."
+"You can search questions by their title or tags. It’s also OK to answer your"
+" own question."
 msgstr ""
 "<b>Než se zeptáte - nezapomeňte hledat podobnou otázku.</b> Otázky můžete "
 "vyhledávat podle názvu nebo značek. Je také v pořádku odpovědět na vlastní "
@@ -359,8 +363,8 @@ msgstr ""
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid ""
-"<b>Please avoid asking questions that are too subjective and argumentative</"
-"b> or not relevant to this community."
+"<b>Please avoid asking questions that are too subjective and "
+"argumentative</b> or not relevant to this community."
 msgstr ""
 "<b>Vyhněte se prosím kladení otázek, které jsou pro tuto komunitu příliš "
 "subjektivní a argumentační</b> nebo nejsou relevantní."
@@ -368,20 +372,14 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 msgid ""
-"<b>Please try to give a substantial answer.</b> If you wanted to comment on "
-"the question or answer, just\n"
-"            <b>use the commenting tool.</b> Please remember that you can "
-"always <b>revise your answers</b>\n"
-"            - no need to answer the same question twice. Also, please "
-"<b>don't forget to vote</b>\n"
+"<b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just\n"
+"            <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>\n"
+"            - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "            - it really helps to select the best questions and answers!"
 msgstr ""
-"<b>Pokuste se dát podstatnou odpověď.</b> Pokud jste chtěli komentovat "
-"otázku nebo odpověď, prostě\n"
-"<b>použijte nástroj pro přidávání komentářů.</b> Nezapomeňte, že vždy můžete "
-"<b>své odpovědi revidovat</b>\n"
-"- není třeba odpovídat na stejnou otázku dvakrát. <b>Nezapomeňte také "
-"hlasovat</b>\n"
+"<b>Pokuste se dát podstatnou odpověď.</b> Pokud jste chtěli komentovat otázku nebo odpověď, prostě\n"
+"<b>použijte nástroj pro přidávání komentářů.</b> Nezapomeňte, že vždy můžete <b>své odpovědi revidovat</b>\n"
+"- není třeba odpovídat na stejnou otázku dvakrát. <b>Nezapomeňte také hlasovat</b>\n"
 "- to opravdu pomáhá vybrat ty nejlepší otázky a odpovědi!"
 
 #. module: website_forum
@@ -437,12 +435,10 @@ msgstr "<b>[Odpověď]</b>"
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
 msgid ""
 "<b>|</b>\n"
-"                    <span class=\"fa fa-trophy badge-gold ml-2\" role=\"img"
-"\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
+"                    <span class=\"fa fa-trophy badge-gold ml-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 msgstr ""
 "<b>|</b>\n"
-"                    <span class=\"fa fa-trophy badge-gold ml-2\" role=\"img"
-"\" aria-label=\"Gold badge\" title=\"Zlatý odznak\"/>"
+"                    <span class=\"fa fa-trophy badge-gold ml-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Zlatý odznak\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -481,8 +477,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid ""
-"<i class=\"fa fa-check\"/> How to configure TPS and TVQ's canadian taxes?"
+msgid "<i class=\"fa fa-check\"/> How to configure TPS and TVQ's canadian taxes?"
 msgstr "<i class=\"fa fa-check\"/> Jak nakonfigurovat kanadské daně TPS a TVQ?"
 
 #. module: website_forum
@@ -528,12 +523,10 @@ msgstr "<i class=\"fa fa-flag\"/> Země"
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid ""
 "<i class=\"fa fa-pencil\"/>\n"
-"                                Edit<span class=\"d-none d-lg-inline\"> your "
-"answer</span>"
+"                                Edit<span class=\"d-none d-lg-inline\"> your answer</span>"
 msgstr ""
 "<i class=\"fa fa-pencil\"/>\n"
-"                                Upravit<span class=\"d-none d-lg-inline\"> "
-"vaši odpověď</span>"
+"                                Upravit<span class=\"d-none d-lg-inline\"> vaši odpověď</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
@@ -572,20 +565,20 @@ msgstr "<i class=\"fa fa-tags fa-fw\"/>Sledované značky"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid ""
-"<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-label="
-"\"Negative votes\" title=\"Negative votes\"/>"
+"<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-"
+"label=\"Negative votes\" title=\"Negative votes\"/>"
 msgstr ""
-"<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-label="
-"\"Negative votes\" title=\"Záporné hlasy\"/>"
+"<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-"
+"label=\"Negative votes\" title=\"Záporné hlasy\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid ""
-"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive "
-"votes\" title=\"Positive votes\"/>"
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
+" votes\" title=\"Positive votes\"/>"
 msgstr ""
-"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive "
-"votes\" title=\"Kladné hlasy\"/>"
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
+" votes\" title=\"Kladné hlasy\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -636,27 +629,27 @@ msgstr "<span class=\"badge badge-info\">Uzavřeno</span>"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
 msgid ""
-"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-label="
-"\"Bronze badge\" title=\"Bronze badge\"/>"
+"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
 msgstr ""
-"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-label="
-"\"Bronze badge\" title=\"Bronzový odznak\"/>"
+"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronzový odznak\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
 msgid ""
-"<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-label="
-"\"Silver badge\" title=\"Silver badge\"/>"
+"<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-"
+"label=\"Silver badge\" title=\"Silver badge\"/>"
 msgstr ""
-"<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-label="
-"\"Silver badge\" title=\"Stříbrný odznak\"/>"
+"<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-"
+"label=\"Silver badge\" title=\"Stříbrný odznak\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<span class=\"font-weight-bold\">No answer posted yet.</span>"
 msgstr ""
-"<span class=\"font-weight-bold\">Zatím žádná odpověď nebyla zveřejněna.</"
-"span>"
+"<span class=\"font-weight-bold\">Zatím žádná odpověď nebyla "
+"zveřejněna.</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -721,13 +714,11 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid ""
-"<span class=\"o_wforum_answer_correct_badge border small border-success "
-"rounded-pill font-weight-bold text-success ml-2 px-2\">\n"
+"<span class=\"o_wforum_answer_correct_badge border small border-success rounded-pill font-weight-bold text-success ml-2 px-2\">\n"
 "                            Best Answer\n"
 "                        </span>"
 msgstr ""
-"<span class=\"o_wforum_answer_correct_badge border small border-success "
-"rounded-pill font-weight-bold text-success ml-2 px-2\">\n"
+"<span class=\"o_wforum_answer_correct_badge border small border-success rounded-pill font-weight-bold text-success ml-2 px-2\">\n"
 "                            Nejlepší odpověď\n"
 "                        </span>"
 
@@ -779,6 +770,9 @@ msgstr "Přijetí odpovědi"
 
 #. module: website_forum
 #. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Access Denied"
@@ -1060,6 +1054,7 @@ msgstr "Zpět na otázku"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/main.py:0
 #, python-format
 msgid "Bad Request"
 msgstr "Špatný požadavek"
@@ -1224,6 +1219,7 @@ msgstr "Kliknutím vložte otázku"
 
 #. module: website_forum
 #. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 #, python-format
@@ -1777,14 +1773,15 @@ msgid ""
 "accumulated for a question or answer per day. The table given at the end "
 "explains reputation point requirements for each type of moderation task."
 msgstr ""
-"Pokud například položíte zajímavou otázku nebo poskytnete užitečnou odpověď, "
-"váš příspěvek bude hlasováním posunut nahoru. Na druhou stranu, pokud je "
+"Pokud například položíte zajímavou otázku nebo poskytnete užitečnou odpověď,"
+" váš příspěvek bude hlasováním posunut nahoru. Na druhou stranu, pokud je "
 "odpověď zavádějící - bude hlasováním posunut dolu. Každým kladným hlasem "
 "získá 10 bodů, každý hlas proti odečte 10 bodů. Limit je 200 bodů denně, "
 "které lze nashromáždit za otázku nebo odpověď. Tabulka uvedená na konci "
 "vysvětluje požadavky na reputaci bodů pro každý typ úkolu moderování."
 
 #. module: website_forum
+#: code:addons/website_forum/models/website.py:0
 #: code:addons/website_forum/models/website.py:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.model,name:website_forum.model_forum_forum
@@ -2010,16 +2007,15 @@ msgid ""
 "            them."
 msgstr ""
 "Pokud tento příspěvek zavřete, bude pro většinu uživatelů skryt. Pouze\n"
-"uživatelé, kteří mají vysokou karmu, mohou vidět uzavřené příspěvky a "
-"moderovat je."
+"uživatelé, kteří mají vysokou karmu, mohou vidět uzavřené příspěvky a moderovat je."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid ""
 "If you fit in one of these example or if your motivation for asking the "
-"question is “I would like to participate in a discussion about ______”, then "
-"you should not be asking here but on our mailing lists. However, if your "
+"question is “I would like to participate in a discussion about ______”, then"
+" you should not be asking here but on our mailing lists. However, if your "
 "motivation is “I would like others to explain ______ to me”, then you are "
 "probably OK."
 msgstr ""
@@ -2036,10 +2032,8 @@ msgid ""
 "            users having a high karma can see offensive posts to moderate\n"
 "            them."
 msgstr ""
-"Pokud tento příspěvek označíte jako urážlivý, bude pro většinu uživatelů "
-"skrytý. Pouze\n"
-"uživatelé, kteří mají vysokou karmu, mohou vidět urážlivá místa kvůli jejich "
-"umírnění."
+"Pokud tento příspěvek označíte jako urážlivý, bude pro většinu uživatelů skrytý. Pouze\n"
+"uživatelé, kteří mají vysokou karmu, mohou vidět urážlivá místa kvůli jejich umírnění."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_1920
@@ -2599,7 +2593,8 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
-"Please wait for a moderator to validate your previous post before continuing."
+"Please wait for a moderator to validate your previous post before "
+"continuing."
 msgstr ""
 
 #. module: website_forum
@@ -2730,25 +2725,23 @@ msgstr "Veřejný"
 msgid ""
 "Public: Forum is public\n"
 "Signed In: Forum is visible for signed in users\n"
-"Some users: Forum and their content are hidden for non members of selected "
-"group"
+"Some users: Forum and their content are hidden for non members of selected group"
 msgstr ""
 "Veřejné: Fórum je veřejné\n"
 "Přihlášení: Fórum je viditelné pro přihlášené uživatele\n"
-"Někteří uživatelé: Fórum a jeho obsah jsou skryté pro uživatele, kteří "
-"nejsou členy vybrané skupiny."
+"Někteří uživatelé: Fórum a jeho obsah jsou skryté pro uživatele, kteří nejsou členy vybrané skupiny."
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid ""
-"Public: Forum is public\\nSigned In: Forum is visible for signed in users"
-"\\nSome users: Forum and their content are hidden for non members of "
+"Public: Forum is public\\nSigned In: Forum is visible for signed in "
+"users\\nSome users: Forum and their content are hidden for non members of "
 "selected group"
 msgstr ""
-"Veřejnost: Fórum je veřejné\\ Přihlášen: Fórum je viditelné pro přihlášené "
-"uživatele\\ Někteří uživatelé: Fórum a jeho obsah jsou skryté pro nečleny "
+"Veřejnost: Fórum je veřejné\\nPřihlášen: Fórum je viditelné pro přihlášené "
+"uživatele\\nNěkteří uživatelé: Fórum a jeho obsah jsou skryté pro nečleny "
 "vybrané skupiny."
 
 #. module: website_forum
@@ -2890,6 +2883,7 @@ msgid "Ranks"
 msgstr "Úrovně"
 
 #. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "Re: %s"
@@ -3078,7 +3072,7 @@ msgstr "Samouk"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__seo_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__seo_name
 msgid "Seo name"
-msgstr "SEO jméno"
+msgstr "Seo jméno"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
@@ -3090,8 +3084,8 @@ msgstr "Číselná řada"
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid ""
-"Share this content to increase your chances to be featured on the front page "
-"and attract more visitors."
+"Share this content to increase your chances to be featured on the front page"
+" and attract more visitors."
 msgstr ""
 "Sdílejte tento obsah a zvyšte tak své šance na titulní stránce a přilákejte "
 "více návštěvníků."
@@ -3119,7 +3113,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Sign in"
-msgstr "Přihlásit se"
+msgstr "Přihlásit"
 
 #. module: website_forum
 #. openerp-web
@@ -3127,7 +3121,7 @@ msgstr "Přihlásit se"
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__connected
 #, python-format
 msgid "Signed In"
-msgstr "Přihlášen"
+msgstr "Zapsán"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -3283,8 +3277,8 @@ msgid ""
 "on write_date is currently not supported and this field is a workaround."
 msgstr ""
 "Technické pole umožňující oživit otázku. Zapisování na toto pole spustí "
-"zápis na data write_date, a tím příspěvek oživíte. Přímé psaní na write_date "
-"není aktuálně podporováno a toto pole je řešením."
+"zápis na data write_date, a tím příspěvek oživíte. Přímé psaní na write_date"
+" není aktuálně podporováno a toto pole je řešením."
 
 #. module: website_forum
 #. openerp-web
@@ -3314,9 +3308,9 @@ msgstr "Otázka byla uzavřena"
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid ""
-"Therefore questions and answers can be edited like wiki pages by experienced "
-"users of this site in order to improve the overall quality of the knowledge "
-"base content. Such privileges are granted based on user karma level: you "
+"Therefore questions and answers can be edited like wiki pages by experienced"
+" users of this site in order to improve the overall quality of the knowledge"
+" base content. Such privileges are granted based on user karma level: you "
 "will be able to do the same once your karma gets high enough."
 msgstr ""
 "Zkušení uživatelé tohoto webu mohou proto upravovat otázky a odpovědi jako "
@@ -3344,16 +3338,11 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid ""
-"This community is for professionals and enthusiasts of our products and "
-"services.\n"
-"                                        <br>Share and discuss the best "
-"content and new marketing ideas, build your professional profile and become "
-"a better marketer together."
+"This community is for professionals and enthusiasts of our products and services.\n"
+"                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
 msgstr ""
 "Tato komunita je pro profesionály a nadšence našich produktů a služeb.\n"
-"<br>Sdílejte a diskutujte o nejlepším obsahu a nových marketingových "
-"nápadech, budujte svůj profesionální profil a společně se staňte lepším "
-"obchodníkem."
+"<br>Sdílejte a diskutujte o nejlepším obsahu a nových marketingových nápadech, budujte svůj profesionální profil a společně se staňte lepším obchodníkem."
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -3611,7 +3600,7 @@ msgstr "Oblíbené příspěvky uživatelů"
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 #: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Validate"
-msgstr "Schválit"
+msgstr "Ověřit"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
@@ -3781,9 +3770,9 @@ msgstr ""
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid ""
-"You should only ask practical, answerable questions based on actual problems "
-"that you face. Chatty, open-ended questions diminish the usefulness of this "
-"site and push other questions off the front page."
+"You should only ask practical, answerable questions based on actual problems"
+" that you face. Chatty, open-ended questions diminish the usefulness of this"
+" site and push other questions off the front page."
 msgstr ""
 "Měli byste se ptát pouze prakticky odpověditelné otázky na základě "
 "skutečných problémů, kterým čelíte. Diskutování, nekonečné otázky snižují "
@@ -3958,7 +3947,8 @@ msgid ""
 "if your\n"
 "        answer is selected as the right one. See what you can do with karma"
 msgstr ""
-"pokud je vaše odpověď vybrána jako správná. Vidíte, co to může dělat s karmou"
+"pokud je vaše odpověď vybrána jako správná. Vidíte, co to může dělat s "
+"karmou"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index

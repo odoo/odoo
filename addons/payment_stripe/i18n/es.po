@@ -1,22 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_stripe
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-#
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
+# Martin Trigaux, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Jonatan Gk, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-11 09:46+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2022-02-22 14:45+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Jonatan Gk, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_stripe
@@ -52,6 +56,7 @@ msgstr ""
 #, python-format
 msgid "No transaction found matching reference %s."
 msgstr ""
+"No se ha encontrado ninguna transacción que coincida con la referencia %s."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -61,7 +66,7 @@ msgstr "Método de pago"
 #. module: payment_stripe
 #: model:ir.actions.act_window,name:payment_stripe.action_payment_acquirer_onboarding
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "Métodos de pago"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_account_payment_method
@@ -109,7 +114,7 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Secret Key"
-msgstr "Clave secreta"
+msgstr "Contraseña secreta"
 
 #. module: payment_stripe
 #: model:account.payment.method,name:payment_stripe.payment_method_stripe
@@ -120,7 +125,7 @@ msgstr "Stripe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
-msgstr "ID de intento de pago por Stripe"
+msgstr "ID de Intención de Pago de Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
@@ -148,7 +153,7 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+msgstr "El proveedor de servicios de pago a utilizar con este adquirente"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -169,7 +174,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "La transacción no está vinculada a un token."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_token.py:0
@@ -193,6 +198,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot set the acquirer to Test Mode while it is linked with your Stripe"
+" account."
 msgstr ""
 
 #. module: payment_stripe

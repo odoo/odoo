@@ -1,30 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-#
+# 
 # Translators:
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Sergey Vilizhanin, 2017
+# 6da4f49c4b78e697e34b24b2a66289f5, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
 # Collex100, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
-# Martin Trigaux, 2019
-#
+# Сергей Шебанин <sergey@shebanin.ru>, 2021
+# ILMIR <karamov@it-projects.info>, 2021
+# Martin Trigaux, 2021
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Ivan Kropotkin <yelizariev@itpp.dev>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported"
@@ -38,8 +44,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
-"Только один столбец найден в файле; это часто означает, что у файла неверный "
-"разделитель"
+"В файле обнаружен только один столбец; это зачастую означает, что у файла "
+"неверный разделитель"
 
 #. module: base_import
 #. openerp-web
@@ -68,13 +74,13 @@ msgstr "Разрешить сопоставление с подполями"
 #, python-format
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is "
-"transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 "При импорте произошла неизвестная проблема (возможно, потеряно подключение, "
-"превышен лимит данных или превышении ограничения памяти). Повторите попытку, "
-"если проблема не стала. Если проблема все еще возникает, попробуйте "
+"превышен лимит данных или превышении ограничения памяти). Повторите попытку,"
+" если проблема не стала. Если проблема все еще возникает, попробуйте "
 "разделить файл, а не импортировать его сразу."
 
 #. module: base_import
@@ -85,7 +91,7 @@ msgstr "Базовый"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr "Базовый импорт"
+msgstr "импорт базы"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
@@ -140,6 +146,7 @@ msgstr "Название колонки"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Comma"
 msgstr "Запятая"
@@ -155,10 +162,11 @@ msgstr "Комментарии"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 msgstr ""
-"Не удалось получить URL:%(url)s  [%(field_name)s : L%(line_number) d]:"
-"%(error)s "
+"Не удалось получить URL:%(url)s  [%(field_name)s : L%(line_number) "
+"d]:%(error)s "
 
 #. module: base_import
 #. openerp-web
@@ -217,6 +225,7 @@ msgstr "Валюта"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
 msgstr "ID базы данных"
@@ -273,6 +282,9 @@ msgstr "Точка"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Download"
 msgstr "Скачать"
@@ -325,6 +337,7 @@ msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
 msgstr "Внешний ID"
@@ -342,6 +355,9 @@ msgstr "Файл"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "File Column"
 msgstr ""
@@ -357,6 +373,7 @@ msgid "File Type"
 msgstr "Тип файла"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
@@ -392,8 +409,8 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Found invalid image data, images should be imported as either URLs or base64-"
-"encoded data."
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
 msgstr ""
 
 #. module: base_import
@@ -457,8 +474,8 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
-"Если у данной модели есть комментарии, будут настроены подписки и отправлены "
-"уведомления, но это может сильно замедлить импорт."
+"Если у данной модели есть комментарии, будут настроены подписки и отправлены"
+" уведомления, но это может сильно замедлить импорт."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -479,7 +496,7 @@ msgstr "Импорт"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr "Ответы на часто задаваемые вопросы"
+msgstr "импортировать FAQ"
 
 #. module: base_import
 #. openerp-web
@@ -518,8 +535,8 @@ msgid ""
 "records per file)."
 msgstr ""
 "Импорт завершен. Повторите попытку. Если вы все еще сталкиваетесь с этой "
-"проблемой, файл может быть слишком большим для настройки системы, попробуйте "
-"разделить его (импортировать меньше записей на файл)."
+"проблемой, файл может быть слишком большим для настройки системы, попробуйте"
+" разделить его (импортировать меньше записей на файл)."
 
 #. module: base_import
 #. openerp-web
@@ -616,7 +633,7 @@ msgstr "Последнее обновление"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Load File"
-msgstr "Загрузить файл"
+msgstr "Выбрать файл"
 
 #. module: base_import
 #. openerp-web
@@ -654,7 +671,7 @@ msgstr "Название"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Need Help?"
-msgstr "Не получается?"
+msgstr "Нужна помощь?"
 
 #. module: base_import
 #. openerp-web
@@ -736,6 +753,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "See possible values"
@@ -1020,8 +1038,7 @@ msgstr "Тип"
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid ""
-"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
 "Невозможно загрузить файл «{extension}»: требуется Python-модуль «{modname}»"
 
@@ -1151,6 +1168,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"

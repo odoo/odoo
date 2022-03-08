@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_sms
-#
+# 
 # Translators:
 # Martin Trigaux, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
-#
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/"
-"zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2019-12-16 11:02+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event_sms
@@ -29,12 +28,12 @@ msgstr "自動發送活動信件"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_registration
 msgid "Event Registration"
-msgstr "活動登記"
+msgstr "活動報名"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr "活動：報名"
+msgstr "活動：登記"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
@@ -72,14 +71,13 @@ msgstr "發送"
 #: model:sms.template,body:event_sms.sms_template_data_event_reminder
 msgid ""
 "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name }}: We are excited to remind you that the {{ object."
-"event_id.name }} event is starting {{ object.get_date_range_str() }}. We "
-"confirm your registration and hope to meet you there."
+"user.env.company.name }}: We are excited to remind you that the {{ "
+"object.event_id.name }} event is starting {{ object.get_date_range_str() }}."
+" We confirm your registration and hope to meet you there."
 msgstr ""
 "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name }}: 我們很高興地提醒您，{{ object.event_id.name }} 活動"
-"正在開始{{ object.get_date_range_str() }}。我們確認您的報名，並希望在那裡見到"
-"您。"
+"user.env.company.name }}: 我們很高興地提醒您，{{ object.event_id.name }} 活動正在開始{{ "
+"object.get_date_range_str() }}。我們確認您的報名，並希望在那裡見到您。"
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -89,5 +87,4 @@ msgid ""
 "{{ object.event_id.name }} event."
 msgstr ""
 "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name }}: 我們很高興確認您報名 {{ object.event_id.name }} 活"
-"動。"
+"user.env.company.name }}: 我們很高興確認您報名 {{ object.event_id.name }} 活動。"

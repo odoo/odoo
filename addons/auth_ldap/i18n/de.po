@@ -1,36 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_ldap
-#
+# 
 # Translators:
-# Leon Grill <leg@odoo.com>, 2019
-# Martin Trigaux, 2019
+# Niki Waibel, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Martin Trigaux, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# Johannes Croe <jcr@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
-#
+# Friederike Fasterling-Nesselbosch, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
 msgid ""
-"    Filter used to look up user accounts in the LDAP database. It is an    "
-"arbitrary LDAP filter in string representation. Any `%s` placeholder    will "
-"be replaced by the login (identifier) provided by the user, the filter    "
-"should contain at least one such placeholder.\n"
+"    Filter used to look up user accounts in the LDAP database. It is an    arbitrary LDAP filter in string representation. Any `%s` placeholder    will be replaced by the login (identifier) provided by the user, the filter    should contain at least one such placeholder.\n"
 "\n"
-"    The filter must result in exactly one (1) result, otherwise the login "
-"will    be considered invalid.\n"
+"    The filter must result in exactly one (1) result, otherwise the login will    be considered invalid.\n"
 "\n"
 "    Example (actual attributes depend on LDAP server and setup):\n"
 "\n"
@@ -41,16 +44,11 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"Filter für die Suche nach Benutzerkonten in der LDAP-Datenbank. Es ist ein "
-"beliebiger LDAP-Filter in String-Darstellung. Jeder `%s` Platzhalter wird "
-"durch die vom Benutzer angegebene Anmeldung (Kennung) ersetzt, der Filter "
-"sollte mindestens einen solchen Platzhalter enthalten.\n"
+"Filter für die Suche nach Benutzerkonten in der LDAP-Datenbank. Es ist ein beliebiger LDAP-Filter in String-Darstellung. Jeder `%s` Platzhalter wird durch die vom Benutzer angegebene Anmeldung (Kennung) ersetzt, der Filter sollte mindestens einen solchen Platzhalter enthalten.\n"
 "\n"
-"Der Filter muss genau ein (1) Ergebnis liefern, andernfalls wird die "
-"Anmeldung als ungültig betrachtet.\n"
+"Der Filter muss genau ein (1) Ergebnis liefern, andernfalls wird die Anmeldung als ungültig betrachtet.\n"
 "\n"
-"Beispiel (die tatsächlichen Attribute hängen vom LDAP-Server und der "
-"Einrichtung ab):\n"
+"Beispiel (die tatsächlichen Attribute hängen vom LDAP-Server und der Einrichtung ab):\n"
 "\n"
 "(&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
 "\n"
@@ -85,7 +83,7 @@ msgstr "Firmen LDAP Konfiguration"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurationseinstellungen"
+msgstr "Konfiguration "
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -108,8 +106,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
-"DN des Benutzersuchbereichs: alle untergeordneten Ebenen dieser Basis werden "
-"nach Benutzern durchsucht."
+"DN des Benutzersuchbereichs: alle untergeordneten Ebenen dieser Basis werden"
+" nach Benutzern durchsucht."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -171,12 +169,12 @@ msgstr "LDAP Passwort"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
 msgid "Last Modified on"
-msgstr "Letzte Änderung am"
+msgstr "Zuletzt geändert am"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert von"
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
@@ -205,8 +203,8 @@ msgstr "Prozessparameter"
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid ""
 "Request secure TLS/SSL encryption when connecting to the LDAP server. This "
-"option requires a server with STARTTLS enabled, otherwise all authentication "
-"attempts will fail."
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
 msgstr ""
 "Anforderung einer sicheren TLS/SSL Verschlüsselung für die Verbindung zum "
 "LDAP Server. STARTTLS muss aktiviert sein, sonst werden "
@@ -215,7 +213,7 @@ msgstr ""
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
 msgid "Sequence"
-msgstr "Sequenz"
+msgstr "Reihenfolge"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form

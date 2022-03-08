@@ -1,27 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_geolocalize
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
-#
+# Martin Trigaux, 2021
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -32,12 +29,10 @@ msgstr "(оновити)"
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid ""
 "<br/>\n"
-"                                    <span attrs=\"{'invisible': "
-"[('date_localization', '=', False)]}\">Updated on: </span>"
+"                                    <span attrs=\"{'invisible': [('date_localization', '=', False)]}\">Updated on: </span>"
 msgstr ""
 "<br/>\n"
-"                                    <span attrs=\"{'invisible': "
-"[('date_localization', '=', False)]}\">Оновлено: </span>"
+"                                    <span attrs=\"{'invisible': [('date_localization', '=', False)]}\">Оновлено: </span>"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -59,12 +54,10 @@ msgstr "API"
 #, python-format
 msgid ""
 "API key for GeoCoding (Places) required.\n"
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
-"for more information."
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
 "Вимагається ключ API для GeoCoding (Місця).\n"
-"Відвідайте https://developers.google.com/maps/documentation/geocoding/get-"
-"api-key для більшої інформації."
+"Відвідайте https://developers.google.com/maps/documentation/geocoding/get-api-key для більшої інформації."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -84,12 +77,12 @@ msgstr "Контакт"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
 msgid "Created by"
-msgstr "Створив"
+msgstr "Створено"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
@@ -161,7 +154,7 @@ msgstr "Останнє оновлення"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
 msgid "Name"
-msgstr "Ім'я"
+msgstr "Назва"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:0
@@ -202,16 +195,15 @@ msgstr ""
 "%s\n"
 "\n"
 "Google зробив цю функцію платною.\n"
-"Спочатку слід увімкнути виставлення рахунків у своєму обліковому записі "
-"Google.\n"
+"Спочатку слід увімкнути виставлення рахунків у своєму обліковому записі Google.\n"
 "Потім перейдіть у Console розробника, та увімкніть API:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid ""
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
-"for more information."
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
+" for more information."
 msgstr ""
 "Відвідайте https://developers.google.com/maps/documentation/geocoding/get-"
 "api-key для більшої інформації."
@@ -220,4 +212,4 @@ msgstr ""
 #: code:addons/base_geolocalize/models/res_partner.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Попередження"

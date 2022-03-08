@@ -1,20 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-#
+# 
+# Translators:
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
+# Martin Trigaux, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -93,6 +99,7 @@ msgstr "Both sides"
 #. module: snailmail
 #. openerp-web
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "Buy credits"
 msgstr "Cumpărare credit"
@@ -141,7 +148,7 @@ msgstr "Anulat(ă)"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__city
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "City"
-msgstr "Localitate"
+msgstr "Oraș"
 
 #. module: snailmail
 #. openerp-web
@@ -425,16 +432,12 @@ msgstr "Raport optional care va fi printat si atasat"
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid ""
 "Our service cannot read your letter due to its format.<br/>\n"
-"                Please modify the format of the template or update your "
-"settings\n"
+"                Please modify the format of the template or update your settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
-"Serviciul nostru nu poate citi scrisoarea dvs. datorită formatului său.<br/"
-">\n"
-"                Vă rugăm să modificați formatul șablonului sau să "
-"actualizați setările\n"
-"                pentru a adăuga automat o pagină de copertă goală tuturor "
-"scrisorilor."
+"Serviciul nostru nu poate citi scrisoarea dvs. datorită formatului său.<br/>\n"
+"                Vă rugăm să modificați formatul șablonului sau să actualizați setările\n"
+"                pentru a adăuga automat o pagină de copertă goală tuturor scrisorilor."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
@@ -476,7 +479,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
 msgid "Report Action"
-msgstr "Acțiune raport"
+msgstr "Acțiune Raport"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -586,7 +589,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "State"
-msgstr "Județ"
+msgstr "Stare"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -630,8 +633,8 @@ msgstr "Adresa destinatarului nu este completă"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid ""
-"The attachment of the letter could not be sent. Please check its content and "
-"contact the support if the problem persists."
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
 msgstr ""
 "Fișierul din scrisoare nu a putut fi trimis. Verificați conținutul acestuia "
 "și contactați asistența dacă problema persistă."
@@ -657,8 +660,8 @@ msgid ""
 "The customer address is not complete. Update the address here and re-send "
 "the letter."
 msgstr ""
-"Adresa clientului nu este completă. Actualizați adresa aici și trimiteți din "
-"nou scrisoarea."
+"Adresa clientului nu este completă. Actualizați adresa aici și trimiteți din"
+" nou scrisoarea."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -671,7 +674,8 @@ msgstr ""
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid ""
-"The letter could not be sent due to insufficient credits on your IAP account."
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
 msgstr ""
 
 #. module: snailmail
@@ -705,13 +709,11 @@ msgstr "Adresă actualizare partener"
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
 "If the letter is correctly sent, the status goes in 'Sent',\n"
-"If not, it will got in state 'Error' and the error message will be displayed "
-"in the field 'Error Message'."
+"If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
 "Când este creat ă o scrisoare, starea este „În așteptare”.\n"
 "Dacă scrisoarea este trimisă corect, starea va intra în „Trimis”,\n"
-"În caz contrar, va primi starea „Eroare” și mesajul de eroare va fi afișat "
-"în câmpul „Mesaj eroare”."
+"În caz contrar, va primi starea „Eroare” și mesajul de eroare va fi afișat în câmpul „Mesaj eroare”."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view

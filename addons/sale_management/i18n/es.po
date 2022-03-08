@@ -1,36 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-#
+# 
 # Translators:
 # Cristian Salamea <ovnicraft@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
-# Alejandro Santana <alejandrosantana@anubia.es>, 2019
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
-# Miguel Orueta <mo@landoo.es>, 2019
 # 966ff43e6966712895a590e7320ca288, 2019
-# Hbto [ Vauxoo ] <hbto@vauxoo.com>, 2019
 # 36700cd705c35e1852bdffcd0b296648, 2019
 # 715cd7e95e9ee8a7f9785bf3e53bc76f, 2019
 # renodoo <ren@odoo.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
+# Alejandro Santana <alejandrosantana@anubia.es>, 2019
+# Miguel Orueta <mo@landoo.es>, 2019
 # Jon Perez <jop@odoo.com>, 2019
-#
+# Antonio Trueba, 2020
+# Osiris Anael Roman Eras <osiris.roman@yachaytech.edu.ec>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
+"PO-Revision-Date: 2017-12-13 14:57+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_management
@@ -190,13 +192,10 @@ msgstr "Descripción"
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid ""
 "Design your quotation templates using building blocks<br/>\n"
-"                            <em attrs=\"{'invisible': "
-"[('module_sale_quotation_builder','=',False)]}\">Warning: this option will "
-"install the Website app.</em>"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
-"Diseñe sus plantillas de ofertas utilizando bloques de diseño<br/>\n"
-"<em attrs=\"{'invisible': [('module_sale_quotation_builder','=',"
-"False)]}\">Aviso: esta opción instalará el módulo de sitio web.</em>\n"
+"Diseñe sus plantillas de ofertas utilizando bloques de secciones y titulos1\n"
+"2Warning: this option will install the Website app.2\n"
 " "
 
 #. module: sale_management
@@ -234,7 +233,8 @@ msgstr "Tipo de pantalla"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"No tiene acceso, saltar esta información para el email de resumen del usuario"
+"No tiene acceso, saltar esta información para el email de resumen del "
+"usuario"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -253,7 +253,8 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr "Da el orden de secuencia al mostrar una lista de productos opcionales."
+msgstr ""
+"Da el orden de secuencia al mostrar una lista de productos opcionales."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
@@ -282,7 +283,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr "Indicador clave de rendimiento(KPI) Valor total de venta total"
+msgstr "indicador clave de rendimiento Valor total de venta total"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option____last_update
@@ -311,7 +312,7 @@ msgstr "Última actualización el"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__line_id
 msgid "Line"
-msgstr "Línea"
+msgstr "Linea"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_line_ids
@@ -474,7 +475,8 @@ msgstr ""
 msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
-msgstr "Solicitar pago en línea para confirmar pedidos"
+msgstr ""
+"Solicitar pago en línea al cliente para confirmar pedidos automáticamente."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -525,8 +527,8 @@ msgid ""
 "feature also exists in the Purchase application."
 msgstr ""
 "¿Vende el mismo producto en diferentes tamaños o colores? Pruebe la "
-"cuadrícula de productos y complete sus pedidos con varias cantidades de cada "
-"variante. Esta función también existe en la aplicación Compras."
+"cuadrícula de productos y complete sus pedidos con varias cantidades de cada"
+" variante. Esta función también existe en la aplicación Compras."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -572,8 +574,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
-"Se enviará esta plantilla de correo electrónico como confirmación. Déjela en "
-"blanco si no quiere enviar nada."
+"Se enviará esta plantilla de correo electrónico como confirmación. Déjela en"
+" blanco si no quiere enviar nada."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -628,15 +630,12 @@ msgstr "UdM"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign "
-"online.\n"
+"                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
 "Use plantillas para crear presupuestos profesionales y pulidos en minutos.\n"
-"                Envíe estos presupuestos por correo electrónico y deje que "
-"sus clientes firmen en línea.\n"
-"                Utilice las ventas cruzadas y los descuentos para impulsar y "
-"aumentar sus ventas."
+"                Envíe estos presupuestos por correo electrónico y deje que sus clientes firmen en línea.\n"
+"                Utilice las ventas cruzadas y los descuentos para impulsar y aumentar sus ventas."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
@@ -651,22 +650,18 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"No puede cambiar la línea del presupuesto de venta. En vez de eso, debería "
-"borrar la línea actual y crear una nueva línea del tipo correcto."
+"No puede cambiar el tipo de una línea de presupuesto. En su lugar, debe "
+"eliminarla y crear una nueva del tipo adecuado."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
 #, python-format
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas "
-"your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from "
-"other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"Su presupuesto contiene productos de la compañía %(product_company)s, "
-"mientras que el mismo pertenece a la compañía %(quote_company)s.\n"
-" Cambie la compañía de su presupuesto o elimine los productos de otras "
-"compañías (%(bad_products)s)."
+"Su presupuesto contiene productos de la compañía %(product_company)s, mientras que el mismo pertenece a la compañía %(quote_company)s.\n"
+" Cambie la compañía de su presupuesto o elimine los productos de otras compañías (%(bad_products)s)."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -678,13 +673,10 @@ msgstr "Su plantilla no puede contener productos de varias compañías."
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid ""
-"Your template contains products from company %(product_company)s whereas "
-"your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from "
-"other companies."
+"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
+" Please change the company of your template or remove the products from other companies."
 msgstr ""
-"Su plantilla contiene productos de la empresa %(product_company)s, mientras "
-"que su plantilla pertenece a la empresa %(template_company)s.\n"
+"Su plantilla contiene productos de la empresa %(product_company)s, mientras que su plantilla pertenece a la empresa %(template_company)s.\n"
 " Cambie la empresa de su plantilla o elimine los productos de otras empresas."
 
 #. module: sale_management

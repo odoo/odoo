@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_coupon
-#
+# 	* website_sale_coupon
+# 
 # Translators:
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
-# Martin Trigaux, 2019
-#
+# Martin Trigaux, 2021
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Kim Asplund <kim.asplund@gmail.com>, 2021
+# Simon S, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1+e\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2017-02-15 11:47+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Simon S, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_coupon
@@ -102,7 +104,7 @@ msgstr "Fel eller utgången kod."
 #. module: website_sale_coupon
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_share____last_update
 msgid "Last Modified on"
-msgstr "Senast redigerad"
+msgstr "Senast redigerad den"
 
 #. module: website_sale_coupon
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_share__write_uid
@@ -112,7 +114,7 @@ msgstr "Senast uppdaterad av"
 #. module: website_sale_coupon
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_share__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad"
+msgstr "Senast uppdaterad den"
 
 #. module: website_sale_coupon
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_share__program_id
@@ -144,7 +146,7 @@ msgstr "Ge antingen en kupong eller ett program."
 #. module: website_sale_coupon
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_share__redirect
 msgid "Redirect"
-msgstr "Dirigera om"
+msgstr "Omdirigera"
 
 #. module: website_sale_coupon
 #: model:ir.model.fields,help:website_sale_coupon.field_coupon_program__website_id
@@ -161,9 +163,10 @@ msgstr "Kundorder"
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_view_tree
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_program_view_tree_website
 msgid "Share"
-msgstr "Utdelning"
+msgstr "Dela Dokument"
 
 #. module: website_sale_coupon
+#: code:addons/website_sale_coupon/wizard/sale_coupon_share.py:0
 #: code:addons/website_sale_coupon/wizard/sale_coupon_share.py:0
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_share_view_form
 #, python-format
@@ -173,13 +176,14 @@ msgstr "Dela Kupong"
 #. module: website_sale_coupon
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_share__share_link
 msgid "Share Link"
-msgstr "Dela Länk"
+msgstr "Dela länk"
 
 #. module: website_sale_coupon
 #: code:addons/website_sale_coupon/controllers/main.py:0
 #, python-format
 msgid ""
-"The coupon will be automatically applied when you add something in your cart."
+"The coupon will be automatically applied when you add something in your "
+"cart."
 msgstr ""
 "Kupongen tillämpas automatiskt när du lägger till något i din kundvagn."
 
@@ -210,12 +214,10 @@ msgstr "Webbplats"
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_share_view_form
 msgid ""
 "You can share this promotion with your customers.\n"
-"                            It will be applied at checkout when the customer "
-"uses this link."
+"                            It will be applied at checkout when the customer uses this link."
 msgstr ""
 "Du kan dela denna kampanj med dina kunder.\n"
-"                            Det kommer att tillämpas vid kassan när kunden "
-"använder denna länk."
+"                            Det kommer att tillämpas vid kassan när kunden använder denna länk."
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result

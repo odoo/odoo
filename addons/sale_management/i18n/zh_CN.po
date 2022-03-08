@@ -1,40 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-#
+# 
 # Translators:
-# Jeanphy <hzh0292@qq.com>, 2019
 # e2f <projects@e2f.com>, 2019
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # v2exerer <9010446@qq.com>, 2019
 # fausthuang, 2019
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # diaojiaolou <124412206@qq.com>, 2019
 # keecome <7017511@qq.com>, 2019
-# 黎伟杰 <674416404@qq.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # snow wang <147156565@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 黎伟杰 <674416404@qq.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
-#
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2020
+# Titan Li <lghbeta@gmail.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2017-12-13 14:57+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_management
@@ -171,7 +170,7 @@ msgstr "创建时间"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_company__sale_order_template_id
 msgid "Default Sale Template"
-msgstr ""
+msgstr "默认销售模板"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__company_so_template_id
@@ -191,13 +190,10 @@ msgstr "说明"
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid ""
 "Design your quotation templates using building blocks<br/>\n"
-"                            <em attrs=\"{'invisible': "
-"[('module_sale_quotation_builder','=',False)]}\">Warning: this option will "
-"install the Website app.</em>"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
 "使用构建块设计报价模板<br/>\n"
-"<em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">警"
-"告：此选项将安装网站应用程序。</em>"
+"<em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">警告：此选项将安装网站应用程序。</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -438,7 +434,7 @@ msgstr "报价单模板"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation expires after"
-msgstr "报价单到期"
+msgstr "报价单过期"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -448,7 +444,7 @@ msgstr "移除"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove one"
-msgstr "移除一行"
+msgstr "删除一行"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
@@ -511,13 +507,13 @@ msgid ""
 "Selling the same product in different sizes or colors? Try the product grid "
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
-msgstr ""
+msgstr "以不同的尺寸或颜色销售相同的产品？尝试产品网格并使用多个数量的每个变体填充您的订单。此功能也存在于购买应用程序中。"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sequence
 msgid "Sequence"
-msgstr "单号规则"
+msgstr "序号"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
@@ -525,7 +521,7 @@ msgid ""
 "Struggling with a complex product catalog? Try out the Product Configurator "
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
-msgstr ""
+msgstr "为复杂的产品目录而苦恼？试用产品配置器，帮助销售人员配置具有不同选项的产品：颜色、尺寸、容量等。使销售订单编码更容易且防错。"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
@@ -542,9 +538,7 @@ msgstr "条款和条件"
 msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
-msgstr ""
-"管理员可以在“销售设置”中设置默认条款和条件。如果您选择此报价模板，将显示此处"
-"设置的条款。"
+msgstr "管理员可以在“销售设置”中设置默认条款和条件。如果您选择此报价模板，将显示此处设置的条款。"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -564,13 +558,13 @@ msgstr "如果选项行的产品已存在于报价单中，则将检查此字段
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr ""
+msgstr "提示：Odoo 支持可配置产品"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr ""
+msgstr "提示：使用矩阵批量销售或购买产品"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -604,12 +598,9 @@ msgstr "计量单位"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign "
-"online.\n"
+"                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
-msgstr ""
-"使用模板在几分钟内创建精美的专业报价。通过EMail发送这些报价，让您的客户在线签"
-"名。使用交叉销售和折扣来推动和提高销售额。"
+msgstr "使用模板在几分钟内创建精美的专业报价。通过EMail发送这些报价，让您的客户在线签名。使用交叉销售和折扣来推动和提高销售额。"
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
@@ -629,13 +620,10 @@ msgstr "你无法更改销售报价单的类型。相反，你应删除当前行
 #: code:addons/sale_management/models/sale_order.py:0
 #, python-format
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas "
-"your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from "
-"other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"你的报价单包含来自公司 %(product_company)s 的产品，而你的报价单属于公司 "
-"%(quote_company)s。\n"
+"你的报价单包含来自公司 %(product_company)s 的产品，而你的报价单属于公司 %(quote_company)s。\n"
 "请更改报价单公司或从其他公司删除产品（%(bad_products)s）。"
 
 #. module: sale_management
@@ -648,11 +636,11 @@ msgstr "您的模板不能包含多家公司的产品。"
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid ""
-"Your template contains products from company %(product_company)s whereas "
-"your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from "
-"other companies."
+"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
+" Please change the company of your template or remove the products from other companies."
 msgstr ""
+"您的模板包含来自公司 %(product_company)s 的产品，而您的模板属于公司 %(template_company)s。 \n"
+"请更改您模板的公司或删除其他公司的产品。"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -662,4 +650,4 @@ msgstr "天数"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
-msgstr ""
+msgstr "例如标准咨询套餐"

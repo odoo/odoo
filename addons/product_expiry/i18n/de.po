@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_expiry
-#
+# 
 # Translators:
+# Wolfgang Taferner, 2017
+# e2f <projects@e2f.com>, 2018
 # Johannes Croe <jcr@odoo.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
-# Martin Trigaux, 2019
-#
+# Leon Grill <leg@odoo.com>, 2019
+# Martin Trigaux, 2020
+# Chris Egal <sodaswed@web.de>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_expiry
@@ -55,7 +59,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Best Before Time"
-msgstr ""
+msgstr "Mindesthaltbarkeit"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
@@ -65,7 +69,7 @@ msgstr "Mindestens haltbar bis"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "Best before:"
-msgstr ""
+msgstr "Mindestens haltbar bis:"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
@@ -105,8 +109,8 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
-"Datum, um die abgelaufenen Lose und Seriennummern mit dem Filter "
-"„Alerts“ (Alarme) zu bestimmen."
+"Datum, um die abgelaufenen Lose und Seriennummern mit dem Filter „Alerts“ "
+"(Alarme) zu bestimmen."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -164,7 +168,7 @@ msgstr "Verfallsdaten werden auf dem Lieferschein ausgewiesen"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Expired Lot(s)"
-msgstr ""
+msgstr "Abgelaufene Charge(n)"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
@@ -184,12 +188,12 @@ msgstr "Include expiration dates on delivery slip"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_date
@@ -216,7 +220,8 @@ msgid ""
 msgstr ""
 "Anzahl der Tage nach Erhalt der Produkte (vom Lieferanten oder auf Lager "
 "nach der Produktion), nach denen die Ware gefährlich werden kann und nicht "
-"mehr verbraucht werden darf. Sie wird anhand der Los-/Seriennummer berechnet."
+"mehr verbraucht werden darf. Sie wird anhand der Los-/Seriennummer "
+"berechnet."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -227,8 +232,8 @@ msgid ""
 "number."
 msgstr ""
 "Anzahl der Tage vor dem Verfallsdatum, nach denen eine Warnung für die "
-"Partie/Seriennummer ausgelöst werden soll. Sie wird anhand der Los-/"
-"Seriennummer berechnet."
+"Partie/Seriennummer ausgelöst werden soll. Sie wird anhand der "
+"Los-/Seriennummer berechnet."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -238,29 +243,30 @@ msgid ""
 "removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
 "Anzahl der Tage vor dem Verfallsdatum, nach dem die Waren aus dem Lager "
-"entfernt werden sollten. Sie wird anhand der Chargen-/Seriennummer errechnet."
+"entfernt werden sollten. Sie wird anhand der Chargen-/Seriennummer "
+"errechnet."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
 msgid ""
 "Number of days before the Expiration Date after which the goods starts "
-"deteriorating, without being dangerous yet. It will be computed on the lot/"
-"serial number."
+"deteriorating, without being dangerous yet. It will be computed on the "
+"lot/serial number."
 msgstr ""
 "Anzahl der Tage vor dem Verfallsdatum, nach denen die Ware zu verderben "
-"beginnt, ohne jedoch gefährlich zu sein. Wird anhand der Chargen-/"
-"Seriennummer errechnet."
+"beginnt, ohne jedoch gefährlich zu sein. Wird anhand der "
+"Chargen-/Seriennummer errechnet."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
 msgid "Picking"
-msgstr "Kommissionierung"
+msgstr "Liefervorgang"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Proceed except for expired one"
-msgstr ""
+msgstr "Fortfahren außer für abgelaufene Produkte"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -349,8 +355,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
-"Anzahl der Tage nach Erstellung einer Serie, an dem die Haltbarkeit abläuft, "
-"ohne dass der Konsum nach Ablaufdatum gesundheitsschädlich ist."
+"Anzahl der Tage nach Erstellung einer Serie, an dem die Haltbarkeit abläuft,"
+" ohne dass der Konsum nach Ablaufdatum gesundheitsschädlich ist."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
@@ -375,12 +381,12 @@ msgstr "Verwendung durch:"
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
 msgid ""
-"When this box is ticked, you have the possibility to specify dates to manage "
-"product expiration, on the product and on the corresponding lot/serial "
+"When this box is ticked, you have the possibility to specify dates to manage"
+" product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
-"Wenn dieses Kontrollkästchen aktiviert ist, haben Sie die Möglichkeit, Daten "
-"zur Verwaltung des Produktverfalls auf dem Produkt und auf den "
+"Wenn dieses Kontrollkästchen aktiviert ist, haben Sie die Möglichkeit, Daten"
+" zur Verwaltung des Produktverfalls auf dem Produkt und auf den "
 "entsprechenden Los-/Seriennummern anzugeben"
 
 #. module: product_expiry
@@ -395,10 +401,8 @@ msgstr ""
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 #, python-format
 msgid ""
-"You are going to deliver the product %(product_name)s, %(lot_name)s which is "
-"expired.\n"
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""
-"Sie sind im Begriff das Produkt %(product_name)s, %(lot_name)s auszuliefern, "
-"das abgelaufen ist.\n"
+"Sie sind im Begriff das Produkt %(product_name)s, %(lot_name)s auszuliefern, das abgelaufen ist.\n"
 "Möchten Sie fortfahren?"

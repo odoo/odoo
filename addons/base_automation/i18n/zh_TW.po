@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_automation
-#
+# 
 # Translators:
 # Martin Trigaux, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
-#
+# amos lin <seeing@edirect168.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/"
-"zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_automation
@@ -46,7 +46,7 @@ msgstr "動作名稱"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
 msgid "Action To Do"
-msgstr "待辦的行動"
+msgstr "待做的動作"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__type
@@ -56,7 +56,7 @@ msgstr "動作類型"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
 msgid "Active"
-msgstr "啟用"
+msgstr "有效"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
@@ -152,26 +152,24 @@ msgstr "子伺服器將被被啟動。注意最後返回動作的值將做用做
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "創建者"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__day
 msgid "Days"
-msgstr "天數"
+msgstr "天"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
-"                                    You can put a negative number if you "
-"need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 "
-"minutes before a meeting."
+"                                    You can put a negative number if you need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
 "延遲觸發日期。\n"
 "如果在觸發日期您需要一個延遲，\n"
@@ -200,16 +198,14 @@ msgstr "禁用操作"
 #, python-format
 msgid ""
 "Disabling this automated action will enable you to continue your workflow\n"
-"                but any data created after this could potentially be "
-"corrupted,\n"
-"                as you are effectively disabling a customization that may "
-"set\n"
+"                but any data created after this could potentially be corrupted,\n"
+"                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
 "禁用此自動操作將使您能夠繼續您的工作流程\n"
-"                但在此之後建立的任何資料都可能被破壞，\n"
-"                因為您正在有效地禁用可能設置的自訂\n"
-"                重要和/或必填欄位。"
+"                但在此之後創建的任何數據都可能被破壞，\n"
+"                因為您正在有效地禁用可能設置的自定義\n"
+"                重要和/或必填字段。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -236,7 +232,7 @@ msgstr "編輯動作"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
 msgid "Email Template"
-msgstr "Email模板"
+msgstr "電郵模板"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
@@ -246,7 +242,7 @@ msgstr "外部 ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
 msgid "Fields that trigger the onchange."
-msgstr "觸發 onchange 的欄位。"
+msgstr "觸發 onchange 的字段。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -278,13 +274,14 @@ msgstr "在執行規則前，此條件必須被滿足"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
+"If present, this condition must be satisfied before the update of the "
+"record."
 msgstr "在更新記錄前此條件必須被滿足"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
 msgid "Last Modified on"
-msgstr "最後修改於"
+msgstr "最後修改時間"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -294,12 +291,12 @@ msgstr "最後運行"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
 msgid "Last Updated by"
-msgstr "最後更新者"
+msgstr "最後更新人"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
@@ -319,7 +316,7 @@ msgstr "分鐘"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
-msgstr "型號"
+msgstr "模型"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -383,8 +380,8 @@ msgstr "更新時"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__help
 msgid ""
-"Optional help text for the users with a description of the target view, such "
-"as its usage and purpose."
+"Optional help text for the users with a description of the target view, such"
+" as its usage and purpose."
 msgstr "可選的幫助文本，目標視圖的說明，比如用途和目的。"
 
 #. module: base_automation
@@ -392,7 +389,7 @@ msgstr "可選的幫助文本，目標視圖的說明，比如用途和目的。
 msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
-msgstr "提供用於連結伺服器操作使用的記錄上新增記錄的欄位。"
+msgstr "提供用於鏈接服務器操作使用的記錄上新創建的記錄的字段。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -402,12 +399,12 @@ msgstr "Python 代碼"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 msgid "Responsible"
-msgstr "負責人"
+msgstr "負責"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
-msgstr "序號"
+msgstr "序列"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -457,17 +454,14 @@ msgstr "記錄上使用者的技術名稱"
 msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
-msgstr ""
-"這個 \"%(trigger_value)s\" %(trigger_label)s 只能與 \"%(state_value)s\" 動作"
-"類型"
+msgstr "這個 \"%(trigger_value)s\" %(trigger_label)s 只能與 \"%(state_value)s\" 動作類型"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
 msgid ""
-"The action will be triggered if and only if one of these fields is updated."
-"If empty, all fields are watched."
-msgstr ""
-"僅當並且僅當其中一個欄位更新時，將觸發該操作。如果為空，則監視所有欄位。"
+"The action will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
+msgstr "僅當並且僅當其中一個欄位更新時，將觸發該操作。如果為空，則監視所有欄位。"
 
 #. module: base_automation
 #. openerp-web
@@ -494,7 +488,7 @@ msgstr "觸發日期"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Trigger Fields"
-msgstr "觸發欄位"
+msgstr "觸發字段"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__state
@@ -503,20 +497,19 @@ msgid ""
 "- 'Execute Python Code': a block of python code that will be executed\n"
 "- 'Create': create a new record with new values\n"
 "- 'Update a Record': update the values of a record\n"
-"- 'Execute several actions': define an action that triggers several other "
-"server actions\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
 "- 'Send Email': automatically send an email (Discuss)\n"
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
 "伺服器操作的類型。以下值可用：\n"
 "- \"執行 Python 代碼\"：將執行的 Python 代碼塊\n"
-"- \"建立\"：使用新值建立新記錄\n"
+"- \"創建\"：使用新值創建新記錄\n"
 "- \"更新記錄\"：更新記錄的值\n"
 "- \"執行多個操作\"：定義觸發其他幾個伺服器操作的操作\n"
 "- \"發送電子郵件\"：自動發送電子郵件（討論）\n"
 "- \"添加關注者\"：將關注者添加到記錄（討論）\n"
-"- \"建立下一個活動\"：建立活動（討論）"
+"- \"創建下一個活動\"：創建活動（討論）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -528,12 +521,10 @@ msgstr "用途"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
 msgid ""
-"Use 'Specific User' to always assign the same user on the next activity. Use "
-"'Generic User From Record' to specify the field name of the user to choose "
+"Use 'Specific User' to always assign the same user on the next activity. Use"
+" 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
-msgstr ""
-"使用「特定使用者」總是在下一個活動中分配相同的使用者。使用「記錄中的通用使用"
-"者」指定在記錄上選擇的使用者的字段名。 "
+msgstr "使用「特定使用者」總是在下一個活動中分配相同的使用者。使用「記錄中的通用使用者」指定在記錄上選擇的使用者的字段名。 "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -544,11 +535,9 @@ msgstr "使用日曆"
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific Sales Team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
 "使用自動操作來自動觸發操作\n"
@@ -569,6 +558,7 @@ msgstr "映射的值"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
+#: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -578,8 +568,7 @@ msgstr "警告"
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr ""
-"當需要根據時間條件做計算時，可能使用一個根據工作日的日曆去計算是比較合適的."
+msgstr "當需要根據時間條件做計算時，可能使用一個根據工作日的日曆去計算是比較合適的."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
@@ -592,8 +581,7 @@ msgstr "在處理多個操作時，執行順序是根據序列。小的數字具
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                                  If present, will be checked by the "
-"scheduler. If empty, will be checked at creation and update."
+"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 "當條件被觸發。\n"
 "如果存在，將由調度器檢查。如果為空，將檢查創建並更新。"
@@ -606,11 +594,9 @@ msgstr "如果不選中，此規則被隱藏且不被執行"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
 msgid ""
-"Write Python code that the action will execute. Some variables are available "
-"for use; help about python expression is given in the help tab."
-msgstr ""
-"編寫動作將執行的Python代碼。一些變量可供使用;有關python表達式的幫助在幫助選項"
-"卡中給出。"
+"Write Python code that the action will execute. Some variables are available"
+" for use; help about python expression is given in the help tab."
+msgstr "編寫動作將執行的Python代碼。一些變量可供使用;有關python表達式的幫助在幫助選項卡中給出。"
 
 #. module: base_automation
 #. openerp-web
@@ -633,5 +619,4 @@ msgstr "您可以禁用此自動操作或對其進行編輯以解決問題。"
 msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
-msgstr ""
-"您無法為已刪除的記錄發送電子郵件、添加關注者或建立活動。它根本不起作用。"
+msgstr "您無法為已刪除的記錄發送電子郵件、添加關注者或創建活動。它根本不起作用。"
