@@ -16,6 +16,7 @@
         <field name="name">project.project.tree.inherit.sale.project</field>
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.view_project"/>
+        <field name="priority">50</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="sale_line_id" optional="hide" readonly="1"/>
@@ -58,6 +59,32 @@
                         </div>
                     </div>
                 </div>
+            </xpath>
+            <xpath expr="//button[@name='action_view_analytic_account_entries']" position="after">
+                <button name="action_open_project_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                        attrs="{'invisible': ['|', ('invoice_count', '=', 0), ('analytic_account_id', '=', False)]}"
+                        groups="account.group_account_readonly">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="invoice_count" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Invoices
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='action_view_analytic_account_entries']" position="after">
+                <button name="action_open_project_vendor_bills" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('vendor_bill_count', '=', 0)]}" groups="account.group_account_readonly">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="vendor_bill_count" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Vendor Bills
+                        </span>
+                    </div>
+                </button>
             </xpath>
         </field>
     </record>

@@ -23,6 +23,8 @@ class Project(models.Model):
     has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice')
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman')
     has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice')
+    invoice_count = fields.Integer(related='analytic_account_id.invoice_count', groups='account.group_account_readonly')
+    vendor_bill_count = fields.Integer(related='analytic_account_id.vendor_bill_count', groups='account.group_account_readonly')
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
@@ -128,6 +130,27 @@ class Project(models.Model):
             action['context']['default_advance_payment_method'] = 'percentage'
         return action
 
+    def action_open_project_invoices(self):
+        invoices = self.env['account.move'].search([
+            ('line_ids.analytic_account_id', '!=', False),
+            ('line_ids.analytic_account_id', 'in', self.analytic_account_id.ids),
+            ('move_type', '=', 'out_invoice')
+        ])
+        action = {
+            'name': _('Invoices'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
+            'domain': [('id', 'in', invoices.ids)],
+            'context': {
+                'create': False,
+            }
+        }
+        if len(invoices) == 1:
+            action['views'] = [[False, 'form']]
+            action['res_id'] = invoices.id
+        return action
+
     # ----------------------------
     #  Project Updates
     # ----------------------------
@@ -222,7 +245,44 @@ class Project(models.Model):
                 'show': self.sale_order_count > 0,
                 'sequence': 1,
             })
+        if self.user_has_groups('account.group_account_readonly'):
+            buttons.append({
+                'icon': 'pencil-square-o',
+                'text': _lt('Invoices'),
+                'number': self.invoice_count,
+                'action_type': 'object',
+                'action': 'action_open_project_invoices',
+                'show': bool(self.analytic_account_id) and self.invoice_count > 0,
+                'sequence': 30,
+            })
+        if self.user_has_groups('account.group_account_readonly'):
+            buttons.append({
+                'icon': 'pencil-square-o',
+                'text': _lt('Vendor Bills'),
+                'number': self.vendor_bill_count,
+                'action_type': 'object',
+                'action': 'action_open_project_vendor_bills',
+                'show': self.vendor_bill_count > 0,
+                'sequence': 48,
+            })
         return buttons
+
+    def action_open_project_vendor_bills(self):
+        vendor_bills = self.env['account.move'].search([('line_ids.analytic_account_id', '!=', False), ('line_ids.analytic_account_id', 'in', self.analytic_account_id.ids), ('move_type', '=', 'in_invoice')])
+        action_window = {
+            'name': _('Vendor Bills'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
+            'domain': [('id', 'in', vendor_bills.ids)],
+            'context': {
+                'create': False,
+            }
+        }
+        if len(vendor_bills) == 1:
+            action_window['views'] = [[False, 'form']]
+            action_window['res_id'] = vendor_bills.id
+        return action_window
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
