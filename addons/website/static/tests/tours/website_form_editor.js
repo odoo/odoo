@@ -140,6 +140,12 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Complete Recipient E-mail",
             trigger: '[data-field-name="email_to"] input',
             run: 'text_blur test@test.test',
+        }, {
+            content: 'Edit the Phone Number field',
+            trigger: 'input[name="phone"]',
+        }, {
+            content: 'Change the label position of the phone field',
+            trigger: 'we-button[data-select-label-position="right"]',
         },
         ...addExistingField('email_cc', 'text', 'Test conditional visibility', false, {visibility: CONDITIONALVISIBILITY, condition: 'odoo'}),
 
@@ -316,6 +322,10 @@ odoo.define('website.tour.form_editor', function (require) {
         {
             content: 'Verify value attribute and property',
             trigger: '.s_website_form_field:eq(0) input[value="John Smith"]:propValue("Mitchell Admin")',
+        },
+        {
+            content: 'Verify that phone field is still auto-fillable',
+            trigger: '.s_website_form_field input[data-fill-with="phone"]:propValue("+1 555-555-5555")',
         },
         // Check that if we edit again and save again the default value is not deleted.
         {
