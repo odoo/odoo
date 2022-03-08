@@ -9,20 +9,6 @@ tour.register('shop_sale_loyalty', {
     url: '/shop?search=Small%20Cabinet',
 },
     [
-        {
-            content: "open customize menu",
-            extra_trigger: '.oe_website_sale .o_wsale_products_searchbar_form',
-            trigger: '#customize-menu > a',
-        },
-        {
-            content: "enable 'Show # found' if needed",
-            trigger: "#customize-menu label:contains(Show # found)",
-            run: function () {
-                if (!$('#customize-menu label:contains(Show # found) input').prop('checked')) {
-                    $('#customize-menu label:contains(Show # found)').click();
-                }
-            }
-        },
         /* 1. Buy 1 Small Cabinet, enable coupon code & insert 10% code */
         {
             content: "select Small Cabinet",
