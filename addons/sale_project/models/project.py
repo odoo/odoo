@@ -306,16 +306,23 @@ class Project(models.Model):
             'delivered_manual': 'service_revenues',
         }
 
-    def _get_revenues_items_from_sol(self, with_action=True):
-        sale_line_read_group = self.env['sale.order.line'].read_group(
+    def _get_profitability_sale_order_items_domain(self, domain=None):
+        if domain is None:
+            domain = []
+        return expression.AND([
             [
-                ('order_id', 'in', self._get_sale_orders().ids),
                 ('product_id', '!=', False),
                 ('is_expense', '=', False),
                 ('is_downpayment', '=', False),
                 ('state', 'in', ['sale', 'done']),
                 '|', ('qty_to_invoice', '>', 0), ('qty_invoiced', '>', 0),
             ],
+            domain,
+        ])
+
+    def _get_revenues_items_from_sol(self, domain=None, with_action=True):
+        sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
+            self._get_profitability_sale_order_items_domain(domain),
             ['product_id', 'ids:array_agg(id)', 'untaxed_amount_to_invoice', 'untaxed_amount_invoiced'],
             ['product_id'],
         )
@@ -330,7 +337,7 @@ class Project(models.Model):
                     res['ids'],
                 ) for res in sale_line_read_group
             }
-            product_read_group = self.env['product.product'].read_group(
+            product_read_group = self.env['product.product'].sudo()._read_group(
                 [('id', 'in', list(sols_per_product)), ('expense_policy', '=', 'no')],
                 ['invoice_policy', 'service_type', 'type', 'ids:array_agg(id)'],
                 ['invoice_policy', 'service_type', 'type'],
@@ -372,7 +379,10 @@ class Project(models.Model):
 
     def _get_profitability_items(self, with_action=True):
         profitability_items = super()._get_profitability_items(with_action)
-        revenue_items_from_sol = self._get_revenues_items_from_sol(with_action)
+        revenue_items_from_sol = self._get_revenues_items_from_sol(
+            [('order_id', 'in', self.sudo()._get_sale_orders().ids)],
+            with_action,
+        )
         revenues = profitability_items['revenues']
         revenues['data'] += revenue_items_from_sol['data']
         revenues['total']['to_invoice'] += revenue_items_from_sol['total']['to_invoice']
