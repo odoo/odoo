@@ -1255,9 +1255,6 @@ const Wysiwyg = Widget.extend({
                     const oldColorpicker = colorpicker;
                     const hookEl = oldColorpicker ? oldColorpicker.el : elem;
                     const selectedColor = this._getSelectedColor($, eventName);
-                    const selection = this.odooEditor.document.getSelection();
-                    const range = selection.rangeCount && selection.getRangeAt(0);
-                    const hadNonCollapsedSelection = range && !selection.isCollapsed;
                     colorpicker = new ColorPaletteWidget(this, {
                         excluded: ['transparent_grayscale'],
                         $editable: $(this.odooEditor.editable), // Our parent is the root widget, we can't retrieve the editable section from it...
@@ -1267,39 +1264,18 @@ const Wysiwyg = Widget.extend({
                     });
                     this.colorpickers[eventName] = colorpicker;
                     colorpicker.on('custom_color_picked color_picked', null, ev => {
-                        if (hadNonCollapsedSelection) {
-                            this.odooEditor.historyResetLatestComputedSelection(true);
-                        }
                         this._processAndApplyColor(eventName, ev.data.color);
                         this._updateEditorUI();
+                        this.odooEditor.historyUnpauseSteps();
+                        colorpicker.off('color_leave');
                     });
                     colorpicker.on('color_hover', null, ev => {
-                        console.group('hover');
-                        let s = this.odooEditor.document.getSelection();
-                        console.log(s.anchorNode.tagName || s.anchorNode.textContent, s.anchorOffset, s.focusNode.tagName || s.focusNode.textContent, s.focusOffset)
-                        if (hadNonCollapsedSelection) {
-                            this.odooEditor.historyResetLatestComputedSelection(true);
-                        }
-                        s = this.odooEditor.document.getSelection();
-                        console.log(s.anchorNode.tagName || s.anchorNode.textContent, s.anchorOffset, s.focusNode.tagName || s.focusNode.textContent, s.focusOffset)
                         this.odooEditor.historyPauseSteps();
-                        try {
-                            this._processAndApplyColor(eventName, ev.data.color);
-                        } finally {
-                            this.odooEditor.historyUnpauseSteps();
-                            s = this.odooEditor.document.getSelection();
-                            console.log(s.anchorNode.tagName || s.anchorNode.textContent, s.anchorOffset, s.focusNode.tagName || s.focusNode.textContent, s.focusOffset)
-                            console.groupEnd('hover');
-                        }
+                        this._processAndApplyColor(eventName, ev.data.color);
                     });
                     colorpicker.on('color_leave', null, ev => {
-                        console.group('leave');
-                        let s = this.odooEditor.document.getSelection();
-                        console.log(s.anchorNode.tagName || s.anchorNode.textContent, s.anchorOffset, s.focusNode.tagName || s.focusNode.textContent, s.focusOffset)
-                        this.odooEditor.historyRevertCurrentStep();
-                        s = this.odooEditor.document.getSelection();
-                        console.log(s.anchorNode.tagName || s.anchorNode.textContent, s.anchorOffset, s.focusNode.tagName || s.focusNode.textContent, s.focusOffset)
-                        console.groupEnd('leave');
+                        this.odooEditor.historyUndo();
+                        this.odooEditor.historyUnpauseSteps();
                     });
                     colorpicker.on('enter_key_color_colorpicker', null, () => {
                         $dropdown.children('.dropdown-toggle').dropdown('hide');

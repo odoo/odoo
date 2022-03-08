@@ -647,10 +647,6 @@ export class OdooEditor extends EventTarget {
 
     // One step completed: apply to vDOM, setup next history step
     historyStep(skipRollback = false, { stepId } = {}) {
-        if (!this._historyStepsActive) {
-            return;
-        }
-        console.trace('historyStep');
         this.observerFlush();
         // check that not two unBreakables modified
         if (this._toRollback) {
@@ -670,7 +666,10 @@ export class OdooEditor extends EventTarget {
         currentStep.previousStepId = previousStep.id;
 
         this._historySteps.push(currentStep);
-        if (this.options.onHistoryStep) {
+        if (!this._historyStepsActive && this._historyStepsStates.get(currentStep.id) === '') {
+            this._historyStepsStates.set(currentStep.id, 'paused');
+        }
+        if (this.options.onHistoryStep && this._historyStepsActive) {
             this.options.onHistoryStep(currentStep);
         }
         this._currentStep = {
@@ -739,21 +738,6 @@ export class OdooEditor extends EventTarget {
         this._toRollback = false;
     }
     /**
-     * Undo the current non-recorded draft step.
-     */
-    historyRevertCurrentStep() {
-        this.observerFlush();
-        this.historyRevert(this._currentStep, {sideEffect: false});
-        this.observerFlush();
-        // Clear current step from all previous changes.
-        this._currentStep.mutations = [];
-
-        this._activateContenteditable();
-        this.historySetSelection(this._currentStep);
-        this._computeHistorySelection();
-        this._currentStep.selection = undefined;
-    }
-    /**
      * Undo a step of the history.
      *
      * this._historyStepsState is a map from it's location (index) in this.history to a state.
@@ -783,6 +767,7 @@ export class OdooEditor extends EventTarget {
             this.historyStep(true, { stepId });
             this.dispatchEvent(new Event('historyUndo'));
         }
+        console.log(pos, {...this._historySteps}, [...this._historyStepsStates]);
     }
     /**
      * Redo a step of the history.
@@ -792,14 +777,17 @@ export class OdooEditor extends EventTarget {
     historyRedo() {
         const pos = this._getNextRedoIndex();
         if (pos > 0) {
+            // Consider the position consumed.
             this._historyStepsStates.set(this._historySteps[pos].id, 'consumed');
             this.historyRevert(this._historySteps[pos]);
+            // Consider the last position of the history as a redo.
             this.historySetSelection(this._historySteps[pos]);
             const stepId = this._generateId();
             this._historyStepsStates.set(stepId, 'redo');
             this.historyStep(true, { stepId });
             this.dispatchEvent(new Event('historyRedo'));
         }
+        console.log(pos, {...this._historySteps}, [...this._historyStepsStates]);
     }
     /**
      * Check wether undoing is possible.
@@ -936,6 +924,12 @@ export class OdooEditor extends EventTarget {
     }
     historyUnpauseSteps() {
         this._historyStepsActive = true;
+        for (const step of this._historySteps) {
+            const state = this._historyStepsStates.get(step.id);
+            if (state === 'paused') {
+                this._historyStepsStates.set(step.id, undefined);
+            }
+        }
     }
     _historyClean() {
         this._historySteps = [];
@@ -1624,7 +1618,7 @@ export class OdooEditor extends EventTarget {
                 this._historySteps[index].clientId === this._collabClientId
             ) {
                 const state = this._historyStepsStates.get(this._historySteps[index].id);
-                if (state === 'redo' || !state) {
+                if (state === 'redo' || state === 'paused' || !state) {
                     return index;
                 }
             }
@@ -1656,6 +1650,8 @@ export class OdooEditor extends EventTarget {
                         break;
                     case 'consumed':
                         totalConsumed += 1;
+                        break;
+                    case 'paused':
                         break;
                     default:
                         return -1;
