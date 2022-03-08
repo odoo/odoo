@@ -8,20 +8,6 @@ tour.register('shop_sale_gift_card', {
     url: '/shop?search=Small%20Drawer'
 },
     [
-        {
-            content: 'Open customize menu',
-            extra_trigger: '.oe_website_sale .o_wsale_products_searchbar_form',
-            trigger: '#customize-menu > a',
-        },
-        {
-            content: "Enable 'Show # found' if needed",
-            trigger: '#customize-menu label:contains(Show # found)',
-            run: function () {
-                if (!$('#customize-menu label:contains(Show # found) input').prop('checked')) {
-                    $('#customize-menu label:contains(Show # found)').click();
-                }
-            }
-        },
         // Add a small drawer to the order (50$)
         {
             content: 'select Small Drawer',
