@@ -1949,12 +1949,20 @@
                 'repartition_type': 'base',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_02')],
             }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_line_ids': [ref('l10n_fr.tax_report_02')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -1974,12 +1982,20 @@
                 'repartition_type': 'base',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_04')],
             }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_line_ids': [ref('l10n_fr.tax_report_04')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -1999,12 +2015,20 @@
                 'repartition_type': 'base',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_06')],
             }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_line_ids': [ref('l10n_fr.tax_report_06')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
             }),
         ]"/>
     </record>
