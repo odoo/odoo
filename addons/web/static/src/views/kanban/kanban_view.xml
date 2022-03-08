@@ -2,20 +2,22 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanView" owl="1">
-        <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
-            <t t-set-slot="control-panel-bottom-left">
-                <t t-call="{{ constructor.buttonTemplate }}"/>
-            </t>
-            <KanbanRenderer
-                list="model.root"
-                fields="props.fields"
-                context="props.context"
-                archInfo="archInfo"
-                readonly="true"
-                openRecord="record => this.openRecord(record)"
-                noContentHelp="props.info.noContentHelp"
-            />
-        </Layout>
+        <div t-att-class="props.className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
+                <t t-set-slot="control-panel-bottom-left">
+                    <t t-call="{{ constructor.buttonTemplate }}"/>
+                </t>
+                <KanbanRenderer
+                    list="model.root"
+                    fields="props.fields"
+                    context="props.context"
+                    archInfo="archInfo"
+                    readonly="true"
+                    openRecord="record => this.openRecord(record)"
+                    noContentHelp="props.info.noContentHelp"
+                />
+            </Layout>
+        </div>
     </t>
 
     <t t-name="web.KanbanView.Buttons" owl="1">

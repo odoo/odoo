@@ -2,23 +2,24 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ListView" owl="1">
-
-        <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
-            <t t-set-slot="control-panel-bottom-left">
-                <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
-                    <t t-call="{{ constructor.buttonTemplate }}"/>
-                </div>
-                <t t-if="props.info.actionMenus and model.root.selection.length">
-                    <ActionMenus
-                        activeIds="model.root.selection.map((r) => r.resId)"
-                        context="props.context"
-                        items="getActionMenuItems()"
-                        isDomainSelected="model.root.isDomainSelected"
-                        resModel="model.root.resModel"/>
+        <div t-att-class="props.className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
+                <t t-set-slot="control-panel-bottom-left">
+                    <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                        <t t-call="{{ constructor.buttonTemplate }}"/>
+                    </div>
+                    <t t-if="props.info.actionMenus and model.root.selection.length">
+                        <ActionMenus
+                            activeIds="model.root.selection.map((r) => r.resId)"
+                            context="props.context"
+                            items="getActionMenuItems()"
+                            isDomainSelected="model.root.isDomainSelected"
+                            resModel="model.root.resModel"/>
+                    </t>
                 </t>
-            </t>
-            <ListRenderer list="model.root" fields="props.fields" archInfo="archInfo" hasSelectors="props.hasSelectors" openRecord.bind="openRecord"/>
-        </Layout>
+                <ListRenderer list="model.root" fields="props.fields" archInfo="archInfo" hasSelectors="props.hasSelectors" openRecord.bind="openRecord"/>
+            </Layout>
+        </div>
     </t>
 
     <t t-name="web.ListView.Buttons" owl="1">
