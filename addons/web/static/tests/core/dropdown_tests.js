@@ -1023,9 +1023,9 @@ QUnit.module("Components", ({ beforeEach }) => {
             </Dropdown>`;
         MyComponent.components = { Dropdown };
 
-        const parent = await makeParent(MyComponent);
-        await mouseEnter(parent.el, "button.dropdown-toggle");
-        assert.containsOnce(parent, ".o-tooltip");
-        assert.strictEqual(parent.el.querySelector(".o-tooltip").textContent, "My tooltip");
+        await makeParent(MyComponent);
+        await mouseEnter(target, "button.dropdown-toggle");
+        assert.containsOnce(target, ".o-tooltip");
+        assert.strictEqual(target.querySelector(".o-tooltip").textContent, "My tooltip");
     });
 });
