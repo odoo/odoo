@@ -245,27 +245,6 @@ class Project(models.Model):
                 sale_line_id = project.sale_line_employee_ids.filtered(lambda l: l.project_id == project and l.employee_id == employee_id).sale_line_id
                 timesheet_ids.filtered(lambda t: t.employee_id == employee_id).sudo().so_line = sale_line_id
 
-    def action_open_project_invoices(self):
-        invoices = self.env['account.move'].search([
-            ('line_ids.analytic_account_id', '!=', False),
-            ('line_ids.analytic_account_id', 'in', self.analytic_account_id.ids),
-            ('move_type', '=', 'out_invoice')
-        ])
-        action = {
-            'name': _('Invoices'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
-            'domain': [('id', 'in', invoices.ids)],
-            'context': {
-                'create': False,
-            }
-        }
-        if len(invoices) == 1:
-            action['views'] = [[False, 'form']]
-            action['res_id'] = invoices.id
-        return action
-
     def action_view_timesheet(self):
         self.ensure_one()
         return {
