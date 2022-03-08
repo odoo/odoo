@@ -71,7 +71,7 @@ export class ModelFieldSelectorPopover extends LegacyComponent {
         this.searchValue = "";
         this.currentNode.field = field;
         if (!field.relation) {
-            this.trigger("popover-closed");
+            this.props.close();
         } else {
             this.chain.push({
                 resModel: field.relation,
@@ -102,5 +102,6 @@ Object.assign(ModelFieldSelectorPopover, {
         isDebugMode: Boolean,
         loadChain: Function,
         filter: Function,
+        close: Function,
     },
 });
