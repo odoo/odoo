@@ -1387,6 +1387,10 @@ class AccountTax(models.Model):
             if len(invoice_repartition_line_ids) != len(refund_repartition_line_ids):
                 raise ValidationError(_("Invoice and credit note repartition should have the same number of lines."))
 
+            if not invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax') or \
+                    not refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax'):
+                raise ValidationError(_("Invoice and credit note repartition should have at least one tax repartition line."))
+
             index = 0
             while index < len(invoice_repartition_line_ids):
                 inv_rep_ln = invoice_repartition_line_ids[index]
@@ -1773,7 +1777,7 @@ class AccountTax(models.Model):
             price_include = self._context.get('force_price_include', tax.price_include)
 
             #compute the tax_amount
-            if price_include and total_included_checkpoints.get(i) and sum_repartition_factor != 0:
+            if price_include and total_included_checkpoints.get(i) is not None and sum_repartition_factor != 0:
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
@@ -1785,7 +1789,7 @@ class AccountTax(models.Model):
             tax_amount = round(tax_amount, precision_rounding=prec)
             factorized_tax_amount = round(tax_amount * sum_repartition_factor, precision_rounding=prec)
 
-            if price_include and not total_included_checkpoints.get(i):
+            if price_include and total_included_checkpoints.get(i) is None:
                 cumulated_tax_included_amount += factorized_tax_amount
 
             # If the tax affects the base of subsequent taxes, its tax move lines must
