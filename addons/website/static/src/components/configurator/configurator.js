@@ -23,7 +23,7 @@ const WEBSITE_TYPES = {
     2: {id: 2, label: _lt("an online store"), name: 'online_store'},
     3: {id: 3, label: _lt("a blog"), name: 'blog'},
     4: {id: 4, label: _lt("an event website"), name: 'event'},
-    5: {id: 5, label: _lt("an elearning platform"), name: 'elearning'}
+    5: {id: 5, label: _lt("an elearning platform"), name: 'elearning'},
 };
 
 const WEBSITE_PURPOSES = {
@@ -31,7 +31,7 @@ const WEBSITE_PURPOSES = {
     2: {id: 2, label: _lt("develop the brand"), name: 'develop_brand'},
     3: {id: 3, label: _lt("sell more"), name: 'sell_more'},
     4: {id: 4, label: _lt("inform customers"), name: 'inform_customers'},
-    5: {id: 5, label: _lt("schedule appointments"), name: 'schedule_appointments'}
+    5: {id: 5, label: _lt("schedule appointments"), name: 'schedule_appointments'},
 };
 
 const PALETTE_NAMES = [
@@ -63,9 +63,9 @@ const CUSTOM_BG_COLOR_ATTRS = ['menu', 'footer'];
 
 const SESSION_STORAGE_ITEM_NAME = 'websiteConfigurator' + session.website_id;
 
-//---------------------------------------------------------
+//------------------------------------------------------------------------------
 // Components
-//---------------------------------------------------------
+//------------------------------------------------------------------------------
 
 class SkipButton extends Component {
     async skip() {
@@ -114,7 +114,7 @@ class DescriptionScreen extends Component {
             focus: this._disableKeyboardNav.bind(this),
             classes: {
                 'ui-autocomplete': 'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast',
-            }
+            },
         });
         if (this.state.selectedIndustry) {
             this.industrySelection.el.value = this.state.selectedIndustry.label;
@@ -315,10 +315,10 @@ class PaletteSelectionScreen extends Component {
             const attachment = await this.rpc({
                 route: '/web_editor/attachment/add_data',
                 params: {
-                    name: 'logo',
-                    data: data.split(',')[1],
-                    is_image: true,
-                }
+                    'name': 'logo',
+                    'data': data.split(',')[1],
+                    'is_image': true,
+                },
             });
             if (!attachment.error) {
                 this.state.changeLogo(data, attachment.id);
@@ -370,14 +370,13 @@ class FeaturesSelectionScreen extends Component {
         if (!industryId) {
             return this.router.navigate(ROUTES.descriptionScreen);
         }
-        const params = {
-            industry_id: industryId,
-            palette: this.state.selectedPalette
-        };
         const themes = await this.rpc({
             model: 'website',
             method: 'configurator_recommended_themes',
-            kwargs: params,
+            kwargs: {
+                'industry_id': industryId,
+                'palette': this.state.selectedPalette,
+            },
         });
 
         if (!themes.length) {
@@ -431,9 +430,9 @@ Object.assign(Configurator, {
     template: 'website.Configurator.Configurator',
 });
 
-//---------------------------------------------------------
+//------------------------------------------------------------------------------
 // Router
-//---------------------------------------------------------
+//------------------------------------------------------------------------------
 
 class Router {
     constructor() {
@@ -446,14 +445,14 @@ class Router {
     }
 }
 
-const useRouter = () => {
+function useRouter() {
     const env = useEnv();
     return useState(env.router);
-};
+}
 
-//---------------------------------------------------------
+//------------------------------------------------------------------------------
 // Store
-//---------------------------------------------------------
+//------------------------------------------------------------------------------
 
 class Store {
     async start() {
@@ -609,14 +608,13 @@ async function getInitialState(services) {
     if (localState) {
         let themes = [];
         if (localState.selectedIndustry && localState.selectedPalette) {
-            const params = {
-                industry_id: localState.selectedIndustry.id,
-                palette: localState.selectedPalette
-            };
             themes = await services.rpc({
                 model: 'website',
                 method: 'configurator_recommended_themes',
-                kwargs: params,
+                kwargs: {
+                    'industry_id': localState.selectedIndustry.id,
+                    'palette': localState.selectedPalette,
+                },
             });
         }
         return Object.assign(r, {...localState, palettes, themes});
@@ -625,8 +623,8 @@ async function getInitialState(services) {
     const features = {};
     results.features.forEach(feature => {
         features[feature.id] = Object.assign({}, feature, {selected: feature.module_state === 'installed'});
-        const wtp = features[feature.id].website_config_preselection;
-        features[feature.id].website_config_preselection = wtp ? wtp.split(',') : [];
+        const wtp = features[feature.id]['website_config_preselection'];
+        features[feature.id]['website_config_preselection'] = wtp ? wtp.split(',') : [];
     });
 
     // Palette color used by default as background color for menu and footer.
@@ -653,14 +651,14 @@ async function getInitialState(services) {
     });
 }
 
-const useStore = () => {
+function useStore() {
     const env = useEnv();
     return useState(env.state);
-};
+}
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Helpers
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 async function skipConfigurator(services) {
     await services.rpc({
@@ -681,7 +679,7 @@ async function applyConfigurator(self, themeName) {
     if (themeName !== undefined) {
         const loader = renderToString('website.ThemePreview.Loader', {showTips: true});
         $('body').append(loader);
-        const selectedFeatures = Object.values(self.state.features).filter((feature) => feature.selected).map((feature) => feature.id)
+        const selectedFeatures = Object.values(self.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
         let selectedPalette = self.state.selectedPalette.name;
         if (!selectedPalette) {
             selectedPalette = [
@@ -692,24 +690,23 @@ async function applyConfigurator(self, themeName) {
                 self.state.selectedPalette.color5,
             ];
         }
-        const data = {
-            selected_features: selectedFeatures,
-            industry_id: self.state.selectedIndustry.id,
-            selected_palette: selectedPalette,
-            theme_name: themeName,
-            website_purpose: WEBSITE_PURPOSES[self.state.selectedPurpose].name,
-            website_type: WEBSITE_TYPES[self.state.selectedType].name,
-            logo_attachment_id: self.state.logoAttachmentId,
-        };
         const resp = await self.rpc({
             model: 'website',
             method: 'configurator_apply',
-            kwargs: {...data},
+            kwargs: {
+                'selected_features': selectedFeatures,
+                'industry_id': self.state.selectedIndustry.id,
+                'selected_palette': selectedPalette,
+                'theme_name': themeName,
+                'website_purpose': WEBSITE_PURPOSES[self.state.selectedPurpose].name,
+                'website_type': WEBSITE_TYPES[self.state.selectedType].name,
+                'logo_attachment_id': self.state.logoAttachmentId,
+            },
         });
         window.sessionStorage.removeItem(SESSION_STORAGE_ITEM_NAME);
         window.location = resp.url;
     }
-};
+}
 
 function updateStorage(state) {
     const newState = JSON.stringify({
@@ -739,9 +736,9 @@ async function makeEnvironment() {
     return env;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Setup
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 async function setup() {
     const env = await makeEnvironment();
