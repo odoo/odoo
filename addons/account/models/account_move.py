@@ -2083,6 +2083,17 @@ class AccountMove(models.Model):
             if record.is_sale_document() and journal_type != 'sale' or record.is_purchase_document() and journal_type != 'purchase':
                 raise ValidationError(_("The chosen journal has a type that is not compatible with your invoice type. Sales operations should go to 'sale' journals, and purchase operations to 'purchase' ones."))
 
+    @api.constrains('commercial_partner_id', 'line_ids')
+    def _check_partner_id(self):
+        for move in self:
+            if move.is_invoice(include_receipts=True):
+                if any(
+                    move.commercial_partner_id != line.partner_id
+                    for line in move.line_ids
+                    if not line.display_type
+                ):
+                    raise UserError(_("Some partner inconsistencies are detected. Please reload the page."))
+
     @api.constrains('line_ids', 'fiscal_position_id', 'company_id')
     def _validate_taxes_country(self):
         """ By playing with the fiscal position in the form view, it is possible to keep taxes on the invoices from
