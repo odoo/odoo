@@ -23,6 +23,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         var self = this;
         var $timeline = this.$('.twitter_timeline');
 
+        this.offsets = [];
         $timeline.append('<center><div><img src="/website_twitter/static/src/img/loadtweet.gif"></div></center>');
         var def = this._rpc({route: '/website_twitter/get_favorites'}).then(function (data) {
             $timeline.empty();
@@ -96,7 +97,8 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                     totalWidth += $(area).outerWidth(true);
                 });
                 $scrollableArea.width(totalWidth);
-                $scrollWrapper.scrollLeft(index*180);
+                $scrollWrapper.scrollLeft(index * 180);
+                self.offsets.push(index * 180);
             });
             self._startScrolling();
         });
@@ -120,14 +122,16 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
      * @private
      */
     _startScrolling: function () {
+        const self = this;
+
         if (!this.$scroller) {
             return;
         }
-        _.each(this.$scroller.find('.scrollWrapper'), function (el) {
+        _.each(this.$scroller.find('.scrollWrapper'), function (el, index) {
             var $wrapper = $(el);
             $wrapper.data('getNextElementWidth', true);
             $wrapper.data('autoScrollingInterval', setInterval(function () {
-                $wrapper.scrollLeft($wrapper.scrollLeft() + 1);
+                $wrapper.scrollLeft(++self.offsets[index]);
                 if ($wrapper.data('getNextElementWidth')) {
                     $wrapper.data('swapAt', $wrapper.data('scrollableArea').children(':first').outerWidth(true));
                     $wrapper.data('getNextElementWidth', false);
@@ -135,7 +139,8 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 if ($wrapper.data('swapAt') <= $wrapper.scrollLeft()) {
                     var swap_el = $wrapper.data('scrollableArea').children(':first').detach();
                     $wrapper.data('scrollableArea').append(swap_el);
-                    $wrapper.scrollLeft($wrapper.scrollLeft() - swap_el.outerWidth(true));
+                    self.offsets[index] -= swap_el.outerWidth(true);
+                    $wrapper.scrollLeft(self.offsets[index]);
                     $wrapper.data('getNextElementWidth', true);
                 }
             }, 20));
