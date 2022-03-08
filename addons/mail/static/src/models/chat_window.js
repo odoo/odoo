@@ -45,8 +45,8 @@ registerModel({
          * Programmatically auto-focus an existing chat window.
          */
         focus() {
-            if (!this.thread) {
-                this.update({ isDoFocus: true });
+            if (this.newMessageFormInputView) {
+                this.newMessageFormInputView.update({ doFocus: true });
             }
             if (this.threadView && this.threadView.composerView) {
                 this.threadView.composerView.update({ doFocus: true });
@@ -151,14 +151,6 @@ registerModel({
             });
         },
         /**
-         * @param {Event} ev
-         */
-        onFocusInNewMessageFormInput(ev) {
-            if (this.exists()) {
-                this.update({ isFocused: true });
-            }
-        },
-        /**
          * Swap this chat window with the previous one.
          */
         shiftPrev() {
@@ -216,13 +208,6 @@ registerModel({
          * @private
          * @returns {boolean}
          */
-        _computeHasNewMessageForm() {
-            return this.isVisible && !this.isFolded && !this.thread;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
         _computeHasShiftPrev() {
             if (!this.manager) {
                 return false;
@@ -257,6 +242,19 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsFocused() {
+            if (this.newMessageFormInputView && this.newMessageFormInputView.isFocused) {
+                return true;
+            }
+            if (this.threadView && this.threadView.isComposerFocused) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsFolded() {
@@ -288,10 +286,13 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string}
+         * @returns {FieldCommand}
          */
-        _computeNewMessageFormInputPlaceholder() {
-            return this.env._t("Search user...");
+        _computeNewMessageFormInputView() {
+            if (this.isVisible && !this.isFolded && !this.thread) {
+                return insertAndReplace();
+            }
+            return clear();
         },
         /**
          * @private
@@ -422,12 +423,6 @@ registerModel({
         hasInviteFeature: attr({
             compute: '_computeHasInviteFeature',
         }),
-        /**
-         * Determines whether "new message form" should be displayed.
-         */
-        hasNewMessageForm: attr({
-            compute: '_computeHasNewMessageForm',
-        }),
         hasShiftPrev: attr({
             compute: '_computeHasShiftPrev',
             default: false,
@@ -443,18 +438,10 @@ registerModel({
             compute: '_computeHasThreadView',
         }),
         /**
-         * Determine whether the chat window should be programmatically
-         * focused by observed component of chat window. Those components
-         * are responsible to unmark this record afterwards, otherwise
-         * any re-render will programmatically set focus again!
-         */
-        isDoFocus: attr({
-            default: false,
-        }),
-        /**
          * States whether `this` is focused. Useful for visual clue.
          */
         isFocused: attr({
+            compute: '_computeIsFocused',
             default: false,
         }),
         /**
@@ -489,12 +476,10 @@ registerModel({
         name: attr({
             compute: '_computeName',
         }),
-        /**
-         * The content of placeholder for the autocomplete input of
-         * 'new_message' chat window.
-         */
-        newMessageFormInputPlaceholder: attr({
-            compute: '_computeNewMessageFormInputPlaceholder',
+        newMessageFormInputView: one('AutocompleteInputView', {
+            compute: '_computeNewMessageFormInputView',
+            inverse: 'chatWindowOwnerAsNewMessageFormInput',
+            isCausal: true,
         }),
         shiftNextText: attr({
             compute: '_computeShiftNextText',
