@@ -1966,14 +1966,3 @@ class PosSession(models.Model):
         params['search_params'] = {**params['search_params'], **custom_search_params}
         partners = self.env['res.partner'].search_read(**params['search_params'])
         return partners
-
-
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
-    @api.model
-    def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
-        super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
-        self.env['pos.session']._alert_old_session()
-        if use_new_cursor:
-            self.env.cr.commit()

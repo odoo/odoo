@@ -111,11 +111,6 @@ class StockPickingType(models.Model):
                 picking_type.hide_reservation_method = True
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
-    pos_order_id = fields.Many2one('pos.order', 'POS Order')
-
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
