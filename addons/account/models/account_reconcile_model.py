@@ -421,6 +421,7 @@ class AccountReconcileModel(models.Model):
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'reconcile_model_id': self.id,
                 'journal_id': line.journal_id.id,
+                'tax_ids': [],
             }
             lines_vals_list.append(writeoff_line)
 
@@ -431,7 +432,7 @@ class AccountReconcileModel(models.Model):
                 detected_fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(partner_id)
                 if detected_fiscal_position:
                     taxes = detected_fiscal_position.map_tax(taxes)
-                writeoff_line['tax_ids'] = [Command.set(taxes.ids)]
+                writeoff_line['tax_ids'] += [Command.set(taxes.ids)]
                 # Multiple taxes with force_tax_included results in wrong computation, so we
                 # only allow to set the force_tax_included field if we have one tax selected
                 if line.force_tax_included:
