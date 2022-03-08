@@ -110,7 +110,7 @@ export function useBus(bus, eventName, callback) {
  *
  * @param {string} eventName the name of the event
  * @param {string} [querySelector] a JS native selector for event delegation
- * @param {function} handler the event handler (will be bound to the component)
+ * @param {function} [handler] the event handler (will be bound to the component)
  * @param {Object} [options] to be passed to addEventListener as options.
  *   Useful for listening in the capture phase
  */

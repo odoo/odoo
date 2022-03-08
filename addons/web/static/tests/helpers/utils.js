@@ -543,3 +543,73 @@ export function useLogLifeCycle(logFn, name = "") {
         });
     }
 }
+
+/**
+ * Returns the list of nodes containing n2 (included) that do not contain n1.
+ *
+ * @param {Node} n1
+ * @param {Node} n2
+ * @returns {Node[]}
+ */
+const getDifferentParents = (n1, n2) => {
+    const parents = [n2];
+    while (parents[0].parentNode) {
+        const parent = parents[0].parentNode;
+        if (parent.contains(n1)) {
+            break;
+        }
+        parents.unshift(parent);
+    }
+    return parents;
+};
+
+/**
+ * Helper performing a drag and drop sequence.
+ *
+ * - the 'fromSelector' is used to determine the element on which the drag will
+ *  start;
+ * - the 'toSelector' will determine the element on which the first one will be
+ * dropped.
+ *
+ * The first element will be dragged by its center, and will be dropped on the
+ * bottom-right inner pixel of the target element. This behavior covers both
+ * cases of appending the first element to the end of a list (toSelector =
+ * target list) or moving it at the position of another element, effectively
+ * placing the first element before the second (toSelector = other element).
+ *
+ * Note that only the last event is awaited, since all the others are
+ * considered to be synchronous.
+ *
+ * @param {string} fromSelector
+ * @param {string} toSelector
+ * @returns {Promise<void>}
+ */
+export const dragAndDrop = async (fromSelector, toSelector) => {
+    const fixture = getFixture();
+    const from = fixture.querySelector(fromSelector);
+    const to = fixture.querySelector(toSelector);
+
+    // Mouse down on main target then move to a far away position to initiate the drag
+    const fromRect = from.getBoundingClientRect();
+    triggerEvent(from, null, "mousedown", {
+        clientX: fromRect.x + fromRect.width / 2,
+        clientY: fromRect.y + fromRect.height / 2,
+    });
+    triggerEvent(window, null, "mousemove", { clientX: -999, clientY: -999 });
+
+    // Find target position
+    const toRect = to.getBoundingClientRect();
+    const toPos = {
+        clientX: toRect.x + toRect.width - 1,
+        clientY: toRect.y + toRect.height - 1,
+    };
+
+    // Move, enter and drop the element on the target
+    triggerEvent(window, null, "mousemove", toPos);
+    // "mouseenter" is fired on every parent of `to` that do not contain
+    // `from` (typically: different parent lists).
+    for (const target of getDifferentParents(from, to)) {
+        triggerEvent(target, null, "mouseenter", toPos);
+    }
+    await triggerEvent(from, null, "mouseup", toPos);
+};

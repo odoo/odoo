@@ -6,19 +6,19 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
+import { useSortable } from "@web/core/utils/ui";
 import { url } from "@web/core/utils/urls";
 import { ColorPickerField } from "@web/fields/color_picker_field";
 import { Field } from "@web/fields/field";
 import { fileTypeMagicWordMap } from "@web/fields/image_field";
 import { session } from "@web/session";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
+import { useBounceButton } from "@web/views/helpers/view_hook";
 import { isRelational } from "@web/views/helpers/view_utils";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
-import { useSortable } from "@web/views/kanban/kanban_sortable";
 import { isAllowedDateField } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { useBounceButton } from "@web/views/helpers/view_hook";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
@@ -59,36 +59,26 @@ export class KanbanRenderer extends Component {
             ref: rootRef,
             setup: () =>
                 this.canResequenceRecords && {
-                    listSelector: this.props.list.isGrouped ? ".o_kanban_group" : false,
-                    itemSelector: ".o_record_draggable",
-                    containment: this.canMoveRecords ? false : "parent",
-                    axis: !this.canMoveRecords && this.props.list.isGrouped ? "y" : false,
+                    items: ".o_record_draggable",
+                    lists: this.props.list.isGrouped && ".o_kanban_group",
+                    connectLists: this.canMoveRecords,
+                    axis: this.props.list.isGrouped && !this.canMoveRecords ? "y" : false,
                     cursor: "move",
                 },
-            onListEnter(group) {
-                group.classList.add("o_kanban_hover");
-            },
-            onListLeave(group) {
-                group.classList.remove("o_kanban_hover");
-            },
-            onStart(group, item) {
+            onStart: (list, item) => {
                 dataRecordId = item.dataset.id;
-                if (group) {
-                    dataGroupId = group.dataset.id;
+                if (list) {
+                    dataGroupId = list.dataset.id;
                 }
                 item.classList.add("o_dragged");
             },
-            onStop(group, item) {
-                item.classList.remove("o_dragged");
-            },
+            onListEnter: (list) => list.classList.add("o_kanban_hover"),
+            onListLeave: (list) => list.classList.remove("o_kanban_hover"),
+            onStop: (_list, item) => item.classList.remove("o_dragged"),
             onDrop: async ({ item, previous, parent }) => {
                 item.classList.remove("o_record_draggable");
                 const refId = previous ? previous.dataset.id : null;
-                let targetGroupId;
-                if (this.props.list.isGrouped) {
-                    const groupEl = parent.closest(".o_kanban_group");
-                    targetGroupId = groupEl.dataset.id;
-                }
+                const targetGroupId = parent && parent.dataset.id;
                 await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
                 item.classList.add("o_record_draggable");
             },
@@ -97,19 +87,16 @@ export class KanbanRenderer extends Component {
             ref: rootRef,
             setup: () =>
                 this.canResequenceGroups && {
-                    itemSelector: ".o_group_draggable",
-                    containment: "parent",
+                    items: ".o_group_draggable",
                     axis: "x",
                     handle: ".o_column_title",
                     cursor: "move",
                 },
-            onStart(group, item) {
+            onStart: (_list, item) => {
                 dataGroupId = item.dataset.id;
                 item.classList.add("o_dragged");
             },
-            onStop(group, item) {
-                item.classList.remove("o_dragged");
-            },
+            onStop: (_list, item) => item.classList.remove("o_dragged"),
             onDrop: async ({ item, previous }) => {
                 item.classList.remove("o_group_draggable");
                 const refId = previous ? previous.dataset.id : null;

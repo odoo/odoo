@@ -3,6 +3,7 @@
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
+    dragAndDrop,
     editInput,
     getFixture,
     makeDeferred,
@@ -31,17 +32,6 @@ const { markup } = owl;
 // Helpers
 // ----------------------------------------------------------------------------
 
-/**
- * @param {HTMLElement} el
- * @returns {{ clientX: number, clientY: number }}
- */
-const getPos = (el) => {
-    const { x, y, width, height } = el.getBoundingClientRect();
-    return {
-        clientX: x + width / 2,
-        clientY: y + height / 2,
-    };
-};
 const makeFakeActionService = (actionService) => {
     registry.category("services").add("action", { start: () => actionService }, { force: true });
 };
@@ -66,74 +56,6 @@ const getTooltips = (groupIndex) => {
     return [...root.querySelectorAll(".o_kanban_counter_progress .progress-bar")]
         .map((card) => card.dataset.tooltip)
         .filter(Boolean);
-};
-
-/**
- * Helper to perform a full drag & drop sequence.
- *
- * - the 'selector' is used to determine the element on which the drag will
- *  start;
- * - the second parameter is an object consisting of one of 3 available keys
- *  along with another selector determining the element on or besides which the
- *  first element will be dropped. Said key can either be:
- *
- *      * 'after': the first element will be dropped *below* the second,
- *          typically used to move a record after another;
- *
- *      * 'before': the first element will be dropped *above* the second,
- *          typically used to move a record before another;
- *
- *      * 'appendTo': the first element will be dropped *at the end* of
- *          the second, typically used to move a record in another group.
- *
- * Note that only the last event is awaited, since all the others are
- * considered to be synchronous.
- *
- * @param {string} selector
- * @param {Object} params
- * @param {string} [params.after]
- * @param {string} [params.before]
- * @param {string} [params.appendTo]
- * @returns {Promise<void>}
- */
-const dragAndDrop = async (selector, { after, before, appendTo }) => {
-    const el = target.querySelector(selector);
-    const targetEl = target.querySelector(after || before || appendTo);
-
-    // Mouse down on main target then move to a far away position to initiate the drag
-    triggerEvent(el, null, "mousedown", getPos(el));
-    triggerEvent(window, null, "mousemove", { clientX: -999, clientY: -999 });
-
-    // Enter the target list (if grouped and other list)
-    if (target.querySelector(".o_kanban_group")) {
-        const initList = el.closest(".o_kanban_group");
-        const targetList = targetEl.closest(".o_kanban_group");
-        if (initList !== targetList) {
-            triggerEvent(targetList, null, "mouseenter", getPos(targetList));
-        }
-    }
-
-    // Find target position
-    const { x, y, width, height } = targetEl.getBoundingClientRect();
-    const targetPos = { clientX: x, clientY: y };
-    if (after) {
-        // Right after the bottom-right pixel of the center of the target
-        targetPos.clientX += width / 2 + 1;
-        targetPos.clientY += height / 2 + 1;
-    } else if (before) {
-        // Right before the top-left pixel of the center of the target
-        targetPos.clientX += width / 2 - 1;
-        targetPos.clientY += height / 2 - 1;
-    } else if (appendTo) {
-        // At the bottom-right corner of the target
-        targetPos.clientX += width - 1;
-        targetPos.clientY += height - 1;
-    }
-
-    // Move, enter and drop the element on the target
-    triggerEvent(window, null, "mousemove", targetPos);
-    triggerEvent(targetEl, null, "mouseenter", targetPos);
-    await triggerEvent(el, null, "mouseup", targetPos);
 };
 
 // Record
@@ -3609,9 +3531,10 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([]);
 
         // first record of first column moved to the bottom of second column
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:nth-child(2)",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
 
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
@@ -3650,9 +3573,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
 
         // first record of second column moved to the bottom of first column
-        await dragAndDrop(".o_kanban_group:nth-child(2) .o_kanban_record", {
-            appendTo: ".o_kanban_group:first-child",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            ".o_kanban_group:first-child"
+        );
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
@@ -3692,9 +3616,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 2);
 
         // first record of first column moved to the bottom of second column
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:nth-child(2)",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
 
         // should not be draggable
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
@@ -3708,9 +3633,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_group:nth-child(3) .o_kanban_record");
 
         // first record of first column moved to the bottom of second column
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:nth-child(2)",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
 
         // should not be draggable
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
@@ -3720,9 +3646,10 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(0), ["blipdef", "blipghi"]);
 
         // second record of first column moved at first place
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record:last-child", {
-            before: ".o_kanban_group:first-child .o_kanban_record",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record:last-child",
+            ".o_kanban_group:first-child .o_kanban_record"
+        );
 
         // should still be able to resequence
         assert.deepEqual(getCardTexts(0), ["blipghi", "blipdef"]);
@@ -3769,9 +3696,10 @@ QUnit.module("Views", (hooks) => {
         );
 
         // drag&drop a record in another column
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:nth-child(2)",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
 
         // should not drag&drop record
         assert.containsN(
@@ -3804,9 +3732,10 @@ QUnit.module("Views", (hooks) => {
         );
 
         // drag&drop a record in another column
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:nth-child(2)",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
 
         // should not drag&drop record
         assert.containsN(
@@ -3860,9 +3789,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:last-child .o_kanban_record", 3);
 
         // drag&drop a record in another column
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:nth-child(2)",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.containsN(target, ".o_kanban_group:last-child .o_kanban_record", 3);
@@ -3890,9 +3820,10 @@ QUnit.module("Views", (hooks) => {
             "last column should have 2 records"
         );
 
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:last-child",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:last-child"
+        );
 
         assert.containsNone(
             target,
@@ -3965,9 +3896,10 @@ QUnit.module("Views", (hooks) => {
                 "2nd column should contain 2 records of February month"
             );
 
-            await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-                appendTo: ".o_kanban_group:nth-child(2)",
-            });
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:nth-child(2)"
+            );
 
             assert.containsOnce(
                 target,
@@ -3998,9 +3930,10 @@ QUnit.module("Views", (hooks) => {
                 "2nd column should contain 2 records of February month"
             );
 
-            await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-                appendTo: ".o_kanban_group:nth-child(2)",
-            });
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:nth-child(2)"
+            );
 
             assert.containsOnce(
                 target,
@@ -4042,9 +3975,10 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(target, ".o_record_draggable");
 
             // attempt to drag&drop a record in another column
-            await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-                appendTo: ".o_kanban_group:nth-child(2)",
-            });
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:nth-child(2)"
+            );
 
             // should not drag&drop record
             assert.containsN(
@@ -4066,9 +4000,10 @@ QUnit.module("Views", (hooks) => {
             );
 
             // attempt to drag&drop a record in the same column
-            await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-                after: ".o_kanban_group:first-child .o_kanban_record:last-child",
-            });
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:first-child .o_kanban_record:last-child"
+            );
 
             assert.deepEqual(
                 getCardTexts(),
@@ -4111,9 +4046,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
 
         // drag&drop a record in another column
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:nth-child(2)",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
 
         // should not be dropped, card should reset back to first column
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
@@ -7023,16 +6959,18 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
 
-        await dragAndDrop(".o_kanban_group:nth-child(2) .o_kanban_record", {
-            appendTo: ".o_kanban_group:first-child",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            ".o_kanban_group:first-child"
+        );
 
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
 
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:nth-child(2)",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
 
         assert.containsNone(target, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
@@ -7080,9 +7018,7 @@ QUnit.module("Views", (hooks) => {
             "records should be correctly ordered"
         );
 
-        await dragAndDrop(".o_kanban_record:nth-child(2)", {
-            after: ".o_kanban_record:nth-child(3)",
-        });
+        await dragAndDrop(".o_kanban_record:nth-child(2)", ".o_kanban_record:nth-child(3)");
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.deepEqual(
@@ -7091,9 +7027,7 @@ QUnit.module("Views", (hooks) => {
             "records should be correctly ordered"
         );
 
-        await dragAndDrop(".o_kanban_record:nth-child(3)", {
-            before: ".o_kanban_record:nth-child(2)",
-        });
+        await dragAndDrop(".o_kanban_record:nth-child(3)", ".o_kanban_record:nth-child(2)");
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.deepEqual(
@@ -7742,21 +7676,24 @@ QUnit.module("Views", (hooks) => {
 
         assert.deepEqual(getCounters(), ["1", "1", "2"]);
 
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:nth-child(2)",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
 
         assert.deepEqual(getCounters(), ["0", "2", "2"]);
 
-        await dragAndDrop(".o_kanban_group:nth-child(2) .o_kanban_record", {
-            appendTo: ".o_kanban_group:first-child",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            ".o_kanban_group:first-child"
+        );
 
         assert.deepEqual(getCounters(), ["1", "1", "2"]);
 
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:nth-child(3)",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(3)"
+        );
 
         assert.deepEqual(getCounters(), ["0", "1", "3"]);
     });
@@ -7810,9 +7747,10 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getCounters(), ["1", "3"]);
 
             // Drag the last kanban record to the first column
-            await dragAndDrop(".o_kanban_group:last-child .o_kanban_record:nth-child(4)", {
-                appendTo: ".o_kanban_group:first-child",
-            });
+            await dragAndDrop(
+                ".o_kanban_group:last-child .o_kanban_record:nth-child(4)",
+                ".o_kanban_group:first-child"
+            );
 
             assert.deepEqual(getTooltips(), ["1 gnap", "1 blip", "1 yop", "1 blip"]);
             assert.deepEqual(getCounters(), ["2", "2"]);
@@ -7849,9 +7787,10 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(1), ["1"], "second column's records should be only the id 1");
 
         // Drag the first kanban record on top of the last
-        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-            appendTo: ".o_kanban_group:last-child",
-        });
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:last-child"
+        );
 
         // load more twice to load all records of second column
         await loadMore(1);
@@ -7994,7 +7933,7 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector(".o_kanban_group"),
                 "quick create should have been added in the first column"
             );
-            await dragAndDrop(".o_kanban_record", { appendTo: ".o_kanban_group:nth-child(2)" });
+            await dragAndDrop(".o_kanban_record", ".o_kanban_group:nth-child(2)");
             await createRecord();
             assert.strictEqual(
                 target.querySelector(".o_kanban_quick_create").closest(".o_kanban_group"),
@@ -8793,7 +8732,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_sortable");
         assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
 
-        await dragAndDrop(".o_kanban_record", { after: ".o_kanban_record:nth-child(4)" });
+        await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(4)");
 
         assert.deepEqual(getCardTexts(), ["blip", "gnap", "blip", "yop"]);
     });
@@ -8822,7 +8761,7 @@ QUnit.module("Views", (hooks) => {
         assert.doesNotHaveClass(target.querySelector(".o_kanban_renderer"), "o_kanban_sortable");
         assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
 
-        await dragAndDrop(".o_kanban_record", { after: ".o_kanban_record:nth-child(4)" });
+        await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(4)");
 
         assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
     });
@@ -9233,9 +9172,10 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getCardTexts(1), ["1yop"]);
 
             // Drop in the non-matching record from first column
-            await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", {
-                appendTo: ".o_kanban_group.o_kanban_group_show",
-            });
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group.o_kanban_group_show"
+            );
 
             // Check that we have 2 columns, check their progressbar's state, and check records
             assert.containsN(target, ".o_kanban_group", 2);
@@ -9312,9 +9252,10 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["web_search_read"]);
 
         // Drag out its only record onto the first column
-        await dragAndDrop(".o_kanban_group.o_kanban_group_show .o_kanban_record", {
-            appendTo: ".o_kanban_group:first-child",
-        });
+        await dragAndDrop(
+            ".o_kanban_group.o_kanban_group_show .o_kanban_record",
+            ".o_kanban_group:first-child"
+        );
 
         // Check that we have 2 columns, check their progressbar's state, and check records
         assert.containsN(target, ".o_kanban_group", 2);

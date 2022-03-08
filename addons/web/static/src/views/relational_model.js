@@ -624,8 +624,8 @@ export class Record extends DataPoint {
                 this.resIds.push(this.resId);
             }
             if (shouldReload) {
-                await this.load();
                 this.model.trigger("record-updated", { record: this });
+                await this.load();
                 this.model.notify();
             }
             this.isInQuickCreation = false;
