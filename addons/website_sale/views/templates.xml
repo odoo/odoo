@@ -149,12 +149,6 @@
         </t>
     </template>
 
-    <template id="search_count_box" inherit_id="website.website_search_box" active="False" customize_show="True" name="Show # found">
-        <xpath expr="//button[contains(@t-att-class, 'oe_search_button')]" position="inside">
-            <span t-if='search' class='oe_search_found'> <small>(<t t-esc="search_count or 0"/> found)</small></span>
-        </xpath>
-    </template>
-
     <template id="products_item" name="Products item">
         <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
 
