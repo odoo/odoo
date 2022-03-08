@@ -32,7 +32,7 @@ function getDataURLFromFile(file) {
 
 export class FileUploader extends Component {
     setup() {
-        console.log(this.props);
+        // console.log(this.props);
         this.notification = useService("notification");
         this.id = `o_fileupload_${++FileUploader.nextId}`;
         this.state = useState({

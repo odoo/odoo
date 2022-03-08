@@ -69,3 +69,9 @@ export const combineAttributes = (node, attr, parts, glue = " ") => {
     allValues.push(...(Array.isArray(parts) ? parts : [parts]));
     node.setAttribute(attr, allValues.join(glue));
 };
+
+export const makeEl = (string) => {
+    const parent = document.createElement("div");
+    parent.innerHTML = string;
+    return parent.children[0];
+};

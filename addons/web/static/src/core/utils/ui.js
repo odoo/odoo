@@ -14,7 +14,7 @@ import { clamp } from "@web/core/utils/numbers";
  *  sequence must be initiated when dragging on a certain part of the element.
  * @property {boolean} [connectLists] whether elements can be dragged accross
  *  different parent lists. Note that it requires a `lists` param to work.
- * @property {"x" | "y"} [axis] locks the displacement of the dragged elements
+ * @property {"x" | "y" | false} [axis] locks the displacement of the dragged elements
  *  on a single axis (e.g. if axis="x" elements will only be able to move
  *  horizontally).
  */

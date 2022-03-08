@@ -50,7 +50,7 @@ export class BinaryField extends Component {
         this.props.update(false);
     }
     onFileUploaded(file) {
-        console.log(file);
+        // console.log(file);
         this.state.fileName = file.name;
         this.state.isValid = true;
         this.props.update(file);

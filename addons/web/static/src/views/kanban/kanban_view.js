@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { combineAttributes, isTruthy, XMLParser } from "@web/core/utils/xml";
+import { combineAttributes, isTruthy, makeEl, XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
 import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/helpers/model";
@@ -81,12 +81,6 @@ const extractAttributes = (node, attributes) => {
         node.removeAttribute(attr);
     }
     return attrs;
-};
-
-const makeEl = (string) => {
-    const parent = document.createElement("div");
-    parent.innerHTML = string;
-    return parent.children[0];
 };
 
 export class KanbanArchParser extends XMLParser {

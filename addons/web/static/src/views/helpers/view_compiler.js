@@ -680,6 +680,9 @@ export class ViewCompiler {
         if ("icon" in node.attributes) {
             button.setAttribute("icon", `"${node.getAttribute("icon")}"`);
         }
+        if ("t-if" in node.attributes) {
+            button.setAttribute("t-if", node.getAttribute("t-if"));
+        }
         button.setAttribute("classes", JSON.stringify(Array.from(node.classList)));
 
         const clickParams = {};

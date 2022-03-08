@@ -187,9 +187,9 @@ X2ManyField.components = { Pager };
 X2ManyField.props = { ...standardFieldProps };
 X2ManyField.template = "web.X2ManyField";
 X2ManyField.useSubView = true;
-X2ManyField.convertAttrsToProps = (attrs) => {
-    console.log(attrs);
-};
+// X2ManyField.convertAttrsToProps = (attrs) => {
+//     console.log(attrs);
+// };
 
 registry.category("fields").add("one2many", X2ManyField);
 registry.category("fields").add("many2many", X2ManyField);

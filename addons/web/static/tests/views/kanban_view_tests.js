@@ -32,10 +32,6 @@ const { markup } = owl;
 // Helpers
 // ----------------------------------------------------------------------------
 
-const makeFakeActionService = (actionService) => {
-    registry.category("services").add("action", { start: () => actionService }, { force: true });
-};
-
 // Kanban
 const reload = async (kanban, params = {}) => {
     kanban.env.searchModel.reload(params);
@@ -2037,15 +2033,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("quick create record and edit in grouped mode", async (assert) => {
         assert.expect(6);
 
-        makeFakeActionService({
-            async switchView(viewType, props) {
-                assert.strictEqual(viewType, "form");
-                assert.strictEqual(props.resId, newRecordID);
-            },
-        });
-
         let newRecordID;
-        await makeView({
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -2061,6 +2050,13 @@ QUnit.module("Views", (hooks) => {
                 }
             },
             groupBy: ["bar"],
+        });
+
+        patchWithCleanup(kanban.env.services.action, {
+            async switchView(viewType, props) {
+                assert.strictEqual(viewType, "form");
+                assert.strictEqual(props.resId, newRecordID);
+            },
         });
 
         assert.containsOnce(
@@ -2559,12 +2555,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("quick create record in grouped on date(time) field", async (assert) => {
         assert.expect(6);
 
-        makeFakeActionService({
-            async switchView(viewType, props) {
-                assert.deepEqual([props.resId, viewType], [false, "form"]);
-            },
-        });
-
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -2576,6 +2566,12 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["date"],
+        });
+
+        patchWithCleanup(kanban.env.services.action, {
+            async switchView(viewType, props) {
+                assert.deepEqual([props.resId, viewType], [false, "form"]);
+            },
         });
 
         assert.containsNone(
@@ -3147,17 +3143,7 @@ QUnit.module("Views", (hooks) => {
             color: 0,
         });
 
-        makeFakeActionService({
-            async switchView(viewType, props) {
-                assert.deepEqual(
-                    [props.resId, viewType],
-                    [1, "form"],
-                    "should trigger an event to open the clicked record in a form view"
-                );
-            },
-        });
-
-        await makeView({
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -3173,6 +3159,16 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
             async mockRPC(route) {
                 assert.step(route);
+            },
+        });
+
+        patchWithCleanup(kanban.env.services.action, {
+            async switchView(viewType, props) {
+                assert.deepEqual(
+                    [props.resId, viewType],
+                    [1, "form"],
+                    "should trigger an event to open the clicked record in a form view"
+                );
             },
         });
 
@@ -3223,15 +3219,7 @@ QUnit.module("Views", (hooks) => {
 
         serverData.models.partner.records = [{ id: 1, foo: "yop" }];
 
-        makeFakeActionService({
-            async switchView() {
-                // when clicking on a record in kanban view,
-                // it switches to form view.
-                throw new Error("should not switch view");
-            },
-        });
-
-        await makeView({
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -3248,6 +3236,14 @@ QUnit.module("Views", (hooks) => {
                 "</t>" +
                 "</templates>" +
                 "</kanban>",
+        });
+
+        patchWithCleanup(kanban.env.services.action, {
+            async switchView() {
+                // when clicking on a record in kanban view,
+                // it switches to form view.
+                throw new Error("should not switch view");
+            },
         });
 
         assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
@@ -6480,7 +6476,7 @@ QUnit.module("Views", (hooks) => {
         }
     });
 
-    QUnit.skipWOWL("rendering date and datetime", async (assert) => {
+    QUnit.test("rendering date and datetime", async (assert) => {
         assert.expect(2);
 
         serverData.models.partner.records[0].date = "2017-01-25";
@@ -6496,27 +6492,26 @@ QUnit.module("Views", (hooks) => {
                 '<field name="datetime"/>' +
                 '<templates><t t-name="kanban-box">' +
                 "<div>" +
-                '<t t-esc="record.date.raw_value"/>' +
-                '<t t-esc="record.datetime.raw_value"/>' +
+                '<span class="date" t-esc="record.date.raw_value"/>' +
+                '<span class="datetime" t-esc="record.datetime.raw_value"/>' +
                 "</div>" +
                 "</t></templates>" +
                 "</kanban>",
         });
 
-        // FIXME: this test is locale dependant. we need to do it right.
+        patchWithCleanup(luxon.Settings, { defaultLocale: "en" });
+
         assert.strictEqual(
-            target.querySelector("div.o_kanban_record:contains(Wed Jan 25)").length,
-            1,
-            "should have formatted the date"
+            target.querySelector(".o_kanban_record:first-child .date").innerText,
+            "Wed Jan 25 2017"
         );
         assert.strictEqual(
-            target.querySelector("div.o_kanban_record:contains(Mon Dec 12)").length,
-            1,
-            "should have formatted the datetime"
+            target.querySelector(".o_kanban_record:nth-child(2) .datetime").innerText,
+            "Mon Dec 12 2016"
         );
     });
 
-    QUnit.skipWOWL("evaluate conditions on relational fields", async (assert) => {
+    QUnit.test("evaluate conditions on relational fields", async (assert) => {
         assert.expect(3);
 
         serverData.models.partner.records[0].product_id = false;
@@ -6538,18 +6533,20 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
         });
 
-        assert.strictEqual(
-            $(".o_kanban_record:not(.o_kanban_ghost)").length,
+        assert.containsN(
+            target,
+            ".o_kanban_record:not(.o_kanban_ghost)",
             4,
             "there should be 4 records"
         );
-        assert.strictEqual(
-            $(".o_kanban_record:not(.o_kanban_ghost) .btn_a").length,
-            1,
+        assert.containsOnce(
+            target,
+            ".o_kanban_record:not(.o_kanban_ghost) .btn_a",
             "only 1 of them should have the 'Action' button"
         );
-        assert.strictEqual(
-            $(".o_kanban_record:not(.o_kanban_ghost) .btn_b").length,
+        assert.containsN(
+            target,
+            ".o_kanban_record:not(.o_kanban_ghost) .btn_b",
             2,
             "only 2 of them should have the 'Action' button"
         );
@@ -8171,13 +8168,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(2);
         serverData.models.partner.records = [];
 
-        makeFakeActionService({
-            async switchView() {
-                assert.step("switch_view");
-            },
-        });
-
-        await makeView({
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -8190,6 +8181,13 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates></kanban>",
             groupBy: ["product_id"],
         });
+
+        patchWithCleanup(kanban.env.services.action, {
+            async switchView() {
+                assert.step("switch_view");
+            },
+        });
+
         await createRecord();
         assert.verifySteps(["switch_view"]);
     });

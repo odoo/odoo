@@ -22,7 +22,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
-const { Component, useState, useRef } = owl;
+const { Component, markup, useState, useRef } = owl;
 const { RECORD_COLORS } = ColorPickerField;
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
@@ -126,11 +126,23 @@ export class KanbanRenderer extends Component {
 
     getRawValue(record, fieldName) {
         const field = record.fields[fieldName];
-        let value = record.data[fieldName];
-        if (["one2many", "many2many"].includes(field.type)) {
-            value = value.resIds;
+        const value = record.data[fieldName];
+        switch (field.type) {
+            case "one2many":
+            case "many2many": {
+                return value.count ? value.resIds : [];
+            }
+            case "date":
+            case "datetime": {
+                return value && value.toJSDate().toDateString();
+            }
+            case "html": {
+                return markup(value);
+            }
+            default: {
+                return value;
+            }
         }
-        return value;
     }
 
     getValue(record, fieldName) {
