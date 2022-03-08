@@ -348,10 +348,6 @@ class SaleOrder(models.Model):
             tax_totals = account_move._get_tax_totals(order.partner_id, tax_lines_data, order.amount_total, order.amount_untaxed, order.currency_id)
             order.tax_totals_json = json.dumps(tax_totals)
 
-    @api.onchange('expected_date')
-    def _onchange_expected_date(self):
-        self.commitment_date = self.expected_date
-
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):
         for trans in self:
@@ -482,7 +478,7 @@ class SaleOrder(models.Model):
                 }
             }
 
-    @api.onchange('commitment_date')
+    @api.onchange('commitment_date', 'expected_date')
     def _onchange_commitment_date(self):
         """ Warn if the commitment dates is sooner than the expected date """
         if (self.commitment_date and self.expected_date and self.commitment_date < self.expected_date):
