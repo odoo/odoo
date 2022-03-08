@@ -11,18 +11,6 @@ export class RadioField extends Component {
         this.id = `radio_field_${++RadioField.nextId}`;
     }
 
-    get items() {
-        switch (this.props.type) {
-            case "selection":
-                return this.props.record.fields[this.props.name].selection;
-            case "many2one":
-                return this.props.record.preloadedData
-                    ? this.props.record.preloadedData[this.props.name]
-                    : [];
-            default:
-                return [];
-        }
-    }
     get value() {
         switch (this.props.type) {
             case "selection":
@@ -53,13 +41,25 @@ RadioField.template = "web.RadioField";
 RadioField.props = {
     ...standardFieldProps,
     horizontal: { type: Boolean, optional: true },
+    radioItems: Array,
 };
 RadioField.displayName = _lt("Radio");
 RadioField.supportedTypes = ["many2one", "selection"];
 RadioField.isEmpty = () => false;
-RadioField.convertAttrsToProps = (attrs) => {
+RadioField.extractProps = (fieldName, record, attrs) => {
+    const getRadioItems = () => {
+        switch (record.fields[fieldName].type) {
+            case "selection":
+                return record.fields[fieldName].selection;
+            case "many2one":
+                return record.preloadedData ? record.preloadedData[fieldName] : [];
+            default:
+                return [];
+        }
+    };
     return {
         horizontal: Boolean(attrs.options.horizontal),
+        radioItems: getRadioItems(),
     };
 };
 RadioField.nextId = 0;

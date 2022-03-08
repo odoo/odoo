@@ -103,7 +103,7 @@ QUnit.module("Fields", (hooks) => {
         });*/
     });
 
-    QUnit.test("JournalDashboardGraphField is rendered correctly", async function (assert) {
+    QUnit.skipWOWL("JournalDashboardGraphField is rendered correctly", async function (assert) {
         assert.expect(3);
 
         const kanban = await makeView({

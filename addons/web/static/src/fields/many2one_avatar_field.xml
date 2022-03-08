@@ -4,7 +4,7 @@
     <t t-name="web.Many2OneAvatarField" owl="1">
         <div>
             <span class="o_m2o_avatar">
-                <img t-attf-src="/web/image/{{relation}}/{{props.value[0]}}/avatar_128" />
+                <img t-attf-src="/web/image/{{props.relation}}/{{props.value[0]}}/avatar_128" />
             </span>
             <Many2OneField t-props="props" />
         </div>

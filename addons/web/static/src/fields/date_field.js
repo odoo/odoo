@@ -12,14 +12,11 @@ export class DateField extends Component {
     get date() {
         return this.props.value && this.props.value.startOf("day");
     }
-    get isDateTime() {
-        return this.props.record.fields[this.props.name].type === "datetime";
-    }
     get formattedValue() {
         return this.props.value
             ? formatDate(this.props.value, {
                   // get local date if field type is datetime
-                  timezone: this.isDateTime,
+                  timezone: this.props.isDateTime,
               })
             : "";
     }
@@ -28,20 +25,23 @@ export class DateField extends Component {
 DateField.template = "web.DateField";
 DateField.props = {
     ...standardFieldProps,
+    isDateTime: { type: Boolean, optional: true },
     pickerOptions: { type: Object, optional: true },
 };
 DateField.defaultProps = {
+    isDateTime: false,
     pickerOptions: {},
 };
 DateField.components = {
     DatePicker,
 };
-(DateField.displayName = _lt("Date")),
-    (DateField.supportedTypes = ["date", "datetime"]),
-    (DateField.convertAttrsToProps = (attrs) => {
-        return {
-            pickerOptions: attrs.options.datepicker,
-        };
-    });
+DateField.displayName = _lt("Date");
+DateField.supportedTypes = ["date", "datetime"];
+DateField.extractProps = (fieldName, record, attrs) => {
+    return {
+        isDateTime: record.fields[fieldName].type === "datetime",
+        pickerOptions: attrs.options.datepicker,
+    };
+};
 
 registry.category("fields").add("date", DateField);

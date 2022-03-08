@@ -27,7 +27,7 @@ DateTimeField.components = {
 };
 DateTimeField.displayName = _lt("Date & Time");
 DateTimeField.supportedTypes = ["datetime"];
-DateTimeField.convertAttrsToProps = (attrs) => {
+DateTimeField.extractProps = (fieldName, record, attrs) => {
     return {
         pickerOptions: attrs.options.datepicker,
     };

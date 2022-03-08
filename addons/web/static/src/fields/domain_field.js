@@ -83,7 +83,7 @@ DomainField.components = {
 };
 DomainField.supportedTypes = ["char"];
 DomainField.isEmpty = () => false;
-DomainField.convertAttrsToProps = (attrs) => {
+DomainField.extractProps = (fieldName, record, attrs) => {
     return {
         model: attrs.options.model,
     };

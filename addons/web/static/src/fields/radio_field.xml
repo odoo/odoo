@@ -7,7 +7,7 @@
             t-att-class="props.horizontal ? 'o_horizontal' : 'o_vertical'"
             t-att-aria-label="props.record.activeFields[props.name].string"
         >
-            <t t-foreach="items" t-as="item" t-key="item[0]">
+            <t t-foreach="props.radioItems" t-as="item" t-key="item[0]">
                 <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
                     <input
                         type="radio"

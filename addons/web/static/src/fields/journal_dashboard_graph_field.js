@@ -24,12 +24,6 @@ export class JournalDashboardGraphField extends Component {
         });
     }
 
-    get className() {
-        return this.props.record.data["graph_type"]
-            ? `o_graph_${this.props.record.data["graph_type"]}chart`
-            : "";
-    }
-
     /**
      * Instantiates a Chart (Chart.js lib) to render the graph according to
      * the current config.
@@ -39,9 +33,9 @@ export class JournalDashboardGraphField extends Component {
             this.chart.destroy();
         }
         let config;
-        if (this.props.record.data["graph_type"] === "line") {
+        if (this.props.graphType === "line") {
             config = this._getLineChartConfig();
-        } else if (this.props.record.data["graph_type"] === "bar") {
+        } else if (this.props.graphType === "bar") {
             config = this._getBarChartConfig();
         }
         this.chart = new Chart(this.canvasRef.el, config);
@@ -142,6 +136,14 @@ export class JournalDashboardGraphField extends Component {
 JournalDashboardGraphField.template = "web.JournalDashboardGraphField";
 JournalDashboardGraphField.props = {
     ...standardFieldProps,
+    className: { type: String, optional: true },
+    graphType: String,
+};
+JournalDashboardGraphField.extractProps = (fieldName, record) => {
+    return {
+        className: record.data["graph_type"] ? `o_graph_${record.data["graph_type"]}chart` : "",
+        graphType: record.data["graph_type"],
+    };
 };
 
 registry.category("fields").add("dashboard_graph", JournalDashboardGraphField);

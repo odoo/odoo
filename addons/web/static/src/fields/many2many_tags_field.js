@@ -51,7 +51,7 @@ Many2ManyTagsField.fieldsToFetch = {
     display_name: { name: "display_name", type: "char" },
 };
 Many2ManyTagsField.RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-Many2ManyTagsField.convertAttrsToProps = (attrs) => {
+Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
     return {
         colorField: attrs.options.color_field,
         canEditColor: !attrs.options.no_edit_color,

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { Domain } from "@web/core/domain";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
@@ -9,10 +8,6 @@ import { standardFieldProps } from "./standard_field_props";
 const { Component } = owl;
 
 export class Many2ManyCheckboxesField extends Component {
-    get items() {
-        return this.props.record.preloadedData[this.props.name];
-    }
-
     isSelected(item) {
         return this.props.value.resIds.includes(item[0]);
     }
@@ -31,6 +26,12 @@ Many2ManyCheckboxesField.components = { CheckBox };
 Many2ManyCheckboxesField.template = "web.Many2ManyCheckboxesField";
 Many2ManyCheckboxesField.props = {
     ...standardFieldProps,
+    items: Object,
+};
+Many2ManyCheckboxesField.extractProps = (fieldName, record) => {
+    return {
+        items: record.preloadedData[fieldName],
+    };
 };
 Many2ManyCheckboxesField.displayName = _lt("Checkboxes");
 Many2ManyCheckboxesField.supportedTypes = ["many2many"];

@@ -64,7 +64,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_form_button_edit");
 
         // click on the only element (because it's closed) to open the field component
-        await click(target, "button");
+        await click(target, ".o_field_color_picker button");
 
         await triggerEvent(document.activeElement, null, "keydown", {
             which: 13, // tab

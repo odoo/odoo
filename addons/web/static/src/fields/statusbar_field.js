@@ -93,7 +93,7 @@ StatusBarField.components = {
 };
 StatusBarField.supportedTypes = ["many2one", "selection"];
 StatusBarField.isEmpty = () => false;
-StatusBarField.convertAttrsToProps = (attrs) => {
+StatusBarField.extractProps = (fieldName, record, attrs) => {
     return {
         clickable: Boolean(attrs.options.clickable),
         visibleSelection:

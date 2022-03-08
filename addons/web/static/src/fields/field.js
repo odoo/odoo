@@ -213,9 +213,6 @@ Field.parseFieldNode = function (node, fields, viewType) {
         }
         fieldInfo.attrs[attribute.name] = attribute.value;
     }
-    if (fieldInfo.FieldComponent.convertAttrsToProps) {
-        fieldInfo.props = fieldInfo.FieldComponent.convertAttrsToProps(fieldInfo.attrs);
-    }
 
     if (!fieldInfo.invisible && X2M_TYPES.includes(field.type)) {
         if (field.views) {

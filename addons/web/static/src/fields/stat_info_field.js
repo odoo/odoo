@@ -31,7 +31,7 @@ StatInfoField.props = {
 };
 StatInfoField.supportedTypes = ["float", "integer"];
 StatInfoField.isEmpty = () => false;
-StatInfoField.convertAttrsToProps = (attrs) => {
+StatInfoField.extractProps = (fieldName, record, attrs) => {
     return {
         labelField: attrs.options.label_field,
         noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),

@@ -3,7 +3,7 @@
 
     <t t-name="web.Many2ManyCheckboxesField" owl="1">
         <div aria-atomic="true">
-            <t t-foreach="items" t-as="item" t-key="item[0]">
+            <t t-foreach="props.items" t-as="item" t-key="item[0]">
                 <div>
                     <CheckBox
                         value="isSelected(item)"

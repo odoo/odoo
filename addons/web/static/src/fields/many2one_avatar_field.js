@@ -6,16 +6,18 @@ import { Many2OneField } from "./many2one_field";
 
 const { Component } = owl;
 
-export class Many2OneAvatarField extends Component {
-    get relation() {
-        return this.props.record.fields[this.props.name].relation;
-    }
-}
+export class Many2OneAvatarField extends Component {}
 
 Many2OneAvatarField.template = "web.Many2OneAvatarField";
 Many2OneAvatarField.props = {
     ...standardFieldProps,
     placeholder: { type: String, optional: true },
+    relation: Object,
+};
+Many2OneAvatarField.extractProps = (fieldName, record) => {
+    return {
+        relation: record.fields[fieldName].relation,
+    };
 };
 Many2OneAvatarField.components = {
     Many2OneField,

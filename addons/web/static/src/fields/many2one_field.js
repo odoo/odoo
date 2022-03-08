@@ -40,20 +40,11 @@ export class Many2OneField extends Component {
     get searchLimit() {
         return this.constructor.searchLimit;
     }
-    get relation() {
-        return this.props.record.fields[this.props.name].relation;
-    }
-    get noOpen() {
-        return this.props.noOpen;
-    }
     get hasExternalButton() {
-        return !this.noOpen && !!this.props.value && !this.state.isFloating;
+        return !this.props.noOpen && !!this.props.value && !this.state.isFloating;
     }
     get canCreate() {
         return this.props.canCreate && !this.props.noCreate;
-    }
-    get canWrite() {
-        return this.props.canWrite;
     }
     get canQuickCreate() {
         return this.canCreate && !this.props.noQuickCreate;
@@ -80,7 +71,7 @@ export class Many2OneField extends Component {
     async loadDisplayName(value) {
         // FIXME WOWL should not be done here (in list, we do a name_get by line)
         if (this.props.alwaysReload && value) {
-            const nameGet = await this.orm.call(this.relation, "name_get", [value[0]], {
+            const nameGet = await this.orm.call(this.props.relation, "name_get", [value[0]], {
                 context: this.props.record.getFieldContext(this.props.name),
             });
             return nameGet[0][1].split("\n").map((line) => line.trim());
@@ -89,7 +80,7 @@ export class Many2OneField extends Component {
     }
 
     async loadRecordSource(request) {
-        const records = await this.orm.call(this.relation, "name_search", [], {
+        const records = await this.orm.call(this.props.relation, "name_search", [], {
             name: request,
             args: this.getDomain(),
             operator: "ilike",
@@ -158,7 +149,7 @@ export class Many2OneField extends Component {
 
     async openAction() {
         const action = await this.orm.call(
-            this.props.record.fields[this.props.name].relation,
+            this.props.relation,
             "get_formview_action",
             [[this.props.value[0]]],
             { context: this.props.record.getFieldContext(this.props.name) }
@@ -167,7 +158,7 @@ export class Many2OneField extends Component {
     }
     async openDialog(resId) {
         const viewId = await this.orm.call(
-            this.props.record.fields[this.props.name].relation,
+            this.props.relation,
             "get_formview_id",
             [[this.props.value[0]]],
             { context: this.props.record.getFieldContext(this.props.name) }
@@ -177,7 +168,7 @@ export class Many2OneField extends Component {
             activeFields: {},
             fields: {},
             resId,
-            resModel: this.relation,
+            resModel: this.props.relation,
             context: this.props.record.getFieldContext(this.props.name),
             mode: this.props.readonly ? "readonly" : "edit",
             viewId,
@@ -223,6 +214,7 @@ Many2OneField.props = {
     noQuickCreate: { type: Boolean, optional: true },
     noCreateEdit: { type: Boolean, optional: true },
     alwaysReload: { type: Boolean, optional: true },
+    relation: String,
 };
 Many2OneField.defaultProps = {
     canCreate: true,
@@ -233,7 +225,7 @@ Many2OneField.components = {
 };
 Many2OneField.displayName = _lt("Many2one");
 Many2OneField.supportedTypes = ["many2one"];
-Many2OneField.convertAttrsToProps = (attrs) => {
+Many2OneField.extractProps = (fieldName, record, attrs) => {
     return {
         noOpen: Boolean(attrs.options.no_open),
         noCreate: Boolean(attrs.options.no_create),
@@ -242,6 +234,7 @@ Many2OneField.convertAttrsToProps = (attrs) => {
         noQuickCreate: Boolean(attrs.options.no_quick_create),
         noCreateEdit: Boolean(attrs.options.no_create_edit),
         alwaysReload: Boolean(attrs.options.always_reload),
+        relation: record.fields[fieldName].relation,
     };
 };
 Many2OneField.searchLimit = 7;

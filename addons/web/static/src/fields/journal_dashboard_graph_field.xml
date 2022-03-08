@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.JournalDashboardGraphField" owl="1">
-        <div t-attf-class="o_dashboard_graph {{ className }}">
+        <div t-attf-class="o_dashboard_graph {{ props.className }}">
             <canvas t-ref="canvas"/>
         </div>
     </t>

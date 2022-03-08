@@ -23,7 +23,7 @@ BooleanFavoriteField.defaultProps = {
 BooleanFavoriteField.displayName = _lt("Favorite");
 BooleanFavoriteField.supportedTypes = ["boolean"];
 BooleanFavoriteField.isEmpty = () => false;
-BooleanFavoriteField.convertAttrsToProps = (attrs) => {
+BooleanFavoriteField.extractProps = (fieldName, record, attrs) => {
     return {
         noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
     };

@@ -102,7 +102,7 @@ AceField.defaultProps = {
     mode: "qweb",
 };
 AceField.supportedTypes = ["text"];
-AceField.convertAttrsToProps = (attrs) => {
+AceField.extractProps = (fieldName, record, attrs) => {
     return {
         mode: attrs.options.mode,
     };
