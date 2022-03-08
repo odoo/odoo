@@ -99,12 +99,21 @@ class TestSMSPost(TestMailFullCommon, MockLinkTracker):
             'number': '13',
             'mailing_id': mailing.id,
         })
+        sms_4 = self.env['sms.sms'].create({
+            'body': 'Welcome to https://test.odoo.com/r/RAOUL\nAnd again,\n'
+                    'https://test.odoo.com/r/RAOUL',
+            'number': '14',
+            'mailing_id': mailing.id,
+        })
 
-        res = (sms_0 | sms_1 | sms_2 | sms_3)._update_body_short_links()
+        res = (sms_0 | sms_1 | sms_2 | sms_3 | sms_4)._update_body_short_links()
         self.assertEqual(res[sms_0.id], 'Welcome to https://test.odoo.com')
         self.assertEqual(res[sms_1.id], 'Welcome to https://test.odoo.com/r/RAOUL')
         self.assertEqual(res[sms_2.id], 'Welcome to https://test.odoo.com/r/RAOUL/s/%s' % sms_2.id)
         self.assertEqual(res[sms_3.id], 'Welcome to https://test.odoo.com/leodagan/r/RAOUL')
+        self.assertEqual(
+            res[sms_4.id],
+            f'Welcome to https://test.odoo.com/r/RAOUL/s/{sms_4.id}\nAnd again,\nhttps://test.odoo.com/r/RAOUL/s/{sms_4.id}')
 
     def test_sms_send_batch_size(self):
         self.count = 0
