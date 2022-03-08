@@ -50,7 +50,9 @@ var BasicView = AbstractView.extend({
         this.rendererParams.viewType = this.viewType;
 
         this.controllerParams.confirmOnDelete = true;
-        this.controllerParams.archiveEnabled = 'active' in this.fields || 'x_active' in this.fields;
+        this.controllerParams.archiveEnabled = 'active' in this.fields ? !this.fields.active.readonly
+                                             : 'x_active' in this.fields ? !this.fields.x_active.readonly
+                                             : false;
         this.controllerParams.hasButtons =
                 'action_buttons' in params ? params.action_buttons : true;
         this.controllerParams.viewId = viewInfo.view_id;
