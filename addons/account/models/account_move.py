@@ -2728,7 +2728,7 @@ class AccountMove(models.Model):
                 debit = -line_vals['debit']
                 credit = -line_vals['credit']
 
-            if 'tax_tag_invert' in line_vals:
+            if 'tax_tag_invert' in line_vals and not self.tax_cash_basis_origin_move_id:
                 # This is an editable computed field; we want to it recompute itself
                 del line_vals['tax_tag_invert']
 
