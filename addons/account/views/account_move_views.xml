@@ -878,6 +878,8 @@
                                         <field name="account_internal_type" invisible="1"/>
                                         <field name="account_internal_group" invisible="1"/>
                                     </kanban>
+
+                                    <!-- Form view to cover mobile use -->
                                     <form>
                                         <sheet>
                                             <field name="product_uom_category_id" invisible="1"/>
@@ -886,11 +888,13 @@
                                             <group>
                                                 <field name="partner_id" invisible="1"/>
                                                 <field name="company_id" invisible="1"/>
+                                                <field name="debit" invisible="1"/>
+                                                <field name="credit" invisible="1"/>
                                                 <field name="product_id" widget="many2one_barcode"/>
                                                 <field name="quantity"/>
                                                 <field name="product_uom_id" groups="uom.group_uom"/>
                                                 <field name="price_unit"/>
-                                                <field name="discount" groups="product.group_discount_per_so_line"/>
+                                                <field name="discount" string="Disc.%"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </group>
                                             <group>
@@ -903,6 +907,10 @@
                                             <label for="name" string="Section" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
                                             <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
                                             <field name="name" widget="text"/>
+                                            <group>
+                                                <field name="price_subtotal" string="Subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                                <field name="price_total" string="Total" groups="account.group_show_line_subtotals_tax_included"/>
+                                            </group>
                                         </sheet>
                                     </form>
                                 </field>
