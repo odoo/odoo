@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture } from "../helpers/utils";
+import { click, getFixture, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 const MY_IMAGE =
@@ -131,28 +131,14 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "ImageField is correctly replaced when given an incorrect value",
         async function (assert) {
-            assert.expect(6);
+            assert.expect(7);
 
-            serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
             serverData.models.partner.records[0].document = "incorrect_base64_value";
 
-            // FIXME WOWL patch willStart?
-            // testUtils.mock.patch(basicFields.FieldBinaryImage, {
-            //     // Delay the _render function: this will ensure that the error triggered
-            //     // by the incorrect base64 value is dispatched before the src is replaced
-            //     // (see test_utils_mock.removeSrcAttribute), since that function is called
-            //     // when the element is inserted into the DOM.
-            //     async _render() {
-            //         const result = this._super.apply(this, arguments);
-            //         await concurrency.delay(100);
-            //         return result;
-            //     },
-            // });
-
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -164,19 +150,30 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
+            assert.strictEqual(
+                target.querySelector('div[name="document"] > img').dataset.src,
+                "data:image/png;base64,incorrect_base64_value",
+                "the image has the invalid src by default"
+            );
+
+            // As GET requests can't occur in tests, we must generate an error
+            // on the img element to check whether the data-src is replaced with
+            // a placeholder, here knowing that the GET request would fail
+            await triggerEvent(target, 'div[name="document"] > img', "error");
+
             assert.hasClass(
                 target.querySelector('.o_field_widget[name="document"]'),
                 "o_field_image",
                 "the widget should have the correct class"
             );
             assert.containsOnce(
-                form,
+                target,
                 ".o_field_widget[name='document'] > img",
                 "the widget should contain an image"
             );
             assert.strictEqual(
                 target.querySelector('div[name="document"] > img').dataset.src,
-                `/web/static/img/placeholder.png`,
+                "/web/static/img/placeholder.png",
                 "the image should have the correct src"
             );
             assert.hasClass(
@@ -201,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("ImageField: option accepted_file_extensions", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -230,7 +227,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner_type.records[0].image = PRODUCT_IMAGE;
         serverData.models.partner.records[0].timmy = [12];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -265,7 +262,7 @@ QUnit.module("Fields", (hooks) => {
             "The view's image is in the DOM"
         );
         assert.containsOnce(
-            form,
+            target,
             ".o_kanban_record.oe_kanban_global_click",
             "There should be one record in the many2many"
         );
@@ -287,7 +284,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner_type.records[0].image = PRODUCT_IMAGE;
         serverData.models.partner.records[0].timmy = [12];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -303,7 +300,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        assert.containsOnce(form, "tr.o_data_row", "There should be one record in the many2many");
+        assert.containsOnce(target, "tr.o_data_row", "There should be one record in the many2many");
         assert.ok(
             document.querySelector(`img[data-src="data:image/gif;base64,${PRODUCT_IMAGE}"]`),
             "The list's image is in the DOM"
@@ -313,7 +310,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("ImageField with required attribute", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
