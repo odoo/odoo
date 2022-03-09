@@ -125,7 +125,7 @@ class AccountMove(models.Model):
                     vals = {
                         'name': line.name[:64],
                         'move_id': move.id,
-                        'partner_id': move.commercial_partner_id.id,
+                        'partner_id': line.partner_id.id or move.commercial_partner_id.id,
                         'currency_id': line.currency_id.id,
                         'product_id': line.product_id.id,
                         'product_uom_id': line.product_uom_id.id,
@@ -137,7 +137,6 @@ class AccountMove(models.Model):
                         'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                         'exclude_from_invoice_tab': True,
                         'is_anglo_saxon_line': True,
-                        'partner_id': line.partner_id.id,
                     }
                     vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
                     lines_vals_list.append(vals)
@@ -146,7 +145,7 @@ class AccountMove(models.Model):
                     vals = {
                         'name': line.name[:64],
                         'move_id': move.id,
-                        'partner_id': move.commercial_partner_id.id,
+                        'partner_id': line.partner_id.id or move.commercial_partner_id.id,
                         'currency_id': line.currency_id.id,
                         'product_id': line.product_id.id,
                         'product_uom_id': line.product_uom_id.id,
@@ -158,7 +157,6 @@ class AccountMove(models.Model):
                         'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                         'exclude_from_invoice_tab': True,
                         'is_anglo_saxon_line': True,
-                        'partner_id': line.partner_id.id,
                     }
                     vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
                     lines_vals_list.append(vals)
