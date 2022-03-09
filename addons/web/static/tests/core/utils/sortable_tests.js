@@ -2,8 +2,9 @@
 
 import { dragAndDrop, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { useSortable } from "@web/core/utils/ui";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, useRef, useState, xml } = owl;
+const { useRef, useState, xml } = owl;
 
 let target;
 QUnit.module("UI", ({ beforeEach }) => {
@@ -17,7 +18,7 @@ QUnit.module("UI", ({ beforeEach }) => {
         assert.expect(8);
 
         const mountListAndAssert = async (setupList, shouldThrow) => {
-            class List extends Component {
+            class List extends LegacyComponent {
                 setup() {
                     setupList();
                 }
@@ -92,7 +93,7 @@ QUnit.module("UI", ({ beforeEach }) => {
     QUnit.test("Simple sorting in single list", async (assert) => {
         assert.expect(19);
 
-        class List extends Component {
+        class List extends LegacyComponent {
             setup() {
                 useSortable({
                     ref: useRef("root"),
@@ -148,7 +149,7 @@ QUnit.module("UI", ({ beforeEach }) => {
     QUnit.test("Simple sorting in multiple lists", async (assert) => {
         assert.expect(20);
 
-        class List extends Component {
+        class List extends LegacyComponent {
             setup() {
                 useSortable({
                     ref: useRef("root"),
@@ -207,7 +208,7 @@ QUnit.module("UI", ({ beforeEach }) => {
     QUnit.test("Dynamically disable sortable feature", async (assert) => {
         assert.expect(4);
 
-        class List extends Component {
+        class List extends LegacyComponent {
             setup() {
                 this.state = useState({ enableSortable: true });
                 useSortable({

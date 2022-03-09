@@ -339,6 +339,7 @@ export class Record extends DataPoint {
 
         this.mode = params.mode || (this.isVirtual ? "edit" : state.mode || "readonly");
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
+        markRaw(this);
     }
 
     get evalContext() {

@@ -5,10 +5,11 @@ import { ButtonBox } from "@web/views/form/button_box/button_box";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, useSubEnv, useState, useEffect, xml } = owl;
+const { useSubEnv, useState, useEffect, xml } = owl;
 
-export class FormRenderer extends Component {
+export class FormRenderer extends LegacyComponent {
     setup() {
         const { arch, activeFields, xmlDoc } = this.props.archInfo;
         this.state = useState({}); // Used by Form Compiler

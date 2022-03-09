@@ -11,6 +11,7 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, mount, triggerEvent } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { createWebClient, doAction } from "../webclient/helpers";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 import FormView from "web.FormView";
 import legacyViewRegistry from "web.view_registry";
@@ -74,7 +75,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("creating a domain from scratch", async (assert) => {
         assert.expect(12);
 
-        class Parent extends Component {
+        class Parent extends LegacyComponent {
             setup() {
                 this.value = "[]";
             }
@@ -342,7 +343,7 @@ QUnit.module("Components", (hooks) => {
 
         let newValue;
 
-        class Parent extends Component {
+        class Parent extends LegacyComponent {
             setup() {
                 this.value = `[("product_id", "ilike", 1)]`;
             }

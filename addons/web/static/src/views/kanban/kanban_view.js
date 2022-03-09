@@ -14,8 +14,7 @@ import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { Layout } from "@web/search/layout";
 import { ViewNotFoundError } from "@web/views/view";
 import { useViewButtons } from "@web/views/view_button/hook";
-
-const { Component } = owl;
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const KANBAN_BOX_ATTRIBUTE = "kanban-box";
 const ACTION_TYPES = ["action", "object"];
@@ -284,7 +283,7 @@ export class KanbanArchParser extends XMLParser {
 
 // -----------------------------------------------------------------------------
 
-class KanbanView extends Component {
+class KanbanView extends LegacyComponent {
     setup() {
         this.actionService = useService("action");
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);

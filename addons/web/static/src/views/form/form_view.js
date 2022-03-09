@@ -16,8 +16,9 @@ import { Layout } from "@web/search/layout";
 import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onWillStart, useEffect, useRef, onRendered } = owl;
+const { onWillStart, useEffect, useRef, onRendered } = owl;
 
 const viewRegistry = registry.category("views");
 
@@ -41,7 +42,7 @@ export class FormArchParser extends XMLParser {
 
 // -----------------------------------------------------------------------------
 
-export class FormView extends Component {
+export class FormView extends LegacyComponent {
     setup() {
         this.dialogService = useService("dialog");
         this.router = useService("router");

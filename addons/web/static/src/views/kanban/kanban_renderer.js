@@ -21,8 +21,9 @@ import { isAllowedDateField } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, markup, useState, useRef } = owl;
+const { markup, useState, useRef } = owl;
 const { RECORD_COLORS } = ColorPickerField;
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
@@ -34,7 +35,7 @@ const isNull = (value) => [null, undefined].includes(value);
 
 const formatterRegistry = registry.category("formatters");
 
-export class KanbanRenderer extends Component {
+export class KanbanRenderer extends LegacyComponent {
     setup() {
         const { arch, cards, className, fields, xmlDoc, examples } = this.props.archInfo;
         this.cards = cards;

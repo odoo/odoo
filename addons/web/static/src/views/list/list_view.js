@@ -19,8 +19,9 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { getActiveActions, getDecoration, processButton } from "../helpers/view_utils";
 import { RelationalModel, stringToOrderBy } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onWillStart, useSubEnv } = owl;
+const { onWillStart, useSubEnv } = owl;
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -188,7 +189,7 @@ export class ListArchParser extends XMLParser {
 
 // -----------------------------------------------------------------------------
 
-export class ListView extends Component {
+export class ListView extends LegacyComponent {
     setup() {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
