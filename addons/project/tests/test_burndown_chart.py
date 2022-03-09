@@ -138,8 +138,8 @@ class TestBurndownChart(TransactionCase):
             task_e.write({'stage_id': done_stage.id})
             self.env.cr.flush()
 
-        read_group_result = self.env['project.task.burndown.chart.report'].with_context(fill_temporal=True).read_group([('project_id', '=', project.id), ('display_project_id', '!=', False)], ['date', 'stage_id', 'nb_tasks'], ['date:month', 'stage_id'], lazy=False)
-        read_group_result_dict = {(res['date:month'], res['stage_id'][0]): res['nb_tasks'] for res in read_group_result}
+        read_group_result = self.env['project.task.burndown.chart.report'].with_context(fill_temporal=True).read_group([('project_id', '=', project.id), ('display_project_id', '!=', False)], ['date', 'stage_id'], ['date:month', 'stage_id'], lazy=False)
+        read_group_result_dict = {(res['date:month'], res['stage_id'][0]): res['__count'] for res in read_group_result}
         stages_dict = {stage.id: stage.name for stage in stages}
         expected_dict = {
             ('January %s' % (current_year - 1), todo_stage.id): 5,
@@ -166,13 +166,13 @@ class TestBurndownChart(TransactionCase):
             ('January %s' % (current_year), done_stage.id): 5,
             ('January %s' % (current_year), todo_stage.id): 1,
         }
-        for (month, stage_id), nb_tasks in read_group_result_dict.items():
+        for (month, stage_id), __count in read_group_result_dict.items():
             # when we don't found any record in the dict then we are in the current_year
             # and the number of tasks should always be 5 in Done stage and 1 in Todo Stage
             # since we have created the last task without changing its stage.
-            expected_nb_tasks = expected_dict.get((month, stage_id), 5 if stage_id != todo_stage.id else 1)
+            expected_count = expected_dict.get((month, stage_id), 5 if stage_id != todo_stage.id else 1)
             self.assertEqual(
-                nb_tasks,
-                expected_nb_tasks,
-                'In %s, the number of tasks should be equal to %s in %s stage.' % (month, expected_nb_tasks, stages_dict.get(stage_id, 'Unknown'))
+                __count,
+                expected_count,
+                'In %s, the number of tasks should be equal to %s in %s stage.' % (month, expected_count, stages_dict.get(stage_id, 'Unknown'))
             )

@@ -25,7 +25,6 @@ class ReportProjectTaskBurndownChart(models.Model):
     date_assign = fields.Datetime(string='Assignment Date', readonly=True)
     date_deadline = fields.Date(string='Deadline', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
-    nb_tasks = fields.Integer('# of Tasks', readonly=True, group_operator="sum")
     date_group_by = fields.Selection(
         (
             ('day', 'By Day'),
@@ -115,8 +114,7 @@ SELECT (task_id*10^7 + 10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
        date_assign,
        date_deadline,
        partner_id,
-       'day' AS date_group_by,
-       1 AS nb_tasks
+       'day' AS date_group_by
   FROM all_moves_stage_task t
   JOIN LATERAL generate_series(t.date_begin, t.date_end-interval '1 day', '1 day') d ON TRUE
 
@@ -132,8 +130,7 @@ SELECT (task_id*10^7 + 2*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
        date_assign,
        date_deadline,
        partner_id,
-       'week' AS date_group_by,
-       1 AS nb_tasks
+       'week' AS date_group_by
   FROM all_moves_stage_task t
   JOIN LATERAL generate_series(t.date_begin, t.date_end, '1 week') d ON TRUE
  WHERE date_trunc('week', t.date_begin) <= date_trunc('week', d)
@@ -151,8 +148,7 @@ SELECT (task_id*10^7 + 3*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
        date_assign,
        date_deadline,
        partner_id,
-       'month' AS date_group_by,
-       1 AS nb_tasks
+       'month' AS date_group_by
   FROM all_moves_stage_task t
   JOIN LATERAL generate_series(t.date_begin, t.date_end, '1 month') d ON TRUE
  WHERE date_trunc('month', t.date_begin) <= date_trunc('month', d)
@@ -170,8 +166,7 @@ SELECT (task_id*10^7 + 4*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
        date_assign,
        date_deadline,
        partner_id,
-       'quarter' AS date_group_by,
-       1 AS nb_tasks
+       'quarter' AS date_group_by
   FROM all_moves_stage_task t
   JOIN LATERAL generate_series(t.date_begin, t.date_end, '3 month') d ON TRUE
  WHERE date_trunc('quarter', t.date_begin) <= date_trunc('quarter', d)
@@ -189,8 +184,7 @@ SELECT (task_id*10^7 + 5*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
        date_assign,
        date_deadline,
        partner_id,
-       'year' AS date_group_by,
-       1 AS nb_tasks
+       'year' AS date_group_by
   FROM all_moves_stage_task t
   JOIN LATERAL generate_series(t.date_begin, t.date_end, '1 year') d ON TRUE
  WHERE date_trunc('year', t.date_begin) <= date_trunc('year', d)
