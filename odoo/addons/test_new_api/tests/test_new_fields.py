@@ -2878,6 +2878,21 @@ class TestX2many(common.TransactionCase):
         })
         self.assertTrue(field.unlink())
 
+    def test_custom_m2m_related(self):
+        # this checks the ondelete of a related many2many field
+        model_id = self.env['ir.model']._get_id('res.partner')
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_foo',
+            'field_description': 'Foo',
+            'model_id': model_id,
+            'ttype': 'many2many',
+            'relation': 'res.partner.category',
+            'related': 'category_id',
+            'readonly': True,
+            'store': True,
+        })
+        self.assertTrue(field.unlink())
+
 
 class TestHtmlField(common.TransactionCase):
 
