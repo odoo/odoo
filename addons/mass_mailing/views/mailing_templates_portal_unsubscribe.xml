@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="unsubscribe">
+    <template id="page_mailing_unsubscribe" name="Unsubscribe">
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.unsubscribe_form"/>
+        </t>
+    </template>
+
+    <template id="unsubscribe_form">
         <div class="container o_unsubscribe_form">
             <div class="row">
                 <form action="/mail/mailing/unsubscribe" method="POST" id="unsubscribe_form" class="col-lg-6 offset-lg-3 mt-4">
@@ -66,7 +72,13 @@
         </div>
     </template>
 
-    <template id="unsubscribed">
+    <template id="page_mailing_unsubscribe_done" name="Unsubscribed">
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.unsubscribe_done"/>
+        </t>
+    </template>
+
+    <template id="unsubscribe_done">
         <div class="container o_unsubscribe_form">
             <div class="row">
                 <input type="hidden" name="email" t-att-value="email"/>
@@ -103,17 +115,5 @@
                 </div>
             </div>
         </div>
-    </template>
-
-    <template id="page_unsubscribe" name="Unsubscribe">
-        <t t-call="mass_mailing.layout">
-            <t t-call="mass_mailing.unsubscribe"/>
-        </t>
-    </template>
-
-    <template id="page_unsubscribed" name="Unsubscribed">
-        <t t-call="mass_mailing.layout">
-            <t t-call="mass_mailing.unsubscribed"/>
-        </t>
     </template>
 </odoo>
