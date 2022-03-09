@@ -740,23 +740,19 @@ export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc) => {
     const component = useComponent();
 
     // Assigns special functions to the current component.
-    Object.assign(
-        component,
-        {
-            evalDomain(record, expr) {
-                return new Domain(expr).contains(record.evalContext);
-            },
-            getWidget(widgetName) {
-                class ToImplement extends Component {}
-                ToImplement.template = xml`<div>${widgetName}</div>`;
-                return ToImplement;
-            },
-            isFieldEmpty(record, fieldName) {
-                return Field.isEmpty(record, fieldName);
-            },
+    Object.assign(component, {
+        evalDomain(record, expr) {
+            return new Domain(expr).contains(record.evalContext);
         },
-        ViewCompiler.specialFunctions
-    );
+        getWidget(widgetName) {
+            class ToImplement extends Component {}
+            ToImplement.template = xml`<div>${widgetName}</div>`;
+            return ToImplement;
+        },
+        isFieldEmpty(record, fieldName) {
+            return Field.isEmpty(record, fieldName);
+        },
+    });
 
     // Creates a new compiled template if the given template key hasn't been
     // compiled already.

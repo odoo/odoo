@@ -63,7 +63,7 @@ QUnit.module('Views', {
     },
 }, function () {
 
-    QUnit.module('view_dialogs');
+    QUnit.module('view_dialogs_legacy');
 
     QUnit.test('formviewdialog buttons in footer are positioned properly', async function (assert) {
         assert.expect(2);

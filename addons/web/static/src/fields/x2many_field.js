@@ -3,6 +3,7 @@
 import { makeContext } from "@web/core/context";
 import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
+import { sprintf } from "@web/core/utils/strings";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/fields/standard_field_props";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
@@ -136,7 +137,10 @@ export class X2ManyField extends Component {
                 record.data = { ...record._values, ...record._changes };
                 record.model.notify();
             },
-            title: this.props.record.activeFields[this.props.name].string,
+            title: sprintf(
+                this.env._t("Open: %s"),
+                this.props.record.activeFields[this.props.name].string
+            ),
         });
     }
 
@@ -185,7 +189,10 @@ export class X2ManyField extends Component {
                     this.list.onChanges();
                     this.list.model.notify();
                 },
-                title: this.props.record.activeFields[this.props.name].string,
+                title: sprintf(
+                    this.env._t("Open: %s"),
+                    this.props.record.activeFields[this.props.name].string
+                ),
             });
         }
     }

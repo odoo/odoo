@@ -42,6 +42,65 @@ export class FormArchParser extends XMLParser {
 
 // -----------------------------------------------------------------------------
 
+export async function loadSubViews(
+    activeFields,
+    fields,
+    context,
+    resModel,
+    viewService,
+    userService
+) {
+    for (const fieldName in activeFields) {
+        const field = fields[fieldName];
+        if (!isX2Many(field)) {
+            continue; // what follows only concerns x2many fields
+        }
+        const fieldInfo = activeFields[fieldName];
+        if (fieldInfo.modifiers.invisible === true) {
+            continue; // no need to fetch the sub view if the field is always invisible
+        }
+        if (fieldInfo.views[fieldInfo.viewMode]) {
+            continue; // the sub view is inline in the main form view
+        }
+        if (!fieldInfo.FieldComponent.useSubView) {
+            continue; // the FieldComponent used to render the field doesn't need a sub view
+        }
+
+        // extract *_view_ref keys from field context, to fetch the adequate view
+        const fieldContext = {};
+        const regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
+        let matches;
+        while ((matches = regex.exec(fieldInfo.context)) !== null) {
+            fieldContext[matches[1]] = matches[2];
+        }
+        // filter out *_view_ref keys from general context
+        const refinedContext = {};
+        for (const key in context) {
+            if (key.indexOf("_view_ref") === -1) {
+                refinedContext[key] = context[key];
+            }
+        }
+        // specify the main model to prevent access rights defined in the context
+        // (e.g. create: 0) to apply to sub views (same logic as the one applied by
+        // the server for inline views)
+        refinedContext.base_model_name = resModel;
+
+        const viewType = fieldInfo.viewMode;
+        const views = await viewService.loadViews({
+            resModel: field.relation,
+            views: [[false, viewType]],
+            context: makeContext([fieldContext, userService.context, refinedContext]),
+        });
+        const subView = views[viewType];
+        const { ArchParser } = viewRegistry.get(viewType);
+        const archInfo = new ArchParser().parse(subView.arch, subView.fields);
+        fieldInfo.views[viewType] = { ...archInfo, fields: subView.fields };
+        fieldInfo.relatedFields = subView.fields;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 export class FormView extends LegacyComponent {
     setup() {
         this.dialogService = useService("dialog");
@@ -118,63 +177,19 @@ export class FormView extends LegacyComponent {
         });
 
         onWillStart(async () => {
-            await this.loadSubViews();
+            await loadSubViews(
+                this.archInfo.activeFields,
+                this.props.fields,
+                this.props.context,
+                this.props.resModel,
+                this.viewService,
+                this.user
+            );
         });
 
         onRendered(() => {
             this.env.config.setDisplayName(this.model.root.data.display_name || this.env._t("New"));
         });
-    }
-
-    async loadSubViews() {
-        const activeFields = this.archInfo.activeFields;
-        for (const fieldName in activeFields) {
-            const field = this.props.fields[fieldName];
-            if (!isX2Many(field)) {
-                continue; // what follows only concerns x2many fields
-            }
-            const fieldInfo = activeFields[fieldName];
-            if (fieldInfo.modifiers.invisible === true) {
-                continue; // no need to fetch the sub view if the field is always invisible
-            }
-            if (fieldInfo.views[fieldInfo.viewMode]) {
-                continue; // the sub view is inline in the main form view
-            }
-            if (!fieldInfo.FieldComponent.useSubView) {
-                continue; // the FieldComponent used to render the field doesn't need a sub view
-            }
-
-            // extract *_view_ref keys from field context, to fetch the adequate view
-            const fieldContext = {};
-            const regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
-            let matches;
-            while ((matches = regex.exec(fieldInfo.context)) !== null) {
-                fieldContext[matches[1]] = matches[2];
-            }
-            // filter out *_view_ref keys from general context
-            const refinedContext = {};
-            for (const key in this.props.context) {
-                if (key.indexOf("_view_ref") === -1) {
-                    refinedContext[key] = this.props.context[key];
-                }
-            }
-            // specify the main model to prevent access rights defined in the context
-            // (e.g. create: 0) to apply to sub views (same logic as the one applied by
-            // the server for inline views)
-            refinedContext.base_model_name = this.props.resModel;
-
-            const viewType = fieldInfo.viewMode;
-            const views = await this.viewService.loadViews({
-                resModel: field.relation,
-                views: [[false, viewType]],
-                context: makeContext([fieldContext, this.user.context, refinedContext]),
-            });
-            const subView = views[viewType];
-            const { ArchParser } = viewRegistry.get(viewType);
-            const archInfo = new ArchParser().parse(subView.arch, subView.fields);
-            fieldInfo.views[viewType] = { ...archInfo, fields: subView.fields };
-            fieldInfo.relatedFields = subView.fields;
-        }
     }
 
     getActionMenuItems() {

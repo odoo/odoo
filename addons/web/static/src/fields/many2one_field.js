@@ -175,7 +175,10 @@ export class Many2OneField extends Component {
         });
         this.dialog.add(FormViewDialog, {
             record,
-            title: this.props.record.activeFields[this.props.name].string,
+            title: sprintf(
+                this.env._t("Open: %s"),
+                this.props.record.activeFields[this.props.name].string
+            ),
         });
     }
 

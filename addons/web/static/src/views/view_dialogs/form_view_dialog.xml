@@ -2,16 +2,14 @@
 <templates xml:space="preserve">
 
   <t t-name="web.FormViewDialogBody" owl="1">
-    <FormRenderer class="o_form_view" record="props.record" fields="archInfo.fields" archInfo="archInfo"/>
+    <FormRenderer class="o_form_view" record="record" fields="archInfo.fields" archInfo="archInfo"/>
   </t>
 
   <t t-name="web.FormViewDialogFooter" owl="1">
-    <t t-if="props.record.isInEdition">
-        <button class="btn btn-primary" t-on-click="save">Save</button>
-        <button class="btn btn-secondary o_form_button_cancel" t-on-click="cancel">Cancel</button>
-    </t>
-    <t t-else="">
-        <button class="btn btn-secondary o_form_button_cancel" t-on-click="close">Close</button>
+    <t t-foreach="buttons" t-as="button" t-key="button.text">
+        <button t-attf-class="btn {{button.className}}" t-on-click="() => this.buttonClick(button.onClick, button.close)" t-att-data-hotkey="button.hotkey">
+          <t t-esc="button.text"/>
+        </button>
     </t>
   </t>
 
