@@ -581,3 +581,49 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_to': datetime(2022, 3, 11, 23, 59, 59),
         })
         self.assertEqual(leave.number_of_days, 1)
+
+    def test_several_allocations(self):
+        allocation_vals = {
+            'name': 'Allocation',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'number_of_days': 5,
+            'state': 'confirm',
+            'date_from': '2022-01-01',
+            'date_to': '2022-12-31',
+        }
+        allocation1 = self.env['hr.leave.allocation'].create(allocation_vals)
+        allocation2 = self.env['hr.leave.allocation'].create(allocation_vals)
+
+        allocation1.action_validate()
+        allocation2.action_validate()
+
+        # Neither allocation has enough days
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'date_from': '2022-01-01',
+                'date_to': '2022-01-15',
+                'number_of_days': 10,
+            })
+
+        allocation_vals.update({'number_of_days': 10})
+        allocation3 = self.env['hr.leave.allocation'].create(allocation_vals)
+        allocation3.action_validate()
+
+        # The 3rd allocation has enough days, so it should be picked
+        holiday = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'date_from': '2022-01-01',
+            'date_to': '2022-01-15',
+            'number_of_days': 10,
+        })
+        holiday.sudo().action_validate()
+
+        self.assertEqual(allocation1.leaves_taken, 0.0, 'As this allocation does not have enough days, it should not be affected')
+        self.assertEqual(allocation2.leaves_taken, 0.0, 'As this allocation does not have enough days, it should not be affected')
+        self.assertEqual(allocation3.leaves_taken, 10.0, 'As this allocation has enough days, the leave days should be taken')
