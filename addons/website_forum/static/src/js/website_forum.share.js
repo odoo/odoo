@@ -10,7 +10,7 @@ var qweb = core.qweb;
 var ForumShare = publicWidget.registry.socialShare.extend({
     selector: '',
     xmlDependencies: publicWidget.registry.socialShare.prototype.xmlDependencies
-        .concat(['/website_forum/static/src/xml/website_forum_share_templates.xml']),
+        .concat(['/website_forum/static/src/xml/public_templates.xml']),
     events: {},
 
     /**
