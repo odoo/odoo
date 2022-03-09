@@ -1,6 +1,14 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+    triggerEvent,
+} from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 import { registry } from "@web/core/registry";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
@@ -159,7 +167,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("char field in form view", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -213,7 +221,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -250,7 +258,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.fields.foo.size = 5; // max length
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -276,10 +284,10 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("char field in editable list view", async function (assert) {
+    QUnit.test("char field in editable list view", async function (assert) {
         assert.expect(6);
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
@@ -312,7 +320,7 @@ QUnit.module("Fields", (hooks) => {
         await triggerEvent(input, null, "change");
 
         // save
-        await click(list, ".o_list_button_save");
+        await click(target, ".o_list_button_save");
         cell = target.querySelector("tbody td:not(.o_list_record_selector)");
         assert.doesNotHaveClass(
             cell.parentElement,
@@ -590,7 +598,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("char field does not allow html injections", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -624,7 +632,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.fields.foo2 = { string: "Foo2", type: "char", trim: false };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -670,168 +678,216 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL(
         "input field: change value before pending onchange returns",
         async function (assert) {
-            // assert.expect(3);
-            // serverData.models.partner.onchanges = {
-            //     product_id: function () {},
-            // };
-            // const def;
-            // const form = await makeView({
-            //     type: "form",
-            //     resModel: 'partner',
-            //     serverData,
-            //     arch: '<form>' +
-            //             '<sheet>' +
-            //                 '<field name="p">' +
-            //                     '<tree editable="bottom">' +
-            //                         '<field name="product_id"/>' +
-            //                         '<field name="foo"/>' +
-            //                     '</tree>' +
-            //                 '</field>' +
-            //             '</sheet>' +
-            //         '</form>',
-            //     resId: 1,
-            //     mockRPC: function (route, args) {
-            //         const result = this._super.apply(this, arguments);
-            //         if (args.method === "onchange") {
-            //             return Promise.resolve(def).then(function () {
-            //                 return result;
-            //             });
-            //         } else {
-            //             return result;
-            //         }
-            //     },
-            //     viewOptions: {
-            //         mode: 'edit',
-            //     },
-            // });
-            // await click(form.$('.o_field_x2many_list_row_add a'));
-            // assert.strictEqual(form.$('input[name="foo"]').val(), 'My little Foo Value',
-            //     'should contain the default value');
-            // def = makeDeferred();
-            // await many2one.clickOpenDropdown('product_id');
-            // await many2one.clickHighlightedItem('product_id');
-            // // set foo before onchange
-            // await editInput(form.$('input[name="foo"]'), "tralala");
-            // assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
-            //     'input should contain tralala');
-            // // complete the onchange
-            // def.resolve();
-            // await nextTick();
-            // assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
-            //     'input should contain the same value as before onchange');
+            assert.expect(3);
+
+            serverData.models.partner.onchanges = {
+                product_id() {},
+            };
+
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="p">
+                                <tree editable="bottom">
+                                    <field name="product_id" />
+                                    <field name="foo" />
+                                </tree>
+                            </field>
+                        </sheet>
+                    </form>
+                `,
+                async mockRPC(route, { method }, performRPC) {
+                    const result = performRPC(...arguments);
+                    if (method === "onchange") {
+                        await def;
+                    }
+                    return result;
+                },
+            });
+
+            await click(target, ".o_form_button_edit");
+
+            await click(target, ".o_field_x2many_list_row_add a");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "My little Foo Value",
+                "should contain the default value"
+            );
+
+            await click(target, ".o-autocomplete--input");
+            await click(target.querySelector(".o-autocomplete--dropdown-item"));
+
+            // set foo before onchange
+            await editInput(target, ".o_field_widget[name='foo'] input", "tralala");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "tralala",
+                "input should contain tralala"
+            );
+
+            // complete the onchange
+            def.resolve();
+            await nextTick();
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "tralala",
+                "input should contain the same value as before onchange"
+            );
         }
     );
 
     QUnit.skipWOWL(
         "input field: change value before pending onchange returns (with fieldDebounce)",
         async function (assert) {
-            // // this test is exactly the same as the previous one, except that we set
-            // // here a fieldDebounce to accurately reproduce what happens in practice:
-            // // the field doesn't notify the changes on 'input', but on 'change' event.
-            // assert.expect(5);
-            // serverData.models.partner.onchanges = {
-            //     product_id: function (obj) {
-            //         obj.int_field = obj.product_id ? 7 : false;
-            //     },
-            // };
-            // let def;
-            // const form = await makeView({
-            //     type: "form",
-            //     resModel: 'partner',
-            //     serverData,
-            //     arch: `
-            //         <form>
-            //             <field name="p">
-            //                 <tree editable="bottom">
-            //                     <field name="product_id"/>
-            //                     <field name="foo"/>
-            //                     <field name="int_field"/>
-            //                 </tree>
-            //             </field>
-            //         </form>`,
-            //     async mockRPC(route, args) {
-            //         const result = this._super(...arguments);
-            //         if (args.method === "onchange") {
-            //             await Promise.resolve(def);
-            //         }
-            //         return result;
-            //     },
-            //     fieldDebounce: 5000,
-            // });
-            // await click(form.$('.o_field_x2many_list_row_add a'));
-            // assert.strictEqual(form.$('input[name="foo"]').val(), 'My little Foo Value',
-            //     'should contain the default value');
-            // def = makeDeferred();
-            // await many2one.clickOpenDropdown('product_id');
-            // await many2one.clickHighlightedItem('product_id');
-            // // set foo before onchange
-            // await editInput(form.$('input[name="foo"]'), "tralala");
-            // assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala');
-            // assert.strictEqual(form.$('input[name="int_field"]').val(), '');
-            // // complete the onchange
-            // def.resolve();
-            // await nextTick();
-            // assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
-            //     'foo should contain the same value as before onchange');
-            // assert.strictEqual(form.$('input[name="int_field"]').val(), '7',
-            //     'int_field should contain the value returned by the onchange');
+            // this test is exactly the same as the previous one, except that we set
+            // here a fieldDebounce to accurately reproduce what happens in practice:
+            // the field doesn't notify the changes on 'input', but on 'change' event.
+            assert.expect(5);
+
+            serverData.models.partner.onchanges = {
+                product_id(obj) {
+                    obj.int_field = obj.product_id ? 7 : false;
+                },
+            };
+
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="product_id"/>
+                                <field name="foo"/>
+                                <field name="int_field"/>
+                            </tree>
+                        </field>
+                    </form>
+                `,
+                async mockRPC(route, { method }, performRPC) {
+                    const result = performRPC(...arguments);
+                    if (method === "onchange") {
+                        await def;
+                    }
+                    return result;
+                },
+                // fieldDebounce: 5000,
+            });
+
+            await click(target, ".o_field_x2many_list_row_add a");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "My little Foo Value",
+                "should contain the default value"
+            );
+
+            await click(target, ".o-autocomplete--input");
+            await click(target.querySelector(".o-autocomplete--dropdown-item"));
+
+            // set foo before onchange
+            await editInput(target, ".o_field_widget[name='foo'] input", "tralala");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "tralala",
+                "input should contain tralala"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='int_field'] input").value,
+                ""
+            );
+
+            // complete the onchange
+            def.resolve();
+            await nextTick();
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "tralala",
+                "foo should contain the same value as before onchange"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='int_field'] input").value,
+                "7",
+                "int_field should contain the value returned by the onchange"
+            );
         }
     );
 
     QUnit.skipWOWL(
         "input field: change value before pending onchange renaming",
         async function (assert) {
-            // assert.expect(3);
-            // serverData.models.partner.onchanges = {
-            //     product_id: function (obj) {
-            //         obj.foo = 'on change value';
-            //     },
-            // };
-            // const def = makeDeferred();
-            // const form = await makeView({
-            //     type: "form",
-            //     resModel: 'partner',
-            //     serverData,
-            //     arch: '<form>' +
-            //             '<sheet>' +
-            //                 '<field name="product_id"/>' +
-            //                 '<field name="foo"/>' +
-            //             '</sheet>' +
-            //         '</form>',
-            //     resId: 1,
-            //     mockRPC: function (route, args) {
-            //         const result = this._super.apply(this, arguments);
-            //         if (args.method === "onchange") {
-            //             return def.then(function () {
-            //                 return result;
-            //             });
-            //         } else {
-            //             return result;
-            //         }
-            //     },
-            //     viewOptions: {
-            //         mode: 'edit',
-            //     },
-            // });
-            // assert.strictEqual(form.$('input[name="foo"]').val(), 'yop',
-            //     'should contain the correct value');
-            // await many2one.clickOpenDropdown('product_id');
-            // await many2one.clickHighlightedItem('product_id');
-            // // set foo before onchange
-            // editInput(form.$('input[name="foo"]'), "tralala");
-            // assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
-            //     'input should contain tralala');
-            // // complete the onchange
-            // def.resolve();
-            // assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
-            //     'input should contain the same value as before onchange');
+            assert.expect(3);
+
+            serverData.models.partner.onchanges = {
+                product_id(obj) {
+                    obj.foo = "on change value";
+                },
+            };
+
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="product_id" />
+                            <field name="foo" />
+                        </sheet>
+                    </form>
+                `,
+                async mockRPC(route, { method }, performRPC) {
+                    const result = performRPC(...arguments);
+                    if (method === "onchange") {
+                        await def;
+                    }
+                    return result;
+                },
+            });
+
+            await click(target, ".o_form_button_edit");
+
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "yop",
+                "should contain the correct value"
+            );
+
+            await click(target, ".o-autocomplete--input");
+            await click(target.querySelector(".o-autocomplete--dropdown-item"));
+
+            // set foo before onchange
+            editInput(target, ".o_field_widget[name='foo'] input", "tralala");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "tralala",
+                "should contain tralala"
+            );
+
+            // complete the onchange
+            def.resolve();
+            await nextTick();
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "tralala",
+                "input should contain the same value as before onchange"
+            );
         }
     );
 
     QUnit.test("input field: change password value", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -874,7 +930,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].foo = false;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -907,47 +963,54 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "input field: set and remove value, then wait for onchange",
         async function (assert) {
-            // assert.expect(2);
-            // serverData.models.partner.onchanges = {
-            //     product_id(obj) {
-            //         obj.foo = obj.product_id ? "onchange value" : false;
-            //     },
-            // };
-            // let def;
-            // const form = await makeView({
-            //     type: "form",
-            //     resModel: 'partner',
-            //     serverData,
-            //     arch: `
-            //         <form>
-            //             <field name="p">
-            //                 <tree editable="bottom">
-            //                     <field name="product_id"/>
-            //                     <field name="foo"/>
-            //                 </tree>
-            //             </field>
-            //         </form>`,
-            //     async mockRPC(route, args) {
-            //         const result = this._super(...arguments);
-            //         if (args.method === "onchange") {
-            //             await Promise.resolve(def);
-            //         }
-            //         return result;
-            //     },
-            //     fieldDebounce: 1000, // needed to accurately mock what really happens
-            // });
-            // await click(form.$('.o_field_x2many_list_row_add a'));
-            // assert.strictEqual(form.$('input[name="foo"]').val(), "");
-            // await editInput(form.$('input[name="foo"]'), "test"); // set value for foo
-            // await editInput(form.$('input[name="foo"]'), ""); // remove value for foo
-            // // trigger the onchange by setting a product
-            // await many2one.clickOpenDropdown('product_id');
-            // await many2one.clickHighlightedItem('product_id');
-            // assert.strictEqual(form.$('input[name="foo"]').val(), 'onchange value',
-            //     'input should contain correct value after onchange');
+            assert.expect(2);
+
+            serverData.models.partner.onchanges = {
+                product_id(obj) {
+                    obj.foo = obj.product_id ? "onchange value" : false;
+                },
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="product_id"/>
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </form>
+                `,
+                async mockRPC(route, { method }, performRPC) {
+                    const result = await performRPC(...arguments);
+                    if (method === "onchange") {
+                        await Promise.resolve();
+                    }
+                    return result;
+                },
+                // fieldDebounce: 1000, // needed to accurately mock what really happens
+            });
+
+            await click(target, ".o_field_x2many_list_row_add a");
+            assert.strictEqual(target.querySelector(".o_field_widget[name='foo'] input").value, "");
+            await editInput(target, ".o_field_widget[name='foo'] input", "test"); // set value for foo
+            await editInput(target, ".o_field_widget[name='foo'] input", ""); // remove value for foo
+
+            // trigger the onchange by setting a product
+            await click(target, ".o-autocomplete--input");
+            await click(target.querySelector(".o-autocomplete--dropdown-item"));
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "onchange value",
+                "input should contain correct value after onchange"
+            );
         }
     );
 });
