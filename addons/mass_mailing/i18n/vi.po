@@ -240,7 +240,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"failed_text\">emails could not be sent.</span>"
-msgstr "<span name=\"failed_text\">emails không thể gửi.</span>"
+msgstr "<span name=\"failed_text\">email không thể gửi được.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -248,13 +248,13 @@ msgid ""
 "<span name=\"ignored_text\">emails have been ignored and will not be "
 "sent.</span>"
 msgstr ""
-"<span name=\"ignored_text\">emails have been ignored and will not be "
-"sent.</span>"
+"<span name=\"ignored_text\">email đã bị bỏ qua và sẽ không được gửi."
+"</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
-msgstr "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
+msgstr "<span name=\"next_departure_text\">Gửi thư hàng loạt này được ấn định vào </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -262,13 +262,13 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent "
 "soon.</span>"
 msgstr ""
-"<span name=\"scheduled_text\">emails are in queue and will be sent "
-"soon.</span>"
+"<span name=\"scheduled_text\">Email được xếp vào hàng đợi và sẽ được"
+" sớm thôi.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"sent\">emails have been sent.</span>"
-msgstr "<span name=\"sent\">emails have been sent.</span>"
+msgstr "<span name=\"sent\">email chưa được gửi.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
@@ -292,9 +292,9 @@ msgid ""
 "                            <span attrs=\"{'invisible': [('bounced', '=', False)]}\"> appears to be invalid</span>\n"
 "                            </strong>"
 msgstr ""
-"<strong><span name=\"trace_type_name_mail\">This email</span>\n"
-"                            <span attrs=\"{'invisible': [('exception', '=', False)]}\"> could not be sent</span>\n"
-"                            <span attrs=\"{'invisible': [('bounced', '=', False)]}\"> appears to be invalid</span>\n"
+"<strong><span name=\"trace_type_name_mail\">Email này</span>\n"
+"                            <span attrs=\"{'invisible': [('exception', '=', False)]}\"> đã không thể gửi đi được</span>\n"
+"                            <span attrs=\"{'invisible': [('bounced', '=', False)]}\"> dường như không hợp lệ</span>\n"
 "                            </strong>"
 
 #. module: mass_mailing
@@ -317,6 +317,7 @@ msgstr "Quản lý<strong>tổng</strong> "
 msgid ""
 "A mailing contact cannot subscribe to the same mailing list multiple times."
 msgstr ""
+"Một liên hệ gửi thư không thể đăng ký vào cùng danh mục gửi thư nhiều lần."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
@@ -374,7 +375,7 @@ msgstr "Biểu tượng kiểu hoạt động"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 msgid "All Rights Reserved"
-msgstr ""
+msgstr "Tất cả các quyền được bảo lưu"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__unique_ab_testing
@@ -468,8 +469,6 @@ msgid ""
 "At least one of the mailing list you are trying to archive is used in an "
 "ongoing mailing campaign."
 msgstr ""
-"At least one of the mailing list you are trying to archive is used in an "
-"ongoing mailing campaign."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -555,7 +554,7 @@ msgstr "Bị trả về"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Bounced (%)"
-msgstr "Bounced (%)"
+msgstr "Bị trả về (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced_ratio
@@ -567,7 +566,7 @@ msgstr "Tỷ lệ trả về"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Business Benefits on %i Emails Sent"
-msgstr "Business Benefits on %i Emails Sent"
+msgstr "Lợi ích kinh doanh cho %i Email được gửi"
 
 #. module: mass_mailing
 #. openerp-web
@@ -575,7 +574,7 @@ msgstr "Business Benefits on %i Emails Sent"
 #, python-format
 msgid "By using the <b>Breadcrumb</b>, you can navigate back to the overview."
 msgstr ""
-"By using the <b>Breadcrumb</b>, you can navigate back to the overview."
+"Bằng việc sử dụng <b>Breadcrumb</b>, bạn có thể điều hướng ngược trở về tổng quan."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__campaign_id
@@ -2683,7 +2682,7 @@ msgstr "Tổng"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Total Bounces"
-msgstr "Tổng thoát"
+msgstr "Tổng trả về"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
