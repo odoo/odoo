@@ -43,7 +43,7 @@ class MailPluginController(http.Controller):
 
         normalized_email = partner.email_normalized
         if not normalized_email:
-            return {'error': _('Contact has no valid email')}
+            return {'error': _('The email of this contact is not valid and we can not enrich it')}
 
         company, enrichment_info = self._create_company_from_iap(normalized_email)
 
@@ -70,7 +70,7 @@ class MailPluginController(http.Controller):
 
         normalized_email = partner.email_normalized
         if not normalized_email:
-            return {'error': 'Contact has no valid email'}
+            return {'error': 'The email of this contact is not valid and we can not enrich it'}
 
         domain = tools.email_domain_extract(normalized_email)
         iap_data = self._iap_enrich(domain)
