@@ -55,7 +55,7 @@ FloatField.extractProps = (fieldName, record, attrs) => {
     return {
         setAsInvalid: record.setInvalidField.bind(record),
         field: record.fields[fieldName], // To remove
-        inputType: attrs.type,
+        inputType: attrs.options.type,
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits,

@@ -2,6 +2,8 @@
 
 import { click, editInput, getFixture, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
@@ -35,7 +37,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("unset field should be set to 0", async function (assert) {
         assert.expect(2);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -61,7 +63,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.fields.float_field.digits = [0, 1];
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -79,7 +81,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("use correct digit precision from options", async function (assert) {
         assert.expect(1);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -97,7 +99,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("use correct digit precision from field attrs", async function (assert) {
         assert.expect(1);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -115,7 +117,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("basic flow in form view", async function (assert) {
         assert.expect(6);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -175,7 +177,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("use a formula", async function (assert) {
         assert.expect(4);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -225,7 +227,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("use incorrect formula", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -308,7 +310,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].float_field = false;
         serverData.models.partner.records[0].int_field = false;
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -334,14 +336,14 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("float widget on monetary field", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.monetary = { string: "Monetary", type: "monetary" };
-        this.data.partner.records[0].monetary = 9.99;
-        this.data.partner.records[0].currency_id = 1;
+        serverData.models.partner.fields.monetary = { string: "Monetary", type: "monetary" };
+        serverData.models.partner.records[0].monetary = 9.99;
+        serverData.models.partner.records[0].currency_id = 1;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -349,19 +351,18 @@ QUnit.module("Fields", (hooks) => {
                 '<field name="currency_id" invisible="1"/>' +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
+            /*
             session: {
                 currencies: _.indexBy(this.data.currency.records, "id"),
-            },
+            },*/
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=monetary]").text(),
+            target.querySelector(".o_field_widget[name=monetary]").innerText,
             "9.99",
             "value should be correctly formatted (with the float formatter)"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL(
@@ -369,17 +370,17 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.partner.records = [
+            serverData.models.partner.records = [
                 {
                     id: 1,
                     float_field: -8.89859,
                     currency_id: 1,
                 },
             ];
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -387,10 +388,11 @@ QUnit.module("Fields", (hooks) => {
                     '<field name="currency_id" invisible="1"/>' +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
+                /*
                 session: {
                     currencies: _.indexBy(this.data.currency.records, "id"),
-                },
+                },*/
             });
 
             // Non-breaking space between the currency and the amount
@@ -400,89 +402,82 @@ QUnit.module("Fields", (hooks) => {
                 "The value should be displayed properly."
             );
 
-            await testUtils.form.clickEdit(form);
+            await click(target.querySelector(".o_form_button_edit"));
             assert.strictEqual(
                 target.querySelector(".o_field_widget[name=float_field] input").value,
                 "-8.9",
                 "The input should be rendered without the currency symbol."
             );
             assert.strictEqual(
-                target.querySelector(".o_field_widget[name=float_field] input").parent().children()
-                    .textContent,
+                target.querySelector(".o_field_widget[name=float_field] input").parentElement
+                    .firstChild.textContent,
                 "$",
                 "The input should be preceded by a span containing the currency symbol."
             );
 
-            await testUtils.fields.editInput(
-                target.querySelector(".o_field_monetary input"),
-                "109.2458938598598"
-            );
+            await editInput(target, ".o_field_monetary input", "109.2458938598598");
             assert.strictEqual(
                 target.querySelector(".o_field_widget[name=float_field] input").value,
                 "109.2458938598598",
                 "The value should not be formated yet."
             );
 
-            await testUtils.form.clickSave(form);
+            await click(target.querySelector(".o_form_button_save"));
             // Non-breaking space between the currency and the amount
             assert.strictEqual(
                 target.querySelector(".o_field_widget").textContent,
                 "$\u00a0109.2",
                 "The new value should be rounded properly."
             );
-
-            form.destroy();
         }
     );
 
     QUnit.skipWOWL("float field with type number option", async function (assert) {
         assert.expect(4);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 "<field name=\"float_field\" options=\"{'type': 'number'}\"/>" +
                 "</form>",
-            res_id: 4,
-            translateParameters: {
-                thousands_sep: ",",
-                grouping: [3, 0],
-            },
+            resId: 4,
         });
+        registry.category("services").remove("localization");
+        registry
+            .category("services")
+            .add(
+                "localization",
+                makeFakeLocalizationService({ thousandsSep: ",", grouping: [3, 0] })
+            );
 
-        await testUtils.form.clickEdit(form);
+        await click(target.querySelector(".o_form_button_edit"));
         assert.ok(
-            target.querySelector(".o_field_widget")[0].hasAttribute("type"),
+            target.querySelector(".o_field_widget input").hasAttribute("type"),
             "Float field with option type must have a type attribute."
         );
         assert.hasAttrValue(
-            target.querySelector(".o_field_widget"),
+            target.querySelector(".o_field_widget input"),
             "type",
             "number",
             'Float field with option type must have a type attribute equals to "number".'
         );
-        await testUtils.fields.editInput(
-            target.querySelector(".o_field_widget[name=float_field] input"),
-            "123456.7890"
-        );
-        await testUtils.form.clickSave(form);
-        await testUtils.form.clickEdit(form);
+        await editInput(target, ".o_field_widget[name=float_field] input", "123456.7890");
+        await click(target.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            target.querySelector(".o_field_widget").value,
+            target.querySelector(".o_field_widget input").value,
             "123456.789",
             "Float value must be not formatted if input type is number."
         );
-        await testUtils.form.clickSave(form);
+        await click(target.querySelector(".o_form_button_save"));
         assert.strictEqual(
-            target.querySelector(".o_field_widget").text(),
+            target.querySelector(".o_field_widget").innerText,
             "123,456.8",
             "Float value must be formatted in readonly view even if the input type is number."
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL(
@@ -490,90 +485,87 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
                 arch:
                     '<form string="Partners">' +
                     "<field name=\"float_field\" options=\"{'type': 'number'}\"/>" +
                     "</form>",
-                res_id: 4,
-                translateParameters: {
-                    thousands_sep: ".",
-                    decimal_point: ",",
-                    grouping: [3, 0],
-                },
+                resId: 4,
             });
+            registry.category("services").remove("localization");
+            registry.category("services").add(
+                "localization",
+                makeFakeLocalizationService({
+                    thousandsSep: ".",
+                    decimalPoint: ",",
+                    grouping: [3, 0],
+                })
+            );
 
-            await testUtils.form.clickEdit(form);
+            await click(target.querySelector(".o_form_button_edit"));
             assert.ok(
-                target.querySelector(".o_field_widget")[0].hasAttribute("type"),
+                target.querySelector(".o_field_widget input").hasAttribute("type"),
                 "Float field with option type must have a type attribute."
             );
             assert.hasAttrValue(
-                target.querySelector(".o_field_widget"),
+                target.querySelector(".o_field_widget input"),
                 "type",
                 "number",
                 'Float field with option type must have a type attribute equals to "number".'
             );
-            await testUtils.fields.editInput(
-                target.querySelector(".o_field_widget[name=float_field] input"),
-                "123456.789"
-            );
-            await testUtils.form.clickSave(form);
-            await testUtils.form.clickEdit(form);
+            await editInput(target, ".o_field_widget[name=float_field] input", "123456.789");
+            await click(target.querySelector(".o_form_button_save"));
+            await click(target.querySelector(".o_form_button_edit"));
             assert.strictEqual(
                 target.querySelector(".o_field_widget").value,
                 "123456.789",
                 "Float value must be not formatted if input type is number."
             );
-            await testUtils.form.clickSave(form);
+            await click(target.querySelector(".o_form_button_save"));
             assert.strictEqual(
-                target.querySelector(".o_field_widget").text(),
+                target.querySelector(".o_field_widget").innerText,
                 "123.456,8",
                 "Float value must be formatted in readonly view even if the input type is number."
             );
-
-            form.destroy();
         }
     );
 
     QUnit.skipWOWL("float field without type number option", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch: '<form string="Partners">' + '<field name="float_field"/>' + "</form>",
-            res_id: 4,
-            translateParameters: {
-                thousands_sep: ",",
-                grouping: [3, 0],
-            },
+            resId: 4,
         });
+        registry.category("services").remove("localization");
+        registry
+            .category("services")
+            .add(
+                "localization",
+                makeFakeLocalizationService({ thousandsSep: ",", grouping: [3, 0] })
+            );
 
-        await testUtils.form.clickEdit(form);
+        await click(target.querySelector(".o_form_button_edit"));
         assert.hasAttrValue(
-            target.querySelector(".o_field_widget"),
+            target.querySelector(".o_field_widget input"),
             "type",
             "text",
             "Float field with option type must have a text type (default type)."
         );
 
-        await testUtils.fields.editInput(
-            target.querySelector(".o_field_widget[name=float_field] input"),
-            "123456.7890"
-        );
-        await testUtils.form.clickSave(form);
-        await testUtils.form.clickEdit(form);
+        await editInput(target, ".o_field_widget[name=float_field] input", "123456.7890");
+        await click(target.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            target.querySelector(".o_field_widget").value,
+            target.querySelector(".o_field_widget input").value,
             "123,456.8",
             "Float value must be formatted if input type isn't number."
         );
-
-        form.destroy();
     });
 });
