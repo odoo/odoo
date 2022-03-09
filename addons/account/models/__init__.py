@@ -33,3 +33,4 @@ from . import ir_actions_report
 from . import res_currency
 from . import res_bank
 from . import mail_thread
+from . import ir_module_module
