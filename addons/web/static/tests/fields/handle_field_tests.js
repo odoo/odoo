@@ -49,11 +49,11 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("HandleField");
 
-    QUnit.skipWOWL("HandleField in x2m", async function (assert) {
+    QUnit.test("HandleField in x2m", async function (assert) {
         assert.expect(6);
 
         serverData.models.partner.records[0].p = [2, 4];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -109,7 +109,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("HandleField with falsy values", async function (assert) {
         assert.expect(1);
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
@@ -126,7 +126,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.containsN(
-            list,
+            target,
             visibleRowHandles,
             serverData.models.partner.records.length,
             "there should be a visible handle for each record"
