@@ -318,6 +318,10 @@ var FieldMany2One = AbstractField.extend({
             open: function (event) {
                 self._onScroll = function (ev) {
                     if (ev.target !== self.$input.get(0) && self.$input.hasClass('ui-autocomplete-input')) {
+                        if (ev.target.id === self.$input.autocomplete('widget').get(0).id) {
+                            ev.stopPropagation();
+                            return;
+                        }
                         self.$input.autocomplete('close');
                     }
                 };
