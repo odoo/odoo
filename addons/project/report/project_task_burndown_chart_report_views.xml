@@ -33,7 +33,6 @@
             <graph string="Burndown Chart" type="line" sample="1" disable_linking="1" js_class="burndown_chart">
                 <field name="date" string="Date" interval="month"/>
                 <field name="stage_id"/>
-                <field name="nb_tasks" type="measure"/>
             </graph>
         </field>
     </record>
@@ -42,7 +41,7 @@
         <field name="name">project.task.burndown.chart.report.view.pivot</field>
         <field name="model">project.task.burndown.chart.report</field>
         <field name="arch" type="xml">
-            <pivot string="Burndown Chart" display_quantity="1" disable_linking="1" sample="1">
+            <pivot string="Burndown Chart" display_quantity="1" disable_linking="1" sample="1" js_class="burndown_chart_pivot">
                 <field name="date" type="row"/>
                 <field name="stage_id" type="row"/>
             </pivot>
