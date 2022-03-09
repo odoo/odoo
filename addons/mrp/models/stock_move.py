@@ -87,6 +87,12 @@ class StockMove(models.Model):
         .filtered(lambda ml: ml.qty_done == 0.0)\
         .write({'move_id': new_move, 'product_uom_qty': 0})
 
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        distinct_fields = super()._prepare_merge_moves_distinct_fields()
+        distinct_fields.append('bom_line_id')
+        return distinct_fields
+
     @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
     def _compute_order_finished_lot_ids(self):
         for move in self:
