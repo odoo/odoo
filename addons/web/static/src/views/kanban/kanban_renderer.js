@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ColorList } from "@web/core/colorlist/colorlist";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -8,7 +9,6 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { useSortable } from "@web/core/utils/ui";
 import { url } from "@web/core/utils/urls";
-import { ColorPickerField } from "@web/fields/color_picker_field";
 import { Field } from "@web/fields/field";
 import { fileTypeMagicWordMap } from "@web/fields/image_field";
 import { session } from "@web/session";
@@ -24,7 +24,7 @@ import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { markup, useState, useRef } = owl;
-const { RECORD_COLORS } = ColorPickerField;
+const { COLORS } = ColorList;
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
@@ -49,7 +49,7 @@ export class KanbanRenderer extends LegacyComponent {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.mousedownTarget = null;
-        this.colors = RECORD_COLORS;
+        this.colors = COLORS;
         this.exampleData = registry.category("kanban_examples").get(examples, null);
         this.ghostColumns = this.generateGhostColumns();
         // Sortable
