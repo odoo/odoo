@@ -10,7 +10,7 @@ var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
-const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
+const { legacyExtraNextTick, triggerScroll } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 const { browser } = require('@web/core/browser/browser');
 const { patchWithCleanup } = require('@web/../tests/helpers/utils');
@@ -3351,7 +3351,9 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('many2one dropdown disappears on scroll', async function (assert) {
-            assert.expect(2);
+            assert.expect(4);
+
+            this.data.partner.records[0].display_name = "Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery Loooooooooooooooooooooooooooooooooooooooooooong Naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame";
 
             var form = await createView({
                 View: FormView,
@@ -3369,12 +3371,17 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
 
             var $input = form.$('.o_field_many2one input');
+            var dropdown = document.querySelector(".dropdown-menu.ui-front");
 
             await testUtils.dom.click($input);
             assert.isVisible($input.autocomplete('widget'), "dropdown should be opened");
 
-            form.el.dispatchEvent(new Event('scroll'));
-            assert.isNotVisible($input.autocomplete('widget'), "dropdown should be closed");
+            await triggerScroll(dropdown, { left: 50 }, false);
+            assert.strictEqual(dropdown.scrollLeft, 50, "a scroll happened");
+            assert.isVisible($input.autocomplete('widget'), "dropdown stays open if the scroll is inside the dropdown");
+
+            await triggerScroll(window, { top: 50 });
+            assert.isNotVisible($input.autocomplete('widget'), "dropdown closes if the scroll is outside the dropdown");
 
             form.destroy();
         });
