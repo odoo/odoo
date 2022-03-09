@@ -9,7 +9,6 @@ import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { evalDomain } from "@web/views/relational_model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { Record } from "../views/relational_model";
 
 const { Component } = owl;
 

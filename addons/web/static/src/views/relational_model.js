@@ -1701,7 +1701,7 @@ export class StaticList extends DataPoint {
 
     async createRecord({ context, mode, resId }) {
         const record = this.model.createDataPoint("record", {
-            context: makeContext([this.context, this.rawContext, context], this.getEvalContext()),
+            // context: makeContext([this.context, this.rawContext, context], this.getEvalContext()),
             resModel: this.resModel,
             resId,
             fields: this.fields,
