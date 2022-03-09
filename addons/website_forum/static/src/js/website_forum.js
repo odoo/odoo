@@ -16,7 +16,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
     xmlDependencies: [
         '/web_editor/static/src/xml/editor.xml',
-        '/website_forum/static/src/xml/website_forum_share_templates.xml',
+        '/website_forum/static/src/xml/public_templates.xml',
     ],
     events: {
         'click .karma_required': '_onKarmaRequiredClick',
@@ -558,7 +558,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
 publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
     selector: '.o_wforum_moderation_queue',
-    xmlDependencies: ['/website_forum/static/src/xml/website_forum_share_templates.xml'],
+    xmlDependencies: ['/website_forum/static/src/xml/public_templates.xml'],
     events: {
         'click .o_wforum_select_all_spam': '_onSelectallSpamClick',
         'click .o_wforum_mark_spam': 'async _onMarkSpamClick',
