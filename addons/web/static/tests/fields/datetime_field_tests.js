@@ -208,7 +208,7 @@ QUnit.module("Fields", (hooks) => {
 
         patchTimeZone(120);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -299,7 +299,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.onchanges = {
                 datetime() {},
             };
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -376,7 +376,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -420,7 +420,7 @@ QUnit.module("Fields", (hooks) => {
             { force: true }
         );
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -442,12 +442,12 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(document.body, ".modal", "there should not be a Warning dialog");
     });
 
-    QUnit.skipWOWL("DatetimeField in editable list view", async function (assert) {
+    QUnit.test("DatetimeField in editable list view", async function (assert) {
         assert.expect(9);
 
         patchTimeZone(120);
 
-        const list = await makeView({
+        await makeView({
             serverData,
             type: "list",
             resModel: "partner",
@@ -465,7 +465,7 @@ QUnit.module("Fields", (hooks) => {
         // switch to edit mode
         await click(target, ".o_data_row:first-child div[name='datetime']");
         assert.containsOnce(
-            list,
+            target,
             "input.o_datepicker_input",
             "the view should have a date input for editable mode"
         );
@@ -575,7 +575,7 @@ QUnit.module("Fields", (hooks) => {
 
         patchTimeZone(120);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -632,7 +632,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.records[0].p = [2];
             serverData.models.partner.records[1].datetime = "2017-02-08 02:00:00"; // UTC
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -679,7 +679,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.records[0].p = [2];
             serverData.models.partner.records[1].datetime = "2017-02-08 10:00:00"; // without timezone
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -722,7 +722,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.datetime.default = "2017-08-02 12:00:05";
         serverData.models.partner.fields.datetime.required = true;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
