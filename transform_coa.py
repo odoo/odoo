@@ -18,40 +18,57 @@ env = locals().get('env') or {}
 
 
 def pformat(item, level=0, stream=None):
-    stream = stream or io.StringIO()
-    if isinstance(item, (Field, Record)):
-        stream.write(pformat(item.get('children', {}), level=level))
-    elif isinstance(item, (tuple, list)):
-        start, end = '[]' if isinstance(item, list) else '()'
-        is_o2m = all([isinstance(sub, (tuple, list))
-                      and 2 <= len(sub) <= 3
-                      and all([isinstance(x, int) for x in sub[:2]])
-                      for sub in item])
+
+    def pformat_field_record(value, stream):
+        stream.write(pformat(value.get('children', {}), level=level))\
+
+    def pformat_tuple_list(value, stream):
+        start, end = '[]' if isinstance(value, list) else '()'
         stream.write(indent(level, start + '\n'))
-        for i, subitem in enumerate(item):
+        is_o2m = all([isinstance(sub, (tuple, list))
+                      and len(sub) in (2, 3)
+                      and all([isinstance(x, int) for x in sub[:2]])
+                      for sub in value])
+        for i, subitem in enumerate(value):
             if is_o2m:
                 subitem = list(subitem)
                 if subitem == [5, 0, 0]:
                     value_str = Unquoted("Command.clear()")
                 elif len(subitem) == 3 and isinstance(subitem[2], Record):
                     if subitem[0] == Command.CREATE:
-                        value_str = Unquoted("Command.create(" + pformat(subitem[2], level+1).strip() + ")")
+                        subvalue_str = pformat(subitem[2], level+1).strip()
+                        value_str = Unquoted(f"Command.create({subvalue_str})")
             else:
                 value_str = repr(subitem)
-            stream.write(indent(level + 1, f"{value_str}{',' if i < len(item) else ''}\n"))
+            comma = ',' if i < len(value) else ''
+            stream.write(indent(level + 1, f"{value_str}{comma}\n"))
         stream.write(indent(level, end))
-    elif isinstance(item, dict):
+
+    def pformat_dict(value, stream):
         stream.write(indent(level, '{\n'))
-        for i, (key, subitem) in enumerate(item.items()):
+        for i, (key, subitem) in enumerate(value.items()):
             if isinstance(subitem, Field):
-                value = subitem._value
+                subvalue = subitem._value
             else:
-                value = subitem
-            value_str = pformat(value, level + 1).lstrip()
-            stream.write(indent(level + 1, f"{repr(key)}: {value_str}{',' if i < len(item) else ''}\n"))
+                subvalue = subitem
+            value_str = pformat(subvalue, level + 1).lstrip()
+            comma = ',' if i < len(value) else ''
+            stream.write(indent(level + 1, f"{repr(key)}: {value_str}{comma}\n"))
         stream.write(indent(level, '}\n'))
+
+    stream = stream or io.StringIO()
+    mapping = [
+        ((Field, Record), pformat_field_record),
+        ((tuple, list), pformat_tuple_list),
+        ((dict,), pformat_dict)
+    ]
+    for types, formatter in mapping:
+        if isinstance(item, types):
+            formatter(item, stream)
+            break
     else:
         stream.write(indent(level, repr(item)))
+
     return stream.getvalue()
 
 
@@ -152,6 +169,9 @@ class Record(Node):
                         value[i] = sub
         return value
 
+def unquote_ref(value):
+    return Unquoted(f"f'account.{{cid}}_{value}'")
+
 class Unquoted(str):
     def __init__(self, value):
         super().__init__()
@@ -191,7 +211,7 @@ class AccountTax(Record):
         if record_id == 'chart_template_id':
             child['delete'] = True
         elif record_id == 'tax_group_id':
-            child._value = Unquoted(f"f'account.{{cid}}_{child._value}'")
+            child._value = unquote_ref(child._value)
         elif record_id in ('invoice_repartition_line_ids', 'refund_repartition_line_ids'):
             child._value = self.cleanup_o2m(child, AccountTaxRepartitionLine)
         return child
@@ -202,7 +222,7 @@ class AccountTaxRepartitionLine(Record):
         child = super().cleanup(child)
         record_id = child.get('id')
         if record_id == 'account_id':
-            child._value = Unquoted(f"f'account.{{cid}}_{child._value}'")
+            child._value = unquote_ref(child._value)
         return child
 
 class AccountFiscalPosition(Record):
@@ -317,7 +337,7 @@ def split_template_from_company(all_records):
     for _record_id, record in chart_templates.items():
         for field_id, field in record.get('children', {}).items():
             if re.match('.*account_.*id.*', field_id):
-                record['children'][field_id]._value = Unquoted(f"f'account.{{cid}}_{field._value}'")
+                record['children'][field_id]._value = unquote_ref(field._value)
         for field_id in company_fields:
             if field_id in record.get('children', {}):
                 company_record.append(record['children'].pop(field_id))
