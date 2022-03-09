@@ -64,7 +64,7 @@ class ProductTemplate(models.Model):
     def _compute_tax_string(self):
         for record in self:
             currency = record.currency_id
-            res = record.taxes_id.compute_all(record.list_price)
+            res = record.taxes_id.compute_all(record.list_price, product=record, partner=self.env['res.partner'])
             joined = []
             included = res['total_included']
             if currency.compare_amounts(included, record.list_price):
