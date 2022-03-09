@@ -2,8 +2,8 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
-import emojis from '@mail/js/emojis';
 import { LegacyComponent } from '@web/legacy/legacy_component';
+import EmojiPicker from '@mail/components/emoji_picker/emoji_picker';
 
 export class EmojiList extends LegacyComponent {
 
@@ -12,7 +12,6 @@ export class EmojiList extends LegacyComponent {
      */
     setup() {
         super.setup();
-        this.emojis = emojis;
         useUpdate({ func: () => this._update() });
     }
 
@@ -49,11 +48,20 @@ export class EmojiList extends LegacyComponent {
         return Boolean(this.root.el && this.root.el.contains(node));
     }
 
+    /**
+     * @param {Event} event
+     */
+    onEmojiClick(event) {
+        if (this.emojiListView) {
+            this.emojiListView.onClickEmoji(event);
+        }
+    }
 }
 
 Object.assign(EmojiList, {
     props: { localId: String },
     template: 'mail.EmojiList',
+    components: { EmojiPicker },
 });
 
 registerMessagingComponent(EmojiList);

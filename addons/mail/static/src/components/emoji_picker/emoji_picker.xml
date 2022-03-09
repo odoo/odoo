@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.EmojiPicker" owl="1">
+        <div t-ref="root" class="o_emoji_picker">
+            <div class="bg-light border-bottom p-2">
+                <div class="input-group">
+                    <input class="form-control" type="text"
+                        placeholder="Search..."
+                        t-ref="search-input"
+                        t-on-input="_onInputChange"
+                        t-att-value="state.term"/>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-danger" type="button" t-on-click="_onResetInput">
+                            <i class="fa fa-close"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <nav class="flex-shrink-0 bg-light border-right">
+                    <ul class="nav nav-pills flex-column p-0">
+                        <li t-foreach="sections" t-as="section" t-key="section.id" class="nav-item">
+                            <a class="nav-link px-2 py-1"
+                                t-att-href="'#' + uid + '_' + section.id"
+                                t-on-click="onNavItemClick">
+                                <t t-esc="section.icon" />
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="o_emoji_container flex-grow-1 position-relative">
+                    <div class="o_emoji_pane px-2">
+                        <div t-foreach="state.sections" t-as="section" t-key="section.id" class="o_section">
+                            <div t-att-id="uid + '_' + section.id" t-esc="section.title" class="py-2"/>
+                            <div class="d-flex flex-wrap">
+                                <span t-foreach="section.emojis" t-as="emoji" t-key="emoji_index"
+                                    t-esc="emoji[0]"
+                                    t-on-click="event => { this.onEmojiClick(event) }"
+                                    t-att-title="emoji[1]"
+                                    t-att-data-unicode="emoji[0]"
+                                    class="o_emoji rounded"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

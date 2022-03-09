@@ -2,10 +2,36 @@
 
 import emojis from '@mail/js/emojis';
 import MailEmojisMixin from '@mail/js/emojis_mixin';
-import core from 'web.core';
+import { qweb as QWeb } from 'web.core';
+import Widget from 'web.Widget';
+import { ComponentWrapper, WidgetAdapterMixin } from 'web.OwlCompatibility';
+import EmojiPicker from '@mail/components/emoji_picker/emoji_picker';
 
 var _onEmojiClickMixin = MailEmojisMixin._onEmojiClick;
-var QWeb = core.qweb;
+
+/**
+ * The mixin will be used in a definition field. As you may know, A field is a widget.
+ * To instantiate the emoji picker, we will have the use the following adapter.
+ */
+const EmojiPickerLegacy = Widget.extend(WidgetAdapterMixin, {
+    /**
+     * @override
+     * @param {Object} parent
+     * @param {Object} options
+     * @param {Function} options.onEmojiClick - Callback function
+     */
+    init: function (parent, options) {
+        this._super.apply(this, arguments);
+        this.options = options;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.component = new ComponentWrapper(this, EmojiPicker, this.options);
+        return this.component.mount(this.el);
+    },
+});
 
 /*
  * Common code for FieldTextEmojis and FieldCharEmojis
@@ -110,7 +136,15 @@ var FieldEmojiCommon = {
     _attachEmojisDropdown: function () {
         if (!this.$emojisIcon) {
             this.$emojisIcon = $(QWeb.render('mail.EmojisDropdown', {widget: this}));
-            this.$emojisIcon.find('.o_mail_emoji').on('click', this._onEmojiClick.bind(this));
+
+            const $dropdown = this.$emojisIcon.find('.dropdown-menu');
+            const $toggle = this.$emojisIcon.find('.dropdown-toggle');
+            $toggle.one('click', () => {
+                const picker = new EmojiPickerLegacy(this, {
+                    onEmojiClick: this._onEmojiClick.bind(this)
+                });
+                picker.attachTo($dropdown);
+            });
 
             if (this.$el.filter('span.o_field_translate').length) {
                 // multi-languages activated, place the button on the left of the translation button

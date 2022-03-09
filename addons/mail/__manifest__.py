@@ -79,6 +79,7 @@
             # Unused by guests and depends on ViewDialogs, better to remove it instead of pulling the whole view dependency tree
             ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
             'mail/static/src/js/emojis.js',
+            'mail/static/stc/js/emojis_sections.js',
             'mail/static/src/js/utils.js',
             'mail/static/src/model/*.js',
             'mail/static/src/models/*/*.js',
