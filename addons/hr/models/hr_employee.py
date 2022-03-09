@@ -66,7 +66,7 @@ class HrEmployeePrivate(models.Model):
     ], string='Marital Status', groups="hr.group_hr_user", default='single', tracking=True)
     spouse_complete_name = fields.Char(string="Spouse Complete Name", groups="hr.group_hr_user", tracking=True)
     spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=True)
-    children = fields.Integer(string='Number of Dependant Children', groups="hr.group_hr_user", tracking=True)
+    children = fields.Integer(string='Number of Dependent Children', groups="hr.group_hr_user", tracking=True)
     place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
     country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
     birthday = fields.Date('Date of Birth', groups="hr.group_hr_user", tracking=True)
