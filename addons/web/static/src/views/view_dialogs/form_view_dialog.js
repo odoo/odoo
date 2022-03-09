@@ -104,7 +104,7 @@ export class FormViewDialog extends Dialog {
             return;
         }
         const readonly = !this.record.isInEdition;
-        const multiSelect = this.record.resId === -1 && !this.props.disableMultipleSelection;
+        const multiSelect = this.record.resId === -1 && !this.props.disableMultipleSelection; // WOWL this is not good
         this.buttons = [
             {
                 text:

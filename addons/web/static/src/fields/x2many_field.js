@@ -156,8 +156,11 @@ export class X2ManyField extends Component {
                     this.list.getEvalContext()
                 ),
                 resModel: this.list.resModel,
-                fields: { ...form.fields, id: { name: "id", type: "integer", readonly: true } },
-                activeFields: form.activeFields,
+                fields: {
+                    ...(form || {}).fields,
+                    id: { name: "id", type: "integer", readonly: true },
+                },
+                activeFields: (form || {}).activeFields || {},
                 views: { form },
                 mode: "edit",
                 viewMode: "form",

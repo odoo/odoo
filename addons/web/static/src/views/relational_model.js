@@ -1638,6 +1638,7 @@ export class StaticList extends DataPoint {
         this.orderBy = params.orderBy || [];
         this.offset = params.offset || 0;
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
+        this.initialLimit = this.limit;
 
         this.deletedIds = new Set([]);
         this.addedIds = new Set([]);
@@ -1958,6 +1959,7 @@ export class StaticList extends DataPoint {
         this.deletedIds.clear();
         this.addedIds.clear();
         this.virtualIds = [];
+        this.limit = this.initialLimit;
         this.load();
     }
 }

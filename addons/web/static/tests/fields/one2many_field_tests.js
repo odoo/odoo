@@ -10,12 +10,33 @@ import {
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { ListRenderer } from "@web/views/list/list_renderer";
+import { registry } from "@web/core/registry";
+
+const serviceRegistry = registry.category("services");
 
 let serverData;
 let target;
 
 // WOWL remove after adapting tests
-let testUtils, delay, AbstractField, BasicModel, fieldRegistry, clickFirst, KanbanRecord, fieldUtils, relationalFields, makeLegacyDialogMappingTestEnv, AbstractStorageService, RamStorage, patch, unpatch, ControlPanel, FieldOne2Many, AbstractFieldOwl, fieldRegistryOwl, cpHelpers;
+let testUtils,
+    delay,
+    AbstractField,
+    BasicModel,
+    fieldRegistry,
+    clickFirst,
+    KanbanRecord,
+    fieldUtils,
+    relationalFields,
+    makeLegacyDialogMappingTestEnv,
+    AbstractStorageService,
+    RamStorage,
+    patch,
+    unpatch,
+    ControlPanel,
+    FieldOne2Many,
+    AbstractFieldOwl,
+    fieldRegistryOwl,
+    cpHelpers;
 
 async function clickDiscard(target) {
     await click(target.querySelector(".o_form_button_cancel"));
@@ -417,7 +438,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].p = [2];
         serverData.models.partner.records[1].turtles = [1, 2];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -445,7 +466,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         var $targetInput = $(".o_selected_row .o_input[name=foo]");
         assert.equal(
@@ -1417,7 +1438,7 @@ QUnit.module("Fields", (hooks) => {
             "should display '#39' at the first line"
         );
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.containsN(form, ".o_data_row", 40, "should display 39 records and the create line");
         assert.containsOnce(
@@ -1449,7 +1470,7 @@ QUnit.module("Fields", (hooks) => {
             "should display '#39' at the second line after onchange"
         );
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.containsN(form, ".o_data_row", 40, "should display 39 records and the create line");
         assert.containsOnce(
@@ -1535,7 +1556,7 @@ QUnit.module("Fields", (hooks) => {
                 "should display '#77' at the last line"
             );
 
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
 
             assert.containsN(
                 form,
@@ -1555,7 +1576,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             await testUtils.fields.editInput(form.$(".o_data_row input:first"), "value 3");
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
 
             assert.containsN(
                 form,
@@ -2547,7 +2568,7 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
             await clickEdit(target);
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await testUtils.fields.editInput($('input[name="turtle_int"]'), "5");
             await click($(".modal-footer button.btn-primary").first());
             assert.strictEqual(
@@ -3493,17 +3514,15 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["read", "onchange", "onchange"]);
     });
 
-    QUnit.skipWOWL(
-        "editable one2many list, adding line when only one page",
-        async function (assert) {
-            assert.expect(5);
+    QUnit.test("editable one2many list, adding line when only one page", async function (assert) {
+        assert.expect(5);
 
-            serverData.models.partner.records[0].turtles = [1, 2, 3];
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <field name="turtles">
                             <tree editable="bottom" limit="3">
@@ -3511,34 +3530,36 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                resId: 1,
-            });
+            resId: 1,
+        });
 
-            // add a record, to reach the page size limit
-            await clickEdit(target);
-            await click(form.$(".o_field_x2many_list_row_add a"));
-            // the record currently being added should not count in the pager
-            assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
+        // add a record, to reach the page size limit
+        await clickEdit(target);
+        await addRow(target);
+        // the record currently being added should not count in the pager
+        assert.containsNone(target, ".o_field_widget[name=turtles] .o_pager");
 
-            // enter value in turtle_foo field and click outside to unselect the row
-            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
-            await click(form.$el);
-            assert.containsNone(form, ".o_selected_row");
-            assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
+        // enter value in turtle_foo field and click outside to unselect the row
+        await editInput(target, '.o_field_widget[name="turtle_foo"] input', "nora");
+        await click(target);
+        assert.containsNone(target, ".o_selected_row");
+        assert.containsNone(target, ".o_field_widget[name=turtles] .o_pager");
 
-            await clickSave(target);
-            assert.containsOnce(form, ".o_field_widget[name=turtles] .o_pager");
-            assert.strictEqual(form.$(".o_field_widget[name=turtles] .o_pager").text(), "1-3 / 4");
-        }
-    );
+        await clickSave(target);
+        assert.containsOnce(target, ".o_field_widget[name=turtles] .o_pager");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=turtles] .o_pager").innerText,
+            "1-3 / 4"
+        );
+    });
 
-    QUnit.skipWOWL("editable one2many list, adding line, then discarding", async function (assert) {
+    QUnit.test("editable one2many list, adding line, then discarding", async function (assert) {
         assert.expect(3);
 
         serverData.models.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
         serverData.models.partner.records[0].turtles = [1, 2, 3, 4];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3555,27 +3576,26 @@ QUnit.module("Fields", (hooks) => {
 
         // add a record, then discard
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         await clickDiscard(target);
-        assert.containsNone(form, ".modal", "should not open modal");
+        assert.containsNone(target, ".modal");
 
-        assert.isVisible(form.$(".o_field_widget[name=turtles] .o_pager"));
+        assert.isVisible(target.querySelector(".o_field_widget[name=turtles] .o_pager"));
         assert.strictEqual(
-            form.$(".o_field_widget[name=turtles] .o_pager").text().trim(),
-            "1-3 / 4",
-            "pager should display correct values"
+            target.querySelector(".o_field_widget[name=turtles] .o_pager").innerText.trim(),
+            "1-3 / 4"
         );
     });
 
-    QUnit.skipWOWL("editable one2many list, required field and pager", async function (assert) {
+    QUnit.test("editable one2many list, required field and pager", async function (assert) {
         assert.expect(1);
 
         serverData.models.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
         serverData.models.turtle.fields.turtle_foo.required = true;
         serverData.models.partner.records[0].turtles = [1, 2, 3, 4];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3592,11 +3612,11 @@ QUnit.module("Fields", (hooks) => {
 
         // add a (empty) record
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         // go on next page. The new record is not valid and should be discarded
-        await click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
-        assert.containsOnce(form, "tr.o_data_row");
+        await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
+        assert.containsOnce(target, "tr.o_data_row");
     });
 
     QUnit.skipWOWL(
@@ -3608,7 +3628,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.turtle.fields.turtle_foo.required = true;
             serverData.models.partner.records[0].turtles = [1, 2, 3, 4];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -3626,75 +3646,64 @@ QUnit.module("Fields", (hooks) => {
 
             // add a record with a dirty state, but not valid
             await clickEdit(target);
-            await click(form.$(".o_field_x2many_list_row_add a"));
-            await testUtils.fields.editInput(form.$('input[name="turtle_int"]'), 4321);
+            await addRow(target);
+            await editInput(target, '.o_field_widget[name="turtle_int"] input', 4321);
 
             // go to next page. The new record is not valid, but dirty. we should
             // see a confirm dialog
-            await click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
+            await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
 
             assert.strictEqual(
-                form.$(".o_field_widget[name=turtles] .o_pager").text().trim(),
-                "1-4 / 5",
-                "pager should still display the correct total"
+                target.querySelector(".o_field_widget[name=turtles] .o_pager").innerText,
+                "1-4 / 5"
             );
 
             assert.strictEqual(
-                form.$(".o_field_widget[name=turtles] .o_pager").text().trim(),
-                "1-4 / 5",
-                "pager should again display the correct total"
+                target.querySelector(".o_field_widget[name=turtles] .o_pager").innerText,
+                "1-4 / 5"
             );
-            assert.containsOnce(
-                form,
-                ".o_field_one2many input.o_field_invalid",
-                "there should be an invalid input in the one2many"
-            );
+            assert.containsOnce(target, ".o_field_one2many input.o_field_invalid");
         }
     );
 
-    QUnit.skipWOWL(
-        "editable one2many list, adding, discarding, and pager",
-        async function (assert) {
-            assert.expect(5);
+    QUnit.test("editable one2many list, adding, discarding, and pager", async function (assert) {
+        serverData.models.partner.records[0].turtles = [1];
 
-            serverData.models.partner.records[0].turtles = [1];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree editable="bottom" limit="3">
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <form>
-                        <field name="turtles">
-                            <tree editable="bottom" limit="3">
-                                <field name="turtle_foo"/>
-                            </tree>
-                        </field>
-                    </form>`,
-                resId: 1,
-            });
+        // add 4 records (to have more records than the limit)
+        await clickEdit(target);
+        await addRow(target);
+        await editInput(target, '.o_field_widget[name="turtle_foo"] input', "nora");
+        await addRow(target);
+        await editInput(target, '.o_field_widget[name="turtle_foo"] input', "nora");
+        await addRow(target);
+        await editInput(target, '.o_field_widget[name="turtle_foo"] input', "nora");
+        await addRow(target);
 
-            // add 4 records (to have more records than the limit)
-            await clickEdit(target);
-            await click(form.$(".o_field_x2many_list_row_add a"));
-            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
-            await click(form.$(".o_field_x2many_list_row_add a"));
-            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
-            await click(form.$(".o_field_x2many_list_row_add a"));
-            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
-            await click(form.$(".o_field_x2many_list_row_add a"));
+        assert.containsN(target, "tr.o_data_row", 5);
+        assert.containsNone(target, ".o_field_widget[name=turtles] .o_pager");
 
-            assert.containsN(form, "tr.o_data_row", 5);
-            assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
+        // discard
+        await clickDiscard(target);
+        assert.containsNone(target, ".modal");
 
-            // discard
-            await clickDiscard(target);
-            assert.containsNone(form, ".modal", "should not open modal");
-
-            assert.containsOnce(form, "tr.o_data_row");
-            assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
-        }
-    );
+        assert.containsOnce(target, "tr.o_data_row");
+        assert.containsNone(target, ".o_field_widget[name=turtles] .o_pager");
+    });
 
     QUnit.skipWOWL("unselecting a line with missing required data", async function (assert) {
         assert.expect(6);
@@ -3702,7 +3711,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.turtle.fields.turtle_foo.required = true;
         delete serverData.models.turtle.fields.turtle_foo.default;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3721,34 +3730,26 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // edit mode, then click on Add an item, then click elsewhere
-        assert.containsNone(form, "tr.o_data_row", "should have 0 data rows");
+        assert.containsNone(target, "tr.o_data_row");
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
-        assert.containsOnce(form, "tr.o_data_row", "should have 1 data rows");
+        await addRow(target);
+        assert.containsOnce(target, "tr.o_data_row");
 
         // adding a value in the non required field, so it is dirty, but with
         // a missing required field
-        await testUtils.fields.editInput(form.$('input[name="turtle_int"]'), "12345");
+        await editInput(target, '.o_field_widget[name="turtle_int"] input', "12345");
 
         // click elsewhere,
-        await click(form.$("label.o_form_label"));
-        assert.containsNone(document.body, ".modal", "a confirmation modal should not be opened");
+        await click(target.querySelector("label.o_form_label"));
+        assert.containsNone(document.body, ".modal");
 
         // the line should still be selected
-        assert.containsOnce(
-            form,
-            "tr.o_data_row.o_selected_row",
-            "should still have 1 selected data row"
-        );
+        assert.containsOnce(target, "tr.o_data_row.o_selected_row");
 
         // click discard
         await clickDiscard(target);
-        assert.containsNone(document.body, ".modal", "a confirmation modal should not be opened");
-        assert.containsNone(
-            form,
-            "tr.o_data_row",
-            "should have 0 data rows (invalid line has been discarded"
-        );
+        assert.containsNone(document.body, ".modal");
+        assert.containsNone(target, "tr.o_data_row");
     });
 
     QUnit.skipWOWL("pressing enter in a o2m with a required empty field", async function (assert) {
@@ -3779,7 +3780,7 @@ QUnit.module("Fields", (hooks) => {
 
         // edit mode, then click on Add an item, then press enter
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), "enter");
         assert.hasClass(
             form.$('input[name="turtle_foo"]'),
@@ -3789,7 +3790,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["read", "onchange"]);
     });
 
-    QUnit.skipWOWL("editing a o2m, with required field and onchange", async function (assert) {
+    QUnit.test("editing a o2m, with required field and onchange", async function (assert) {
         assert.expect(11);
 
         serverData.models.turtle.fields.turtle_foo.required = true;
@@ -3800,7 +3801,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3820,34 +3821,33 @@ QUnit.module("Fields", (hooks) => {
                 if (args.method) {
                     assert.step(args.method);
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         // edit mode, then click on Add an item
-        assert.containsNone(form, "tr.o_data_row", "should have 0 data rows");
+        assert.containsNone(target, "tr.o_data_row");
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         // input some text in required turtle_foo field
-        await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "aubergine");
+        await editInput(target, '.o_field_widget[name="turtle_foo"] input', "aubergine");
         assert.strictEqual(
-            form.$('input[name="turtle_int"]').val(),
-            "9",
-            "onchange should have been triggered"
+            target.querySelector('.o_field_widget[name="turtle_int"] input').value,
+            "9"
         );
 
         // save and check everything is fine
         await clickSave(target);
+
         assert.strictEqual(
-            form.$(".o_data_row td:contains(aubergine)").length,
-            1,
-            "should have one row with turtle_foo value"
+            target.querySelector('.o_data_row td .o_field_widget[name="turtle_foo"] span')
+                .innerText,
+            "aubergine"
         );
         assert.strictEqual(
-            form.$(".o_data_row td:contains(9)").length,
-            1,
-            "should have one row with turtle_int value"
+            target.querySelector('.o_data_row td .o_field_widget[name="turtle_int"] span')
+                .innerText,
+            "9"
         );
 
         assert.verifySteps(["read", "onchange", "onchange", "write", "read", "read"]);
@@ -3876,7 +3876,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         assert.containsOnce(form, "tr.o_data_row", "there should be one data row");
 
         await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), "escape");
@@ -3911,7 +3911,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await clickEdit(target);
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             assert.containsOnce(form, "tr.o_data_row", "there should be one data row");
 
             await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), "escape");
@@ -3923,7 +3923,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("pressing escape in editable o2m list in dialog", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3953,7 +3953,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await click($(".modal .o_field_x2many_list_row_add a"));
 
         assert.strictEqual(
@@ -4260,9 +4260,9 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(form, ".o_data_row", "rows of the o2m should have been deleted");
 
         // add two new subrecords
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "x");
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "y");
 
         assert.containsN(form, ".o_data_row", 2, "o2m should contain two rows");
@@ -4275,7 +4275,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsNone(form, ".o_data_row", "rows of the o2m should have been deleted");
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "z");
 
         await clickSave(target);
@@ -4457,7 +4457,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsNone(form, ".o_data_row", "o2m shouldn't contain any row");
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         // trigger the first onchange
         deactiveOnchange = false;
         await testUtils.fields.editInput(form.$('input[name="turtle_int"]'), "10");
@@ -4982,7 +4982,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records[0].p = [2];
         serverData.models.partner.records[1].product_id = 37;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5011,7 +5011,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
     });
 
     QUnit.skipWOWL("one2many field with context", async function (assert) {
@@ -5055,9 +5055,9 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "hammer");
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
     });
 
     QUnit.skipWOWL("one2many list edition, some basic functionality", async function (assert) {
@@ -5201,7 +5201,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.strictEqual(
             $(".modal .o_data_row").length,
@@ -5213,7 +5213,7 @@ QUnit.module("Fields", (hooks) => {
         await click($(".modal .o_select_button"));
         await click($(".o_form_button_save"));
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.strictEqual(
             $(".modal .o_data_row").length,
@@ -5328,7 +5328,7 @@ QUnit.module("Fields", (hooks) => {
 
         // add a one2many record
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await click($(".modal .o_data_row:first .o_list_record_selector input"));
         await click($(".modal .o_select_button"));
 
@@ -6111,7 +6111,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // add new line (first, xpad)
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await testUtils.fields.editInput(form.$('input[name="display_name"]'), "first");
         await click(form.$('div[name="product_id"] input'));
         // the onchange won't be generated
@@ -6171,7 +6171,7 @@ QUnit.module("Fields", (hooks) => {
         await testUtils.fields.editInput(form.$('input.o_field_integer[name="int_field"]'), "10");
 
         // add new line (first, xenomorphe)
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await testUtils.fields.editInput(form.$('input[name="display_name"]'), "first");
         await click(form.$('div[name="product_id"] input'));
         // generate the onchange
@@ -7039,7 +7039,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(form, ".o_data_row", "should start with one data row");
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.containsN(form, ".o_data_row", 2, "should have 2 data rows");
         assert.strictEqual(
@@ -7088,7 +7088,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(form, ".o_data_row", "should start with one data row");
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.containsN(form, ".o_data_row", 2, "should have 2 data rows");
         assert.strictEqual(
@@ -7217,7 +7217,7 @@ QUnit.module("Fields", (hooks) => {
             "0",
             "int_field should start with value 0"
         );
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         assert.strictEqual(
             form.$('.o_field_widget[name="int_field"]').val(),
             "0",
@@ -7292,7 +7292,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // add a new row (which is invalid at first)
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await testUtils.owlCompatibilityExtraNextTick();
             assert.strictEqual(
                 form.$('.o_field_widget[name="int_field"]').val(),
@@ -7361,7 +7361,7 @@ QUnit.module("Fields", (hooks) => {
                 "int_field should start with value 10"
             );
 
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
 
             assert.strictEqual(
                 form.$('.o_field_widget[name="int_field"]').val(),
@@ -7420,7 +7420,7 @@ QUnit.module("Fields", (hooks) => {
                 "int_field should start with value 10"
             );
 
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
 
             assert.strictEqual(
                 form.$('.o_field_widget[name="int_field"]').val(),
@@ -7475,7 +7475,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // add a first line but hold the onchange back
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             prom = testUtils.makeTestPromise();
             assert.containsOnce(
                 form,
@@ -7487,7 +7487,7 @@ QUnit.module("Fields", (hooks) => {
 
             // try to add a second line and check that it is correctly waiting
             // for the onchange to return
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             assert.strictEqual($(".modal").length, 0, "no modal should be displayed");
             assert.strictEqual(
                 $(".o_field_invalid").length,
@@ -7549,8 +7549,8 @@ QUnit.module("Fields", (hooks) => {
             });
             prom = testUtils.makeTestPromise();
             // click twice to add a new line
-            await click(form.$(".o_field_x2many_list_row_add a"));
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
+            await addRow(target);
             assert.containsNone(
                 form,
                 ".o_data_row",
@@ -7609,7 +7609,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // trigger the two onchanges
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await testUtils.fields.editInput(form.$(".o_data_row .o_field_widget"), "a name");
         prom = testUtils.makeTestPromise();
         await click(form.$(".o_datepicker_input"));
@@ -7635,7 +7635,7 @@ QUnit.module("Fields", (hooks) => {
             display_name: function () {},
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7672,11 +7672,11 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // add a line (this should trigger an onchange and a warning)
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         // check if 'Add an item' still works (this should trigger an onchange
         // and a warning again)
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.verifySteps(["onchange", "warning", "onchange", "warning"]);
     });
@@ -7938,7 +7938,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.turtle.fields.turtle_foo.required = true;
         serverData.models.partner.records[0].turtles = [];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7960,7 +7960,7 @@ QUnit.module("Fields", (hooks) => {
         await clickEdit(target);
 
         // triggers an onchange on partner, because the new record is valid
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.verifySteps(["read", "onchange", "onchange"]);
     });
@@ -7974,7 +7974,7 @@ QUnit.module("Fields", (hooks) => {
             p: function () {},
         };
         var checkOnchange = false;
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -8006,7 +8006,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await click($(".modal .o_field_x2many_list_row_add a"));
         await testUtils.fields.editInput($(".modal .o_data_cell input"), "new record");
         checkOnchange = true;
@@ -8053,7 +8053,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await clickEdit(target);
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.containsN(form, "tr.o_data_row", 41);
         assert.hasClass(form.$("tr.o_data_row").last(), "o_selected_row");
@@ -8096,7 +8096,7 @@ QUnit.module("Fields", (hooks) => {
 
         await clickEdit(target);
         // add a new record page 1 (this increases the limit to 4)
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await testUtils.fields.editInput(
             form.$('.o_data_row input[name="turtle_foo"]'),
             "rainbow dash"
@@ -8148,7 +8148,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(form, "tr.o_data_row", 2);
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.containsN(form, "tr.o_data_row", 3);
 
@@ -8206,7 +8206,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             prom = testUtils.makeTestPromise();
             await testUtils.fields.editInput(form.$(".o_field_widget[name=int_field]"), "44");
 
@@ -8269,7 +8269,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             prom = testUtils.makeTestPromise();
             await testUtils.fields.editAndTrigger(form.$(".o_field_widget[name=int_field]"), "44", [
                 "input",
@@ -8315,7 +8315,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         // use of owlCompatibilityExtraNextTick because we have a boolean field (owl) inside the
         // x2many, so an update of the x2many requires to wait for 2 animation frames: one
         // for the list to be re-rendered (with the boolean field) and one for the control
@@ -8550,7 +8550,7 @@ QUnit.module("Fields", (hooks) => {
                     },
                 },
             });
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "pinky pie");
             await clickSave(target);
         }
@@ -8818,7 +8818,7 @@ QUnit.module("Fields", (hooks) => {
             // check line is at the correct place
 
             var inputText = "ninja";
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText);
             await clickSave(target);
 
@@ -8862,7 +8862,7 @@ QUnit.module("Fields", (hooks) => {
             // check line is at the correct place
 
             var inputText = "ninja";
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText);
             await clickSave(target);
 
@@ -9047,11 +9047,11 @@ QUnit.module("Fields", (hooks) => {
 
             var inputText1 = "relax";
             var inputText2 = "max";
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText1);
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText2);
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
 
             assert.strictEqual($(".o_data_cell:nth-child(2)").text(), inputText1 + inputText2);
 
@@ -9305,7 +9305,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // add a row and trigger the onchange
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await testUtils.fields.editInput(
                 form.$(".o_data_row .o_field_widget[name=display_name]"),
                 "a name"
@@ -9445,10 +9445,10 @@ QUnit.module("Fields", (hooks) => {
                         <tree>
                         <control>
                             <create string="Add food" context="" />
-                            <create string=\"Add pizza\" context=\"{'default_display_name': 'pizza'}\" />
+                            <create string="Add pizza" context="{'default_display_name': 'pizza'}" />
                         </control>
                         <control>
-                            <create string=\"Add pasta\" context=\"{'default_display_name': 'pasta'}\" />
+                            <create string="Add pasta" context="{'default_display_name': 'pasta'}" />
                         </control>
                         <field name="display_name"/>
                     </tree>
@@ -9456,13 +9456,14 @@ QUnit.module("Fields", (hooks) => {
                         <field name="display_name"/>
                         </form>
                     </field>
-                </form>`,
+                </form>
+            `,
         });
 
         // new controls correctly added
         const rowAdd = target.querySelectorAll(".o_field_x2many_list_row_add");
         assert.strictEqual(rowAdd.length, 1);
-        assert.strictEqual(rowAdd[0].closest("tr").querySelectorAll("td").length, 1);
+        assert.containsN(rowAdd[0].closest("tr"), "td", 2);
         assert.deepEqual(
             [...rowAdd[0].querySelectorAll("a")].map((el) => el.innerText),
             ["Add food", "Add pizza", "Add pasta"]
@@ -9498,32 +9499,28 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "o2m add a line custom control create align with handle",
-        async function (assert) {
-            assert.expect(3);
+    QUnit.test("o2m add a line custom control create align with handle", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="int_field" widget="handle"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <form>
-                        <field name="p">
-                            <tree>
-                                <field name="int_field" widget="handle"/>
-                            </tree>
-                        </field>
-                    </form>`,
-            });
-
-            // controls correctly added, at one column offset when handle is present
-            var $tr = form.$(".o_field_x2many_list_row_add").closest("tr");
-            assert.strictEqual($tr.find("td").length, 2);
-            assert.strictEqual($tr.find("td:eq(0)").text(), "");
-            assert.strictEqual($tr.find("td:eq(1)").text(), "Add a line");
-        }
-    );
+        // controls correctly added, at one column offset when handle is present
+        const tr = target.querySelector(".o_field_x2many_list_row_add").closest("tr");
+        assert.containsN(tr, "td", 2);
+        const tds = tr.querySelectorAll("td");
+        assert.strictEqual(tds[0].innerText, "");
+        assert.strictEqual(tds[1].innerText, "Add a line");
+    });
 
     QUnit.skipWOWL("one2many form view with action button", async function (assert) {
         // once the action button is clicked, the record is reloaded (via the
@@ -9531,15 +9528,30 @@ QUnit.module("Fields", (hooks) => {
         // any action, or an ir.action.act_window_close) ; this test ensures that
         // it reloads the fields of the opened view (i.e. the form in this case).
         // See https://github.com/odoo/odoo/issues/24189
-        assert.expect(7);
-
-        var data = this.data;
-        data.partner.records[0].p = [2];
-
-        const form = await makeView({
+        serverData.models.partner.records[0].p = [2];
+        serverData.views = {
+            "partner_type,false,list": `
+                <tree>
+                    <field name="display_name"/>
+                </tree>
+            `,
+        };
+        const actionService = serviceRegistry.get("action");
+        serviceRegistry.add(
+            "action",
+            {
+                dependencies: actionService.dependencies,
+                async start(env) {
+                    const action = await actionService.start(env);
+                    return action;
+                },
+            },
+            { force: true }
+        );
+        await makeView({
             type: "form",
             resModel: "partner",
-            data: data,
+            serverData,
             resId: 1,
             arch: `
                 <form>
@@ -9553,62 +9565,33 @@ QUnit.module("Fields", (hooks) => {
                         </form>
                     </field>
                 </form>`,
-            archs: {
-                "partner_type,false,list": '<tree><field name="display_name"/></tree>',
-            },
-            intercepts: {
-                execute_action: function (ev) {
-                    data.partner.records[1].display_name = "new name";
-                    data.partner.records[1].timmy = [12];
-                    ev.data.on_closed();
-                },
-            },
-            viewOptions: {
-                mode: "edit",
-            },
+            // intercepts: {
+            //     execute_action: function (ev) {
+            //         data.partner.records[1].display_name = "new name";
+            //         data.partner.records[1].timmy = [12];
+            //         ev.data.on_closed();
+            //     },
+            // },
         });
+        await clickEdit(target);
 
-        assert.containsOnce(form, ".o_data_row", "there should be one record in the one2many");
-        assert.strictEqual(
-            form.$(".o_data_cell").text(),
-            "second record",
-            "initial display_name of o2m record should be correct"
-        );
+        assert.containsOnce(target, ".o_data_row");
+        assert.strictEqual(target.querySelector(".o_data_cell").innerText, "second record");
 
         // open one2many record in form view
-        await click(form.$(".o_data_cell:first"));
-        assert.strictEqual(
-            $(".modal .o_form_view").length,
-            1,
-            "should have opened the form view in a dialog"
-        );
-        assert.strictEqual(
-            $(".modal .o_form_view .o_data_row").length,
-            0,
-            "there should be no record in the many2many"
-        );
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsNone(target, ".modal .o_form_view .o_data_row");
 
         // click on the action button
-        await click($(".modal .o_form_view button"));
-        assert.strictEqual(
-            $(".modal .o_data_row").length,
-            1,
-            "fields in the o2m form view should have been read"
-        );
-        assert.strictEqual(
-            $(".modal .o_data_cell").text(),
-            "gold",
-            "many2many subrecord should have been fetched"
-        );
+        await click(target.querySelector(".modal .o_form_view button"));
+        assert.containsOnce(target, ".modal .o_data_row");
+        assert.strictEqual(target.querySelector(".modal .o_data_cell").innerText, "gold");
 
         // save the dialog
-        await click($(".modal .modal-footer .btn-primary"));
+        await click(target.querySelector(".modal .modal-footer .btn-primary"));
 
-        assert.strictEqual(
-            form.$(".o_data_cell").text(),
-            "new name",
-            "fields in the o2m list view should have been read as well"
-        );
+        assert.strictEqual(target.querySelector(".o_data_cell").text(), "new name");
     });
 
     QUnit.skipWOWL("onchange affecting inline unopened list view", async function (assert) {
@@ -9717,7 +9700,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].turtles = [1];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9728,17 +9711,17 @@ QUnit.module("Fields", (hooks) => {
                             <field name="display_name" widget="email"/>
                             <field name="turtle_foo" widget="url"/>
                         </tree>
-                        <form></form>
+                        <form/>
                     </field>
                 </form>`,
             resId: 1,
         });
 
-        await click(form.$(".o_email_cell a"));
-        assert.strictEqual($(".modal .o_form_view").length, 0, "click should not open the modal");
+        await click(target.querySelector(".o_email_cell a"));
+        assert.containsNone(target, ".modal");
 
-        await click(form.$(".o_url_cell a"));
-        assert.strictEqual($(".modal .o_form_view").length, 0, "click should not open the modal");
+        await click(target.querySelector(".o_url_cell a"));
+        assert.containsNone(target, ".modal");
     });
 
     QUnit.skipWOWL("create and edit on m2o in o2m, and press ESCAPE", async function (assert) {
@@ -9763,7 +9746,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.containsOnce(form, ".o_selected_row", "should have create a new row in edition");
 
@@ -9792,7 +9775,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.records[0].turtles = [];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -9818,7 +9801,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await click($('button[name="post"]'));
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
         }
     );
 
@@ -9847,7 +9830,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // add a row, fill it, then trigger the tab shortcut
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), "ninja");
             await testUtils.fields.triggerKeydown(form.$('.o_input[name="turtle_foo"]'), "tab");
 
@@ -9897,7 +9880,7 @@ QUnit.module("Fields", (hooks) => {
             var value = "hello";
 
             // add a new line
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
 
             // we want to add a delay to simulate an onchange
             prom = testUtils.makeTestPromise();
@@ -9929,8 +9912,7 @@ QUnit.module("Fields", (hooks) => {
             // that they wouldn't have sent to the model yet). This test is added alongside a bug fix
             // ensuring that we don't end up in a deadlock when a widget actually has some changes to
             // commit at that moment.
-            assert.expect(9);
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -9944,29 +9926,25 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    return this._super.apply(this, arguments);
                 },
                 // we set a fieldDebounce to precisely mock the behavior of the webclient: changes are
                 // not sent to the model at keystrokes, but when the input is left
-                fieldDebounce: 5000,
+
+                // legacyParams: { fieldDebounce: 5000 }, // WOWL keep this in view API?
             });
 
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
 
-            await testUtils.fields.editInput(
-                form.$(".o_field_widget[name=turtles] input"),
-                "some foo value"
-            );
+            await editInput(target, ".o_field_widget[name=turtles] input", "some foo value");
 
             // click to add a second row to unselect the current one, then save
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await clickSave(target);
 
-            assert.containsOnce(form, ".o_form_readonly", "form view should be in readonly");
+            assert.containsOnce(target, ".o_form_readonly");
             assert.strictEqual(
-                form.$(".o_data_row").text(),
-                "some foo value",
-                "foo field should have correct value"
+                target.querySelector(".o_data_row").innerText.trim(),
+                "some foo value"
             );
             assert.verifySteps([
                 "onchange", // main record
@@ -9982,7 +9960,15 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many with extra field from server not in form", async function (assert) {
         assert.expect(6);
 
-        const form = await makeView({
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="display_name"/>
+                </form>
+            `,
+        };
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9996,75 +9982,47 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            archs: {
-                "partner,false,form": `<form> <field name="display_name"/> </form>`,
-            },
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     args.args[1].p[0][2].datetime = "2018-04-05 12:00:00";
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         await clickEdit(target);
 
-        var x2mList = form.$(".o_field_x2many_list[name=p]");
-
         // Add a record in the list
-        await click(x2mList.find(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
-        var modal = $(".modal-lg");
-
-        var nameInput = modal.find("input.o_input[name=display_name]");
-        await testUtils.fields.editInput(nameInput, "michelangelo");
+        await editInput(target, ".modal div[name=display_name] input", "michelangelo");
 
         // Save the record in the modal (though it is still virtual)
-        await click(modal.find(".btn-primary").first());
+        await click(target.querySelector(".modal .btn-primary"));
 
-        assert.equal(
-            x2mList.find(".o_data_row").length,
-            1,
-            "There should be 1 records in the x2m list"
-        );
+        assert.containsOnce(target, ".o_data_row");
 
-        var newlyAdded = x2mList.find(".o_data_row").eq(0);
+        let cells = target.querySelectorAll(".o_data_cell");
 
-        assert.equal(
-            newlyAdded.find(".o_data_cell").first().text(),
-            "",
-            "The create_date field should be empty"
-        );
-        assert.equal(
-            newlyAdded.find(".o_data_cell").eq(1).text(),
-            "michelangelo",
-            "The display name field should have the right value"
-        );
+        assert.equal(cells[0].innerText, "");
+        assert.equal(cells[1].innerText, "michelangelo");
 
         // Save the whole thing
         await clickSave(target);
 
-        x2mList = form.$(".o_field_x2many_list[name=p]");
+        // x2mList = target.querySelectorAll(".o_field_x2many_list[name=p]");
 
-        // Redo asserts in RO mode after saving
-        assert.equal(
-            x2mList.find(".o_data_row").length,
-            1,
-            "There should be 1 records in the x2m list"
-        );
+        // // Redo asserts in RO mode after saving
+        // assert.equal(
+        //     x2mList.find(".o_data_row").length,
+        //     1,
+        //     "There should be 1 records in the x2m list"
+        // );
 
-        newlyAdded = x2mList.find(".o_data_row").eq(0);
+        // newlyAdded = x2mList.find(".o_data_row").eq(0);
 
-        assert.equal(
-            newlyAdded.find(".o_data_cell").first().text(),
-            "04/05/2018 12:00:00",
-            "The create_date field should have the right value"
-        );
-        assert.equal(
-            newlyAdded.find(".o_data_cell").eq(1).text(),
-            "michelangelo",
-            "The display name field should have the right value"
-        );
+        // cells = newlyAdded.querySelectorAll(".o_data_cell");
+        // assert.equal(cells[0].innerText,"04/05/2018 12:00:00");
+        // assert.equal(cells[1].innerText,"michelangelo");
     });
 
     QUnit.skipWOWL("one2many invisible depends on parent field", async function (assert) {
@@ -10262,7 +10220,7 @@ QUnit.module("Fields", (hooks) => {
             await clickEdit(target);
 
             // add a new o2m record
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             form.$(".o_field_one2many input:first").focus();
             await testUtils.fields.editInput(form.$(".o_field_one2many input:first"), "New line");
             await click(form.$el);
@@ -10675,7 +10633,7 @@ QUnit.module("Fields", (hooks) => {
 
             var width = form.$('th[data-name="date"]')[0].offsetWidth;
 
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
 
             assert.containsOnce(form, ".o_data_row");
             assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
@@ -10791,7 +10749,7 @@ QUnit.module("Fields", (hooks) => {
 
             // create a record to store the current widths, but discard it directly to keep
             // the list empty (otherwise, the browser automatically computes the optimal widths)
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
 
             assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
 
@@ -10878,7 +10836,7 @@ QUnit.module("Fields", (hooks) => {
             await testUtils.fields.many2one.searchAndClickItem("trululu", { search: "new value" });
 
             // add a row in p
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             assert.containsNone(form, ".o_data_row");
 
             // resolve the name_create to trigger the onchange, and the reset of p
@@ -11622,11 +11580,23 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skipWOWL("search more pager is reset when doing a new search", async function (assert) {
         assert.expect(6);
-
+        serverData.models.partner.fields.datetime.searchable = true;
         serverData.models.partner.records.push(
             ...new Array(170).fill().map((_, i) => ({ id: i + 10, name: "Partner " + i }))
         );
-        serverData.models.partner.fields.datetime.searchable = true;
+        serverData.views = {
+            "partner,false,list": `
+                <tree>
+                    <field name="display_name"/>
+                </tree>
+            `,
+            "partner,false,search": `
+                <search>
+                    <field name="datetime"/>
+                    <field name="display_name"/>
+                </search>
+            `,
+        };
         await makeView({
             type: "form",
             resModel: "partner",
@@ -11639,11 +11609,6 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            archs: {
-                "partner,false,list": '<tree><field name="display_name"/></tree>',
-                "partner,false,search":
-                    '<search><field name="datetime"/><field name="display_name"/></search>',
-            },
             resId: 1,
         });
 
@@ -11666,7 +11631,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual($("tr.o_data_row").length, 1, "should display 1 record");
     });
 
-    QUnit.skipWOWL("do not call name_get if display_name already known", async function (assert) {
+    QUnit.test("do not call name_get if display_name already known", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner.fields.product_id.default = 37;
@@ -11676,19 +11641,29 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form><field name="trululu"/><field name="product_id"/></form>',
+            arch: `
+                <form>
+                    <field name="trululu"/>
+                    <field name="product_id"/>
+                </form>
+            `,
             mockRPC(route, args) {
                 assert.step(args.method + " on " + args.model);
-                return this._super.apply(this, arguments);
             },
         });
 
-        assert.strictEqual(form.$(".o_field_widget[name=trululu] input").val(), "first record");
-        assert.strictEqual(form.$(".o_field_widget[name=product_id] input").val(), "xphone");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=trululu] input").value,
+            "first record"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=product_id] input").value,
+            "xphone"
+        );
         assert.verifySteps(["onchange on partner"]);
     });
 
@@ -12014,7 +11989,7 @@ QUnit.module("Fields", (hooks) => {
 
             await clickEdit(target);
             // add a line (virtual record)
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             await testUtils.owlCompatibilityExtraNextTick();
             await testUtils.fields.editInput(form.$(".o_input"), "pi");
             // delete the line above it
@@ -12062,9 +12037,9 @@ QUnit.module("Fields", (hooks) => {
                 mode: "edit",
             },
         });
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
         await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
-        await click(form.$(".o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         assert.verifySteps([
             "read partner",
@@ -12474,7 +12449,7 @@ QUnit.module("Fields", (hooks) => {
             await clickEdit(target);
 
             // add a new o2m record
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             form.$(".o_field_one2many input:first").focus();
             await testUtils.fields.editInput(form.$(".o_field_one2many input:first"), "New line");
             await click(form.$el);
@@ -12640,7 +12615,7 @@ QUnit.module("Fields", (hooks) => {
                 2,
                 "dropdown is still open"
             );
-            await click(form.$(".o_field_x2many_list_row_add a"));
+            await addRow(target);
             // use of owlCompatibilityExtraNextTick because the x2many field is reset, meaning that
             // 1) its list renderer is updated (updateState is called): this is async and as it
             // contains a FieldBoolean, which is written in Owl, it completes in the nextAnimationFrame
