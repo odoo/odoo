@@ -670,6 +670,9 @@ class WebsiteSlides(WebsiteProfile):
     def slide_view(self, slide, **kwargs):
         if not slide.channel_id.can_access_from_current_website() or not slide.active:
             raise werkzeug.exceptions.NotFound()
+        # redirection to channel's homepage for category slides
+        if slide.is_category:
+            return werkzeug.utils.redirect(slide.channel_id.website_url)
         self._set_viewed_slide(slide)
 
         values = self._get_slide_detail(slide)
