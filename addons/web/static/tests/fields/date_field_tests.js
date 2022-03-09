@@ -610,7 +610,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.skipWOWL(
         "do not trigger a field_changed for datetime field with date widget",
         async function (assert) {
             assert.expect(3);

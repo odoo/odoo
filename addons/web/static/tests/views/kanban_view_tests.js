@@ -5726,7 +5726,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_group", 2, "there should be two columns");
-        assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_view_nocontent");
         assert.containsN(
             target,
@@ -5736,7 +5736,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await quickCreateRecord();
-        assert.doesNotHaveClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsNone(target, ".o_kanban_record");
         assert.containsNone(target, ".o_view_nocontent");
         assert.containsOnce(
@@ -5747,7 +5747,7 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput("display_name", "twilight sparkle");
         await validateRecord();
 
-        assert.doesNotHaveClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsOnce(
             target.querySelector(".o_kanban_group:first-child"),
             ".o_kanban_record"
@@ -5787,7 +5787,7 @@ QUnit.module("Views", (hooks) => {
             noContentHelp: "No content helper",
         });
         assert.containsN(target, ".o_kanban_group", 2, "there should be two columns");
-        assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_view_nocontent");
         assert.containsN(
             target,
@@ -5797,7 +5797,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await quickCreateRecord();
-        assert.doesNotHaveClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsNone(target, ".o_kanban_record");
         assert.containsNone(target, ".o_view_nocontent");
         assert.containsOnce(
@@ -5806,7 +5806,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(target.querySelector(".o_kanban_view"));
-        assert.doesNotHaveClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsNone(target, ".o_kanban_quick_create");
         assert.containsNone(target, ".o_kanban_record");
         assert.containsOnce(target, ".o_view_nocontent");
@@ -5875,7 +5875,7 @@ QUnit.module("Views", (hooks) => {
             noContentHelp: "No content helper",
         });
 
-        assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsN(
             target,
             ".o_kanban_record:not(.o_kanban_ghost)",
@@ -5886,7 +5886,7 @@ QUnit.module("Views", (hooks) => {
 
         await reload(kanban, { domain: [["id", "<", 0]] });
 
-        assert.doesNotHaveClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
         assert.containsOnce(target, ".o_view_nocontent");
     });
@@ -5927,7 +5927,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_group", 2, "there should be 2 'real' columns");
-        assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.ok(
             target.querySelectorAll(".o_kanban_record").length >= 1,
             "there should be sample records"
@@ -5989,7 +5989,7 @@ QUnit.module("Views", (hooks) => {
         const columns = target.querySelectorAll(".o_kanban_group");
 
         assert.ok(columns.length >= 1, "there should be at least 1 sample column");
-        assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsN(target, ".o_kanban_record", 16);
 
         const kanbanText = target.querySelector(".o_kanban_view").innerText;
@@ -6021,12 +6021,12 @@ QUnit.module("Views", (hooks) => {
             noContentHelp: "No content helper",
         });
 
-        assert.doesNotHaveClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
         assert.containsNone(target, ".o_view_nocontent");
 
         await reload(kanban, { domain: [["id", "<", 0]] });
-        assert.doesNotHaveClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
     });
 
@@ -6063,7 +6063,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsN(target, ".o_kanban_group", 2);
         assert.ok(
             target.querySelectorAll(".o_kanban_record").length > 0,
@@ -6074,7 +6074,7 @@ QUnit.module("Views", (hooks) => {
         await editColumnName("Yoohoo");
         await validateColumn();
 
-        assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsN(target, ".o_kanban_group", 3);
         assert.ok(
             target.querySelectorAll(".o_kanban_record").length > 0,
@@ -6112,7 +6112,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_kanban_group");
         assert.ok(
             target.querySelectorAll(".o_kanban_record").length > 0,
@@ -6158,7 +6158,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_kanban_group");
         assert.ok(
             target.querySelectorAll(".o_kanban_record").length > 0,
@@ -6222,7 +6222,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_kanban_group");
         assert.ok(
             target.querySelectorAll(".o_kanban_record").length > 0,
@@ -6273,7 +6273,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+            assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
             assert.containsN(target, ".o_kanban_group", 2);
             assert.ok(
                 target.querySelectorAll(".o_kanban_record").length > 0,
@@ -6285,7 +6285,7 @@ QUnit.module("Views", (hooks) => {
             await editColumnName("Yoohoo");
             await validateColumn();
 
-            assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+            assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
             assert.containsN(target, ".o_kanban_group", 3);
             assert.ok(
                 target.querySelectorAll(".o_kanban_record").length,
@@ -6296,7 +6296,7 @@ QUnit.module("Views", (hooks) => {
             const clickColumnAction = await toggleColumnActions(2);
             await clickColumnAction("Delete");
 
-            assert.hasClass(target.querySelector(".o_kanban_view"), "o_view_sample_data");
+            assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
             assert.containsN(target, ".o_kanban_group", 2);
             assert.ok(
                 target.querySelectorAll(".o_kanban_record").length,

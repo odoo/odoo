@@ -2230,7 +2230,7 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skipWOWL(
         "categories and filters are loaded when switching from a view without the search panel",
         async (assert) => {
             assert.expect(5);
