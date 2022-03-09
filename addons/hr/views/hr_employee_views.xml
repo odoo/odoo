@@ -118,7 +118,7 @@
                             <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Private Contact">
-                                        <group>
+                                        <group colspan="2">
                                             <field name="address_home_id"
                                                 context="{
                                                     'show_address': 1,
@@ -139,11 +139,15 @@
                                         </group>
                                     </group>
                                     <group>
-                                        <group string="Family Status" colspan="2">
-                                            <field name="marital"/>
-                                            <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
-                                            <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
-                                            <field name="children"/>
+                                        <group name="family_status" string="Family Status" colspan="2">
+                                            <group colspan="2">
+                                                <field name="marital"/>
+                                                <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
+                                                <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
+                                            </group>
+                                            <group name="children" col="4" colspan="2">
+                                                <field name="children"/>
+                                            </group>
                                         </group>
                                         <group string="Emergency" colspan="2">
                                             <field name="emergency_contact"/>
