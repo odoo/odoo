@@ -21,6 +21,9 @@ registerModel({
             if ('id' in data) {
                 data2.id = data.id;
             }
+            if ('is_main' in data) {
+                data2.is_main = data.is_main;
+            }
             if ('mimetype' in data) {
                 data2.mimetype = data.mimetype;
             }
