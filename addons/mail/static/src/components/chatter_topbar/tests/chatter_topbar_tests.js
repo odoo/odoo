@@ -403,10 +403,11 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
 QUnit.test('rendering with multiple partner followers', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({
-        id: 100,
-        message_follower_ids: [1, 2],
-    });
+    this.data['res.partner'].records.push(
+        { id: 11 },
+        { id: 12 },
+        { id: 100, message_follower_ids: [1, 2] },
+    );
     this.data['mail.followers'].records.push(
         {
             // simulate real return from RPC
