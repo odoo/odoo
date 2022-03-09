@@ -11,24 +11,23 @@
                     </div>
                     <div class="d-flex flex-column flex-grow-1 mx-0 py-2 overflow-auto">
                         <t t-foreach="channelInvitationForm.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.localId">
-                            <div class="o_ChannelInvitationForm_selectablePartner d-flex align-items-center px-3 py-1" t-on-click="() => channelInvitationForm.onClickSelectablePartner(selectablePartner)" t-att-data-partner-id="selectablePartner.id">
-                                <div class="o_ChannelInvitationForm_selectablePartnerAvatarContainer flex-shrink-0 position-relative">
+                            <div class="o_ChannelInvitationForm_selectablePartner d-flex align-items-center px-3 py-1 btn-light" t-on-click="() => channelInvitationForm.onClickSelectablePartner(selectablePartner)" t-att-data-partner-id="selectablePartner.id">
+                                <div class="o_ChannelInvitationForm_selectablePartnerAvatarContainer position-relative flex-shrink-0">
                                     <img class="o_ChannelInvitationForm_selectablePartnerAvatar w-100 h-100 rounded-circle" t-att-src="selectablePartner.avatarUrl" alt="Avatar"/>
                                     <t t-if="selectablePartner.im_status and selectablePartner.im_status !== 'im_partner'">
                                         <PartnerImStatusIcon
-                                            className="'o_ChannelInvitationForm_selectablePartnerImStatusIcon d-flex align-items-center justify-content-center text-white'"
+                                            className="'o_ChannelInvitationForm_selectablePartnerImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center text-white'"
                                             classNameObj="{
                                                 'o_ChannelInvitationForm_selectablePartnerImStatusIcon-mobile': messaging.device.isMobile,
+                                                'small' : !messaging.device.isMobile,
                                             }"
                                             partnerLocalId="selectablePartner.localId"
                                         />
                                     </t>
                                 </div>
-                                <div class="o_ChannelInvitationForm_selectablePartnerAvatarNameSeparator"/>
-                                <span class="o_ChannelInvitationForm_selectablePartnerName flex-grow-1 text-truncate">
+                                <span class="o_ChannelInvitationForm_selectablePartnerName flex-grow-1 mx-2 text-truncate">
                                     <t t-esc="selectablePartner.nameOrDisplayName"/>
                                 </span>
-                                <div class="o_ChannelInvitationForm_selectablePartnerNameSelectionSeparator flex-grow-1 flex-shrink-0"/>
                                 <input class="o_ChannelInvitationForm_selectablePartnerCheckbox flex-shrink-0" type="checkbox" t-att-checked="channelInvitationForm.selectedPartners.includes(selectablePartner) ? 'checked' : undefined" t-on-input="ev => channelInvitationForm.onInputPartnerCheckbox(selectablePartner, ev)" t-ref="selection-status"/>
                             </div>
                         </t>
