@@ -37,32 +37,39 @@ class MassMailController(http.Controller):
             raise Unauthorized() from e
 
         if mailing_sudo.mailing_model_real == 'mailing.contact':
-            # Unsubscribe directly + Let the user choose their subscriptions
-            mailing_sudo.update_opt_out(email, mailing_sudo.contact_list_ids.ids, True)
+            return self._mailing_unsubscribe_from_list(mailing_sudo, res_id, email, token)
+        return self._mailing_unsubscribe_from_document(mailing_sudo, res_id, email, token)
 
-            contacts = request.env['mailing.contact'].sudo().search([('email_normalized', '=', tools.email_normalize(email))])
-            subscription_list_ids = contacts.mapped('subscription_list_ids')
-            # In many user are found : if user is opt_out on the list with contact_id 1 but not with contact_id 2,
-            # assume that the user is not opt_out on both
-            # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
-            opt_out_list_ids = subscription_list_ids.filtered(lambda rel: rel.opt_out).mapped('list_id')
-            opt_in_list_ids = subscription_list_ids.filtered(lambda rel: not rel.opt_out).mapped('list_id')
-            opt_out_list_ids = set([list.id for list in opt_out_list_ids if list not in opt_in_list_ids])
+    def _mailing_unsubscribe_from_list(self, mailing, document_id, email, hash_token):
+        # Unsubscribe directly + Let the user choose their subscriptions
+        mailing.update_opt_out(email, mailing.contact_list_ids.ids, True)
 
-            unique_list_ids = set([list.list_id.id for list in subscription_list_ids])
-            list_ids = request.env['mailing.list'].sudo().browse(unique_list_ids)
-            unsubscribed_list = ', '.join(str(list.name) for list in mailing_sudo.contact_list_ids if list.is_public)
-            return request.render('mass_mailing.page_mailing_unsubscribe', {
-                'contacts': contacts,
-                'list_ids': list_ids,
-                'opt_out_list_ids': opt_out_list_ids,
-                'unsubscribed_list': unsubscribed_list,
-                'email': email,
-                'mailing_id': mailing_id,
-                'res_id': res_id,
-                'show_blacklist_button': request.env['ir.config_parameter'].sudo().get_param('mass_mailing.show_blacklist_buttons'),
-            })
+        contacts = request.env['mailing.contact'].sudo().search([('email_normalized', '=', tools.email_normalize(email))])
+        subscription_list_ids = contacts.mapped('subscription_list_ids')
+        # In many user are found : if user is opt_out on the list with contact_id 1 but not with contact_id 2,
+        # assume that the user is not opt_out on both
+        # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
+        opt_out_list_ids = subscription_list_ids.filtered(lambda rel: rel.opt_out).mapped('list_id')
+        opt_in_list_ids = subscription_list_ids.filtered(lambda rel: not rel.opt_out).mapped('list_id')
+        opt_out_list_ids = set([list.id for list in opt_out_list_ids if list not in opt_in_list_ids])
 
+        unique_list_ids = set([list.list_id.id for list in subscription_list_ids])
+        list_ids = request.env['mailing.list'].sudo().browse(unique_list_ids)
+        unsubscribed_list = ', '.join(str(list.name) for list in mailing.contact_list_ids if list.is_public)
+
+        render_values = self._prepare_mailing_subscription_values(mailing, document_id, email, hash_token)
+        return request.render(
+            'mass_mailing.page_mailing_unsubscribe',
+            dict(
+                **render_values,
+                contacts=contacts,
+                list_ids=list_ids,
+                opt_out_list_ids=opt_out_list_ids,
+                unsubscribed_list=unsubscribed_list,
+            )
+        )
+
+    def _mailing_unsubscribe_from_document(self, mailing, document_id, email, hash_token):
         opt_in_lists = request.env['mailing.contact.subscription'].sudo().search([
             ('contact_id.email_normalized', '=', email),
             ('opt_out', '=', False)
@@ -71,19 +78,34 @@ class MassMailController(http.Controller):
         message = Markup('<p>%s</p>') % Markup(
             _(
                 'Blocklist request from unsubscribe link of mailing %(mailing_link)s (document %(record_link)s)',
-                **self._format_bl_request(mailing_sudo, res_id)
+                **self._format_bl_request(mailing, document_id)
             )
         )
         _blacklist_rec = request.env['mail.blacklist'].sudo()._add(email, message=message)
 
-        return request.render('mass_mailing.page_mailing_unsubscribe_done', {
+        render_values = self._prepare_mailing_subscription_values(mailing, document_id, email, hash_token)
+        return request.render(
+            'mass_mailing.page_mailing_unsubscribe_done',
+            dict(
+                **render_values,
+                list_ids=opt_in_lists,
+            )
+        )
+
+    def _prepare_mailing_subscription_values(self, mailing, document_id, email, hash_token):
+        """ Prepare common values used in various subscription management or 
+        blacklist flows done in portal. """
+        return {
+            # customer
+            'document_id': document_id,
             'email': email,
-            'mailing_id': mailing_id,
-            'res_id': res_id,
-            'list_ids': opt_in_lists,
+            'mailing_id': mailing.id,
+            'res_id': document_id,
+            'token': hash_token,
+            # blacklist
             'show_blacklist_button': request.env['ir.config_parameter'].sudo().get_param(
                 'mass_mailing.show_blacklist_buttons'),
-        })
+        }
 
     @http.route('/mailing/list/update', type='json', auth='public')
     def mailing_update_list_subscription(self, mailing_id, opt_in_ids, opt_out_ids, email, res_id, token):
