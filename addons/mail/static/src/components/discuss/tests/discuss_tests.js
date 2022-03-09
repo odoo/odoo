@@ -619,9 +619,9 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
             }).localId
         }"]
     `);
-    assert.notOk(
-        channel1.querySelectorAll(`:scope .o_ThreadIcon`).length,
-        "channel1 (public) should not have any icon"
+    assert.ok(
+        channel1.querySelectorAll(`:scope .o_ThreadIcon_channelPublic`).length,
+        "channel1 (public) should have globe icon"
     );
     assert.strictEqual(
         channel2.querySelectorAll(`:scope .o_ThreadIcon_channelPrivate`).length,
