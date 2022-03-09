@@ -221,7 +221,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("image fields are correctly rendered", async function (assert) {
         assert.expect(6);
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -237,7 +237,7 @@ QUnit.module("Fields", (hooks) => {
             "o_field_image_url",
             "the widget should have the correct class"
         );
-        assert.containsOnce(form, 'div[name="foo"] > img', "the widget should contain an image");
+        assert.containsOnce(target, 'div[name="foo"] > img', "the widget should contain an image");
         assert.strictEqual(
             target.querySelector('div[name="foo"] > img').dataset.src,
             FR_FLAG_URL,
@@ -261,14 +261,14 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("ImageUrlField in subviews are loaded correctly", async function (assert) {
+    QUnit.test("ImageUrlField in subviews are loaded correctly", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner_type.fields.image = { name: "image", type: "char" };
         serverData.models.partner_type.records[0].image = EN_FLAG_URL;
         serverData.models.partner.records[5].timmy = [12];
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -301,7 +301,7 @@ QUnit.module("Fields", (hooks) => {
             "The view's image is in the DOM"
         );
         assert.containsOnce(
-            form,
+            target,
             ".o_kanban_record.oe_kanban_global_click",
             "There should be one record in the many2many"
         );
@@ -323,7 +323,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner_type.records[0].image = EN_FLAG_URL;
         serverData.models.partner.records[5].timmy = [12];
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -338,7 +338,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 6,
         });
 
-        assert.containsOnce(form, "tr.o_data_row", "There should be one record in the many2many");
+        assert.containsOnce(target, "tr.o_data_row", "There should be one record in the many2many");
         assert.ok(
             document.querySelector(`img[data-src="${EN_FLAG_URL}"]`),
             "The list's image is in the DOM"
