@@ -14513,4 +14513,28 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.skipWOWL('archive/unarchive not available on active readonly models', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.fields.active = { string: 'Active', type: 'boolean', default: true, readonly: true };
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="3"><field name="display_name"/></tree>',
+            viewOptions: {
+                hasActionMenus: true,
+            },
+        });
+
+        await testUtils.dom.click(list.$('tbody .o_data_row:first td.o_list_record_selector:first input'));
+        assert.containsOnce(list, '.o_cp_action_menus', 'sidebar should be available');
+
+        await testUtils.dom.click(list.$('.o_cp_action_menus .dropdown-toggle:contains(Action)'));
+        assert.containsNone(list, 'a:contains(Archive)', 'Archive action should not be available');
+
+        list.destroy();
+    });
 });
