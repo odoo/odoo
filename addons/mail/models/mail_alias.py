@@ -139,7 +139,7 @@ class Alias(models.Model):
     def _clean_and_check_unique(self, name):
         """When an alias name appears to already be an email, we keep the local
         part only. A sanitizing / cleaning is also performed on the name. If
-        name already exists an UserError is raised. """
+        name already exists a UserError is raised. """
         sanitized_name = remove_accents(name).lower().split('@')[0]
         sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
         sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
@@ -151,7 +151,7 @@ class Alias(models.Model):
         if self:
             domain += [('id', 'not in', self.ids)]
         if sanitized_name in [catchall_alias, bounce_alias] or self.search_count(domain):
-            raise UserError(_('The e-mail alias is already used. Please enter another one.'))
+            raise UserError(_("The e-mail alias '%s' is already used. Please enter another one.") % (sanitized_name))
         return sanitized_name
 
     def open_document(self):
