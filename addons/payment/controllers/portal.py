@@ -110,7 +110,7 @@ class PaymentPortal(portal.CustomerPortal):
 
         # Select all acquirers and tokens that match the constraints
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            company_id, partner_sudo.id, currency_id=currency.id
+            company_id, partner_sudo.id, currency_id=currency.id, **kwargs
         )  # In sudo mode to read the fields of acquirers and partner (if not logged in)
         if acquirer_id in acquirers_sudo.ids:  # Only keep the desired acquirer if it's suitable
             acquirers_sudo = acquirers_sudo.browse(acquirer_id)
