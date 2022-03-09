@@ -9,11 +9,6 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
-        breakpoint()
-        print(f"bank_journal={cls.company_data['default_journal_bank'].name}")
-        print(f"inbound_payment_method_line={cls.inbound_payment_method_line.id}")
-        print(f"outbound_payment_method_loute={cls.outbound_payment_method_loute.id}")
-
         super().setUpClass(chart_template_ref=chart_template_ref)
 
         company = cls.company_data['default_journal_bank'].company_id
@@ -205,7 +200,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
     def test_payment_move_sync_onchange(self):
 
-        pay_form = Form(self.env['account.payment'].with_context(default_journal_id=self.company_data['default_journal_bank'].id))
+        pay_form = Form(self.env['account.payment'].with_context(default_journal_id=self.payment_journal.id))
         pay_form.amount = 50.0
         pay_form.payment_type = 'inbound'
         pay_form.partner_type = 'customer'
@@ -795,10 +790,9 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         not on the company level.
         """
         company = self.company_data['company']
-        bank_journal = self.company_data['default_journal_bank']
 
-        bank_journal.outbound_payment_method_line_ids.payment_account_id = company.account_journal_payment_credit_account_id
-        bank_journal.inbound_payment_method_line_ids.payment_account_id = company.account_journal_payment_debit_account_id
+        self.payment_journal.outbound_payment_method_line_ids.payment_account_id = company.account_journal_payment_credit_account_id
+        self.payment_journal.inbound_payment_method_line_ids.payment_account_id = company.account_journal_payment_debit_account_id
         company.account_journal_payment_debit_account_id = False
         company.account_journal_payment_credit_account_id = False
 
@@ -806,7 +800,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'amount': 5.0,
             'payment_type': 'inbound',
             'partner_type': 'customer',
-            'journal_id': bank_journal.id,
+            'journal_id': self.payment_journal.id,
         })
         self.assertRecordValues(payment, [{
             'amount': 5.0,

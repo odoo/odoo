@@ -9,7 +9,6 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
-        breakpoint()
         super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.currency_data_3 = cls.setup_multi_currency_data({
@@ -19,11 +18,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'currency_subunit_label': "Broken Umbrella",
         }, rate2017=0.01)
 
-        cls.payment_debit_account_id = cls.company_data['default_journal_bank'].company_id.account_journal_payment_debit_account_id.copy()
-        cls.payment_credit_account_id = cls.company_data['default_journal_bank'].company_id.account_journal_payment_credit_account_id.copy()
+        cls.payment_debit_account_id = cls.payment_journal.company_id.account_journal_payment_debit_account_id.copy()
+        cls.payment_credit_account_id = cls.payment_journal.company_id.account_journal_payment_credit_account_id.copy()
 
-        cls.bank_journal_1 = cls.company_data['default_journal_bank']
-        cls.bank_journal_2 = cls.company_data['default_journal_bank'].copy()
+        cls.bank_journal_1 = cls.payment_journal
+        cls.bank_journal_2 = cls.payment_journal.copy()
 
         cls.partner_bank_account1 = cls.env['res.partner.bank'].create({
             'acc_number': "0123456789",
@@ -548,7 +547,6 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference': 0.0
         }])
 
-        breakpoint()
         self.assertRecordValues(payments, [
             {
                 'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',
