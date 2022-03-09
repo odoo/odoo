@@ -7,23 +7,13 @@ import { standardFieldProps } from "./standard_field_props";
 const { Component } = owl;
 
 export class SelectionField extends Component {
-    get options() {
-        switch (this.props.type) {
-            case "many2one":
-                return this.props.record.preloadedData[this.props.name];
-            case "selection":
-                return this.props.record.fields[this.props.name].selection;
-            default:
-                return [];
-        }
-    }
     get string() {
         switch (this.props.type) {
             case "many2one":
                 return this.props.value ? this.props.value[1] : "";
             case "selection":
                 return this.props.value !== false
-                    ? this.options.find((o) => o[0] === this.props.value)[1]
+                    ? this.props.options.find((o) => o[0] === this.props.value)[1]
                     : "";
             default:
                 return "";
@@ -48,7 +38,7 @@ export class SelectionField extends Component {
                 if (value === false) {
                     this.props.update(false);
                 } else {
-                    this.props.update(this.options.find((option) => option[0] === value));
+                    this.props.update(this.props.options.find((option) => option[0] === value));
                 }
                 break;
             case "selection":
@@ -61,7 +51,23 @@ export class SelectionField extends Component {
 SelectionField.template = "web.SelectionField";
 SelectionField.props = {
     ...standardFieldProps,
+    options: Object,
     placeholder: { type: String, optional: true },
+};
+SelectionField.extractProps = (fieldName, record) => {
+    const getOptions = () => {
+        switch (record.fields[fieldName].type) {
+            case "many2one":
+                return record.preloadedData[fieldName];
+            case "selection":
+                return record.fields[fieldName].selection;
+            default:
+                return [];
+        }
+    };
+    return {
+        options: getOptions(),
+    };
 };
 SelectionField.displayName = _lt("Selection");
 SelectionField.supportedTypes = ["many2one", "selection"];

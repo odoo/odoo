@@ -14,7 +14,7 @@
                         t-esc="props.placeholder"
                     />
                 </t>
-                <t t-foreach="options" t-as="option" t-key="option[0]">
+                <t t-foreach="props.options" t-as="option" t-key="option[0]">
                     <option
                         t-att-selected="option[0] === value"
                         t-att-value="stringify(option[0])"
