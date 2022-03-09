@@ -59,7 +59,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("DateField: toggle datepicker [REQUIRE FOCUS]", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -105,7 +105,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             ];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -145,7 +145,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("date field is empty if no date is set", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 4,
@@ -174,7 +174,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -201,7 +201,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 4,
@@ -226,7 +226,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("DateField value should not set on first click", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 4,
@@ -262,7 +262,7 @@ QUnit.module("Fields", (hooks) => {
 
         patchTimeZone(120); // Should be ignored by date fields
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -343,7 +343,7 @@ QUnit.module("Fields", (hooks) => {
 
         patchTimeZone(-120); // Should be ignored by date fields
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -373,7 +373,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("DateField dropdown disappears on scroll", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -406,7 +406,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("DateField with warn_future option", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 4,
@@ -459,7 +459,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.fields.date.default = undefined;
             serverData.models.partner.onchanges = {};
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -492,10 +492,10 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("DateField in editable list view", async function (assert) {
+    QUnit.test("DateField in editable list view", async function (assert) {
         assert.expect(8);
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
@@ -511,7 +511,7 @@ QUnit.module("Fields", (hooks) => {
         await click(cell);
 
         assert.containsOnce(
-            list,
+            target,
             "input.o_datepicker_input",
             "the view should have a date input for editable mode"
         );
@@ -567,7 +567,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("DateField remove value", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -615,7 +615,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -652,7 +652,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(3);
             const done = assert.async();
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -710,7 +710,7 @@ QUnit.module("Fields", (hooks) => {
         });
         moment().locale("norvegianForTest");
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -744,7 +744,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("DateField: hit enter should update value", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
