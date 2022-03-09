@@ -24,3 +24,4 @@ from . import pos_payment
 from . import pos_payment_method
 from . import pos_bill
 from . import procurement_group
+from . import uom
