@@ -36,7 +36,10 @@ export class X2ManyField extends Component {
         const archInfo = this.fieldInfo.views[this.viewMode];
         return {
             activeActions: this.activeActions,
-            archInfo,
+            archInfo: {
+                ...archInfo,
+                editable: this.props.record.isInEdition && archInfo.editable,
+            },
             fields: Object.assign({}, this.props.fields, archInfo.fields), // WOWL is this necessary?
             list: this.list,
             openRecord: this.openRecord.bind(this),

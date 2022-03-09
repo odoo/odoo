@@ -3234,7 +3234,8 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(nbWrite, 1, "should have write the changes in DB");
     });
 
-    QUnit.test("one2many list (editable): edition", async function (assert) {
+    // WOWL won't do quick edit
+    QUnit.skipWOWL("one2many list (editable): edition", async function (assert) {
         assert.expect(7);
 
         serverData.models.partner.records[0].p = [2, 4];
