@@ -179,7 +179,7 @@ class AccountAnalyticLine(models.Model):
     def _default_user(self):
         return self.env.context.get('user_id', self.env.user.id)
 
-    name = fields.Char('Description', required=True, translate=True)
+    name = fields.Char('Description', required=True)
     date = fields.Date('Date', required=True, index=True, default=fields.Date.context_today)
     amount = fields.Monetary('Amount', required=True, default=0.0)
     unit_amount = fields.Float('Quantity', default=0.0)
