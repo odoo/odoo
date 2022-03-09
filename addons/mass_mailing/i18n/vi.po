@@ -57,7 +57,7 @@ msgstr "%s (bản sao)"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "%s Traces"
-msgstr "%s Traces"
+msgstr "%s Vết"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -75,7 +75,7 @@ msgid ""
 "                                        &amp;nbsp;"
 msgstr ""
 "&amp;nbsp;\n"
-"                                        <span class=\"fa fa-compass fa-2x text-o-color-4\" role=\"img\" aria-label=\"Choose\" title=\"Choose\"/>\n"
+"                                        <span class=\"fa fa-compass fa-2x text-o-color-4\" role=\"img\" aria-label=\"Chọn\" title=\"Chọn\"/>\n"
 "                                        &amp;nbsp;"
 
 #. module: mass_mailing
@@ -86,7 +86,7 @@ msgid ""
 "                                        &amp;nbsp;"
 msgstr ""
 "&amp;nbsp;\n"
-"                                        <span class=\"fa fa-credit-card fa-2x text-o-color-4\" role=\"img\" aria-label=\"Order\" title=\"Order\"/>\n"
+"                                        <span class=\"fa fa-credit-card fa-2x text-o-color-4\" role=\"img\" aria-label=\"Order\" title=\"Đặt hàng\"/>\n"
 "                                        &amp;nbsp;"
 
 #. module: mass_mailing
@@ -97,7 +97,7 @@ msgid ""
 "                                        &amp;nbsp;"
 msgstr ""
 "&amp;nbsp;\n"
-"                                        <span class=\"fa fa-smile-o fa-2x text-o-color-4\" role=\"img\" aria-label=\"Enjoy\" title=\"Enjoy\"/>\n"
+"                                        <span class=\"fa fa-smile-o fa-2x text-o-color-4\" role=\"img\" aria-label=\"Hãy tận hưởng\" title=\"Hãy tận hưởng\"/>\n"
 "                                        &amp;nbsp;"
 
 #. module: mass_mailing
@@ -114,13 +114,13 @@ msgstr "21 tháng 7"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "24H Stats of mailing"
-msgstr "24H Stats of mailing"
+msgstr "Thống kê 24H gửi mail hàng loạt"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "24H Stats of mailing \"%s\""
-msgstr "24H Stats of mailing \"%s\""
+msgstr "Thống kê 24H gửi mail hàng loạt \"%s\""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
@@ -130,8 +130,8 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
-"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
-"blacklisted for mass mailings\" aria-label=\"Blacklisted\" "
+"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Email này bị "
+"đưa vào sổ đen khi gửi thư hàng loạt\" aria-label=\"Bị vào sổ đen\" "
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 
@@ -157,7 +157,7 @@ msgid ""
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" attrs=\"{'invisible': ['|', ('reply_to_mode', '=', 'thread'), ('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],}\">\n"
-"                                                    To track replies, this address must belong to this database.\n"
+"                                                    Để theo dõi trả lời, địa chỉ này phải thuộc về cơ sở dữ liệu này.\n"
 "                                                </small>"
 
 #. module: mass_mailing
@@ -170,7 +170,7 @@ msgid ""
 msgstr ""
 "<small>\n"
 "                                    <strong>Michael Fletcher</strong><br/>\n"
-"                                    <small>Quản lý cộng đồng</small>\n"
+"                                    <small>Quản lý Cộng đồng</small>\n"
 "                                </small>"
 
 #. module: mass_mailing
@@ -208,8 +208,8 @@ msgid ""
 "<span class=\"fa fa-calendar-check-o mr-2 small my-auto\" aria-label=\"Sent "
 "date\"/>"
 msgstr ""
-"<span class=\"fa fa-calendar-check-o mr-2 small my-auto\" aria-label=\"Sent "
-"date\"/>"
+"<span class=\"fa fa-calendar-check-o mr-2 small my-auto\" aria-label=\"Ngày "
+"gửi\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
@@ -218,6 +218,8 @@ msgid ""
 "<span class=\"fa fa-copyright\" role=\"img\" aria-label=\"Copyright\" "
 "title=\"Copyright\"/>"
 msgstr ""
+"<span class=\"fa fa-copyright\" role=\"img\" aria-label=\"Bản quyền\" "
+"title=\"Bản quyền\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -226,7 +228,7 @@ msgid ""
 "label=\"Scheduled date\"/>"
 msgstr ""
 "<span class=\"fa fa-hourglass-half mr-2 small my-auto\" aria-"
-"label=\"Scheduled date\"/>"
+"label=\"Ngày được ấn định\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -235,7 +237,7 @@ msgid ""
 "                                            <span class=\"align-self-baseline\">Next Batch</span>"
 msgstr ""
 "<span class=\"fa fa-hourglass-o mr-2 small my-auto\" aria-label=\"Scheduled date\"/>\n"
-"                                            <span class=\"align-self-baseline\">Next Batch</span>"
+"                                            <span class=\"align-self-baseline\">Lô tiếp theo</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -262,13 +264,13 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent "
 "soon.</span>"
 msgstr ""
-"<span name=\"scheduled_text\">Email được xếp vào hàng đợi và sẽ được"
+"<span name=\"scheduled_text\">email được xếp vào hàng đợi và sẽ được"
 " sớm thôi.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"sent\">emails have been sent.</span>"
-msgstr "<span name=\"sent\">email chưa được gửi.</span>"
+msgstr "<span name=\"sent\">email đã được gửi.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
@@ -469,6 +471,8 @@ msgid ""
 "At least one of the mailing list you are trying to archive is used in an "
 "ongoing mailing campaign."
 msgstr ""
+"Ít nhất một danh sách gửi thư bạn đang cố lưu trữ thì được sử dụng cho một"
+" chiến dịch gửi thư hàng loạt sắp diễn ra."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -605,7 +609,7 @@ msgstr "Chiến dịch"
 msgid ""
 "Campaigns are the perfect tool to track results across multiple mailings."
 msgstr ""
-"Campaigns are the perfect tool to track results across multiple mailings."
+"Chiến dịch là công cụ hoàn hảo để theo dõi kết quả thông qua các lần gửi thư hàng loạt khác nhau."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -750,7 +754,7 @@ msgstr "Cấu hình máy chủ email"
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Congratulations, I love your first mailing. :)"
-msgstr "Congratulations, I love your first mailing. :)"
+msgstr "Chúc mừng, Tôi rất thích lần gửi thư đầu tiên của bạn :)"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__smtp
@@ -1096,7 +1100,7 @@ msgstr "Thống kê email"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Engagement on %i Emails Sent"
-msgstr ""
+msgstr "Có gắn kết với %i email được gửi"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
