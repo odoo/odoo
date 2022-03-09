@@ -541,6 +541,9 @@ MockServer.include({
                         ['res_id', '=', thread.id],
                         ['res_model', '=', thread_model],
             ]], {});
+            // search read returns many2one relations as an array [id, display_name].
+            // But the original route does not. Thus, we need to change it now.
+            followers.forEach(follower => follower.partner_id = follower.partner_id[0]);
             res['followers'] = followers;
         }
         if (request_list.includes('suggestedRecipients')) {

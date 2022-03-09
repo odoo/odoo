@@ -148,7 +148,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
         partner.message_follower_ids.push(1);
         payload.options.on_close();
     });
-    this.data['res.partner'].records.push({ id: 100 });
+    this.data['res.partner'].records.push({ id: 100 }, { id: 42 });
     this.data['mail.followers'].records.push({
         partner_id: 42,
         email: "bla@bla.bla",
