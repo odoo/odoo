@@ -77,7 +77,6 @@ export const hotkeyService = {
             if (!overlaysVisible && hotkey === hotkeyService.overlayModifier) {
                 addHotkeyOverlays(activeElement);
                 event.preventDefault();
-                overlaysVisible = true;
                 return;
             }
 
@@ -110,7 +109,6 @@ export const hotkeyService = {
             if (overlaysVisible) {
                 removeHotkeyOverlays();
                 event.preventDefault();
-                overlaysVisible = false;
             }
         }
 
@@ -203,6 +201,7 @@ export const hotkeyService = {
                 }
                 overlayParent.appendChild(overlay);
             }
+            overlaysVisible = true;
         }
 
         /**
@@ -212,6 +211,7 @@ export const hotkeyService = {
             for (const overlay of document.querySelectorAll(".o_web_hotkey_overlay")) {
                 overlay.remove();
             }
+            overlaysVisible = false;
         }
 
         /**

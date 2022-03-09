@@ -263,6 +263,40 @@ QUnit.test("the overlay of hotkeys is correctly displayed on MacOs", async (asse
     assert.verifySteps([]);
 });
 
+QUnit.test("overlays can be toggled multiple times in a row", async (assert) => {
+    const eventArgs = { key: "alt", altKey: true, bubbles: true };
+    const pressOverlayModifier = () =>
+        document.activeElement.dispatchEvent(new KeyboardEvent("keydown", eventArgs));
+    const releaseOverlayModifier = () =>
+        document.activeElement.dispatchEvent(new KeyboardEvent("keyup", eventArgs));
+
+    class MyComponent extends Component {}
+    MyComponent.template = xml`<button data-hotkey="a"/>`;
+
+    await mount(MyComponent, target, { env });
+    assert.containsNone(target, ".o_web_hotkey_overlay");
+
+    // Display overlays
+    pressOverlayModifier();
+    await nextTick();
+    assert.containsOnce(target, ".o_web_hotkey_overlay");
+
+    // Hide overlays
+    releaseOverlayModifier();
+    await nextTick();
+    assert.containsNone(target, ".o_web_hotkey_overlay");
+
+    // Display overlays
+    pressOverlayModifier();
+    await nextTick();
+    assert.containsOnce(target, ".o_web_hotkey_overlay");
+
+    // Hide overlays
+    releaseOverlayModifier();
+    await nextTick();
+    assert.containsNone(target, ".o_web_hotkey_overlay");
+});
+
 QUnit.test("MacOS usability", async (assert) => {
     assert.expect(6);
 
