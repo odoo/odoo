@@ -1,5 +1,5 @@
 import {
-    BasicEditor,
+    BasicEditor, customErrorMessage,
     testEditor
 } from "../utils.js";
 
@@ -591,15 +591,67 @@ describe('Copy and paste', () => {
             });
         });
     });
-    // TODO
     describe('link', () => {
         describe('range collapsed', async () => {
-
+            it('should paste and transform an URL in a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'http://www.xyz.com');
+                    },
+                    contentAfter: '<p>ab<a href="http://www.xyz.com">http://www.xyz.com</a>[]cd</p>',
+                });
+            });
+            it('should paste and transform an URL in a span', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<span>b[]c</span>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'http://www.xyz.com');
+                    },
+                    contentAfter: '<p>a<span>b<a href="http://www.xyz.com">http://www.xyz.com</a>[]c</span>d</p>',
+                });
+            });
+            it('should paste and not transform an URL in a existing link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="http://existing.com">b[]c</a>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'http://www.xyz.com');
+                    },
+                    contentAfter: '<p>a<a href="http://existing.com">bhttp://www.xyz.com[]c</a>d</p>',
+                });
+            });
         });
         describe('range not collapsed', async () => {
-
+            it('should paste and transform an URL in a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[xxx]cd</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'http://www.xyz.com');
+                    },
+                    contentAfter: '<p>ab<a href="http://www.xyz.com">http://www.xyz.com</a>[]cd</p>',
+                });
+            });
+            it('should paste and transform an URL in a span', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<span>b[x<a href="http://existing.com">546</a>x]c</span>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'http://www.xyz.com');
+                    },
+                    contentAfter: '<p>a<span>b<a href="http://www.xyz.com">http://www.xyz.com</a>[]c</span>d</p>',
+                });
+            });
+            it('should paste and not transform an URL in a existing link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="http://existing.com">b[qsdqsd]c</a>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'http://www.xyz.com');
+                    },
+                    contentAfter: '<p>a<a href="http://existing.com">bhttp://www.xyz.com[]c</a>d</p>',
+                });
+            });
         });
     });
+    // TODO
     describe('images', () => {
         describe('range collapsed', async () => {
 
@@ -610,10 +662,68 @@ describe('Copy and paste', () => {
     });
     describe('youtube video', () => {
         describe('range collapsed', async () => {
-
+            it('should paste and transform a youtube URL in a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+                        await editor.commandBar._currentValidate(); // force commandBar validation
+                    },
+                    contentAfter: '<p>ab<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="1"></iframe>[]cd</p>',
+                });
+            });
+            it('should paste and transform a youtube URL in a span', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<span>b[]c</span>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://youtu.be/dQw4w9WgXcQ');
+                        await editor.commandBar._currentValidate(); // force commandBar validation
+                    },
+                    contentAfter: '<p>a<span>b<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="1"></iframe>[]c</span>d</p>',
+                });
+            });
+            it('should paste and not transform a youtube  URL in a existing link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="http://existing.com">b[]c</a>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://youtu.be/dQw4w9WgXcQ');
+                        window.chai.expect(editor.commandBar.el.style.display).to.be.equal('none');
+                    },
+                    contentAfter: '<p>a<a href="http://existing.com">bhttps://youtu.be/dQw4w9WgXcQ[]c</a>d</p>',
+                });
+            });
         });
         describe('range not collapsed', async () => {
-
+            it('should paste and transform an URL in a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[xxx]cd</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://youtu.be/dQw4w9WgXcQ');
+                        await editor.commandBar._currentValidate(); // force commandBar validation
+                    },
+                    contentAfter: '<p>ab<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="1"></iframe>[]cd</p>',
+                });
+            });
+            it('should paste and transform an URL in a span', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<span>b[x<a href="http://existing.com">546</a>x]c</span>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+                        await editor.commandBar._currentValidate(); // force commandBar validation
+                    },
+                    contentAfter: '<p>a<span>b<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="1"></iframe>[]c</span>d</p>',
+                });
+            });
+            it('should paste and not transform an URL in a existing link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="http://existing.com">b[qsdqsd]c</a>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+                        window.chai.expect(editor.commandBar.el.style.display).to.be.equal('none');
+                    },
+                    contentAfter: '<p>a<a href="http://existing.com">bhttps://www.youtube.com/watch?v=dQw4w9WgXcQ[]c</a>d</p>',
+                });
+            });
         });
     });
 });

@@ -761,6 +761,7 @@ export class OdooEditor extends EventTarget {
      * "consumed": The position has been undone and is considered consumed.
      */
     historyUndo() {
+        console.warn("historyUndo");
         // The last step is considered an uncommited draft so always revert it.
         const lastStep = this._currentStep;
         this.historyRevert(lastStep);
@@ -815,6 +816,7 @@ export class OdooEditor extends EventTarget {
     }
 
     historyRevert(step, { until = 0, sideEffect = true } = {} ) {
+        console.warn('history revert');
         // apply dom changes by reverting history steps
         for (let i = step.mutations.length - 1; i >= until; i--) {
             const mutation = step.mutations[i];
@@ -2780,9 +2782,15 @@ export class OdooEditor extends EventTarget {
             const splitAroundUrl = text.split(URL_REGEX);
             const linkAttributes = this.options.defaultLinkAttributes || {};
 
+            const sel = this.document.getSelection();
+            // if (!sel.isCollapsed) {
+            //     this.deleteRange(sel);
+            // }
+            // this.historyStep();
             for (let i = 0; i < splitAroundUrl.length; i++) {
                 // Even indexes will always be plain text, and odd indexes will always be URL.
-                if (i % 2) {
+
+                if (i % 2 && !closestElement(sel.anchorNode, 'a')) {
                     const url = /^https?:\/\//gi.test(splitAroundUrl[i])
                         ? splitAroundUrl[i]
                         : 'https://' + splitAroundUrl[i];
@@ -2921,6 +2929,8 @@ export class OdooEditor extends EventTarget {
                 }
             }
             this.historyStep();
+
+            
         }
     }
     /**
