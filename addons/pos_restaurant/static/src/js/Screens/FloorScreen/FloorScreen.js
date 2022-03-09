@@ -121,11 +121,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
         async _save(table) {
             const tableCopy = { ...table };
             delete tableCopy.floor;
-            const tableId = await this.rpc({
-                model: 'restaurant.table',
-                method: 'create_from_ui',
-                args: [tableCopy],
-            });
+            const tableId = await this.orm.call('restaurant.table', 'create_from_ui', [tableCopy]);
             table.id = tableId;
             this.env.pos.tables_by_id[tableId] = table;
         }
@@ -134,11 +130,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 return;
             }
             try {
-                const result = await this.rpc({
-                    model: 'pos.config',
-                    method: 'get_tables_order_count',
-                    args: [this.env.pos.config.id],
-                });
+                const result = await this.orm.call('pos.config', 'get_tables_order_count', [this.env.pos.config.id]);
                 result.forEach((table) => {
                     const table_obj = this.env.pos.tables_by_id[table.id];
                     const unsynced_orders = this.env.pos
@@ -294,11 +286,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             this.state.floorBackground = color;
             this.activeFloor.background_color = color;
             try {
-                await this.rpc({
-                    model: 'restaurant.floor',
-                    method: 'write',
-                    args: [[this.activeFloor.id], { background_color: color }],
-                });
+                await this.orm.write('restaurant.floor', [this.activeFloor.id], { background_color: color });
             } catch (error) {
                 if (isConnectionError(error)) {
                     await this.showPopup('OfflineErrorPopup', {
@@ -319,11 +307,9 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             if (!confirmed) return;
             try {
                 const originalSelectedTableId = this.state.selectedTableId;
-                await this.rpc({
-                    model: 'restaurant.table',
-                    method: 'create_from_ui',
-                    args: [{ active: false, id: originalSelectedTableId }],
-                });
+                await this.orm.call('restaurant.table', 'create_from_ui', [
+                    { active: false, id: originalSelectedTableId },
+                ]);
                 this.activeFloor.tables = this.activeTables.filter(
                     (table) => table.id !== originalSelectedTableId
                 );

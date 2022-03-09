@@ -157,7 +157,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         continue;
                     }
 
-                    let new_line = Orderline.create({}, {
+                    let new_line = Orderline.create(this.env, {}, {
                         pos: this.env.pos,
                         order: this.env.pos.get_order(),
                         product: this.env.pos.db.get_product_by_id(line.product_id[0]),
@@ -235,7 +235,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                     }
 
 
-                    let new_line = Orderline.create({}, {
+                    let new_line = Orderline.create(this.env, {}, {
                         pos: this.env.pos,
                         order: this.env.pos.get_order(),
                         product: down_payment_product,
@@ -263,12 +263,8 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
         }
 
         async _getSaleOrder(id) {
-            let sale_order = await this.rpc({
-                model: 'sale.order',
-                method: 'read',
-                args: [[id],['order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed']],
-                context: this.env.session.user_context,
-              });
+            const fields = ['order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed'];
+            let sale_order = await this.orm.read('sale.order', [id], fields);
 
             let sale_lines = await this._getSOLines(sale_order[0].order_line);
             sale_order[0].order_line = sale_lines;
@@ -277,12 +273,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
         }
 
         async _getSOLines(ids) {
-          let so_lines = await this.rpc({
-              model: 'sale.order.line',
-              method: 'read_converted',
-              args: [ids],
-              context: this.env.session.user_context,
-          });
+          let so_lines = await this.orm.call('sale.order.line', 'read_converted', [ids]);
           return so_lines;
         }
 

@@ -213,12 +213,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 // find the barcode in the backend
                 let foundProductIds = [];
                 try {
-                    foundProductIds = await this.rpc({
-                        model: 'product.product',
-                        method: 'search',
-                        args: [[['barcode', '=', code.base_code]]],
-                        context: this.env.session.user_context,
-                    });
+                    foundProductIds = await this.orm.search('product.product', [['barcode', '=', code.base_code]]);
                 } catch (error) {
                     if (isConnectionError(error)) {
                         return this.showPopup('OfflineErrorPopup', {

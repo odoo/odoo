@@ -15,6 +15,15 @@ odoo.define('point_of_sale.PosComponent', function (require) {
             });
         }
         /**
+         * The orm service is very popular, so we make it available to all components.
+         */
+        get orm() {
+            if (!this.env.services.orm) {
+                throw new Error('orm service is not available');
+            }
+            return this.env.services.orm;
+        }
+        /**
          * This function is available to all Components that inherit this class.
          * The goal of this function is to show an awaitable dialog (popup) that
          * returns a response after user interaction. See the following for quick

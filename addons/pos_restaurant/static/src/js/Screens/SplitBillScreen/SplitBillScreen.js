@@ -21,6 +21,7 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
                 // sequence_number of pos_session is modified. which will trigger
                 // rerendering which will rerender this screen and will be infinite loop.
                 this.newOrder = Order.create(
+                    this.env,
                     {},
                     {
                         pos: this.env.pos,

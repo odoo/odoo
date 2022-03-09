@@ -57,7 +57,7 @@ Registries.Model.extend(PosGlobalState, PosHrPosGlobalState);
 
 
 const PosHrOrder = (Order) => class PosHrOrder extends Order {
-    constructor(obj, options) {
+    constructor(env, obj, options) {
         super(...arguments);
         if (!options.json && this.pos.config.module_pos_hr) {
             this.cashier = this.pos.get_cashier();

@@ -187,8 +187,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 // 2. Invoice.
                 if (this.currentOrder.is_to_invoice()) {
                     if (syncOrderResult.length) {
-                        await this.env.legacyActionManager.do_action('account.account_invoices', {
-                            additional_context: {
+                        await this.env.services.action.doAction('account.account_invoices', {
+                            additionalContext: {
                                 active_ids: [syncOrderResult[0].account_move],
                             },
                         });
