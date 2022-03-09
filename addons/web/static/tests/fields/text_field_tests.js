@@ -76,7 +76,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(7);
 
         serverData.models.partner.fields.foo.type = "text";
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -127,7 +127,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.fields.foo.type = "text";
         serverData.models.partner.records[0].foo = "f\nu\nc\nk\nm\ni\nl\ng\nr\no\nm";
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -159,7 +159,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("text fields in edit mode, no vertical resize", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -201,7 +201,7 @@ QUnit.module("Fields", (hooks) => {
                 obj.txt = damnLongText;
             },
         };
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -236,7 +236,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].txt = "a\nb\nc\nd\ne\nf";
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
@@ -273,7 +273,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -382,27 +382,28 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "go to next line (and not the next row) when pressing enter",
         async function (assert) {
             assert.expect(4);
 
             serverData.models.partner.fields.foo.type = "text";
-            const list = await makeView({
+            await makeView({
                 type: "list",
                 resModel: "partner",
                 serverData,
-                arch:
-                    '<list editable="top">' +
-                    '<field name="int_field"/>' +
-                    '<field name="foo"/>' +
-                    '<field name="qux"/>' +
-                    "</list>",
+                arch: `
+                    <list editable="top">
+                        <field name="int_field" />
+                        <field name="foo" />
+                        <field name="qux" />
+                    </list>
+                `,
             });
 
             await click(target.querySelector("tbody tr:first-child .o_list_text"));
             const textarea = target.querySelector("textarea.o_input");
-            assert.containsOnce(list, textarea, "should have a text area");
+            assert.containsOnce(target, textarea, "should have a text area");
             assert.strictEqual(textarea.value, "yop", 'should still be "yop" in edit');
 
             assert.strictEqual(
@@ -431,7 +432,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -458,7 +459,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("text field rendering in list view", async function (assert) {
         assert.expect(1);
 
-        const list = await makeView({
+        await makeView({
             serverData,
             type: "list",
             resModel: "partner",
@@ -466,13 +467,13 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            list,
+            target,
             "tbody td.o_list_text",
             "should have a td with the .o_list_text class"
         );
     });
 
-    QUnit.skipWOWL("field text in editable list view", async function (assert) {
+    QUnit.test("field text in editable list view", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.foo.type = "text";
@@ -481,7 +482,11 @@ QUnit.module("Fields", (hooks) => {
             type: "list",
             resModel: "partner",
             serverData,
-            arch: '<tree string="Phonecalls" editable="top">' + '<field name="foo"/>' + "</tree>",
+            arch: `
+                <tree editable="top">
+                    <field name="foo" />
+                </tree>
+            `,
         });
 
         await click(target.querySelector(".o_list_button_add"));
