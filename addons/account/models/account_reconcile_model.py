@@ -312,7 +312,7 @@ class AccountReconcileModel(models.Model):
     # RECONCILIATION PROCESS
     ####################################################
 
-    def _get_taxes_move_lines_dict(self, tax, base_line_dict):
+    def _get_taxes_move_lines_dict(self, tax, base_line_dict, statement_line=None):
         ''' Get move.lines dict (to be passed to the create()) corresponding to a tax.
         :param tax:             An account.tax record.
         :param base_line_dict:  A dict representing the move.line containing the base amount.
@@ -322,7 +322,11 @@ class AccountReconcileModel(models.Model):
         balance = base_line_dict['balance']
 
         tax_type = tax.type_tax_use
-        is_refund = (tax_type == 'sale' and balance > 0) or (tax_type == 'purchase' and balance < 0)
+        if statement_line:
+            is_refund = (tax_type == 'sale' and balance > 0) or (tax_type == 'purchase' and balance < 0)
+        else:
+            is_refund = (tax_type == 'sale' and balance < 0) or (tax_type == 'purchase' and balance > 0)
+
         res = tax.compute_all(balance, is_refund=is_refund)
 
         new_aml_dicts = []
@@ -432,7 +436,7 @@ class AccountReconcileModel(models.Model):
                 # only allow to set the force_tax_included field if we have one tax selected
                 if line.force_tax_included:
                     taxes = taxes[0].with_context(force_price_include=True)
-                tax_vals_list = self._get_taxes_move_lines_dict(taxes, writeoff_line)
+                tax_vals_list = self._get_taxes_move_lines_dict(taxes, writeoff_line, statement_line=st_line)
                 lines_vals_list += tax_vals_list
                 if not line.force_tax_included:
                     for tax_line in tax_vals_list:
