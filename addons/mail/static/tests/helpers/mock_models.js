@@ -117,7 +117,7 @@ export class MockModels {
                     is_active: { type: 'boolean' },
                     is_editable: { type: 'boolean' },
                     name: { type: 'char' },
-                    partner_id: { type: 'integer' },
+                    partner_id: { relation: 'res.partner', type: 'many2one' },
                     res_id: { type: 'many2one_reference' },
                     res_model: { type: 'char' },
                     subtype_ids: { type: 'many2many', relation: 'mail.message.subtype' }
