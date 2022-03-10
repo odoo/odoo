@@ -26,6 +26,7 @@ const {
     applyModifications,
     removeOnImageChangeAttrs,
     isImageSupportedForProcessing,
+    isImageSupportedForStyle,
     createDataURL,
     isGif,
 } = require('web_editor.image_processing');
@@ -4903,6 +4904,9 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      */
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'media_link_opt') {
+            if (this.$target[0].matches('img')) {
+                return isImageSupportedForStyle(this.$target[0]);
+            }
             return !this.$target[0].classList.contains('media_iframe_video');
         }
         return this._super(...arguments);
@@ -5207,7 +5211,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             const img = this._getImg();
             return this._isImageSupportedForProcessing(img, true);
         }
-        return this._super(...arguments);
+        return isImageSupportedForStyle(this._getImg());
     },
     /**
      * Indicates if an option should be applied only on supported mimetypes.
@@ -5566,6 +5570,10 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
         if (params.optionsPossibleValues.resetCrop) {
             return this._isCropped();
+        }
+        if (params.optionsPossibleValues.crop) {
+            const img = this._getImg();
+            return isImageSupportedForStyle(img) || this._isImageSupportedForProcessing(img);
         }
         return this._super(...arguments);
     },

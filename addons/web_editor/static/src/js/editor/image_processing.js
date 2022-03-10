@@ -384,6 +384,13 @@ function isImageSupportedForProcessing(mimetype, strict = false) {
     }
     return ['image/jpeg', 'image/png'].includes(mimetype);
 }
+/**
+ * @param {HTMLImageElement} img
+ * @returns {Boolean}
+ */
+function isImageSupportedForStyle(img) {
+    return img.parentElement && !img.parentElement.dataset.oeType;
+}
 
 /**
  * @param {Blob} blob
@@ -407,6 +414,7 @@ return {
     loadImage,
     removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields, 'aspectRatio'],
     isImageSupportedForProcessing,
+    isImageSupportedForStyle,
     createDataURL,
     isGif,
 };
