@@ -788,15 +788,11 @@ blockquote {
 .btn-custom:hover, .btn-fill-custom:hover {
     filter: invert(0.2);
 }
-.btn-outline-custom {
-    &:not(:hover) {
-        background-color: transparent !important;
-        background-image: none !important;
-    }
-    &:hover {
-        background-color: '';
-        background-image: '';
-    }
+.btn-outline-custom:not(:hover) {
+    // Custom buttons have their fill color or gradient specified in their
+    // element style. They must only be shown on hover for outline buttons.
+    background-color: transparent !important;
+    background-image: none !important;
 }
 
 // Base snippet rules
