@@ -526,6 +526,11 @@ class MrpProduction(models.Model):
         if not values.get('procurement_group_id'):
             procurement_group_vals = self._prepare_procurement_group_vals(values)
             values['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
+        if values.get('move_raw_ids'):
+            duplicate_bom_line_list = [move_vals[2].get('bom_line_id') for move_vals in values.get('move_raw_ids')]
+            if len(duplicate_bom_line_list) != len(set(duplicate_bom_line_list)):
+                self = self.with_context(import_file=True)
+                del values['move_raw_ids']
         production = super(MrpProduction, self).create(values)
         production.move_raw_ids.write({
             'group_id': production.procurement_group_id.id,
