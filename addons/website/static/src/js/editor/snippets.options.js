@@ -11,6 +11,7 @@ const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Symbol.for("default")];
 const wUtils = require('website.utils');
+const {isImageSupportedForStyle} = require('web_editor.image_processing');
 require('website.s_popup_options');
 
 var _t = core._t;
@@ -3113,6 +3114,15 @@ options.registry.WebsiteAnimate = options.Class.extend({
         }
         if (widgetName === 'animation_launch_opt') {
             return !this.$target[0].closest('.dropdown');
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeVisibility(methodName, params) {
+        if (this.$target[0].matches('img')) {
+            return isImageSupportedForStyle(this.$target[0]);
         }
         return this._super(...arguments);
     },
