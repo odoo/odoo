@@ -131,7 +131,7 @@ class StockMove(models.Model):
         qty_fname = 'qty_done' if are_qties_done else 'product_uom_qty'
         for move in self:
             if related_order_lines[0].product_id == move.product_id and related_order_lines[0].product_id.tracking != 'none':
-                if self.picking_type_id.use_existing_lots or self.picking_type_id.use_create_lots:
+                if move.picking_type_id.use_existing_lots or move.picking_type_id.use_create_lots:
                     for line in related_order_lines:
                         sum_of_lots = 0
                         for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
@@ -140,13 +140,13 @@ class StockMove(models.Model):
                             else:
                                 qty = abs(line.qty)
                             ml_vals = move._prepare_move_line_vals()
-                            if self.picking_type_id.use_existing_lots:
+                            if move.picking_type_id.use_existing_lots:
                                 existing_lot = self.env['stock.production.lot'].search([
                                     ('company_id', '=', self.company_id.id),
                                     ('product_id', '=', line.product_id.id),
                                     ('name', '=', lot.lot_name)
                                 ])
-                                if not existing_lot and self.picking_type_id.use_create_lots:
+                                if not existing_lot and move.picking_type_id.use_create_lots:
                                     existing_lot = self.env['stock.production.lot'].create({
                                         'company_id': self.company_id.id,
                                         'product_id': line.product_id.id,
