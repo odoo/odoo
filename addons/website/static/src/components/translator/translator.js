@@ -205,6 +205,40 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         styleEl.sheet.insertRule(`[data-oe-translation-state].o_dirty {background: ${translatedColor} !important;}`);
         styleEl.sheet.insertRule(`[data-oe-translation-state="translated"] {background: ${translatedColor} !important;}`);
         styleEl.sheet.insertRule(`[data-oe-translation-state] {background: ${toTranslateColor} !important;}`);
+
+        const showNotification = ev => {
+            let message = this.env._t('This translation is not editable.');
+            if (ev.target.closest('.s_table_of_content_navbar_wrap')) {
+                message = this.env._t('Translate header in the text. Menu is generated automatically.');
+            }
+            this.env.services.notification.add(message, {
+                type: 'info',
+                sticky: false,
+            });
+        };
+        for (const translationEl of $editable) {
+            if (translationEl.closest('.o_not_editable')) {
+                translationEl.addEventListener('click', showNotification);
+            }
+            if (translationEl.closest('.s_table_of_content_navbar_wrap')) {
+                // Make sure the same translation ids are used.
+                const href = translationEl.closest('a').getAttribute('href');
+                const headerEl = translationEl.closest('.s_table_of_content').querySelector(`${href} [data-oe-translation-initial-sha]`);
+                if (headerEl) {
+                    if (translationEl.dataset.oeTranslationInitialSha !== headerEl.dataset.oeTranslationInitialSha) {
+                        // Use the same identifier for the generated navigation
+                        // label and its associated header so that the general
+                        // synchronization mechanism kicks in.
+                        // The initial value is kept to be restored before save
+                        // in order to keep the translation of the unstyled
+                        // label distinct from the one of the header.
+                        translationEl.dataset.oeTranslationSaveSha = translationEl.dataset.oeTranslationInitialSha;
+                        translationEl.dataset.oeTranslationInitialSha = headerEl.dataset.oeTranslationInitialSha;
+                    }
+                    translationEl.classList.add('o_translation_without_style');
+                }
+            }
+        }
     }
 
     markTranslatableNodes() {
