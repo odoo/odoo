@@ -272,15 +272,15 @@
 
     <t t-name="wysiwyg.widgets.upload.progressbar">
         <div t-attf-class="o_we_progressbar js_progressbar_#{fileId}">
-            <div class="d-flex text-info">
-                <span><i class="fa fa-spinner fa-pulse"/></span>
-                <span class="font-italic font-weight-bold text-truncate flex-grow-1 mx-2" t-esc="fileName"/>
-                <span class="text-nowrap" t-esc="fileSize"/>
-            </div>
-            <div class='js_progressbar_txt'>
-                <span class="text-success d-none"><i class='fa fa-check'/> File has been uploaded</span>
-                <span class="text-danger d-none"><i class='fa fa-times float-left m-1'/> <span class="o_we_error_text">File could not be saved</span></span>
-            </div>
+            <small class="text-info d-flex align-items-center mr-2">
+                <span><i class="fa fa-circle-o-notch fa-spin mr-2"/></span>
+                <span class="font-italic text-truncate flex-grow-1 mr-2" t-esc="fileName"/>
+                <span class="font-weight-bold text-nowrap" t-esc="fileSize"/>
+            </small>
+            <small class='js_progressbar_txt d-flex align-items-center mt-1'>
+                <span class="text-success d-none"><i class='fa fa-check my-1 mr-1'/> File has been uploaded</span>
+                <span class="text-danger d-none"><i class='fa fa-times my-1 mr-1'/> <span class="o_we_error_text">File could not be saved</span></span>
+            </small>
             <div class="progress">
                 <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">0%</div>
             </div>
@@ -289,12 +289,11 @@
     </t>
     <t t-name="wysiwyg.widgets.upload.progress_toast">
         <div class="o_notification_manager">
-            <div t-attf-class="o_notification bg-info fade show" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="o_notification_body">
-                    <button type="button" class="close o_notification_close"
-                    aria-label="Close">
-                        <span class="d-inline" aria-hidden="true">×</span>
-                    </button>
+            <div t-attf-class="o_notification position-relative show fade mb-2 border border-info bg-white" role="alert" aria-live="assertive" aria-atomic="true">
+                <button type="button" class="o_notification_close btn" aria-label="Close" t-on-click="props.close">
+                    <i class="oi oi-close"/>
+                </button>
+                <div class="o_notification_body pl-2 pr-4 py-2">
                     <div class="mr-auto o_notification_content"/>
                 </div>
             </div>
