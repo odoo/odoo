@@ -55,7 +55,7 @@ patch(NavBar.prototype, 'website_navbar', {
         if (this.websiteService.currentWebsite) {
             return websiteSystrayRegistry
                 .getEntries()
-                .map(([key, value]) => ({ key, ...value }))
+                .map(([key, value], index) => ({ key, ...value, index }))
                 .filter((item) => ('isDisplayed' in item ? item.isDisplayed(this.env) : true))
                 .reverse();
         }
