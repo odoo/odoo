@@ -9,7 +9,7 @@ class ReplenishmentReport(models.AbstractModel):
 
     def _compute_draft_quantity_count(self, product_template_ids, product_variant_ids, wh_location_ids):
         res = super()._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids)
-        domain = [('state', 'in', ['draft', 'sent'])]
+        domain = [('state', 'in', ['draft', 'sent', 'to approve'])]
         domain += self._product_purchase_domain(product_template_ids, product_variant_ids)
         warehouse_id = self.env.context.get('warehouse', False)
         if warehouse_id:
