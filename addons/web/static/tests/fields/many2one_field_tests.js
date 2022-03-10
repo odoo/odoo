@@ -1435,7 +1435,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(count, 1, "an extra name_get should have been done");
         assert.ok(
-            target.querySelector("a").textContent.includes("and some address"),
+            target.querySelector("a.o_form_uri").textContent.includes("and some address"),
             "should display additional result"
         );
 
@@ -1448,7 +1448,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_save");
         assert.ok(
-            target.querySelector("a").textContent.includes("and some address"),
+            target.querySelector("a.o_form_uri").textContent.includes("and some address"),
             "should still display additional result"
         );
     });

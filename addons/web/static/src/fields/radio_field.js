@@ -51,8 +51,10 @@ RadioField.extractProps = (fieldName, record, attrs) => {
         switch (record.fields[fieldName].type) {
             case "selection":
                 return record.fields[fieldName].selection;
-            case "many2one":
-                return record.preloadedData ? record.preloadedData[fieldName] : [];
+            case "many2one": {
+                const value = record.preloadedData[fieldName] || [];
+                return value.map((item) => [item.id, item.display_name]);
+            }
             default:
                 return [];
         }

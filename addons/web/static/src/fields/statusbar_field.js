@@ -25,9 +25,17 @@ export class StatusBarField extends Component {
     }
 
     getVisibleMany2Ones() {
-        const items = this.props.record.preloadedData
+        let items = this.props.record.preloadedData
             ? this.props.record.preloadedData[this.props.name]
             : [];
+        // FIXME: do this somewhere else
+        items = items.map((i) => {
+            return {
+                id: i.id,
+                name: i.display_name,
+                isFolded: i.fold,
+            };
+        });
         return items.map((item) => ({
             ...item,
             isSelected: this.props.value && item.id === this.props.value[0],

@@ -13,7 +13,7 @@ import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { getActiveActions, isX2Many } from "@web/views/helpers/view_utils";
 import { Layout } from "@web/search/layout";
-import { RelationalModel } from "@web/views/relational_model";
+import { RelationalModel } from "@web/views/basic_relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";
 
@@ -132,6 +132,10 @@ export class FormView extends Component {
         } else {
             resId = this.props.state ? this.props.state.resId : false;
         }
+        this.beforeLoadResolver = null;
+        this.beforeLoadProm = new Promise((r) => {
+            this.beforeLoadResolver = r;
+        });
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             resId,
@@ -140,6 +144,7 @@ export class FormView extends Component {
             activeFields,
             viewMode: "form",
             rootType: "record",
+            beforeLoadProm: this.beforeLoadProm,
         });
         const { create, edit } = this.archInfo.activeActions;
 
@@ -209,6 +214,7 @@ export class FormView extends Component {
                 this.viewService,
                 this.user
             );
+            this.beforeLoadResolver();
         });
 
         onRendered(() => {

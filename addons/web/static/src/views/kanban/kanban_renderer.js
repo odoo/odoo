@@ -88,7 +88,14 @@ KanbanCoverImageDialog.components = { SimpleDialog };
 
 export class KanbanRenderer extends Component {
     setup() {
-        const { arch, cards, className, fields, xmlDoc, examples } = this.props.archInfo;
+        const {
+            arch,
+            cards,
+            className,
+            activeFields: fields,
+            xmlDoc,
+            examples,
+        } = this.props.archInfo;
         this.dialogClose = [];
         this.cards = cards;
         this.className = className;

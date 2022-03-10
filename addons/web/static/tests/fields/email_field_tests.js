@@ -248,7 +248,6 @@ QUnit.module("Fields", (hooks) => {
             // edit the phone field, but with the mail in readonly mode
             await click(target.querySelector(".o_form_button_edit"));
             await editInput(target, ".o_field_widget[name='int_field'] input", 3);
-            await click(target.querySelector(".o_form_button_save"));
 
             // check rendering after changes
             assert.strictEqual(
