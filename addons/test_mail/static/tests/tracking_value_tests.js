@@ -24,7 +24,7 @@ QUnit.module('tracking_value_tests.js', {
                                 <field name="float_field"/>
                                 <field name="integer_field"/>
                                 <field name="monetary_field"/>
-                                <field name="partner_id"/>
+                                <field name="many2one_field_id"/>
                                 <field name="selection_field"/>
                                 <field name="text_field"/>
                             </sheet>
@@ -35,7 +35,7 @@ QUnit.module('tracking_value_tests.js', {
                 archs: { 'mail.message,false,list': '<tree/>' },
                 data: this.data,
                 hasView: true,
-                model: 'mail.test.tracking.value',
+                model: 'mail.test.track.all',
                 View: FormView,
                 viewOptions: { mode: 'edit' },
                 ...params,
@@ -47,7 +47,7 @@ QUnit.module('tracking_value_tests.js', {
 QUnit.test('basic rendering of tracking value (float type)', async function (assert) {
     assert.expect(8);
 
-    this.data['mail.test.tracking.value'].records.push({ float_field: 12.30, id: 1 });
+    this.data['mail.test.track.all'].records.push({ float_field: 12.30, id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editInput(form.$('input[name=float_field]'), 45.67);
@@ -99,7 +99,7 @@ QUnit.test('basic rendering of tracking value (float type)', async function (ass
 QUnit.test('rendering of tracked field of type float: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ float_field: 1, id: 1 });
+    this.data['mail.test.track.all'].records.push({ float_field: 1, id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editInput(form.$('input[name=float_field]'), 0);
@@ -116,7 +116,7 @@ QUnit.test('rendering of tracked field of type float: from non-0 to 0', async fu
 QUnit.test('rendering of tracked field of type float: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ float_field: 0, id: 1 });
+    this.data['mail.test.track.all'].records.push({ float_field: 0, id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editInput(form.$('input[name=float_field]'), 1);
@@ -133,7 +133,7 @@ QUnit.test('rendering of tracked field of type float: from 0 to non-0', async fu
 QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1, integer_field: 1 });
+    this.data['mail.test.track.all'].records.push({ id: 1, integer_field: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editInput(form.$('input[name=integer_field]'), 0);
@@ -150,7 +150,7 @@ QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async 
 QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1, integer_field: 0 });
+    this.data['mail.test.track.all'].records.push({ id: 1, integer_field: 0 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editInput(form.$('input[name=integer_field]'), 1);
@@ -167,7 +167,7 @@ QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async 
 QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1, monetary_field: 1 });
+    this.data['mail.test.track.all'].records.push({ id: 1, monetary_field: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editSelect(form.$('div[name=monetary_field] > input'), 0);
@@ -184,7 +184,7 @@ QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async
 QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1, monetary_field: 0 });
+    this.data['mail.test.track.all'].records.push({ id: 1, monetary_field: 0 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editSelect(form.$('div[name=monetary_field] > input'), 1);
@@ -201,7 +201,7 @@ QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async
 QUnit.test('rendering of tracked field of type boolean: from true to false', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ boolean_field: true, id: 1 });
+    this.data['mail.test.track.all'].records.push({ boolean_field: true, id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     form.$('.custom-checkbox input').click();
@@ -218,7 +218,7 @@ QUnit.test('rendering of tracked field of type boolean: from true to false', asy
 QUnit.test('rendering of tracked field of type boolean: from false to true', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1 });
+    this.data['mail.test.track.all'].records.push({ id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     form.$('.custom-checkbox input').click();
@@ -235,7 +235,7 @@ QUnit.test('rendering of tracked field of type boolean: from false to true', asy
 QUnit.test('rendering of tracked field of type char: from a string to empty string', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ char_field: 'Marc', id: 1 });
+    this.data['mail.test.track.all'].records.push({ char_field: 'Marc', id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editInput(form.$('input[name=char_field]'), '');
@@ -252,7 +252,7 @@ QUnit.test('rendering of tracked field of type char: from a string to empty stri
 QUnit.test('rendering of tracked field of type char: from empty string to a string', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ char_field: '', id: 1 });
+    this.data['mail.test.track.all'].records.push({ char_field: '', id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editInput(form.$('input[name=char_field]'), 'Marc');
@@ -269,7 +269,7 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
 QUnit.test('rendering of tracked field of type date: from no date to a set date', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1 });
+    this.data['mail.test.track.all'].records.push({ id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=date_field] .o_datepicker_input'), '12/14/2018', ['change']);
@@ -286,7 +286,7 @@ QUnit.test('rendering of tracked field of type date: from no date to a set date'
 QUnit.test('rendering of tracked field of type date: from a set date to no date', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ date_field: '2018-12-14', id: 1 });
+    this.data['mail.test.track.all'].records.push({ date_field: '2018-12-14', id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=date_field] .o_datepicker_input'), '', ['change']);
@@ -303,7 +303,7 @@ QUnit.test('rendering of tracked field of type date: from a set date to no date'
 QUnit.test('rendering of tracked field of type datetime: from no date and time to a set date and time', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1 });
+    this.data['mail.test.track.all'].records.push({ id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=datetime_field] .o_datepicker_input'), '12/14/2018 13:42:28', ['change']);
@@ -320,7 +320,7 @@ QUnit.test('rendering of tracked field of type datetime: from no date and time t
 QUnit.test('rendering of tracked field of type datetime: from a set date and time to no date and time', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ datetime_field: '2018-12-14 13:42:28 ', id: 1 });
+    this.data['mail.test.track.all'].records.push({ datetime_field: '2018-12-14 13:42:28 ', id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=datetime_field] .o_datepicker_input'), '', ['change']);
@@ -337,7 +337,7 @@ QUnit.test('rendering of tracked field of type datetime: from a set date and tim
 QUnit.test('rendering of tracked field of type text: from some text to empty', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1, text_field: 'Marc' });
+    this.data['mail.test.track.all'].records.push({ id: 1, text_field: 'Marc' });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editInput(form.$('textarea[name=text_field]'), '');
@@ -354,7 +354,7 @@ QUnit.test('rendering of tracked field of type text: from some text to empty', a
 QUnit.test('rendering of tracked field of type text: from empty to some text', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1, text_field: '' });
+    this.data['mail.test.track.all'].records.push({ id: 1, text_field: '' });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editInput(form.$('textarea[name=text_field]'), 'Marc');
@@ -371,7 +371,7 @@ QUnit.test('rendering of tracked field of type text: from empty to some text', a
 QUnit.test('rendering of tracked field of type selection: from a selection to no selection', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1, selection_field: 'first' });
+    this.data['mail.test.track.all'].records.push({ id: 1, selection_field: 'first' });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editSelect(form.$('select[name=selection_field]'), '');
@@ -388,7 +388,7 @@ QUnit.test('rendering of tracked field of type selection: from a selection to no
 QUnit.test('rendering of tracked field of type selection: from no selection to a selection', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.tracking.value'].records.push({ id: 1 });
+    this.data['mail.test.track.all'].records.push({ id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editSelect(form.$('select[name=selection_field]'), '"first"');
@@ -406,15 +406,15 @@ QUnit.test('rendering of tracked field of type many2one: from having a related r
     assert.expect(1);
 
     this.data['res.partner'].records.push({ display_name: 'Marc', id: 11 });
-    this.data['mail.test.tracking.value'].records.push({ id: 1, partner_id: 11 });
+    this.data['mail.test.track.all'].records.push({ id: 1, many2one_field_id: 11 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_field_many2one_selection input'), '', ['keyup']);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Partner:MarcNone",
-        "should display the correct content of tracked field of type many2one: from having a related record to no related record (Partner: Marc -> None)"
+        "Many2one:MarcNone",
+        "should display the correct content of tracked field of type many2one: from having a related record to no related record (Many2one: Marc -> None)"
     );
 
     form.destroy();
@@ -424,16 +424,16 @@ QUnit.test('rendering of tracked field of type many2one: from no related record 
     assert.expect(1);
 
     this.data['res.partner'].records.push({ display_name: 'Marc', id: 11 });
-    this.data['mail.test.tracking.value'].records.push({ id: 1 });
+    this.data['mail.test.track.all'].records.push({ id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
-    await testUtils.fields.many2one.clickOpenDropdown('partner_id');
-    await testUtils.fields.many2one.clickItem('partner_id', 'Marc');
+    await testUtils.fields.many2one.clickOpenDropdown('many2one_field_id');
+    await testUtils.fields.many2one.clickItem('many2one_field_id', 'Marc');
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Partner:NoneMarc",
-        "should display the correct content of tracked field of type many2one: from no related record to having a related record (Partner: None -> Marc)"
+        "Many2one:NoneMarc",
+        "should display the correct content of tracked field of type many2one: from no related record to having a related record (Many2one: None -> Marc)"
     );
 
     form.destroy();
