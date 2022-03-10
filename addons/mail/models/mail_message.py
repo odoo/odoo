@@ -722,9 +722,24 @@ class Message(models.Model):
             ('res_partner_id', '=', partner_id),
             ('is_read', '=', False)]
         if domain:
-            messages = self.search(domain)
-            messages.set_message_done()
-            return messages.ids
+            # avoid side effects due to message being set as done while loading mail channel
+            query = self.env['mail.message']._where_calc(domain)
+            tables, where_clause, where_params = query.get_sql()
+
+            query = """
+                SELECT id
+                FROM """ + tables + """
+                WHERE """ + where_clause + """
+            """
+
+            self._cr.execute(query, where_params)
+            messages_ids = [r[0] for r in self._cr.fetchall()]
+
+            @self.env.cr.postcommit.add
+            def set_messages_done():
+                with api.Environment.manage():
+                    self.browse(messages_ids).set_message_done()
+            return messages_ids
 
         notifications = self.env['mail.notification'].sudo().search(notif_domain)
         notifications.write({'is_read': True})
