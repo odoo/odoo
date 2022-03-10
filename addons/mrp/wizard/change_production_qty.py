@@ -37,8 +37,15 @@ class ChangeProductionQty(models.TransientModel):
         for move in production.move_finished_ids:
             if move.state in ('done', 'cancel'):
                 continue
-            qty = (new_qty - old_qty) * move.unit_factor
+            done_qty = sum(production.move_finished_ids.filtered(
+                lambda r:
+                    r.product_id == move.product_id and
+                    r.state == 'done'
+                ).mapped('product_uom_qty')
+            )
+            qty = (new_qty - old_qty) * move.unit_factor + done_qty
             modification[move] = (move.product_uom_qty + qty, move.product_uom_qty)
+<<<<<<< HEAD
             if self._need_quantity_propagation(move, qty):
                 push_moves |= move.copy({'product_uom_qty': qty})
             else:
@@ -46,6 +53,12 @@ class ChangeProductionQty(models.TransientModel):
 
         if push_moves:
             push_moves._action_confirm()._action_assign()
+=======
+            if (move.product_uom_qty + qty) > 0:
+                move.write({'product_uom_qty': move.product_uom_qty + qty})
+            else:
+                move._action_cancel()
+>>>>>>> e6ae9c1ab73... temp
 
         return modification
 
