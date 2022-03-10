@@ -17,6 +17,7 @@ from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.ir_qweb import QWebException, render
 from odoo.tools import misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
+from odoo.exceptions import MissingError
 
 unsafe_eval = eval
 
@@ -1239,6 +1240,51 @@ class TestQWebBasic(TransactionCase):
             error = str(e)
             self.assertIn('Can not compile expression', error)
             self.assertIn('<div t-esc="abc + def + ("/>', error)
+
+    def test_error_message_3(self):
+        # The format error tells the developer what to do.
+        template = '''<section>
+                    <div t-esc="1+2">
+                        <span>content</span>
+                    </div>
+                </section>'''
+        with self.assertRaises(ValueError):
+            self.env['ir.qweb']._render(template)
+        try:
+            self.env['ir.qweb']._render(template)
+        except ValueError as e:
+            self.assertIn('Inline templates must be passed as `etree` documents', str(e))
+
+        template = '''toto <t t-esc="content"/>'''
+        with self.assertRaises(ValueError):
+            self.env['ir.qweb']._render(template)
+        try:
+            self.env['ir.qweb']._render(template)
+        except ValueError as e:
+            self.assertIn('Inline templates must be passed as `etree` documents', str(e))
+
+    def test_error_message_4(self):
+        # Template record view not found.
+        with self.assertRaises(MissingError):
+            self.env['ir.qweb']._render(-999)
+        try:
+            self.env['ir.qweb']._render(-999)
+        except MissingError as e:
+            self.assertIn('Record does not exist or has been deleted.', str(e))
+
+        with self.assertRaises(ValueError):
+            self.env['ir.qweb']._render('not.wrong_template_xmlid')
+        try:
+            self.env['ir.qweb']._render('not.wrong_template_xmlid')
+        except ValueError as e:
+            self.assertIn('External ID not found in the system', str(e))
+
+        with self.assertRaises(AssertionError):
+            self.env['ir.qweb']._render(False)
+        try:
+            self.env['ir.qweb']._render(False)
+        except AssertionError as e:
+            self.assertIn('template is required', str(e))
 
     def test_call_set(self):
         view0 = self.env['ir.ui.view'].create({
