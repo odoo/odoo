@@ -61,6 +61,7 @@ tour.register('shop_buy_product', {
         {
             content: "go to checkout",
             extra_trigger: '#cart_products input.js_quantity:propValue(1)',
+            extra_trigger: 'body:not([rpc-done])',
             trigger: 'a[href*="/shop/checkout"]',
         },
         {

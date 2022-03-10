@@ -119,3 +119,24 @@ class WebsiteSaleDelivery(WebsiteSale):
                 'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
             }
         return {}
+
+    @http.route()
+    def payment_transaction(self, acquirer_id, save_token=False, so_id=None, access_token=None, token=None, **kwargs):
+        if so_id:
+            env = request.env['sale.order']
+            domain = [('id', '=', so_id)]
+            if access_token:
+                env = env.sudo()
+                domain.append(('access_token', '=', access_token))
+            order = env.search(domain, limit=1)
+        else:
+            order = request.website.sale_get_order()
+
+        # Ensure there is something to proceed
+        if not order or (order and not order.order_line):
+            return False
+
+        if not (order.is_all_service or order.delivery_set):
+            return False
+
+        return super().payment_transaction(acquirer_id, save_token, so_id, access_token, token, **kwargs)
