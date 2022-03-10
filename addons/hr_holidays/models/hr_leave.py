@@ -674,7 +674,9 @@ class HolidaysRequest(models.Model):
         """ Returns a float equals to the timedelta between two dates given as string."""
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
-            result = employee._get_work_days_data_batch(date_from, date_to)[employee.id]
+            # We force the company in the domain as we are more than likely in a compute_sudo
+            domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+            result = employee._get_work_days_data_batch(date_from, date_to, domain=domain)[employee.id]
             if self.request_unit_half and result['hours'] > 0:
                 result['days'] = 0.5
             return result
@@ -1383,4 +1385,4 @@ class HolidaysRequest(models.Model):
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
-        return self.env.user.employee_id._get_unusual_days(date_from, date_to)
+        return self.env.user.employee_id.sudo(False)._get_unusual_days(date_from, date_to)
