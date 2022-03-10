@@ -165,6 +165,7 @@
                     <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
+                    <field name="balance" sum="Total Balance" readonly="1" optional="hide" />
                     <field name="amount_currency" groups="base.group_multi_currency" optional="hide"/>
                     <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
                     <field name="tax_tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
@@ -315,6 +316,7 @@
                 <field name="analytic_account_id" position="replace"/>
                 <field name="debit" position="replace"/>
                 <field name="credit" position="replace"/>
+                <field name="balance" position="replace"/>
             </field>
         </record>
 
@@ -348,6 +350,7 @@
                     <field name="tax_ids" />
                     <field name="tax_line_id" string="Originator Tax"/>
                     <field name="reconcile_model_id"/>
+                    <field name="balance"/>
                     <separator/>
                     <filter string="Unposted" name="unposted" domain="[('parent_state', '=', 'draft')]" help="Unposted Journal Items"/>
                     <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items"/>
