@@ -1082,6 +1082,9 @@ function makeActionManager(env) {
             context: makeContext([env.services.user.context, action.context]),
         });
         let nextAction = await keepLast.add(runProm);
+        if (nextAction.help) {
+            nextAction.help = markup(nextAction.help);
+        }
         nextAction = nextAction || { type: "ir.actions.act_window_close" };
         return doAction(nextAction, options);
     }

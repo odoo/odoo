@@ -90,4 +90,28 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 2);
     });
+
+    QUnit.test("action with html help returned by a server action", async function (assert) {
+        assert.expect(1);
+
+        serverData.actions[2].context = { someKey: 44 };
+        const mockRPC = async (route, args) => {
+            if (route === "/web/action/run") {
+                return Promise.resolve({
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "list"]],
+                    help: "<p>I am not a helper</p>",
+                    domain: [[0, "=", 1]],
+                });
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 2);
+
+        assert.strictEqual(
+            target.querySelector(".o_list_view .o_nocontent_help p").innerText,
+            "I am not a helper"
+        );
+    });
 });
