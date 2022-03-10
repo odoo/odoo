@@ -84,7 +84,7 @@
         <tr><td valign="top" style="font-size: 13px;">
             We appreciate your feedback. It helps us to improve continuously.
             <t t-if="object.project_id.rating_status == 'stage'">
-                <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey has been sent because your task has been moved to the stage <b t-out="object.stage_id.name or ''">In progress</b></span>
+                <br/><br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey has been sent because your task has been moved to the stage <b t-out="object.stage_id.name or ''">In progress</b></span>
             </t>
             <t t-if="object.project_id.rating_status == 'periodic'">
                 <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey is sent <b t-out="object.project_id.rating_status_period or ''">Weekly</b> as long as the task is in the <b t-out="object.stage_id.name or ''">In progress</b> stage.</span>
