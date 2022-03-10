@@ -637,6 +637,9 @@
     year = parts[3] || '';
     if (year.length > 0) {
       sep = ' / ';
+      // Force year to 2 digits
+      if (year.length === 4 )
+        year = year.substr(-2);
     } else if (sep === ' /') {
       mon = mon.substring(0, 1);
       sep = '';
