@@ -7,6 +7,10 @@ registerModel({
     name: 'QUnitTest',
     identifyingFields: [], // singleton acceptable (only one test at a time)
     fields: {
+        clockWatcher: one('ClockWatcher', {
+            inverse: 'qunitTestOwner',
+            isCausal: true,
+        }),
         composer: one('Composer', {
             isCausal: true,
         }),
