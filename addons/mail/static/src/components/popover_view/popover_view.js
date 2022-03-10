@@ -19,7 +19,7 @@ export class PopoverView extends Component {
             () => this.popoverView && this.popoverView.anchorRef && this.popoverView.anchorRef.el,
             {
                 popper: "root",
-                margin: 16,
+                margin: this.popoverView.margin,
                 position: this.popoverView.position,
             }
         );

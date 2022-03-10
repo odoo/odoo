@@ -3,7 +3,8 @@
 
     <t t-name="mail.AutocompleteInputView" owl="1">
         <t t-if="autocompleteInputView">
-            <input class="o_AutocompleteInputView" t-attf-class="{{ className }}" t-on-blur="autocompleteInputView.onBlur" t-on-focusin="autocompleteInputView.onFocusin" t-on-keydown="autocompleteInputView.onKeydown" t-att-placeholder="autocompleteInputView.placeholder" t-ref="root"/>
+            <input class="o_AutocompleteInputView" t-attf-class="{{ className }}" t-on-compositionend="autocompleteInputView.onCompositionend" t-on-compositionstart="autocompleteInputView.onCompositionstart" t-on-focusin="autocompleteInputView.onFocusin" t-on-input="autocompleteInputView.onInput" t-on-keydown="autocompleteInputView.onKeydown" t-att-placeholder="autocompleteInputView.placeholder" t-ref="root"/>
+            <PopoverView t-if="autocompleteInputView.suggestionPopoverView" localId="autocompleteInputView.suggestionPopoverView.localId"/>
         </t>
     </t>
 

@@ -218,7 +218,7 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
      * Enough space for 3 visible chat windows:
      *  10 + 325 + 5 + 325 + 5 + 325 + 10 = 1000 < 1920
      */
-    assert.expect(11);
+    assert.expect(12);
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Partner 131" });
@@ -285,28 +285,28 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     );
 
     // search for a user in "new message" autocomplete
-    document.execCommand('insertText', false, "131");
-    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
-        .dispatchEvent(new window.KeyboardEvent('keydown'));
-    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
-        .dispatchEvent(new window.KeyboardEvent('keyup'));
+    await afterNextRender(() => document.execCommand('insertText', false, "131"));
     // Wait for search RPC to be resolved. The following await lines are
     // necessary because autocomplete is an external lib therefore it is not
     // possible to use `afterNextRender`.
     await imSearchDef;
-    await nextAnimationFrame();
-    const link = document.querySelector('.ui-autocomplete .ui-menu-item a');
-    assert.ok(
-        link,
-        "should have autocomplete suggestion after typing on 'new message' input"
+    assert.containsOnce(
+        document.body,
+        '.o_AutocompleteInputSuggestionView',
+        "should show suggestion view of autocomplete input after typing '131'",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_AutocompleteInputSuggestionItemView',
+        "suggestion view should have one item after typing '131' in input",
     );
     assert.strictEqual(
-        link.textContent,
+        document.querySelector('.o_AutocompleteInputSuggestionItemView_text').textContent,
         "Partner 131",
-        "autocomplete suggestion should target the partner matching search term"
+        "autocomplete suggestion should target the partner matching search term",
     );
 
-    await afterNextRender(() => link.click());
+    await afterNextRender(() => document.querySelector('.o_AutocompleteInputSuggestionItemView').click());
     assert.containsNone(
         document.body,
         '.o_ChatWindow.o-new-message',
@@ -350,19 +350,12 @@ QUnit.test('new message chat window should close on selecting the user if chat w
     await click(`.o_MessagingMenu_newMessageButton`);
 
     // search for a user in "new message" autocomplete
-    document.execCommand('insertText', false, "131");
-    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
-        .dispatchEvent(new window.KeyboardEvent('keydown'));
-    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
-        .dispatchEvent(new window.KeyboardEvent('keyup'));
+    await afterNextRender(() => document.execCommand('insertText', false, "131"));
     // Wait for search RPC to be resolved. The following await lines are
     // necessary because autocomplete is an external lib therefore it is not
     // possible to use `afterNextRender`.
     await imSearchDef;
-    await nextAnimationFrame();
-    const link = document.querySelector('.ui-autocomplete .ui-menu-item a');
-
-    await afterNextRender(() => link.click());
+    await afterNextRender(() => document.querySelector('.o_AutocompleteInputSuggestionItemView').click());
     assert.containsNone(
         document.body,
         '.o_ChatWindow_newMessageFormInput',
@@ -398,19 +391,14 @@ QUnit.test('new message autocomplete should automatically select first result', 
     await click(`.o_MessagingMenu_newMessageButton`);
 
     // search for a user in "new message" autocomplete
-    document.execCommand('insertText', false, "131");
-    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
-        .dispatchEvent(new window.KeyboardEvent('keydown'));
-    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
-        .dispatchEvent(new window.KeyboardEvent('keyup'));
+    await afterNextRender(() => document.execCommand('insertText', false, "131"));
     // Wait for search RPC to be resolved. The following await lines are
     // necessary because autocomplete is an external lib therefore it is not
     // possible to use `afterNextRender`.
     await imSearchDef;
-    await nextAnimationFrame();
     assert.hasClass(
-        document.querySelector('.ui-autocomplete .ui-menu-item a'),
-        'ui-state-active',
+        document.querySelector('.o_AutocompleteInputSuggestionItemView'),
+        'o-isActive',
         "first autocomplete result should be automatically selected",
     );
 });

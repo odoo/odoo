@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AutocompleteInputSuggestionView" owl="1">
+        <t t-if="autocompleteInputSuggestionView">
+            <div class="o_AutocompleteInputSuggestionView" t-att-style="autocompleteInputSuggestionView.width !== undefined ? 'width: ' + autocompleteInputSuggestionView.width + 'px' : undefined">
+                <t t-foreach="autocompleteInputSuggestionView.itemViews" t-as="itemView" t-key="itemView.localId">
+                    <AutocompleteInputSuggestionItemView localId="itemView.localId"/>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

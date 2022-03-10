@@ -6,7 +6,12 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'PopoverView',
-    identifyingFields: [['composerViewOwnerAsEmoji', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
+    identifyingFields: [[
+        'autocompleteInputViewOwner',
+        'composerViewOwnerAsEmoji',
+        'messageActionListOwnerAsReaction',
+        'threadViewTopbarOwnerAsInvite',
+    ]],
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
@@ -31,6 +36,9 @@ registerModel({
          * @returns {Ref}
          */
         _computeAnchorRef() {
+            if (this.autocompleteInputViewOwner) {
+                return this.autocompleteInputViewOwner.inputRef;
+            }
             if (this.threadViewTopbarOwnerAsInvite) {
                 return this.threadViewTopbarOwnerAsInvite.inviteButtonRef;
             }
@@ -39,6 +47,16 @@ registerModel({
             }
             if (this.messageActionListOwnerAsReaction) {
                 return this.messageActionListOwnerAsReaction.actionReactionRef;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeAutocompleteInputSuggestionView() {
+            if (this.autocompleteInputViewOwner) {
+                return insertAndReplace();
             }
             return clear();
         },
@@ -57,6 +75,9 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeContent() {
+            if (this.autocompleteInputSuggestionView) {
+                return replace(this.autocompleteInputSuggestionView);
+            }
             if (this.channelInvitationForm) {
                 return replace(this.channelInvitationForm);
             }
@@ -70,6 +91,9 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeContentClassName() {
+            if (this.autocompleteInputSuggestionView) {
+                return 'o_PopoverView_autocompleteInputSuggestionView';
+            }
             if (this.channelInvitationForm) {
                 return 'o_PopoverView_channelInvitationForm';
             }
@@ -83,6 +107,9 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeContentComponentName() {
+            if (this.autocompleteInputSuggestionView) {
+                return 'AutocompleteInputSuggestionView';
+            }
             if (this.channelInvitationForm) {
                 return 'ChannelInvitationForm';
             }
@@ -106,9 +133,22 @@ registerModel({
         },
         /**
          * @private
+         * @returns {integer|Field}
+         */
+        _computeMargin() {
+            if (this.autocompleteInputSuggestionView) {
+                return 0;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computePosition() {
+            if (this.autocompleteInputSuggestionView) {
+                return 'bottom-start';
+            }
             if (this.threadViewTopbarOwnerAsInvite) {
                 return 'bottom';
             }
@@ -146,6 +186,16 @@ registerModel({
         anchorRef: attr({
             compute: '_computeAnchorRef',
             required: true,
+        }),
+        autocompleteInputViewOwner: one('AutocompleteInputView', {
+            inverse: 'suggestionPopoverView',
+            readonly: true,
+        }),
+        autocompleteInputSuggestionView: one('AutocompleteInputSuggestionView', {
+            compute: '_computeAutocompleteInputSuggestionView',
+            inverse: 'popoverViewOwner',
+            isCausal: true,
+            readonly: true,
         }),
         /**
          * The record that represents the content inside the popover view.
@@ -198,6 +248,10 @@ registerModel({
             inverse: 'popoverViewOwner',
             isCausal: true,
             readonly: true,
+        }),
+        margin: attr({
+            compute: '_computeMargin',
+            default: 16,
         }),
         /**
          * If set, this popover view is owned by a message action list.
