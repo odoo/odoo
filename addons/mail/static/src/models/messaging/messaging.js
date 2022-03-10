@@ -375,12 +375,6 @@ registerModel({
          * Mailbox Starred.
          */
         starred: one('Thread'),
-        time: one('Time', {
-            default: insertAndReplace(),
-            isCausal: true,
-            readonly: true,
-            required: true,
-        }),
         userSetting: one('UserSetting', {
             isCausal: true,
         }),
