@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import barcode
+from . import digest
 from . import ir_actions_report
 from . import product_strategy
 from . import res_company

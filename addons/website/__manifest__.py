@@ -113,6 +113,7 @@
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
         'views/neutralize_views.xml',
+        'views/digest_digest_views.xml',
         'wizard/base_language_install_views.xml',
         'wizard/website_robots.xml',
     ],
