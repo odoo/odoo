@@ -183,13 +183,7 @@ class AccountMove(models.Model):
             eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped('price_subtotal'))))
             eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: l.price_total - l.price_subtotal))))
 
-            company_npwp = company_id.partner_id.vat or '000000000000000'
-
             fk_values_list = ['FK'] + [eTax[f] for f in FK_HEAD_LIST[1:]]
-            eTax['JALAN'] = company_id.partner_id.l10n_id_tax_address or company_id.partner_id.street
-            eTax['NOMOR_TELEPON'] = company_id.phone or ''
-
-            lt_values_list = ['FAPR', company_npwp, company_id.name] + [eTax[f] for f in LT_HEAD_LIST[3:]]
 
             # HOW TO ADD 2 line to 1 line for free product
             free, sales = [], []
@@ -268,7 +262,6 @@ class AccountMove(models.Model):
                 total_discount += round(sale['DISKON'], 2)
 
             output_head += _csv_row(fk_values_list, delimiter)
-            output_head += _csv_row(lt_values_list, delimiter)
             for sale in sales:
                 of_values_list = ['OF'] + [str(sale[f]) for f in OF_HEAD_LIST[1:-2]] + ['0', '0']
                 output_head += _csv_row(of_values_list, delimiter)
@@ -277,7 +270,7 @@ class AccountMove(models.Model):
 
     def _prepare_etax(self):
         # These values are never set
-        return {'JUMLAH_PPNBM': 0, 'UANG_MUKA_PPNBM': 0, 'BLOK': '', 'NOMOR': '', 'RT': '', 'RW': '', 'KECAMATAN': '', 'KELURAHAN': '', 'KABUPATEN': '', 'PROPINSI': '', 'KODE_POS': '', 'JUMLAH_BARANG': 0, 'TARIF_PPNBM': 0, 'PPNBM': 0}
+        return {'JUMLAH_PPNBM': 0, 'UANG_MUKA_PPNBM': 0, 'JUMLAH_BARANG': 0, 'TARIF_PPNBM': 0, 'PPNBM': 0}
 
     def _generate_efaktur(self, delimiter):
         if self.filtered(lambda x: not x.l10n_id_kode_transaksi):
