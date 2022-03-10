@@ -12,6 +12,7 @@ const TableOfContent = publicWidget.Widget.extend({
      * @override
      */
     async start() {
+        this._stripNavbarStyles();
         await this._super(...arguments);
         this.$scrollingElement = $().getScrollingElement();
         this.previousPosition = -1;
@@ -31,6 +32,23 @@ const TableOfContent = publicWidget.Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _stripNavbarStyles() {
+        // TODO Introduce a `disabledInTranslateMode` flag instead.
+        // Ignore in translation mode.
+        if (this.el.querySelector('[data-oe-translation-id]')) {
+            return;
+        }
+
+        // This is needed for styles added on translations when the master text
+        // has no style.
+        for (const el of this.el.querySelectorAll('.s_table_of_content_navbar .table_of_content_link')) {
+            const text = el.textContent; // Get text from el.
+            el.textContent = text; // Replace all of el's content with that text.
+        }
+    },
     /**
      * @private
      */
