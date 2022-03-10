@@ -3,27 +3,29 @@
 
     <t t-name="web.Many2ManyTagsField" owl="1">
         <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
-            <t t-if="props.canEditColor">
-                <Dropdown togglerClass="'o_tag badge badge-pill o_tag_color_'  + tag.colorIndex">
+            <t t-if="props.canQuickEdit">
+                <Dropdown togglerClass="'o_tag badge badge-pill o_tag_color_'  + (isTagHidden(tag) ? 0 : tag.colorIndex)">
                     <t t-set-slot="toggler">
-                        <span class="o_badge_text" t-att-title="tag.name or 'tag' + tag_index">
-                            <span class="o_tag_badge_text" t-esc="tag.name or 'tag' + tag_index"/>
-                            <a t-if="!props.readonly" href="#" class="fa fa-times ml-2 o_delete" title="Delete" aria-label="Delete"></a>
-                        </span>
+                        <t t-call="badge_text"/>
                     </t>
                     <div class="o_tag_dropdown">
-                        <ColorList colors="constructor.RECORD_COLORS" onColorSelected="(id) => this.switchColor(id, tag)"/>
-                        <CheckBox>Hide in kanban</CheckBox>
+                        <ColorList colors="constructor.RECORD_COLORS" onColorSelected="(id) => this.switchTagColor(id, tag)"/>
+                        <CheckBox value="isTagHidden(tag)" onChange.bind="(isChecked) => this.onTagVisibilityChange(isChecked, tag)">Hide in kanban</CheckBox>
                     </div>
                 </Dropdown>
             </t>
             <t t-else="">
-                <span class="o_badge_text" t-att-title="tag.name or 'tag' + tag_index">
-                    <span class="o_tag_badge_text" t-esc="tag.name or 'tag' + tag_index"/>
-                    <a t-if="!props.readonly" href="#" class="fa fa-times ml-2 o_delete" title="Delete" aria-label="Delete"></a>
-                </span>
+                <t t-call="badge_text"/>
             </t>
         </t>
+        <!--HERE SHOULD BE A DROPDOWN TO ADD TAGS - AutoComplete component? -->
+    </t>
+
+    <t t-name="badge_text" owl="1">
+        <span class="o_badge_text" t-att-title="tag.name or 'tag' + tag_index">
+            <span class="o_tag_badge_text" t-esc="tag.name or 'tag' + tag_index"/>
+            <a t-if="!props.readonly" href="#" class="fa fa-times ml-2 o_delete" title="Delete" aria-label="Delete"></a>
+        </span>
     </t>
 
 </templates>

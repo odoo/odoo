@@ -9,9 +9,14 @@ import { ColorList } from "@web/core/colorlist/colorlist";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-const { Component } = owl;
+const { Component, useState } = owl;
 
 export class Many2ManyTagsField extends Component {
+    setup() {
+        this.state = useState({
+            hiddenTagsColors: {},
+        });
+    }
     get tags() {
         const colorField = this.props.colorField;
         return this.props.value.records
@@ -22,10 +27,23 @@ export class Many2ManyTagsField extends Component {
                 colorIndex: record.data[colorField] || i,
             }));
     }
-    switchColor(colorIndex, tag) {
-        //Not sure about how to change and save a many2many field
-        const record = this.props.value.records.filter((record) => record.data.id === tag.id)[0];
-        record.update(this.props.colorField, colorIndex);
+    isTagHidden(tag) {
+        return !!this.state.hiddenTagsColors[tag.id];
+    }
+    switchTagColor(colorIndex, tag) {
+        const tagRecord = this.props.value.records.find((record) => record.data.id === tag.id);
+        this.props.update(colorIndex, tagRecord);
+        delete this.state.hiddenTagsColors[tag.id];
+    }
+    onTagVisibilityChange(isHidden, tag) {
+        console.log(`should set isHiddenInKanban for tag ${tag} to: ${isHidden}`);
+        if (isHidden) {
+            this.state.hiddenTagsColors[tag.id] = this.props.value.records.find(
+                (record) => record.data.id === tag.id
+            ).data[this.props.colorField];
+        } else {
+            delete this.state.hiddenTagsColors[tag.id];
+        }
     }
 }
 
@@ -37,24 +55,32 @@ Many2ManyTagsField.components = {
 };
 Many2ManyTagsField.template = "web.Many2ManyTagsField";
 Many2ManyTagsField.defaultProps = {
-    canEditColor: true,
+    canQuickEdit: true,
+    update: () => {},
 };
 Many2ManyTagsField.props = {
     ...standardFieldProps,
-    canEditColor: { type: Boolean, optional: true },
+    canQuickEdit: { type: Boolean, optional: true },
     colorField: { type: String, optional: true },
     placeholder: { type: String, optional: true },
+    update: { type: Function, optional: true },
 };
+Many2ManyTagsField.RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 Many2ManyTagsField.displayName = _lt("Tags");
 Many2ManyTagsField.supportedTypes = ["many2many"];
 Many2ManyTagsField.fieldsToFetch = {
     display_name: { name: "display_name", type: "char" },
 };
-Many2ManyTagsField.RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
 Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
+    const colorField = attrs.options.color_field;
     return {
-        colorField: attrs.options.color_field,
-        canEditColor: !attrs.options.no_edit_color,
+        colorField: colorField,
+        canQuickEdit: !attrs.options.no_edit_color,
+        update: (colorIndex, tagRecord) => {
+            tagRecord.update(colorField, colorIndex);
+            tagRecord.save();
+        },
     };
 };
 

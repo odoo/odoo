@@ -1,5 +1,6 @@
 .o_field_widget.o_field_many2many_tags {
     display: inline-flex;
+    flex-wrap: wrap;
     > span, > button {
         flex: 0 0 auto;
     }
@@ -15,13 +16,15 @@
         color: inherit;
         line-height: 1.1;
     }
-
+    .o_tag_dropdown label {
+        line-height: $o-line-height-base;
+    }
     .custom-checkbox {
         padding-top: 5px ;
     }
 
     .o_tag_dropdown {
-        padding: 5px;
+        margin: 5px;
         max-width: 150px;
     }
 }
