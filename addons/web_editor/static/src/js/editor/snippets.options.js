@@ -25,6 +25,7 @@ const {
     applyModifications,
     removeOnImageChangeAttrs,
     isImageSupportedForProcessing,
+    isImageSupportedForStyle,
 } = require('web_editor.image_processing');
 
 var qweb = core.qweb;
@@ -4853,6 +4854,9 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      */
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'media_link_opt') {
+            if (this.$target[0].matches('img')) {
+                return isImageSupportedForStyle(this.$target[0]);
+            }
             return !this.$target[0].classList.contains('media_iframe_video');
         }
         return this._super(...arguments);
@@ -5162,12 +5166,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     },
     /**
      * TODO: adapt in master (used to keep ImageTools related options available
-     * for all images).
+     * for all supported images).
      *
      * @returns {Boolean}
      */
     _isAllowedOnAllImages() {
-        return false;
+        return isImageSupportedForStyle(this._getImg());
     },
 });
 
@@ -5520,6 +5524,10 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (params.optionsPossibleValues.resetCrop) {
             return this._isCropped();
         }
+        // Only the 'Crop' widget is visible when image is not supported for style options.
+        if (Object.keys(params.optionsPossibleValues).some(methodName => ['transform', 'selectStyle'].includes(methodName))) {
+            return isImageSupportedForStyle(this._getImg());
+        }
         return this._super();
     },
     /**
@@ -5642,12 +5650,6 @@ registry.ImageTools = ImageHandlerOption.extend({
             await this._loadShape(img.dataset.shape);
             await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
         }
-    },
-    /**
-     * @override
-     */
-    _isAllowedOnAllImages() {
-        return true;
     },
 
     //--------------------------------------------------------------------------
