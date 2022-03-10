@@ -199,3 +199,47 @@ class AccountAnalyticLine(models.Model):
         for line in self:
             if line.account_id.company_id and line.company_id.id != line.account_id.company_id.id:
                 raise ValidationError(_('The selected account belongs to another company than the one you\'re trying to create an analytic item for'))
+
+    def _get_non_distributive_tag_ids(self):
+        self.ensure_one()
+        return self.tag_ids.filtered(lambda r: not r.active_analytic_distribution).ids
+
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        distribution_vals_list = []
+        for line in lines:
+            if not line.move_id:
+                continue
+            for tag in line.tag_ids:
+                if not tag.active_analytic_distribution:
+                    continue
+                for distribution in tag.analytic_distribution_ids:
+                    distribution_vals_list.append(
+                        line._prepare_analytic_distribution_line(distribution)
+                    )
+        if distribution_vals_list:
+            self.create(distribution_vals_list)
+        return lines
+
+    def _prepare_analytic_distribution_line(self, distribution):
+        """ Prepare the values used to create() an account.analytic.line upon creation of an aal
+            having analytic tags with analytic distribution.
+        """
+        self.ensure_one()
+        return {
+            'name': self.name,
+            'date': self.date,
+            'account_id': distribution.account_id.id,
+            'group_id': distribution.account_id.group_id.id,
+            'tag_ids': [(6, 0, self._get_non_distributive_tag_ids())],
+            'partner_id': self.partner_id.id,
+            'unit_amount': self.unit_amount,
+            'product_id': self.product_id and self.product_id.id or False,
+            'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
+            'amount': self.amount * distribution.percentage / 100.0,
+            'general_account_id': self.general_account_id.id,
+            'ref': self.ref,
+            'move_id': self.move_id.id,
+            'user_id': self.user_id.id or self._uid,
+            'company_id': distribution.account_id.company_id.id or self.env.company.id,
+        }
