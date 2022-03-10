@@ -15,8 +15,12 @@ export const AllocationLeaveFormController = FormController.extend({
         if (formData.holiday_status_id) {
             let nameSearchContext = {'holiday_status_name_get': false};
             const employee_id = formData.employee_id;
-            if (employee_id) {
+            const date_from = formData.date_from;
+            const date_to = formData.date_to;
+            if (employee_id && date_from) {
                 nameSearchContext = {'holiday_status_name_get': true, 'employee_id': employee_id.data.id};
+                nameSearchContext.default_date_from = date_from;
+                nameSearchContext.default_date_to = date_to;
             }
             const nameSearch = await this._rpc({
                 model: 'hr.leave.type',
@@ -25,12 +29,13 @@ export const AllocationLeaveFormController = FormController.extend({
                 context: nameSearchContext,
                 limit: 1
             });
-            if (this.$el.find("div[name='holiday_status_id']").find('input')[0]) {
-                this.$el.find("div[name='holiday_status_id']").find('input')[0].value = nameSearch[0][1];
+            const holiday_input = this.$el.find("div[name='holiday_status_id']").find('input')[0];
+            if (holiday_input) {
+                holiday_input.value = nameSearch[0][1];
             }
         }
         return result;
-    }
+    },
 
 });
 

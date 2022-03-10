@@ -84,7 +84,6 @@ class HolidaysRequest(models.Model):
 
             if lt:
                 defaults['holiday_status_id'] = lt.id
-                defaults['request_unit_custom'] = False
 
         if 'state' in fields_list and not defaults.get('state'):
             lt = self.env['hr.leave.type'].browse(defaults.get('holiday_status_id'))
@@ -142,7 +141,7 @@ class HolidaysRequest(models.Model):
     holiday_status_id = fields.Many2one(
         "hr.leave.type", compute='_compute_from_employee_id', store=True, string="Time Off Type", required=True, readonly=False,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]},
-        domain=['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)])
+        domain="['|', ('requires_allocation', '=', 'no'), '&', ('has_valid_allocation', '=', True), '&', ('virtual_remaining_leaves', '>', 0), ('max_leaves', '>', '0')]")
     holiday_allocation_id = fields.Many2one(
         'hr.leave.allocation', compute='_compute_from_holiday_status_id', string="Allocation", store=True, readonly=False)
     color = fields.Integer("Color", related='holiday_status_id.color')
@@ -312,12 +311,6 @@ class HolidaysRequest(models.Model):
         for leave in self:
             leave.all_employee_ids = leave.employee_id | leave.employee_ids
 
-    @api.constrains('holiday_status_id', 'number_of_days')
-    def _check_allocation_duration(self):
-        for holiday in self:
-            if holiday.holiday_status_id.requires_allocation == 'yes' and holiday.holiday_allocation_id and holiday.number_of_days > holiday.holiday_allocation_id.number_of_days:
-                raise ValidationError(_("You have several allocations for those type and period.\nPlease split your request to fit in their number of days."))
-
     @api.depends_context('uid')
     def _compute_description(self):
         self.check_access_rights('read')
@@ -446,6 +439,18 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             if holiday.holiday_status_id or holiday.request_unit_half:
                 holiday.request_unit_hours = False
+
+    @api.onchange('request_date_from', 'request_date_to', 'employee_id', 'employee_ids')
+    def _onchange_holiday_status_id(self):
+        leave_type = self.env['hr.leave.type'].search([])
+        employee_id = self.employee_id.id
+        date_from = fields.Datetime.to_string(self.request_date_from)
+        date_to = fields.Datetime.to_string(self.request_date_to)
+        available_leave_type = leave_type._get_valid_allocations(date_from, date_to, employee_id)
+        if available_leave_type and self.holiday_status_id not in available_leave_type:
+            self.holiday_status_id = available_leave_type[:1]
+        elif not available_leave_type:
+            self.holiday_status_id = leave_type[:1]
 
     @api.depends('employee_ids')
     def _compute_from_employee_ids(self):
@@ -736,11 +741,35 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             if holiday.holiday_type != 'employee' or not holiday.employee_id or not holiday.holiday_status_id or holiday.holiday_status_id.requires_allocation == 'no':
                 continue
-            mapped_days = holiday.holiday_status_id.get_employees_days([holiday.employee_id.id], holiday.date_from)
-            leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
-            if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
-                raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
-                                        'Please also check the time off waiting for validation.') + '\n- %s' % holiday.display_name)
+            allocation = holiday.holiday_allocation_id
+            if allocation:
+                remaining_allocation_days_hours, leave_units = allocation._get_request_unit_remaining_days()
+                if float_compare(remaining_allocation_days_hours, 0, precision_digits=2) == -1:
+                    other_leaves_total = remaining_allocation_days_hours + holiday[leave_units]
+                    several_days_hours = float_compare(other_leaves_total, 1, precision_digits=0)
+                    if allocation.type_request_unit == 'day':
+                        unit = _('day') if not several_days_hours else _('days')
+                    else:
+                        unit = _('hour') if not several_days_hours else _('hours')
+                    insufficient_time_off_error = _('The number of remaining time off is not sufficient for this time off type.\n'
+                                                    '%(remaining)s %(unit)s remaining out of %(total)s for %(name)s allocation type (from %(date_from)s to %(date_to)s).',
+                                                    remaining=max(other_leaves_total, 0),
+                                                    unit=unit,
+                                                    total=allocation.max_leaves,
+                                                    name=allocation.name,
+                                                    date_from=format_date(self.env, allocation.date_from),
+                                                    date_to=format_date(self.env, allocation.date_to))
+                    other_leaves_waiting_validation = (allocation.taken_leave_ids - self).filtered(lambda leave: leave.state in ['draft', 'confirm', 'validate1'])
+                    other_leaves_to_validate_error = ""
+                    if other_leaves_waiting_validation:
+                        formatted_leaves = []
+                        for leave in other_leaves_waiting_validation:
+                            formatted_leaves.append(_('%(name)s from %(date_from)s to %(date_to)s',
+                                                    name=leave.display_name,
+                                                    date_from=format_date(self.env, leave.date_from),
+                                                    date_to=format_date(self.env, leave.date_to)))
+                        other_leaves_to_validate_error = _('\nPlease also check the time off waiting for validation:\n%(leaves)s', leaves='\n'.join(formatted_leaves))
+                    raise ValidationError(insufficient_time_off_error + other_leaves_to_validate_error)
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date_state(self):
@@ -806,9 +835,24 @@ class HolidaysRequest(models.Model):
         # Try to force the leave_type name_get when creating new records
         # This is called right after pressing create and returns the name_get for
         # most fields in the view.
+        new_context_values = {}
         if field_onchange.get('employee_id') and 'employee_id' not in self._context and values:
             employee_id = get_employee_from_context(values, self._context, self.env.user.employee_id.id)
-            self = self.with_context(employee_id=employee_id)
+            new_context_values['employee_id'] = employee_id
+            new_context_values['default_employee_id'] = employee_id
+        elif not values:
+            new_context_values['employee_id'] = self.env.user.employee_id.id
+            new_context_values['default_employee_id'] = self.env.user.employee_id.id
+
+        if values.get('id') and values.get('request_date_from') and values.get('request_date_to'):
+            new_context_values['default_date_from'] = values['request_date_from']
+            new_context_values['default_date_to'] = values['request_date_to']
+
+        if not self._context.get('holiday_status_name_get', True):
+            new_context_values['holiday_status_name_get'] = False
+
+        self = self.with_context(dict(self.env.context, **new_context_values))
+
         return super().onchange(values, field_name, field_onchange)
 
     def name_get(self):
@@ -883,13 +927,64 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('holiday_allocation_id')
     def _check_allocation_id(self):
+        self = self.filtered(lambda leave: leave.holiday_type == 'employee' and not leave.multi_employee and
+                             leave.holiday_status_id.requires_allocation == 'yes' and not leave.holiday_allocation_id)
+        if not self:
+            return
+        allocations = self.env['hr.leave.allocation'].search([('employee_ids', 'in', self.employee_ids.ids),
+                                                              ('state', '=', 'validate'),
+                                                              ('holiday_status_id', 'in', self.holiday_status_id.ids),
+                                                              ('date_from', '<=', min(self.mapped('date_from'))),
+                                                              '|', ('date_to', '>=', max(self.mapped('date_to'))), ('date_to', '=', False),
+                                                              ])
         for leave in self:
-            if leave.holiday_type == 'employee' and not leave.multi_employee and\
-                leave.holiday_status_id.requires_allocation == 'yes' and not leave.holiday_allocation_id:
+            leave_allocations = allocations.filtered_domain(
+                [
+                    ('holiday_status_id', 'in', leave.holiday_status_id.ids),
+                    ('employee_id', 'in', leave.employee_id.ids),
+                    '&',
+                    ('date_from', '<=', leave.request_date_to or leave.date_to),
+                    '|',
+                    ('date_to', '>=', leave.request_date_from or leave.date_from),
+                    ('date_to', '=', False),
+                ])
+            allocations_list = []
+            for allocation in leave_allocations:
+                remaining_allocation_days_hours = allocation._get_request_unit_remaining_days()[0]
+                if allocation.type_request_unit in ['day', 'half_day']:
+                    unit = _('day') if float_compare(remaining_allocation_days_hours, 1, precision_digits=2) <= 0 else _('days')
+                else:
+                    unit = _('hour') if float_compare(remaining_allocation_days_hours, 1, precision_digits=2) <= 0 else _('hours')
+                allocations_list.append(_(
+                    '%(remaining)s %(unit)s remaining out of %(total)s for %(allocation_name)s',
+                    remaining=remaining_allocation_days_hours,
+                    unit=unit,
+                    total=allocation.max_leaves,
+                    allocation_name=allocation.name_validity
+                ))
+            if len(allocations_list) > 1:
+                raise ValidationError(_(
+                    'Could not find a suitable allocation between %(date_from)s and %(date_to)s.\n\n'
+                    'Available allocations during the requested time period:\n'
+                    '%(allocations)s',
+                    date_from=fields.Date.to_string(leave.request_date_from),
+                    date_to=fields.Date.to_string(leave.request_date_to),
+                    allocations='\n'.join(allocations_list)
+                ))
+            elif len(allocations_list) == 1:
+                raise ValidationError(_(
+                    'Could not find a suitable allocation between %(date_from)s and %(date_to)s.\n\n'
+                    'Available allocation during the requested time period:\n'
+                    '%(allocations)s',
+                    date_from=fields.Date.to_string(leave.request_date_from),
+                    date_to=fields.Date.to_string(leave.request_date_to),
+                    allocations='\n'.join(allocations_list)
+                ))
+            else:
                 raise ValidationError(_(
                     'Could not find an allocation of type %(leave_type)s for the requested time period.',
                     leave_type=leave.holiday_status_id.display_name,
-                ) + '\n- %s' % (leave.employee_id.name))
+                ))
 
     @api.constrains('holiday_allocation_id', 'date_to', 'date_from')
     def _check_leave_type_validity(self):

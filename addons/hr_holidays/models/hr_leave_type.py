@@ -10,7 +10,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import format_date
+from odoo.tools import float_compare, format_date
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
 
@@ -147,25 +147,34 @@ class HolidaysType(models.Model):
 
         return [('id', new_operator, [x['holiday_status_id'] for x in self._cr.dictfetchall()])]
 
+    def _get_valid_allocations(self, date_from, date_to, employee_id):
+        allocations = self.env['hr.leave.allocation'].search([('holiday_status_id', 'in', self.ids),
+                                                              ('employee_id', '=', employee_id),
+                                                              '&',
+                                                              '|',
+                                                              ('date_to', '>=', date_to),
+                                                              ('date_to', '=', False),
+                                                              ('date_from', '<=', date_from)])
+        holiday_type_with_valid_allocations = self.env['hr.leave.type']
+        for holiday_type in self:
+            if employee_id and holiday_type.requires_allocation == 'yes' and date_from and date_to:
+                allocation = allocations.filtered_domain([
+                    ('holiday_status_id', '=', holiday_type.id)
+                ])
+                if bool(allocation):
+                    holiday_type_with_valid_allocations += holiday_type
+            else:
+                holiday_type_with_valid_allocations += holiday_type
+        return holiday_type_with_valid_allocations
 
     @api.depends('requires_allocation')
     def _compute_valid(self):
         date_to = self._context.get('default_date_to', fields.Datetime.today())
         date_from = self._context.get('default_date_from', fields.Datetime.today())
         employee_id = self._context.get('default_employee_id', self._context.get('employee_id', self.env.user.employee_id.id))
+        valid_holiday_types = self._get_valid_allocations(date_from, date_to, employee_id)
         for holiday_type in self:
-            if holiday_type.requires_allocation:
-                allocation = self.env['hr.leave.allocation'].search([
-                    ('holiday_status_id', '=', holiday_type.id),
-                    ('employee_id', '=', employee_id),
-                    '|',
-                    ('date_to', '>=', date_to),
-                    '&',
-                    ('date_to', '=', False),
-                    ('date_from', '<=', date_from)])
-                holiday_type.has_valid_allocation = bool(allocation)
-            else:
-                holiday_type.has_valid_allocation = True
+            holiday_type.has_valid_allocation = holiday_type in valid_holiday_types
 
     def _search_max_leaves(self, operator, value):
         value = float(value)
@@ -408,17 +417,30 @@ class HolidaysType(models.Model):
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
             return super(HolidaysType, self).name_get()
         res = []
+        leaves_count = []
+        if self._context.get('default_date_from'):
+            employee_id = self._context.get('employee_id')
+            employee_id = employee_id[0] if isinstance(employee_id, list) else employee_id
+            leaves_count = self.get_employees_days([employee_id], date=self._context['default_date_from'])[employee_id]
         for record in self:
-            name = record.name
             if record.requires_allocation == "yes" and not self._context.get('from_manager_leave_form'):
+                if leaves_count:
+                    virtual_remaining_leaves = float_round(leaves_count[record.id].get('virtual_remaining_leaves', 0), precision_digits=2)
+                    max_leaves = float_round(leaves_count[record.id].get('max_leaves', 0), precision_digits=2)
+                else:
+                    virtual_remaining_leaves = float_round(record.virtual_remaining_leaves, precision_digits=2)
+                    max_leaves = float_round(record.max_leaves, precision_digits=2)
                 name = "%(name)s (%(count)s)" % {
-                    'name': name,
+                    'name': record.name,
                     'count': _('%g remaining out of %g') % (
-                        float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
-                        float_round(record.max_leaves, precision_digits=2) or 0.0,
+                        virtual_remaining_leaves or 0.0,
+                        max_leaves or 0.0,
                     ) + (_(' hours') if record.request_unit == 'hour' else _(' days'))
                 }
-            res.append((record.id, name))
+                if float_compare(virtual_remaining_leaves, 0, precision_digits=2) >= 0:
+                    res.append((record.id, name))
+            else:
+                res.append((record.id, record.name))
         return res
 
     @api.model

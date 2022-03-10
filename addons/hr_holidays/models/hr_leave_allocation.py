@@ -591,6 +591,13 @@ class HolidaysAllocation(models.Model):
     # Business methods
     ####################################################
 
+    def _get_request_unit_remaining_days(self):
+        self.ensure_one()
+        leave_units = 'number_of_days' if self.type_request_unit == 'day' else 'number_of_hours_display'
+        number_of_leave_days_hours = sum(self.taken_leave_ids.filtered(lambda leave: leave.state not in ['cancel', 'refuse']).mapped(leave_units))
+        remaining_allocation_days_hours = self.max_leaves - number_of_leave_days_hours
+        return remaining_allocation_days_hours, leave_units
+
     def _prepare_holiday_values(self, employees):
         self.ensure_one()
         return [{
