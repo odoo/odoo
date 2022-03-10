@@ -2438,7 +2438,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="search_text_with_highlight" name="Website Searchbox item highlight">
-    <span t-foreach="enumerate(parts)" t-as="part" t-att-class="'text-primary' if part[0] % 2 else None" t-esc="part[1]"/>
+    <!-- Zero-width space in front to prevent presentation indent from happening -->
+    &amp;#8203;<span t-foreach="enumerate(parts)" t-as="part" t-att-class="'text-primary' if part[0] % 2 else None" t-esc="part[1]"/>
 </template>
 
 <template id="index_management">
