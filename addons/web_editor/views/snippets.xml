@@ -428,7 +428,7 @@
         </we-button-group>
     </div>
 
-    <div data-selector="img">
+    <div data-selector="img" data-exclude="[data-oe-type=image] > img">
         <we-input string="Description" class="o_we_large"
             data-select-attribute="" data-attribute-name="alt"
             placeholder="Alt tag"
@@ -574,7 +574,7 @@
         </we-button-group>
     </div>
 
-    <div data-selector="span.fa, i.fa, img">
+    <div data-selector="span.fa, i.fa, img" data-exclude="[data-oe-type=image] > img">
         <we-select string="Alignment" data-state-to-first-class="true">
             <we-button data-select-class="" title="Unalign">None</we-button>
             <we-button data-select-class="float-left" title="Align Left">Left</we-button>
