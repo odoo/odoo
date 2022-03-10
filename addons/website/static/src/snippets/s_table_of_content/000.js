@@ -12,6 +12,7 @@ const TableOfContent = publicWidget.Widget.extend({
      * @override
      */
     async start() {
+        this._stripNavbarStyles();
         await this._super(...arguments);
         this.$scrollingElement = $().getScrollingElement();
         this.previousPosition = -1;
@@ -36,6 +37,21 @@ const TableOfContent = publicWidget.Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _stripNavbarStyles() {
+        // This is needed for styles added on translations when the master text
+        // has no style.
+        for (let el of this.el.querySelectorAll('.s_table_of_content_navbar .table_of_content_link')) {
+            const translationEl = el.querySelector('span[data-oe-translation-state]');
+            if (translationEl) {
+                el = translationEl;
+            }
+            const text = el.textContent; // Get text from el.
+            el.textContent = text; // Replace all of el's content with that text.
+        }
+    },
     /**
      * @private
      */
