@@ -368,6 +368,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
             this.snippetsLoaded = ev;
             return;
         }
+
+        this.wysiwyg.$iframeBody.find('.iframe-utils-zone').addClass('d-none');
+
         var $snippetsSideBar = ev.data;
         var $themes = $snippetsSideBar.find("#email_designer_themes").children();
         var $snippets = $snippetsSideBar.find(".oe_snippet");
@@ -556,6 +559,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
             });
             selectedTheme = this._getSelectedTheme(themesParams);
         }
+
+        this.wysiwyg.$iframeBody.find('.iframe-utils-zone').removeClass('d-none');
     },
     /**
      * @override
