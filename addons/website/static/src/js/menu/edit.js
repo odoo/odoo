@@ -314,6 +314,11 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                         this.classList.add('o_dirty');
                     }
                 });
+                if (this.options.processRecordsCallback) {
+                    for (const el of $savable) {
+                        this.options.processRecordsCallback(record, el);
+                    }
+                }
             }
         };
         this.observer = new MutationObserver(processRecords);
