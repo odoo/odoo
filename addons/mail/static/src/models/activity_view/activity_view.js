@@ -74,7 +74,7 @@ registerModel({
             if (!this.activity.dateDeadline) {
                 return clear();
             }
-            const today = moment(this.messaging.time.currentDateEveryMinute.getTime()).startOf('day');
+            const today = moment(this.clockWatcher.clock.date.getTime()).startOf('day');
             const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
             // true means no rounding
             const diff = momentDeadlineDate.diff(today, 'days', true);
@@ -166,6 +166,15 @@ registerModel({
          */
         assignedUserText: attr({
             compute: '_computeAssignedUserText',
+        }),
+        clockWatcher: one('ClockWatcher', {
+            default: insertAndReplace({
+                clock: insertAndReplace({
+                    frequency: 60 * 1000,
+                }),
+            }),
+            inverse: 'activityViewOwner',
+            isCausal: true,
         }),
         /**
          * Compute the label for "when" the activity is due.
