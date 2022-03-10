@@ -410,10 +410,10 @@ class TestFields(TransactionCaseWithUserDemo):
         users = (user1 + user2 + user3).with_user(self.user_demo)
         user1, user2, user3 = users
         # regression test: a bug invalidated the field's value from cache
-        user1.company_type
+        user1.partner_id.company_type
         with self.assertRaises(AccessError):
-            user2.company_type
-        user3.company_type
+            user2.partner_id.company_type
+        user3.partner_id.company_type
 
     def test_12_recursive(self):
         """ test recursively dependent fields """
@@ -1312,7 +1312,7 @@ class TestFields(TransactionCaseWithUserDemo):
         # a bunch of fields are inherited from res_partner
         for user in self.env['res.users'].search([]):
             partner = user.partner_id
-            for field in ('is_company', 'name', 'email', 'country_id'):
+            for field in ('name', 'email', 'mobile'):
                 self.assertEqual(getattr(user, field), getattr(partner, field))
                 self.assertEqual(user[field], partner[field])
 

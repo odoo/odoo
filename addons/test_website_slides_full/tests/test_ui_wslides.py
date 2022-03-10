@@ -15,6 +15,8 @@ class TestUi(TestUICommon):
         # Avoid Billing/Shipping address page
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)],
+        })
+        user_demo.partner_id.write({
             'street': '215 Vine St',
             'city': 'Scranton',
             'zip': '18503',

@@ -7,8 +7,8 @@
         <t t-if="not object.name and object.parent_name">
             <span itemprop="name" t-esc="object.parent_name"/>
         </t>
-        <t t-if="options.get('country_image') and 'country_id' in fields and object.country_id and object.country_id.image_url">
-            <span t-field="object.country_id.image_url" t-options='{"widget": "image_url", "class": "country_flag"}'/>
+        <t t-if="options.get('country_image') and 'country_id' in fields and target.country_id and target.country_id.image_url">
+            <span t-field="target.country_id.image_url" t-options='{"widget": "image_url", "class": "country_flag"}'/>
         </t>
     </div>
 </template>
@@ -17,7 +17,7 @@
         <div t-if="not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
             --<span class="text-muted" t-esc="name"/>--
         </div>
-        <t t-if="object.country_id.name_position != 'after'">
+        <t t-if="target.country_id.name_position != 'after'">
             <t t-call="base.contact_name"/>
         </t>
         <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
@@ -43,7 +43,7 @@
             <div t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='fa fa-envelope fa-fw' role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-esc="email"/></div>
         </div>
         <div t-if="vat and 'vat' in fields"><span t-esc="vat_label"/>: <span itemprop="vatID" t-esc="vat"/></div>
-        <t t-if="object.country_id and object.country_id.name_position == 'after'">
+        <t t-if="target.country_id and target.country_id.name_position == 'after'">
             <t t-call="base.contact_name"/>
         </t>
     </address>

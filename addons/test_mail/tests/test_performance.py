@@ -23,7 +23,6 @@ class BaseMailPerformance(TransactionCaseWithUserDemo):
         }
 
         cls.user_employee = cls.env['res.users'].with_context(cls._quick_create_ctx).create({
-            'country_id': cls.env.ref('base.be').id,
             'email': 'e.e@example.com',
             'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             'login': 'employee',
@@ -31,10 +30,9 @@ class BaseMailPerformance(TransactionCaseWithUserDemo):
             'notification_type': 'inbox',
             'signature': '--\nErnest',
         })
+
         cls.admin = cls.env.user
-        cls.admin.write({
-            'country_id': cls.env.ref('base.be').id,
-        })
+        (cls.user_employee.partner_id + cls.admin.partner_id).country_id = cls.env.ref('base.be')
 
         cls.customer = cls.env['res.partner'].with_context(cls._quick_create_ctx).create({
             'country_id': cls.env.ref('base.be').id,

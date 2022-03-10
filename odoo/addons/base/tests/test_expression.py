@@ -616,7 +616,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         # Create users
         a = Users.create({'name': 'test_A', 'login': 'test_A'})
         b1 = Users.create({'name': 'test_B', 'login': 'test_B'})
-        b2 = Users.create({'name': 'test_B2', 'login': 'test_B2', 'parent_id': b1.partner_id.id})
+        b2 = Users.create({'name': 'test_B2', 'login': 'test_B2', 'partner_parent_id': b1.partner_id.id})
 
         # Test1: simple inheritance
         users = self._search(Users, [('name', 'like', 'test')])
@@ -625,13 +625,13 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(users, b1, 'searching through inheritance failed')
 
         # Test2: inheritance + relational fields
-        users = self._search(Users, [('child_ids.name', 'like', 'test_B')])
+        users = self._search(Users, [('partner_child_ids.name', 'like', 'test_B')])
         self.assertEqual(users, b1, 'searching through inheritance failed')
         
         # Special =? operator mean "is equal if right is set, otherwise always True"
-        users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', False)])
+        users = self._search(Users, [('name', 'like', 'test'), ('partner_parent_id', '=?', False)])
         self.assertEqual(users, a + b1 + b2, '(x =? False) failed')
-        users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', b1.partner_id.id)])
+        users = self._search(Users, [('name', 'like', 'test'), ('partner_parent_id', '=?', b1.partner_id.id)])
         self.assertEqual(users, b2, '(x =? id) failed')
 
     def test_30_normalize_domain(self):
@@ -1188,12 +1188,9 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users".id
             FROM "res_users"
-            LEFT JOIN "res_partner" AS "res_users__partner_id" ON
-                ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE ("res_users"."active" = %s)
             AND ("res_users"."id" = %s)
-            AND ("res_users__partner_id"."id" = %s)
-            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+            ORDER BY  "res_users"."name" ,"res_users"."login"
         ''']):
             Model.search([])
 
@@ -1206,13 +1203,12 @@ class TestMany2one(TransactionCase):
         self.company = self.env['res.company'].browse(1)
 
     def test_inherited(self):
+
         with self.assertQueries(['''
             SELECT "res_users".id
             FROM "res_users"
-            LEFT JOIN "res_partner" AS "res_users__partner_id" ON
-                ("res_users"."partner_id" = "res_users__partner_id"."id")
-            WHERE ("res_users__partner_id"."name"::text LIKE %s)
-            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+            WHERE ("res_users"."name"::text like %s)
+            ORDER BY  "res_users"."name" ,"res_users"."login"
         ''']):
             self.User.search([('name', 'like', 'foo')])
 
@@ -1223,8 +1219,8 @@ class TestMany2one(TransactionCase):
             FROM "res_users"
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
-            WHERE ("res_users__partner_id"."name"::text LIKE %s)
-            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+            WHERE ("res_users__partner_id"."name"::text like %s)
+            ORDER BY  "res_users"."name" ,"res_users"."login"
         ''']):
             self.User.search([('partner_id.name', 'like', 'foo')])
 

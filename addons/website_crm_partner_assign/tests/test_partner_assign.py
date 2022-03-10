@@ -101,11 +101,13 @@ class TestPartnerLeadPortal(TestCrmCommon):
             self.env, login='user_portal',
             name='Patrick Portal', email='portal@test.example.com',
             company_id=self.env.ref("base.main_company").id,
-            grade_id=self.grade.id,
-            user_id=self.user_sales_manager.id,
             notification_type='email',
             groups='base.group_portal',
         )
+        self.user_portal.partner_id.write({
+            'grade_id': self.grade.id,
+            'user_id' :self.user_sales_manager.id,
+        })
 
         # New lead, assigned to the new portal
         self.lead_portal = self.env['crm.lead'].with_context(mail_notrack=True).create({
@@ -150,7 +152,7 @@ class TestPartnerLeadPortal(TestCrmCommon):
             'contact_name': 'Renaud Rutten',
         })
         opportunity = self.env['crm.lead'].browse(data['id'])
-        salesmanteam = self.env['crm.team']._get_default_team_id(user_id=self.user_portal.user_id.id)
+        salesmanteam = self.env['crm.team']._get_default_team_id(user_id=self.user_portal.partner_id.user_id.id)
 
         self.assertEqual(opportunity.team_id, salesmanteam, 'The created opportunity should have the same team as the salesman default team of the opportunity creator.')
         self.assertEqual(opportunity.partner_assigned_id, self.user_portal.partner_id, 'Assigned Partner of created opportunity is the (portal) creator.')

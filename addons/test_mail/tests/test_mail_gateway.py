@@ -627,7 +627,7 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
 
-        record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_normalized, 'groups@test.com', subject='Email SimpleEmail')
+        record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.partner_id.email_normalized, 'groups@test.com', subject='Email SimpleEmail')
         self.assertEqual(record.create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].subject, 'Email SimpleEmail')
         self.assertEqual(record.message_ids[0].create_uid, self.user_employee)

@@ -1999,6 +1999,9 @@ class IrModelData(models.Model):
             record = data['record']
             noupdate = bool(data.get('noupdate'))
             rows.add((prefix, suffix, record._name, record.id, noupdate))
+            # Special Case for res.users: Avoid related res.partner xmlid to be dropped
+            if record._name == 'res.users':
+                rows.add((prefix, suffix + '_res_partner', 'res.partner', record.partner_id.id, noupdate))
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
             # insert rows or update them
@@ -2036,6 +2039,8 @@ class IrModelData(models.Model):
         record = self.env.ref(xml_id, raise_if_not_found=False)
         if record:
             self.pool.loaded_xmlids.add(xml_id)
+            if record._name == 'res.users':
+                self._load_xmlid(xml_id + '_res_partner')
         return record
 
     @api.model

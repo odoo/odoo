@@ -4510,6 +4510,15 @@ Fields:
                                 'record': record[parent_field],
                                 'noupdate': data.get('noupdate', False),
                             })
+                    # Special case for res.users: Create associated xml_id for partner_id
+                    if record._name == 'res.users':
+                        imd_data_list.append({
+                            'xml_id': f"{data['xml_id']}_res_partner",
+                            'record': record.partner_id,
+                            'noupdate': data.get('noupdate', False),
+                        })
+
+
                     imd_data_list.append(data)
 
         # create or update XMLIDs

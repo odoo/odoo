@@ -7,7 +7,7 @@ from odoo.exceptions import AccessError
 
 HR_READABLE_FIELDS = [
     'active',
-    'child_ids',
+    'partner_child_ids',
     'employee_id',
     'address_home_id',
     'employee_ids',

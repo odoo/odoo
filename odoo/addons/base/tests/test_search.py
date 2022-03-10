@@ -60,47 +60,6 @@ class test_search(TransactionCase):
         id_desc_active_desc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active desc")
         self.assertEqual([e, ab, b, a, d, c], list(id_desc_active_desc), "Search with 'ID DESC, ACTIVE DESC' order failed.")
 
-    def test_10_inherits_m2order(self):
-        Users = self.env['res.users']
-
-        # Find Employee group
-        group_employee = self.env.ref('base.group_user')
-
-        # Get country/state data
-        country_be = self.env.ref('base.be')
-        country_us = self.env.ref('base.us')
-        states_us = country_us.state_ids[:2]
-
-        # Create test users
-        u = Users.create({'name': '__search', 'login': '__search', 'groups_id': [Command.set([group_employee.id])]})
-        a = Users.create({'name': '__test_A', 'login': '__test_A', 'country_id': country_be.id, 'state_id': country_be.id})
-        b = Users.create({'name': '__test_B', 'login': '__a_test_B', 'country_id': country_us.id, 'state_id': states_us[1].id})
-        c = Users.create({'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us.id, 'state_id': states_us[0].id})
-
-        # Search as search user
-        Users = Users.with_user(u)
-
-        # Do: search on res.users, order on a field on res.partner to try inherits'd fields, then res.users
-        expected_ids = [u.id, a.id, c.id, b.id]
-        user_ids = Users.search([('id', 'in', expected_ids)], order='name asc, login desc').ids
-        self.assertEqual(user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
-
-        # Do: order on many2one and inherits'd fields
-        expected_ids = [c.id, b.id, a.id, u.id]
-        user_ids = Users.search([('id', 'in', expected_ids)], order='state_id asc, country_id desc, name asc, login desc').ids
-        self.assertEqual(user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
-
-        # Do: order on many2one and inherits'd fields
-        expected_ids = [u.id, b.id, c.id, a.id]
-        user_ids = Users.search([('id', 'in', expected_ids)], order='country_id desc, state_id desc, name asc, login desc').ids
-        self.assertEqual(user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
-
-        # Do: order on many2one, but not by specifying in order parameter of search, but by overriding _order of res_users
-        self.patch_order('res.users', 'country_id desc, name asc, login desc')
-        expected_ids = [u.id, c.id, b.id, a.id]
-        user_ids = Users.search([('id', 'in', expected_ids)]).ids
-        self.assertEqual(user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
-
     def test_11_indirect_inherits_m2o_order(self):
         Cron = self.env['ir.cron']
         Users = self.env['res.users']

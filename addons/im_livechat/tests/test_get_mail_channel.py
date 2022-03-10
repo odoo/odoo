@@ -28,8 +28,8 @@ class TestGetMailChannel(TransactionCase):
         self.visitor_user = self.env['res.users'].create({
             'name': 'Rajesh',
             'login': 'rajesh',
-            'country_id': self.ref('base.in'),
         })
+        self.visitor_user.partner_id.country_id = self.ref('base.in')
 
         self.livechat_channel = self.env['im_livechat.channel'].create({
             'name': 'The channel',
@@ -56,7 +56,8 @@ class TestGetMailChannel(TransactionCase):
     def test_channel_get_livechat_visitor_info(self):
         belgium = self.env.ref('base.be')
         public_user = self.env.ref('base.public_user')
-        test_user = self.env['res.users'].create({'name': 'Roger', 'login': 'roger', 'country_id': belgium.id})
+        test_user = self.env['res.users'].create({'name': 'Roger', 'login': 'roger'})
+        test_user.partner_id.country_id = belgium
 
         # ensure visitor info are correct with anonymous
         operator = self.operators[0]

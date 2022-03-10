@@ -248,7 +248,6 @@ class Users(models.Model):
     """
     _name = "res.users"
     _description = 'Users'
-    _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
 
     @property
@@ -275,8 +274,10 @@ class Users(models.Model):
         default_user_id = self.env['ir.model.data']._xmlid_to_res_id('base.default_user', raise_if_not_found=False)
         return self.env['res.users'].browse(default_user_id).sudo().groups_id if default_user_id else []
 
-    partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True, index=True,
+    partner_id = fields.Many2one(
+        'res.partner', required=True, ondelete='restrict', auto_join=True, index=True, copy=False,
         string='Related Partner', help='Partner-related data of the user')
+
     login = fields.Char(required=True, help="Used to log into the system")
     password = fields.Char(
         compute='_compute_password', inverse='_set_password',
@@ -308,10 +309,26 @@ class Users(models.Model):
     company_ids = fields.Many2many('res.company', 'res_company_users_rel', 'user_id', 'cid',
         string='Companies', default=lambda self: self.env.company.ids)
 
-    # overridden inherited fields to bypass access rights, in case you have
-    # access to the user but not its corresponding partner
-    name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
-    email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
+    name = fields.Char(related='partner_id.name', readonly=False, store=True)
+    email = fields.Char(related='partner_id.email', readonly=False, store=True)
+    email_formatted = fields.Char(related='partner_id.email_formatted')
+    tz = fields.Selection(related='partner_id.tz', readonly=False)
+    image_1920 = fields.Image(related='partner_id.image_1920', readonly=False)
+    image_1024 = fields.Image(related='partner_id.image_1024', readonly=False)
+    image_512 = fields.Image(related='partner_id.image_512', readonly=False)
+    image_256 = fields.Image(related='partner_id.image_256', readonly=False)
+    image_128 = fields.Image(related='partner_id.image_128', readonly=False)
+    avatar_1920 = fields.Image(related='partner_id.avatar_1920', readonly=False)
+    avatar_1024 = fields.Image(related='partner_id.avatar_1024', readonly=False)
+    avatar_512 = fields.Image(related='partner_id.avatar_512', readonly=False)
+    avatar_256 = fields.Image(related='partner_id.avatar_256', readonly=False)
+    avatar_128 = fields.Image(related='partner_id.avatar_128', readonly=False)
+    phone = fields.Char(related='partner_id.phone', readonly=False)
+    mobile = fields.Char(related='partner_id.mobile', readonly=False)
+    lang = fields.Selection(related='partner_id.lang', readonly=False)
+    partner_child_ids = fields.One2many(related='partner_id.child_ids', readonly=False)
+    partner_parent_id = fields.Many2one(related='partner_id.parent_id', readonly=False)
+    commercial_company_name = fields.Char(related='partner_id.commercial_company_name', readonly=False)
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
                                     compute='_compute_accesses_count', compute_sudo=True)
@@ -321,7 +338,7 @@ class Users(models.Model):
                                   compute='_compute_accesses_count', compute_sudo=True)
 
     _sql_constraints = [
-        ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
+        ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !'),
     ]
 
     def init(self):
@@ -436,9 +453,9 @@ class Users(models.Model):
         if self.login and tools.single_email_re.match(self.login):
             self.email = self.login
 
-    @api.onchange('parent_id')
+    @api.onchange('partner_parent_id')
     def onchange_parent_id(self):
-        return self.partner_id.onchange_parent_id()
+        return self.partner_parent_id.onchange_parent_id()
 
     def _read(self, fields):
         super(Users, self)._read(fields)
@@ -463,6 +480,12 @@ class Users(models.Model):
                       user_name=user.name,
                       company_allowed=', '.join(user.mapped('company_ids.name')))
                 )
+
+    @api.constrains('partner_id')
+    def _check_private_partners(self):
+        for user in self:
+            if user.partner_id.type == 'private':
+                raise UserError(_('Private partners can not be linked to users.'))
 
     @api.constrains('action_id')
     def _check_action_id(self):
@@ -544,6 +567,10 @@ class Users(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        without_partner_vals = [vals for vals in vals_list if 'partner_id' not in vals]
+        partners = self.env['res.partner'].create([{'name': vals['name']} for vals in without_partner_vals])
+        for vals, partner in zip(without_partner_vals, partners):
+            vals['partner_id'] = partner.id
         users = super(Users, self).create(vals_list)
         for user in users:
             # if partner is global we keep it that way
@@ -628,11 +655,13 @@ class Users(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {})
+        if 'partner_id' not in default:
+            default['partner_id'] = self.partner_id.copy().id
         if ('name' not in default) and ('partner_id' not in default):
             default['name'] = _("%s (copy)", self.name)
         if 'login' not in default:
             default['login'] = _("%s (copy)", self.login)
-        return super(Users, self).copy(default)
+        return super().copy(default)
 
     @api.model
     @tools.ormcache('self._uid')

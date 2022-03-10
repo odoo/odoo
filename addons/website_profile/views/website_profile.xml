@@ -218,11 +218,11 @@
                             <div t-if="user.partner_id.company_name" class="lead mb-2">
                                 <i class="fa fa-building-o fa-fw mr-1"/><span t-field="user.partner_id.company_name"/>
                             </div>
-                            <div t-if="user.city or user.country_id" class="lead mb-2">
+                            <div t-if="user.partner_id.city or user.partner_id.country_id" class="lead mb-2">
                                 <i class="fa fa-map-marker fa-fw mr-1"/>
-                                <span t-field="user.city"/><span class="text-nowrap ml-1" t-if="user.country_id">(<span t-field="user.country_id"/>)</span>
+                                <span t-field="user.partner_id.city"/><span class="text-nowrap ml-1" t-if="user.partner_id.country_id">(<span t-field="user.partner_id.country_id"/>)</span>
                             </div>
-                            <div t-if="user.website" class="lead mb-2">
+                            <div t-if="user.partner_id.website" class="lead mb-2">
                                 <i class="fa fa-globe fa-fw mr-1"/><span t-field="user.website"/>
                             </div>
                         </div>

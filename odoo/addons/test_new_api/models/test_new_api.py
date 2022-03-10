@@ -1580,3 +1580,39 @@ class Prefetch(models.Model):
     ron = fields.Float('Ron Weasley', prefetch='Harry Potter')
     hansel = fields.Integer('Hansel', prefetch="Hansel and Gretel")
     gretel = fields.Char('Gretel', prefetch="Hansel and Gretel")
+
+
+class ResPartnerInherits(models.Model):
+    _name = 'res.partner.inherits'
+    _description = 'res.partner.inherits'
+    _order = "name, id"
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company')
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    color = fields.Integer(default=0)
+    function = fields.Char()
+    date = fields.Date()
+    title = fields.Many2one('res.partner.title')
+    currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True)
+    monetary = fields.Monetary()  # implicitly depends on currency_id as currency_field
+
+    def _get_company_currency(self):
+        for partner in self:
+            partner.currency_id = partner.sudo().company_id.currency_id
+
+
+class ResUsersInherits(models.Model):
+    _name = 'res.users.inherits'
+    _description = 'res.users.inherits'
+    _inherits = {'res.partner.inherits': 'partner_id'}
+    _order = 'name, login'
+
+    login = fields.Char(required=True)
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company.id)
+    partner_id = fields.Many2one('res.partner.inherits', required=True, ondelete='restrict', auto_join=True)
+    color = fields.Integer(related='partner_id.color', readonly=False, store=True)
+    function = fields.Char(related='partner_id.function', readonly=False, store=True)
+    date = fields.Date(related='partner_id.date', readonly=False, store=True)
+    title = fields.Many2one(related='partner_id.title', readonly=False, store=True)

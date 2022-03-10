@@ -317,7 +317,7 @@ class WebsiteSlides(WebsiteProfile):
 
         users = request.env['res.users'].sudo().search([
             ('karma', '>', 0),
-            ('website_published', '=', True)], limit=5, order='karma desc')
+            ('partner_id.website_published', '=', True)], limit=5, order='karma desc')
 
         render_values = self._slide_render_context_base()
         render_values.update(self._prepare_user_values(**post))
@@ -418,7 +418,7 @@ class WebsiteSlides(WebsiteProfile):
     def _get_top3_users(self):
         return request.env['res.users'].sudo().search_read([
             ('karma', '>', 0),
-            ('website_published', '=', True)], ['id'], limit=3, order='karma desc')
+            ('partner_id.website_published', '=', True)], ['id'], limit=3, order='karma desc')
 
     @http.route([
         '/slides/<model("slide.channel"):channel>',

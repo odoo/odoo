@@ -22,13 +22,13 @@ class WebsiteAccount(CustomerPortal):
 
     def get_domain_my_lead(self, user):
         return [
-            ('partner_assigned_id', 'child_of', user.commercial_partner_id.id),
+            ('partner_assigned_id', 'child_of', user.partner_id.commercial_partner_id.id),
             ('type', '=', 'lead')
         ]
 
     def get_domain_my_opp(self, user):
         return [
-            ('partner_assigned_id', 'child_of', user.commercial_partner_id.id),
+            ('partner_assigned_id', 'child_of', user.partner_id.commercial_partner_id.id),
             ('type', '=', 'opportunity')
         ]
 

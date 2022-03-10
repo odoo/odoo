@@ -29,9 +29,11 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
 
         cls.admin_user = cls.env.ref('base.user_admin')
         cls.admin_user.write({
-            'country_id': cls.env.ref('base.be').id,
             'login': 'admin',
             'notification_type': 'inbox',
+        })
+        cls.admin_user.partner_id.write({
+            'country_id': cls.env.ref('base.be').id,
         })
         cls.company_admin = cls.admin_user.company_id
         # set country in order to format Belgian numbers
@@ -42,7 +44,6 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
             cls.env,
             company_id=cls.company_admin.id,
             company_ids=[(4, cls.company_admin.id)],
-            country_id=cls.env.ref('base.be').id,
             groups='base.group_user,base.group_partner_manager,event.group_event_user',
             email='e.e@example.com',
             login='event_user',
@@ -50,6 +51,7 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
             notification_type='inbox',
             signature='--\nErnest',
         )
+        cls.event_user.partner_id.country_id = cls.env.ref('base.be')
 
         cls.customer = cls.env['res.partner'].create({
             'country_id': cls.env.ref('base.be').id,

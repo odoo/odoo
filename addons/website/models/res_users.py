@@ -13,6 +13,8 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     website_id = fields.Many2one('website', related='partner_id.website_id', store=True, related_sudo=False, readonly=False)
+    website_published = fields.Boolean(related='partner_id.website_published', readonly=False)
+    is_published = fields.Boolean(related='partner_id.is_published', readonly=False)
 
     _sql_constraints = [
         # Partial constraint, complemented by a python constraint (see below).

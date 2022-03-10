@@ -1497,7 +1497,7 @@ class MailThread(models.AbstractModel):
         """ Find partners linked to users, given an email address that will
         be normalized. Search is done as sudo on res.users model to avoid domain
         on partner like ('user_ids', '!=', False) that would not be efficient. """
-        domain = [('email_normalized', 'in', normalized_emails)]
+        domain = [('partner_id.email_normalized', 'in', normalized_emails)]
         if extra_domain:
             domain = expression.AND([domain, extra_domain])
         partners = self.env['res.users'].sudo().search(domain, order='name ASC').mapped('partner_id')
@@ -1551,14 +1551,15 @@ class MailThread(models.AbstractModel):
             followers = self.env['res.partner']
 
         follower_users = self.env['res.users'].search([
-            ('partner_id', 'in', followers.ids), ('email_normalized', '=', normalized_email)
+            ('partner_id', 'in', followers.ids), ('partner_id.email_normalized', '=', normalized_email)
         ], limit=1) if followers else self.env['res.users']
         matching_user = follower_users[0] if follower_users else self.env['res.users']
         if matching_user:
             return matching_user
 
         if not matching_user:
-            std_users = self.env['res.users'].sudo().search([('email_normalized', '=', normalized_email)], limit=1, order='name ASC')
+            std_users = self.env['res.users'].sudo().search([
+                ('partner_id.email_normalized', '=', normalized_email)], limit=1, order='name ASC')
             matching_user = std_users[0] if std_users else self.env['res.users']
         if matching_user:
             return matching_user

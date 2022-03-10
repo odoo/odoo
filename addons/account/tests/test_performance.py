@@ -31,7 +31,6 @@ class BaseMailAccountPerformance(MailCommon):
         cls.user_account = cls.env['res.users'].with_context(cls._test_context).create({
             'company_id': cls.company_admin.id,
             'company_ids': [(4, cls.company_admin.id)],
-            'country_id': cls.env.ref('base.be').id,
             'email': 'e.e@example.com',
             'groups_id': [
                 (6, 0, [cls.env.ref('base.group_user').id,
@@ -47,7 +46,6 @@ class BaseMailAccountPerformance(MailCommon):
         cls.user_account_other = cls.env['res.users'].with_context(cls._test_context).create({
             'company_id': cls.company_admin.id,
             'company_ids': [(4, cls.company_admin.id)],
-            'country_id': cls.env.ref('base.be').id,
             'email': 'e.e.other@example.com',
             'groups_id': [
                 (6, 0, [cls.env.ref('base.group_user').id,
@@ -63,7 +61,6 @@ class BaseMailAccountPerformance(MailCommon):
         cls.user_portal = cls.env['res.users'].with_context(cls._test_context).create({
             'company_id': cls.company_admin.id,
             'company_ids': [(4, cls.company_admin.id)],
-            'country_id': cls.env.ref('base.be').id,
             'email': 'p.p@example.com',
             'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])],
             'login': 'user_portal',
@@ -71,6 +68,7 @@ class BaseMailAccountPerformance(MailCommon):
             'notification_type': 'email',
             'signature': '--\nOlivia',
         })
+        (cls.user_account + cls.user_account_other + cls.user_portal).partner_id.country_id = cls.env.ref('base.be')
 
         # mass mode: 10 invoices with their customer
         country_id = cls.env.ref('base.be').id

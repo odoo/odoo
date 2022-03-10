@@ -22,6 +22,8 @@ class ResUsers(models.Model):
 
     state = fields.Selection(compute='_compute_state', search='_search_state', string='Status',
                  selection=[('new', 'Never Connected'), ('active', 'Confirmed')])
+    signup_url = fields.Char(related='partner_id.signup_url')
+    signup_valid = fields.Boolean(related='partner_id.signup_valid')
 
     def _search_state(self, operator, value):
         negative = operator in expression.NEGATIVE_TERM_OPERATORS

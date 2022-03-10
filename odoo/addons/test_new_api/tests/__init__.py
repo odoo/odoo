@@ -9,3 +9,6 @@ from . import test_ui
 from . import test_domain
 from . import test_schema
 from . import test_company_checks
+from . import test_search_inherits
+from . import test_read_group_inherits
+from . import test_access_monetary_inherits

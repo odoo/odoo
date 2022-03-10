@@ -18,6 +18,7 @@ class Users(models.Model):
     _inherit = ['res.users']
     _description = 'Users'
 
+    # YTI NOTE: Could we store email_normalized from res.partner to avoid a JOIN ?
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
         ('inbox', 'Handle in Odoo')],

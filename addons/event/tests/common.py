@@ -14,9 +14,11 @@ class EventCase(common.TransactionCase):
 
         cls.admin_user = cls.env.ref('base.user_admin')
         cls.admin_user.write({
-            'country_id': cls.env.ref('base.be').id,
             'login': 'admin',
             'notification_type': 'inbox',
+        })
+        cls.admin_user.partner_id.write({
+            'country_id': cls.env.ref('base.be').id,
         })
         cls.company_admin = cls.admin_user.company_id
         # set country in order to format Belgian numbers

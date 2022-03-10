@@ -873,7 +873,7 @@ class WebsiteSale(http.Controller):
             if country_code:
                 def_country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1)
             else:
-                def_country_id = request.website.user_id.sudo().country_id
+                def_country_id = request.website.user_id.sudo().partner_id.country_id
 
         country = 'country_id' in values and values['country_id'] != '' and request.env['res.country'].browse(int(values['country_id']))
         country = country and country.exists() or def_country_id

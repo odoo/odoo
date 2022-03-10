@@ -732,6 +732,10 @@ class Contact(models.AbstractModel):
             opsep = M('<br/>')
 
         value = value.sudo().with_context(show_address=True)
+        if value._name == 'res.users':
+            target = value.partner_id
+        else:
+            target = value
         name_get = value.name_get()[0][1]
         # Avoid having something like:
         # name_get = 'Foo\n  \n' -> This is a res.partner with a name and no address
@@ -743,16 +747,17 @@ class Contact(models.AbstractModel):
         val = {
             'name': name_get.split("\n")[0],
             'address': address,
-            'phone': value.phone,
-            'mobile': value.mobile,
-            'city': value.city,
-            'country_id': value.country_id.display_name,
-            'website': value.website,
-            'email': value.email,
-            'vat': value.vat,
-            'vat_label': value.country_id.vat_label or _('VAT'),
+            'phone': target.phone,
+            'mobile': target.mobile,
+            'city': target.city,
+            'country_id': target.country_id.display_name,
+            'website': target.website,
+            'email': target.email,
+            'vat': target.vat,
+            'vat_label': target.country_id.vat_label or _('VAT'),
             'fields': opf,
             'object': value,
+            'target': target,
             'options': options
         }
         return self.env['ir.qweb']._render('base.contact', val, **template_options)

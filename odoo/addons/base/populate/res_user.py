@@ -20,23 +20,16 @@ class Users(models.Model):
     _populate_dependencies = ["res.partner"]
 
     def _populate_factories(self):
-        def generate_partner_id(iterator, *args):
-            partner_factories = self.env['res.partner']._populate_factories()
-            partner_generator = populate.chain_factories(partner_factories, self._name)
-            for dependant_values in partner_generator:
-                values = next(iterator)
-                yield {**dependant_values, **values, '__complete': values['__complete']}
-
         def get_company_ids(values, **kwargs):
             return [(6, 0, [values['company_id']])]
 
         return [
             ('active', populate.cartesian([True, False], [0.9, 0.1])),
-            ('partner_id', generate_partner_id),
             ('company_id', populate.randomize(self.env.registry.populated_models['res.company'])),
             ('company_ids', populate.compute(get_company_ids)),
             ('login', populate.constant('user_login_{counter}')),
             ('name', populate.constant('user_{counter}')),
+            ('tz', populate.randomize([tz for tz in self.env['res.partner']._fields['tz'].get_values(self.env)])),
         ]
 
     def _populate(self, size):

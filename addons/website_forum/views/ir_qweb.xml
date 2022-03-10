@@ -5,9 +5,9 @@
         <div>
              <div t-if="'karma' in fields" class='css_editable_mode_hidden'>
                 <div t-if="options.get('UserBio')" class="mb-2">
-                    <span t-field="object.company_name" class="o_forum_tooltip_line"/><br/>
-                        <a t-att-href="object.website" t-if="object.website">
-                            <span t-field="object.website" class="o_forum_tooltip_line"/>
+                    <span t-field="target.company_name" class="o_forum_tooltip_line"/><br/>
+                        <a t-att-href="target.website" t-if="target.website">
+                            <span t-field="target.website" class="o_forum_tooltip_line"/>
                         </a>
                 </div>
                 <b class="mt-4"><i class="fa fa-diamond text-secondary"/> <t t-esc="object.karma"/></b>
@@ -23,14 +23,14 @@
                 </div>
                 <t t-out="0"/>
                 <div t-if="options.get('UserBio')" class="mt-2">
-                    <div class="o_forum_tooltip_line" t-if="object.partner_id.country_id or object.partner_id.city">
-                        <span t-field="object.partner_id.city"/><span t-if="object.partner_id.city and object.partner_id.country_id">, </span><span t-field="object.partner_id.country_id"/>
+                    <div class="o_forum_tooltip_line" t-if="target.country_id or target.city">
+                        <span t-field="target.city"/><span t-if="target.city and target.country_id">, </span><span t-field="target.country_id"/>
                     </div>
                 </div>
             </div>
             <span t-if="options.get('website_description') and 'partner_id' in fields">
-                <t t-if="object.partner_id.website_description">
-                    <span t-field="object.partner_id.website_description"/>
+                <t t-if="target.website_description">
+                    <span t-field="target.website_description"/>
                 </t>
             </span>
 
