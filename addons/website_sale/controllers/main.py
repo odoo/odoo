@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
+import urllib
+
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
@@ -635,6 +637,18 @@ class WebsiteSale(http.Controller):
         tx = request.env.context.get('website_sale_transaction')
         if tx and tx.state != 'draft':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
+
+        # Force login if tokenization is required
+        if request.env['payment.acquirer'].sudo()._is_tokenization_required(
+            sale_order_id=order.id
+        ):
+            user_sudo = request.env.user
+            # The user needs to be logged if tokenization is required.
+            if user_sudo._is_public():
+                return request.redirect(
+                    # Escape special characters to avoid loosing original params when redirected
+                    f'/web/login?redirect={urllib.parse.quote(request.httprequest.full_path)}'
+                )
 
     def checkout_values(self, **kw):
         order = request.website.sale_get_order(force_create=1)

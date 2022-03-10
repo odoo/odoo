@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import binascii
+import urllib
 
 from odoo import fields, http, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, MissingError, ValidationError
@@ -186,6 +187,17 @@ class CustomerPortal(portal.CustomerPortal):
         # Payment values
         if order_sudo.has_to_be_paid():
             logged_in = not request.env.user._is_public()
+
+            # Force login if tokenization is required
+            tokenization_required = request.env['payment.acquirer'].sudo()._is_tokenization_required(
+                sale_order_id=order_sudo.id
+            )
+            if not logged_in and tokenization_required:
+                return request.redirect(
+                    # Escape special characters to avoid loosing original params when redirected
+                    f'/web/login?redirect={urllib.parse.quote(request.httprequest.full_path)}'
+                )
+
             acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
                 order_sudo.company_id.id,
                 order_sudo.partner_id.id,
@@ -205,10 +217,7 @@ class CustomerPortal(portal.CustomerPortal):
             }
             # Prevent public partner from saving payment methods but force it for logged in partners
             # buying subscription products
-            show_tokenize_input = logged_in \
-                and not request.env['payment.acquirer'].sudo()._is_tokenization_required(
-                    sale_order_id=order_sudo.id
-                )
+            show_tokenize_input = logged_in and not tokenization_required
             values.update({
                 'acquirers': acquirers_sudo,
                 'tokens': tokens,

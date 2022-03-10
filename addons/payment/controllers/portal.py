@@ -90,7 +90,9 @@ class PaymentPortal(portal.CustomerPortal):
             partner_sudo = user_sudo.partner_id
         else:
             partner_sudo = request.env['res.partner'].sudo().browse(partner_id).exists()
-            if not partner_sudo:
+            if not partner_sudo or request.env['payment.acquirer'].sudo()._is_tokenization_required(
+                **kwargs  # Force login if partner doesn't exist or if tokenization is required
+            ):
                 return request.redirect(
                     # Escape special characters to avoid loosing original params when redirected
                     f'/web/login?redirect={urllib.parse.quote(request.httprequest.full_path)}'
