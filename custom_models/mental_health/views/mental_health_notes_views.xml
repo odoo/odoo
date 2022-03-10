@@ -4,13 +4,27 @@
         <field name="name">Properties</field>
         <field name="res_model">mental_health.notes</field>
         <field name="view_mode">tree,form</field>
+
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 You don't have any notes associated with your account!
             </p>
             <p>
-                If you are a therapist, this means you haven't created notes. Otherwise, you haven't had notes made from sessions with a therapist.
+                If you are a therapist, this means you haven't created notes. Otherwise, you haven't had notes made from
+                sessions with a therapist.
             </p>
+        </field>
+    </record>
+
+    <record id="mental_health_notes_view_tree" model="ir.ui.view">
+        <field name="name">Mental Health Notes</field>
+        <field name="model">mental_health.notes</field>
+        <field name="arch" type="xml">
+            <tree string="Properties">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="icd10_codes"/>
+            </tree>
         </field>
     </record>
 </odoo>
