@@ -122,21 +122,29 @@ const KnowledgeFormRenderer = FormRenderer.extend({
      * When the user clicks on the caret to hide and show some files
      * @param {Event} event
      */
-    _onFold: function (event) {
+    _onFold: async function (event) {
         event.stopPropagation();
         const $button = $(event.currentTarget);
         const $icon = $button.find('i');
         const $li = $button.closest('li');
         const $ul = $li.find('ul');
-        if ($ul.length !== 0) {
-            $ul.toggle();
-            if ($ul.is(':visible')) {
-                $icon.removeClass('fa-caret-right');
-                $icon.addClass('fa-caret-down');
-            } else {
-                $icon.removeClass('fa-caret-down');
-                $icon.addClass('fa-caret-right');
+        $ul.toggle();
+        if ($ul.is(':visible')) {
+            $icon.removeClass('fa-caret-right');
+            $icon.addClass('fa-caret-down');
+        } else {
+            if ($ul.length === 0) {
+                // Call the children content
+                const children = await this._rpc({
+                    route: '/knowledge/get_children',
+                    params: {
+                        parent_id: $li.data('articleId')
+                    }
+                });
+                $li.append($('<ul/>').append(children));
             }
+            $icon.removeClass('fa-caret-down');
+            $icon.addClass('fa-caret-right');
         }
     },
 

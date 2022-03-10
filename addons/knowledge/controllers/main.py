@@ -76,23 +76,20 @@ class KnowledgeController(http.Controller):
     # Articles tree generation
     # ------------------------
 
-    def get_tree_values(self, res_id):
+    def get_tree_values(self, res_id=False, parent_id=False):
         # sudo article to avoid access error on member or on article for external users.
         # The article the user can see will be based on user_has_access.
         Article = request.env["knowledge.article"].sudo()
-        # get favourite
-        favourites = Article.search([("favourite_user_ids", "in", [request.env.user.id]), ('user_has_access', '=', True)])
 
-        main_articles = Article.search([("parent_id", "=", False), ('user_has_access', '=', True)])
-
-        public_articles = main_articles.filtered(lambda article: article.category == 'workspace')
-        shared_articles = main_articles.filtered(lambda article: article.category == 'shared')
+        main_articles = Article.search([("parent_id", "=", parent_id), ('user_has_access', '=', True)]).sorted('sequence')
+        if parent_id:
+            return {'articles': main_articles}
 
         values = {
             "active_article_id": res_id,
-            "favourites": favourites,
-            "public_articles": public_articles,
-            "shared_articles": shared_articles
+            "favourites": Article.search([("favourite_user_ids", "in", [request.env.user.id]), ('user_has_access', '=', True)]),
+            "public_articles": main_articles.filtered(lambda article: article.category == 'workspace'),
+            "shared_articles": main_articles.filtered(lambda article: article.category == 'shared'),
         }
 
         if request.env.user.has_group('base.group_user'):
@@ -105,4 +102,10 @@ class KnowledgeController(http.Controller):
     @http.route('/knowledge/get_tree', type='json', auth='user')
     def display_tree(self, res_id=False):
         # TODO: remove res_id and highlight active id after adding the template to the view. ??
-        return request.env.ref('knowledge.knowledge_article_tree_template')._render(self.get_tree_values(res_id))
+        template = request.env.ref('knowledge.knowledge_article_tree_template')._render(self.get_tree_values(res_id=res_id))
+        return template
+
+    @http.route('/knowledge/get_children', type='json', auth='user')
+    def display_children(self, parent_id):
+        template = request.env.ref('knowledge.articles_template')._render(self.get_tree_values(parent_id=parent_id))
+        return template

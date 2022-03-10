@@ -175,6 +175,7 @@ class Article(models.Model):
     @api.depends_context('uid')
     @api.depends('internal_permission', 'article_member_ids.partner_id', 'article_member_ids.permission')
     def _compute_user_has_access(self):
+        print("entering user has access")
         if self.env.user.has_group('base.group_system'):
             self.user_has_access = True
             return
