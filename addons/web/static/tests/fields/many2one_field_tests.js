@@ -17,6 +17,9 @@ import { makeView, setupViewRegistries } from "../views/helpers";
 let serverData;
 let target;
 
+// WOWL remove after adapting tests
+let createView, FormView, testUtils, cpHelpers, Widget, BasicModel, StandaloneFieldManagerMixin, relationalFields, ListView;
+
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
@@ -695,7 +698,7 @@ QUnit.module("Fields", (hooks) => {
             setTimeout: (fn) => fn(),
         });
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -747,7 +750,7 @@ QUnit.module("Fields", (hooks) => {
                 `,
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -805,7 +808,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            const list = await makeView({
+            await makeView({
                 type: "list",
                 resModel: "partner",
                 serverData,
@@ -929,7 +932,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("empty many2one field", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -976,7 +979,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("empty many2one field with node options", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -1210,7 +1213,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("many2one in non edit mode", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -1265,7 +1268,7 @@ QUnit.module("Fields", (hooks) => {
             `,
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -1295,7 +1298,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("many2one searches with correct value", async function (assert) {
         assert.expect(6);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -1341,7 +1344,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("many2one search with trailing and leading spaces", async function (assert) {
         assert.expect(10);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -1403,7 +1406,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(4);
 
         let count = 0;
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 2,
@@ -1509,7 +1512,7 @@ QUnit.module("Fields", (hooks) => {
         var parent = new StandaloneWidget(model);
         model.setParent(parent);
         await testUtils.mock.addMockEnvironment(parent, {
-            data: self.data,
+            // data: self.data,
             mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
@@ -1572,7 +1575,7 @@ QUnit.module("Fields", (hooks) => {
         const def = makeDeferred();
         let newRecordId;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -1618,7 +1621,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -1715,7 +1718,7 @@ QUnit.module("Fields", (hooks) => {
         const def = makeDeferred();
         let newRecordId;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -1868,7 +1871,7 @@ QUnit.module("Fields", (hooks) => {
             [0, 0, { display_name: "new record", p: [] }],
         ];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -1910,7 +1913,7 @@ QUnit.module("Fields", (hooks) => {
                 [0, 0, { display_name: "new record", trululu: false, p: [] }],
             ];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -1954,7 +1957,7 @@ QUnit.module("Fields", (hooks) => {
                 [0, 0, { display_name: "new record", trululu: false, p: [] }],
             ];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -2034,7 +2037,7 @@ QUnit.module("Fields", (hooks) => {
             [0, 0, { trululu: 1, p: [] }],
         ];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -2073,7 +2076,7 @@ QUnit.module("Fields", (hooks) => {
                 [0, 0, { display_name: "record2", trululu: 2, p: [] }],
             ];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -2448,7 +2451,7 @@ QUnit.module("Fields", (hooks) => {
         };
         let displayName = "brandon is the new timmy";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -2516,7 +2519,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.fields.turtles.default = [[6, 0, [2, 3]]];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -2566,7 +2569,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -2677,7 +2680,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "product",
             resId: 37,
@@ -2737,7 +2740,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("autocompletion in a many2one, in form view with a domain", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -2764,7 +2767,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 2,
@@ -2800,7 +2803,7 @@ QUnit.module("Fields", (hooks) => {
 
         let count = 0;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -2828,7 +2831,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("selecting a many2one, then discarding", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -2869,7 +2872,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.records[0].timmy = [12];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -2925,7 +2928,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("quick create on a many2one", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -2970,7 +2973,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3026,7 +3029,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3079,7 +3082,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3232,7 +3235,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("no_create option on a many2one", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3340,7 +3343,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -3440,7 +3443,7 @@ QUnit.module("Fields", (hooks) => {
                 `,
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -3480,7 +3483,7 @@ QUnit.module("Fields", (hooks) => {
 
             const def = makeDeferred();
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -3536,7 +3539,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("leaving a many2one by pressing tab", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3580,7 +3583,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -3723,7 +3726,7 @@ QUnit.module("Fields", (hooks) => {
         };
 
         let domain = [];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -3771,7 +3774,7 @@ QUnit.module("Fields", (hooks) => {
         };
 
         let domain = [];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -3841,7 +3844,7 @@ QUnit.module("Fields", (hooks) => {
             "partner,false,search": `<search />`,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3895,7 +3898,7 @@ QUnit.module("Fields", (hooks) => {
         };
 
         let expectedDomain;
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3963,7 +3966,7 @@ QUnit.module("Fields", (hooks) => {
         </div>`);
         $("body").append($fakeDialog);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4020,7 +4023,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -4091,7 +4094,7 @@ QUnit.module("Fields", (hooks) => {
             "partner,false,search": `<search />`,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4140,7 +4143,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("many2one dropdown disappears on scroll", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -4175,7 +4178,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records[0].p = [1, 2, 4];
         serverData.models.partner.fields.trululu.sortable = true;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -4227,7 +4230,7 @@ QUnit.module("Fields", (hooks) => {
             "partner,false,search": `<search />`,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -4314,7 +4317,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -4362,7 +4365,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -4519,7 +4522,7 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelectorAll(".o_field_one2many input:first"),
                 "New line"
             );
-            await click(formllel);
+            await click(form);
 
             assert.containsN(
                 form,

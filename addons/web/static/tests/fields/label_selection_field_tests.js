@@ -57,7 +57,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("LabelSelectionField in form view", async function (assert) {
         assert.expect(12);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -144,7 +144,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("LabelSelectionField in editable list view", async function (assert) {
         assert.expect(21);
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,

@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, triggerEvent, mount } from "../helpers/utils";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
+import { makeFakeLocalizationService } from "../helpers/mock_services";
 
 const { Component, xml } = owl;
 

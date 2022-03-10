@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
-import { _lt } from "@web/core/l10n/translation";
 
 import { ColorList } from "@web/core/colorlist/colorlist";
 

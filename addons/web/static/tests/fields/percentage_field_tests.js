@@ -36,7 +36,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("PercentageField in form view", async function (assert) {
         assert.expect(6);
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",

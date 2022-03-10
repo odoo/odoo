@@ -14,6 +14,9 @@ import {
 let serverData;
 let target;
 
+// WOWL remove after adapting tests
+let testUtils;
+
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
@@ -218,7 +221,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.records[0].foo = `[("int_field", "=", uid)]`;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -244,7 +247,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].foo = "[]";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -326,7 +329,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.bar.type = "char";
         serverData.models.partner.records[0].bar = "product";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -413,7 +416,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -453,7 +456,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.bar.type = "char";
         serverData.models.partner.records[0].bar = "product";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -497,7 +500,7 @@ QUnit.module("Fields", (hooks) => {
             "partner_type,false,search": `<search><field name="name" string="Name" /></search>`,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -543,7 +546,7 @@ QUnit.module("Fields", (hooks) => {
             "partner_type,false,search": `<search><field name="name" string="Name" /></search>`,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -572,7 +575,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.bar.type = "char";
         serverData.models.partner.records[0].bar = "product";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -627,7 +630,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.fields.bar.type = "char";
             serverData.models.partner.records[0].bar = "product";
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -689,7 +692,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.fields.bar.type = "char";
             serverData.models.partner.records[0].bar = "product";
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -739,7 +742,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records[0].bar = "product";
 
         const def = makeDeferred();
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -787,7 +790,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.bar.type = "char";
         serverData.models.partner.records[0].bar = "partner";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,

@@ -6,6 +6,9 @@ import { session } from "@web/session";
 
 let serverData;
 
+// WOWL remove after adapting tests
+let createView, FormView, testUtils, ListView;
+
 function getFieldArch(fieldName, widget) {
     return `<field name="${fieldName}" ` + (widget ? `widget="${widget}"` : "") + `/>`;
 }

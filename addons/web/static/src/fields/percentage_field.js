@@ -14,8 +14,8 @@ export class PercentageField extends Component {
         let parsedValue;
         try {
             parsedValue = this.props.parse(ev.target.value);
-        } catch (e) {
-            // FIXME WOWL check error
+        } catch (_e) {
+            // WOWL TODO: rethrow error when not the expected type
             this.props.setAsInvalid(this.props.name);
             return;
         }

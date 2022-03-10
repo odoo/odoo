@@ -4,10 +4,9 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
+import { sprintf, escape } from "@web/core/utils/strings";
 import { standardFieldProps } from "./standard_field_props";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { escape } from "@web/core/utils/strings";
 
 const { Component, onWillStart, onWillUpdateProps, useState } = owl;
 

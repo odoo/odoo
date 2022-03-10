@@ -9,7 +9,7 @@ import { GroupByMenu } from "../group_by_menu/group_by_menu";
 import { SearchBar } from "../search_bar/search_bar";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, useState } = owl;
+const { useState } = owl;
 
 const MAPPING = {
     filter: FilterMenu,

@@ -7,6 +7,9 @@ import { makeView, setupViewRegistries } from "../views/helpers";
 let serverData;
 let target;
 
+// WOWL remove after adapting tests
+let makeLegacyCommandService, createWebClient, triggerHotkey, legacyExtraNextTick, doAction, core, makeTestEnvironment;
+
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
@@ -205,7 +208,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("PriorityField when not set", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 2,
@@ -281,7 +284,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("PriorityField in form view", async function (assert) {
         assert.expect(25);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -464,7 +467,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("PriorityField in editable list view", async function (assert) {
         assert.expect(25);
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,

@@ -537,7 +537,7 @@ QUnit.module("Fields", (hooks) => {
         "multi edition of DatetimeField in list view: edit date in input",
         async function (assert) {
             assert.expect(4);
-
+            const createView = null, ListView = null;
             var list = await createView({
                 View: ListView,
                 model: "partner",

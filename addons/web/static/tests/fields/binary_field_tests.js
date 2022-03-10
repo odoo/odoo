@@ -279,8 +279,9 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await click(target, ".o_form_button_create");
-            await testUtils.fields.many2one.clickOpenDropdown("product_id");
-            await testUtils.fields.many2one.clickHighlightedItem("product_id");
+            // WOWL uncomment when unskipping this test
+            // await testUtils.fields.many2one.clickOpenDropdown("product_id");
+            // await testUtils.fields.many2one.clickHighlightedItem("product_id");
 
             assert.containsOnce(
                 form,

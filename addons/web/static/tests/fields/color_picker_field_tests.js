@@ -46,7 +46,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("can navigate away with TAB", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -82,7 +82,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -126,7 +126,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("closes when color selected or outside click", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -175,7 +175,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            const list = await makeView({
+            await makeView({
                 type: "list",
                 resModel: "partner",
                 serverData,

@@ -163,7 +163,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(2);
 
             serverData.models.partner.records[0].timmy = [12, 14];
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,

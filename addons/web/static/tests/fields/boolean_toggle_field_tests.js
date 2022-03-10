@@ -28,7 +28,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("use BooleanToggleField in form view", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -61,7 +61,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("readonly switch", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,

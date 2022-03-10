@@ -34,7 +34,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("boolean field in form view", async function (assert) {
         assert.expect(15);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -163,7 +163,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("boolean field in editable list view", async function (assert) {
         assert.expect(11);
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
@@ -263,7 +263,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("readonly boolean field", async function (assert) {
         assert.expect(6);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,

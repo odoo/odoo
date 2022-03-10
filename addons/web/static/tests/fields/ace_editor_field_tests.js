@@ -39,7 +39,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("AceEditorField on text fields works", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,

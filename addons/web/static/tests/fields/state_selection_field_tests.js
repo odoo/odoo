@@ -7,6 +7,9 @@ import { makeView, setupViewRegistries } from "../views/helpers";
 let serverData;
 let target;
 
+// WOWL remove after adapting tests
+let makeTestEnvironment, makeLegacyCommandService, triggerHotkey, core, legacyExtraNextTick, createWebClient, doAction;
+
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
@@ -298,7 +301,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("StateSelectionField with readonly modifier", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,

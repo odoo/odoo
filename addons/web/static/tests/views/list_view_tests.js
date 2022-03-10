@@ -37,6 +37,9 @@ const serviceRegistry = registry.category("services");
 let serverData;
 let target;
 
+// WOWL remove after adapting tests
+let testUtils, Widget, widgetRegistry, widgetRegistryOwl, cpHelpers, FormView, ListView, ListRenderer, core, _t, clickFirst, mixins, BasicModel, RamStorage, AbstractStorageService, loadState, patch, unpatch, ControlPanel, ListController, createView, basicFields;
+
 async function reloadListView(target) {
     await click(target, "input.o_searchview_input");
     await triggerEvent(target, "input.o_searchview_input", "keydown", { key: "Enter" });
@@ -407,7 +410,7 @@ QUnit.module("Views", (hooks) => {
         }
         serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
 
-        await makeView({
+        const list = await makeView({
             type: "list",
             model: "foo",
             serverData,
@@ -4999,7 +5002,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            await makeView({
+            const list = await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
@@ -5088,7 +5091,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("empty list with sample data", async function (assert) {
         assert.expect(19);
 
-        await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
@@ -5196,7 +5199,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("empty list with sample data: keyboard navigation", async function (assert) {
         assert.expect(11);
 
-        await makeView({
+        const list = await makeView({
             arch: `
                 <tree sample="1">
                     <field name="foo"/>
@@ -5251,7 +5254,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("non empty list with sample data", async function (assert) {
         assert.expect(6);
 
-        await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
@@ -5679,7 +5682,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("reload list view with groupby node", async function (assert) {
         assert.expect(2);
 
-        await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
@@ -6225,7 +6228,7 @@ QUnit.module("Views", (hooks) => {
         var nbRPCs = { readGroup: 0, searchRead: 0 };
         var envIDs = []; // the ids that should be in the environment during this test
 
-        await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
@@ -7035,7 +7038,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(12);
 
-            await makeView({
+            const list = await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
@@ -7104,7 +7107,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(13);
 
-            await makeView({
+            const list = await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
@@ -8027,7 +8030,7 @@ QUnit.module("Views", (hooks) => {
             }
             serverData.models.bar.records = newRecs;
 
-            await makeView({
+            const list = await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
@@ -10821,7 +10824,7 @@ QUnit.module("Views", (hooks) => {
 
         var blockSearchRead = false;
         var prom = testUtils.makeTestPromise();
-        await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
@@ -11542,7 +11545,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("editable grouped lists", async function (assert) {
         assert.expect(4);
 
-        await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
@@ -11575,7 +11578,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("grouped lists are editable (ungrouped first)", async function (assert) {
         assert.expect(2);
 
-        await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
@@ -14051,9 +14054,6 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.skipWOWL("update control panel while list view is mounting", async function (assert) {
-        const ControlPanel = require("web.ControlPanel");
-        const ListController = require("web.ListController");
-
         let mountedCounterCall = 0;
 
         patch(ControlPanel.prototype, "test.ControlPanel", {

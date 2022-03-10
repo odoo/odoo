@@ -75,7 +75,7 @@ QUnit.module("Fields", (hooks) => {
         // we check that even in that eventuality, only two decimals are displayed
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -108,7 +108,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("StatInfoField in form view", async function (assert) {
         assert.expect(9);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,

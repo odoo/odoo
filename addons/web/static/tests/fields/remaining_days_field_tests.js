@@ -216,7 +216,7 @@ QUnit.module("Fields", (hooks) => {
             { id: 8, date: false },
         ];
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
@@ -280,7 +280,7 @@ QUnit.module("Fields", (hooks) => {
                 { id: 8, date: false },
             ];
 
-            const list = await makeView({
+            await makeView({
                 type: "list",
                 resModel: "partner",
                 serverData,
@@ -346,7 +346,7 @@ QUnit.module("Fields", (hooks) => {
                 { id: 8, date: false },
             ];
 
-            const list = await makeView({
+            await makeView({
                 type: "list",
                 resModel: "partner",
                 serverData,
@@ -393,7 +393,7 @@ QUnit.module("Fields", (hooks) => {
             { id: 1, date: "2017-10-08" }, // today
         ];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -444,7 +444,7 @@ QUnit.module("Fields", (hooks) => {
             { id: 1, datetime: "2017-10-08 10:00:00" }, // today
         ];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -495,7 +495,7 @@ QUnit.module("Fields", (hooks) => {
                 { id: 8, datetime: false },
             ];
 
-            const list = await makeView({
+            await makeView({
                 type: "list",
                 resModel: "partner",
                 serverData,
@@ -576,7 +576,7 @@ QUnit.module("Fields", (hooks) => {
                 { id: 5, datetime: "2017-10-09 20:00:00" }, // + 2 days
             ];
 
-            const list = await makeView({
+            await makeView({
                 type: "list",
                 resModel: "partner",
                 serverData,
@@ -614,7 +614,7 @@ QUnit.module("Fields", (hooks) => {
             { id: 5, date: "2017-10-05" }, // - 3 days
         ];
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
@@ -653,7 +653,7 @@ QUnit.module("Fields", (hooks) => {
                 { id: 5, datetime: "2017-10-07 02:00:00" }, // - 2 days
             ];
 
-            const list = await makeView({
+            await makeView({
                 type: "list",
                 resModel: "partner",
                 serverData,

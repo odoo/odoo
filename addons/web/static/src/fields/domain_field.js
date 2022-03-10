@@ -29,7 +29,8 @@ export class DomainField extends Component {
         try {
             this.getDomain(this.props.value).toList();
             return true;
-        } catch (e) {
+        } catch (_e) {
+            // WOWL TODO: rethrow error when not the expected type
             return false;
         }
     }
@@ -63,7 +64,8 @@ export class DomainField extends Component {
                 ),
                 isValid: true,
             });
-        } catch (e) {
+        } catch (_e) {
+            // WOWL TODO: rethrow error when not the expected type
             Object.assign(this.state, {
                 recordCount: 0,
                 isValid: false,

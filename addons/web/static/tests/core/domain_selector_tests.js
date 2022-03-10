@@ -16,7 +16,7 @@ import { LegacyComponent } from "@web/legacy/legacy_component";
 import FormView from "web.FormView";
 import legacyViewRegistry from "web.view_registry";
 
-const { Component, xml } = owl;
+const { xml } = owl;
 
 let serverData;
 let env;

@@ -158,7 +158,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("use TAB to navigate to a PhoneField", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",

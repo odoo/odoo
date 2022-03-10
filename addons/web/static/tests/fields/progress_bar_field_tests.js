@@ -65,7 +65,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -111,7 +111,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(5);
             serverData.models.partner.records[0].int_field = 99;
 
-            const form = await makeView({
+            await makeView({
                 serverData,
                 type: "form",
                 resModel: "partner",
@@ -163,7 +163,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(5);
             serverData.models.partner.records[0].int_field = 99;
 
-            const form = await makeView({
+            await makeView({
                 serverData,
                 type: "form",
                 resModel: "partner",
@@ -216,7 +216,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(5);
             serverData.models.partner.records[0].int_field = 99;
 
-            const form = await makeView({
+            await makeView({
                 serverData,
                 type: "form",
                 resModel: "partner",
@@ -270,7 +270,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(7);
             serverData.models.partner.records[0].int_field = 99;
 
-            const form = await makeView({
+            await makeView({
                 serverData,
                 type: "form",
                 resModel: "partner",
@@ -362,7 +362,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(5);
             serverData.models.partner.records[0].int_field = 99;
 
-            const form = await makeView({
+            await makeView({
                 serverData,
                 type: "form",
                 resModel: "partner",
@@ -430,7 +430,7 @@ QUnit.module("Fields", (hooks) => {
                 force: true,
             });
 
-            const form = await makeView({
+            await makeView({
                 serverData,
                 type: "form",
                 resModel: "partner",

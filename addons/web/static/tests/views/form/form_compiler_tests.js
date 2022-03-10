@@ -203,7 +203,7 @@ QUnit.module("Form Renderer", (hooks) => {
                 </form>`,
         };
 
-        const form = await makeView({
+        await makeView({
             serverData,
             resModel: "partner",
             type: "form",
@@ -223,7 +223,7 @@ QUnit.module("Form Renderer", (hooks) => {
                 </form>`,
         };
 
-        const form = await makeView({
+        await makeView({
             serverData,
             resModel: "partner",
             type: "form",

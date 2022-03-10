@@ -32,7 +32,8 @@ export class DomainSelector extends LegacyComponent {
             this.traverseNode(ctx);
 
             return ctx.parent;
-        } catch (e) {
+        } catch (_e) {
+            // WOWL TODO: rethrow error when not the expected type
             return false;
         }
     }

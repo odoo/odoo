@@ -28,6 +28,10 @@ const serviceRegistry = registry.category("services");
 
 const { markup } = owl;
 
+// WOWL remove after adapting tests
+let testUtils, Widget, widgetRegistry, widgetRegistryOwl, FormRenderer, AbstractField, KanbanView, cpHelpers, modalCancel, modalOk, FieldChar, KanbanRenderer, fieldRegistry;
+
+
 // ----------------------------------------------------------------------------
 // Helpers
 // ----------------------------------------------------------------------------
@@ -4057,7 +4061,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.partner.records.product_id = 1;
         serverData.models.product.records.push({ id: 1, display_name: "third product" });
 
-        const readGroupCount = 0;
+        let readGroupCount = 0;
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -4143,7 +4147,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("kanban view with create=False", async (assert) => {
         assert.expect(1);
 
-        await makeView({
+            await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -4160,7 +4164,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("clicking on a link triggers correct event", async (assert) => {
         assert.expect(1);
 
-        await makeView({
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -4184,8 +4188,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("environment is updated when (un)folding groups", async (assert) => {
         assert.expect(3);
 
-        const envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
-        await makeView({
+        let envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -4323,7 +4327,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(9);
 
         const data = serverData.models;
-        for (const i = 0; i < 12; i++) {
+        for (let i = 0; i < 12; i++) {
             data.product.records.push({
                 id: 8 + i,
                 name: "column",
@@ -4430,7 +4434,7 @@ QUnit.module("Views", (hooks) => {
 
         let resequencedIDs;
 
-        await makeView({
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -6471,7 +6475,7 @@ QUnit.module("Views", (hooks) => {
         try {
             await click(target.querySelector('.o_kanban_record button[name="toggle_action"]'));
             assert.strictEqual(true, true, "Everything went fine");
-        } catch (e) {
+        } catch {
             assert.strictEqual(true, false, "Error triggered at action execution");
         }
     });
@@ -6555,7 +6559,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("resequence columns in grouped by m2o", async (assert) => {
         assert.expect(6);
 
-        const envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
+        let envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -6669,7 +6673,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        const $firstRecord = target.querySelector(".o_kanban_record:first-child");
+        let $firstRecord = target.querySelector(".o_kanban_record:first-child");
 
         assert.containsNone(
             target,
@@ -6701,7 +6705,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("load more records in column", async (assert) => {
         assert.expect(13);
 
-        const envIDs = [1, 2, 4]; // the ids that should be in the environment during this test
+        let envIDs = [1, 2, 4]; // the ids that should be in the environment during this test
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -7113,7 +7117,7 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             assert.expect(3);
 
-            const counter = 0;
+            let counter = 0;
             const MyTestWidget = AbstractField.extend({
                 on_attach_callback: function () {
                     counter++;
@@ -7152,7 +7156,7 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(counter, 2, "on_attach_callback should have been called twice");
 
             // set a color to kanban record
-            const $firstRecord = target.querySelector(".o_kanban_record:first-child");
+            let $firstRecord = target.querySelector(".o_kanban_record:first-child");
             testUtils.kanban.toggleRecordDropdown($firstRecord);
             await click($firstRecord.find(".oe_kanban_colorpicker a.oe_kanban_color_9"));
 
@@ -8390,7 +8394,7 @@ QUnit.module("Views", (hooks) => {
             "has an action and the kanban has no oe_kanban_global_... class",
         async (assert) => {
             assert.expect(1);
-            await makeView({
+            const kanban = await makeView({
                 type: "kanban",
                 resModel: "partner",
                 serverData,
@@ -8472,7 +8476,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("asynchronous rendering of a field widget (grouped)", async (assert) => {
         assert.expect(4);
 
-        const fooFieldProm = makeDeferred();
+        let fooFieldProm = makeDeferred();
         fieldRegistry.get("char").add(
             "asyncwidget",
             FieldChar.extend({
@@ -8882,7 +8886,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("quick create: keyboard navigation to buttons", async (assert) => {
         assert.expect(2);
 
-        await makeView({
+        const kanban = await makeView({
             arch: `
                 <kanban on_create="quick_create">
                     <field name="bar"/>

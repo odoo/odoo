@@ -5,6 +5,8 @@ import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 let target;
+// WOWL remove after adapting tests
+let cpHelpers, relationalFields, KanbanView;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -775,7 +777,7 @@ QUnit.module("Fields", (hooks) => {
                 display_name: "Partner 9",
             }
         );
-        var form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -852,7 +854,7 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(1);
 
             const M2M_LIMIT = relationalFields.FieldMany2ManyTags.prototype.limit;
-            //relationalFields.FieldMany2ManyTags.prototype.limit = 30;
+            relationalFields.FieldMany2ManyTags.prototype.limit = 30;
             serverData.models.partner.fields.partner_ids = {
                 string: "Partner",
                 type: "many2many",
@@ -877,7 +879,7 @@ QUnit.module("Fields", (hooks) => {
                 "should have rendered 30 tags even though 35 records linked"
             );
 
-            //relationalFields.FieldMany2ManyTags.prototype.limit = M2M_LIMIT;
+            relationalFields.FieldMany2ManyTags.prototype.limit = M2M_LIMIT;
         }
     );
 

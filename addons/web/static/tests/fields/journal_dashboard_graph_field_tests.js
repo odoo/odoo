@@ -75,7 +75,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });*/
 
-        const kanban = makeView({
+        makeView({
             serverData,
             type: "kanban",
             resModel: "partner",

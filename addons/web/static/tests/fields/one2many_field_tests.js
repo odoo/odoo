@@ -14,6 +14,9 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 let serverData;
 let target;
 
+// WOWL remove after adapting tests
+let testUtils, delay, AbstractField, BasicModel, fieldRegistry, clickFirst, KanbanRecord, fieldUtils, relationalFields, makeLegacyDialogMappingTestEnv, AbstractStorageService, RamStorage, patch, unpatch, ControlPanel, FieldOne2Many, AbstractFieldOwl, fieldRegistryOwl, cpHelpers;
+
 async function clickDiscard(target) {
     await click(target.querySelector(".o_form_button_cancel"));
 }
@@ -8876,7 +8879,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.turtle.fields.turtle_int.default = 10;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -8927,7 +8930,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.turtle.fields.turtle_int.default = 10;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -8964,7 +8967,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.turtle.fields.turtle_int.default = 10;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -11184,7 +11187,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11624,7 +11627,7 @@ QUnit.module("Fields", (hooks) => {
             ...new Array(170).fill().map((_, i) => ({ id: i + 10, name: "Partner " + i }))
         );
         serverData.models.partner.fields.datetime.searchable = true;
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11702,7 +11705,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].p = [1, 7, 4, 5, 2, 6, 3];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,

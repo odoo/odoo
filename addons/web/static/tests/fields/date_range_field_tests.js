@@ -2,6 +2,8 @@
 
 import { click, getFixture, patchTimeZone, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
+// WOWL remove this after unskipping tests using this
+const editInput = null;
 
 let serverData;
 let target;
@@ -218,7 +220,7 @@ QUnit.module("Fields", (hooks) => {
         };
         serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -375,7 +377,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
         serverData.models.partner.records[0].date_end = "2017-02-08";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -539,7 +541,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
         serverData.models.partner.records[0].date_end = "2017-02-08";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -699,7 +701,7 @@ QUnit.module("Fields", (hooks) => {
             };
             serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -738,7 +740,7 @@ QUnit.module("Fields", (hooks) => {
             };
             serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -790,7 +792,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
             serverData.models.partner.records[0].date_end = "2017-02-08";
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -844,7 +846,7 @@ QUnit.module("Fields", (hooks) => {
         };
         serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -873,7 +875,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
         serverData.models.partner.records[0].date_end = "2017-03-13";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,

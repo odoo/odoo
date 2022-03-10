@@ -273,7 +273,8 @@ export class ColorPicker extends Component {
         try {
             rgbColor = convertCSSColorToRgba(ev.target.value);
             rgbColor.opacity = this.props.transparency ? rgbColor.opacity : 100;
-        } catch (e) {
+        } catch (_e) {
+            // WOWL TODO: rethrow error when not the expected type
             invalid = true;
             ev.target.value = this.hex;
         }

@@ -77,7 +77,7 @@ QUnit.module("Fields", (hooks) => {
             r.color = "red";
         });
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
@@ -100,7 +100,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records[0].product_id = 37;
         serverData.models.partner.records[0].trululu = false;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -204,7 +204,7 @@ QUnit.module("Fields", (hooks) => {
             ],
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -243,7 +243,7 @@ QUnit.module("Fields", (hooks) => {
             ],
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -270,7 +270,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("unset selection on a many2one field", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -306,7 +306,7 @@ QUnit.module("Fields", (hooks) => {
         // edit the partner with id=4
         serverData.models.partner.records[2].display_name = "<span>hey</span>";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -397,7 +397,7 @@ QUnit.module("Fields", (hooks) => {
             default: "good",
             string: "Good",
         };
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,

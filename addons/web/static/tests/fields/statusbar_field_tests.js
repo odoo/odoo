@@ -3,9 +3,13 @@
 import { browser } from "@web/core/browser/browser";
 import { click, getFixture, patchWithCleanup } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
+
+// WOWL remove after adapting tests
+let testUtils, makeTestEnvironment, triggerHotkey, nextTick, doAction, core, makeLegacyCommandService, createWebClient;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -306,7 +310,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("clickable statusbar widget on many2one field", async function (assert) {
         assert.expect(5);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -351,7 +355,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(2);
 
         serverData.models.product.records = [];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -409,7 +413,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("statusbar with no value in readonly", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -489,7 +493,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.records[0].bar = false;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,

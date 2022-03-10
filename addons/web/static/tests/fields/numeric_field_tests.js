@@ -7,6 +7,8 @@ import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 let target;
+// WOWL remove after adapting tests
+let nextTick;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -228,7 +230,7 @@ QUnit.module("Fields", (hooks) => {
             registry
                 .category("services")
                 .add("localization", makeFakeLocalizationService({ decimal_point: "🇧🇪" }));
-            const form = await makeView({
+            await makeView({
                 serverData,
                 type: "form",
                 resModel: "partner",

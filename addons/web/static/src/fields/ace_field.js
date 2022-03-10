@@ -1,5 +1,5 @@
 /** @odoo-module **/
-
+/* global ace */
 import { loadAssets } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";

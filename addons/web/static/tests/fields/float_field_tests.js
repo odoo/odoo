@@ -8,6 +8,8 @@ import { registry } from "@web/core/registry";
 let serverData;
 let target;
 
+// WOWL remove after adapting tests
+let createView, FormView, testUtils;
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();

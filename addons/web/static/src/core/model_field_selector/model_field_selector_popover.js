@@ -85,7 +85,8 @@ export class ModelFieldSelectorPopover extends LegacyComponent {
         try {
             this.chain = await this.props.loadChain(this.fullFieldName);
             this.update();
-        } catch (error) {
+        } catch (_error) {
+            // WOWL TODO: rethrow error when not the expected type
             this.chain = [{ resModel: this.props.chain[0], field: null }];
             await this.props.update([]);
             this.render();

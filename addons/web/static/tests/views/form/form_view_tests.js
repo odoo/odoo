@@ -19,6 +19,9 @@ import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
 
+// WOWL remove after adapting tests
+let createView, FormView, testUtils, core, mapLegacyEnvToWowlEnv, makeTestEnv, makeTestEnvironment, concurrency, _t, ViewDialogs, clickFirst, pyUtils, Widget, widgetRegistry, widgetRegistryOwl, mixins, BasicModel, RamStorage, AbstractStorageService, FormRenderer, AbstractField, clickLast, fieldRegistryOwl;
+
 let serverData;
 QUnit.module("Views", (hooks) => {
     hooks.beforeEach(() => {
@@ -2856,7 +2859,7 @@ QUnit.module("Views", (hooks) => {
 
             serverData.models.partner.onchanges.foo = function () {};
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -7563,7 +7566,7 @@ QUnit.module("Views", (hooks) => {
 
             serverData.models.partner.fields.trululu.default = 2;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -7592,7 +7595,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.records[0].product_ids = [37]; // one2many
             serverData.models.partner.records[0].timmy = [12]; // many2many
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -9902,7 +9905,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         };
 
-        const form = await makeView(makeView);
+        await makeView(params);
         assert.ok(instanceNumber > 0);
         assert.strictEqual(instanceNumber, 0);
 
@@ -9953,7 +9956,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(10);
             serverData.models.partner.records[0].timmy = [12];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -11564,7 +11567,7 @@ QUnit.module("Views", (hooks) => {
         }
         fieldRegistryOwl.add("custom", CustomFieldComponent);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,

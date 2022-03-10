@@ -10,7 +10,8 @@ export class IntegerField extends Component {
         let value = ev.target.value;
         try {
             value = this.props.parse(value);
-        } catch (e) {
+        } catch (_e) {
+            // WOWL TODO: rethrow error when not the expected type
             isValid = false;
             this.props.setAsInvalid(this.props.name);
         }

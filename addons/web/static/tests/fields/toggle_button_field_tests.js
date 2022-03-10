@@ -2,10 +2,13 @@
 
 import { setupViewRegistries } from "../views/helpers";
 
-let serverData;
+// WOWL remove after adapting tests
+let createView, FormView, testUtils, ListView;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
+        // WOWL
+        // eslint-disable-next-line no-undef
         serverData = {
             models: {
                 partner: {
