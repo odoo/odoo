@@ -473,20 +473,27 @@ export const useSortable = (params) => {
         },
         () => toDependencies(setup())
     );
-    useExternalListener(window, "mousedown", (ev) => {
-        if (!enabled || !ev.target.closest(fullSelector)) {
-            return;
-        }
+    useEffect(
+        (el) => {
+            const handler = (ev) => {
+                if (!enabled || !ev.target.closest(fullSelector)) {
+                    return;
+                }
 
-        // A drag sequence can still be in progress if the mouseup occurred
-        // outside of the window.
-        dragStop(true);
+                // A drag sequence can still be in progress if the mouseup occurred
+                // outside of the window.
+                dragStop(true);
 
-        currentItem = ev.target.closest(itemSelector);
-        currentList = listSelector && ev.target.closest(listSelector);
-        offsetX = ev.clientX;
-        offsetY = ev.clientY;
-    });
+                currentItem = ev.target.closest(itemSelector);
+                currentList = listSelector && ev.target.closest(listSelector);
+                offsetX = ev.clientX;
+                offsetY = ev.clientY;
+            };
+            el.addEventListener("mousedown", handler);
+            return () => el.removeEventListener("mousedown", handler);
+        },
+        () => [ref.el]
+    );
     useExternalListener(window, "mousemove", (ev) => {
         if (!enabled || !currentItem || updatingDrag) {
             return;

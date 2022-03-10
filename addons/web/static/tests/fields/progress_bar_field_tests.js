@@ -326,7 +326,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(5);
         serverData.models.partner.records[0].int_field = 99;
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -351,7 +351,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector(".o_progress"));
 
-        assert.containsNone(form, ".o_progressbar_value.o_input", "no input in readonly mode");
+        assert.containsNone(target, ".o_progressbar_value.o_input", "no input in readonly mode");
 
         assert.verifySteps(["/web/dataset/call_kw/partner/read"]);
     });

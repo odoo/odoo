@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { download } from "@web/core/network/download";
+// import { download } from "@web/core/network/download";
 import { makeMockXHR } from "../helpers/mock_services";
 import {
     click,
@@ -68,7 +68,7 @@ QUnit.module("Fields", (hooks) => {
             this.status = 200;
             this.response = new Blob([data.get("data")], { type: "text/plain" });
         }
-        let MockXHR = makeMockXHR("", send);
+        const MockXHR = makeMockXHR("", send);
 
         patchWithCleanup(
             browser,
@@ -78,7 +78,7 @@ QUnit.module("Fields", (hooks) => {
             { pure: true }
         );
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -90,7 +90,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         assert.containsOnce(
-            form,
+            target,
             '.o_field_widget[name="document"] a > .fa-download',
             "the binary field should be rendered as a downloadable link in readonly"
         );
@@ -124,7 +124,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_form_button_edit");
 
         assert.containsNone(
-            form,
+            target,
             '.o_field_widget[name="document"] a > .fa-download',
             "the binary field should not be rendered as a downloadable link in edit"
         );
@@ -134,7 +134,7 @@ QUnit.module("Fields", (hooks) => {
             "the binary field should display the file name in the input edit mode"
         );
         assert.containsOnce(
-            form,
+            target,
             ".o_field_binary .o_clear_file_button",
             "there shoud be a button to clear the file"
         );
@@ -151,7 +151,7 @@ QUnit.module("Fields", (hooks) => {
             "the input should be hidden"
         );
         assert.containsOnce(
-            form,
+            target,
             ".o_field_binary .o_select_file_button",
             "there should be a button to upload the file"
         );
@@ -163,12 +163,12 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_save");
         assert.containsNone(
-            form,
+            target,
             '.o_field_widget[name="document"] a > .fa-download',
             "the binary field should not render as a downloadable link since we removed the file"
         );
         assert.containsNone(
-            form,
+            target,
             "o_field_widget span",
             "the binary field should not display a filename in the link since we removed the file"
         );
@@ -252,11 +252,11 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(4);
 
             // save the session function
-            var oldGetFile = download;
-            download = function (option) {
-                assert.step("We shouldn't be getting the file.");
-                return oldGetFile.bind(download)(option);
-            };
+            // var oldGetFile = download;
+            // download = function (option) {
+            //     assert.step("We shouldn't be getting the file.");
+            //     return oldGetFile.bind(download)(option);
+            // };
 
             serverData.models.partner.onchanges = {
                 product_id: function (obj) {
@@ -266,7 +266,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.fields.document.readonly = true;
 
-            const form = await makeView({
+            await makeView({
                 serverData,
                 type: "form",
                 resModel: "partner",
@@ -284,12 +284,12 @@ QUnit.module("Fields", (hooks) => {
             // await testUtils.fields.many2one.clickHighlightedItem("product_id");
 
             assert.containsOnce(
-                form,
+                target,
                 '.o_field_widget[name="document"] a',
                 "The link to download the binary should be present"
             );
             assert.containsNone(
-                form,
+                target,
                 '.o_field_widget[name="document"] a > .fa-download',
                 "The download icon should not be present"
             );
@@ -299,7 +299,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.verifySteps([]); // We shouldn't have passed through steps
 
-            download = oldGetFile;
+            // download = oldGetFile;
         }
     );
 });

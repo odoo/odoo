@@ -336,7 +336,7 @@ QUnit.module("Fields", (hooks) => {
             };
 
             let domain = [];
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -365,7 +365,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target, ".o_form_button_edit");
 
             assert.containsN(
-                form,
+                target,
                 ".o_field_widget[name='trululu'] option",
                 4,
                 "should be 4 options in the selection"
@@ -377,7 +377,7 @@ QUnit.module("Fields", (hooks) => {
             await triggerEvent(input, null, "change");
 
             assert.containsOnce(
-                form,
+                target,
                 ".o_field_widget[name='trululu'] option",
                 "should be 1 option in the selection"
             );

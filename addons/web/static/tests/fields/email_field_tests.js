@@ -53,7 +53,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("EmailField in form view", async function (assert) {
         assert.expect(7);
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -68,14 +68,14 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         let mailtoLink = target.querySelector(".o_field_email a.o_form_uri.o_text_overflow");
-        assert.containsOnce(form, mailtoLink, "should have a anchor with correct classes");
+        assert.containsOnce(target, mailtoLink, "should have a anchor with correct classes");
         assert.strictEqual(mailtoLink.innerText, "yop", "the value should be displayed properly");
         assert.hasAttrValue(mailtoLink, "href", "mailto:yop", "should have proper mailto prefix");
 
         // switch to edit mode and check the result
         await click(target.querySelector(".o_form_button_edit"));
         const mailtoEdit = target.querySelector('.o_field_email input[type="email"]');
-        assert.containsOnce(form, mailtoEdit, "should have an input for the email field");
+        assert.containsOnce(target, mailtoEdit, "should have an input for the email field");
         assert.strictEqual(
             mailtoEdit.value,
             "yop",
@@ -100,7 +100,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("EmailField in editable list view", async function (assert) {
         assert.expect(10);
 
-        const list = await makeView({
+        await makeView({
             serverData,
             type: "list",
             resModel: "partner",
@@ -118,7 +118,12 @@ QUnit.module("Fields", (hooks) => {
         );
 
         let mailtoLink = target.querySelectorAll(".o_field_email a");
-        assert.containsN(list, ".o_field_email a", 2, "should have 2 anchors with correct classes");
+        assert.containsN(
+            target,
+            ".o_field_email a",
+            2,
+            "should have 2 anchors with correct classes"
+        );
         assert.hasAttrValue(
             mailtoLink[0],
             "href",

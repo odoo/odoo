@@ -200,7 +200,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(2);
 
         // Create the domain selector and its mock environment
-        domainSelector = await mount(DomainSelector, target, {
+        await mount(DomainSelector, target, {
             env,
             props: {
                 resModel: "partner",
@@ -217,8 +217,8 @@ QUnit.module("Components", (hooks) => {
         });
 
         // Check that there is a datepicker to choose the date
-        assert.containsOnce(domainSelector.el, ".o_datepicker", "there should be a datepicker");
-        await click(domainSelector.el, ".o_datepicker_input");
+        assert.containsOnce(target, ".o_datepicker", "there should be a datepicker");
+        await click(target, ".o_datepicker_input");
 
         await click(
             document.body.querySelector(
@@ -234,7 +234,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         // Create the domain selector and its mock environment
-        domainSelector = await mount(DomainSelector, target, {
+        await mount(DomainSelector, target, {
             env,
             props: {
                 resModel: "partner",
@@ -251,7 +251,7 @@ QUnit.module("Components", (hooks) => {
             },
         });
 
-        const input = domainSelector.el.querySelector(".o_domain_leaf_value_input");
+        const input = target.querySelector(".o_domain_leaf_value_input");
         input.value = "pad";
         await triggerEvent(input, null, "change");
     });
@@ -260,7 +260,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         // Create the domain selector and its mock environment
-        domainSelector = await mount(DomainSelector, target, {
+        await mount(DomainSelector, target, {
             env,
             props: {
                 resModel: "product",
@@ -280,7 +280,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         // Create the domain selector and its mock environment
-        domainSelector = await mount(DomainSelector, target, {
+        await mount(DomainSelector, target, {
             env,
             props: {
                 resModel: "partner",
@@ -300,7 +300,7 @@ QUnit.module("Components", (hooks) => {
 
         // Clicking on the button should add a visible field selector in the
         // widget so that the user can change the field chain
-        await click(domainSelector.el, ".o_domain_add_first_node_button");
+        await click(target, ".o_domain_add_first_node_button");
     });
 
     QUnit.skipWOWL("inline domain editor in modal", async (assert) => {

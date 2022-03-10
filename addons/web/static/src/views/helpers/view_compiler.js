@@ -104,7 +104,7 @@ export class ViewCompiler {
         // let mod = node.getAttribute(modifierName);
         // if (mod === null) {
         const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-        let mod = modifierName in modifiers ? modifiers[modifierName] : false;
+        const mod = modifierName in modifiers ? modifiers[modifierName] : false;
         // }
         // AAB: is this necessary for modifiers?
         // if (!Array.isArray(mod) && !(typeof mod === "boolean")) {
@@ -231,7 +231,7 @@ export class ViewCompiler {
             }
             compiled.setAttribute(attr.name, attr.value);
         }
-        for (let child of node.childNodes) {
+        for (const child of node.childNodes) {
             this.append(compiled, this.compileNode(child, params));
         }
         return compiled;
@@ -243,8 +243,11 @@ export class ViewCompiler {
             `t-attf-class`,
             "{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}"
         );
+        if (params.className) {
+            form.setAttribute("t-att-class", params.className);
+        }
         let hasSheet = false;
-        for (let child of node.childNodes) {
+        for (const child of node.childNodes) {
             hasSheet = hasSheet || (child.tagName && child.tagName.toUpperCase() === "SHEET");
             const toAppend = this.compileNode(child, params);
             this.append(form, toAppend);
@@ -262,7 +265,7 @@ export class ViewCompiler {
         const sheetFG = this.document.createElement("div");
         sheetFG.setAttribute("class", "o_form_sheet");
         sheetBG.appendChild(sheetFG);
-        for (let child of node.childNodes) {
+        for (const child of node.childNodes) {
             this.append(sheetFG, this.compileNode(child, params));
         }
         return sheetBG;
@@ -312,7 +315,7 @@ export class ViewCompiler {
             const colSize = Math.max(1, Math.round(12 / nbCols));
 
             params = Object.create(params);
-            for (let child of node.childNodes) {
+            for (const child of node.childNodes) {
                 if (child.tag === "newline") {
                     this.append(group, this.document.createElement("br"));
                     continue;
@@ -351,7 +354,7 @@ export class ViewCompiler {
             const rows = [];
             let currentColspan = 0;
             let currentRow = this.document.createElement("tr");
-            for (let child of node.childNodes) {
+            for (const child of node.childNodes) {
                 if (isComment(child)) {
                     continue;
                 }
@@ -392,7 +395,7 @@ export class ViewCompiler {
                 // LPE FIXME implem colspan brols
                 //currentRow = this.document.createElement("tr");
 
-                let tds = [];
+                const tds = [];
                 if (child.tagName === "field") {
                     if (this.isAlwaysInvisible(this.getModifier(child, "invisible"), params)) {
                         continue;
@@ -559,7 +562,7 @@ export class ViewCompiler {
 
         const invisibleDomains = {};
         let containsAlwaysVisiblePages = false;
-        for (let child of node.childNodes) {
+        for (const child of node.childNodes) {
             if (!(child instanceof Element)) {
                 continue;
             }
@@ -632,7 +635,7 @@ export class ViewCompiler {
         content.setAttribute("t-if", `${params.noteBookId} === "${pageId}"`);
         content.classList.add("tab-pane", "active");
 
-        for (let child of node.childNodes) {
+        for (const child of node.childNodes) {
             this.append(content, this.compileNode(child, params));
         }
 
@@ -644,7 +647,7 @@ export class ViewCompiler {
         statusBar.setAttribute("class", "o_form_statusbar");
         const buttons = [];
         const others = [];
-        for (let child of node.childNodes) {
+        for (const child of node.childNodes) {
             const compiled = this.compileNode(child, params);
             if (!compiled) {
                 continue;
@@ -736,7 +739,7 @@ export class ViewCompiler {
     }
 }
 
-export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc) => {
+export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc, params) => {
     const component = useComponent();
 
     // Assigns special functions to the current component.
@@ -758,7 +761,7 @@ export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc) => {
     // compiled already.
     if (!templateIds[templateKey]) {
         const { qweb } = component.env;
-        const compiledDoc = new ViewCompiler(qweb, fields).compile(xmlDoc);
+        const compiledDoc = new ViewCompiler(qweb, fields).compile(xmlDoc, params);
         templateIds[templateKey] = xml`${compiledDoc.outerHTML}`;
         // DEBUG -- start
         console.group(`Compiled template (${templateIds[templateKey]}):`);

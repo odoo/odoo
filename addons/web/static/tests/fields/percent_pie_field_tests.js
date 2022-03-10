@@ -204,7 +204,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("PercentPieField in form view with value < 50%", async function (assert) {
         assert.expect(12);
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -220,7 +220,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            form,
+            target,
             ".o_field_percent_pie.o_field_widget .o_pie",
             "should have a pie chart"
         );
@@ -246,7 +246,7 @@ QUnit.module("Fields", (hooks) => {
         // switch to edit mode and check the result
         await click(target.querySelector(".o_form_button_edit"));
         assert.containsOnce(
-            form,
+            target,
             ".o_field_percent_pie.o_field_widget .o_pie",
             "should have a pie chart"
         );
@@ -276,7 +276,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         await click(target.querySelector(".o_form_button_save"));
         assert.containsOnce(
-            form,
+            target,
             ".o_field_percent_pie.o_field_widget .o_pie",
             "should have a pie chart"
         );
@@ -303,7 +303,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("PercentPieField in form view with value > 50%", async function (assert) {
         assert.expect(12);
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -319,7 +319,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            form,
+            target,
             ".o_field_percent_pie.o_field_widget .o_pie",
             "should have a pie chart"
         );
@@ -346,7 +346,7 @@ QUnit.module("Fields", (hooks) => {
         // switch to edit mode and check the result
         await click(target.querySelector(".o_form_button_edit"));
         assert.containsOnce(
-            form,
+            target,
             ".o_field_percent_pie.o_field_widget .o_pie",
             "should have a pie chart"
         );
@@ -371,7 +371,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         await click(target.querySelector(".o_form_button_save"));
         assert.containsOnce(
-            form,
+            target,
             ".o_field_percent_pie.o_field_widget .o_pie",
             "should have a pie chart"
         );

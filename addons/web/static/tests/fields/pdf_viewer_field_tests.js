@@ -32,7 +32,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("PdfViewerField without data", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -41,18 +41,18 @@ QUnit.module("Fields", (hooks) => {
 
         assert.hasClass(target.querySelector(".o_field_widget"), "o_field_pdf_viewer");
         assert.containsOnce(
-            form,
+            target,
             ".o_select_file_button:not(.o_hidden)",
             "there should be a visible 'Upload' button"
         );
-        assert.containsNone(form, ".o_pdfview_iframe", "there should be no iframe");
-        assert.containsOnce(form, 'input[type="file"]', "there should be one input");
+        assert.containsNone(target, ".o_pdfview_iframe", "there should be no iframe");
+        assert.containsOnce(target, 'input[type="file"]', "there should be one input");
     });
 
     QUnit.test("PdfViewerField: basic rendering", async function (assert) {
         assert.expect(4);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -65,9 +65,9 @@ QUnit.module("Fields", (hooks) => {
             },
         });
         assert.hasClass(target.querySelector(".o_field_widget"), "o_field_pdf_viewer");
-        assert.containsNone(form, ".o_select_file_button", "there should be no 'Upload' button");
+        assert.containsNone(target, ".o_select_file_button", "there should be no 'Upload' button");
         assert.containsOnce(
-            form,
+            target,
             ".o_field_widget iframe.o_pdfview_iframe",
             "there should be an iframe"
         );
@@ -84,14 +84,14 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("PdfViewerField: upload rendering", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: "<form>" + '<field name="document" widget="pdf_viewer"/>' + "</form>",
         });
 
-        assert.containsNone(form, ".o_pdfview_iframe", "there is no PDF Viewer");
+        assert.containsNone(target, ".o_pdfview_iframe", "there is no PDF Viewer");
 
         // Set and trigger the change of a pdf file for the input
         const fileInput = target.querySelector('input[type="file"]');
@@ -102,7 +102,7 @@ QUnit.module("Fields", (hooks) => {
 
         await nextTick();
 
-        assert.containsOnce(form, ".o_pdfview_iframe", "there is a PDF Viewer");
+        assert.containsOnce(target, ".o_pdfview_iframe", "there is a PDF Viewer");
         const iframeFile = target
             .querySelector(".o_field_widget iframe.o_pdfview_iframe")
             .dataset.src.split("?file=")[1];

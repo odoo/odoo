@@ -264,7 +264,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("basic flow in editable list view", async function (assert) {
         assert.expect(4);
 
-        const list = await makeView({
+        await makeView({
             serverData,
             type: "list",
             resModel: "partner",
@@ -284,7 +284,7 @@ QUnit.module("Fields", (hooks) => {
         await click(cell);
 
         assert.containsOnce(
-            list,
+            target,
             '.o_field_widget[name="int_field"] input',
             "The view should have 1 input for editable integer."
         );

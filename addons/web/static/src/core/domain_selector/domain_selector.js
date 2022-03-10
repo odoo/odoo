@@ -2,9 +2,10 @@
 
 import { Domain } from "@web/core/domain";
 import { DomainSelectorRootNode } from "./domain_selector_root_node";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class DomainSelector extends LegacyComponent {
+const { Component } = owl;
+
+export class DomainSelector extends Component {
     setup() {
         this.nextNodeId = 0;
     }

@@ -4,11 +4,10 @@ import { sortBy } from "../utils/arrays";
 import { useModelField } from "./model_field_hook";
 
 import { fuzzyLookup } from "@web/core/utils/search";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { onWillStart } = owl;
+const { Component, onWillStart } = owl;
 
-export class ModelFieldSelectorPopover extends LegacyComponent {
+export class ModelFieldSelectorPopover extends Component {
     setup() {
         this.chain = Array.from(this.props.chain);
         this.modelField = useModelField();

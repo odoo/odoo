@@ -19,7 +19,7 @@
                     title="Close"
                     role="img"
                     aria-label="Close"
-                    t-on-click="() => this.trigger('popover-closed')"
+                    t-on-click="props.close"
                 />
 
                 <t t-if="props.showSearchInput">

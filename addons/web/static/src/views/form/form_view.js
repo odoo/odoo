@@ -16,9 +16,8 @@ import { Layout } from "@web/search/layout";
 import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { onWillStart, useEffect, useRef, onRendered } = owl;
+const { Component, onWillStart, useEffect, useRef, onRendered } = owl;
 
 const viewRegistry = registry.category("views");
 
@@ -101,7 +100,7 @@ export async function loadSubViews(
 
 // -----------------------------------------------------------------------------
 
-export class FormView extends LegacyComponent {
+export class FormView extends Component {
     setup() {
         this.dialogService = useService("dialog");
         this.router = useService("router");

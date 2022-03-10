@@ -40,7 +40,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("PhoneField in form view on normal screens", async function (assert) {
         assert.expect(6);
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -62,7 +62,7 @@ QUnit.module("Fields", (hooks) => {
 
         const phone = target.querySelector(".o_field_phone a");
         assert.containsOnce(
-            form,
+            target,
             phone,
             "should have rendered the phone number as a link with correct classes"
         );
@@ -72,7 +72,7 @@ QUnit.module("Fields", (hooks) => {
         // switch to edit mode and check the result
         await click(target.querySelector(".o_form_button_edit"));
         assert.containsOnce(
-            form,
+            target,
             'input[type="phone"]',
             "should have an input for the phone field"
         );
@@ -97,7 +97,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("PhoneField in editable list view on normal screens", async function (assert) {
         assert.expect(8);
 
-        const list = await makeView({
+        await makeView({
             serverData,
             type: "list",
             resModel: "partner",
@@ -109,7 +109,7 @@ QUnit.module("Fields", (hooks) => {
             // },
         });
 
-        assert.containsN(list, "tbody td:not(.o_list_record_selector).o_data_cell", 2);
+        assert.containsN(target, "tbody td:not(.o_list_record_selector).o_data_cell", 2);
         assert.strictEqual(
             target.querySelector("tbody td:not(.o_list_record_selector) a").innerText,
             "yop",
@@ -117,7 +117,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.containsN(
-            list,
+            target,
             ".o_field_widget a.o_form_uri.o_phone_link",
             2,
             "should have the correct classnames"
@@ -148,7 +148,7 @@ QUnit.module("Fields", (hooks) => {
             "value should be properly updated"
         );
         assert.containsN(
-            list,
+            target,
             ".o_field_widget a.o_form_uri.o_phone_link",
             2,
             "should still have links with correct classes"

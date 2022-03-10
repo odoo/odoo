@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
+import { getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
-let serverData;
+let serverData, target;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -33,14 +34,14 @@ QUnit.module("Fields", (hooks) => {
                 },
             },
         };
-
+        target = getFixture();
         setupViewRegistries();
     });
 
     QUnit.module("CopyClipboardField");
 
     QUnit.test("Char & Text Fields: Copy to clipboard button", async function (assert) {
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -57,12 +58,12 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            form,
+            target,
             ".o_clipboard_button.o_btn_text_copy",
             "Should have copy button on text type field"
         );
         assert.containsOnce(
-            form,
+            target,
             ".o_clipboard_button.o_btn_char_copy",
             "Should have copy button on char type field"
         );
@@ -71,7 +72,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("CopyClipboardField on unset field", async function (assert) {
         serverData.models.partner.records[0].char_field = false;
 
-        const form = await makeView({
+        await makeView({
             serverData,
             type: "form",
             resModel: "partner",
@@ -87,7 +88,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsNone(
-            form,
+            target,
             '.o_field_copy[name="char_field"] .o_clipboard_button',
             "char_field (unset) should not contain a button"
         );
@@ -98,7 +99,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             serverData.models.partner.fields.display_name.readonly = true;
 
-            const form = await makeView({
+            await makeView({
                 serverData,
                 type: "form",
                 resModel: "partner",
@@ -113,7 +114,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.containsNone(
-                form,
+                target,
                 '.o_field_copy[name="display_name"] .o_clipboard_button',
                 "the readonly unset field should not contain a button"
             );

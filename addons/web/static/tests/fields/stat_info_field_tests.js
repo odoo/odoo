@@ -180,7 +180,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("StatInfoField in form view with specific label_field", async function (assert) {
         assert.expect(9);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -202,7 +202,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            form,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should have one stat button"
         );
@@ -220,7 +220,7 @@ QUnit.module("Fields", (hooks) => {
         // switch to edit mode and check the result
         await click(target, ".o_form_button_edit");
         assert.containsOnce(
-            form,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should still have one stat button"
         );
@@ -238,7 +238,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         await click(target, ".o_form_button_save");
         assert.containsOnce(
-            form,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should have one stat button"
         );
@@ -257,7 +257,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("StatInfoField in form view with no label", async function (assert) {
         assert.expect(9);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -275,7 +275,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
         assert.containsOnce(
-            form,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should have one stat button"
         );
@@ -293,7 +293,7 @@ QUnit.module("Fields", (hooks) => {
         // switch to edit mode and check the result
         await click(target, ".o_form_button_edit");
         assert.containsOnce(
-            form,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should still have one stat button"
         );
@@ -311,7 +311,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         await click(target, ".o_form_button_save");
         assert.containsOnce(
-            form,
+            target,
             ".oe_stat_button .o_field_widget .o_stat_info",
             "should have one stat button"
         );

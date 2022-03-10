@@ -18,7 +18,15 @@ let serverData;
 let target;
 
 // WOWL remove after adapting tests
-let createView, FormView, testUtils, cpHelpers, Widget, BasicModel, StandaloneFieldManagerMixin, relationalFields, ListView;
+let createView,
+    FormView,
+    testUtils,
+    cpHelpers,
+    Widget,
+    BasicModel,
+    StandaloneFieldManagerMixin,
+    relationalFields,
+    ListView;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -898,7 +906,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test('many2one fields with option "no_open"', async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -915,15 +923,15 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            form,
+            target,
             ".o_field_widget[name='trululu'] > span",
             "should be displayed inside a span (sanity check)"
         );
-        assert.containsNone(form, "span.o_form_uri", "should not have an anchor");
+        assert.containsNone(target, "span.o_form_uri", "should not have an anchor");
 
         await click(target, ".o_form_button_edit");
         assert.containsNone(
-            form,
+            target,
             ".o_field_widget[name='trululu'] .o_external_button",
             "should not have the button to open the record"
         );
@@ -3417,8 +3425,8 @@ QUnit.module("Fields", (hooks) => {
         // we now write again 'a' in the cell to select xpad. We will now
         // test with the tab key
         await testUtils.fields.editInput(list.$("td.o_data_cell input:first"), "a");
-        var $input = list.$("td.o_data_cell input:first");
-        var $dropdown = $input.autocomplete("widget");
+        $input = list.$("td.o_data_cell input:first");
+        $dropdown = $input.autocomplete("widget");
         assert.ok($dropdown.is(":visible"), "autocomplete dropdown should be visible");
         await testUtils.fields.triggerKeydown($input, "tab");
 
@@ -3982,8 +3990,8 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // dropdown selector
-        let filterMenuCss = ".o_search_options > .o_filter_menu";
-        let groupByMenuCss = ".o_search_options > .o_group_by_menu";
+        const filterMenuCss = ".o_search_options > .o_filter_menu";
+        const groupByMenuCss = ".o_search_options > .o_group_by_menu";
 
         await click(document.querySelector(`${filterMenuCss} > .dropdown-toggle`));
 

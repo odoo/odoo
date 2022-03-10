@@ -1,10 +1,17 @@
 /** @odoo-module **/
 
 import { makeView, setupViewRegistries } from "../views/helpers";
-import { click, clickEdit, clickSave, editInput, patchWithCleanup } from "../helpers/utils";
+import {
+    click,
+    clickEdit,
+    clickSave,
+    editInput,
+    getFixture,
+    patchWithCleanup,
+} from "../helpers/utils";
 import { session } from "@web/session";
 
-let serverData;
+let serverData, target;
 
 // WOWL remove after adapting tests
 let createView, FormView, testUtils, ListView;
@@ -105,7 +112,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             },
         };
-
+        target = getFixture();
         setupViewRegistries();
     });
 
@@ -121,7 +128,7 @@ QUnit.module("Fields", (hooks) => {
             },
         ];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -134,33 +141,33 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "$\u00a09.10",
             "The value should be displayed properly."
         );
 
-        await clickEdit(form);
+        await clickEdit(target);
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_widget input").value,
             "9.10",
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").parentNode.childNodes[0].textContent,
+            target.querySelector(".o_field_widget input").parentNode.childNodes[0].textContent,
             "$",
             "The input should be preceded by a span containing the currency symbol."
         );
 
-        await editInput(form.el, ".o_field_monetary input", "108.2458938598598");
+        await editInput(target, ".o_field_monetary input", "108.2458938598598");
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_widget input").value,
             "108.25",
             "The new value should be rounded properly after the blur"
         );
 
-        await clickSave(form);
+        await clickSave(target);
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "$\u00a0108.25",
             "The new value should be rounded properly."
         );
@@ -183,7 +190,7 @@ QUnit.module("Fields", (hooks) => {
             },
         ];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -196,11 +203,11 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // Test computation and rounding
-        await clickEdit(form);
-        await editInput(form.el, ".o_field_monetary input", "=100/3");
-        await clickSave(form);
+        await clickEdit(target);
+        await editInput(target, ".o_field_monetary input", "=100/3");
+        await clickSave(target);
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "$\u00a033.33",
             "The new value should be calculated and rounded properly."
         );
@@ -224,7 +231,7 @@ QUnit.module("Fields", (hooks) => {
             },
         ];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -238,34 +245,34 @@ QUnit.module("Fields", (hooks) => {
 
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "0.00\u00a0€",
             "The value should be displayed properly."
         );
 
-        await clickEdit(form);
+        await clickEdit(target);
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_widget input").value,
             "0.00",
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").parentNode.children[1].textContent,
+            target.querySelector(".o_field_widget input").parentNode.children[1].textContent,
             "€",
             "The input should be followed by a span containing the currency symbol."
         );
 
-        await editInput(form.el, ".o_field_widget input", "108.2458938598598");
+        await editInput(target, ".o_field_widget input", "108.2458938598598");
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_widget input").value,
             "108.25",
             "The value should be formatted on blur."
         );
 
-        await clickSave(form);
+        await clickSave(target);
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "108.25\u00a0€",
             "The new value should be rounded properly."
         );
@@ -301,7 +308,7 @@ QUnit.module("Fields", (hooks) => {
             },
         ];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -315,34 +322,34 @@ QUnit.module("Fields", (hooks) => {
 
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "99.1234\u00a0Bs.F",
             "The value should be displayed properly."
         );
 
-        await clickEdit(form);
+        await clickEdit(target);
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_widget input").value,
             "99.1234",
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").parentNode.children[1].textContent,
+            target.querySelector(".o_field_widget input").parentNode.children[1].textContent,
             "Bs.F",
             "The input should be followed by a span containing the currency symbol."
         );
 
-        await editInput(form.el, ".o_field_widget input", "99.111111111");
+        await editInput(target, ".o_field_widget input", "99.111111111");
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget input").value,
+            target.querySelector(".o_field_widget input").value,
             "99.1111",
             "The value should should be formatted on blur."
         );
 
-        await clickSave(form);
+        await clickSave(target);
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget").textContent,
             "99.1111\u00a0Bs.F",
             "The new value should be rounded properly."
         );
@@ -382,7 +389,7 @@ QUnit.module("Fields", (hooks) => {
             },
         ];
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             serverData,
             resModel: "partner",
@@ -392,23 +399,23 @@ QUnit.module("Fields", (hooks) => {
                 </tree>`,
         });
 
-        const dollarValues = Array.from(list.el.querySelectorAll("td")).filter((x) =>
+        const dollarValues = Array.from(target.querySelectorAll("td")).filter((x) =>
             x.textContent.includes("$")
         );
         assert.strictEqual(dollarValues.length, 2, "Only 2 line has dollar as a currency.");
 
-        const euroValues = Array.from(list.el.querySelectorAll("td")).filter((x) =>
+        const euroValues = Array.from(target.querySelectorAll("td")).filter((x) =>
             x.textContent.includes("€")
         );
         assert.strictEqual(euroValues.length, 1, "Only 1 line has euro as a currency.");
 
-        const noCurrencyValues = Array.from(list.el.querySelectorAll("td.o_data_cell")).filter(
+        const noCurrencyValues = Array.from(target.querySelectorAll("td.o_data_cell")).filter(
             (x) => !(x.textContent.includes("€") || x.textContent.includes("$"))
         );
         assert.strictEqual(noCurrencyValues.length, 1, "Only 1 line has no currency.");
 
         // switch to edit mode
-        const dollarCell = list.el.querySelectorAll("td.o_field_cell")[0];
+        const dollarCell = target.querySelectorAll("td.o_field_cell")[0];
         await click(dollarCell);
 
         assert.strictEqual(
@@ -418,30 +425,30 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.containsOnce(
-            list.el,
+            target,
             ".o_field_widget input",
             "The view should have 1 input for editable monetary float."
         );
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget  input").value,
+            target.querySelector(".o_field_widget  input").value,
             "9.10",
             "The input should be rendered without the currency symbol."
         );
 
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget input").parentNode.childNodes[0].textContent,
+            target.querySelector(".o_field_widget input").parentNode.childNodes[0].textContent,
             "$",
             "The input should be preceded by a span containing the currency symbol."
         );
 
-        await editInput(list.el, ".o_field_widget input", "108.2458938598598");
+        await editInput(target, ".o_field_widget input", "108.2458938598598");
         assert.strictEqual(
-            list.el.querySelector(".o_field_widget  input").value,
+            target.querySelector(".o_field_widget  input").value,
             "108.25",
             "The typed value should be correctly displayed and formatted on blur"
         );
 
-        await clickSave(list);
+        await clickSave(target);
         assert.strictEqual(
             dollarCell.textContent,
             "$\u00a0108.25",
@@ -466,7 +473,7 @@ QUnit.module("Fields", (hooks) => {
             },
         ];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             serverData,
             resModel: "partner",
@@ -479,17 +486,17 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_monetary").textContent,
+            target.querySelector(".o_field_monetary").textContent,
             "$\u00a04.20",
             "readonly value should contain the currency"
         );
 
-        await clickEdit(form);
+        await clickEdit(target);
 
         // replace bottom with new helpers when they exist
-        await click(form.el, ".o_field_many2one_selection input");
+        await click(target, ".o_field_many2one_selection input");
         const euroM2OListItem = Array.from(
-            form.el.querySelectorAll(".o_field_many2one_selection li")
+            target.querySelectorAll(".o_field_many2one_selection li")
         ).filter((li) => li.textContent === "€")[0];
         await click(euroM2OListItem);
 
@@ -500,10 +507,10 @@ QUnit.module("Fields", (hooks) => {
         //     "The value should be formatted with new currency on blur."
         // );
 
-        await clickSave(form);
+        await clickSave(target);
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_monetary").textContent,
+            target.querySelector(".o_field_monetary").textContent,
             "4.20\u00a0€",
             "The new value should still be correct."
         );

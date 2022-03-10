@@ -255,7 +255,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner_type.records = records;
         serverData.models.partner.records[0].timmy = records.map((r) => r.id);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -276,7 +276,11 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_edit");
 
-        assert.containsN(form, ".o_field_widget[name='timmy'] input[type='checkbox']:checked", 90);
+        assert.containsN(
+            target,
+            ".o_field_widget[name='timmy'] input[type='checkbox']:checked",
+            90
+        );
 
         // toggle the last value
         let checkboxes = target.querySelectorAll(
