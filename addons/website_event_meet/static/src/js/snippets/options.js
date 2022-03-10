@@ -1,69 +1,39 @@
-odoo.define('website_event_meet.set_customize_options', function (require) {
-"use strict";
+/** @odoo-module **/
 
-let EventSpecificOptions = require('website_event.set_customize_options').EventSpecificOptions;
+import options from 'web_editor.snippets.options';
 
-EventSpecificOptions.include({
-    xmlDependencies: (EventSpecificOptions.prototype.xmlDependencies || [])
-        .concat([
-            '/website_event_meet/static/src/xml/customize_options.xml',
-        ]),
-
-    events: _.extend({}, EventSpecificOptions.prototype.events, {
-        'change #allow-room-creation': '_onAllowRoomCreationChange',
-    }),
-
-    start: function () {
-        this.$allowRoomCreationInput = this.$('#allow-room-creation');
-        this._super.apply(this, arguments);
-    },
+options.registry.WebsiteEvent.include({
 
     //--------------------------------------------------------------------------
-    // Handlers
+    // Options
     //--------------------------------------------------------------------------
 
-    _onAllowRoomCreationChange: function () {
-        let checkboxValue = this.$allowRoomCreationInput.is(':checked');
-        this._toggleAllowRoomCreation(checkboxValue);
+    /**
+     * @see this.selectClass for parameters
+     */
+    allowRoomCreation(previewMode, widgetValue, params) {
+        this._rpc({
+            model: this.modelName,
+            method: 'write',
+            args: [[this.eventId], {
+                meeting_room_allow_creation: widgetValue
+            }],
+        }).then(() => this.trigger_up('reload_editable', {option_selector: this.data.selector}));
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    _getCheckboxFields: function () {
-        let fields = this._super();
-        fields = _.union(fields, ['meeting_room_allow_creation']);
-        return fields;
-    },
-
-    _getCheckboxFieldMatch: function (checkboxField) {
-        if (checkboxField === 'meeting_room_allow_creation') {
-            return this.$allowRoomCreationInput;
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'allowRoomCreation': {
+                return this._getRpcData('meeting_room_allow_creation');
+            }
         }
-        return this._super(checkboxField);
+        return this._super(...arguments);
     },
-
-    _initCheckboxCallback: function (rpcData) {
-        this._super(rpcData);
-        if (rpcData[0]['meeting_room_allow_creation']) {
-            let submenuInput = this._getCheckboxFieldMatch('meeting_room_allow_creation');
-            submenuInput.attr('checked', 'checked');
-        }
-    },
-
-    _toggleAllowRoomCreation: async function (val) {
-        await this._rpc({
-            model: this.modelName,
-            method: 'write',
-            args: [[this.eventId], {
-                meeting_room_allow_creation: val
-            }],
-        });
-
-        location.reload();
-    },
-
-});
-
 });

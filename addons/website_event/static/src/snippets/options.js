@@ -1,129 +1,76 @@
-odoo.define('website_event.set_customize_options', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var CustomizeMenu = require('website.customizeMenu');
-var publicWidget = require('web.public.widget');
+import options from 'web_editor.snippets.options';
 
-var EventSpecificOptions = publicWidget.Widget.extend({
-    template: 'website_event.customize_options',
-    xmlDependencies: ['/website_event/static/src/xml/customize_options.xml'],
-    events: {
-        'change #display-website-menu': '_onDisplaySubmenuChange',
-    },
+options.registry.WebsiteEvent = options.Class.extend({
 
     /**
      * @override
      */
-    start: function () {
-        this.$submenuInput = this.$('#display-website-menu');
-        this.modelName = this._getEventObject().model;
-        this.eventId = this._getEventObject().id;
-        this._initCheckbox();
+    start() {
+        const eventObject = this._getEventObject();
+        this.modelName = eventObject.model;
+        this.eventId = eventObject.id;
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
-    // Handlers
+    // Options
     //--------------------------------------------------------------------------
 
-    _onDisplaySubmenuChange: function (ev) {
-        var checkboxValue = this.$submenuInput.is(':checked');
-        this._toggleSubmenuDisplay(checkboxValue);
+    /**
+     * @see this.selectClass for parameters
+     */
+    displaySubmenu(previewMode, widgetValue, params) {
+        this._rpc({
+            model: this.modelName,
+            method: 'toggle_website_menu',
+            args: [[this.eventId], widgetValue],
+        }).then(() => this.trigger_up('reload_editable', {option_selector: this.data.selector}));
+        // TODO: if widgetValue is false, it should reload on the event url
+        // page ('website_url' field).
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    _getCheckboxFields: function () {
-        return ['website_menu', 'website_url'];
-    },
-
-    _getCheckboxFieldMatch: function (checkboxField) {
-        if (checkboxField === 'website_menu') {
-            return this.$submenuInput;
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'displaySubmenu': {
+                return this._getRpcData('website_menu');
+            }
         }
+        return this._super(...arguments);
     },
-
-    _getEventObject: function() {
-        var repr = $('html').data('main-object');
-        var m = repr.match(/(.+)\((\d+),(.*)\)/);
+    /**
+     * @private
+     */
+    _getEventObject() {
+        const repr = this.ownerDocument.documentElement.dataset.mainObject;
+        const m = repr.match(/(.+)\((\d+),(.*)\)/);
         return {
             model: m[1],
             id: m[2] | 0,
         };
     },
-
-    _initCheckbox: function () {
-        var self = this;
-        this._rpc({
+    /**
+     * @private
+     * @param {string}
+     * @returns {boolean}
+     */
+    async _getRpcData(field) {
+        const data = await this._rpc({
             model: this.modelName,
             method: 'read',
             args: [
                 [this.eventId],
-                this._getCheckboxFields()
+                [field],
             ],
-        }).then((data) => {
-            self._initCheckboxCallback(data);
         });
+        return data[0][field];
     },
-
-    _initCheckboxCallback: function (rpcData) {
-        if (rpcData[0]['website_menu']) {
-            var submenuInput = this._getCheckboxFieldMatch('website_menu');
-            submenuInput.attr('checked', 'checked');
-        }
-        this.eventUrl = rpcData[0]['website_url'];
-    },
-
-    _reloadEventPage: function () {
-        window.location = this.eventUrl;
-    },
-
-    _toggleSubmenuDisplay: function (val) {
-        var self = this;
-        this._rpc({
-            model: this.modelName,
-            method: 'toggle_website_menu',
-            args: [[this.eventId], val],
-        }).then(function () {
-            self._reloadEventPage();
-        });
-    },
-
-});
-
-CustomizeMenu.include({
-    _getEventObject: function() {
-        var repr = $('html').data('main-object');
-        var m = repr.match(/(.+)\((\d+),(.*)\)/);
-        return {
-            model: m[1],
-            id: m[2] | 0,
-        };
-    },
-
-    _loadCustomizeOptions: function () {
-        var self = this;
-        var def = this._super.apply(this, arguments);
-        return def.then(function () {
-            if (!self.__eventOptionsLoaded && self._getEventObject().model === 'event.event') {
-                self.__eventOptionsLoaded = true;
-                self.eventOptions = new EventSpecificOptions(self);
-                // If this is the first customize menu, add the divider at top
-                if (!self.$('.dropdown-divider').length) {
-                    self.$('.dropdown-menu').append($('<div/>', {
-                        class: 'dropdown-divider',
-                        role: 'separator',
-                    }));
-                }
-                self.eventOptions.insertAfter(self.$el.find('.dropdown-divider:first()'));
-            }
-        });
-    },
-});
-
-return {
-    EventSpecificOptions: EventSpecificOptions,
-};
-
 });
