@@ -302,6 +302,26 @@ snippetsEditor.SnippetsMenu.include({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async cleanForSave() {
+        // Clean unstyled translations
+        return this._super(...arguments).then(() => {
+            for (const el of this.options.editable[0].querySelectorAll('.o_translation_without_style')) {
+                el.classList.remove('o_translation_without_style');
+                if (el.dataset.oeTranslationSaveSha) {
+                    el.dataset.oeTranslationInitialSha = el.dataset.oeTranslationSaveSha;
+                    delete el.dataset.oeTranslationSaveSha;
+                }
+            }
+        });
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 

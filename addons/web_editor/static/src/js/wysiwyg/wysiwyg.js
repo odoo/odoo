@@ -1081,6 +1081,10 @@ const Wysiwyg = Widget.extend({
                         return;
                     }
                     let $node = $(field);
+                    // Do not forward "unstyled" copies to other nodes.
+                    if ($node.hasClass('o_translation_without_style')) {
+                        return;
+                    }
                     let $nodes = $odooFields.filter(function () {
                         return this !== field;
                     });
@@ -1133,6 +1137,16 @@ const Wysiwyg = Widget.extend({
                     }
                     const html = $node.html();
                     for (const node of $nodes) {
+                        if (node.classList.contains('o_translation_without_style')) {
+                            // For generated elements such as the navigation
+                            // labels of website's table of content, only the
+                            // text of the referenced translation must be used.
+                            const text = $node.text();
+                            if (node.innerText !== text) {
+                                node.innerText = text;
+                            }
+                            continue;
+                        }
                         if (node.innerHTML !== html) {
                             node.innerHTML = html;
                         }
