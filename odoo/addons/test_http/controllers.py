@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
+import werkzeug
 from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request
@@ -72,6 +73,14 @@ class TestHttp(http.Controller):
     @http.route('/test_http/echo-json-context', type='json', auth='user', methods=['POST'], csrf=False)
     def echo_json_context(self, **kwargs):
         return request.env.context
+
+    @http.route('/test_http/echo-json-over-http', type='http', auth='none', methods=['POST'], csrf=False)
+    def echo_json_over_http(self):
+        try:
+            data = request.get_json_data()
+        except ValueError as exc:
+            raise werkzeug.exceptions.BadRequest("Invalid JSON data") from exc
+        return request.make_json_response(data)
 
     # =====================================================
     # Models

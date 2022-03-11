@@ -1164,6 +1164,9 @@ class Request:
         params.pop('session_id', None)
         return params
 
+    def get_json_data(self):
+        return json.loads(self.httprequest.get_data(as_text=True))
+
     def _get_profiler_context_manager(self):
         """
         Get a profiler when the profiling is enabled and the requested
@@ -1201,7 +1204,7 @@ class Request:
         response.headers.extend(self.future_response.headers)
         return response
 
-    def make_response(self, data, headers=None, cookies=None):
+    def make_response(self, data, headers=None, cookies=None, status=200):
         """ Helper for non-HTML responses, or HTML responses with custom
         response headers or cookies.
 
@@ -1210,16 +1213,38 @@ class Request:
         complete response object, or the returned data will not be correctly
         interpreted by the clients.
 
-        :param basestring data: response body
+        :param str data: response body
+        :param int status: http status code
         :param headers: HTTP headers to set on the response
         :type headers: ``[(name, value)]``
         :param collections.Mapping cookies: cookies to set on the client
+        :returns: a response object.
+        :rtype: :class:`~odoo.http.Response`
         """
-        response = Response(data, headers=headers)
+        response = Response(data, status=status, headers=headers)
         if cookies:
             for k, v in cookies.items():
                 response.set_cookie(k, v)
         return response
+
+    def make_json_response(self, data, headers=None, cookies=None, status=200):
+        """ Helper for JSON responses, it json-serializes ``data`` and
+        sets the Content-Type header accordingly if none is provided.
+
+        :param data: the data that will be json-serialized into the response body
+        :param int status: http status code
+        :param List[(str, str)] headers: HTTP headers to set on the response
+        :param collections.Mapping cookies: cookies to set on the client
+        :rtype: :class:`~odoo.http.Response`
+        """
+        data = json.dumps(data, ensure_ascii=False, default=date_utils.json_default)
+
+        headers = werkzeug.datastructures.Headers(headers)
+        headers['Content-Length'] = len(data)
+        if 'Content-Type' not in headers:
+            headers['Content-Type'] = 'application/json; charset=utf-8'
+
+        return self.make_response(data, headers.to_wsgi_list(), cookies, status)
 
     def not_found(self, description=None):
         """ Shortcut for a `HTTP 404
@@ -1468,7 +1493,7 @@ class HttpDispatcher(Dispatcher):
 
     @classmethod
     def is_compatible_with(cls, request):
-        return request.httprequest.mimetype not in JSON_MIMETYPES
+        return True
 
     def dispatch(self, endpoint, args):
         """
@@ -1568,14 +1593,10 @@ class JsonRPCDispatcher(Dispatcher):
           <-- {"jsonrpc": "2.0", "error": {"code": 1, "message": "End user error message.", "data": {"code": "codestring", "debug": "traceback" } }, "id": null}
 
         """
-        httprequest = self.request.httprequest
-        body = httprequest.get_data().decode(httprequest.charset)
         try:
-            self.jsonrequest = json.loads(body)
-        except ValueError:
-            _logger.info('%s: Invalid JSON data\n%s', httprequest.path,
-                         body)
-            raise werkzeug.exceptions.BadRequest(f"Invalid JSON data:\n{body}")
+            self.jsonrequest = self.request.get_json_data()
+        except ValueError as exc:
+            raise BadRequest("Invalid JSON data") from exc
 
         self.request.params = dict(self.jsonrequest.get('params', {}), **args)
         ctx = self.request.params.pop('context', None)
@@ -1627,12 +1648,7 @@ class JsonRPCDispatcher(Dispatcher):
         if result is not None:
             response['result'] = result
 
-        body = json.dumps(response, default=date_utils.json_default)
-
-        return Response(body, status=status, headers=[
-            ('Content-Type', 'application/json'),
-            ('Content-Length', len(body)),
-        ])
+        return self.request.make_json_response(response)
 
 
 # =========================================================

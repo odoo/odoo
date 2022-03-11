@@ -187,13 +187,23 @@ class TestHttpEchoReplyHttpNoDB(TestHttpBase):
 
     @mute_logger('odoo.http')
     def test_echohttp4_post_json_nodb(self):
-        res = self.nodb_url_open('/test_http/echo-http-post', data='{}', headers=CT_JSON)
-        self.assertIn("Bad Request", res.text)
+        payload = json.dumps({'commander': 'Thor'})
+        res = self.nodb_url_open('/test_http/echo-http-post', data=payload, headers=CT_JSON)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, '{}')
 
     def test_echohttp5_post_csrf(self):
         res = self.nodb_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'})
         self.assertEqual(res.status_code, 303)
         self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/web/database/selector')
+
+    def test_echohttp6_json_over_http(self):
+        payload = json.dumps({'commander': 'Thor'})
+        res = self.nodb_url_open('/test_http/echo-json-over-http', data=payload, headers=CT_JSON)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, payload)
+        mimetype = res.headers['Content-Type'].partition(';')[0]
+        self.assertEqual(mimetype, 'application/json')
 
 
 @tagged('post_install', '-at_install')
@@ -247,8 +257,10 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
 
     @mute_logger('odoo.http')
     def test_echohttp4_post_json_db(self):
-        res = self.db_url_open('/test_http/echo-http-post', data='{}', headers=CT_JSON)
-        self.assertIn("Bad Request", res.text)
+        payload = json.dumps({'commander': 'Thor'})
+        res = self.db_url_open('/test_http/echo-http-post', data=payload, headers=CT_JSON)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, '{}')
 
     @mute_logger('odoo.http')
     def test_echohttp5_post_no_csrf(self):
