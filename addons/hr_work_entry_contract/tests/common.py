@@ -29,7 +29,7 @@ class TestWorkEntryBase(TransactionCase):
         })
 
         # I create a contract for "Richard"
-        cls.env['hr.contract'].create({
+        cls.richard_contract = cls.env['hr.contract'].create({
             'date_end': Date.today() + relativedelta(years=2),
             'date_start': Date.to_date('2018-01-01'),
             'name': 'Contract for Richard',

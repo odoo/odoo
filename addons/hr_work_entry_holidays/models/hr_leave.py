@@ -147,7 +147,14 @@ class HrLeave(models.Model):
         start = min(self.mapped('date_from') + [fields.Datetime.from_string(vals.get('date_from', False)) or datetime.max])
         stop = max(self.mapped('date_to') + [fields.Datetime.from_string(vals.get('date_to', False)) or datetime.min])
         with self.env['hr.work.entry']._error_checking(start=start, stop=stop, skip=skip_check):
-            return super().write(vals)
+            res = super().write(vals)
+            if 'active' in vals:
+                # This is a special case using the cancel function on your own leaves
+                #  we also have to archive the associated work entries.
+                inactive_leaves = self.filtered(lambda l: not l.active)
+                work_entries = self.env['hr.work.entry'].sudo().search([('leave_id', 'in', inactive_leaves.ids)])
+                work_entries.write({'active': False})
+            return res
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -218,13 +225,3 @@ class HrLeave(models.Model):
             contract_calendar = contracts[:1].resource_calendar_id if contracts else None
             return contract_calendar or self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
         return super()._get_calendar()
-
-    def _compute_can_cancel(self):
-        super()._compute_can_cancel()
-
-        cancellable_leaves = self.filtered('can_cancel')
-        work_entries = self.env['hr.work.entry'].sudo().search([('leave_id', 'in', cancellable_leaves.ids)])
-        leave_ids = work_entries.mapped('leave_id').ids
-
-        for leave in cancellable_leaves:
-            leave.can_cancel = leave.id not in leave_ids

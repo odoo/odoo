@@ -655,12 +655,19 @@ class HolidaysRequest(models.Model):
             else:
                 holiday.can_approve = True
 
+    def _can_cancel_check_date(self):
+        # Meant to be overriden, if it is false, other factors may impact how can cancel works for the past.
+        return True
+
     @api.depends_context('uid')
     @api.depends('state', 'employee_id')
     def _compute_can_cancel(self):
         today = fields.Datetime.today()
+        check_date = self._can_cancel_check_date()
         for leave in self:
-            leave.can_cancel = leave.id and leave.employee_id.user_id == self.env.user and leave.state == 'validate' and leave.date_from and leave.date_from > today
+            leave.can_cancel = leave.id and leave.employee_id.user_id == self.env.user and leave.state == 'validate'
+            if check_date:
+                leave.can_cancel = leave.can_cancel and leave.date_from and leave.date_from > today
 
     @api.depends('state')
     def _compute_is_hatched(self):

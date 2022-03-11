@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HrWorkEntry(models.Model):
@@ -21,9 +21,23 @@ class HrWorkEntry(models.Model):
             return contract_data.get('hours', 0)
         return super()._get_duration(date_start, date_stop)
 
+    def _invalidate_leave_can_cancel(self):
+        leaves = self.leave_id
+        if leaves:
+            can_cancel_field = self.env['hr.leave']._fields['can_cancel']
+            self.env.cache.invalidate([(can_cancel_field, self.leave_id.ids)])
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        self._invalidate_leave_can_cancel()
+        return res
+
     def write(self, vals):
-        if 'state' in vals and vals['state'] == 'cancelled':
-            self.mapped('leave_id').filtered(lambda l: l.state != 'refuse').action_refuse()
+        if 'state' in vals:
+            self._invalidate_leave_can_cancel()
+            if vals['state'] == 'cancelled':
+                self.mapped('leave_id').filtered(lambda l: l.state != 'refuse').action_refuse()
         return super().write(vals)
 
     def _reset_conflicting_state(self):
