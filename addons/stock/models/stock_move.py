@@ -355,6 +355,7 @@ class StockMove(models.Model):
                     # do not impact reservation here
                     move_line = self.env['stock.move.line'].create(dict(move._prepare_move_line_vals(), qty_done=quantity_done))
                     move.write({'move_line_ids': [(4, move_line.id)]})
+                    move_line._apply_putaway_strategy()
             elif len(move_lines) == 1:
                 move_lines[0].qty_done = quantity_done
             else:
@@ -1119,13 +1120,9 @@ class StockMove(models.Model):
         else:
             move_lines = self.move_line_nosuggest_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_name)
 
-        if origin_move_line:
-            location_dest = origin_move_line.location_dest_id
-        else:
-            location_dest = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=1, packaging=self.product_packaging_id)
+        loc_dest = origin_move_line and origin_move_line.location_dest_id
         move_line_vals = {
             'picking_id': self.picking_id.id,
-            'location_dest_id': location_dest.id,
             'location_id': self.location_id.id,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_id.uom_id.id,
@@ -1142,6 +1139,7 @@ class StockMove(models.Model):
             })
 
         move_lines_commands = []
+        qty_by_location = defaultdict(float)
         for lot_name in lot_names:
             # We write the lot name on an existing move line (if we have still one)...
             if move_lines:
@@ -1149,11 +1147,14 @@ class StockMove(models.Model):
                     'lot_name': lot_name,
                     'qty_done': 1,
                 }))
+                qty_by_location[move_lines[0].location_dest_id.id] += 1
                 move_lines = move_lines[1:]
             # ... or create a new move line with the serial name.
             else:
-                move_line_cmd = dict(move_line_vals, lot_name=lot_name)
+                loc = loc_dest or self.location_dest_id._get_putaway_strategy(self.product_id, quantity=1, packaging=self.product_packaging_id, additional_qty=qty_by_location)
+                move_line_cmd = dict(move_line_vals, lot_name=lot_name, location_dest_id=loc.id)
                 move_lines_commands.append((0, 0, move_line_cmd))
+                qty_by_location[loc.id] += 1
         return move_lines_commands
 
     def _get_new_picking_values(self):
@@ -1299,6 +1300,7 @@ class StockMove(models.Model):
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
             'location_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id,
             'picking_id': self.picking_id.id,
             'company_id': self.company_id.id,
         }
@@ -1321,9 +1323,6 @@ class StockMove(models.Model):
                 package_id=package.id or False,
                 owner_id =reserved_quant.owner_id.id or False,
             )
-        # apply putaway
-        location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity or 0, package=package, packaging=self.product_packaging_id).id
-        vals['location_dest_id'] = location_dest_id
         return vals
 
     def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
@@ -1454,6 +1453,9 @@ class StockMove(models.Model):
         reserved_availability = {move: move.reserved_availability for move in self}
         roundings = {move: move.product_id.uom_id.rounding for move in self}
         move_line_vals_list = []
+        # Once the quantities are assigned, we want to find a better destination location thanks
+        # to the putaway rules. This redirection will be applied on moves of `moves_to_redirect`.
+        moves_to_redirect = OrderedSet()
         for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
             rounding = roundings[move]
             missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
@@ -1493,6 +1495,7 @@ class StockMove(models.Model):
                     else:
                         move_line_vals_list.append(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
                 assigned_moves_ids.add(move.id)
+                moves_to_redirect.add(move.id)
             else:
                 if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                     assigned_moves_ids.add(move.id)
@@ -1512,6 +1515,7 @@ class StockMove(models.Model):
                     taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, package_id=forced_package_id, strict=False)
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue
+                    moves_to_redirect.add(move.id)
                     if float_compare(need, taken_quantity, precision_rounding=rounding) == 0:
                         assigned_moves_ids.add(move.id)
                     else:
@@ -1542,6 +1546,7 @@ class StockMove(models.Model):
                         taken_quantity = move._update_reserved_quantity(need, min(quantity, available_quantity), location_id, lot_id, package_id, owner_id)
                         if float_is_zero(taken_quantity, precision_rounding=rounding):
                             continue
+                        moves_to_redirect.add(move.id)
                         if float_is_zero(need - taken_quantity, precision_rounding=rounding):
                             assigned_moves_ids.add(move.id)
                             break
@@ -1555,6 +1560,7 @@ class StockMove(models.Model):
         if self.env.context.get('bypass_entire_pack'):
             return
         self.mapped('picking_id')._check_entire_pack()
+        StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
 
     def _action_cancel(self):
         if any(move.state == 'done' and not move.scrapped for move in self):
@@ -1855,7 +1861,11 @@ class StockMove(models.Model):
         looking for trouble...).
         @param qty: quantity in the UoM of move.product_uom
         """
+        existing_smls = self.move_line_ids
         self.move_line_ids = self._set_quantity_done_prepare_vals(qty)
+        # `_set_quantity_done_prepare_vals` may return some commands to create new SMLs
+        # These new SMLs need to be redirected thanks to putaway rules
+        (self.move_line_ids - existing_smls)._apply_putaway_strategy()
 
     def _set_quantities_to_reservation(self):
         for move in self:
