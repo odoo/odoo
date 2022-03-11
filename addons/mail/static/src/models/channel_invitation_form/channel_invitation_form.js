@@ -10,6 +10,18 @@ registerModel({
     identifyingFields: [['chatWindow', 'popoverViewOwner']],
     recordMethods: {
         /**
+         * Handles click on the "copy" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        async onClickCopy(ev) {
+            await navigator.clipboard.writeText(this.thread.invitationLink);
+            this.env.services.notification.notify({
+                message: this.env._t('Link copied!'),
+                type: 'success',
+            });
+        },
+        /**
          * Handles click on the "invite" button.
          *
          * @param {MouseEvent} ev
@@ -76,6 +88,12 @@ registerModel({
                 this.searchInputRef.el.setSelectionRange(this.searchTerm.length, this.searchTerm.length);
                 this.update({ doFocusOnSearchInput: clear() });
             }
+        },
+        /**
+         * Handles focus on the invitation link.
+         */
+        onFocusInvitationLinkInput(ev) {
+            ev.target.select();
         },
         /**
          * @param {Partner} partner
