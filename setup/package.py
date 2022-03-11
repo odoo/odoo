@@ -389,12 +389,11 @@ class KVM(object):
     def start(self):
         kvm_cmd = [
             "kvm",
-            "-cpu", "core2duo",
-            "-smp", "2,sockets=2,cores=1,threads=1",
-            "-net", "nic,model=rtl8139",
+            "-cpu", "Skylake-Server",
+            "-net", "nic,macaddr=52:54:00:12:34:56,model=virtio-net-pci",
             "-net", "user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432",
-            "-m", "1024",
-            "-drive", "file=%s,snapshot=on" % self.image,
+            "-m", "2048",
+            "-drive", "if=virtio,file=%s,snapshot=on" % self.image,
             "-nographic"
         ]
         logging.info("Starting kvm: {}".format(" ".join(kvm_cmd)))

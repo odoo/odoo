@@ -679,7 +679,7 @@ var Discuss = AbstractAction.extend({
                     if (self._lastSearchVal) {
                         if (ui.item.special) {
                             if (ui.item.special === 'public') {
-                                self.call('mail_service', 'createChannel', self._lastSearchVal, 'public');
+                                self.call('mail_service', 'createChannel', self._lastSearchVal, 'groups');
                             } else {
                                 self.call('mail_service', 'createChannel', self._lastSearchVal, 'private');
                             }
