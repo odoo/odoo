@@ -106,6 +106,17 @@ class AutomaticEntryWizard(models.TransientModel):
         for record in self:
             record.display_currency_helper = bool(record.destination_account_id.currency_id)
 
+    @api.constrains('action', 'move_line_ids')
+    def _check_account_user_type(self):
+        for wizard in self:
+            if wizard.action == 'change_period':
+                if len(wizard.move_line_ids.account_id.user_type_id) > 1:
+                    raise UserError(_('All accounts on the lines must be of the same type.'))
+
+    @api.immediate_constraint(_check_account_user_type)
+    def _fallback_action_contraint(self):
+        self.action = self._origin.action or 'change_account'
+
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
@@ -273,9 +284,6 @@ class AutomaticEntryWizard(models.TransientModel):
     @api.depends('move_line_ids', 'journal_id', 'revenue_accrual_account', 'expense_accrual_account', 'percentage', 'date', 'account_type', 'action', 'destination_account_id')
     def _compute_move_data(self):
         for record in self:
-            if record.action == 'change_period':
-                if any(line.account_id.user_type_id != record.move_line_ids[0].account_id.user_type_id for line in record.move_line_ids):
-                    raise UserError(_('All accounts on the lines must be of the same type.'))
             if record.action == 'change_period':
                 record.move_data = json.dumps(record._get_move_dict_vals_change_period())
             elif record.action == 'change_account':

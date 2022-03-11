@@ -239,6 +239,18 @@ def onchange(*args):
     """
     return attrsetter('_onchange', args)
 
+def immediate_constraint(constraint):
+    def wrapper(fallback):
+        def _safe_onchange(self):
+            try:
+                constraint(self)
+            except Exception as ve:
+                fallback(self)
+                return {'warning': {'message': str(ve)}}
+        setattr(_safe_onchange, '_onchange', getattr(constraint, '_constrains'))
+        return _safe_onchange
+    return wrapper
+
 
 def depends(*args):
     """ Return a decorator that specifies the field dependencies of a "compute"
