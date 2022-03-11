@@ -1443,7 +1443,14 @@ export class OdooEditor extends EventTarget {
                 if (hasGradient && !hasTextGradientClass) {
                     hiliteColor = backgroundImage;
                 } else {
-                    hiliteColor = computedStyle.backgroundColor;
+                    let ancestor = endContainer;
+                    while (ancestor && !hiliteColor) {
+                        hiliteColor = ancestor.style.backgroundColor;
+                        ancestor = ancestor.parentElement;
+                    }
+                    if (!hiliteColor) {
+                        hiliteColor = computedStyle.backgroundColor;
+                    }
                 }
             }
         }
