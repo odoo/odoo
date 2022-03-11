@@ -49,7 +49,7 @@ class mother2(models.Model):
             if rec.field_in_mother:
                 rec.surname = rec.field_in_mother
             else:
-                super(mother, rec)._compute_surname()
+                super(mother2, rec)._compute_surname()
 
 
 class mother3(models.Model):
