@@ -342,20 +342,20 @@ class TestSurveySecurityControllers(common.TestSurveyCommon, HttpCase):
         })
 
         # right short access token
-        response = self.url_open(f'/s/123456')
+        response = self.url_open('/s/123456')
         self.assertEqual(response.status_code, 200)
         self.assertIn('The session will begin automatically when the host starts', response.text)
 
         # `like` operator injection
-        response = self.url_open(f'/s/______')
+        response = self.url_open('/s/______')
         self.assertFalse(self.survey.title in response.text)
 
         # right short token, but closed survey
         self.survey.action_archive()
-        response = self.url_open(f'/s/123456')
+        response = self.url_open('/s/123456')
         self.assertFalse(self.survey.title in response.text)
 
         # right short token, but wrong `session_state`
         self.survey.write({'session_state': False, 'active': True})
-        response = self.url_open(f'/s/123456')
+        response = self.url_open('/s/123456')
         self.assertFalse(self.survey.title in response.text)
