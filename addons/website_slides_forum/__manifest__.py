@@ -20,6 +20,7 @@
         'views/website_slides_menu_views.xml',
         'views/website_slides_forum_templates.xml',
         'views/website_slides_templates.xml',
+        'views/snippets.xml',
     ],
     'demo': [
         'data/slide_channel_demo.xml',

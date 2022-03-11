@@ -512,7 +512,7 @@
     </field>
 </record>
 
-<template id="job_filter_by_countries" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Countries">
+<template id="job_filter_by_countries" inherit_id="website_hr_recruitment.index" active="False" name="Filter by Countries">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills flex-column mb32">
             <li class="nav-item"><a t-attf-href="/jobs#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }?all_countries=1" t-attf-class="nav-link#{'' if country_id else ' active'}">All Countries</a></li>
@@ -529,7 +529,7 @@
     </xpath>
 </template>
 
-<template id="job_filter_by_departments" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Departments">
+<template id="job_filter_by_departments" inherit_id="website_hr_recruitment.index" active="False" name="Filter by Departments">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills flex-column mb32">
             <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/office/%s' % office_id if office_id else ''}" t-attf-class="nav-link#{'' if department_id else ' active'}">All Departments</a></li>
@@ -545,7 +545,7 @@
     </xpath>
 </template>
 
-<template id="job_filter_by_offices" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Offices">
+<template id="job_filter_by_offices" inherit_id="website_hr_recruitment.index" active="False" name="Filter by Offices">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills flex-column mb32">
             <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }" t-attf-class="nav-link#{'' if office_id else ' active'}">All Offices</a></li>
@@ -566,7 +566,7 @@
     </xpath>
 </template>
 
-<template id="job_right_side_bar" inherit_id="website_hr_recruitment.index" active="True" customize_show="True" name="Right Side Bar">
+<template id="job_right_side_bar" inherit_id="website_hr_recruitment.index" active="True" name="Right Side Bar">
     <xpath expr="//div[@id='jobs_grid']" position="after">
         <div class="col-lg-3 oe_structure oe_empty" id="jobs_grid_left">
             <section class="">

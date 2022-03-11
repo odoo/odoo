@@ -109,7 +109,7 @@
     </t>
 </template>
 
-<template id="ref_country" inherit_id="website_crm_partner_assign.index" customize_show="True" name="Left World Map">
+<template id="ref_country" inherit_id="website_crm_partner_assign.index" name="Left World Map">
     <xpath expr="//ul[@id='reseller_countries']" position="after">
         <t t-if="google_maps_api_key">
             <!-- modal for large map -->
@@ -199,7 +199,7 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_lead" name="Show Leads / Opps" customize_show="True" inherit_id="portal.portal_my_home" priority="15">
+    <template id="portal_my_home_lead" name="Show Leads / Opps" inherit_id="portal.portal_my_home" priority="15">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Leads</t>

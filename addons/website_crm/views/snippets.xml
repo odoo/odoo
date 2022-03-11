@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="Crm Snippet Options">
+    <xpath expr="." position="inside">
+        <div data-selector="main:has(span[data-for='contactus_form'])" data-page-options="true" data-no-check="true" string="Contact us Page">
+            <we-checkbox string="Opportunity"
+                         data-customize-website-views="website_crm.contactus_form"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>
