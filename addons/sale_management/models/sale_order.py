@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -150,6 +150,9 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
+        if self.env.su:
+            self = self.with_user(SUPERUSER_ID)
+
         for order in self:
             if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
                 self.sale_order_template_id.mail_template_id.send_mail(order.id)
