@@ -22,6 +22,7 @@ Publish your customers as business references on your website to attract new pot
         'views/res_partner_views.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/snippets.xml',
     ],
     'installable': True,
     'license': 'LGPL-3',

@@ -2062,11 +2062,11 @@
 <!-- Error and special pages -->
 <template id="website_info" name="Odoo Information">
     <t t-call="website.layout">
-        <div id="wrap"/>
+        <div id="wrap" class="o_website_info"/>
     </t>
 </template>
 
-<template id="show_website_info" inherit_id="website.website_info" customize_show="True" name="Show Odoo Information">
+<template id="show_website_info" inherit_id="website.website_info" name="Show Odoo Information">
     <xpath expr="//div[@id='wrap']" position="inside">
         <div class="oe_structure">
             <section class="container">
@@ -2084,7 +2084,7 @@
                 <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher" role="status">
                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
                    <p>
-                     Note: To hide this page, uncheck it from the top Customize menu.
+                     Note: To hide this page, uncheck it from the Customize tab in edit mode.
                    </p>
                 </div>
                 <h2>Installed Applications</h2>

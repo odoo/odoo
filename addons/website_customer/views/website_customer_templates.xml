@@ -62,7 +62,7 @@
 </template>
 
 <!-- Option: left column: World Map -->
-<template id="opt_country" inherit_id="website_customer.index" customize_show="True" name="Show Map">
+<template id="opt_country" inherit_id="website_customer.index" name="Show Map">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <t t-if="google_maps_api_key">
             <!-- modal for large map -->
@@ -88,7 +88,7 @@
     </xpath>
 </template>
 
-<template id="opt_industry_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Industry" priority="20">
+<template id="opt_industry_list" inherit_id="website_customer.index" name="Filter on Industry" priority="20">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <h3>References by Industries</h3>
         <ul class="nav nav-pills flex-column mt16 mb32">
@@ -107,7 +107,7 @@
     </xpath>
 </template>
 
-<template id="opt_country_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Countries" priority="30">
+<template id="opt_country_list" inherit_id="website_customer.index" name="Filter on Countries" priority="30">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <h3>References by Country</h3>
         <ul class="nav nav-pills flex-column mt16 mb32">
@@ -127,7 +127,7 @@
 </template>
 
 
-<template id="opt_tag_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Tags" priority="40">
+<template id="opt_tag_list" inherit_id="website_customer.index" name="Filter on Tags" priority="40">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
 
         <h3 t-if="len(tags)">References by Tag</h3>
