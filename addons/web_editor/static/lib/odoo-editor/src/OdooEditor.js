@@ -1977,7 +1977,7 @@ export class OdooEditor extends EventTarget {
 
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#createLink');
-        linkButton && linkButton.classList.toggle('active', linkNode);
+        linkButton && linkButton.classList.toggle('active', !!linkNode);
         const unlinkButton = this.toolbar.querySelector('#unlink');
         unlinkButton && unlinkButton.classList.toggle('d-none', !linkNode);
         const undoButton = this.toolbar.querySelector('#undo');
