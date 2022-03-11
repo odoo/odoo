@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Chatter" owl="1">
-        <div class="o_Chatter" t-attf-class="{{ className }}" t-ref="root">
+        <div class="o_Chatter position-relative flex-grow-1 flex-column d-flex w-100 bg-white" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="chatter">
                 <div class="o_Chatter_fixedPanel">
                     <ChatterTopbar
@@ -11,15 +11,15 @@
                     />
                     <t t-if="chatter.composerView">
                         <Composer
-                            className="'o_Chatter_composer'"
-                            classNameObj="{ 'o-bordered': chatter.hasExternalBorder }"
+                            className="'o_Chatter_composer border-bottom'"
+                            classNameObj="{ 'o-bordered border-left border-right': chatter.hasExternalBorder }"
                             localId="chatter.composerView.localId"
                             hasMentionSuggestionsBelowPosition="true"
                             isExpandable="true"
                         />
                     </t>
                 </div>
-                <div class="o_Chatter_scrollPanel" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
+                <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
                     <t t-if="chatter.attachmentBoxView">
                         <AttachmentBox
                             className="'o_Chatter_attachmentBox'"
