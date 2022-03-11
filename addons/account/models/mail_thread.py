@@ -10,7 +10,7 @@ class MailThread(models.AbstractModel):
         """ This method extension ensures that, when using the "Send & Print" feature, if the user
         adds an attachment, the latter will be linked to the record.
 
-        # TDE NOTE: clean that brol
+        # Task-2792146: will move to model-based method
         """
         record = self.env.context.get('attached_to')
         # link mail.compose.message attachments to attached_to

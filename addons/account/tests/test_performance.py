@@ -11,6 +11,23 @@ from odoo.tools import formataddr, mute_logger
 
 @tagged('mail_performance', 'account_performance', 'post_install', '-at_install')
 class BaseMailAccountPerformance(MailCommon):
+    """ Base main class for performance tests related to mail usage in accounting.
+
+    TDE note: explanation for query counters.
+      * assertQueryCount has highest counters in order to have green builds. Those
+        are generally matching enterprise builds counters (all modules including
+        enterprise modules);
+      * "acc" stands for developer-friendly accounting (install account with
+        enterprise, run tests);
+      * "com" stands for community runbot (all modules, community only);
+      * "ent" stands for enterprise runbot (all modules, enterprise build).
+        Sometimes enterprise may be lower than community due to some ORM side
+        effect (happens rarely);
+      * those 3 values may differ due to side effects in sub-addons. Fixing it
+        is a long-term work. Having them displayed allows to ease maintenance and
+        seeing if local changes (e.g. fixes in account or mail) have an effect
+        on query counters without having to wait on complete runbot builds;
+    """
 
     @classmethod
     def setUpClass(cls):
