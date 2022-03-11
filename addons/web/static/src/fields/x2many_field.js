@@ -149,10 +149,7 @@ export class X2ManyField extends Component {
         } else {
             const form = this.list.views.form;
             const record = this.list.model.createDataPoint("record", {
-                context: makeContext(
-                    [this.list.context, this.list.rawContext, context],
-                    this.list.getEvalContext()
-                ),
+                context: makeContext([this.list.context, context]),
                 resModel: this.list.resModel,
                 fields: {
                     ...(form || {}).fields,
@@ -170,10 +167,7 @@ export class X2ManyField extends Component {
                 save: () => {
                     record.switchMode("readonly");
                     const newRecord = this.list.model.createDataPoint("record", {
-                        context: makeContext(
-                            [this.list.context, this.list.rawContext, context],
-                            this.list.getEvalContext()
-                        ),
+                        context: this.list.context,
                         resModel: this.list.resModel,
                         fields: this.list.fields,
                         activeFields: this.list.activeFields,

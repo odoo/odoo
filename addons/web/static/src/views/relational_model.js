@@ -347,6 +347,8 @@ export class Record extends DataPoint {
         this._onChangePromise = Promise.resolve({});
         this._domains = {};
 
+        this.getParentEvalContext = params.getParentEvalContext;
+
         this.mode = params.mode || (this.isVirtual ? "edit" : state.mode || "readonly");
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
         markRaw(this);
@@ -371,9 +373,14 @@ export class Record extends DataPoint {
                 evalContext[fieldName] = value.toFormat("yyyy-LL-dd");
             } else if (value && this.fields[fieldName].type === "datetime") {
                 evalContext[fieldName] = value.toFormat("yyyy-LL-dd HH:mm:ss");
+            } else if (value && this.fields[fieldName].type === "many2one") {
+                evalContext[fieldName] = value[0];
             } else {
                 evalContext[fieldName] = value;
             }
+        }
+        if (this.getParentEvalContext) {
+            evalContext.parent = this.getParentEvalContext();
         }
         return evalContext;
     }
@@ -803,8 +810,7 @@ export class Record extends DataPoint {
             fields,
             activeFields,
             context: this.context,
-            rawContext: field.context,
-            getEvalContext: () => this.evalContext,
+            getParentEvalContext: () => this.evalContext,
             limit,
             orderBy,
             field: this.fields[fieldName],
@@ -1802,15 +1808,14 @@ export class StaticList extends DataPoint {
         this.displayedIds = [];
         this._cache = {};
 
-        this.isOne2Many = params.field.type === "one2many"; // bof
+        this.field = params.field;
         this.views = params.views || {};
         this.viewMode = params.viewMode;
 
         this.notYetValidated = null;
         this.onChanges = params.onChanges || (() => {});
 
-        this.rawContext = params.rawContext;
-        this.getEvalContext = params.getEvalContext;
+        this.getParentEvalContext = params.getParentEvalContext;
 
         this.editedRecord = null;
         this.onRecordWillSwitchMode = async (record, mode) => {
@@ -1852,9 +1857,11 @@ export class StaticList extends DataPoint {
         return records;
     }
 
-    async createRecord({ mode, resId }) {
+    async createRecord({ context, mode, resId }) {
         const record = this.model.createDataPoint("record", {
-            // context: makeContext([this.context, this.rawContext, context], this.getEvalContext()),
+            // FIXME: we might need a structure that can store evaluated and non evaluted context,
+            // to be evaluated later with the given eval context
+            context: makeContext([this.context, this.field.context, context], this.evalContext),
             resModel: this.resModel,
             resId,
             fields: this.fields,
@@ -1862,6 +1869,7 @@ export class StaticList extends DataPoint {
             activeFields: this.activeFields,
             viewMode: this.viewMode,
             views: this.views,
+            getParentEvalContext: this.getParentEvalContext,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
             onChanges: () => {
                 this.onChanges();
@@ -2059,7 +2067,7 @@ export class StaticList extends DataPoint {
     getCommands() {
         const commands = [];
         let hasChanged = false;
-        if (this.isOne2Many) {
+        if (this.field.type === "one2many") {
             for (const resId of this.resIds) {
                 const record = this._cache[resId];
                 if (this.deletedIds.has(resId)) {
