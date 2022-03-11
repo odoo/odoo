@@ -20,7 +20,7 @@ import { getActiveActions, getDecoration, processButton } from "../helpers/view_
 import { RelationalModel, stringToOrderBy } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
 
-const { Component, onWillStart, useSubEnv } = owl;
+const { Component, onWillStart, useSubEnv, useEffect } = owl;
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -196,6 +196,7 @@ export class ListView extends Component {
         this.user = useService("user");
 
         this.archInfo = new ListArchParser().parse(this.props.arch, this.props.fields);
+        this.editable = this.props.editable ? this.archInfo.editable : false;
         this.activeActions = this.archInfo.activeActions;
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
@@ -237,31 +238,45 @@ export class ListView extends Component {
                 },
             };
         });
+
+        useEffect(
+            () => {
+                if (this.props.onSelectionChanged) {
+                    const resIds = this.model.root.selection.map((record) => record.resId);
+                    this.props.onSelectionChanged(resIds);
+                }
+            },
+            () => [this.model.root.selection.length]
+        );
     }
 
     async openRecord(record) {
-        const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        try {
-            await this.actionService.switchView("form", { resId: record.resId, resIds });
-        } catch (e) {
-            if (e instanceof ViewNotFoundError) {
-                // there's no form view in the current action
-                return;
+        if (this.props.selectRecord) {
+            const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
+            this.props.selectRecord(record.resId, { activeIds });
+        } else {
+            const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
+            try {
+                await this.actionService.switchView("form", { resId: record.resId, resIds });
+            } catch (e) {
+                if (e instanceof ViewNotFoundError) {
+                    // there's no form view in the current action
+                    return;
+                }
+                throw e;
             }
-            throw e;
         }
     }
 
     async onClickCreate() {
-        if (this.archInfo.editable) {
+        if (this.editable) {
             // add a new row
             if (this.model.root.editedRecord) {
                 await this.model.root.editedRecord.save();
             }
-            await this.model.root.createRecord(null, this.archInfo.editable === "top");
+            await this.model.root.createRecord(null, this.editable === "top");
             this.render();
         } else {
-            // switch to form view to create a new record
             try {
                 await this.actionService.switchView("form", { resId: false });
             } catch (e) {
@@ -332,8 +347,12 @@ export class ListView extends Component {
         return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
     }
 
-    onSelectDomain() {
+    async onSelectDomain() {
         this.model.root.selectDomain(true);
+        if (this.props.onSelectionChanged) {
+            const resIds = await this.model.root.getResIds(true);
+            this.props.onSelectionChanged(resIds);
+        }
     }
 
     get nbSelected() {
@@ -396,8 +415,8 @@ export class ListView extends Component {
                     this.env._t(
                         "Of the %d records selected, only the first %d have been archived/unarchived."
                     ),
-                    total,
-                    resIds.length
+                    resIds.length,
+                    total
                 ),
                 { title: this.env._t("Warning") }
             );
@@ -425,8 +444,8 @@ export class ListView extends Component {
                             this.env._t(
                                 `Only the first %s records have been deleted (out of %s selected)`
                             ),
-                            total,
-                            resIds.length
+                            resIds.length,
+                            total
                         ),
                         { title: this.env._t("Warning") }
                     );
@@ -446,9 +465,15 @@ ListView.components = { ActionMenus, ListViewHeaderButton, ListRenderer, Layout,
 ListView.props = {
     ...standardViewProps,
     hasSelectors: { type: Boolean, optional: 1 },
+    editable: { type: Boolean, optional: 1 },
+    selectRecord: { type: Function, optional: 1 },
+    showButtons: { type: Boolean, optional: 1 },
+    onSelectionChanged: { type: Function, optional: 1 },
 };
 ListView.defaultProps = {
     hasSelectors: true,
+    editable: true,
+    showButtons: true,
 };
 
 ListView.template = `web.ListView`;

@@ -2,10 +2,7 @@
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 
-import dialogs from "web.view_dialogs";
-import { standaloneAdapter } from "web.OwlCompatibility";
-
-const { Component } = owl;
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
 function runJSTestsItem({ env }) {
     const runTestsURL = browser.location.origin + "/web/tests?debug=assets";
@@ -37,7 +34,7 @@ export function openViewItem({ env }) {
     async function onSelected(records) {
         const views = await env.services.orm.searchRead(
             "ir.ui.view",
-            [["id", "=", records[0].id]],
+            [["id", "=", records[0]]],
             ["name", "model", "type"],
             { limit: 1 }
         );
@@ -55,19 +52,16 @@ export function openViewItem({ env }) {
         type: "item",
         description: env._t("Open View"),
         callback: () => {
-            const adapterParent = standaloneAdapter({ Component });
-            const selectCreateDialog = new dialogs.SelectCreateDialog(adapterParent, {
-                res_model: "ir.ui.view",
+            env.services.dialog.add(SelectCreateDialog, {
+                resModel: "ir.ui.view",
                 title: env._t("Select a view"),
-                disable_multiple_selection: true,
+                multiSelect: false,
                 domain: [
                     ["type", "!=", "qweb"],
                     ["type", "!=", "search"],
                 ],
-                on_selected: onSelected,
+                onSelected,
             });
-
-            selectCreateDialog.open();
         },
         sequence: 40,
     };

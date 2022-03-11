@@ -21,8 +21,6 @@ export class FormViewDialog extends Dialog {
         this.archInfo = this.props.archInfo;
         this.title = this.props.title;
         this.record = this.props.record;
-        this.multiSelect = false;
-        this.buttons = this.props.buttons;
 
         this.dialogFooterRef = useRef("dialogFooter");
 
@@ -56,28 +54,14 @@ export class FormViewDialog extends Dialog {
                 this.record = this.model.root;
             }
 
-            this.createButtons();
+            this.readonly = !this.record.isInEdition;
+            this.multiSelect = this.record.resId === -1 && !this.props.disableMultipleSelection; // WOWL this is not good
 
             Object.assign(this.record.activeFields, this.archInfo.activeFields);
             Object.assign(this.record.fields, this.archInfo.fields);
             this.record.fieldNames = Object.keys(this.record.activeFields);
-            //FIXME: Maybe we need to check if multiple footer
-            if (this.archInfo.xmlDoc.querySelector("footer")) {
-                const footerXmlDoc = this.archInfo.xmlDoc.querySelector("footer");
-                const templateKey = footerXmlDoc.outerXml;
+            this.extractFooter();
 
-                if (!templateFooter[templateKey]) {
-                    const { qweb } = this.env;
-                    const compiledDoc = new ViewCompiler(qweb, this.archInfo.fields).compile(
-                        footerXmlDoc
-                    );
-                    templateFooter[templateKey] = xml`${compiledDoc.outerHTML}`;
-                }
-
-                this.footerTemplate = templateFooter[templateKey];
-                this.archInfo.xmlDoc.querySelector("footer").remove();
-                this.archInfo.arch = this.archInfo.xmlDoc.outerXml;
-            }
             await loadSubViews(
                 this.archInfo.activeFields,
                 this.archInfo.fields,
@@ -90,66 +74,44 @@ export class FormViewDialog extends Dialog {
         });
     }
 
-    async buttonClick(onClick, close) {
-        if (onClick) {
-            await onClick();
-        }
-        if (close) {
-            this.close();
+    extractFooter() {
+        //FIXME: Maybe we need to check if multiple footer
+        if (this.archInfo.xmlDoc.querySelector("footer")) {
+            const footerXmlDoc = this.archInfo.xmlDoc.querySelector("footer");
+            const templateKey = footerXmlDoc.outerXml;
+            //Check templateKey is not undefined ?
+
+            if (!templateFooter[templateKey]) {
+                const compiledDoc = new ViewCompiler(this.archInfo.fields).compile(footerXmlDoc);
+                templateFooter[templateKey] = xml`${compiledDoc.outerHTML}`;
+            }
+
+            this.footerTemplate = templateFooter[templateKey];
+            this.archInfo.xmlDoc.querySelector("footer").remove();
+            this.archInfo.arch = this.archInfo.xmlDoc.outerXml;
         }
     }
 
-    createButtons() {
-        if (this.buttons) {
-            return;
+    discard() {
+        if (this.record.isInEdition) {
+            this.model.root.discard();
         }
-        const readonly = !this.record.isInEdition;
-        const multiSelect = this.record.resId === -1 && !this.props.disableMultipleSelection; // WOWL this is not good
-        this.buttons = [
-            {
-                text:
-                    this.props.closeText ||
-                    (readonly ? this.env._t("Close") : this.env._t("Discard")),
-                className: "btn-secondary o_form_button_cancel",
-                hotkey: "j",
-                close: true,
-                onClick: () => {
-                    if (!readonly) {
-                        this.model.root.discard();
-                    }
-                },
-            },
-        ];
-        if (!readonly) {
-            this.buttons.unshift({
-                text:
-                    this.props.saveText ||
-                    (multiSelect ? this.env._t("Save & Close") : this.env._t("Save")),
-                className: "btn-primary",
-                hotkey: "c",
-                close: true,
-                onClick: async () => {
-                    if (this.props.save) {
-                        await this.props.save();
-                    }
-                },
-            });
+        this.close();
+    }
 
-            if (multiSelect) {
-                this.buttons.splice(1, 0, {
-                    text: this.env._t("Save & New"),
-                    className: "btn-primary",
-                    hotkey: "n",
-                    onClick: async () => {
-                        const disabledButtons = this.disableButtons();
-                        await this.model.root.save();
-                        await this.model.load({ resId: null });
-                        this.enableButtons(disabledButtons);
-                        this.title && this.title.replace(this.env._t("Open:"), this.env._t("New:"));
-                    },
-                });
-            }
+    async save() {
+        if (this.props.save) {
+            await this.props.save();
         }
+        this.close();
+    }
+
+    async saveNew() {
+        const disabledButtons = this.disableButtons();
+        await this.model.root.save();
+        await this.model.load({ resId: null });
+        this.enableButtons(disabledButtons);
+        this.title && this.title.replace(this.env._t("Open:"), this.env._t("New:"));
     }
 
     disableButtons() {

@@ -400,7 +400,7 @@ export class ListRenderer extends Component {
     }
 
     async onCellClicked(record, column) {
-        if (this.props.archInfo.editable) {
+        if (this.props.editable) {
             if (record.isInEdition) {
                 this.focusCell(column);
                 this.cellToFocus = null;
@@ -480,5 +480,6 @@ ListRenderer.props = [
     "onAdd?",
     "creates?",
     "hasSelectors?",
+    "editable?",
 ];
 ListRenderer.defaultProps = { hasSelectors: false };

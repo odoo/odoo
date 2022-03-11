@@ -61,8 +61,7 @@ const appendAttr = (node, attr, string) => {
 };
 
 export class ViewCompiler {
-    constructor(qweb, fields) {
-        this.qweb = qweb;
+    constructor(fields) {
         this.fields = fields;
         this.parser = new DOMParser();
         this.document = this.parseXML("<templates />");
@@ -760,8 +759,7 @@ export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc, param
     // Creates a new compiled template if the given template key hasn't been
     // compiled already.
     if (!templateIds[templateKey]) {
-        const { qweb } = component.env;
-        const compiledDoc = new ViewCompiler(qweb, fields).compile(xmlDoc, params);
+        const compiledDoc = new ViewCompiler(fields).compile(xmlDoc, params);
         templateIds[templateKey] = xml`${compiledDoc.outerHTML}`;
         // DEBUG -- start
         console.group(`Compiled template (${templateIds[templateKey]}):`);

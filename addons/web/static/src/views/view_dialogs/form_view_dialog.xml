@@ -6,10 +6,17 @@
   </t>
 
   <t t-name="web.FormViewDialogFooter" owl="1">
-    <t t-foreach="buttons" t-as="button" t-key="button.text">
-        <button t-attf-class="btn {{button.className}}" t-on-click="() => this.buttonClick(button.onClick, button.close)" t-att-data-hotkey="button.hotkey">
-          <t t-esc="button.text"/>
-        </button>
+    <t t-if="!readonly and multiSelect">
+      <button class="btn btn-primary o_form_button_save" t-on-click="save" data-hotkey="c">Save &amp; Close</button>
+      <button class="btn btn-primary o_form_button_save_new" t-on-click="saveNew" data-hotkey="n">Save &amp; New</button>
+      <button class="btn btn-secondary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Discard</button>
+    </t>
+    <t t-elif="!readonly">
+      <button class="btn btn-primary o_form_button_save" t-on-click="save" data-hotkey="c">Save</button>
+      <button class="btn btn-secondary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Discard</button>
+    </t>
+    <t t-else="">
+      <button class="btn btn-primary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Close</button>
     </t>
   </t>
 

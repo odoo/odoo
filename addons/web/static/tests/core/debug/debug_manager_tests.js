@@ -285,7 +285,7 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.verifySteps(["ir.attachment/search", "ir.attachment/unlink", "reloadPage"]);
     });
 
-    QUnit.skipWOWL("can open a view", async (assert) => {
+    QUnit.test("can open a view", async (assert) => {
         assert.expect(3);
 
         const mockRPC = async (route, args) => {
@@ -329,11 +329,9 @@ QUnit.module("DebugMenu", (hooks) => {
         await createWebClient({ serverData, mockRPC });
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".modal .o_list_view");
 
-        await click(target.querySelector(".modal .o_list_view .o_data_row"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".modal .o_list_view .o_data_row td"));
         assert.containsNone(target, ".modal");
         assert.containsOnce(target, ".some_view");
     });
