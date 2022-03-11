@@ -5,12 +5,16 @@ import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-const { Component } = owl;
+const { Component, useEffect } = owl;
 
 export class EditInBackendSystray extends Component {
     setup() {
         this.websiteService = useService('website');
         this.actionService = useService('action');
+
+        useEffect(() => {
+            this.websiteService.editedObjectPath = null;
+        }, () => []);
     }
 
     getElements() {
@@ -22,6 +26,7 @@ export class EditInBackendSystray extends Component {
 
     editInBackend() {
         const { metadata: { mainObject } } = this.websiteService.currentWebsite;
+        this.websiteService.editedObjectPath = this.websiteService.contentWindow.location.pathname;
         this.actionService.doAction({
             res_model: mainObject.model,
             res_id: mainObject.id,

@@ -28,6 +28,8 @@ export const websiteService = {
             showNewContentModal: false,
         });
         let pageDocument;
+        let contentWindow;
+        let editedObjectPath;
         return {
             set currentWebsiteId(id) {
                 currentWebsiteId = id;
@@ -62,6 +64,18 @@ export const websiteService = {
             },
             get pageDocument() {
                 return pageDocument;
+            },
+            set contentWindow(window) {
+                contentWindow = window;
+            },
+            get contentWindow() {
+                return contentWindow;
+            },
+            set editedObjectPath(path) {
+                editedObjectPath = path;
+            },
+            get editedObjectPath() {
+                return editedObjectPath;
             },
             goToWebsite({ websiteId = currentWebsiteId || websites[0].id, path = '/' } = {}) {
                 action.doAction('website.website_editor', {
