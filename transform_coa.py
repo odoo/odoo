@@ -5,6 +5,7 @@ import io
 import sys
 import csv
 import re
+import logging
 from itertools import groupby
 from pathlib import Path
 
@@ -12,6 +13,8 @@ from lxml import etree
 
 from odoo import Command
 from odoo.tools.safe_eval import safe_eval
+
+_logger = logging.getLogger(__name__)
 
 self = locals().get('self') or {}
 env = locals().get('env') or {}
@@ -316,7 +319,7 @@ def get_records(module):
                 else:
                     merge_records(value, records[key])
         except etree.ParseError as e:
-            print(f"Invalid XML file {filename}, {e}")
+            _logger.warning("Invalid XML file %s, %s", filename, e)
 
     return records
 
@@ -368,7 +371,7 @@ def do_module(code, module, lang):
     content = (
         "# -*- coding: utf-8 -*-\n"
         "# Part of Odoo. See LICENSE file for full copyright and licensing details.\n"
-        "from odoo import models, Command, _\n"
+        "from odoo import models, Command\n"
         "from odoo.addons.account.models.chart_template import delegate_to_super_if_code_doesnt_match\n"
         "\n"
         "class AccountChartTemplate(models.AbstractModel):\n"
@@ -508,7 +511,7 @@ def load_old_source(module, filename):
         if path.exists():
             break
     else:
-        print(f"Cannot find {filename} file for {module}")
+        _logger.warning("Cannot find %s file for %s", filename, module)
         return
 
     with open(path, newline='', encoding='utf-8') as infile:
@@ -525,7 +528,7 @@ def save_new_file(module, filename, content):
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print("usage: transform_coa.py <code> <module> <lang>\n"
-              "Example: transform_coa.py it l10n_it it_IT")
+        _logger.warning("usage: transform_coa.py <code> <module> <lang>\n"
+                     "Example: transform_coa.py it l10n_it it_IT")
         sys.exit(1)
     do_module(sys.argv[1], sys.argv[2], sys.argv[3])

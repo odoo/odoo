@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, Command, _
+from odoo import models, Command
 from odoo.addons.account.models.chart_template import delegate_to_super_if_code_doesnt_match
 
 class AccountChartTemplate(models.AbstractModel):

@@ -1195,11 +1195,11 @@ class AccountTaxRepartitionLine(models.Model):
                 return command_list
             elif 'tag_ids' in vals:
                 ids = []
-                for command, id, values in command_list:
+                for command, _id, values in command_list:
                     if command == Command.SET:
                         ids.extend(values)
                     if command == Command.LINK:
-                        ids.append(id)
+                        ids.append(_id)
                 return ids
 
         tag_ids = set(command_to_ids(vals.get('tag_ids', [])))

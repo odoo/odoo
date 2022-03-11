@@ -493,14 +493,14 @@ class AccountChartTemplate(models.AbstractModel):
         ]
         return {
             f"{cid}_{kind}_tax_template": {
-                "name": _(f"{name} 15%"),
+                "name": name,
                 "amount": 15,
                 "type_tax_use": kind,
                 "tax_group_id": f'account.{cid}_tax_group_15',
                 "invoice_repartition_line_ids": tax_repartition_lines,
                 "refund_repartition_line_ids": tax_repartition_lines,
             } for kind, name in (
-                ('sale', 'Tax'),
-                ('purchase', 'Purchase Tax')
+                ('sale', _('Tax 15%')),
+                ('purchase', _('Purchase Tax 15%'))
             )
         }
