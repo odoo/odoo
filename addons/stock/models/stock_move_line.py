@@ -5,7 +5,7 @@ from collections import Counter, defaultdict
 
 from odoo import _, api, fields, tools, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import OrderedSet
+from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
@@ -203,10 +203,35 @@ class StockMoveLine(models.Model):
         if not self.id and self.user_has_groups('stock.group_stock_multi_locations') and self.product_id and self.qty_done:
             qty_done = self.product_uom_id._compute_quantity(self.qty_done, self.product_id.uom_id)
             default_dest_location = self._get_default_dest_location()
-            additional_qty = self._get_putaway_additional_qty()
-            self.location_dest_id = default_dest_location._get_putaway_strategy(
+            self.location_dest_id = default_dest_location.with_context(exclude_sml_ids=self.ids)._get_putaway_strategy(
                 self.product_id, quantity=qty_done, package=self.result_package_id,
-                packaging=self.move_id.product_packaging_id, additional_qty=additional_qty)
+                packaging=self.move_id.product_packaging_id)
+
+    def _apply_putaway_strategy(self):
+        for package, smls in groupby(self, lambda sml: sml.result_package_id):
+            smls = self.env['stock.move.line'].concat(*smls)
+            excluded_smls = smls
+            if package.package_type_id:
+                best_loc = smls.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(self.env['product.product'], package=package)
+                smls.location_dest_id = smls.package_level_id.location_dest_id = best_loc
+            elif package:
+                used_locations = set()
+                for sml in smls:
+                    if len(used_locations) > 1:
+                        break
+                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(sml.product_id, quantity=sml.reserved_uom_qty)
+                    excluded_smls -= sml
+                    used_locations.add(sml.location_dest_id)
+                if len(used_locations) > 1:
+                    smls.location_dest_id = smls.move_id.location_dest_id
+                else:
+                    smls.package_level_id.location_dest_id = smls.location_dest_id
+            else:
+                for sml in smls:
+                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(
+                        sml.product_id, quantity=sml.reserved_uom_qty, packaging=sml.move_id.product_packaging_id,
+                    )
+                    excluded_smls -= sml
 
     def _get_default_dest_location(self):
         if not self.user_has_groups('stock.group_stock_storage_categories'):
