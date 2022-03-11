@@ -40,7 +40,7 @@ msgid ""
 msgstr ""
 "\n"
 "                (object.state in ('draft', 'sent') and 'Yêu cầu báo giá - %s' % (object.name) or\n"
-"                'Đơn mua hàng - %s' % (object.name))"
+"                'Đơn mua - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
@@ -64,7 +64,7 @@ msgstr "${object.company_id.name} Đơn mua (Ref ${object.name or 'n/a' })"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%(name)s confirmed the receipt will take place on %(date)s."
-msgstr ""
+msgstr "%(name)s đã xác nhận việc nhận sẽ diễn ra vào %(date)s."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -323,7 +323,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 msgid "<span> day(s) before</span>"
-msgstr ""
+msgstr "<span> ngày trước khi nhận hàng</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -333,7 +333,7 @@ msgstr "<span>Yêu cầu xác nhận</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong class=\"d-block mb-1\">From:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Từ:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -392,7 +392,7 @@ msgstr "<strong>SL</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order_update_date
 msgid "<strong>Receipt Date:</strong>"
-msgstr "<strong>Ngày biên nhận:</strong>"
+msgstr "<strong>Ngày nhận hàng:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -3086,4 +3086,4 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "day(s) before"
-msgstr ""
+msgstr "ngày trước khi nhận hàng"
