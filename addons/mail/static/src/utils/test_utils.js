@@ -30,6 +30,7 @@ import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
 import LegacyRegistry from "web.Registry";
+import MockServer from 'web.MockServer';
 
 const { App, Component, EventBus } = owl;
 const { afterNextRender } = App;
@@ -241,11 +242,7 @@ async function getModelDefinitions() {
     return modelDefinitions;
 }
 
-//------------------------------------------------------------------------------
-// Public: test lifecycle
-//------------------------------------------------------------------------------
-
-async function beforeEach(self) {
+async function getInitialServerData() {
     const data = { ...TEST_USER_IDS };
     const modelDefinitions = await modelDefinitionsPromise;
     const recordsToInsertRegistry = registry.category('mail.model.definitions').category('recordsToInsert');
@@ -257,7 +254,99 @@ async function beforeEach(self) {
         }
         data[modelName] = { fields, records };
     }
+    return data;
+}
 
+let pyEnv;
+/**
+ * Creates an environment that can be used to setup test data as well as
+ * creating data after test start.
+ *
+ * @returns {Object} An environment that can be used to interact with the mock
+ * server (creation, deletion, update of records...)
+ */
+ export async function startServer() {
+    pyEnv = new Proxy(
+        {
+            mockServer: new MockServer(await getInitialServerData(), {}),
+            ...TEST_USER_IDS,
+        },
+        {
+            get(target, name) {
+                if (target[name]) {
+                    return target[name];
+                }
+                return {
+                    /**
+                     * Simulate a 'create' operation on a model.
+                     *
+                     * @param {Object[]|Object} values records to be created.
+                     * @returns {integer[]|integer} array of ids if more than one value was passed,
+                     * id of created record otherwise.
+                     */
+                    create(values = {}) {
+                        if (!Array.isArray(values)) {
+                            values = [values];
+                        }
+                        const recordIds = values.map(value => target.mockServer._mockCreate(name, value))
+                        return recordIds.length === 1 ? recordIds[0] : recordIds;
+                    },
+                    /**
+                     * Simulate a 'search' operation on a model.
+                     *
+                     * @param {Array} domain
+                     * @param {Object} context
+                     * @returns {integer[]} array of ids corresponding to the given domain.
+                     */
+                    search(domain, context = {}) {
+                        return target.mockServer._mockSearch(name, [domain], context);
+                    },
+                    /**
+                     * Simulate a 'search_read' operation on a model.
+                     *
+                     * @param {Array} domain
+                     * @param {Object} context
+                     * @returns {Object[]} array of records corresponding to the given domain.
+                     */
+                    searchRead(domain, context = {}) {
+                        return target.mockServer._mockSearchRead(name, [], { domain, context });
+                    },
+                    /**
+                     * Simulate an 'unlink' operation on a model.
+                     *
+                     * @param {integer[]} ids
+                     * @returns {boolean} mockServer 'unlink' method always returns true.
+                     */
+                    unlink(ids) {
+                        return target.mockServer._mockUnlink(name, [ids]);
+                    },
+                    /**
+                     * Simulate a 'write' operation on a model.
+                     *
+                     * @param {integer[]} ids ids of records to write on.
+                     * @param {Object} values values to write on the records matching given ids.
+                     * @returns {boolean} mockServer 'write' method always returns true.
+                     */
+                    write(ids, values) {
+                        return target.mockServer._mockWrite(name, [ids, values]);
+                    },
+                };
+            },
+            set(target, name, value) {
+                return target[name] = value;
+            },
+         },
+    );
+    registerCleanup(() => pyEnv = undefined);
+    return pyEnv;
+}
+
+//------------------------------------------------------------------------------
+// Public: test lifecycle
+//------------------------------------------------------------------------------
+
+async function beforeEach(self) {
+    const data = await getInitialServerData();
     Object.assign(self, {
         data,
         widget: undefined
@@ -716,6 +805,17 @@ async function start(param0 = {}) {
         }),
     }, param0.services);
 
+    if (!param0.data && !param0.serverData) {
+        pyEnv = pyEnv || await startServer();
+        const data = pyEnv.mockServer.data;
+        Object.assign(data, TEST_USER_IDS);
+        if (hasWebClient) {
+            param0.serverData = { models: data };
+        } else {
+            param0.data = data;
+        }
+    }
+
     const kwargs = Object.assign({}, param0, {
         archs: Object.assign({}, {
             'mail.message,false,search': '<search/>'
@@ -724,7 +824,7 @@ async function start(param0 = {}) {
         services: Object.assign({}, services, param0.services),
     }, { env });
     let widget;
-    let mockServer; // only in basic mode
+    let mockServer;
     let testEnv;
     const selector = debug ? 'body' : '#qunit-fixture';
     if (hasView) {
@@ -799,6 +899,11 @@ async function start(param0 = {}) {
     }
     // get the final test env after execution of createView/createWebClient/addMockEnvironment
     testEnv = Component.env;
+    // link the pyEnv to the actual mockServer after execution of createView/createWebClient/addMockEnvironment
+    if (pyEnv) {
+        pyEnv.mockServer = MockServer.currentMockServer;
+        mockServer = pyEnv.mockServer;
+    }
     const afterEvent = getAfterEvent({ messagingBus });
     let waitUntilEventPromise;
     if (waitUntilEvent) {
@@ -811,6 +916,7 @@ async function start(param0 = {}) {
         afterEvent,
         env: testEnv,
         mockServer,
+        pyEnv,
         widget,
     };
     const { modelManager } = testEnv.services.messaging;
