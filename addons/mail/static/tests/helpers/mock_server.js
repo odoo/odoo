@@ -45,6 +45,7 @@ MockServer.include({
 
         this._super(...arguments);
 
+        MockServer.currentMockServer = this;
         // creation of the ir.model.fields records, required for tracked fields
         for (const modelName in data) {
             const fieldNamesToFields = data[modelName].fields;
