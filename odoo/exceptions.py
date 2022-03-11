@@ -12,10 +12,7 @@ treated as a 'Server error'.
     check out the :mod:`odoo.addons.test_exceptions` module.
 """
 
-import logging
 import warnings
-
-_logger = logging.getLogger(__name__)
 
 
 class UserError(Exception):
