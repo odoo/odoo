@@ -38,6 +38,7 @@ class AccountTaxGroup(models.Model):
         string='Advance Tax payment account',
         help="Downpayments posted on this account will be considered by the Tax Closing Entry.")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country for which this tax group is applicable.")
+    country_code = fields.Char(related="country_id.code")
     preceding_subtotal = fields.Char(
         string="Preceding Subtotal",
         help="If set, this value will be used on documents as the label of a subtotal excluding this tax group before displaying it. " \
