@@ -612,6 +612,21 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def product_id_change(self):
+        self._update_description()
+        self._update_taxes()
+
+        product = self.product_id
+        if product and product.sale_line_warn != 'no-message':
+            if product.sale_line_warn == 'block':
+                self.product_id = False
+            return {
+                'warning': {
+                    'title': _("Warning for %s", product.name),
+                    'message': product.sale_line_warn_msg,
+                }
+            }
+
+    def _update_description(self):
         if not self.product_id:
             return
         valid_values = self.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
@@ -632,14 +647,26 @@ class SaleOrderLine(models.Model):
 
         product = self.product_id.with_context(
             lang=get_lang(self.env, self.order_id.partner_id.lang).code,
+        )
+
+        self.update({'name': self.get_sale_order_line_multiline_description_sale(product)})
+
+    def _update_taxes(self):
+        if not self.product_id:
+            return
+
+        vals = {}
+        if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
+            vals['product_uom'] = self.product_id.uom_id
+            vals['product_uom_qty'] = self.product_uom_qty or 1.0
+
+        product = self.product_id.with_context(
             partner=self.order_id.partner_id,
             quantity=vals.get('product_uom_qty') or self.product_uom_qty,
             date=self.order_id.date_order,
             pricelist=self.order_id.pricelist_id.id,
             uom=self.product_uom.id
         )
-
-        vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
 
         self._compute_tax_id()
 
@@ -655,17 +682,6 @@ class SaleOrderLine(models.Model):
             )
 
         self.update(vals)
-
-        if product.sale_line_warn != 'no-message':
-            if product.sale_line_warn == 'block':
-                self.product_id = False
-
-            return {
-                'warning': {
-                    'title': _("Warning for %s", product.name),
-                    'message': product.sale_line_warn_msg,
-                }
-            }
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
