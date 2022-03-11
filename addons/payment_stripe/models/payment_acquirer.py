@@ -247,27 +247,33 @@ class PaymentAcquirer(models.Model):
         """
         self.ensure_one()
 
-        return {
-            'type': 'standard',
-            'country': self.company_id.country_id.code,
-            'email': self.company_id.email,
-            'business_type': 'individual',
-            'company[address][city]': self.company_id.city or '',
-            'company[address][country]': self.company_id.country_id.code or '',
-            'company[address][line1]': self.company_id.street or '',
-            'company[address][line2]': self.company_id.street2 or '',
-            'company[address][postal_code]': self.company_id.zip or '',
-            'company[address][state]': self.company_id.state_id.name or '',
-            'company[name]': self.company_id.name,
-            'individual[address][city]': self.company_id.city or '',
-            'individual[address][country]': self.company_id.country_id.code or '',
-            'individual[address][line1]': self.company_id.street or '',
-            'individual[address][line2]': self.company_id.street2 or '',
-            'individual[address][postal_code]': self.company_id.zip or '',
-            'individual[address][state]': self.company_id.state_id.name or '',
-            'individual[email]': self.company_id.email or '',
-            'business_profile[name]': self.company_id.name,
-        }
+        payload = {}
+        payload['type'] = 'standard'
+        payload['business_type'] = 'individual'
+
+        def set_if_defined(key, value):
+            if value:
+                payload[key] = value
+
+        set_if_defined('country', self.company_id.country_id.code)
+        set_if_defined('email', self.company_id.email)
+        set_if_defined('company[address][city]', self.company_id.city)
+        set_if_defined('company[address][country]', self.company_id.country_id.code)
+        set_if_defined('company[address][line1]', self.company_id.street)
+        set_if_defined('company[address][line2]', self.company_id.street2)
+        set_if_defined('company[address][postal_code]', self.company_id.zip)
+        set_if_defined('company[address][state]', self.company_id.state_id.name)
+        set_if_defined('company[name]', self.company_id.name)
+        set_if_defined('individual[address][city]', self.company_id.city)
+        set_if_defined('individual[address][country]', self.company_id.country_id.code)
+        set_if_defined('individual[address][line1]', self.company_id.street)
+        set_if_defined('individual[address][line2]', self.company_id.street2)
+        set_if_defined('individual[address][postal_code]', self.company_id.zip)
+        set_if_defined('individual[address][state]', self.company_id.state_id.name)
+        set_if_defined('individual[email]', self.company_id.email)
+        set_if_defined('business_profile[name]', self.company_id.name)
+
+        return payload
 
     def _stripe_create_account_link(self, connected_account_id, menu_id):
         """ Create an account link and return its URL.
