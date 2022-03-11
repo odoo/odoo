@@ -1453,5 +1453,12 @@
             <we-button data-configure-api-key="" data-no-preview="true">Custom Key</we-button>
         </we-row>
     </div>
+    <!-- Info page ('/website/info') -->
+    <div data-selector="main:has(.o_website_info)" data-page-options="true" data-no-check="true" string="Info Page">
+        <we-checkbox string="Odoo Information"
+                        data-customize-website-views="website.show_website_info"
+                        data-no-preview="true"
+                        data-reload="/"/>
+    </div>
 </template>
 </odoo>
