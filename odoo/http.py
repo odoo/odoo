@@ -577,6 +577,12 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
         defined at the given ``modules`` (often system wide modules or
         installed modules). Modules in this context are Odoo addons.
         """
+        # Controllers defined outside of odoo addons are outside of the
+        # controller inheritance/extension mechanism.
+        yield from (ctrl() for ctrl in Controller.children_classes.get('', []))
+
+        # Controllers defined inside of odoo addons can be extended in
+        # other installed addons. Rebuild the class inheritance here.
         highest_controllers = []
         for module in modules:
             highest_controllers.extend(Controller.children_classes.get(module, []))
