@@ -1943,6 +1943,10 @@ export class StaticList extends DataPoint {
                     this.addedIds.add(resId);
                 }
             }
+            if (command[0] === 5) {
+                this.deletedIds = new Set(this.resIds);
+                this.displayedIds = [];
+            }
         }
     }
 
