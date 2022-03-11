@@ -883,6 +883,13 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_blacklist.py:0
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Email Address?"
+msgstr "Bạn có chắc muốn đưa địa chỉ email này vào sổ đen?"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/xml/activity.xml:0
@@ -3559,7 +3566,7 @@ msgstr "Thư: Trình quản lý hàng đợi email"
 #: model:ir.cron,cron_name:mail.ir_cron_mail_notify_channel_moderators
 #: model:ir.cron,name:mail.ir_cron_mail_notify_channel_moderators
 msgid "Mail: Notify channel moderators"
-msgstr "Mail: Thông báo cho người điều hành kênh"
+msgstr "Mail: Thông báo cho người kiểm duyệt kênh"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -5483,7 +5490,7 @@ msgstr "Tìm kiếm Nhóm"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Search Moderation List"
-msgstr "Tìm kiếm danh sách điều hành viên"
+msgstr "Tìm kiếm danh sách người kiểm duyệt"
 
 #. module: mail
 #. openerp-web
@@ -6909,6 +6916,16 @@ msgstr ""
 "trong địa chỉ alias."
 
 #. module: mail
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid ""
+"You do not have the access right to unblacklist emails. Please contact your "
+"administrator."
+msgstr ""
+"Bạn không có quyền truy cập vào các email bị đưa vào sổ đen. Vui lòng liên hệ"
+" với người quản trị hệ thống."
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -6946,7 +6963,7 @@ msgstr "Bạn có tin nhắn đợi kiểm duyệt, xin vui lòng đi xử lý."
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "You have no messages to moderate."
-msgstr ""
+msgstr "Bạn không có thông điệp / tin nhắn nào cần kiểm duyệt."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
@@ -6989,7 +7006,7 @@ msgstr " "
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Your message is pending moderation."
-msgstr ""
+msgstr "Tin của bạn đang chờ kiểm duyệt."
 
 #. module: mail
 #. openerp-web
