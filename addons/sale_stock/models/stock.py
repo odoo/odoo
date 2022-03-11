@@ -104,6 +104,7 @@ class StockPicking(models.Model):
                 'product_id': product.id,
                 'product_uom_qty': 0,
                 'qty_delivered': move.quantity_done,
+                'product_uom': move.product_uom.id,
             }
             if product.invoice_policy == 'delivery':
                 # Check if there is already a SO line for this product to get
