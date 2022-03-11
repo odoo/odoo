@@ -17,6 +17,7 @@ from threading import Thread
 import time
 
 from odoo import _, http
+from odoo.tools.func import lazy_property
 from odoo.modules.module import get_resource_path
 
 _logger = logging.getLogger(__name__)
@@ -266,7 +267,7 @@ def load_iot_handlers():
             if spec:
                 module = util.module_from_spec(spec)
                 spec.loader.exec_module(module)
-    http.root = http.Root()
+    lazy_property.reset_all(http.root)
 
 def odoo_restart(delay):
     IR = IoTRestart(delay)
