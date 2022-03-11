@@ -943,6 +943,7 @@
                                        attrs="{'invisible': [('payment_state', '=', 'invoicing_legacy'), ('move_type', '!=', 'entry')]}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
                                         <!-- Displayed fields -->
+                                        <field name="sequence" widget="handle" attrs="{'column_invisible':[('parent.move_type','!=','entry')]}"/>
                                         <field name="account_id"
                                                attrs="{
                                                     'required': [('display_type', 'not in', ('line_section', 'line_note'))],
@@ -1018,7 +1019,6 @@
                                         <field name="price_subtotal" invisible="1"/>
                                         <field name="price_total" invisible="1"/>
 
-                                        <field name="sequence" invisible="1"/>
                                         <field name="move_name" invisible="1"/>
                                         <field name="date" invisible="1"/>
                                         <field name="tax_line_id" invisible="1"/>
