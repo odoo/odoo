@@ -883,7 +883,14 @@ export function isItalic(node) {
  * @returns {boolean}
  */
 export function isUnderline(node) {
-    return getComputedStyle(closestElement(node)).textDecorationLine === 'underline';
+    let parent = closestElement(node);
+    while (parent) {
+        if (getComputedStyle(parent).textDecorationLine === 'underline') {
+            return true;
+        }
+        parent = parent.parentElement;
+    }
+    return false;
 }
 /**
  * Return true if the given node appears struck through.
@@ -892,7 +899,14 @@ export function isUnderline(node) {
  * @returns {boolean}
  */
 export function isStrikeThrough(node) {
-    return getComputedStyle(closestElement(node)).textDecorationLine === 'line-through';
+    let parent = closestElement(node);
+    while (parent) {
+        if (getComputedStyle(parent).textDecorationLine === 'line-through') {
+            return true;
+        }
+        parent = parent.parentElement;
+    }
+    return false;
 }
 
 export function isUnbreakable(node) {
@@ -1475,12 +1489,14 @@ export function fillEmpty(el) {
  * its anchor point. Then, select that zero-width space.
  *
  * @param {Selection} selection
+ * @returns {Node} the inserted zero-width space
  */
 export function insertAndSelectZws(selection) {
     const offset = selection.anchorOffset;
     const zws = insertText(selection, '\u200B');
     splitTextNode(zws, offset);
     selection.getRangeAt(0).selectNode(zws);
+    return zws;
 }
 /**
  * Removes the given node if invisible and all its invisible ancestors.
