@@ -4,7 +4,6 @@
 {
     'name': 'Lead Enrichment',
     'summary': 'Enrich Leads/Opportunities using email address domain',
-    'version': '1.1',
     'category': 'Sales/CRM',
     'version': '1.1',
     'depends': [
