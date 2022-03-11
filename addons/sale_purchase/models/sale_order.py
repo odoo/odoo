@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
+from odoo.tools.misc import get_lang
 
 
 class SaleOrder(models.Model):
@@ -234,14 +235,21 @@ class SaleOrderLine(models.Model):
 
         # compute unit price
         price_unit = 0.0
+        product_ctx = {
+            'lang': get_lang(self.env, purchase_order.partner_id.lang).code,
+            'company_id': purchase_order.company_id,
+        }
         if supplierinfo:
             price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(
                 supplierinfo.price, supplier_taxes, taxes, self.company_id)
             if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
                 price_unit = supplierinfo.currency_id._convert(price_unit, purchase_order.currency_id, purchase_order.company_id, fields.datetime.today())
+            product_ctx.update({'seller_id': supplierinfo.id})
+        else:
+            product_ctx.update({'partner_id': purchase_order.partner_id.id})
 
         return {
-            'name': '[%s] %s' % (self.product_id.default_code, self.name) if self.product_id.default_code else self.name,
+            'name': self.product_id.with_context(**product_ctx).display_name,
             'product_qty': purchase_qty_uom,
             'product_id': self.product_id.id,
             'product_uom': self.product_id.uom_po_id.id,
