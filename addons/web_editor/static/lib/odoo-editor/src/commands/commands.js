@@ -305,22 +305,60 @@ const styles = {
 export function toggleFormat(editor, format) {
     const selection = editor.document.getSelection();
     if (!selection.rangeCount) return;
-    if (selection.getRangeAt(0).collapsed) {
-        insertAndSelectZws(selection);
+    const wasCollapsed = selection.getRangeAt(0).collapsed;
+    let zws;
+    if (wasCollapsed) {
+        if (selection.anchorNode.nodeType === Node.TEXT_NODE && selection.anchorNode.textContent === '\u200b') {
+            zws = selection.anchorNode;
+            selection.getRangeAt(0).selectNode(zws);
+        } else {
+            zws = insertAndSelectZws(selection);
+        }
     }
     getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
+    const {anchorNode, anchorOffset, focusNode, focusOffset} = editor.document.getSelection();
     const style = styles[format];
-    const isAlreadyFormatted = !!getSelectedNodes(editor.editable)
-        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length)
-        .find(n => style.is(n.parentElement));
-    applyInlineStyle(editor, el => {
-        if (isAlreadyFormatted) {
-            const block = closestBlock(el);
-            el.style[style.name] = style.is(block) ? 'normal' : getComputedStyle(block)[style.name];
-        } else {
-            el.style[style.name] = style.value;
+    const selectedTextNodes = getSelectedNodes(editor.editable)
+        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
+    const isAlreadyFormatted = !!selectedTextNodes.find(n => style.is(n.parentElement));
+    if (isAlreadyFormatted && style.name === 'textDecorationLine') {
+        const decoratedPairs = new Set(selectedTextNodes.map(n => [closestElement(n, `[style*="text-decoration-line: ${style.value}"]`), n]));
+        for (const [closestDecorated, textNode] of decoratedPairs) {
+            const splitResult = splitAroundUntil(textNode, closestDecorated);
+            const decorationToRemove = splitResult[0] || splitResult[1] || closestDecorated;
+            decorationToRemove.style.removeProperty('text-decoration-line');
+            if (!decorationToRemove.style.cssText) {
+                for (const child of decorationToRemove.childNodes) {
+                    decorationToRemove.before(child);
+                }
+                decorationToRemove.remove();
+            }
         }
-    });
+        if (wasCollapsed) {
+            setSelection(zws, 1);
+        } else {
+            setSelection(anchorNode, anchorOffset, focusNode, focusOffset);
+        }
+    } else {
+        applyInlineStyle(editor, el => {
+            if (isAlreadyFormatted) {
+                const block = closestBlock(el);
+                el.style[style.name] = style.is(block) ? 'normal' : getComputedStyle(block)[style.name];
+            } else if (style.name === 'textDecorationLine' && el.style[style.name]) {
+                // The <span> (el) has a text decoration and we want to set
+                // another. We don't want to replace the old with the new, we
+                // want to add a new one (eg it was underlined, we want it also
+                // strikeThrough).
+                const newChild = document.createElement('span');
+                const children = [...el.childNodes];
+                el.prepend(newChild);
+                newChild.append(...children);
+                newChild.style[style.name] = style.value;
+            } else {
+                el.style[style.name] = style.value;
+            }
+        });
+    }
 }
 function addColumn(editor, beforeOrAfter) {
     getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
