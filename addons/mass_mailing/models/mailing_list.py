@@ -317,7 +317,7 @@ class MassMailingList(models.Model):
             'contact_count_opt_out': '''
                 SUM(CASE WHEN COALESCE(r.opt_out,FALSE) = TRUE
                     THEN 1 ELSE 0 END) AS contact_count_opt_out''',
-            'contact_count_blacklisted': f'''
+            'contact_count_blacklisted': '''
                 SUM(CASE WHEN bl.id IS NOT NULL
                 THEN 1 ELSE 0 END) AS contact_count_blacklisted'''
         }
