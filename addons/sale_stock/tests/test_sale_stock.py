@@ -1173,3 +1173,36 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         })
         self.assertEqual(move_pick.product_uom_qty, 40, 'The move quantity should have been increased as the sale order line was.')
         self.assertEqual(move_out.product_uom_qty, 40, 'The move quantity should have been increased as the sale order line and the pick line were.')
+
+    def test_18_deliver_more_and_multi_uom(self):
+        """
+        Deliver an additional product with a UoM different than its default one
+        This UoM should be the same on the generated SO line
+        """
+        uom_m_id = self.ref("uom.product_uom_meter")
+        uom_km_id = self.ref("uom.product_uom_km")
+        self.product_b.write({
+            'uom_id': uom_m_id,
+            'uom_po_id': uom_m_id,
+        })
+
+        so = self._get_new_sale_order(product=self.product_a)
+        so.action_confirm()
+
+        picking = so.picking_ids
+        self.env['stock.move'].create({
+            'picking_id': picking.id,
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'name': self.product_b.name,
+            'product_id': self.product_b.id,
+            'product_uom_qty': 1,
+            'product_uom': uom_km_id,
+        })
+        action = picking.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+
+        self.assertEqual(so.order_line[1].product_id, self.product_b)
+        self.assertEqual(so.order_line[1].qty_delivered, 1)
+        self.assertEqual(so.order_line[1].product_uom.id, uom_km_id)
