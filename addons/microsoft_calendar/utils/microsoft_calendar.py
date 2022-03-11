@@ -45,38 +45,59 @@ class MicrosoftCalendarService():
         self.microsoft_service = microsoft_service
 
     @requires_auth_token
+    def _get_events_from_paginated_url(self, url, token=None, params=None, timeout=TIMEOUT):
+        """
+        Get a list of events from a paginated URL.
+        Each page contains a link to the next page, so loop over all the pages to get all the events.
+        """
+        headers = {
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer %s' % token,
+            'Prefer': 'outlook.body-content-type="text", odata.maxpagesize=50'
+        }
+        if not params:
+            params = {
+                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
+                'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
+            }
+
+        # get the first page of events
+        _, data, _ = self.microsoft_service._do_request(
+            url, params, headers, method='GET', timeout=timeout
+        )
+
+        # and then, loop on other pages to get all the events
+        events = data.get('value', [])
+        next_page_token = data.get('@odata.nextLink')
+        while next_page_token:
+            _, data, _ = self.microsoft_service._do_request(
+                next_page_token, {}, headers, preuri='', method='GET', timeout=timeout
+            )
+            next_page_token = data.get('@odata.nextLink')
+            events += data.get('value', [])
+
+        token_url = data.get('@odata.deltaLink')
+        next_sync_token = urls.url_parse(token_url).decode_query().get('$deltatoken', False) if token_url else None
+
+        return events, next_sync_token
+
+    @requires_auth_token
     def _get_events_delta(self, sync_token=None, token=None, timeout=TIMEOUT):
         """
         Get a set of events that have been added, deleted or updated in a time range.
         See: https://docs.microsoft.com/en-us/graph/api/event-delta?view=graph-rest-1.0&tabs=http
         """
         url = "/v1.0/me/calendarView/delta"
-        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token, 'Prefer': 'odata.maxpagesize=50,outlook.body-content-type="text"'}
-        if sync_token:
-            params = {'$deltatoken': sync_token}
-        else:
-            params = {
-                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
-                'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
-            }
+        params = {'$deltatoken': sync_token} if sync_token else None
 
         try:
-            dummy, data, dummy = self.microsoft_service._do_request(url, params, headers, method='GET', timeout=timeout)
+            events, next_sync_token = self._get_events_from_paginated_url(
+                url, params=params, token=token, timeout=timeout)
         except requests.HTTPError as e:
             if e.response.status_code == 410 and 'fullSyncRequired' in str(e.response.content) and sync_token:
                 # retry with a full sync
                 return self._get_events_delta(token=token, timeout=timeout)
             raise e
-
-        events = data.get('value', [])
-        next_page_token = data.get('@odata.nextLink')
-        while next_page_token:
-            dummy, data, dummy = self.microsoft_service._do_request(next_page_token, {}, headers, preuri='', method='GET', timeout=timeout)
-            next_page_token = data.get('@odata.nextLink')
-            events += data.get('value', [])
-
-        token_url = data.get('@odata.deltaLink')
-        next_sync_token = urls.url_parse(token_url).decode_query().get('$deltatoken', False) if token_url else None
 
         # event occurrences (from a recurrence) are retrieved separately to get all their info,
         # # and mainly the iCalUId attribute which is not provided by the 'get_delta' api end point
@@ -91,13 +112,9 @@ class MicrosoftCalendarService():
         See: https://docs.microsoft.com/en-us/graph/api/event-list-instances?view=graph-rest-1.0&tabs=http
         """
         url = f"/v1.0/me/events/{serieMasterId}/instances"
-        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
-        params = {
-            'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
-            'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
-        }
-        dummy, data, dummy = self.microsoft_service._do_request(url, params, headers, method='GET', timeout=timeout)
-        return MicrosoftEvent(data.get('value', []))
+
+        events, _ = self._get_events_from_paginated_url(url, token=token, timeout=timeout)
+        return MicrosoftEvent(events)
 
     @requires_auth_token
     def get_events(self, sync_token=None, token=None, timeout=TIMEOUT):
