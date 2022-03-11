@@ -226,6 +226,7 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         self = self.with_company(self.move_id.journal_id.company_id)
         if self.product_id.type == 'product' \
+            and self.product_id.valuation == 'real_time' \
             and self.move_id.company_id.anglo_saxon_accounting \
             and self.move_id.is_purchase_document():
             fiscal_position = self.move_id.fiscal_position_id
