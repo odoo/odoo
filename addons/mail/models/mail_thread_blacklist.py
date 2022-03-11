@@ -116,11 +116,11 @@ class MailBlackListMixin(models.AbstractModel):
         can_access = self.env['mail.blacklist'].check_access_rights('write', raise_exception=False)
         if can_access:
             return {
-                'name': 'Are you sure you want to unblacklist this Email Address?',
+                'name': _('Are you sure you want to unblacklist this Email Address?'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'mail.blacklist.remove',
                 'target': 'new',
             }
         else:
-            raise AccessError("You do not have the access right to unblacklist emails. Please contact your administrator.")
+            raise AccessError(_("You do not have the access right to unblacklist emails. Please contact your administrator."))
