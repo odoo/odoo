@@ -298,7 +298,7 @@
                                                         t-att-data-ribbon-id="td_product['ribbon'].id">
                                                         <div t-attf-class="o_wsale_product_grid_wrapper o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
                                                             <t t-call="website_sale.products_item">
-                                                                <t t-set="product_image_big" t-value="td_product['x'] + td_product['y'] &gt; 2"/>
+                                                                <t t-set="product_image_big" t-value="td_product['x'] + td_product['y'] &gt; 2 or ppr &lt;= 2"/>
                                                             </t>
                                                         </div>
                                                     </td>
