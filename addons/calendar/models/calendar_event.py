@@ -112,11 +112,19 @@ class Meeting(models.Model):
         return {fname for fname in all_fields if all_fields[fname]['manual']}
 
     @api.model
+    def _get_m2o_store_fields(self):
+        all_fields = self.fields_get(attributes=['store'])
+        fname_set = {fname for fname in all_fields if all_fields[fname]['store']}
+        fname_normal = set()
+        for r in fname_set:
+            if self._fields[r].type != 'many2one':
+                fname_normal.add(r)
+        return fname_set - fname_normal
+
+    @api.model
     def _get_public_fields(self):
-        return self._get_recurrent_fields() | self._get_time_fields() | self._get_custom_fields() | {
-            'id', 'active', 'allday',
-            'duration', 'user_id', 'interval',
-            'count', 'rrule', 'recurrence_id', 'show_as'}
+        return self._get_recurrent_fields() | self._get_time_fields() | self._get_custom_fields() | self._get_m2o_store_fields() | {
+            'id', 'active', 'allday', 'duration', 'interval', 'count', 'rrule', 'show_as'}
 
     @api.model
     def _get_display_time(self, start, stop, zduration, zallday):
