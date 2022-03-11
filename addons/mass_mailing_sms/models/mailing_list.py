@@ -41,7 +41,7 @@ class MailingList(models.Model):
                     AND COALESCE(r.opt_out,FALSE) = FALSE
                     AND bl_sms.id IS NULL)
                 THEN 1 ELSE 0 END) AS contact_count_sms''',
-            'contact_count_blacklisted': f'''
+            'contact_count_blacklisted': '''
                 SUM(CASE WHEN (bl.id IS NOT NULL OR bl_sms.id IS NOT NULL)
                 THEN 1 ELSE 0 END) AS contact_count_blacklisted'''
         })
