@@ -9,7 +9,7 @@ from pytz import timezone
 from random import randint
 
 from odoo import api, exceptions, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.resource.models.resource import make_aware, Intervals
 from odoo.tools.float_utils import float_compare
 
@@ -353,6 +353,17 @@ class MrpWorkcenterProductivityLoss(models.Model):
     loss_id = fields.Many2one('mrp.workcenter.productivity.loss.type', domain=([('loss_type', 'in', ['quality', 'availability'])]), string='Category')
     loss_type = fields.Selection(string='Effectiveness Category', related='loss_id.loss_type', store=True, readonly=False)
 
+    def _convert_to_duration(self, date_start, date_stop, workcenter=False):
+        """ Convert a date range into a duration in minutes.
+        If the productivity type is not from an employee (extra hours are allow)
+        and the workcenter has a calendar, convert the dates into a duration based on
+        working hours.
+        """
+        if (self.loss_type not in ('productive', 'performance')) and workcenter and workcenter.resource_calendar_id:
+            r = workcenter._get_work_days_data_batch(date_start, date_stop)[workcenter.id]['hours']
+            return round(r * 60, 2)
+        else:
+            return round((date_stop - date_start).total_seconds() / 60.0, 2)
 
 class MrpWorkcenterProductivity(models.Model):
     _name = "mrp.workcenter.productivity"
@@ -398,14 +409,7 @@ class MrpWorkcenterProductivity(models.Model):
     def _compute_duration(self):
         for blocktime in self:
             if blocktime.date_start and blocktime.date_end:
-                d1 = fields.Datetime.from_string(blocktime.date_start)
-                d2 = fields.Datetime.from_string(blocktime.date_end)
-                diff = d2 - d1
-                if (blocktime.loss_type not in ('productive', 'performance')) and blocktime.workcenter_id.resource_calendar_id:
-                    r = blocktime.workcenter_id._get_work_days_data_batch(d1, d2)[blocktime.workcenter_id.id]['hours']
-                    blocktime.duration = round(r * 60, 2)
-                else:
-                    blocktime.duration = round(diff.total_seconds() / 60.0, 2)
+                blocktime.duration = blocktime.loss_id._convert_to_duration(blocktime.date_start, blocktime.date_end, blocktime.workcenter_id)
             else:
                 blocktime.duration = 0.0
 
@@ -419,6 +423,30 @@ class MrpWorkcenterProductivity(models.Model):
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
+
+    def _close(self):
+        underperformance_timers = self.env['mrp.workcenter.productivity']
+        for timer in self:
+            wo = timer.workorder_id
+            if wo.duration_expected <= wo.duration:
+                if timer.loss_type == 'productive':
+                    underperformance_timers |= timer
+                timer.write({'date_end': fields.Datetime.now()})
+                continue
+
+            maxdate = timer.date_start + relativedelta.relativedelta(minutes=wo.duration_expected - wo.duration)
+            enddate = fields.datetime.now()
+            if maxdate > enddate:
+                timer.write({'date_end': enddate})
+            else:
+                timer.write({'date_end': maxdate})
+                underperformance_timers |= timer.copy({'date_start': maxdate, 'date_end': enddate})
+
+        if underperformance_timers:
+            underperformance_type = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
+            if not underperformance_type:
+                raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+            underperformance_timers.write({'loss_id': underperformance_type.id})
 
 
 class MrpWorkCenterCapacity(models.Model):
