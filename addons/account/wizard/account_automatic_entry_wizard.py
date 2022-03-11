@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
 
 from collections import defaultdict
@@ -105,6 +105,17 @@ class AutomaticEntryWizard(models.TransientModel):
     def _compute_display_currency_helper(self):
         for record in self:
             record.display_currency_helper = bool(record.destination_account_id.currency_id)
+
+    @api.constrains('date', 'move_line_ids')
+    def _check_date(self):
+        for wizard in self:
+            if wizard.move_line_ids.move_id._get_violated_lock_dates(wizard.date, False):
+                raise ValidationError(_("The date selected is protected by a lock date"))
+
+            if wizard.action == 'change_period':
+                for move in wizard.move_line_ids.move_id:
+                    if move._get_violated_lock_dates(move.date, False):
+                        raise ValidationError(_("The date of some related entries is protected by a lock date"))
 
     @api.model
     def default_get(self, fields):
