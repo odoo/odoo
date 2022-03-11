@@ -27,6 +27,8 @@ export const websiteService = {
         let currentMetadata = {};
         let fullscreen;
         let pageDocument;
+        let contentWindow;
+        let editedObjectPath;
         const context = reactive({
             showNewContentModal: false,
         });
@@ -84,6 +86,18 @@ export const websiteService = {
             },
             get pageDocument() {
                 return pageDocument;
+            },
+            set contentWindow(window) {
+                contentWindow = window;
+            },
+            get contentWindow() {
+                return contentWindow;
+            },
+            set editedObjectPath(path) {
+                editedObjectPath = path;
+            },
+            get editedObjectPath() {
+                return editedObjectPath;
             },
             goToWebsite({ websiteId = currentWebsiteId || websites[0].id, path = '/' } = {}) {
                 action.doAction('website.website_preview', {
