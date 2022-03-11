@@ -113,7 +113,9 @@ class Sanitize {
             node = nodeP;
         }
 
-        // Remove zero-width spaces added by `fillEmpty` when there is content.
+        // Remove zero-width spaces added by `fillEmpty` when there is content
+        // and the selection is not next to it.
+        const anchor = this.root.ownerDocument.getSelection().anchorNode;
         if (
             node.nodeType === Node.TEXT_NODE &&
             node.textContent.includes('\u200B') &&
@@ -129,7 +131,8 @@ class Sanitize {
                         sibling.length > 0
                 )
             ) &&
-            !isBlock(node.parentElement)
+            !isBlock(node.parentElement) &&
+            anchor !== node
         ) {
             const restoreCursor = preserveCursor(this.root.ownerDocument);
             node.textContent = node.textContent.replace('\u200B', '');
