@@ -62,7 +62,14 @@
                 <t t-if="channelInvitationForm.thread and channelInvitationForm.thread.invitationLink">
                     <h4 class="mx-3 mt-3 mb-2">Invitation Link</h4>
                     <div class="mx-3 my-2">
-                        <input type="text" t-att-value="channelInvitationForm.thread.invitationLink"/>
+                        <div class="input-group">
+                            <input class="form-control" type="text" t-att-value="channelInvitationForm.thread.invitationLink" readonly="" t-on-focus="channelInvitationForm.onFocusInvitationLinkInput" />
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" t-on-click="channelInvitationForm.onClickCopy">
+                                    <i class="fa fa-copy"/>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </t>
             </t>
