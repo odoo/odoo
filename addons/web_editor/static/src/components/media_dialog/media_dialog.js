@@ -1,112 +1,47 @@
 /** @odoo-module **/
 
 import { useService } from '@web/core/utils/hooks';
-import { qweb } from 'web.core';
+import { useWowlService } from '@web/legacy/utils';
 import { Dialog } from '@web/core/dialog/dialog';
-import { getCSSVariableValue } from 'web_editor.utils';
-import { ImageSelector } from './image_selector';
-import { DocumentSelector } from './document_selector';
-import { IconSelector } from './icon_selector';
-import { VideoSelector } from './video_selector';
+import { ImageSelector, saveImages, imageTagNames, imageSpecificClasses } from './image_selector';
+import { DocumentSelector, saveDocuments, documentTagNames, documentSpecificClasses } from './document_selector';
+import { IconSelector, saveIcons, iconTagNames, iconSpecificClasses } from './icon_selector';
+import { VideoSelector, saveVideos, videoTagNames, videoSpecificClasses } from './video_selector';
 
-const { useState } = owl;
+const { Component, useState, useEffect, xml } = owl;
 
-const TABS = {
+export const TABS = {
     IMAGES: {
         id: 'IMAGES',
         title: "Images",
         Component: ImageSelector,
-        save: async (selectedMedia, { rpc, orm }) => {
-            // Create all media-library attachments.
-            const toSave = Object.fromEntries(selectedMedia.filter(media => media.mediaType === 'libraryMedia').map(media => [
-                media.id, {
-                    query: media.query || '',
-                    is_dynamic_svg: !!media.isDynamicSVG,
-                    dynamic_colors: media.dynamicColors,
-                }
-            ]));
-            let savedMedia = [];
-            if (Object.keys(toSave).length !== 0) {
-                savedMedia = await rpc('/web_editor/save_library_media', { media: toSave });
-            }
-            const selected = selectedMedia.filter(media => media.mediaType === 'attachment').concat(savedMedia).map(attachment => {
-                // Color-customize dynamic SVGs with the theme colors
-                if (attachment.image_src && attachment.image_src.startsWith('/web_editor/shape/')) {
-                    const colorCustomizedURL = new URL(attachment.image_src, window.location.origin);
-                    colorCustomizedURL.searchParams.forEach((value, key) => {
-                        const match = key.match(/^c([1-5])$/);
-                        if (match) {
-                            colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`));
-                        }
-                    });
-                    attachment.image_src = colorCustomizedURL.pathname + colorCustomizedURL.search;
-                }
-                return attachment;
-            });
-            return Promise.all(selected.map(async (attachment) => {
-                const imageEl = document.createElement('img');
-                let src = attachment.image_src;
-                if (!attachment.public) {
-                    const [accessToken] = await orm.call(
-                        'ir.attachment',
-                        'generate_access_token',
-                        [attachment.id],
-                    );
-                    src += `?access_token=${accessToken}`;
-                }
-                imageEl.src = src;
-                imageEl.classList.add('img-fluid', 'o_we_custom_image');
-                return imageEl;
-            }));
-        },
+        save: saveImages,
+        mediaSpecificClasses: imageSpecificClasses,
+        tagNames: imageTagNames,
     },
     DOCUMENTS: {
         id: 'DOCUMENTS',
         title: "Documents",
         Component: DocumentSelector,
-        save: (selectedMedia, { orm }) => {
-            return Promise.all(selectedMedia.map(async attachment => {
-                const linkEl = document.createElement('a');
-                let href = `/web/content/${attachment.id}?unique=${attachment.checksum}&dowload=true`;
-                if (!attachment.public) {
-                    const [accessToken] = await orm.call(
-                        'ir.attachment',
-                        'generate_access_token',
-                        [attachment.id],
-                    );
-                    href += `&access_token=${accessToken}`;
-                }
-                linkEl.href = href;
-                linkEl.title = attachment.name;
-                linkEl.dataset.mimetype = attachment.mimetype;
-                linkEl.classList.add('o_image');
-                return linkEl;
-            }));
-        },
+        save: saveDocuments,
+        mediaSpecificClasses: documentSpecificClasses,
+        tagNames: documentTagNames,
     },
     ICONS: {
         id: 'ICONS',
         title: "Icons",
         Component: IconSelector,
-        save: (selectedMedia) => {
-            return selectedMedia.map(icon => {
-                const iconEl = document.createElement('i');
-                iconEl.classList.add(icon.fontBase, icon.names[0]);
-                return iconEl;
-            });
-        },
+        save: saveIcons,
+        mediaSpecificClasses: iconSpecificClasses,
+        tagNames: iconTagNames,
     },
     VIDEOS: {
         id: 'VIDEOS',
         title: "Videos",
         Component: VideoSelector,
-        save: (selectedMedia) => {
-            return selectedMedia.map(video => {
-                const template = document.createElement('template');
-                template.innerHTML = qweb.render('web_editor.videoWrapper', { src: video.src });
-                return template.content.firstChild;
-            });
-        },
+        save: saveVideos,
+        mediaSpecificClasses: videoSpecificClasses,
+        tagNames: videoTagNames,
     },
 };
 
@@ -128,6 +63,8 @@ export class MediaDialog extends Dialog {
         const noIcons = onlyImages || this.props.noIcons;
         const noVideos = onlyImages || this.props.noVideos;
 
+        this.initialIconClasses = [];
+
         if (!this.props.noImages) {
             this.addTab(TABS.IMAGES, {
                 useMediaLibrary: this.props.useMediaLibrary,
@@ -138,7 +75,9 @@ export class MediaDialog extends Dialog {
             this.addTab(TABS.DOCUMENTS);
         }
         if (!noIcons) {
-            this.addTab(TABS.ICONS);
+            this.addTab(TABS.ICONS, {
+                setInitialIconClasses: (classes) => this.initialIconClasses.push(...classes),
+            });
         }
         if (!noVideos) {
             this.addTab(TABS.VIDEOS, {
@@ -150,6 +89,19 @@ export class MediaDialog extends Dialog {
         this.state = useState({
             activeTab: this.initialActiveTab,
         });
+    }
+
+    get initialActiveTab() {
+        if (this.props.activeTab) {
+            return this.props.activeTab;
+        }
+        if (this.props.media) {
+            const correspondingTab = Object.keys(TABS).filter(id => TABS[id].tagNames.includes(this.props.media.tagName))[0];
+            if (correspondingTab) {
+                return correspondingTab;
+            }
+        }
+        return this.tabs[0].id;
     }
 
     addTab(tab, props) {
@@ -187,6 +139,28 @@ export class MediaDialog extends Dialog {
         const selectedMedia = this.selectedMedia[this.state.activeTab];
         if (selectedMedia.length) {
             const savedMedia = await TABS[this.state.activeTab].save(selectedMedia, { rpc: this.rpc, orm: this.orm });
+            savedMedia.forEach(media => {
+                if (this.props.media) {
+                    media.classList.add(...this.props.media.classList);
+                    const style = this.props.media.getAttribute('style');
+                    if (style) {
+                        media.setAttribute('style', style);
+                    }
+                    if (this.props.media.dataset.shape) {
+                        media.dataset.shape = this.props.media.dataset.shape;
+                    }
+                    if (this.props.media.dataset.shapeColors) {
+                        media.dataset.shapeColors = this.props.media.dataset.shapeColors;
+                    }
+                }
+                media.classList.add(...TABS[this.state.activeTab].mediaSpecificClasses);
+                for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {
+                    media.classList.remove(...TABS[otherTab].mediaSpecificClasses);
+                }
+                media.classList.remove(...this.initialIconClasses);
+                media.classList.remove('o_modified_image_to_save');
+                media.classList.remove('oe_edited_link');
+            });
             if (this.props.multiImages) {
                 this.props.save(savedMedia);
             } else {
@@ -201,3 +175,23 @@ MediaDialog.footerTemplate = 'web_editor.MediaDialogFooter';
 MediaDialog.components = {
     ...Object.keys(TABS).map(key => TABS[key].Component),
 };
+
+export class MediaDialogWrapper extends Component {
+    setup() {
+        this.dialogs = useWowlService('dialog');
+
+        useEffect(() => {
+            this.dialogs.add(MediaDialog, {
+                ...this.props,
+                close: () => {
+                    if (this.props.close) {
+                        this.props.close();
+                    }
+                    this.destroy();
+
+                },
+            });
+        }, () => []);
+    }
+}
+MediaDialogWrapper.template = xml``;

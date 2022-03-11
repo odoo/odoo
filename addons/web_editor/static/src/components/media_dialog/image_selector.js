@@ -207,3 +207,49 @@ ImageSelector.components = {
     ...FileSelector.components,
     AutoResizeImage,
 };
+
+export const saveImages = async (selectedMedia, { rpc, orm }) => {
+    // Create all media-library attachments.
+    const toSave = Object.fromEntries(selectedMedia.filter(media => media.mediaType === 'libraryMedia').map(media => [
+        media.id, {
+            query: media.query || '',
+            is_dynamic_svg: !!media.isDynamicSVG,
+            dynamic_colors: media.dynamicColors,
+        }
+    ]));
+    let savedMedia = [];
+    if (Object.keys(toSave).length !== 0) {
+        savedMedia = await rpc('/web_editor/save_library_media', { media: toSave });
+    }
+    const selected = selectedMedia.filter(media => media.mediaType === 'attachment').concat(savedMedia).map(attachment => {
+        // Color-customize dynamic SVGs with the theme colors
+        if (attachment.image_src && attachment.image_src.startsWith('/web_editor/shape/')) {
+            const colorCustomizedURL = new URL(attachment.image_src, window.location.origin);
+            colorCustomizedURL.searchParams.forEach((value, key) => {
+                const match = key.match(/^c([1-5])$/);
+                if (match) {
+                    colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`));
+                }
+            });
+            attachment.image_src = colorCustomizedURL.pathname + colorCustomizedURL.search;
+        }
+        return attachment;
+    });
+    return Promise.all(selected.map(async (attachment) => {
+        const imageEl = document.createElement('img');
+        let src = attachment.image_src;
+        if (!attachment.public) {
+            const [accessToken] = await orm.call(
+                'ir.attachment',
+                'generate_access_token',
+                [attachment.id],
+            );
+            src += `?access_token=${accessToken}`;
+        }
+        imageEl.src = src;
+        imageEl.alt = attachment.description || '';
+        return imageEl;
+    }));
+};
+export const imageSpecificClasses = ['img', 'img-fluid', 'o_we_custom_image'];
+export const imageTagNames = ['IMG'];

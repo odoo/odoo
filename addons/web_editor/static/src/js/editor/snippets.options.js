@@ -1,6 +1,8 @@
 odoo.define('web_editor.snippets.options', function (require) {
 'use strict';
 
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
 var core = require('web.core');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const Dialog = require('web.Dialog');
@@ -1648,10 +1650,10 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      * @param {boolean} [videos] whether videos should be available
      *   default: false
      */
-    _openDialog(el, {images = false, videos = false}) {
+    _openDialog(el, {images = false, videos = false, save}) {
         el.src = this._value;
         const $editable = this.$target.closest('.o_editable');
-        const mediaDialog = new weWidgets.MediaDialog(this, {
+        const mediaDialogWrapper = new ComponentWrapper(this, MediaDialogWrapper, {
             noImages: !images,
             noVideos: !videos,
             noIcons: true,
@@ -1661,8 +1663,10 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
                 '312451183', '415226028', '367762632', '340475898', '374265101', '370467553'],
             'res_model': $editable.data('oe-model'),
             'res_id': $editable.data('oe-id'),
-        }, el).open();
-        return mediaDialog;
+            save,
+            media: el,
+        });
+        return mediaDialogWrapper.mount(this.el);
     },
 
     //--------------------------------------------------------------------------
@@ -1701,14 +1705,15 @@ const ImagepickerUserValueWidget = MediapickerUserValueWidget.extend({
     _onEditMedia(ev) {
         // Need a dummy element for the media dialog to modify.
         const dummyEl = document.createElement('img');
-        const dialog = this._openDialog(dummyEl, {images: true});
-        dialog.on('save', this, data => {
-            // Accessing the value directly through dummyEl.src converts the url to absolute,
-            // using getAttribute allows us to keep the url as it was inserted in the DOM
-            // which can be useful to compare it to values stored in db.
-            this._value = dummyEl.getAttribute('src');
-            this._onUserValueChange();
-        });
+        this._openDialog(dummyEl, {
+            images: true,
+            save: (media) => {
+                // Accessing the value directly through dummyEl.src converts the url to absolute,
+                // using getAttribute allows us to keep the url as it was inserted in the DOM
+                // which can be useful to compare it to values stored in db.
+                this._value = media.getAttribute('src');
+                this._onUserValueChange();
+        }});
     },
 });
 
@@ -1723,11 +1728,12 @@ const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({
     _onEditMedia(ev) {
         // Need a dummy element for the media dialog to modify.
         const dummyEl = document.createElement('iframe');
-        const dialog = this._openDialog(dummyEl, {videos: true});
-        dialog.on('save', this, data => {
-            this._value = data.bgVideoSrc;
-            this._onUserValueChange();
-        });
+        this._openDialog(dummyEl, {
+            videos: true,
+            save: (media) => {
+                this._value = media.querySelector('iframe').src;
+                this._onUserValueChange();
+        }});
     },
 });
 

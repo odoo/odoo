@@ -44,3 +44,24 @@ DocumentSelector.components = {
     ...FileSelector.components,
     DocumentAttachment,
 };
+
+export const saveDocuments = (selectedMedia, { orm }) => {
+    return Promise.all(selectedMedia.map(async attachment => {
+        const linkEl = document.createElement('a');
+        let href = `/web/content/${attachment.id}?unique=${attachment.checksum}&dowload=true`;
+        if (!attachment.public) {
+            const [accessToken] = await orm.call(
+                'ir.attachment',
+                'generate_access_token',
+                [attachment.id],
+            );
+            href += `&access_token=${accessToken}`;
+        }
+        linkEl.href = href;
+        linkEl.title = attachment.name;
+        linkEl.dataset.mimetype = attachment.mimetype;
+        return linkEl;
+    }));
+};
+export const documentSpecificClasses = ['o_image'];
+export const documentTagNames = ['A'];

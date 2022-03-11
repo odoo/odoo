@@ -2,6 +2,7 @@
 
 import { useService } from '@web/core/utils/hooks';
 import { throttle } from '@web/core/utils/timing';
+import { qweb } from 'web.core';
 
 const { Component, useState, useRef, useEffect } = owl;
 
@@ -197,3 +198,13 @@ VideoSelector.defaultProps = {
     vimeoPreviewIds: [],
     isForBgVideo: false,
 };
+
+export const saveVideos = (selectedMedia) => {
+    return selectedMedia.map(video => {
+        const template = document.createElement('template');
+        template.innerHTML = qweb.render('web_editor.videoWrapper', { src: video.src });
+        return template.content.firstChild;
+    });
+};
+export const videoSpecificClasses = ['media_iframe_video'];
+export const videoTagNames = ['IFRAME'];

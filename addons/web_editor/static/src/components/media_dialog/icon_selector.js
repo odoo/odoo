@@ -40,6 +40,7 @@ export class IconSelector extends Component {
                             return false;
                         })[0];
                         if (selectedIcon) {
+                            this.props.setInitialIconClasses(selectedIcon.names);
                             await this.props.selectMedia(selectedIcon, { save: false });
                         }
                     }
@@ -76,3 +77,13 @@ IconSelector.template = 'web_editor.IconSelector';
 IconSelector.components = {
     SearchMedia,
 };
+
+export const saveIcons = (selectedMedia) => {
+    return selectedMedia.map(icon => {
+        const iconEl = document.createElement('span');
+        iconEl.classList.add(icon.fontBase, icon.names[0]);
+        return iconEl;
+    });
+};
+export const iconSpecificClasses = [];
+export const iconTagNames = ['SPAN', 'I'];

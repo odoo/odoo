@@ -1,6 +1,9 @@
 odoo.define('web_editor.wysiwyg', function (require) {
 'use strict';
 
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
+const { saveVideos, videoSpecificClasses } = require('@web_editor/components/media_dialog/video_selector');
 const dom = require('web.dom');
 const core = require('web.core');
 const session = require('web.session');
@@ -35,7 +38,7 @@ const closestElement = OdooEditorLib.closestElement;
 const setSelection = OdooEditorLib.setSelection;
 
 var id = 0;
-const faZoomClassRegex = RegExp('fa-[0-9]x');
+
 const mediaSelector = 'img, .fa, .o_image, .media_iframe_video';
 
 // Time to consider a user offline in ms. This fixes the problem of the
@@ -123,9 +126,13 @@ const Wysiwyg = Widget.extend({
         }
 
         const getYoutubeVideoElement = async (url) => {
-            const videoWidget = new weWidgets.VideoWidget(this, undefined, {});
-            const src = (await videoWidget.createVideoNode(url)).$video.attr('src');
-            return videoWidget.getWrappedIframe(src)[0];
+            const { embed_url: src } = await this._rpc({
+                route: '/web_editor/video_url/data',
+                params: { video_url: url },
+            });
+            const [savedVideo] = saveVideos([{src}]);
+            savedVideo.classList.add(...videoSpecificClasses);
+            return savedVideo;
         };
 
         this.odooEditor = new OdooEditor(this.$editable[0], Object.assign({
@@ -240,15 +247,8 @@ const Wysiwyg = Widget.extend({
         this.$editable.on('dblclick', mediaSelector, function () {
             self.showTooltip = false;
             const $el = $(this);
-            let params = {node: $el};
+            let params = {node: this};
             $el.selectElement();
-
-            if ($el.is('.fa')) {
-                // save layouting classes from icons to not break the page if you edit an icon
-                params.htmlClass = [...$el[0].classList].filter((className) => {
-                    return !className.startsWith('fa') || faZoomClassRegex.test(className);
-                }).join(' ');
-            }
 
             if (!$el.parent().hasClass('o_stars')) {
                 self.openMediaDialog(params);
@@ -1145,69 +1145,57 @@ const Wysiwyg = Widget.extend({
      *
      * @param {object} params
      * @param {Node} [params.node] Optionnal
-     * @param {Node} [params.htmlClass] Optionnal
      */
     openMediaDialog(params = {}) {
         const sel = this.odooEditor.document.getSelection();
-        const fontawesomeIcon = getInSelection(this.odooEditor.document, '.fa');
-        if (fontawesomeIcon && sel.toString().trim() === "") {
-            params.node = $(fontawesomeIcon);
-            // save layouting classes from icons to not break the page if you edit an icon
-            params.htmlClass = [...fontawesomeIcon.classList].filter((className) => {
-                return !className.startsWith('fa') || faZoomClassRegex.test(className);
-            }).join(' ');
-        }
+
         if (!sel.rangeCount) {
             return;
         }
+
         // We lose the current selection inside the content editable when we
         // click the media dialog button so we need to be able to restore the
         // selection when the modal is closed.
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
         const $node = $(params.node);
-        // We need to keep track of FA icon because media.js will _clear those classes
-        const wasFontAwesome = $node.hasClass('fa');
+
         const $editable = $(this.odooEditor.editable);
         const model = $editable.data('oe-model');
         const field = $editable.data('oe-field');
         const type = $editable.data('oe-type');
 
-        const mediaParams = Object.assign({
-            res_model: model,
-            res_id: $editable.data('oe-id'),
+        this.mediaDialogWrapper = new ComponentWrapper(this, MediaDialogWrapper, {
+            ...this.options.mediaModalParams,
+            ...params,
+            resModel: model,
+            resId: $editable.data('oe-id'),
             domain: $editable.data('oe-media-domain'),
             useMediaLibrary: field && (model === 'ir.ui.view' && field === 'arch' || type === 'html'),
-        }, this.options.mediaModalParams, params);
-        const mediaDialog = new weWidgets.MediaDialog(this, mediaParams, $node);
-        mediaDialog.open();
-
-        mediaDialog.on('save', this, function (element) {
-            debugger
-            if (!element) {
-                return;
-            }
-            // restore saved html classes
-            if (params.htmlClass) {
-                element.className += " " + params.htmlClass;
-            }
-            restoreSelection();
-            if (wysiwygUtils.isImg($node[0]) || wasFontAwesome) {
-                $node.replaceWith(element);
-                this.odooEditor.unbreakableStepUnactive();
-                this.odooEditor.historyStep();
-            } else if (element) {
-                debugger
-                this.odooEditor.execCommand('insertHTML', element.outerHTML);
-            }
-        });
-        mediaDialog.on('closed', this, function () {
-            // if the mediaDialog content has been saved
-            // the previous selection in not relevant anymore
-            if (mediaDialog.destroyAction !== 'save') {
+            media: $node[0],
+            save: (media) => {
+                if (params.node) {
+                    params.node.replaceWith(media);
+                    this.odooEditor.unbreakableStepUnactive();
+                    this.odooEditor.historyStep();
+                } else {
+                    this.odooEditor.execCommand('insertHTML', media.outerHTML);
+                }
                 restoreSelection();
-            }
+
+                if (this.snippetsMenu) {
+                    this.snippetsMenu.activateSnippet($(media)).then(() => {
+                        if (media.tagName === 'IMG') {
+                            $(media).trigger('image_changed');
+                        }
+                    });
+                }
+            },
         });
+
+        // The wysiwyg can be instanciated inside an iframe. The dialog
+        // component is mounted on the global document.
+        return this.mediaDialogWrapper.mount(document.body);
     },
 
     //--------------------------------------------------------------------------
@@ -2151,7 +2139,6 @@ odoo.define('web_editor.widget', function (require) {
 'use strict';
     return {
         Dialog: require('wysiwyg.widgets.Dialog'),
-        MediaDialog: require('wysiwyg.widgets.MediaDialog'),
         LinkDialog: require('wysiwyg.widgets.LinkDialog'),
     };
 });
