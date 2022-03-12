@@ -10,7 +10,7 @@
 # Андрей Гусев <gaussgss@gmail.com>, 2021
 # Sergey Vilizhanin, 2021
 # Ekaterina <nawsikaya@bk.ru>, 2021
-# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2021
 # Vasiliy Korobatov <korobatov@gmail.com>, 2021
 # ILMIR <karamov@it-projects.info>, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
@@ -2253,6 +2253,14 @@ msgstr "Работает текущий пользователь"
 #, python-format
 msgid "It has already been unblocked."
 msgstr "Это был разблокирован."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned

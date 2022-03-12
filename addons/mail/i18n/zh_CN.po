@@ -14,8 +14,8 @@
 # 深圳市耀影科技有限公司_QQ1006399173, 2021
 # 深圳市耀影科技有限公司QQ1006399173 <web@yaoying.vip>, 2021
 # 深圳市耀影科技有限公司QQ1006399173 <yaoyingkeji@yaoying.vip>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Benson <Benson.Dr@Gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -208,6 +208,13 @@ msgstr "(从"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "（最初分配给"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/thread/thread.js:0
+#, python-format
+msgid ", "
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -6024,7 +6031,10 @@ msgid ""
 msgstr "选择每个邮件上的操作，并在需要时更正EMail地址。修改后的地址将保存在相应的联系人上。"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "选择用户组"
 
@@ -6496,6 +6506,12 @@ msgstr "系统通知"
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
 msgstr "目标模型"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "税ID"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -7341,12 +7357,6 @@ msgid ""
 msgstr ""
 "在社区和企业版本中，发送/接收EMail需要使用自己的EMail服务器。在线用户已受益于随时可用的EMail服务器 "
 "(@mycompany.odoo.com)。"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr "统一编号"
 
 #. module: mail
 #. openerp-web

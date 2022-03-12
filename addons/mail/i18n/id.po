@@ -26,8 +26,8 @@
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2022
 # whenwesober, 2022
-# Ryanto The <ry.the77@gmail.com>, 2022
 # Gusti Rini <gustirini@gmail.com>, 2022
+# Ryanto The <ry.the77@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Gusti Rini <gustirini@gmail.com>, 2022\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -222,6 +222,13 @@ msgstr "(dari"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "(awalnya ditugaskan untuk"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/thread/thread.js:0
+#, python-format
+msgid ", "
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -6090,7 +6097,10 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "Kelompok pengguna yang dipilih"
 
@@ -6569,6 +6579,12 @@ msgstr "Notifikasi sistem"
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
 msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "ID Pajak"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -7415,12 +7431,6 @@ msgstr ""
 "Menggunakan server email Anda sendiri diperlukan untuk mengirim/menerima "
 "email pada versi Komunitas dan Enterprise. Pengguna daring sudah disediakan "
 "server email yang siap dipakai (@mycompany.odoo.com)."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr ""
 
 #. module: mail
 #. openerp-web

@@ -51,7 +51,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr ""
+msgstr " Дата блокування %(lock_type)s встановлена на %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -7412,6 +7412,14 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid ""
 "Invoice and credit note distribution should have the same number of lines."
 msgstr ""
 "Розсилка рахунків-фактур і сторно повинна мати однакову кількість рядків."
@@ -10367,6 +10375,12 @@ msgid ""
 msgstr ""
 "Будь ласка, встановіть принаймні один із відповідних текстів, щоб створити "
 "зіставлення партнерів."
+
+#. module: account
+#: code:addons/account/models/ir_module_module.py:0
+#, python-format
+msgid "Please update the Invoicing module before continuing."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -13549,6 +13563,8 @@ msgid ""
 "The accounting date being set prior to the %(lock_type)s lock date "
 "%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
 msgstr ""
+"Дата бухобліку, що встановлюється на дату блокування %(lock_type)s "
+"%(lock_date)s, буде змінено на %(accounting_date)sпісля опублікування."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16799,7 +16815,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
+msgstr "податок"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
@@ -16852,7 +16868,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "user"
-msgstr ""
+msgstr "користувач"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

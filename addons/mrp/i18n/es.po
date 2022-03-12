@@ -7,6 +7,7 @@
 # Martin Trigaux, 2021
 # marcescu, 2022
 # juankfj, 2022
+# Nelson Ramírez <info@konos.cl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: juankfj, 2022\n"
+"Last-Translator: Nelson Ramírez <info@konos.cl>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +82,7 @@ msgstr "# of LdM donde son usados"
 #: code:addons/mrp/models/mrp_routing.py:0
 #, python-format
 msgid "%i work orders"
-msgstr ""
+msgstr "%i órdenes de trabajo"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -116,7 +117,7 @@ msgstr "%s no puede/n ser eliminado/s. Intenta cancelarlo/s antes."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "&amp; Cost"
-msgstr ""
+msgstr "&amp; Costo"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
@@ -218,7 +219,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"font-weight-bold\">To Produce</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-bold\">Para Producir</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2276,6 +2277,14 @@ msgstr "¿Está trabajando el usuario actual?"
 #, python-format
 msgid "It has already been unblocked."
 msgstr "Ya ha sido desbloqueado."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned

@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Jonatan Gk, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Jonatan Gk, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr ""
+msgstr "Número de enrutamiento ABA"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
@@ -53,19 +54,19 @@ msgstr "Número de cuenta"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_payment_method_type
 msgid "Allow Payments From"
-msgstr ""
+msgstr "Permitir pagos desde"
 
 #. module: payment_authorize
 #. openerp-web
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "An error occurred when displayed this payment form."
-msgstr ""
+msgstr "Se produjo un error al mostrar este formulario de pago."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_currency_id
 msgid "Authorize Currency"
-msgstr ""
+msgstr "Autorizar moneda"
 
 #. module: payment_authorize
 #: model:account.payment.method,name:payment_authorize.payment_method_authorize
@@ -76,29 +77,29 @@ msgstr "Authorize.Net"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_payment_method_type
 msgid "Authorize.Net Payment Type"
-msgstr ""
+msgstr "Autorizar.Net Tipo de pago"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr ""
+msgstr "Authorize.Net Profile ID"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
 msgid "Bank (powered by Authorize)"
-msgstr ""
+msgstr "Banco (con poder de autorización)"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__bank_account
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__bank_account
 msgid "Bank Account (USA Only)"
-msgstr ""
+msgstr "Cuenta bancaria (sólo EE.UU.)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Account Type"
-msgstr ""
+msgstr "Tipo de cuenta bancaria"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -108,12 +109,12 @@ msgstr "Nombre del banco"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Business Checking"
-msgstr ""
+msgstr "Comprobación de negocios"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Code"
-msgstr ""
+msgstr "Código de la tarjeta"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -127,6 +128,8 @@ msgid ""
 "Could not fetch merchant details:\n"
 "%s"
 msgstr ""
+"No se pudieron obtener los detalles del comerciante:\n"
+"%s"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__credit_card
@@ -148,7 +151,7 @@ msgstr "Moneda"
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_payment_method_type
 msgid "Determines with what payment method the customer can pay."
-msgstr ""
+msgstr "Determina con qué método de pago puede pagar el cliente."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -162,6 +165,8 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
+"Fallo al autenticar.\n"
+"%s"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
@@ -176,18 +181,19 @@ msgstr "Cómo recibir pagos con Authorize.Net"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
-msgstr ""
+msgstr "MM"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr ""
+msgstr "Nombre en cuenta"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
 msgstr ""
+"No se ha encontrado ninguna transacción que coincida con la referencia %s."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -212,12 +218,12 @@ msgstr "Transacción de pago"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Personal Checking"
-msgstr ""
+msgstr "Comprobación personal"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Personal Savings"
-msgstr ""
+msgstr "Ahorros personales"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -229,18 +235,22 @@ msgstr "Proveedor"
 #, python-format
 msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
 msgstr ""
+"Datos recibidos con código de estado «%(status)s» y código de error "
+"«%(error)s»"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Datos de solicitud de pago manipulados recibidos."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_token.py:0
 #, python-format
 msgid "Saved payment methods cannot be restored once they have been deleted."
 msgstr ""
+"Los métodos de pago guardados no pueden ser restaurados una vez que han sido"
+" eliminados."
 
 #. module: payment_authorize
 #. openerp-web
@@ -254,17 +264,18 @@ msgstr "Error en el servidor"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "Set Account Currency"
-msgstr ""
+msgstr "Establecer la moneda de la cuenta"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
 msgstr ""
+"El ID utilizado únicamente para identificar la cuenta con Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+msgstr "El proveedor de servicios de pago a utilizar con este adquirente"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_client_key
@@ -272,17 +283,19 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
+"La clave del cliente público. Para generar directamente desde Odoo o desde "
+"Authorize.Net backend."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "La transacción no está vinculada a un token."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_payment_method_type
 msgid "The type of payment method this token is linked to."
-msgstr ""
+msgstr "El tipo de método de pago al que está vinculado este token."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -290,6 +303,8 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
+"La referencia única para la combinación partner/token en el motor "
+"Authorize.net."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_acquirer.py:0
@@ -299,12 +314,16 @@ msgid ""
 "method type, please disable the acquirer and duplicate it. Then, change the "
 "payment method type on the duplicated acquirer."
 msgstr ""
+"Hay fichas activas vinculadas a este adquirente. Para cambiar el tipo de "
+"método de pago, desactive al adquirente y duplíquelo. Luego, cambie el tipo "
+"de método de pago en el adquirente duplicado."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
 msgid "This action cannot be performed while the acquirer is disabled."
 msgstr ""
+"Esta acción no se puede realizar mientras el adquirente está desactivado."
 
 #. module: payment_authorize
 #. openerp-web
@@ -312,9 +331,9 @@ msgstr ""
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to process your payment."
-msgstr ""
+msgstr "No podemos procesar su pago."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr ""
+msgstr "YY"

@@ -52,7 +52,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr ""
+msgstr "La fecha de bloqueo de %(lock_type)s se estableció el %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -4739,7 +4739,7 @@ msgstr "Diferencia en tasa de cambio de divisa"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Currency exchange rate difference (cash basis)"
-msgstr "Diferencia de tipo de cambio de divisa (base de efectivo)"
+msgstr "Diferencia de tasa de cambio de divisa (base de efectivo)"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
@@ -7442,6 +7442,16 @@ msgid ""
 msgstr ""
 "La distribución de facturas y notas de crédito debe contener cada una "
 "exactamente una línea para la base."
+
+#. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
+msgstr ""
+"La repartición de facturas y notas de crédito debe tener por lo menos una "
+"línea de repartición de impuestos."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -10415,6 +10425,12 @@ msgstr ""
 " partners."
 
 #. module: account
+#: code:addons/account/models/ir_module_module.py:0
+#, python-format
+msgid "Please update the Invoicing module before continuing."
+msgstr "Actualice el módulo de Facturación antes de continuar."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
@@ -10428,7 +10444,7 @@ msgstr "Reporte de líneas de impuesto agregado"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_pos_receivable_account_id
 msgid "PoS receivable account"
-msgstr "Cuenta por cobrar PDV"
+msgstr "Cuenta por cobrar PdV"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_url
@@ -13611,6 +13627,8 @@ msgid ""
 "The accounting date being set prior to the %(lock_type)s lock date "
 "%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
 msgstr ""
+"La fecha contable establecida antes de la fecha de bloqueo %(lock_date)s "
+"para %(lock_type)s se cambiará a %(accounting_date)s después de publicar."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16907,7 +16925,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
+msgstr "impuesto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
@@ -16960,7 +16978,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "user"
-msgstr ""
+msgstr "usuario"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

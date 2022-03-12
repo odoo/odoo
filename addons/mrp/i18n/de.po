@@ -1165,7 +1165,7 @@ msgstr "Berechnung anhand der erfassten Zeit"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
 msgid "Computed on last"
-msgstr ""
+msgstr "Berechnet am letzten"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
@@ -1891,7 +1891,7 @@ msgstr "FontAwesome Icon, z.B. fa-tasks"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Force"
-msgstr ""
+msgstr "Erzwingen"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
@@ -2284,9 +2284,20 @@ msgid "It has already been unblocked."
 msgstr "Es wurde bereits entsperrt."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
+"Es ist nicht möglich, einen einzelnen Arbeitsauftrag aus der Planung zu "
+"nehmen. Sie sollten stattdessen den Produktionsauftrag herausnehmen, um alle"
+" damit verbundenen Vorgänge herausnehmen zu können."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 msgid "Its Operations are Planned"
-msgstr ""
+msgstr "Operationen sind geplant"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__json_popover
@@ -2768,7 +2779,7 @@ msgstr "Als erledigt markieren"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Mass Produce"
-msgstr ""
+msgstr "Massenproduktion"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_mps
@@ -3117,6 +3128,8 @@ msgid ""
 "Operation define that need to be done to realize a Work Order.\n"
 "                Each operation is done at a specific Work Center and has a specific duration."
 msgstr ""
+"Vorgänge definieren, die zur Durchführung eines Arbeitsauftrags erforderlich sind.\n"
+"Jeder Vorgang wird an einem bestimmten Arbeitsort durchgeführt und hat eine bestimmte Dauer."
 
 #. module: mrp
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
@@ -3492,7 +3505,7 @@ msgstr "Produzierte Seriennummern"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__operation_id
 msgid "Produced in Operation"
-msgstr ""
+msgstr "Produziert in Operation"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -4068,7 +4081,7 @@ msgstr "Einstellungen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
 msgid "Setup Time"
-msgstr ""
+msgstr "Einrichtungszeit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_apply
@@ -4093,7 +4106,7 @@ msgstr "Endgültige Fertigungslose anzeigen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lock
 msgid "Show Lock/unlock buttons"
-msgstr ""
+msgstr "Tasten zum Sperren/Entsperren anzeigen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__show_json_popover
@@ -4268,7 +4281,7 @@ msgstr "Bestand nach Fertigungsregel"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_assign_serial
 msgid "Stock Assign Serial Numbers"
-msgstr ""
+msgstr "Bestand Seriennummern zuordnen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_availability
@@ -4528,6 +4541,9 @@ msgid ""
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
 msgstr ""
+"Der Prozentsatz der endgültigen Produktionskosten für diese "
+"Nebenproduktlinie (geteilt durch die produzierte Menge); die Summe der "
+"Kostenanteile aller Nebenprodukte muss kleiner oder gleich 100 sein."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__cost_share
@@ -4761,6 +4777,7 @@ msgstr "Zeitzone"
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
 msgid "Tip: Use tablets in the shop to control manufacturing"
 msgstr ""
+"Tipp: Verwenden Sie Tablets in der Werkstatt zur Steuerung der Fertigung"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5524,12 +5541,12 @@ msgstr "Arbeitsblatt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_type
 msgid "Worksheet Type"
-msgstr ""
+msgstr "Arbeitsblatt Typ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_google_slide
 msgid "Worksheet URL"
-msgstr ""
+msgstr "Arbeitsblatt URL"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_production_lot.py:0
@@ -5767,7 +5784,7 @@ msgstr "Sie sollten eine Chargennummer für das Endprodukt angeben."
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "and build finished products using"
-msgstr ""
+msgstr "und stellen fertige Produkte her, unter Verwendung von"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action

@@ -12,12 +12,12 @@
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
 # Filip Brenčič <brencicf5@gmail.com>, 2022
 # gebri <gebri@inmail.sk>, 2022
-# Martin Trigaux, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Matus Krnac <matus.krnac@gmail.com>, 2022
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2022
 # Jan Prokop, 2022
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,6 +211,13 @@ msgstr "(od"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "(pôvodne priradené k"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/thread/thread.js:0
+#, python-format
+msgid ", "
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -6108,7 +6115,10 @@ msgstr ""
 "Upravená adresa bude uložená u príslušného kontaktu."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "Vybrané skupiny užívateľov"
 
@@ -6585,6 +6595,12 @@ msgstr "Systémové upozornenia"
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
 msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "DIČ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -7447,12 +7463,6 @@ msgstr ""
 "Použitie vlastného emailového servera je nevyhnutné pre príjem/odosielanie "
 "mailov vo verzii Community a Enterprise. Užívatelia online profitujú z "
 "pripraveného servera (@moja_spolocnost.odoo.com)."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr ""
 
 #. module: mail
 #. openerp-web

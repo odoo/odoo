@@ -18,7 +18,7 @@
 # Collex100, 2021
 # Oleg Kuryan <oleg@ventor.tech>, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
-# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2021
 # ILMIR <karamov@it-projects.info>, 2021
 # Martin Trigaux, 2021
 # Evgeniia Kotova, 2022
@@ -215,6 +215,13 @@ msgstr "(от"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/thread/thread.js:0
+#, python-format
+msgid ", "
 msgstr ""
 
 #. module: mail
@@ -6131,7 +6138,10 @@ msgstr ""
 " это необходимо. Измененную адрес будет сохранен в соответствующем контакте."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "Выбрана группа пользователей"
 
@@ -6612,6 +6622,12 @@ msgstr "Системное уведомление"
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
 msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "ИНН"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -7474,12 +7490,6 @@ msgstr ""
 "и приема электронных писем в сообществе и версии Enterprise. Интернет-"
 "пользователи уже пользуются готовым к использованию электронным сервером (@ "
 "mycompany.odoo.com)."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr ""
 
 #. module: mail
 #. openerp-web

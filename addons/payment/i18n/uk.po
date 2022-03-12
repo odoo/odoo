@@ -750,7 +750,7 @@ msgstr "Помилка"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Помилка: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -777,7 +777,7 @@ msgstr "Фіксована міжнародна комісія"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__acquirer_id
 msgid "Force Payment Acquirer"
-msgstr ""
+msgstr "Увімкнути еквайєр платежу"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_link_wizard__acquirer_id
@@ -794,7 +794,7 @@ msgstr "Від"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "Лише повний"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -826,17 +826,17 @@ msgstr "Маршрутизація HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_acquirers
 msgid "Has Multiple Acquirers"
-msgstr ""
+msgstr "Є кілька еквайєрів"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "Є очікуване повернення"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
-msgstr ""
+msgstr "Чи був платіж після обробки"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
@@ -881,7 +881,7 @@ msgstr "Ви можете зв'язатися з нами, якщо платіж
 msgid ""
 "If you believe that it is an error, please contact the website "
 "administrator."
-msgstr ""
+msgstr "Якщо ви вважаєте, що це помилка, зверніться до адміністратора сайту."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_128
@@ -901,6 +901,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the acquirer."
 msgstr ""
+"У тестовому режимі фальшивий платіж обробляється через інтерфейс тестового платежу.\n"
+"Цей режим рекомендується під час налаштування еквайера."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inline_form_view_id
@@ -1066,7 +1068,7 @@ msgstr "Метод"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_mollie
 msgid "Mollie"
-msgstr ""
+msgstr "Mollie"
 
 #. module: payment
 #. openerp-web
@@ -1087,7 +1089,7 @@ msgstr "Ім'я"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__provider__none
 msgid "No Provider Set"
-msgstr ""
+msgstr "Не встановлено провайдера"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1111,7 +1113,7 @@ msgstr "Не оброблено жодного платежу."
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "No payment option selected"
-msgstr ""
+msgstr "Не вибрано жодної опції платежу"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__not_done
@@ -1121,7 +1123,7 @@ msgstr "Не завершено"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "Not verified"
-msgstr ""
+msgstr "Не підтверджено"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
@@ -1147,7 +1149,7 @@ msgstr "Модуль Odoo Enterprise"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
 msgid "Offline payment by token"
-msgstr ""
+msgstr "Офлайновий платіж за токеном"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -1514,12 +1516,12 @@ msgstr "Причина:"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Reason: %s"
-msgstr ""
+msgstr "Причина: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__redirect_form_view_id
 msgid "Redirect Form Template"
-msgstr ""
+msgstr "Шаблон форми переадресації"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1546,12 +1548,12 @@ msgstr "Відшкодування"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "Сума повернення"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "Повернена сума"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1563,7 +1565,7 @@ msgstr "Відшкодування"
 #: model:ir.model.fields,field_description:payment.field_account_payment__refunds_count
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Підрахунок повернень"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment_register
@@ -1769,7 +1771,7 @@ msgstr "Режим перевірки"
 #: model:ir.model.fields,help:payment.field_payment_token__provider
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+msgstr "Постачальник платіжних послуг для використання з цим еквайєром"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -2136,7 +2138,7 @@ msgstr "Ми не можемо знайти ваш платіж, але не х�
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "We are not able to process your payment."
-msgstr ""
+msgstr "Ми не можемо обробити цей платіж."
 
 #. module: payment
 #. openerp-web

@@ -9,8 +9,8 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # Seongseok Shin <shinss61@hotmail.com>, 2021
-# JH CHOI <hwangtog@gmail.com>, 2021
 # Heesoo Choi, 2021
+# JH CHOI <hwangtog@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Heesoo Choi, 2021\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,6 +203,13 @@ msgstr "(보낸사람"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "(원래 할당"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/thread/thread.js:0
+#, python-format
+msgid ", "
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -6010,7 +6017,10 @@ msgid ""
 msgstr "각 메일에서 수행할 작업을 선택하고 필요한 경우 전자 메일 주소를 수정합니다. 수정된 주소는 해당 연락처에 저장됩니다."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "선택한 사용자 그룹"
 
@@ -6484,6 +6494,12 @@ msgstr "시스템 알림"
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
 msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "사업자등록번호"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -7326,12 +7342,6 @@ msgid ""
 msgstr ""
 "커뮤니티 및 유료버전에서 이메일을 보내고 받으려면 전자 메일 서버를 사용해야 합니다. 온라인 사용자는 이미 가입하면 바로 사용가능한 "
 "이메일 서버(@ mycompany.odoo.com)를 이미 활용하고 있습니다."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr ""
 
 #. module: mail
 #. openerp-web

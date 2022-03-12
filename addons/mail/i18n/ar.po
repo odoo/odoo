@@ -5,8 +5,8 @@
 # Translators:
 # Mustafa Rawi <mustafa@cubexco.com>, 2021
 # Talal Albahra <talal.albahra@outlook.com>, 2021
-# Martin Trigaux, 2021
 # Paul Andrawes, 2021
+# Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
@@ -200,6 +200,13 @@ msgstr "(من"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/thread/thread.js:0
+#, python-format
+msgid ", "
 msgstr ""
 
 #. module: mail
@@ -1155,22 +1162,22 @@ msgstr "الصورة الرمزية"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "الصورة الرمزية 1024 "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "الصورة الرمزية 128 "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "الصورة الرمزية 256 "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "الصورة الرمزية 512 "
 
 #. module: mail
 #. openerp-web
@@ -6077,7 +6084,10 @@ msgstr ""
 "سيتم حفظ العنوان المعدل لجهة الاتصال المقابلة له."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "مجموعة المستخدمين المحددة"
 
@@ -6554,6 +6564,12 @@ msgstr "إخطار من النظام"
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
 msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "معرف الضريبة"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -7414,12 +7430,6 @@ msgstr ""
 "تحتاج لاستخدام سيرفرات البريد الإلكتروني الخاصة بك لتتمكن من إرسال واستلام "
 "الرسائل في النسختين المجانية والمدفوعة. مستخدمي النسخة الإلكترونية يستفيدون "
 "بالفعل من سيرفر بريد إلكتروني جاهز للاستعمال (@mycompany.odoo.com)."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr "الضريبة/معرف الضريبة "
 
 #. module: mail
 #. openerp-web

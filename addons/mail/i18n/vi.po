@@ -11,11 +11,11 @@
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Dao Nguyen <trucdao.uel@gmail.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Vo Thanh Thuy, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -208,6 +208,13 @@ msgstr "(từ"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "(ban đầu được giao cho"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/thread/thread.js:0
+#, python-format
+msgid ", "
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -6166,7 +6173,10 @@ msgstr ""
 "email sửa đổi sẽ được lưu trong liên hệ tương ứng."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "Nhóm người dùng được chọn"
 
@@ -6648,6 +6658,12 @@ msgstr "Thông báo hệ thống"
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
 msgstr "Mô hình mục tiêu"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "Mã số thuế"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -7529,12 +7545,6 @@ msgstr ""
 "Sử dụng máy chủ email của riêng bạn là bắt buộc để gửi/nhận email trong các "
 "phiên bản Cộng đồng và Doanh nghiệp. Người dùng trực tuyến đã được hưởng lợi"
 " từ máy chủ email sẵn sàng sử dụng (@tencongty.com)."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr "ID VAT/Thuế"
 
 #. module: mail
 #. openerp-web

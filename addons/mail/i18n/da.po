@@ -8,8 +8,8 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2021
 # Mads Søndergaard, 2021
 # Mads Søndergaard, 2021
-# Martin Trigaux, 2021
 # lhmflexerp <lhm@flexerp.dk>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,6 +203,13 @@ msgstr "(fra"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "(oprindeligt tildelt"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/thread/thread.js:0
+#, python-format
+msgid ", "
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -6121,7 +6128,10 @@ msgstr ""
 "tilhørende kontakt."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "Valgte gruppe af brugere"
 
@@ -6600,6 +6610,12 @@ msgstr "System besked"
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
 msgstr "Mål model"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "Moms ID"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -7467,12 +7483,6 @@ msgstr ""
 "Brug af din egen email server er påkrævet for at sende/modtage emails i "
 "Community og Enterprise udgaverne. Online brugere drager allerede fordel af "
 "en klar-til-brug email server (@mitfirma.odoo.com)."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr "Moms/Skat ID"
 
 #. module: mail
 #. openerp-web

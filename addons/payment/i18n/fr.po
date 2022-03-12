@@ -7,8 +7,8 @@
 # Rémi CAZENAVE, 2021
 # rclodoo <rcl@odoo.com>, 2021
 # RHTodoo, 2021
-# Camille Dantinne <cmd@odoo.com>, 2021
 # Martin Trigaux, 2022
+# Camille Dantinne <cmd@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
@@ -124,6 +124,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment acquirer configuration."
 msgstr ""
+"<strong>Attention !</strong> Un remboursement est en cours pour ce paiement.\n"
+"                        Attendez un moment pour qu'il soit traité. Si le remboursement est toujours en attente après\n"
+"                        quelques minutes, veuillez vérifier la configuration de votre intermédiaire de paiement."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -138,6 +141,8 @@ msgid ""
 "<strong>Warning</strong> Make sure your are logged in as the right partner "
 "before making this payment."
 msgstr ""
+"<strong>Avertissement</strong> Assurez-vous d'être connecté en tant que bon "
+"partenaire avant d'effectuer ce paiement."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -240,7 +245,7 @@ msgstr "Activer"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Activate Stripe"
-msgstr ""
+msgstr "Activer Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
@@ -1585,7 +1590,7 @@ msgstr "Modèle de document concerné"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr "Prélèvement automatique SEPA"
+msgstr "Prélèvement SEPA"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form

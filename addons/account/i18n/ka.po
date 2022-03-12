@@ -14,8 +14,8 @@
 # Dachi Darchiashvili <darcho.dd@gmail.com>, 2021
 # Gizo Kobakhidze <040168@gmail.com>, 2021
 # Gvantsa Gvinianidze <gvantsa@live.com>, 2021
-# Vasil Grigalashvili <info@clouddesk.info>, 2021
 # Giorgi Jvaridze <giorgi.jvaridze@gmail.com>, 2021
+# Vasil Grigalashvili <info@clouddesk.info>, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Giorgi Jvaridze <giorgi.jvaridze@gmail.com>, 2021\n"
+"Last-Translator: Vasil Grigalashvili <info@clouddesk.info>, 2022\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -182,7 +182,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ""
+msgstr ". თქვენ შეიძლება უფრო დიდი რიცხვის განსაზღვრა გჭირდებათ"
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -193,12 +193,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "1 Payment"
-msgstr ""
+msgstr "1 გადახდა"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "1 Statement"
-msgstr ""
+msgstr "1 ამონაწერი"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -213,12 +213,12 @@ msgstr "2 თვე"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr ""
+msgstr "21 დღე"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
-msgstr ""
+msgstr "30 დღე"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -358,7 +358,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<i class=\"fa fa-calendar\"/> From"
-msgstr ""
+msgstr "ვისგან"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -742,7 +742,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
-msgstr "უახლესი განცხადება"
+msgstr "<span title=\"Latest Statement\">უახლესი ამონაწერი</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -764,12 +764,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> From </span>"
-msgstr "-დან"
+msgstr "<span> დან </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> To </span>"
-msgstr "-მდე"
+msgstr "<span> მდე </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -822,7 +822,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New Invoice</span>"
-msgstr "ახალი ინვოისი"
+msgstr "<span>ახალი ინვოისი </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -832,7 +832,7 @@ msgstr "<span>ახალი</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Operations</span>"
-msgstr "ოპერაციები"
+msgstr "<span>ოპერაციები </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -916,7 +916,7 @@ msgstr "თანხის გამო"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Company:</strong>"
-msgstr "კომპანია"
+msgstr "<strong>კომპანია:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -7017,6 +7017,14 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid ""
 "Invoice and credit note distribution should have the same number of lines."
 msgstr ""
 
@@ -9863,6 +9871,12 @@ msgstr ""
 #, python-format
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/ir_module_module.py:0
+#, python-format
+msgid "Please update the Invoicing module before continuing."
 msgstr ""
 
 #. module: account

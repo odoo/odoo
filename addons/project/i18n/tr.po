@@ -297,6 +297,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"fa fa-lock text-muted\"/><span class=\"text-muted\"> Private</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"fa fa-lock text-muted\"/><span class=\"text-muted\"> Özel</span>"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -393,6 +395,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
 "                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
+"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -418,6 +422,8 @@ msgid ""
 "<i class=\"o_project_task_project_field text-danger\" attrs=\"{'invisible': "
 "[('project_id', '!=', False)]}\">Private</i>"
 msgstr ""
+"<i class=\"o_project_task_project_field text-danger\" attrs=\"{'invisible': "
+"[('project_id', '!=', False)]}\">Özel</i>"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -546,7 +552,7 @@ msgstr "<strong class=\"d-block mb-2\">Ekler</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assignees</strong>"
-msgstr ""
+msgstr "<strong>Atananlar</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -571,7 +577,7 @@ msgstr "<strong>Mesajlar ve iletişim geçmişi</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_planned_hours_template
 msgid "<strong>Planned Hours:</strong>"
-msgstr ""
+msgstr "<strong>Planlanan Saatler:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -904,12 +910,12 @@ msgstr "Bana Ata"
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignee"
-msgstr ""
+msgstr "atanan"
 
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignees"
-msgstr ""
+msgstr "atananlar"
 
 #. module: project
 #. openerp-web
@@ -943,7 +949,7 @@ msgstr "Atanan"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
-msgstr ""
+msgstr "Atananlar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -1248,7 +1254,7 @@ msgstr "Yapılandırma"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Configure Stages"
-msgstr ""
+msgstr "Aşamaları Yapılandırma"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1285,7 +1291,7 @@ msgstr "Kontak"
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "Continue Recurrence"
-msgstr ""
+msgstr "Yinelemeye Devam Et"
 
 #. module: project
 #. openerp-web
@@ -1494,7 +1500,7 @@ msgstr "Tarih"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_group_by
 msgid "Date Group By"
-msgstr ""
+msgstr "Tarihe Göre Gruplandır"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__date
@@ -1933,7 +1939,7 @@ msgstr "Takip Edilen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 msgid "Followed Projects"
-msgstr ""
+msgstr "Takip Edilen Projeler"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_follower_ids
@@ -2325,7 +2331,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Invite People"
-msgstr ""
+msgstr "İnsanları Davet et"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
@@ -2335,7 +2341,7 @@ msgstr "Davetli personel"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all employees"
-msgstr ""
+msgstr "Davet edilen portal kullanıcıları ve tüm çalışanlar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
@@ -3267,7 +3273,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Personal Stage"
-msgstr ""
+msgstr "Kişisel Aşama"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
