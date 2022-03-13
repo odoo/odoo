@@ -3,8 +3,8 @@
 # 	* account_edi
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2022\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,6 +88,12 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "Download"
+msgstr "下載"
+
+#. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 #: model:ir.cron,cron_name:account_edi.ir_cron_edi_network
 #: model:ir.cron,name:account_edi.ir_cron_edi_network
@@ -109,6 +115,11 @@ msgstr "EDI 格式"
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
 msgstr "支援此日記帳分錄的 EDI 格式"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
+msgid "Edi Content"
+msgstr ""
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -181,18 +192,6 @@ msgid "Error"
 msgstr "錯誤"
 
 #. module: account_edi
-#: code:addons/account_edi/models/account_edi_document.py:0
-#, python-format
-msgid "Error when cancelling the journal entry."
-msgstr "取消日記帳分錄時出現錯誤."
-
-#. module: account_edi
-#: code:addons/account_edi/models/account_edi_document.py:0
-#, python-format
-msgid "Error when processing the journal entry."
-msgstr "處理日記帳分錄時出現錯誤."
-
-#. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
 msgid "Format Name"
 msgstr "格式名稱"
@@ -217,6 +216,18 @@ msgstr "此憑證有多少 EDI 出錯?"
 #: model:ir.model.fields,field_description:account_edi.field_mail_template__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"Invalid invoice configuration:\n"
+"\n"
+"%s"
+msgstr ""
+"無效應收付(發票)設定:\n"
+"\n"
+"%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
@@ -314,13 +325,6 @@ msgid "State"
 msgstr "縣市"
 
 #. module: account_edi
-#: model:ir.model.fields,help:account_edi_extended.field_account_edi_document__error
-msgid ""
-"The text of the last error that happened during Electronic Invoice "
-"operation."
-msgstr "電子發票操作期間發生的最後一個錯誤的文件."
-
-#. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_web_services_to_process
@@ -353,9 +357,22 @@ msgid "The payment will be sent asynchronously to :"
 msgstr "付款將延遲傳送到:"
 
 #. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__error
+msgid ""
+"The text of the last error that happened during Electronic Invoice "
+"operation."
+msgstr "電子發票操作期間發生的最後一個錯誤的文件."
+
+#. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
 msgid "This code already exists"
 msgstr "此代碼已存在"
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_edi_document.py:0
+#, python-format
+msgid "This document is being sent by another process already. "
+msgstr ""
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel

@@ -9,6 +9,7 @@
 # monchai7 <montchye@gmail.com>, 2020
 # gsong <gsong2014@foxmail.com>, 2020
 # Odoo Thaidev <odoothaidev@gmail.com>, 2020
+# Wichanon Jamwutthipreecha, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr ""
+msgstr "'*' ไม่ใช่รูปแบบบาร์โค้ด Regex ที่ถูกต้อง คุณหมายถึง '.*' ?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -38,18 +39,22 @@ msgid ""
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
+"<i>ระบบการตั้งชื่อบาร์โค้ด</i> กำหนดวิธีการจดจำและจัดหมวดหมู่บาร์โค้ด\n"
+"                                เมื่อสแกนบาร์โค้ดจะเชื่อมโยงกับกฎ <i>แรก</i> ด้วยการจับคู่\n"
+"                                รูปแบบ ไวยากรณ์รูปแบบเป็นนิพจน์ทั่วไป และบาร์โค้ดตรงกัน\n"
+"                               หากนิพจน์ทั่วไปตรงกับคำนำหน้าของบาร์โค้ด"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
-msgstr ""
+msgstr "ระบบการตั้งชื่อบาร์โค้ดกำหนดวิธีที่จุดขายระบุและตีความบาร์โค้ด"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr ""
+msgstr "เพิ่มการตีความบาร์โค้ด"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -65,12 +70,12 @@ msgstr "เสมอ"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr ""
+msgstr "การระบุภายในสำหรับกฎการตั้งชื่อบาร์โค้ดนี้"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
 msgid "An internal identification of the barcode nomenclature"
-msgstr ""
+msgstr "การระบุภายในของระบบการตั้งชื่อบาร์โค้ด"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
@@ -80,7 +85,7 @@ msgstr "Any"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr ""
+msgstr "Barcode Event Mixin"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -148,29 +153,29 @@ msgstr "ชื่อที่ใช้แสดง"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
 msgid "EAN-13"
-msgstr ""
+msgstr "EAN-13"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__ean2upc
 msgid "EAN-13 to UPC-A"
-msgstr ""
+msgstr "EAN-13 ถึง UPC-A"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean8
 msgid "EAN-8"
-msgstr ""
+msgstr "EAN-8"
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Enable edit mode to modify this document"
-msgstr ""
+msgstr "เปิดใช้งานโหมดแก้ไขเพื่อแก้ไขเอกสารนี้"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
 msgid "Encoding"
-msgstr ""
+msgstr "การเข้ารหัส"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -215,14 +220,14 @@ msgstr "ไม่"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
 msgid "Nomenclature"
-msgstr ""
+msgstr "การตีความ"
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Pager unavailable"
-msgstr ""
+msgstr "เพจเจอร์ไม่พร้อมใช้งาน"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -234,6 +239,12 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
+"รูปแบบยังสามารถกำหนดว่าค่าตัวเลข เช่น น้ำหนักหรือราคา สามารถเป็นได้อย่างไร\n"
+"                               เข้ารหัสลงในบาร์โค้ด พวกเขาถูกระบุโดย<code>{NNN}</code> ที่ N's\n"
+"                                กำหนดตำแหน่งที่เข้ารหัสหลักของตัวเลข ลอยยังได้รับการสนับสนุนด้วย\n"
+"                                ทศนิยมที่ระบุด้วย D เช่น <code>{NNNDD}</code>ในกรณีเหล่านี้\n"
+"                               ฟิลด์บาร์โค้ดในบันทึกที่เกี่ยวข้อง <i>จะต้อง</i> แสดงตัวเลขเหล่านี้เป็น\n"
+"                                ศูนย์"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -250,7 +261,7 @@ msgstr "กฏ"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Scan a barcode to set the quantity"
-msgstr ""
+msgstr "สแกนบาร์โค้ดเพื่อตั้งค่าปริมาณ"
 
 #. module: barcodes
 #. openerp-web
@@ -279,7 +290,7 @@ msgstr "ตาราง"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
-msgstr ""
+msgstr "รูปแบบการจับคู่บาร์โค้ด"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -289,7 +300,7 @@ msgstr "รายการกฏของบาร์โค้ด"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr ""
+msgstr "รูปแบบที่ตรงกันจะใช้นามแฝงของบาร์โค้ดนี้"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -298,6 +309,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
+"มีข้อผิดพลาดทางไวยากรณ์ในรูปแบบบาร์โค้ด %(pattern)s: "
+"กฎสามารถมีวงเล็บปีกกาได้เพียงคู่เดียวเท่านั้น"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -306,6 +319,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
+"มีข้อผิดพลาดทางไวยากรณ์ในรูปแบบบาร์โค้ด%(pattern)s: วงเล็บมีได้เฉพาะ N "
+"ตามด้วย D"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -313,13 +328,14 @@ msgstr ""
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
+"มีข้อผิดพลาดทางไวยากรณ์ในรูปแบบบาร์โค้ด %(pattern)s: วงเล็บที่ว่างเปล่า"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
-msgstr ""
+msgstr "กฎนี้จะใช้ได้เฉพาะเมื่อบาร์โค้ดถูกเข้ารหัสด้วยการเข้ารหัสที่ระบุ"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -333,11 +349,14 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
 msgstr ""
+"รหัส UPC สามารถแปลงเป็น EAN ได้โดยนำหน้าด้วยศูนย์ "
+"การตั้งค่านี้กำหนดว่าควรแปลงบาร์โค้ด UPC/EAN "
+"โดยอัตโนมัติไม่ทางใดก็ทางหนึ่งเมื่อพยายามจับคู่กฎกับการเข้ารหัสอื่น"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
 msgid "UPC-A"
-msgstr ""
+msgstr "UPC-A"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__upc2ean
@@ -354,7 +373,7 @@ msgstr "การแปลง UPC/EAN "
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Undefined barcode command"
-msgstr ""
+msgstr "คำสั่งบาร์โค้ดที่ไม่ได้กำหนด"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
@@ -365,7 +384,7 @@ msgstr "สิ้นค้าที่มีหน่วย"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
-msgstr ""
+msgstr "ใช้เพื่อสั่งกฎเพื่อให้กฎที่มีลำดับที่เล็กกว่าตรงกันก่อน"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
