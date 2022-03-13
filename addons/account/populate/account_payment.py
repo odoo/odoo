@@ -105,7 +105,7 @@ class AccountPayment(models.Model):
             return random.choice(search_payment_method_line_ids(values['payment_type'], values['journal_id']))
 
         company_ids = self.env['res.company'].search([
-            ('chart_template_id', '!=', False),
+            ('chart_template', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
         return [
