@@ -79,6 +79,8 @@ class AccountChartTemplate(models.AbstractModel):
         return result
 
     def _guess_chart_template(self, company=False):
+        # TODO: one country can have multiple CoAs
+        # TODO: also fix account/populate/res_company.py then
         company = company or self.env.company
         default = AccountChartTemplate._template_code
         if not company.country_id:

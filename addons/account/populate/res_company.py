@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-"""Classes extending the populate factory for Companies and related models.
-
-Only adding specificities of basic accounting applications.
+"""
+    Classes extending the populate factory for Companies and related models.
+    Only adding specificities of basic accounting applications.
 """
 from odoo import models, _
-from odoo.tools import populate
+# from odoo.tools import populate
 from odoo.exceptions import UserError
+from odoo.addons.account.models.chart_template import AccountChartTemplate, TEMPLATES
 
 import logging
-from functools import lru_cache
 
 _logger = logging.getLogger(__name__)
 
@@ -19,21 +19,30 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     def _populate(self, size):
-        @lru_cache()
-        def search_coa_ids(currency_id):
-            return self.env['account.chart.template'].search([('currency_id', '=', currency_id)])
 
-        records = super()._populate(size)
+        installed_l10ns = self.env['ir.module.module'].search([
+            ('state', '=', 'installed'),
+            ('name', '=like', r'l10n\___')
+        ],).mapped('name')
+
+        MODULES = {l10n: {'code': k, 'country': v['country']}
+                   for k, v in TEMPLATES.items()
+                   for l10n in v['modules']
+                   if l10n in installed_l10ns}
+        installable_charts = {MODULES[l10n]['country']: MODULES[l10n]['code']
+                              for l10n in installed_l10ns}
+
         _logger.info('Loading Chart Template')
-        default_chart_templates = self.env['account.chart.template'].search([], limit=1)
-        if not default_chart_templates:
+        if not installable_charts:
             raise UserError(_(
                 "At least one localization is needed to be installed in order to populate the "
                 "database with accounting"
             ))
-        random = populate.Random('res.company+chart_template_selector')
 
-        # Load the a chart of accounts matching the currency of the company for the 3 first created companies
+        records = super()._populate(size)
+        # random = populate.Random('res.company+chart_template_selector')
+
+        # Load the a chart of accounts matching the country_id of the company for the 3 first created companies
         # We are loading an existing CoA and not populating it because:
         #   * it reflects best real use cases.
         #   * it allows checking reports by localization
@@ -49,6 +58,7 @@ class ResCompany(models.Model):
         # Note that we can still populate some new records on top of the CoA if it makes sense,
         # like account.journal for instance.
         for company in records[:3]:
-            chart_templates_cur = search_coa_ids(company.currency_id.id) or default_chart_templates
-            random.choice(chart_templates_cur).with_company(company.id).try_loading()
+            chart_template_code = AccountChartTemplate._guess_chart_template(company)
+            AccountChartTemplate.try_loading(chart_template_code, company)
+            # random.choice(chart_templates_cur).with_company(company.id).try_loading()
         return records
