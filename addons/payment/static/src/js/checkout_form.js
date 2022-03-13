@@ -71,7 +71,7 @@ odoo.define('payment.checkout_form', require => {
                 this.txContext.tokenizationRequested = false;
             }
 
-            // Make the payment
+            // Make the paymenttch
             this._hideError(); // Don't keep the error displayed if the user is going through 3DS2
             this._disableButton(true); // Disable until it is needed again
             $('body').block({

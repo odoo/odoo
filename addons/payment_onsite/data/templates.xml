@@ -1,0 +1,54 @@
+<odoo>
+    <template id="website_sale.payment_confirmation_status">
+        <div class="oe_website_sale_tx_status mt-3" t-att-data-order-id="order.id" t-att-data-order-tracking-info="json.dumps(order_tracking_info)">
+            <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
+            <div t-attf-class="card #{
+                (payment_tx_id.state == 'pending' and 'bg-info') or
+                (payment_tx_id.state == 'done' and 'alert-success') or
+                (payment_tx_id.state == 'authorized' and 'alert-success') or
+                'bg-danger'}">
+                <div class="card-header">
+                    <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-right" target="_blank" aria-label="Edit" title="Edit"
+                            t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <t t-if="payment_tx_id.state == 'pending'">
+                        <t t-out="payment_tx_id.acquirer_id.sudo().pending_msg"/>
+                    </t>
+                    <t t-if="payment_tx_id.state == 'done'">
+                        <span t-if='payment_tx_id.acquirer_id.sudo().done_msg' t-out="payment_tx_id.acquirer_id.sudo().done_msg"/>
+                    </t>
+                    <t t-if="payment_tx_id.state == 'cancel'">
+                        <t t-out="payment_tx_id.acquirer_id.sudo().cancel_msg"/>
+                    </t>
+                    <t t-if="payment_tx_id.state == 'authorized'">
+                        <span>Your payment has been authorized.</span>
+                    </t>
+                    <t t-if="payment_tx_id.state == 'error'">
+                        <span t-esc="payment_tx_id.state_message"/>
+                    </t>
+                </div>
+                <t t-if="payment_tx_id.provider == 'transfer'">
+                    <div t-if="order.reference" class="card-body">
+                        <t t-if="payment_tx_id.acquirer_id.sudo().is_onsite_acquirer">
+                            <b>Reference :</b> <span t-esc="order.reference"/>
+                        </t>
+                        <t t-else="">
+                            <b>Communication:</b><span t-esc='order.reference'/>
+                        </t>
+                    </div>
+                    <div t-if="order.carrier_id.delivery_type == 'onsite'" class="card-body">
+                        You may come collect your product at the store <b t-out="order.carrier_id.pos_ids.name"/>
+                    </div>
+                    <div t-if="payment_tx_id.acquirer_id.sudo().qr_code">
+                        <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.sudo().journal_id.bank_account_id.build_qr_code_base64(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
+                        <div class="card-body" t-if="qr_code">
+                            <h3>Or scan me with your banking app.</h3>
+                            <img class="border border-dark rounded" t-att-src="qr_code"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
+</odoo>

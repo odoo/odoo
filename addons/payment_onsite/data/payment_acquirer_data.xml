@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_acquirer_onsite" model="payment.acquirer">
+        <field name="name">Pay on site</field>
+        <field name="description" type="html">
+            <p>
+                Allows your customers to pay at one of your point of sales
+            </p>
+        </field>
+        <field name="provider">transfer</field>
+        <field name="is_onsite_acquirer">true</field>
+        <field name="redirect_form_view_id" ref="payment_transfer.redirect_form"/>
+        <field name="pending_msg"><![CDATA[
+            <p><i>Your order has been saved.</i> Please come to the store to pay for your products</p>]]></field>
+    </record>
+
+    <record id="onsite_delivery_product" model="product.product">
+        <field name="name">On site delivery</field>
+        <field name="type">service</field>
+        <field name="list_price">0</field>
+        <field name="purchase_ok">false</field>
+        <field name="available_in_pos">true</field>
+    </record>
+</odoo>

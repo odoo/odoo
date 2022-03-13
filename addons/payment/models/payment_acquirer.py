@@ -131,9 +131,6 @@ class PaymentAcquirer(models.Model):
     show_done_msg = fields.Boolean(compute='_compute_view_configuration_fields')
     show_cancel_msg = fields.Boolean(compute='_compute_view_configuration_fields')
 
-    # Delivery carriers
-    carrier_ids = fields.Many2many(string="Allowed with carriers", comodel_name="delivery.carrier")
-
     #=== COMPUTE METHODS ===#
 
     @api.depends('state', 'module_state')
