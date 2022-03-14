@@ -3,24 +3,22 @@
 # 	* stock_account
 # 
 # Translators:
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
 # brokemeister <work@maltejansen.de>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
-# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
 # Bülent Tiknas <btiknas@googlemail.com>, 2017
 # Niki Waibel, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Wolfgang Taferner, 2018
-# Johannes Croe <jcr@odoo.com>, 2019
 # Rudolf Schnapka <rs@techno-flex.de>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # e2f <projects@e2f.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Anja Funk <anja.funk@afimage.de>, 2020
 # Tobias Arndt, 2020
-# Robert Förster <hello@suppliot.eu>, 2021
-# Martin Trigaux, 2021
+# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
@@ -75,7 +73,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>Bestimmen Sie andere Eingabe-/Ausgabekonten für bestimmte</b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -174,7 +172,7 @@ msgstr "Durchschnittskosten (AVCO)"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Cancel"
-msgstr "Stornieren"
+msgstr "Abbrechen"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -207,8 +205,8 @@ msgid ""
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
 "Das Ändern der Kostenmethode ist eine wichtige Änderung, die sich auf Ihre "
-"Lagerbewertung auswirkt. Sind Sie sicher, dass Sie diese Änderung vornehmen "
-"möchten?"
+"Bestandsbewertung auswirkt. Sind Sie sicher, dass Sie diese Änderung "
+"vornehmen möchten?"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -219,7 +217,7 @@ msgstr "Unternehmen"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -303,6 +301,9 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
+"Datum, zu dem die Buchungseinträge im Falle einer automatischen "
+"Bestandsbewertung erstellt werden. Wenn leer, wird das Inventurdatum "
+"verwendet."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -317,7 +318,7 @@ msgstr "Beschreibung"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr "Chargen & Seriennummern in Rechnungen anzeigen"
+msgstr "Chargen- & Seriennummern in Rechnungen anzeigen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
@@ -412,13 +413,13 @@ msgstr "Einstandskosten"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_date
@@ -445,13 +446,13 @@ msgstr "Manuell"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
-msgstr ""
+msgstr "Manuelle Bestandsbewertung: %s."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr ""
+msgstr "Manuelle Bestandsbewertung: Ohne Angabe von Gründen."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -746,7 +747,7 @@ msgid ""
 "origin or destination company."
 msgstr ""
 "Die Buchungszeilen weisen keinen konsistenten Status auf: Sie spiegeln nicht"
-" dasselbe Ursprungs- oder Ziel-Unternehmen wider."
+" dasselbe Ursprungs- oder Zielunternehmen wider."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -774,12 +775,12 @@ msgid ""
 " Order/Purchase Order"
 msgstr ""
 "Auslösen einer Minderung der gelieferten/erhaltenen Menge im zugehörigen "
-"Verkaufsauftrag/in der zugehörigen Bestellung"
+"Verkaufsauftrag/Beschaffungsauftrag"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
 msgid "Unit Value"
-msgstr ""
+msgstr "Wert der Einheit"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
@@ -895,8 +896,7 @@ msgstr "Sie können Produkte mit Standardkostenverfahren nicht neu bewerten."
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
 msgstr ""
-"Sie können ein Produkt mit ohne oder mit negativem Bestand nicht neu "
-"bewerten."
+"Sie können ein Produkt ohne oder mit negativem Bestand nicht neu bewerten."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -917,6 +917,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Sie haben für Ihre Produktkategorie kein Eingabebewertungskonto definiert. "
+"Sie müssen eines definieren, bevor Sie diesen Vorgang ausführen können."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -925,6 +927,8 @@ msgid ""
 "You don't have any stock input account defined on your product category. You"
 " must define one before processing this operation."
 msgstr ""
+"Sie haben für Ihre Produktkategorie kein Bestandseingangskonto definiert. "
+"Sie müssen eines definieren, bevor Sie diesen Vorgang ausführen können."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0

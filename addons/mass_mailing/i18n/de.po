@@ -6,9 +6,8 @@
 # Martin K <martinkuenz@gmail.com>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Christian Körner <fipes.de@gmail.com>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
 # Niki Waibel, 2017
@@ -77,7 +76,7 @@ msgstr "% erhalten eine der"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
 msgid "%Click (Total)"
-msgstr ""
+msgstr "%Klicks (Gesamt)"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
@@ -295,8 +294,7 @@ msgid ""
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" attrs=\"{'invisible': ['|', ('reply_to_mode', '=', 'update'), ('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],}\">\n"
-"                                                    Um Antworten nachzuverfolgen, muss die Adresse zur Datenbank gehören.\n"
-"                                                </small>"
+"                                                    Um Antworten nachzuverfolgen, muss die Adresse zur Datenbank gehören.                                                </small>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
@@ -383,7 +381,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 msgid "<span class=\"o_stat_text\">Blacklist</span>"
-msgstr "<span class=\"o_stat_text\">Blacklist</span>"
+msgstr "<span class=\"o_stat_text\">Sperrliste</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
@@ -427,7 +425,7 @@ msgstr "<span class=\"s_number display-4 o_default_snippet_text\">8</span><br/>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 msgid "<span class=\"text-muted\">Blacklist</span>"
-msgstr "<span class=\"text-muted\">Blacklist</span>"
+msgstr "<span class=\"text-muted\">Sperrliste</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -523,6 +521,8 @@ msgid ""
 "<strong class=\"o_default_snippet_text\">Advanced</strong>\n"
 "                                features"
 msgstr ""
+"<strong class=\"o_default_snippet_text\">Erweiterte</strong>\n"
+"                                Funktionen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -535,6 +535,9 @@ msgid ""
 "<strong class=\"o_default_snippet_text\">Total</strong>\n"
 "                                management"
 msgstr ""
+"<strong class=\"o_default_snippet_text\">Gesamte</strong>\n"
+"Betriebsführung\n"
+"                               "
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
@@ -852,7 +855,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_numbers
 msgid "Amazing pages"
-msgstr "Erstaunliche Seiten"
+msgstr "Umwerfende Seiten"
 
 #. module: mass_mailing
 #. openerp-web
@@ -995,38 +998,38 @@ msgstr "Schöne Schnipsel"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__is_blacklisted
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__is_blacklisted
 msgid "Blacklist"
-msgstr "Schwarze Liste"
+msgstr "Sperrliste"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 msgid "Blacklist (%s)"
-msgstr "Blacklist (%s)"
+msgstr "Sperrliste (%s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "Blacklist Me"
-msgstr "Mich auf die schwarze Liste setzen"
+msgstr "Mich auf die Sperrliste setzen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid "Blacklist Option when Unsubscribing"
-msgstr "Option \"Schwarze Liste\" beim Abbestellen"
+msgstr "Option \"Sperrliste\" beim Abbestellen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Blacklisted"
-msgstr "Auf der schwarzen Liste"
+msgstr "Auf der Sperrliste"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_bl
 msgid "Blacklisted Address"
-msgstr "Schwarz gelistete Adressen"
+msgstr "Adressen auf Sperrliste"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
 msgid "Blacklisted Email Addresses"
-msgstr "Schwarz gelistete E-Mail-Adressen"
+msgstr "E-Mail-Adressen auf der Sperrliste"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_arch
@@ -1037,7 +1040,7 @@ msgstr "Nachrichtentext"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Body Width"
-msgstr ""
+msgstr "Breite"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_html
@@ -1083,7 +1086,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Bounced"
-msgstr "Verworfen"
+msgstr "Unzustellbar"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
@@ -1100,12 +1103,12 @@ msgstr "Verworfene Menge"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Business Benefits on %(expected)i %(mailing_type)s Sent"
-msgstr ""
+msgstr "Geschäftliche Vorteile für %(expected)i %(mailing_type)s Gesendet"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
 msgid "Button Label"
-msgstr "Button Beschriftung"
+msgstr "Schaltfläche"
 
 #. module: mass_mailing
 #. openerp-web
@@ -1338,7 +1341,7 @@ msgstr "Unternehmen Bezeichnung"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_configuration
@@ -1403,7 +1406,7 @@ msgstr "Copyright &amp;copy;"
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr "Zähler der unzustellbaren Emails für diesen Kontakt"
+msgstr "Zähler der unzustellbaren E-Mails für diesen Kontakt"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__country_id
@@ -1765,7 +1768,7 @@ msgstr "E-Mail"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Email Blacklisted"
-msgstr "E-Mail auf der schwarzen Liste"
+msgstr "E-Mail auf der Sperrliste"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1788,7 +1791,7 @@ msgstr "E-Mail Thread"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "E-Mail Assistent"
+msgstr "E-Mail-Assistent"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
@@ -1825,12 +1828,12 @@ msgstr "Ereignis-Überschrift"
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__error
 msgid "Exception"
-msgstr "Fehlerliste"
+msgstr "Fehlermeldung"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Exclude Blacklisted Emails"
-msgstr "E-Mails auf der schwarzen Liste ausschließen"
+msgstr "E-Mails auf der Sperrliste ausschließen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
@@ -1969,7 +1972,7 @@ msgstr "Abonnenten (Partner)"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font für großartiges Icon, z.B. fa-tasks "
+msgstr "FontAwesome Icon, z.B. fa-tasks"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2135,9 +2138,7 @@ msgstr ""
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_error
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
-"angekreuzt ist."
+msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_account_invoice_send__mass_mailing_name
@@ -2154,8 +2155,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Wenn die Emailadresse geblacklistet ist, dann erhält der Kontakt keine "
-"Massen-mails mehr."
+"Wenn die E-Mail-Adresse auf der Sperrliste steht, erhält der Kontakt keine "
+"Massen-Mailings mehr."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
@@ -2165,7 +2166,7 @@ msgstr "Ignoriert"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Image Text Image"
-msgstr ""
+msgstr "Bild Text Bild"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -2244,7 +2245,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__kpi_mail_required
 msgid "KPI mail required"
-msgstr ""
+msgstr "KPI-Mail erforderlich"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__keep_archives
@@ -2285,7 +2286,7 @@ msgstr "Letzte Funktion"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace____last_update
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -2304,7 +2305,7 @@ msgstr "Neueste Status-Aktualisierung"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__write_date
@@ -2338,7 +2339,7 @@ msgstr "Lassen Sie uns die E-Mail-Marketing App testen,"
 #: model:ir.model,name:mass_mailing.model_link_tracker
 #: model:ir.ui.menu,name:mass_mailing.link_tracker_menu_mass_mailing
 msgid "Link Tracker"
-msgstr "Link Tracker"
+msgstr "Link-Tracker"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker_click
@@ -2372,7 +2373,7 @@ msgstr "E-Mail"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Mail Body"
-msgstr "Mail Body"
+msgstr "E-Mail-Text"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
@@ -2442,7 +2443,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_graph
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Mailing"
-msgstr "E-Mail Versand"
+msgstr "E-Mail-Versand"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__campaign
@@ -2517,7 +2518,7 @@ msgstr "Mailing-Listen-Abonnements"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 msgid "Mailing Lists"
-msgstr "E-Mail-Empfängerlisten"
+msgstr "Mailinglisten"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_trace
@@ -2705,13 +2706,13 @@ msgstr "Medientitel"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Medium"
-msgstr "Medium"
+msgstr "Mittel"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_list_merge_action
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 msgid "Merge"
-msgstr "Zusammenfassen"
+msgstr "Zusammenführen"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_list_merge
@@ -2738,7 +2739,7 @@ msgstr "Zusammenführen mit einer bestehenden Mailingliste"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_error
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_has_error
 msgid "Message Delivery error"
-msgstr "Error beim senden der Nachricht"
+msgstr "Fehler beim Senden der Nachricht"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__message_id
@@ -3402,19 +3403,19 @@ msgstr "Berichtswesen"
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested blacklisting via unsubscribe link."
-msgstr "Beantragt die Aufnahme in die schwarze Liste über einen Abmeldelink."
+msgstr "Beantragt die Aufnahme in die Sperrliste über einen Abmeldelink."
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested blacklisting via unsubscription page."
-msgstr "Beantragung der Aufnahme in die schwarze Liste über die Abmeldeseite."
+msgstr "Beantragung der Aufnahme in die Sperrliste über die Abmeldeseite."
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested de-blacklisting via unsubscription page."
-msgstr ""
+msgstr "Streichung von der Sperrliste über die Abmeldeseite beantragt."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__user_id
@@ -3635,7 +3636,7 @@ msgstr "Versenden am"
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
 msgid "Sending"
-msgstr "Sende"
+msgstr "Im Versand"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__sent
@@ -3719,12 +3720,12 @@ msgstr "Durchgezogen"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__source_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Source"
-msgstr "Referenz"
+msgstr "Herkunft"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__name
 msgid "Source Name"
-msgstr "Herkunftbezeichnung"
+msgstr "Herkunftsbezeichnung"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
@@ -3762,7 +3763,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "State"
-msgstr "Bundesland"
+msgstr "Status"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail__mailing_trace_ids
@@ -3919,7 +3920,7 @@ msgstr "Text hervorheben"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Text Image Text"
-msgstr ""
+msgstr "Text Bild Text"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
@@ -4066,8 +4067,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Diese E-Mail ist auf der Blacklist für Massenmails. Klicken Sie zum Aufheben"
-" der Blacklist."
+"Diese E-Mail-Adresse steht auf der Sperrliste für Massen-Mailings. Klicken, "
+"um von Sperrliste zu entfernen."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__email_normalized
@@ -4263,7 +4264,7 @@ msgstr "Ungelesene Nachrichten"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_unread_counter
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Zähler der ungelesenen Nachrichten"
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
@@ -4617,8 +4618,8 @@ msgid ""
 "You have been successfully <strong>removed from our blacklist</strong>. You "
 "are now able to be contacted by our services."
 msgstr ""
-"Sie wurden erfolgreich <strong>von unserer Spam-Liste gelöscht</strong>. Sie"
-" werden zukünftig Marketingmaßnahmen per E-Mail von uns erhalten."
+"Sie wurden erfolgreich <strong>von unserer Sperrliste gelöscht</strong>. Nun"
+" können wir Sie wieder kontaktieren."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed

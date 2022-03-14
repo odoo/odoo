@@ -28,6 +28,7 @@ msgid ""
 "An error occurred during processing of your payment (code %s). Please try "
 "again."
 msgstr ""
+"Під час обробки вашого платежу виникла помилка (код %s). Спробуйте ще раз."
 
 #. module: payment_buckaroo
 #: model:account.payment.method,name:payment_buckaroo.payment_method_buckaroo
@@ -38,13 +39,13 @@ msgstr "Buckaroo"
 #. module: payment_buckaroo
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_secret_key
 msgid "Buckaroo Secret Key"
-msgstr ""
+msgstr "Секретний ключ Buckaroo"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Invalid shasign: received %(sign)s, computed %(check)s"
-msgstr ""
+msgstr "Недійсний shasign: отримано %(sign)s, обчислено %(check)s"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
@@ -76,13 +77,13 @@ msgstr "Провайдер"
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference (%(ref)s) or shasign (%(sign)s)"
-msgstr ""
+msgstr "Отримані дані з відсутнім референсом (%(ref)s) або shasign (%(sign)s)"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing transaction keys"
-msgstr ""
+msgstr "Отримані дані з відсутніми ключами транзакції"
 
 #. module: payment_buckaroo
 #: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_acquirer_form
@@ -98,20 +99,21 @@ msgstr "Постачальник платіжних послуг для вико
 #: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
 msgid "The key solely used to identify the website with Buckaroo"
 msgstr ""
+"Ключ, який використовується виключно для ідентифікації веб-сайту з Buckaroo"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown status code: %s"
-msgstr ""
+msgstr "Невідомий код статусу: %s"
 
 #. module: payment_buckaroo
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
 msgid "Website Key"
-msgstr ""
+msgstr "Ключ веб-сайту"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Your payment was refused (code %s). Please try again."
-msgstr ""
+msgstr "Ваш платіж було відхилено (код %s). Спробуйте ще раз."

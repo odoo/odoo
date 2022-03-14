@@ -16,16 +16,14 @@
 # DE T1 <e2f8846@yahoo.com>, 2017
 # 4e7311735ad180fde514b5b19202d965, 2017
 # Gab_Odoo <gab@odoo.com>, 2017
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2018
 # Tom, 2018
 # Tina Rittmüller <tr@ife.de>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Joerg Hueneburg <melikeymedia@gmail.com>, 2019
-# Anja Uebermuth <anja.uebermuth@arts.eu>, 2019
-# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2019
 # Andi, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
-# Florian Pose <fp@igh.de>, 2020
 # Wolfgang Taferner, 2020
 # Anja Funk <anja.funk@afimage.de>, 2020
 # Jan Brodersen <4rmitxes@gmail.com>, 2020
@@ -79,7 +77,7 @@ msgstr "# Eingangsrechnungen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
 msgid "# of Lines"
-msgstr "# Positionen"
+msgstr "Positionen"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -375,10 +373,10 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" attrs=\"{'invisible'\\: [('state','not "
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not "
 "in',('draft','sent'))]}\">Angebotsanfrage </span> <span "
-"class=\"o_form_label\" attrs=\"{'invisible'\\: "
-"[('state','in',('draft','sent'))]}\">Bestellung</span>"
+"class=\"o_form_label\" attrs=\"{'invisible': "
+"[('state','in',('draft','sent'))]}\">Bestellung </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -486,7 +484,7 @@ msgstr "<strong>Bestelldatum:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Purchase Representative:</strong>"
-msgstr "<strong>Einkäufer</strong>"
+msgstr "<strong>Einkäufer:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -559,7 +557,7 @@ msgid ""
 "A service is a non-material product you provide."
 msgstr ""
 "Ein lagerfähiges Produkt ist ein Produkt, für das Sie den Lagerbestand verwalten. Die Inventar App muss installiert sein.\n"
-"Ein Verbrauchsartikel ist ein Produkt, für das der Lagerbestand nicht verwaltet wird.\n"
+"Ein Verbrauchsgut ist ein Produkt, für das der Lagerbestand nicht verwaltet wird.\n"
 "Eine Dienstleistung ist ein von Ihnen bereitgestelltes immaterielles Produkt."
 
 #. module: purchase
@@ -676,7 +674,7 @@ msgstr "Alle Anfragenentwürfe"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "All Late RFQs"
-msgstr "All verspäteten Anfragen"
+msgstr "Alle verspäteten Anfragen"
 
 #. module: purchase
 #. openerp-web
@@ -737,7 +735,7 @@ msgstr "Zeitspanne zwischen Kaufgenehmigung und Bestellung nach Datum."
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_analytic_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__account_analytic_id
 msgid "Analytic Account"
-msgstr "Analysekonto"
+msgstr "Kostenstelle"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_tag_ids
@@ -852,7 +850,7 @@ msgstr "Rechnungszeilen"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Billed"
-msgstr "Verrechnet"
+msgstr "Fakturiert"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -938,7 +936,7 @@ msgstr "Kategorie"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Gewerbliche Einheit"
+msgstr "Handelsgesellschaft"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
@@ -969,7 +967,7 @@ msgstr "E-Mail schreiben"
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -1039,9 +1037,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Eine Umrechnung zwischen Mengeneinheit ist nur möglich, wenn beide Einheiten"
-" einer Kategorie angehören. Die Umrechnung erfolgt dann auf der Basis der "
-"definierten Relationen."
+"Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie "
+"derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der "
+"Kennzahlen."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1276,7 +1274,7 @@ msgstr "Abonnenten (Partner)"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font für großartiges Icon, z.B. fa-tasks "
+msgstr "FontAwesome Icon, z.B. fa-tasks"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
@@ -1360,9 +1358,7 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
-"angekreuzt ist."
+msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1456,13 +1452,13 @@ msgstr "Buchungszeile"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line____last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_report____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_date
@@ -1500,7 +1496,7 @@ msgstr "Durchlaufzeit für Bestellungen"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Let's create your first request for quotation."
-msgstr "Lassen Sie uns Ihre erste Anfrage erstellen."
+msgstr "Lassen Sie uns Ihre erste Angebotsanfrage erstellen."
 
 #. module: purchase
 #. openerp-web
@@ -1600,7 +1596,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
 msgid "Message Delivery error"
-msgstr "Error beim senden der Nachricht"
+msgstr "Fehler beim Senden der Nachricht"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
@@ -1669,7 +1665,7 @@ msgstr "Meine Einkäufe"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
-msgstr "Meine Anfragen"
+msgstr "Meine Ausschreibungen"
 
 #. module: purchase
 #. openerp-web
@@ -2173,7 +2169,7 @@ msgstr "Bestellposition"
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn
 msgid "Purchase Order Line Warning"
-msgstr ""
+msgstr "Bestellzeile Warnung"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2241,7 +2237,7 @@ msgstr "Einkaufsbericht"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Representative"
-msgstr "Einkaufsbeauftragter"
+msgstr "Einkäufer"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2673,12 +2669,12 @@ msgstr "Per E-Mail versenden"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Send the request for quotation to your vendor."
-msgstr "Senden Sie die Angebotsanfrage an Ihren Lieferanten"
+msgstr "Senden Sie die Angebotsanfrage an Ihren Lieferanten."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3074,7 +3070,7 @@ msgstr "Ungelesene Nachrichten"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Zähler der ungelesenen Nachrichten"
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3096,7 +3092,7 @@ msgstr "Nettobetrag"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "UoM"
-msgstr "ME"
+msgstr "UoM"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3249,14 +3245,13 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
-"Achten Sie beim Anlegen einer Bestellung auf die <i>pünktliche "
-"Lieferungs-</i>Rate\\ des Lieferanten (den Prozentsatz der pünktlich "
-"versandten Produkte). Wenn dieser zu niedrig ist, aktivieren Sie die "
-"<i>automatische Mahnungen</i>. Einige Tage vor dem fälligen Versand sendet "
-"Odoo dem Verkäufer eine E-Mail, um ihn um eine Bestätigung der Versanddaten "
-"zu bitten und Sie im Falle von Verzögerungen auf dem Laufenden zu halten. Um"
-" die Leistungsstatistik des Verkäufers zu erhalten, klicken Sie auf die OTD-"
-"Rate. "
+"Achten Sie beim Anlegen einer Bestellung auf die <i>Pünktlichkeitsrate</i> "
+"des Lieferanten, also den Prozentsatz der pünktlich versandten Produkte. "
+"Wenn dieser zu niedrig ist, aktivieren Sie <i>automatische Mahnungen</i>. "
+"Einige Tage vor dem fälligen Versand sendet Odoo dem Verkäufer eine E-Mail, "
+"um ihn um eine Bestätigung der Versanddaten zu bitten und Sie im Falle von "
+"Verzögerungen auf dem Laufenden zu halten. Um die Leistungsstatistik des "
+"Verkäufers zu erhalten, klicken Sie auf die OTD-Rate. "
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3301,7 +3296,7 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Sie müssen ein Produkt für alles, was Sie verkaufen oder kaufen, definieren,,\n"
+"Sie müssen ein Produkt für alles, was Sie verkaufen oder kaufen, definieren,\n"
 "                ob es sich nun um ein Lagerprodukt, ein Verbrauchsmaterial oder eine Dienstleistung handelt."
 
 #. module: purchase

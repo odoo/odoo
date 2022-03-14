@@ -9,20 +9,17 @@
 # Tina Rittmüller <tr@ife.de>, 2017
 # Johannes Croe <jcr@odoo.com>, 2019
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
-# Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
 # Andi, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Caroline Renson <car@odoo.com>, 2020
 # Ermin Trevisan <trevi@twanda.com>, 2020
-# Oliver Roch <oliver.roch@d9t.de>, 2020
-# Florian Pose <fp@igh.de>, 2020
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2021
 # Leon Grill <leg@odoo.com>, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
-# Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -30,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2017-12-13 14:58+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -157,7 +154,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
 msgid "Attachment Count"
-msgstr "Anzahl Anhänge"
+msgstr "# Anhänge"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
@@ -238,7 +235,7 @@ msgstr "Wählen Sie ein Beispiel"
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
-msgstr "Abschliessen"
+msgstr "Abschließen"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -301,7 +298,7 @@ msgstr "Fehlgeschlagene SMS verwerfen"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
 msgid "Discard delivery failures"
-msgstr "Fehlgeschlagene Sendungen löschen"
+msgstr "Fehlgeschlagene Sendungen verwerfen"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_cancel
@@ -405,12 +402,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
 msgid "Followers"
-msgstr "Followers"
+msgstr "Abonnenten"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Followers (Partner)"
+msgstr "Abonnenten (Partner)"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -583,7 +580,7 @@ msgstr "Ungültige Empfängernummer. Bitte aktualisieren Sie sie."
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Follower"
+msgstr "Ist ein Abonnent"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
@@ -609,7 +606,7 @@ msgstr "Sprache"
 #: model:ir.model.fields,field_description:sms.field_sms_template____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__write_uid
@@ -620,7 +617,7 @@ msgstr "Zuletzt geändert am"
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__write_date
@@ -653,7 +650,7 @@ msgstr "Mail Thread SMS"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hauptanhang"
+msgstr "Hauptanhänge"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -666,7 +663,7 @@ msgstr "Nachricht"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
 msgid "Message Delivery error"
-msgstr "Fehler beim Senden der Nachricht"
+msgstr "Error beim senden der Nachricht"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
@@ -737,12 +734,12 @@ msgstr "Nummernfeld"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Anzahl Aktionen"
+msgstr "Anzahl der Aktionen"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
 msgid "Number of errors"
-msgstr "Anzahl Fehler"
+msgstr "# Fehler"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
@@ -752,7 +749,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden"
+msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
@@ -1098,7 +1095,7 @@ msgstr "SMS versenden (%s)"
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 #, python-format
 msgid "Send SMS Text Message"
-msgstr "SMS-Textnachricht senden"
+msgstr "SMS versenden"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -1280,14 +1277,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"Art der Server-Aktion. Folgende Werte stehen zur Verfügung:\n"
-"- 'Python Code ausführen': ein Block von Python-Code, der ausgeführt wird\n"
-"- Anlegen\": einen neuen Datensatz mit neuen Werten anlegen\n"
-"- 'Update a Record': die Werte eines Datensatzes aktualisieren\n"
-"- 'Mehrere Aktionen ausführen': Definieren Sie eine Aktion, die mehrere andere Server-Aktionen auslöst.\n"
-"- E-Mail senden': automatisch eine E-Mail senden (Diskutieren)\n"
-"- Anhänger hinzufügen\": Anhänger zu einem Datensatz hinzufügen (Diskutieren)\n"
-"- Nächste Aktivität erstellen\": eine Aktivität erstellen (Diskutieren)"
+"Type of server action. The following values are available:\n"
+"- 'Execute Python Code': a block of python code that will be executed\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf

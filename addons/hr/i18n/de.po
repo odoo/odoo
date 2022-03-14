@@ -11,8 +11,8 @@
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # e2f <projects@e2f.com>, 2018
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
 # Wolfgang Taferner, 2018
 # Ermin Trevisan <trevi@twanda.com>, 2018
 # Andi, 2018
@@ -23,7 +23,6 @@
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2018
 # Jan Meyer, 2018
 # Johannes Croe <jcr@odoo.com>, 2019
-# Gab_Odoo <gab@odoo.com>, 2019
 # Matt <matt.fasola@braintec-group.com>, 2019
 # ba566f9f7abd166f8f1f032649ec3e69, 2019
 # Franziska Schutte <fsc@odoo.com>, 2019
@@ -39,9 +38,9 @@
 # Robert Förster <hello@suppliot.eu>, 2021
 # Andreas Schmidt <schmigo@gmail.com>, 2021
 # Raymond Vetter, 2021
-# Martin Trigaux, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -49,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +85,7 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Gratulation!</b> Darf ich Sie empfehlen um einen <a "
+"<b>Gratulation!</b> Darf ich Ihnen vorschlagen, einen <a "
 "href=\"%s\">Einarbeitungsplan</a>aufzusetzen?"
 
 #. module: hr
@@ -153,8 +152,7 @@ msgstr "<span class=\"ml8 mr-2\">IP-Adressen (mit Komma getrennt)</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"ml8 mr-2\">Minimum number of emails to sent </span>"
-msgstr ""
-"<span class=\"ml8 mr-2\">Mindestanzahl E-Mails die zu schicken sind </span>"
+msgstr "<span class=\"ml8 mr-2\">Mindestanzahl an E-Mails zu verschicken </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -228,8 +226,8 @@ msgstr "<strong><span>Bericht</span></strong>"
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
 msgid "A user cannot be linked to multiple employees in the same company."
 msgstr ""
-"Ein Benutzer kann nicht mit verschiedenen Mitarbeiter der gleichen "
-"Unternehmung verbunden werden."
+"Ein Benutzer kann nicht mit mehreren Mitarbeitern desselben Unternehmens "
+"verknüpft werden."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
@@ -653,7 +651,7 @@ msgstr "Vollständiger Name"
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -805,7 +803,7 @@ msgstr "Austrittsdatum"
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
 msgid "Departure Reason"
-msgstr "Grund für die Abreise"
+msgstr "Grund für den Austritt"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
@@ -1112,7 +1110,7 @@ msgstr "Abonnenten (Partner)"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font für großartiges Icon, z.B. fa-tasks "
+msgstr "FontAwesome Icon, z.B. fa-tasks"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
@@ -1262,9 +1260,7 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
-"angekreuzt ist."
+msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -1354,13 +1350,13 @@ msgstr "Stellenbeschreibung"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job Position"
-msgstr "Beruf"
+msgstr "Stelle"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_view_hr_job
 msgid "Job Positions"
-msgstr "Stellen"
+msgstr "Offene Stellen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -1376,7 +1372,7 @@ msgstr "Arbeitsstelle"
 #: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
-msgstr "Stellen"
+msgstr "Jobs"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__lang
@@ -1418,7 +1414,7 @@ msgstr "Letzte Aktivität um"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_work_location____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
@@ -1433,7 +1429,7 @@ msgstr "Zuletzt geändert am"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_date
@@ -1477,7 +1473,7 @@ msgstr "Lassen Sie uns eine Arbeitsposition schaffen."
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Location"
-msgstr "Lagerort"
+msgstr "Standort"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
@@ -1547,7 +1543,7 @@ msgstr "Menü"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr "Error beim senden der Nachricht"
+msgstr "Fehler beim Senden der Nachricht"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
@@ -1579,7 +1575,7 @@ msgstr "Name"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
 msgid "Nationality (Country)"
-msgstr "Nationalität"
+msgstr "Nationalität (Land)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
@@ -1741,6 +1737,9 @@ msgid ""
 " enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
+"PIN, die zum Ein- und Auschecken im Kioskmodus der Anwesenheitsanwendung "
+"(falls in der Konfiguration aktiviert) und zum Wechsel des Kassierers in der"
+" Kassenanwendung verwendet wird."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -1824,7 +1823,7 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Richtlinie zum Posten einer Dokument-Mitteilung über das E-Mail-Gateway.\n"
+"Richtlinie zum Posten einer Dokument-Nachricht über das E-Mail-Gateway.\n"
 "- Jeder: jeder kann posten\n"
 "- Partner: nur bestätigte Partner\n"
 "- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
@@ -1938,7 +1937,7 @@ msgstr "Grund"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
-msgstr "Personalbeschaffung"
+msgstr "Rekrutierung"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_job__state__recruit
@@ -1993,7 +1992,7 @@ msgstr "Anforderungen"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
 msgid "Resigned"
-msgstr "Pensioniert"
+msgstr "Gekündigt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
@@ -2042,7 +2041,7 @@ msgstr "RV-Nummer"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
-msgstr "Ausführungsplan"
+msgstr "Arbeitsplan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
@@ -2092,7 +2091,7 @@ msgstr "Einstellungen"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
 msgid "Single"
-msgstr "Alleinstehend"
+msgstr "Ledig"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
@@ -2131,7 +2130,7 @@ msgstr "Vollständiger Name des Ehepartners"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
-msgstr "Einstellung starten"
+msgstr "Rekrutierung starten"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2194,7 +2193,7 @@ msgstr "Tag Bezeichnung"
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
 msgid "Tag name already exists !"
-msgstr "Schlagwort existiert bereits!"
+msgstr "Stichwort existiert bereits!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
@@ -2385,7 +2384,7 @@ msgstr "Ungelesene Nachrichten"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_unread_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Zähler der ungelesenen Nachrichten"
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
@@ -2638,7 +2637,7 @@ msgstr "z.B. Verkaufsleiter"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan
 msgid "plan"
-msgstr "Plan"
+msgstr "Planung"
 
 #. module: hr
 #: code:addons/hr/models/models.py:0

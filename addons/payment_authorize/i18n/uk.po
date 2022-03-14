@@ -24,7 +24,7 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr ""
+msgstr "Число округлень ABA"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
@@ -34,7 +34,7 @@ msgstr "Клієнтський ключ API"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login ID"
-msgstr ""
+msgstr "ID входу API "
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
@@ -54,7 +54,7 @@ msgstr "Номер рахунку"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_payment_method_type
 msgid "Allow Payments From"
-msgstr ""
+msgstr "Дозволити платежі з"
 
 #. module: payment_authorize
 #. openerp-web
@@ -66,7 +66,7 @@ msgstr "Виникла помилка під час відображення ц�
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_currency_id
 msgid "Authorize Currency"
-msgstr ""
+msgstr "Валюта Authorize"
 
 #. module: payment_authorize
 #: model:account.payment.method,name:payment_authorize.payment_method_authorize
@@ -77,29 +77,29 @@ msgstr "Authorize.Net"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_payment_method_type
 msgid "Authorize.Net Payment Type"
-msgstr ""
+msgstr "Тип платежу Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr ""
+msgstr "ID профілю Authorize.Net"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
 msgid "Bank (powered by Authorize)"
-msgstr ""
+msgstr "Банк (від Authorize)"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__bank_account
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__bank_account
 msgid "Bank Account (USA Only)"
-msgstr ""
+msgstr "Банківський рахунок (Лише США)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Account Type"
-msgstr ""
+msgstr "Тип банківського рахунку"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -109,12 +109,12 @@ msgstr "Назва банку"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Business Checking"
-msgstr ""
+msgstr "Перевірка бізнесу"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Code"
-msgstr ""
+msgstr "Код картки"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -128,6 +128,8 @@ msgid ""
 "Could not fetch merchant details:\n"
 "%s"
 msgstr ""
+"Не вдалося отримати відомості про продавця:\n"
+"%s"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__credit_card
@@ -149,7 +151,7 @@ msgstr "Валюта"
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_payment_method_type
 msgid "Determines with what payment method the customer can pay."
-msgstr ""
+msgstr "Визначає, яким способом оплати клієнт може оплатити."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -163,6 +165,8 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
+"Помилка автентифікації.\n"
+"%s"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
@@ -177,12 +181,12 @@ msgstr "Як отримати плату за допомогою Authorize.Net"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
-msgstr ""
+msgstr "MM"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr ""
+msgstr "Ім'я на рахунку"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_transaction.py:0
@@ -213,12 +217,12 @@ msgstr "Платіжна операція"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Personal Checking"
-msgstr ""
+msgstr "Персональна перевірка"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Personal Savings"
-msgstr ""
+msgstr "Персональні збереження"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -229,7 +233,7 @@ msgstr "Провайдер"
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
-msgstr ""
+msgstr "Отримані дані з кодом статусу \"%(status)s\" та кодом помилки \"%(error)s\""
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
@@ -255,12 +259,14 @@ msgstr "Помилка сервера"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "Set Account Currency"
-msgstr ""
+msgstr "Встановіть валюту рахунку"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
 msgstr ""
+"ID, який використовується виключно для ідентифікації облікового запису з "
+"Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__provider
@@ -273,6 +279,8 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
+"Публічний ключ клієнта. Щоби створити прямо з Odoo або з бекенду "
+"Authorize.Net."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_transaction.py:0
@@ -283,7 +291,7 @@ msgstr "Транзакція не зв'язана з токеном."
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_payment_method_type
 msgid "The type of payment method this token is linked to."
-msgstr ""
+msgstr "Тип способу оплати, з яким пов’язано цей токен."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -291,6 +299,8 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
+"Унікальне референс комбінації партнера/токена у серверній частині "
+"Authorize.net."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_acquirer.py:0
@@ -300,12 +310,15 @@ msgid ""
 "method type, please disable the acquirer and duplicate it. Then, change the "
 "payment method type on the duplicated acquirer."
 msgstr ""
+"Існують активні токени, пов’язані з цим еквайєром. Щоб змінити тип способу "
+"оплати, будь ласка, вимкніть еквайєр і скопіюйте його. Потім змініть тип "
+"методу оплати для дубльованого еквайера."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
 msgid "This action cannot be performed while the acquirer is disabled."
-msgstr ""
+msgstr "Цю дію неможливо виконати, якщо еквайєр вимкнено."
 
 #. module: payment_authorize
 #. openerp-web
@@ -318,4 +331,4 @@ msgstr "Ми не можемо обробити цей платіж."
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr ""
+msgstr "рр"

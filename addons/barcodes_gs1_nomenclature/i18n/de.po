@@ -3,11 +3,10 @@
 # 	* barcodes_gs1_nomenclature
 # 
 # Translators:
-# Martin Trigaux, 2021
-# Florian Pose <fp@igh.de>, 2021
 # Kevin Harrings <kha@odoo.com>, 2021
 # Wolfgang Taferner, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 14:47+0000\n"
 "PO-Revision-Date: 2021-05-11 12:32+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +43,7 @@ msgstr "Zugehörige Maßeinheit"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
 msgid "Barcode Nomenclature"
-msgstr "Barcode-Nomenklatur"
+msgstr "Barcode Nomenklatur"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_rule
@@ -168,7 +167,7 @@ msgstr "Menge"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid "The FNC1 Separator Alternative is not a valid Regex: "
-msgstr ""
+msgstr "Die FNC1-Trennzeichenalternative ist kein regulärer Ausdruck:"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -179,6 +178,12 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"Der GS1-Inhaltstyp legt fest, als welche Art von Daten die Regel den Barcode"
+" verarbeiten wird: * Datum: der Barcode wird in eine Odoo-Datumszeit "
+"umgewandelt; * Maßeinheit: der Wert des Barcodes bezieht sich auf eine "
+"bestimmte Maßeinheit; * Numerische Kennung: Barcode mit fester Länge, der "
+"einer bestimmten Codierung folgt; * Alphanumerischer Name: Barcode mit "
+"variabler Länge."
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
@@ -206,6 +211,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
+"Mit der Barcode-Regel \"%s\" ist etwas nicht in Ordnung.\n"
+"Wenn diese Regel Dezimalzahlen verwendet, stellen Sie sicher, dass nur Ziffern für den Application Identifier enthalten sind.\n"
+"Stellen Sie sicher, dass mögliche übereinstimmende Werte nur Ziffern enthalten, da der Wert sonst nicht als Kennzahl zugeordnet werden kann."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature

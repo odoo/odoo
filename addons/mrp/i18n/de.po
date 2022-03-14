@@ -3,16 +3,14 @@
 # 	* mrp
 # 
 # Translators:
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # dd5cd5bab88c61e9dedf84f5ea59b147, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
 # Pascal <paesce@gentlemansclub.de>, 2017
 # Mathias Neef <mn@copado.de>, 2017
 # Martin K <martinkuenz@gmail.com>, 2017
-# Christian Körner <fipes.de@gmail.com>, 2017
 # key six <mobile.umts@gmail.com>, 2017
 # Bülent Tiknas <btiknas@googlemail.com>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
 # ba566f9f7abd166f8f1f032649ec3e69, 2017
 # Renzo Meister, 2017
 # Constantin Ehrenstein <transifex@skiller.eu>, 2017
@@ -27,12 +25,12 @@
 # Alexander Klockhaus <a.klockhaus@gmail.com>, 2018
 # e2f <projects@e2f.com>, 2018
 # Felix Schubert <felix.schubert@go-erp.com>, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
 # Tom, 2018
 # Rudolf Schnapka <rs@techno-flex.de>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Philipp Fürstos <pfu@odoo.com>, 2020
-# Ermin Trevisan <trevi@twanda.com>, 2020
 # Anja Funk <anja.funk@afimage.de>, 2020
 # Andi, 2020
 # Johannes Croe <jcr@odoo.com>, 2020
@@ -307,7 +305,7 @@ msgstr "<span class=\"o_stat_text\">Abfälle</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Source MO</span>"
-msgstr " <span class=\"o_stat_text\">Quellen MO</span> "
+msgstr " <span class=\"o_stat_text\">MO-Quelle</span> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -338,12 +336,12 @@ msgstr "<span>Neu</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span>Orders</span>"
-msgstr "Aufträge"
+msgstr "  <span>Aufträge</span> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>PLAN ORDERS</span>"
-msgstr "<span>BESTELLUNGEN PLANEN</span>"
+msgstr "<span>AUFTRÄGE PLANEN</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_report_delivery_no_kit_section
@@ -839,7 +837,7 @@ msgstr "Stückliste"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_bom_id
 msgid "Bill of Material used on the Production Order"
-msgstr "Aus dem Fertigungsauftrag verwendete Stückliste"
+msgstr "Auf dem Fertigungsauftrag verwendete Stückliste"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
@@ -1200,12 +1198,12 @@ msgstr "Berechnung anhand der erfassten Zeit"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
 msgid "Computed on last"
-msgstr ""
+msgstr "Berechnet am letzten"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -1287,9 +1285,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Eine Umrechnung zwischen Mengeneinheit ist nur möglich, wenn beide Einheiten"
-" einer Kategorie angehören. Die Umrechnung erfolgt dann auf der Basis der "
-"definierten Relationen."
+"Umwandlungen von Maßeinheiten können nur innerhalb derselben Kategorie "
+"erfolgen. Die Konversion erfolgt basierend auf dem Umwandlungsfaktor."
 
 #. module: mrp
 #. openerp-web
@@ -1687,7 +1684,7 @@ msgstr "Entwurf"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
 msgid "Dropdown menu"
-msgstr "Dropdown-Menü"
+msgstr "Dropdownmenu"
 
 #. module: mrp
 #: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
@@ -1854,7 +1851,7 @@ msgstr "Fertige Lot/Seriennummer"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
 msgid "Finished Moves"
-msgstr "Abgeschlossene Schritte"
+msgstr "Abgeschlossene Vorgänge"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__finished_move_line_ids
@@ -1904,12 +1901,12 @@ msgstr "Abonnenten (Partner)"
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font für großartiges Icon, z.B. fa-tasks "
+msgstr "FontAwesome Icon, z.B. fa-tasks"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Force"
-msgstr ""
+msgstr "Erzwingen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2126,9 +2123,7 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_error
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
-"angekreuzt ist."
+msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_cancel
@@ -2309,6 +2304,17 @@ msgid "It has already been unblocked."
 msgstr "Es wurde bereits entsperrt."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
+"Es ist nicht möglich, einen einzelnen Arbeitsauftrag aus der Planung zu "
+"nehmen. Sie sollten stattdessen den Produktionsauftrag herausnehmen, um alle"
+" damit verbundenen Vorgänge herausnehmen zu können."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 msgid "Its Operations are Planned"
 msgstr "Operationen sind geplant"
@@ -2354,7 +2360,7 @@ msgstr "Bausatz"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder____last_update
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_uid
@@ -2379,7 +2385,7 @@ msgstr "Zuletzt geändert am"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__write_uid
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_date
@@ -2804,7 +2810,7 @@ msgstr "Materialverfügbarkeit"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error
 msgid "Message Delivery error"
-msgstr "Error beim senden der Nachricht"
+msgstr "Fehler beim Senden der Nachricht"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_ids
@@ -3354,8 +3360,7 @@ msgstr "Fertigungsauftrag freigeben"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr ""
-"Fertigungsauftrag planen oder Bestellungen erstellen auf Basis von Prognosen"
+msgstr "Fertigungsauftrag oder Bestellungen basierend auf Prognosen planen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -3568,7 +3573,7 @@ msgstr "Produktvorlage"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
 msgid "Product Unit of Measure"
-msgstr "Produkteinheit"
+msgstr "Produktmaßeinheit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_id
@@ -3585,7 +3590,7 @@ msgstr "Produktvarianten"
 #: model:ir.model.fields,field_description:mrp.field_mrp_immediate_production_line__production_id
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__production_id
 msgid "Production"
-msgstr "Produktivbetrieb"
+msgstr "Produktion"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_date
@@ -4027,7 +4032,7 @@ msgstr "Zu kopierende Vorgänge auswählen"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__sequence
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -4178,7 +4183,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
 msgid "Source"
-msgstr "Referenz"
+msgstr "Herkunft"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__location_id
@@ -4211,7 +4216,7 @@ msgstr "Startdatum"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 msgid "State"
-msgstr "Bundesland"
+msgstr "Status"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__state
@@ -4416,7 +4421,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_id
 msgid "The Bill of Material this operation is linked to"
-msgstr "Dieser Vorgang ist mit folgender Stückliste verbunden"
+msgstr "Dieser Vorgang ist mit dieser Stückliste verbunden"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
@@ -4425,8 +4430,8 @@ msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
-"Die ausgewählte Mengeneinheit ist in einer anderen Kategorie als die dieses "
-"Produkts"
+"Die von Ihnen gewählte Produktmengeneinheit hat eine andere Kategorie als im"
+" Produktformular."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4478,6 +4483,9 @@ msgid ""
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
 msgstr ""
+"Der Prozentsatz der endgültigen Produktionskosten für diese "
+"Nebenproduktlinie (geteilt durch die produzierte Menge); die Summe der "
+"Kostenanteile aller Nebenprodukte muss kleiner oder gleich 100 sein."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__cost_share
@@ -4551,7 +4559,7 @@ msgid ""
 "The total cost share for a manufacturing order's by-products cannot exceed "
 "100."
 msgstr ""
-"Der Gesamtkostenanteil für die Nebenprodukte eines Produktionsauftrags darf "
+"Der Gesamtkostenanteil für die Nebenprodukte eines Fertigungsauftrags darf "
 "100 nicht überschreiten."
 
 #. module: mrp
@@ -4618,8 +4626,8 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
-"Das sind die auf die Stückliste basierenden Kosten für dieses Produkt. Es "
-"wird durch das Addieren der Komponenten- und Vorgangskosten, die für die "
+"Das sind die auf die Stückliste basierenden Kosten für dieses Produkt. Diese"
+" werden durch das Addieren der Komponenten- und Vorgangskosten, die für die "
 "Fertigung benötigt werden, berechnet."
 
 #. module: mrp
@@ -4705,6 +4713,7 @@ msgstr "Zeitzone"
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
 msgid "Tip: Use tablets in the shop to control manufacturing"
 msgstr ""
+"Tipp: Verwenden Sie Tablets in der Werkstatt zur Steuerung der Fertigung"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4928,7 +4937,7 @@ msgstr "Einheitsfaktor"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Unit of Measure"
-msgstr "Mengeneinheit"
+msgstr "Maßeinheit"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_id
@@ -4979,7 +4988,7 @@ msgstr "Ungelesene Nachrichten"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_unread_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Zähler der ungelesenen Nachrichten"
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
@@ -5413,12 +5422,12 @@ msgstr "Arbeitsblatt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_type
 msgid "Worksheet Type"
-msgstr ""
+msgstr "Arbeitsblatt Typ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_google_slide
 msgid "Worksheet URL"
-msgstr ""
+msgstr "Arbeitsblatt URL"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_production_lot.py:0
@@ -5541,13 +5550,13 @@ msgid ""
 "                        </b>"
 msgstr ""
 "Sie verbrauchen für die folgenden Produkte eine andere Menge als erwartet.<b"
-" attrs=\"{'invisible'\\: [('consumption', '=', 'strict')]}\">Bitte "
-"bestätigen Sie, dass dies mit Absicht geschieht.</b> <b "
-"attrs=\"{'invisible'\\: [('consumption', '!=', 'strict')]}\"> Bitte "
-"überprüfen Sie Ihren Komponentenverbrauch oder bitten Sie einen Manager um "
-"eine Validierung <span attrs=\"{'invisible'\\:[('mrp_production_count', "
-"'!=', 1)]}\">für diesen Fertigungsauftrag</span> <span "
-"attrs=\"{'invisible'\\:[('mrp_production_count', '=', 1)]}\">für diese "
+" attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">Bitte bestätigen "
+"Sie, dass dies mit Absicht geschieht.</b> <b attrs=\"{'invisible': "
+"[('consumption', '!=', 'strict')]}\"> Bitte überprüfen Sie Ihren "
+"Komponentenverbrauch oder bitten Sie einen Manager um eine Validierung <span"
+" attrs=\"{'invisible':[('mrp_production_count', '!=', 1)]}\">für diesen "
+"Fertigungsauftrag</span> <span "
+"attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">für diese "
 "Fertigungsaufträge</span>. </b> "
 
 #. module: mrp

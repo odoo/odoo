@@ -22,7 +22,6 @@
 # Andi, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Niki Waibel, 2019
-# Mathias Markl <mathias.markl@mukit.at>, 2019
 # Michael Schütt <michael.schuett.lwl@gmail.com>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Wolfgang Taferner, 2019
@@ -35,7 +34,6 @@
 # Anja Funk <anja.funk@afimage.de>, 2020
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # Jan Meyer, 2020
-# Oliver Roch <oliver.roch@d9t.de>, 2020
 # DE T1 <e2f8846@yahoo.com>, 2020
 # Tobias Arndt, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2021
@@ -355,12 +353,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Six payment terminal"
-msgstr "Akzteptieren Sie Zahlungen mittels Six-Terminals"
+msgstr "Zahlungen mit einem Six-Zahlungsterminal akzeptieren"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Vantiv payment terminal"
-msgstr "Akzeptieren Sie Zahlungen mit einem Vantiv-Zahlungsterminal"
+msgstr "Zahlungen mit einem Vantiv-Zahlungsterminal akzeptieren"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -536,9 +534,9 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
-"Alle verfügbaren Preislisten müssen in derselben Währung sein wie das "
-"Unternehmen oder dem Verkaufsjournal, die im Point-of-Sale festgelegt ist, "
-"wenn Sie die Buchhaltungsanwendung verwenden."
+"Alle verfügbaren Preislisten müssen die gleiche Währung haben wie die Firma "
+"oder das Verkaufsjournal, das in dieser Verkaufsstelle eingestellt ist, wenn"
+" Sie Odoo Buchhaltung verwenden."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -1256,7 +1254,7 @@ msgstr "Warnung zum Kundenbildschirm"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Close"
-msgstr "Schließen"
+msgstr "Abschließen"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1360,7 +1358,7 @@ msgstr "Das Unternehmen hat einen Kontenplan"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -1454,7 +1452,7 @@ msgstr "Verbindungsfehler"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Connection error"
-msgstr "Fehler beim Anschluss"
+msgstr "Verbindungsfehler"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1794,7 +1792,9 @@ msgstr "Definieren Sie eine neue Kategorie"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Define the smallest coinage of the currency used to pay"
-msgstr "Definieren Sie die kleinste Münzeinheit der Währung zur Bezahlung"
+msgstr ""
+"Definieren Sie die kleinste Münzeinheit der Währung, die zur Bezahlung "
+"genutzt wird."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1906,7 +1906,7 @@ msgstr "Abweichungen bei der Saldoabstimmung"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_digest_digest
 msgid "Digest"
-msgstr "Übersicht"
+msgstr "Zusammenfassung"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2021,7 +2021,8 @@ msgstr "Bilder von Produktkategorien anzeigen"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Kein Zugriff, überspringen Sie diese Daten für die E-Mail des Benutzers"
+"Keine Zugriffsberechtigung, überspringen dieser Daten für die Digest E-Mail "
+"der Benutzer."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2310,7 +2311,7 @@ msgstr "Abonnenten (Partner)"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font für großartiges Icon, z.B. fa-tasks "
+msgstr "FontAwesome Icon, z.B. fa-tasks"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2798,7 +2799,7 @@ msgstr "Nutzt Firmenwährung"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_restaurant
 msgid "Is a Bar/Restaurant"
-msgstr "Ist eine Bar / Restaurant"
+msgstr "Ist eine Bar/ein Restaurant"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_installed_account_accountant
@@ -2902,7 +2903,7 @@ msgstr "Große Bildlaufleiste"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cash
@@ -2928,7 +2929,7 @@ msgstr "Abschlussdatum der letzten Sitzung"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_date
@@ -3164,7 +3165,7 @@ msgstr "Verwalten Sie Werbe- und Gutscheinprogramme."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
 msgid "Manual Discounts"
-msgstr "Händische Rabatte"
+msgstr "Manuelle Rabatte"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__margin
@@ -3532,7 +3533,7 @@ msgstr "Ok"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Ongoing"
-msgstr "Fortgehend"
+msgstr "Laufend"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3766,7 +3767,7 @@ msgstr "Auftragsnummernfolge"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/OrderDetails.xml:0
 #, python-format
 msgid "Order is empty"
-msgstr "Die Bestellung ist leer"
+msgstr "Der Auftrag ist leer"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4239,7 +4240,7 @@ msgstr "PoS Produktkategorie"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 msgid "Point Of Sale"
-msgstr "Point of Sale"
+msgstr "Kassensystem"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
@@ -4257,7 +4258,7 @@ msgstr "Point of Sale"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Point of Sale"
-msgstr "Point of Sale"
+msgstr "Kassensystem"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_pos_order_view_tree
@@ -4554,7 +4555,7 @@ msgstr "Drucken"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/ReprintReceiptScreen.xml:0
 #, python-format
 msgid "Print Receipt"
-msgstr "Bon drucken"
+msgstr "Beleg drucken"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4662,7 +4663,7 @@ msgstr "Produktvorlage"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Produkteinheit"
+msgstr "Produktmaßeinheit"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_uom_id
@@ -4930,7 +4931,7 @@ msgstr "Verbleibende unsynchronisierte Aufträge"
 #: code:addons/point_of_sale/static/src/xml/Popups/EditListInput.xml:0
 #, python-format
 msgid "Remove"
-msgstr "Löschen"
+msgstr "Entfernen"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5036,7 +5037,7 @@ msgstr "Zahlung stornieren"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Review"
-msgstr "Bewertung"
+msgstr "Beurteilung"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5096,7 +5097,7 @@ msgstr "Auftragspositionen"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 msgid "Sales Details"
-msgstr "Details Verkauf"
+msgstr "Verkaufsdetails"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sale_journal
@@ -5269,7 +5270,7 @@ msgstr "Versand der E-Mail fehlgeschlagen. Bitte versuchen Sie es erneut."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sequence_number
@@ -5560,7 +5561,7 @@ msgstr "Fertigungslos- / Seriennummer in der PoS-Auftragsposition angeben"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__route_id
 msgid "Spefic route for products delivered later."
-msgstr "Spezifische Route für zu spät gelieferte Produkte."
+msgstr "Spezifische Route für später gelieferte Produkte."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
@@ -5706,7 +5707,7 @@ msgstr "Synchronisation getrennt"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Error"
-msgstr "Synchronisationsproblem"
+msgstr "Synchronisationsfehler"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6364,7 +6365,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
-msgstr "Die Sitzung ist bereits geschossen"
+msgstr "Die Sitzung ist bereits geschlossen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6759,7 +6760,7 @@ msgstr "UUID"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
 #, python-format
 msgid "VAT:"
-msgstr "USt.-ID"
+msgstr "USt."
 
 #. module: point_of_sale
 #. openerp-web

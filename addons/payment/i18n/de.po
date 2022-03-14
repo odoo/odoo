@@ -23,17 +23,15 @@
 # dd5cd5bab88c61e9dedf84f5ea59b147, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
-# Anja Uebermuth <anja.uebermuth@arts.eu>, 2019
 # Jérôme JEK <jek@odoo.com>, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2020
 # Ermin Trevisan <trevi@twanda.com>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
 # Raymond Vetter, 2021
-# Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -41,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-27 13:30+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,7 +201,7 @@ msgstr ""
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr "Ein Token ist benötigt um eine neue Transaktion zu erstellen."
+msgstr "Ein Token ist benötigt um eine neue Zahlung zu erstellen."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -522,12 +520,12 @@ msgstr "Klicken Sie hier, um zur Bestätigungsseite weitergeleitet zu werden."
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_refund_wizard_view_form
 msgid "Close"
-msgstr "Schließen"
+msgstr "Abschließen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_method_code
 msgid "Code"
-msgstr "Schlüssel"
+msgstr "Code"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__color
@@ -606,7 +604,7 @@ msgstr "Token erstellen"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr "Erstellen Sie einen neuen Zahlungsempfänger"
+msgstr "Erstellen Sie einen neuen Zahlungsdienstleister"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
@@ -653,7 +651,7 @@ msgstr "Kredit- und Debitkarte"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_adyen
 msgid "Credit Card (powered by Adyen)"
-msgstr "Kreditkart (powered by Adyen)"
+msgstr "Kreditkarte (powered by Adyen)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_alipay
@@ -731,7 +729,7 @@ msgstr "Beschreibung des Acquirers für Kunden"
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Disabled"
-msgstr "Behinderung"
+msgstr "Deaktiviert"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
@@ -800,7 +798,7 @@ msgstr "Fehler"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Error: %s"
-msgstr "Fehler: 1%s"
+msgstr "Fehler: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -984,7 +982,7 @@ msgstr "Interner Serverfehler"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Invoice(s)"
-msgstr "Rechnungen"
+msgstr "Rechnung(en)"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1044,7 +1042,7 @@ msgstr "Sprache"
 #: model:ir.model.fields,field_description:payment.field_payment_token____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
@@ -1060,7 +1058,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_date
@@ -1273,7 +1271,7 @@ msgstr "Andere"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr "Anderer Zahlungserwerber"
+msgstr "Anderer Zahlungsanbieter"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -1502,14 +1500,14 @@ msgstr "Telefon"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select a payment option."
-msgstr "Bitte wählen Sie eine Zahlungsoption"
+msgstr "Bitte wählen Sie eine Zahlungsoption."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select only one payment option."
-msgstr "Bitte wählen Sie nur eine Zahlungsmöglichkeit aus"
+msgstr "Bitte wählen Sie nur eine Zahlungsmöglichkeit aus."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1669,7 +1667,7 @@ msgstr "Ausgewählte Onboarding-Zahlungsmethode"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
 #: model:ir.model.fields,field_description:payment.field_payment_icon__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: payment
 #. openerp-web
@@ -2065,7 +2063,7 @@ msgstr ""
 msgid ""
 "This field holds the image used for this payment icon, limited to 64x64 px"
 msgstr ""
-"Dieses Feld enthält das Bild, das für das Bezahlungs-Icon verwendet wird, "
+"Dieses Feld enthält das Bild, das für das Zahlungssymbol verwendet wird, "
 "beschränkt auf 64x64 px"
 
 #. module: payment
@@ -2241,7 +2239,7 @@ msgstr "Wir bearbeiten Ihre Zahlung, bitte warten Sie ..."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr "Wir warten auf die Zahlungsbestätigung vom Zahlungsanbieter."
+msgstr "Wir warten auf die Bestätigung vom Zahlungsanbieter."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize

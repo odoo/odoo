@@ -20,15 +20,12 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2019
 # Yedigen, 2019
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
 # Saban Yildiz <sabany@projetgrup.com>, 2021
 # Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2021
-# Umur Akın <umura@projetgrup.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
@@ -36,6 +33,9 @@
 # Metin Akın <aknmetin@gmail.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Martin Trigaux, 2022
+# Umur Akın <umura@projetgrup.com>, 2022
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -43,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-07 12:07+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -230,6 +230,13 @@ msgstr "(kimden"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "(başlangıçta"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/thread/thread.js:0
+#, python-format
+msgid ", "
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -6073,7 +6080,10 @@ msgstr ""
 "Eğer bir ilişki alanı ise ilişkinin varışında bir hedef alan seçebilmelisiniz ."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "Seçilen kullanıcı grubu"
 
@@ -6556,6 +6566,12 @@ msgstr "Sistem bildirimi"
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
 msgstr "Targeted model"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "Vergi No"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -7426,12 +7442,6 @@ msgstr ""
 " e-posta sunucusundan (@ mycompany.odoo.com) faydalanıyor."
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr "KDV/Vergi Kimliği"
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -7878,6 +7888,11 @@ msgid "assigned you an activity"
 msgstr "sana bir aktivite verdi"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "yönetim kurulu toplantıları"
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
@@ -8143,6 +8158,11 @@ msgid "other members."
 msgstr ""
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
@@ -8205,6 +8225,11 @@ msgstr "bilinen yazarlar ile sınırlı"
 #, python-format
 msgid "results out of"
 msgstr ""
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "satışlar"
 
 #. module: mail
 #. openerp-web

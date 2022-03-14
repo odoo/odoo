@@ -6,18 +6,17 @@
 # Thomas Lengyel <lexustec_fn@yahoo.de>, 2017
 # Marvin Elia Hoppe <marvin_elia@web.de>, 2017
 # Niki Waibel, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
 # Mathias Neef <mn@copado.de>, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
 # Renzo Meister, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2018
 # Anja Funk <anja.funk@afimage.de>, 2018
 # Johannes Croe <jcr@odoo.com>, 2019
 # Katharina Moritz <kmo@e2f.com>, 2019
 # Wolfgang Taferner, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
-# Jan Meyer, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # UteHaus, 2020
 # Jérôme JEK <jek@odoo.com>, 2020
@@ -32,8 +31,8 @@
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
-# Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -41,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -485,7 +484,7 @@ msgstr "<i class=\"fa fa-bell fa-fw\"/> Verfolgte Beiträge"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<i class=\"fa fa-bug\"/> Filter Tool"
-msgstr "<i class=\"fa fa-bug\"/> Filter-Werkzeug"
+msgstr "<i class=\"fa fa-bug\"/> Filter-Tool"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -722,7 +721,7 @@ msgstr "<span class=\"navbar-text mr-1\">Gehen Sie zu:</span>"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "<span class=\"navbar-text mr-3\">Show Tags Starting By</span>"
-msgstr ""
+msgstr "<span class=\"navbar-text mr-3\">Tags anzeigen beginnend mit</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -1257,7 +1256,7 @@ msgstr "Klicken Sie, um die Frage zu veröffentlichen."
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 #, python-format
 msgid "Close"
-msgstr "Schließen"
+msgstr "Abschließen"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -1287,7 +1286,7 @@ msgstr "Beitrag schließen"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
 msgid "Closed"
-msgstr "Geschlossen"
+msgstr "Abgeschlossen"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_uid
@@ -1302,7 +1301,7 @@ msgstr "Beendet am"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Closing"
-msgstr ""
+msgstr "Schließen"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__name
@@ -1382,7 +1381,7 @@ msgstr "In Antwort umwandeln"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Convert as a comment"
-msgstr "Als Kommentar konvertieren"
+msgstr "In Kommentar umwandeln"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_accept
@@ -1420,7 +1419,7 @@ msgstr "Erstellt am"
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.action_forum_post
 msgid "Create a new forum post"
-msgstr "Einen neuen Beitrag im Forum erstellen"
+msgstr "Einen neuen Forumsbeitrag erstellen"
 
 #. module: website_forum
 #. openerp-web
@@ -1754,7 +1753,7 @@ msgstr "Erste Stimme abgegeben"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 msgid "Flag"
-msgstr "Flag"
+msgstr "Markieren"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_flag
@@ -2021,9 +2020,7 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
-"angekreuzt ist."
+msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
@@ -2049,8 +2046,8 @@ msgid ""
 "            users having a high karma can see closed posts to moderate\n"
 "            them."
 msgstr ""
-"Wenn Sie diesen Beitrag schliessen, ist er für die meisten Benutzer verborgen. Nur\n"
-"Benutzer mit ausreichend Karma können geschlossene Beiträge sehen und moderieren."
+"Wenn Sie diesen Post schließen, ist er für die meisten Benutzer verborgen. Nur\n"
+"Benutzer mit ausreichenden Karma-Punkten können geschlossene Posts sehen und moderieren."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2152,7 +2149,7 @@ msgstr "Es ist nicht erlaubt, die Bewertung einer anderen Person zu erlauben."
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "It is not allowed to vote for its own post."
-msgstr "Es ist nicht erlaubt, für seinen eigenen Posten zu stimmen."
+msgstr "Es ist nicht erlaubt, für seinen eigenen Beitrag zu stimmen."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -2208,7 +2205,7 @@ msgstr "Karma für die Linkbeseitigung"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote____last_update
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__last_post_id
@@ -2231,7 +2228,7 @@ msgstr "Zuletzt aktualisiert"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__write_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__write_date
@@ -2289,7 +2286,7 @@ msgstr "Menü"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error
 msgid "Message Delivery error"
-msgstr "Error beim senden der Nachricht"
+msgstr "Fehler beim Senden der Nachricht"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_ids
@@ -2884,7 +2881,7 @@ msgstr "Frage erhielt 6 Stimmen"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Questions"
-msgstr "Fragestellungen"
+msgstr "Fragen"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__mode__questions
@@ -2978,7 +2975,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Refuse"
-msgstr "Zurücksetzen"
+msgstr "Ablehnen"
 
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
@@ -3064,7 +3061,7 @@ msgstr "Azubi"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Search Tips"
-msgstr ""
+msgstr "Tipps für die Suche"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -3147,12 +3144,12 @@ msgstr "Optionen zu Teilen"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Show"
-msgstr "Show"
+msgstr "Zeigen"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "Show Tags Starting By"
-msgstr ""
+msgstr "Tags anzeigen beginnend mit"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3195,7 +3192,7 @@ msgstr "Einige Benutzer"
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Sorry you must be logged in to perform this action"
-msgstr "Tut uns leid. Du must zum Ausführen dieser Aktion angemeldet sein."
+msgstr "Tut uns leid. Sie müssen zum Ausführen dieser Aktion angemeldet sein."
 
 #. module: website_forum
 #. openerp-web
@@ -3277,12 +3274,12 @@ msgstr "Unterstützer"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Tag"
-msgstr "Tag"
+msgstr "Stichwort"
 
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "Schlagwort existiert bereits!"
+msgstr "Stichwort existiert bereits!"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_tag_action
@@ -3483,7 +3480,7 @@ msgstr "Bis"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "To Validate"
-msgstr "Zu Validieren"
+msgstr "Zu validieren"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3513,7 +3510,7 @@ msgstr "Zu subjektiv und argumentativ"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "Toolbar with button groups"
-msgstr ""
+msgstr "Symbolleiste mit Schaltflächengruppen"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
@@ -3588,7 +3585,7 @@ msgstr "Ungelesene Nachrichten"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_unread_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Zähler der ungelesenen Nachrichten"
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3862,7 +3859,7 @@ msgstr "Ihre Antwort"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Your favourite"
-msgstr ""
+msgstr "Ihr Favorit"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -4098,7 +4095,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "post"
-msgstr "senden"
+msgstr "Beitrag"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index

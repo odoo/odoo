@@ -22,13 +22,11 @@
 # Wolfgang Taferner, 2018
 # Andi, 2018
 # JackTheHunter <Maximilian.N98@gmail.com>, 2019
-# Mathias Markl <mathias.markl@mukit.at>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
 # jonas <jonas.hillebrecht@bklynsoap.com>, 2019
 # Katharina Moritz <kmo@e2f.com>, 2019
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
-# Oliver Roch <oliver.roch@d9t.de>, 2019
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # Jan Meyer, 2020
 # Jérôme JEK <jek@odoo.com>, 2020
@@ -132,7 +130,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<i class=\"fa fa-arrow-right\"/> Add payment acquirers"
-msgstr "<i class=\"fa fa-arrow-right\"/> Zahlungsakquirierer hinzufügen"
+msgstr "<i class=\"fa fa-arrow-right\"/> Zahlungsanbieter hinzufügen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -593,7 +591,7 @@ msgstr "Verworfene Warenkörbe zum Wiederherstellen"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_abandoned_delay
 msgid "Abandoned Delay"
-msgstr "Verworfene Verzögerung"
+msgstr "Verwerfen-Verzögerung"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -603,9 +601,9 @@ msgid ""
 "recovery emails to visitors who entered their contact details."
 msgstr ""
 "Verlassene Einkaufswagen sind alle Einkaufswagen, die von den Besuchern der "
-"Website nicht bestätigt wurden. Du findest sie auf der *Website > "
-"Bestellungen > Verlassene Wagen*. Von dort aus können Sie Recovery-E-Mails "
-"an Besucher senden, die ihre Kontaktdaten eingegeben haben."
+"Website nicht bestätigt wurden. Sie finden sie auf der *Website > "
+"Bestellungen > Verlassene Einkaufswagen*. Von dort aus können Sie Recovery-"
+"E-Mails an Besucher senden, die ihre Kontaktdaten hinterlassen haben."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__product_cross_selling
@@ -697,7 +695,7 @@ msgstr "Alle Ergebnisse"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow shoppers to compare products based on their attributes"
 msgstr ""
-"Ermöglichen Sie es Kunden, Produkte anhand von Eigenschaften zu vergleichen."
+"Ermöglichen Sie es Kunden, Produkte anhand von Attributen zu vergleichen."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -773,7 +771,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_name
 msgid "Base Unit Name"
-msgstr ""
+msgstr "Name der Grundeinheit"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_show_uom_price
@@ -887,7 +885,7 @@ msgstr "Anzahl der Artikel im Warenkorb"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_recovery_mail_template_id
 msgid "Cart Recovery Email"
-msgstr "E-Mail-Adresse zur Warenkorbwiederherstellung"
+msgstr "E-Mail zur Warenkorbwiederherstellung"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1070,7 +1068,7 @@ msgstr "Versandkosten für Aufträge berechnen"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -1083,7 +1081,7 @@ msgstr "Auftrag bestätigen"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Confirm orders when you get paid."
-msgstr "Aufträge bei Zahlung bestätigen."
+msgstr "Bestätigen Sie Aufträge bei Zahlung."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1268,12 +1266,12 @@ msgstr "Design"
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
-msgstr "Legt die Anzeigereihenfolge auf der E-Commerce-Website fest"
+msgstr "Legt die Reihenfolge auf der E-commerce Website fest"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
 msgid "Digest"
-msgstr "Übersicht"
+msgstr "Zusammenfassung"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_digital
@@ -1327,7 +1325,7 @@ msgstr ""
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Kein Zugriff, überspringen Sie diese Daten für die E-Mail des Benutzers"
+"Kein Zugriff, überspringen Sie diese Daten für die E-Mail des Benutzer"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__done
@@ -1353,7 +1351,7 @@ msgstr "Ziehen Sie die Bausteine hierher, um die Kopfzeile für \""
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Drag this website block and drop it in your page."
-msgstr "Ziehen Sie diesen Website-Baustein auf Ihre Seite."
+msgstr "Verschieben Sie diesen Website-Block in Ihre Seite."
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -1538,7 +1536,7 @@ msgstr "Gitter"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Group By"
-msgstr "Gruppieren nach"
+msgstr "Gruppieren"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_http
@@ -1688,7 +1686,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field____last_update
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1790,7 +1788,7 @@ msgstr "Liste"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Log In"
-msgstr "Login"
+msgstr "Anmelden"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1963,7 +1961,7 @@ msgstr "Auf Rädern"
 #, python-format
 msgid "Once you click on <b>Save</b>, your product is updated."
 msgstr ""
-"Sobald Sie auf <b>Speichern klicken,</b> wird Ihr Produkt aktualisiert."
+"Sobald Sie auf <b>Speichern</b> klicken, wird Ihr Produkt aktualisiert."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
@@ -1999,7 +1997,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "Open Source eCommerce"
-msgstr "Open Source eCommerce"
+msgstr "Open-Source eCommerce"
 
 #. module: website_sale
 #. openerp-web
@@ -2055,7 +2053,7 @@ msgstr "Bestelldatum"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_order_line
 msgid "Order Lines displayed on Website"
-msgstr "In der Website angezeigte Auftragszeilen"
+msgstr "Auf der Website anzuzeigende Angebotsposten"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_order_line
@@ -2063,7 +2061,7 @@ msgid ""
 "Order Lines to be displayed on the website. They should not be used for "
 "computation purpose."
 msgstr ""
-"Auftragszeilen zur Anzeige in der Website. Sie sollten nicht zum Zweck der "
+"Angebotspositionen zur Anzeige auf der Website. Sie sollten nicht für "
 "Berechnung eingesetzt werden."
 
 #. module: website_sale
@@ -2254,7 +2252,7 @@ msgstr "Preis pro Einheit"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
-msgstr "Preisliste für diese E-Commerce-Website verfügbar"
+msgstr "Preisliste für diese Ecommerce/Website verfügbar"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
@@ -2271,7 +2269,7 @@ msgstr "Preislisten"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Pricing"
-msgstr "Preiskalkulation"
+msgstr "Positionen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2321,7 +2319,7 @@ msgstr "Produktkategorie"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
 msgid "Product Comparison Tool"
-msgstr "Produktvergleichstool"
+msgstr "Produktvergleichswerkzeug"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_image
@@ -2402,7 +2400,7 @@ msgstr "Produktnamen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product prices displaying in web catalog"
-msgstr "Anzeige der Produktpreise im Webkatalog"
+msgstr "Anzeigte Produktpreise im Webkatalog"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_ribbon
@@ -2443,8 +2441,8 @@ msgid ""
 msgstr ""
 "Stellen Sie Kunden auf der Bestätigungsseite des Zahlungsvorgangs "
 "produktspezifische Links oder Downloads bereit, wenn die Zahlung erfolgt "
-"ist. Dazu fügen Sie die Dateien mit der Schaltfläche „Neue Dateien“ zu einem"
-" Produkt hinzu und veröffentlichen sie."
+"ist. Dazu fügen Sie die Dateien mit der neuen Schaltfläche „Dateien“ zu "
+"einem Produkt hinzu und veröffentlichen sie."
 
 #. module: website_sale
 #: code:addons/website_sale/models/product_image.py:0
@@ -2554,7 +2552,7 @@ msgstr "Kürzlich angesehene Produkte"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email Sent"
-msgstr "Wiederherstellungs-E-Mail gesendet"
+msgstr "Wiederherstellungs-E-Mail senden"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2744,8 +2742,8 @@ msgid ""
 "Select <b>New Product</b> to create it and manage its properties to boost "
 "your sales."
 msgstr ""
-"Um <b>Ihren Umsatz zu steigern, wählen Sie Neues</b> Produkt, um es zu "
-"erstellen und seine Eigenschaften zu verwalten."
+"Zur Umsatzsteigerung wählen Sie <b>Neues Produkt</b>, um es zu erstellen und"
+" seine Eigenschaften zu verwalten."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -2771,7 +2769,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
 msgid "Send a Cart Recovery Email"
-msgstr "Warenkorb-Wiederherstellungs-E-Mail senden"
+msgstr "E-Mail zur Warenkorbwiederherstellung senden"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
@@ -2805,7 +2803,7 @@ msgstr "Seo-Name"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__sequence
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Nummernfolge"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2842,7 +2840,7 @@ msgstr "Versand-Management"
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Shop"
-msgstr "Shop"
+msgstr "Geschäft"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -2857,7 +2855,7 @@ msgstr "Shop-Bestätigung"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Shop - Select Payment Acquirer"
-msgstr "Shop – Zahlungsempfänger auswählen"
+msgstr "Shop – Zahlungsanbieter auswählen"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_default_sort
@@ -2872,7 +2870,7 @@ msgstr "Einkaufswagen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show Empty Cart"
-msgstr ""
+msgstr "Leeren Warenkorb anzeigen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
@@ -2951,7 +2949,7 @@ msgstr "Bundesland / Region"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province..."
-msgstr "Bundesland / Routen ..."
+msgstr "Bundesland / Region..."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
@@ -3017,7 +3015,7 @@ msgstr "Vorgeschlagenes Zubehör im Warenkorb des eCommerce"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "TIN / VAT"
-msgstr "TIN bzw. MwSt."
+msgstr "USt-IdNr."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3243,7 +3241,7 @@ msgstr "Maßeinheit für den Stückpreis bei eCommerce-Produkten."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Unpaid"
-msgstr "Unbezahlter Urlaub"
+msgstr "Unbezahlt"
 
 #. module: website_sale
 #. openerp-web
@@ -3364,14 +3362,14 @@ msgstr "Website"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
 msgid "Website Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Website Payment Acquirer Onboarding-Assistent"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
 #: model:ir.model.fields,field_description:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__public_categ_ids
 msgid "Website Product Category"
-msgstr "Website-Produktkategorie"
+msgstr " Website Produktkategorien"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
@@ -3387,7 +3385,7 @@ msgstr "Website-Sequenz"
 #. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_website
 msgid "Website Shop"
-msgstr "Website-Shop"
+msgstr "Website Shop"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_snippet_filter
@@ -3409,13 +3407,13 @@ msgstr "Website-Besucher"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_description
 msgid "Website meta description"
-msgstr "Website Meta-Beschreibung"
+msgstr "Website Meta Beschreibung"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_keywords
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Website Meta-Schlüsselwörter"
+msgstr "Website Schlüsselwörter"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_title
@@ -3470,8 +3468,8 @@ msgid ""
 "from Pricelists."
 msgstr ""
 "Mit dem ersten Modus können Sie im Produktkonkonfigurationsformular (im "
-"Verkaufsverzeichnis) verschiedene Preise festlegen. Mit dem zweiten legen "
-"Sie Preise und Berechnungsregeln von Preislisten fest."
+"Verkaufstab) verschiedene Preise festlegen. Mit dem zweiten legen Sie Preise"
+" und Berechnungsregeln von Preislisten fest."
 
 #. module: website_sale
 #: code:addons/website_sale/models/product_misc.py:0
@@ -3523,7 +3521,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Your Address"
-msgstr "Deine Adresse"
+msgstr "Ihre Adresse"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3531,7 +3529,7 @@ msgid ""
 "Your Address\n"
 "                                        <small> or </small>"
 msgstr ""
-"Deine Adresse\n"
+"Ihre Adresse\n"
 "                                        <small> oder </small>"
 
 #. module: website_sale

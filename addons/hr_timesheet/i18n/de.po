@@ -15,7 +15,6 @@
 # Gab_Odoo <gab@odoo.com>, 2018
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
 # Jan Brodersen <4rmitxes@gmail.com>, 2019
-# Johannes Croe <jcr@odoo.com>, 2019
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Thomas Neu <t.neu@runbox.com>, 2019
@@ -106,7 +105,7 @@ msgstr "<span class=\"o_stat_text\">Erfasst </span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
-msgstr "<span class=\"o_stat_text\"/>"
+msgstr "<span class=\"o_stat_text\">Studenzettel</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -179,7 +178,7 @@ msgstr "<strong>Tage erfasst:</strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid "<strong>Duration: </strong>"
-msgstr "<strong/>"
+msgstr "<strong>Dauer: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -242,7 +241,7 @@ msgstr "Kostenstellen-Buchung"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytischer Buchungssatz"
+msgstr "Kostenstellen-Buchungen"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
@@ -306,7 +305,7 @@ msgstr "Unternehmen"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
@@ -382,7 +381,7 @@ msgstr "Abteilung"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
 msgid "Describe your activity..."
-msgstr "Beschreiben Sie Ihre Tätigkeit..."
+msgstr "Beschreiben Sie Ihre Tätigkeit"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -734,7 +733,7 @@ msgstr "Drucken"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Produkteinheit"
+msgstr "Produktmaßeinheit"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -962,7 +961,7 @@ msgstr "Aufgabe:"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr "Statistik Aufgaben"
+msgstr "Aufgabenanalyse"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_search
@@ -1097,7 +1096,7 @@ msgstr "Zeit eintragen"
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Off"
-msgstr "Zeit ausschalten"
+msgstr "Abwesenheiten"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1118,7 +1117,7 @@ msgstr "Erfasste Zeiten dieser Aufgabe, inkl. Unteraufgaben"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time unit used to record your timesheets"
-msgstr "Zeiteinheit für deine Zeiterfassung(en)"
+msgstr "Zeiteinheit für Ihre Zeiterfassung"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -1218,7 +1217,7 @@ msgstr "Zeiterfassungsbögen nach Mitarbeiter"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets by Project"
-msgstr "Stundenzettel nach Project"
+msgstr "Stundenzettel nach Projekt"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
@@ -1228,7 +1227,7 @@ msgstr "Stundenzettel nach Aufgabe"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
-msgstr "Zeiterfassung ind ieser Aufgabe erlaubt."
+msgstr "Für diese Aufgabe können Zeiterfassungsbögen erstellt werden."
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
@@ -1250,7 +1249,7 @@ msgstr "Total"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Days"
-msgstr "Gesamt (Tage):"
+msgstr "Gesamt (Tage)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1291,8 +1290,8 @@ msgstr "Gesamt:"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Track your time from anywhere, even offline, with our web/mobile apps"
 msgstr ""
-"Erfasse deine Zeiten von überall, auch Offline, mit unserer Web- / Mobil-"
-"App."
+"Erfassen Sie Ihre Zeiten von überall, auch Offline, mit unserer Web- / "
+"Mobil-App."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -1305,7 +1304,8 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
 msgstr ""
-"Erfasse jeden Tag deine Zeiten und berechne sie an deine Kunden weiter."
+"Erfassen Sie Ihre Zeiten jeden Tag nach Projekten und berechnen Sie sie an "
+"Ihre Kunden weiter."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/res_company.py:0
@@ -1359,7 +1359,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "You cannot access timesheets that are not yours."
-msgstr "Du kannst nicht auf erfasste Zeiten von Anderen zugreifen. "
+msgstr "Sie können nicht auf die Zeiterfassung anderer zugreifen."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -1402,7 +1402,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/res_company.py:0
 #, python-format
 msgid "days"
-msgstr "Tage"
+msgstr "Tagen"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task

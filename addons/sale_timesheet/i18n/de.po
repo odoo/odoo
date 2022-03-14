@@ -3,7 +3,6 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Fabian Liesch <fabian.liesch@gmail.com>, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
 # 4e7311735ad180fde514b5b19202d965, 2017
 # Ermin Trevisan <trevi@twanda.com>, 2018
@@ -12,11 +11,9 @@
 # Henry Mineehen <info@mineehen.de>, 2018
 # Tina Rittmüller <tr@ife.de>, 2018
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2018
-# Katharina Moritz <kmo@e2f.com>, 2018
 # Niki Waibel, 2018
 # e2f <projects@e2f.com>, 2018
 # Wolfgang Taferner, 2018
-# Johannes Croe <jcr@odoo.com>, 2018
 # Chris Egal <sodaswed@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
@@ -25,15 +22,15 @@
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2020
 # Robert Förster <robert.jun@foerster.co.at>, 2020
 # brokemeister <work@maltejansen.de>, 2020
+# Felix Schubert <felix.schubert@go-erp.com>, 2021
 # Bettina Pfeifer <bettina@dygytally.de>, 2021
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # Jérôme JEK <jek@odoo.com>, 2021
 # Florian Pose <fp@igh.de>, 2021
 # Tobias Arndt, 2021
-# Felix Schubert <felix.schubert@go-erp.com>, 2021
 # b4d8887ced18b222d41dc1101b082e15, 2021
-# Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -41,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,10 +63,10 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    Zeit aufnehmen\n"
+"                    Zeit erfassen\n"
 "                </p><p>\n"
-"                     Sie können Ihre Arbeitszeit pro Projekt aufnehmen und abspeichern. Jede Zeit die auf einem Projekt aufgenommen ist, wird zu Kosten, die dann fakturiert werden können an\n"
-"                    Kunden, wenn benötigt.\n"
+"                     Sie können Ihre Arbeitszeit pro Projekt erfassen und abspeichern. Zeitaufwände die auf einem Projekt erfasst werden, können an Kunden fakturiert werden, \n"
+"falls gewünscht.\n"
 "                </p>\n"
 "            "
 
@@ -194,7 +191,7 @@ msgstr "Abgerechneter Betrag"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
 msgid "Amount Re-invoiced"
-msgstr "Weiterberechnender Betrag"
+msgstr "Weiterberechneter Betrag"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
@@ -229,7 +226,7 @@ msgstr "Kostenstelle"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytischer Buchungssatz"
+msgstr "Kostenstellen-Buchungen"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
@@ -332,7 +329,7 @@ msgstr "Unternehmen"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration"
+msgstr "Konfiguration "
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -680,7 +677,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__is_so_line_edited
 msgid "Is Sales Order Item Manually Edited"
-msgstr "Wird die Kundenauftragsposition manuell bearbeitet"
+msgstr "Wird die Auftragsposition manuell bearbeitet"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move
@@ -699,7 +696,7 @@ msgstr "Buchungszeile"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report____last_update
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_uid
@@ -707,7 +704,7 @@ msgstr "Zuletzt geändert am"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__write_uid
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_date
@@ -720,7 +717,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__line_ids
 msgid "Lines"
-msgstr "Linien"
+msgstr "Zeilen"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_type
@@ -730,9 +727,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Mengen für den Auftrag manuell festlegen: Die Rechnung wird basierend auf der manuell eingegebenen Menge generiert, ohne eine Kostenstelle zu erstellen.\n"
-"Zeiterfassung für Vertrag: Die Rechnung wird basierend auf den aufgezeichneten Stunden der entsprechenden Zeiterfassung generiert.\n"
-"Eine Aufgabe erstellen und Stunden aufzeichnen: Erstellen Sie eine Aufgabe für die Verkaufsauftragsvalidierung und zeichnen Sie die Arbeitsstunden auf."
+"Mengen für den Auftrag manuell festlegen: Die Rechnung basierend auf der manuell eingegebenen Menge, ohne eine Kostenstelle zu erstellen.\n"
+" Stundenzettel auf dem Vertrag: Rechnung basierend auf den aufgezeichneten Stunden auf dem dazugehörigen Stundenzettel.\n"
+" Eine Aufgabe erstellen und Stunden aufzeichnen: Eine Aufgabe bei der Verkaufsauftragsvalidierung erstellen und Arbeitsstunden aufzeichnen."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1067,7 +1064,7 @@ msgstr "Anzahlungsrechnung"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_order_id
 #, python-format
 msgid "Sales Order"
-msgstr "Verkaufsauftrag"
+msgstr "Verkaufsauftrag "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__order_confirmation_date
@@ -1088,7 +1085,7 @@ msgstr "Auftragselement"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Auftragsposition"
+msgstr "Kundenauftragszeile"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1507,7 +1504,7 @@ msgstr "Stundenzettel von %s"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr "Zeiterfassung bei Projekt (ein Preis pro Verkaufsauftrag/Projekt)"
+msgstr "Zeiterfassung bei Projekt (ein Preis pro Verkaufsauftrag / Projekt)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1570,8 +1567,8 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
 msgstr ""
-"Erfassen Sie Ihre Zeiten jeden Tag nach Projekten und berechnen Sie sie an "
-"Ihre Kunden weiter."
+"Erfassen Sie täglich Ihre Arbeitsstunden nach Projekten und berechnen Sie "
+"sie an Ihre Kunden."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit

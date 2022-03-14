@@ -3,12 +3,11 @@
 # 	* crm_iap_lead_website
 # 
 # Translators:
-# Martin Trigaux, 2021
-# Felix Schubert <felix.schubert@go-erp.com>, 2021
 # Chris Egal <sodaswed@web.de>, 2021
 # Florian Pose <fp@igh.de>, 2021
 # Kevin Harrings <kha@odoo.com>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-12-07 11:22+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -207,13 +206,13 @@ msgstr "Branchen"
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__write_uid
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__write_date
@@ -255,6 +254,9 @@ msgid ""
 "Lead Generation requires a GeoIP resolver which could not be found on your "
 "system. Please consult https://pypi.org/project/GeoIP/."
 msgstr ""
+"Lead Generation benötigt einen GeoIP-Resolver, der auf Ihrem System nicht "
+"gefunden werden konnte. Bitte konsultieren Sie "
+"https://pypi.org/project/GeoIP/."
 
 #. module: crm_iap_lead_website
 #: model:ir.actions.server,name:crm_iap_lead_website.ir_cron_crm_reveal_lead_ir_actions_server
@@ -297,7 +299,7 @@ msgstr "Es sind maximal 5 Kontakte erlaubt!"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__1
 msgid "Medium"
-msgstr "Medium"
+msgstr "Mittel"
 
 #. module: crm_iap_lead_website
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
@@ -323,7 +325,7 @@ msgstr "Anzahl generierter Leads"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__opportunity_count
 msgid "Number of Generated Opportunity"
-msgstr ""
+msgstr "Nummer der generierten Opportunity"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__country_ids
@@ -386,6 +388,9 @@ msgid ""
 "to target the homepage. Example: /page* to track all the pages which begin "
 "with /page"
 msgstr ""
+"Regex, um die Seiten der Website zu verfolgen. Leer lassen, um die gesamte "
+"Website zu erfassen, oder /, um die Startseite zu erfassen. Beispiel: "
+"/page*, um alle Seiten zu erfassen, die mit /page beginnen"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__website_id
@@ -420,7 +425,7 @@ msgstr "Verkäufer"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
 msgid "Search CRM Reveal Rule"
-msgstr ""
+msgstr "CRM Reveal-Regel suchen"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__seniority_id
@@ -431,12 +436,12 @@ msgstr "Dienstalter"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__reveal_state
 msgid "State"
-msgstr "Bundesland"
+msgstr "Status"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__state_ids
@@ -482,7 +487,7 @@ msgstr "Zu verarbeiten"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_type
 msgid "Type"
-msgstr "Art"
+msgstr "Typ"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__regex_url

@@ -5,7 +5,6 @@
 # Translators:
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # intero_chz <c.zoellner@intero-technologies.de>, 2017
-# b69269ad567b7550d53748df6a5b0869_97d08cd, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
 # Mathias Neef <mn@copado.de>, 2017
 # Niki Waibel, 2017
@@ -30,6 +29,7 @@
 # Kevin Harrings <kha@odoo.com>, 2020
 # Marco Gantenbein <gantemar@gmail.com>, 2020
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
+# Felix Schubert <felix.schubert@go-erp.com>, 2020
 # Leon Grill <leg@odoo.com>, 2020
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # JackTheHunter <Maximilian.N98@gmail.com>, 2021
@@ -39,7 +39,6 @@
 # Chris Egal <sodaswed@web.de>, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Raymond Vetter, 2021
-# Felix Schubert <felix.schubert@go-erp.com>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
 # 
@@ -264,7 +263,7 @@ msgid ""
 "A service is a non-material product you provide."
 msgstr ""
 "Ein lagerfähiges Produkt ist ein Produkt, für das Sie den Lagerbestand verwalten. Die Inventar App muss installiert sein.\n"
-"Ein Verbrauchsartikel ist ein Produkt, für das der Lagerbestand nicht verwaltet wird.\n"
+"Ein Verbrauchsgut ist ein Produkt, für das der Lagerbestand nicht verwaltet wird.\n"
 "Eine Dienstleistung ist ein von Ihnen bereitgestelltes immaterielles Produkt."
 
 #. module: product
@@ -609,7 +608,7 @@ msgstr "Bedingungen"
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -997,7 +996,7 @@ msgstr "Abonnenten (Partner)"
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font für großartiges Icon, z.B. fa-tasks "
+msgstr "FontAwesome Icon, z.B. fa-tasks"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -1131,9 +1130,7 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
-"angekreuzt ist."
+msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
@@ -1217,6 +1214,10 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"In Standardpreis & AVCO: Wert des Produkts (wird in AVCO automatisch berechnet).\n"
+"In FIFO: Wert der nächsten Einheit, die das Lager verlässt (wird automatisch berechnet).\n"
+"Wird verwendet, um das Produkt zu bewerten, wenn die Einkaufskosten nicht bekannt sind (z. B. Bestandsanpassung).\n"
+"Wird zur Berechnung der Margen bei Verkaufsaufträgen verwendet."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1298,7 +1299,7 @@ msgstr "Kilogramm"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line____last_update
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
@@ -1316,7 +1317,7 @@ msgstr "Zuletzt geändert am"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_uid
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_date
@@ -1356,7 +1357,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__pav_attribute_line_ids
 msgid "Lines"
-msgstr "Linien"
+msgstr "Zeilen"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1409,7 +1410,7 @@ msgstr "Max. Preisspanne"
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error
 msgid "Message Delivery error"
-msgstr "Error beim senden der Nachricht"
+msgstr "Fehler beim Senden der Nachricht"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_ids
@@ -1897,7 +1898,7 @@ msgstr "Produktverpackung (PDF)"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "Produktverpackung"
+msgstr "Produktverpackungen"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2181,7 +2182,7 @@ msgstr "Kategorie für das neue Produkt wählen"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__sequence
 #: model:ir.model.fields,field_description:product.field_product_template__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__detailed_type__service
@@ -2380,8 +2381,7 @@ msgstr "Der Erste der Reihenfolge gilt als Vorgabe."
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
-msgstr ""
-"Der minimale Spielraum sollte niedriger sein als der maximale Spielraum."
+msgstr "Der minimale Rand sollte niedriger sein als der maximale Rand."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -2543,7 +2543,7 @@ msgstr "Heutige Aktivitäten"
 #: model:ir.model.fields,field_description:product.field_product_product__type
 #: model:ir.model.fields,field_description:product.field_product_template__type
 msgid "Type"
-msgstr "Art"
+msgstr "Typ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
@@ -2568,7 +2568,7 @@ msgstr "Stückpreis"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_uom
 #: model:ir.model.fields,field_description:product.field_product_template__uom_id
 msgid "Unit of Measure"
-msgstr "Mengeneinheit"
+msgstr "Maßeinheit"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_name
@@ -2592,7 +2592,7 @@ msgstr "Ungelesene Nachrichten"
 #: model:ir.model.fields,field_description:product.field_product_product__message_unread_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Zähler der ungelesenen Nachrichten"
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page

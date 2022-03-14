@@ -10,8 +10,8 @@
 # Martin Trigaux, 2021
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # David Kliment <daklime@gmail.com>, 2021
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # trendspotter <jirka.p@volny.cz>, 2022
 # 
 msgid ""
@@ -206,6 +206,13 @@ msgstr "(od"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "(původně přiřazeno"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/thread/thread.js:0
+#, python-format
+msgid ", "
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -6049,7 +6056,10 @@ msgstr ""
 "Pokud jde o pole vztahu, lze potom vybrat cílové pole v cíli vztahu."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "Vybraná skupina uživatelů"
 
@@ -6536,6 +6546,12 @@ msgstr "Upozornění systému"
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
 msgstr "Cílený model"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "DIČ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -7411,12 +7427,6 @@ msgstr ""
 "připraveného e-mailového serveru (@ mycompany.odoo.com)."
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr ""
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -7863,6 +7873,11 @@ msgid "assigned you an activity"
 msgstr "vám přidělil aktivitu"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "schůze správní rady"
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
@@ -8128,6 +8143,11 @@ msgid "other members."
 msgstr ""
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
@@ -8190,6 +8210,11 @@ msgstr "omezeno na známé autory"
 #, python-format
 msgid "results out of"
 msgstr ""
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "prodeje"
 
 #. module: mail
 #. openerp-web

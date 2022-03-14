@@ -14,12 +14,12 @@
 # e2f <projects@e2f.com>, 2018
 # Anja Funk <anja.funk@afimage.de>, 2018
 # Johannes Croe <jcr@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # philku79 <philip.kuss@gmx.de>, 2020
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020
 # Chris Egal <sodaswed@web.de>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2017-02-15 10:48+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +54,7 @@ msgstr "Aktionsbeschreibung"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Action Name"
-msgstr "Aktionsbezeichnung"
+msgstr "Name der Aktion"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
@@ -217,6 +217,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Wenn Sie diese automatische Aktion deaktivieren, können Sie Ihren Arbeitsablauf fortsetzen.\n"
+"Daten, die danach erstellt werden, könnten jedoch möglicherweise beschädigt werden,\n"
+"da Sie eine Funktion deaktivieren, die möglicherweise wichtige\n"
+"und/oder erforderliche Felder beinhaltet."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -296,7 +300,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -306,7 +310,7 @@ msgstr "Zuletzt ausgeführt"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
@@ -427,7 +431,7 @@ msgstr "Verantwortlich"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -451,7 +455,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr "Richten Sie eine neue automatisierte Automatisierung ein"
+msgstr "Richten Sie eine neue Automatisierung ein"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -531,14 +535,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"Art der Server-Aktion. Folgende Werte stehen zur Verfügung:\n"
-"- 'Python Code ausführen': ein Block von Python-Code, der ausgeführt wird\n"
-"- Anlegen\": einen neuen Datensatz mit neuen Werten anlegen\n"
-"- 'Update a Record': die Werte eines Datensatzes aktualisieren\n"
-"- 'Mehrere Aktionen ausführen': Definieren Sie eine Aktion, die mehrere andere Server-Aktionen auslöst.\n"
-"- E-Mail senden': automatisch eine E-Mail senden (Diskutieren)\n"
-"- Anhänger hinzufügen\": Anhänger zu einem Datensatz hinzufügen (Diskutieren)\n"
-"- Nächste Aktivität erstellen\": eine Aktivität erstellen (Diskutieren)"
+"Type of server action. The following values are available:\n"
+"- 'Execute Python Code': a block of python code that will be executed\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -573,11 +577,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"Verwenden Sie automatisierte Aktionen, um automatisch Aktionen auszulösen für \n"
-"                verschiedene Bildschirme. Beispiel: Ein Führung von einem bestimmten Benutzer erstelltet werden darf\n"
-"                automatisch auf ein bestimmtes Verkaufsteam eingestellt werden, oder eine\n"
-"                Gelegenheit, deren Status nach 14 Tagen noch aussteht, könnte\n"
-"                eine automatische Erinnerungs-E-Mail auslösen."
+"Verwenden Sie automatische Aktionen, um automatisiert Aktionen für\n"
+"unterschiedliche Modelle auszulösen. Zum Beispiel: Ein Lead, erstellt durch einen bestimmten Benutzer wird\n"
+"automatisch einem bestimmten Verkaufsteam zugewiesen. \n"
+"Oder: Eine Verkaufschance die nach 14 Tagen noch den Status \"Ausstehend\" hat, \n"
+"löst automatisch eine Erinnerungs-E-Mail aus."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
