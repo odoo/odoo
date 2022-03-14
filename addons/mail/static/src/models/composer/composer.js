@@ -90,6 +90,25 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computePlaceholder() {
+            if (!this.thread) {
+                return "";
+            }
+            if (this.thread.model === 'mail.channel') {
+                if (this.thread.correspondent) {
+                    return _.str.sprintf(this.env._t("Message %s..."), this.thread.correspondent.nameOrDisplayName);
+                }
+                return _.str.sprintf(this.env._t("Message #%s..."), this.thread.displayName);
+            }
+            if (this.isLog) {
+                return this.env._t("Log an internal note...");
+            }
+            return this.env._t("Send a message to followers...");
+        },
+        /**
+         * @private
          * @returns {Partner[]}
          */
         _computeRecipients() {
@@ -175,6 +194,12 @@ registerModel({
         messageViewInEditing: one('MessageView', {
             inverse: 'composerForEditing',
             readonly: true,
+        }),
+        /**
+         * Placeholder displayed in the composer textarea when it's empty
+         */
+        placeholder: attr({
+            compute: '_computePlaceholder',
         }),
         /**
          * Determines the extra `Partner` (on top of existing followers)
