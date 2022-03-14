@@ -45,8 +45,14 @@ class AccountMove(models.Model):
         if self._context.get('move_reverse_cancel'):
             return super()._post(soft)
 
+        to_post = self
+        if soft:
+            # If soft is True, then a forward dated invoice will NOT be posted now.
+            # Rather, it will set "auto_post" to True - it will get anglo saxon lines at that post date.
+            to_post -= self.filtered(lambda move: move.date > fields.Date.context_today(self))
+
         # Create additional COGS lines for customer invoices.
-        self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
+        self.env['account.move.line'].create(to_post._stock_account_prepare_anglo_saxon_out_lines_vals())
 
         # Post entries.
         posted = super()._post(soft)
