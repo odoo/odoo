@@ -57,9 +57,12 @@ export class FormViewDialog extends Dialog {
             this.readonly = !this.record.isInEdition;
             this.multiSelect = this.record.resId === -1 && !this.props.disableMultipleSelection; // WOWL this is not good
 
-            Object.assign(this.record.activeFields, this.archInfo.activeFields);
-            Object.assign(this.record.fields, this.archInfo.fields);
-            this.record.fieldNames = Object.keys(this.record.activeFields);
+            this.record.activeFields = {
+                ...this.record.activeFields,
+                ...this.archInfo.activeFields,
+            };
+            this.record.fields = { ...this.record.fields, ...this.archInfo.fields };
+
             this.extractFooter();
 
             await loadSubViews(

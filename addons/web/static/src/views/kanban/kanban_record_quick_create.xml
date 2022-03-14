@@ -7,7 +7,7 @@
             t-att-class="{ o_disabled: state.disabled }"
             t-ref="root"
         >
-            <FormRenderer class="'o_form_view o_xxs_form_view'" record="props.record" fields="props.fields" archInfo="props.archInfo" />
+            <FormRenderer class="'o_form_view o_xxs_form_view'" record="props.record" archInfo="props.archInfo" />
             <div class="d-flex">
                 <button class="btn btn-primary o_kanban_add mr-1 text_truncate" t-on-click="() => this.validate('add')">
                     Add

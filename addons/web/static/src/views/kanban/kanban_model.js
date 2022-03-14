@@ -158,13 +158,13 @@ class KanbanGroup extends Group {
     /**
      * @override
      */
-    quickCreate(fields, context) {
+    quickCreate(activeFields, context) {
         const ctx = { ...context };
         if (this.hasActiveProgressValue && this.progressValue.active !== FALSE) {
             const { fieldName } = this.model.progressAttributes;
             ctx[`default_${fieldName}`] = this.progressValue.active;
         }
-        return super.quickCreate(fields, ctx);
+        return super.quickCreate(activeFields, ctx);
     }
 
     /**

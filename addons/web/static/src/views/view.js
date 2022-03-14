@@ -319,6 +319,9 @@ export class View extends Component {
                 descr.searchMenuTypes ||
                 this.constructor.searchMenuTypes;
         }
+        if (!("searchMenuTypes" in viewProps)) {
+            viewProps.searchMenuTypes = this.withSearchProps.searchMenuTypes;
+        }
 
         if (ViewClass.display) {
             // FIXME: there's something inelegant here: display might come from

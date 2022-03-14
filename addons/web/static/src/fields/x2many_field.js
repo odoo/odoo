@@ -39,7 +39,6 @@ export class X2ManyField extends Component {
             activeActions: this.activeActions,
             editable: this.props.record.isInEdition && archInfo.editable,
             archInfo,
-            fields: Object.assign({}, this.props.fields, archInfo.fields), // WOWL is this necessary?
             list: this.list,
             openRecord: this.openRecord.bind(this),
             onAdd: this.onAdd.bind(this),

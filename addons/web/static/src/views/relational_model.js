@@ -251,10 +251,13 @@ class DataPoint {
         this.resModel = params.resModel;
         this.fields = params.fields;
         this.activeFields = params.activeFields;
-        this.fieldNames = Object.keys(params.activeFields);
         this.context = params.context;
 
         this.setup(params, state);
+    }
+
+    get fieldNames() {
+        return Object.keys(this.activeFields);
     }
 
     /**
@@ -324,6 +327,7 @@ export class Record extends DataPoint {
             state.resIds ||
             (this.isVirtual ? [] : [this.resId]);
 
+        this.parentActiveFields = params.parentActiveFields || false;
         this.onChanges = params.onChanges || (() => {});
 
         this._values = params.values;
@@ -628,12 +632,17 @@ export class Record extends DataPoint {
             } else if (keys.length > 0) {
                 await this.model.orm.write(this.resModel, [this.resId], changes);
             }
+            // Switch to the parent active fields
+            if (this.parentActiveFields) {
+                this.activeFields = this.parentActiveFields;
+                this.parentActiveFields = false;
+            }
+            this.isInQuickCreation = false;
             if (shouldReload) {
                 this.model.trigger("record-updated", { record: this });
                 await this.load();
                 this.model.notify();
             }
-            this.isInQuickCreation = false;
             if (!options.stayInEdition) {
                 this.switchMode("readonly");
             }
@@ -1032,6 +1041,7 @@ export class DynamicRecordList extends DynamicList {
             resModel: this.resModel,
             fields: this.fields,
             activeFields: this.activeFields,
+            parentActiveFields: this.activeFields,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
             ...params,
         });
@@ -1456,8 +1466,7 @@ export class DynamicGroupList extends DynamicList {
             );
         }
         this.isLoadingQuickCreate = false;
-        const archInfo = new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
-        return archInfo;
+        return new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
     }
 }
 

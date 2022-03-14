@@ -61,8 +61,8 @@ const appendAttr = (node, attr, string) => {
 };
 
 export class ViewCompiler {
-    constructor(fields) {
-        this.fields = fields;
+    constructor(activeFields) {
+        this.activeFields = activeFields;
         this.parser = new DOMParser();
         this.document = this.parseXML("<templates />");
         this.id = 0;
@@ -488,7 +488,7 @@ export class ViewCompiler {
     compileLabel(node, params) {
         const forAttr = node.getAttribute("for");
         // FIXME: this is the only place we use 'fields'. Maybe make it more simple?
-        if (forAttr && this.fields[forAttr]) {
+        if (forAttr && this.activeFields[forAttr]) {
             const label = this.document.createElement("label");
             const string = node.getAttribute("string");
             if (string) {
@@ -521,7 +521,7 @@ export class ViewCompiler {
         // FIXME WOWL: only for x2many fields
         field.setAttribute(
             "archs",
-            `"views" in props.fields.${fieldName} and props.fields.${fieldName}.views`
+            `"views" in record.fields.${fieldName} and record.fields.${fieldName}.views`
         );
 
         let widgetName;
@@ -738,7 +738,7 @@ export class ViewCompiler {
     }
 }
 
-export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc, params) => {
+export const useViewCompiler = (ViewCompiler, templateKey, activeFields, xmlDoc, params) => {
     const component = useComponent();
 
     // Assigns special functions to the current component.
@@ -759,7 +759,7 @@ export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc, param
     // Creates a new compiled template if the given template key hasn't been
     // compiled already.
     if (!templateIds[templateKey]) {
-        const compiledDoc = new ViewCompiler(fields).compile(xmlDoc, params);
+        const compiledDoc = new ViewCompiler(activeFields).compile(xmlDoc, params);
         templateIds[templateKey] = xml`${compiledDoc.outerHTML}`;
         // DEBUG -- start
         console.group(`Compiled template (${templateIds[templateKey]}):`);

@@ -57,6 +57,8 @@ const TRANSPILED_EXPRESSIONS = [
 // These classes determine whether a click on a record should open it.
 const KANBAN_CLICK_CLASSES = ["oe_kanban_global_click", "oe_kanban_global_click_edit"];
 
+const isValidBox = (node) => node.tagName !== "t" || node.hasAttribute("t-component");
+
 const hasClass = (node, ...classes) => {
     const classAttribute = node.getAttribute("class") || "";
     const attfClassAttribute = node.getAttribute("t-attf-class") || "";
@@ -116,6 +118,7 @@ export class KanbanArchParser extends XMLParser {
         // Root level of the template
         this.visitXML(xmlDoc, (node) => {
             if (node.getAttribute("t-name") === KANBAN_BOX_ATTRIBUTE) {
+                node.removeAttribute("t-name");
                 kanbanBoxTemplate = node;
                 return;
             }
@@ -158,9 +161,16 @@ export class KanbanArchParser extends XMLParser {
         });
 
         // Concrete kanban box element in the template
-        const kanbanBox =
-            [...kanbanBoxTemplate.children].find((node) => node.tagName === "div") ||
-            kanbanBoxTemplate;
+        let kanbanBox = kanbanBoxTemplate;
+        while (!isValidBox(kanbanBox)) {
+            const validChildren = [...kanbanBox.children].filter(isValidBox);
+            if (validChildren.length !== 1) {
+                throw new Error(
+                    `Expected a single element to generate the kanban card template, got ${validChildren.length}.`
+                );
+            }
+            kanbanBox = validChildren[0];
+        }
 
         // Generates dropdown element
         const dropdown = makeEl(`<t t-component="'Dropdown'" />`);
@@ -294,7 +304,7 @@ export class KanbanArchParser extends XMLParser {
 
 // -----------------------------------------------------------------------------
 
-class KanbanView extends Component {
+export class KanbanView extends Component {
     setup() {
         this.actionService = useService("action");
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
@@ -308,7 +318,7 @@ class KanbanView extends Component {
             limit: this.archInfo.limit || this.props.limit,
             onCreate,
             quickCreateView,
-            defaultGroupBy,
+            defaultGroupBy: this.props.searchMenuTypes.includes("groupBy") && defaultGroupBy,
             viewMode: "kanban",
             openGroupsByDefault: true,
         });

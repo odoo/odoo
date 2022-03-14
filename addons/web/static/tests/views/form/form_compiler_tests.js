@@ -46,7 +46,7 @@ QUnit.module("Form Compiler", () => {
                 <div t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" class="o_form_nosheet">
                     <div class="someClass">
                         lol
-                        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views"/>
+                        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in record.fields.display_name and record.fields.display_name.views"/>
                     </div>
                 </div>
             </t>`;
@@ -71,7 +71,7 @@ QUnit.module("Form Compiler", () => {
                                 <label class="o_form_label" for="field_display_name_0" t-esc="record.fields.display_name.string" t-att-class="{ o_form_label_empty: record.resId and isFieldEmpty(record,&quot;display_name&quot;) }"/>
                             </td>
                             <td style="width: 100%">
-                                <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views"/>
+                                <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in record.fields.display_name and record.fields.display_name.views"/>
                             </td>
                         </tr>
                     </tbody>
@@ -83,7 +83,7 @@ QUnit.module("Form Compiler", () => {
                                 <label class="o_form_label" for="field_charfield_1" t-esc="record.fields.charfield.string" t-att-class="{ o_form_label_empty: record.resId and isFieldEmpty(record,&quot;charfield&quot;) }"/>
                             </td>
                             <td style="width: 100%">
-                                <Field id="&quot;field_charfield_1&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in props.fields.charfield and props.fields.charfield.views"/>
+                                <Field id="&quot;field_charfield_1&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in record.fields.charfield and record.fields.charfield.views"/>
                             </td>
                         </tr>
                     </tbody>
@@ -121,10 +121,10 @@ QUnit.module("Form Compiler", () => {
             </div>
             <div class="tab-content">
                 <div t-if="notebook_0 === &quot;page_1&quot;" class="tab-pane active">
-                    <Field id="&quot;field_charfield_2&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in props.fields.charfield and props.fields.charfield.views"/>
+                    <Field id="&quot;field_charfield_2&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in record.fields.charfield and record.fields.charfield.views"/>
                 </div>
                 <div t-if="notebook_0 === &quot;page_3&quot;" class="tab-pane active">
-                    <Field id="&quot;field_display_name_4&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views"/>
+                    <Field id="&quot;field_display_name_4&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in record.fields.display_name and record.fields.display_name.views"/>
                 </div>
             </div>
         </div>`;
@@ -139,7 +139,7 @@ QUnit.module("Form Compiler", () => {
             </form>`;
 
         const expected = /*xml*/ `
-        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" placeholder="&quot;e.g. Contact's Name or //someinfo...&quot;"/>
+        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in record.fields.display_name and record.fields.display_name.views" placeholder="&quot;e.g. Contact's Name or //someinfo...&quot;"/>
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);

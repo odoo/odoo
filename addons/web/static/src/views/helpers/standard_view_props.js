@@ -35,4 +35,5 @@ export const standardViewProps = {
     resIds: { type: Array, optional: 1 },
     bannerRoute: { type: String, optional: 1 },
     className: { type: String, optional: 1 },
+    searchMenuTypes: { type: Array, elements: String },
 };

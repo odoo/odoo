@@ -27,7 +27,6 @@ const FIELD_CLASSES = {
 
 export class ListRenderer extends Component {
     setup() {
-        this.fields = this.props.fields;
         this.allColumns = this.props.archInfo.columns;
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
@@ -62,6 +61,10 @@ export class ListRenderer extends Component {
             }
             this.cellToFocus = null;
         });
+    }
+
+    get fields() {
+        return this.props.list.fields;
     }
 
     focusCell(column) {
@@ -182,7 +185,7 @@ export class ListRenderer extends Component {
         }
         const aggregates = {};
         for (const fieldName in this.props.list.activeFields) {
-            const field = this.props.list.fields[fieldName];
+            const field = this.fields[fieldName];
             const type = field.type;
             if (type !== "integer" && type !== "float" && type !== "monetary") {
                 continue;
@@ -474,7 +477,6 @@ ListRenderer.components = { CheckBoxDropdownItem, Field, ViewButton, CheckBox, D
 ListRenderer.props = [
     "activeActions?",
     "list",
-    "fields",
     "archInfo",
     "openRecord",
     "onAdd?",

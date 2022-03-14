@@ -89,7 +89,6 @@
                                 <t t-if="record.isInQuickCreation and props.list.quickCreateInfo">
                                     <KanbanRecordQuickCreate
                                         record="record"
-                                        fields="props.fields"
                                         archInfo="props.list.quickCreateInfo"
                                         onCancel="force => group.list.cancelQuickCreate(force)"
                                         onValidate="mode => this.validateQuickCreate(mode, group)"
