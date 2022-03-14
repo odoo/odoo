@@ -8,7 +8,7 @@ class Applicant(models.Model):
     _inherit = "hr.applicant"
 
     survey_id = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey", readonly=True)
-    response_id = fields.Many2one('survey.user_input', "Response", ondelete="set null")
+    response_id = fields.Many2one('survey.user_input', "Response", ondelete="set null", copy=False)
     response_state = fields.Selection(related='response_id.state', readonly=True)
 
     def action_print_survey(self):
