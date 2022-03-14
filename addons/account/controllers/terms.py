@@ -19,4 +19,3 @@ class TermsController(http.Controller):
             'company': request.env.company
         }
         return request.render("account.account_terms_conditions_page", values)
-

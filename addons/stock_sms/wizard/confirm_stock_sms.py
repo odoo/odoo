@@ -28,4 +28,3 @@ class ConfirmStockSms(models.TransientModel):
                 })
         pickings_to_validate = self.env['stock.picking'].browse(self.env.context.get('button_validate_picking_ids'))
         return pickings_to_validate.button_validate()
-

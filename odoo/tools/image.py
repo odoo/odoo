@@ -496,4 +496,3 @@ def hex_to_rgb(hx):
 def rgb_to_hex(rgb):
     """Converts a RGB tuple or list to an hexadecimal string"""
     return '#' + ''.join([(hex(c).split('x')[-1].zfill(2)) for c in rgb])
-

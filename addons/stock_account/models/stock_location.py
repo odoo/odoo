@@ -30,4 +30,3 @@ class StockLocation(models.Model):
         if self.usage == 'internal' or (self.usage == 'transit' and self.company_id):
             return True
         return False
-

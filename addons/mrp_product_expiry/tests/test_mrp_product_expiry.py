@@ -112,4 +112,3 @@ class TestStockLot(TestStockCommon):
         # Producing must return a confirmation wizard.
         self.assertNotEqual(res, None)
         self.assertEqual(res['res_model'], 'expiry.picking.confirmation')
-

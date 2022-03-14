@@ -173,4 +173,3 @@ class TestXMLIDS(common.TransactionCase):
         self.assertCountEqual(xml_ids.get(baz.id), [
             'test_inherit.selection__test_new_api_selection__state__baz',
         ])
-
