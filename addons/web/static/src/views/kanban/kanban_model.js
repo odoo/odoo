@@ -364,10 +364,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
                 domain,
                 fieldNames,
                 this.groupBy,
-                {
-                    limit: this.groupLimit,
-                    lazy: true,
-                }
+                { lazy: true }
             );
         }
 

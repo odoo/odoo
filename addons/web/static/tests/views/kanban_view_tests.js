@@ -4197,10 +4197,9 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
     });
 
-    QUnit.skipWOWL("create a column in grouped on m2o", async (assert) => {
-        assert.expect(14);
+    QUnit.test("create a column in grouped on m2o", async (assert) => {
+        assert.expect(16);
 
-        let nbRPCs = 0;
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -4214,93 +4213,78 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
             groupBy: ["product_id"],
             async mockRPC(route, { method }) {
-                nbRPCs++;
-                if (method === "name_create") {
-                    assert.step("name_create");
-                }
-                //Create column will call resequence to set column order
-                if (route === "/web/dataset/resequence") {
-                    assert.step("resequence");
-                    return true;
+                if (method === "name_create" || route === "/web/dataset/resequence") {
+                    assert.step(method || route);
                 }
             },
         });
+
+        assert.containsN(target, ".o_kanban_group", 2);
         assert.containsOnce(target, ".o_column_quick_create", "should have a quick create column");
-        assert.notOk(
-            target.querySelector(".o_column_quick_create input").is(":visible"),
+        assert.containsNone(
+            target,
+            ".o_column_quick_create input",
             "the input should not be visible"
         );
 
         await createColumn();
 
-        assert.ok(
-            target.querySelector(".o_column_quick_create input").is(":visible"),
-            "the input should be visible"
-        );
+        assert.containsOnce(target, ".o_column_quick_create input", "the input should be visible");
 
         // discard the column creation and click it again
-        await target.querySelector(".o_column_quick_create input").trigger(
-            $.Event("keydown", {
-                keyCode: $.ui.keyCode.ESCAPE,
-                which: $.ui.keyCode.ESCAPE,
-            })
-        );
-        assert.notOk(
-            target.querySelector(".o_column_quick_create input").is(":visible"),
-            "the input should not be visible after discard"
+        await triggerEvent(target, ".o_column_quick_create input", "keydown", {
+            key: "Escape",
+        });
+
+        assert.containsNone(
+            target,
+            ".o_column_quick_create input",
+            "the input should not be visible"
         );
 
         await createColumn();
-        assert.ok(
-            target.querySelector(".o_column_quick_create input").is(":visible"),
-            "the input should be visible"
-        );
+
+        assert.containsOnce(target, ".o_column_quick_create input", "the input should be visible");
 
         await editColumnName("new value");
         await validateColumn();
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:last-child span:contains(new value)").length,
-            1,
+        assert.containsN(target, ".o_kanban_group", 3);
+        assert.containsOnce(
+            getColumn(2),
+            "span:contains(new value)",
             "the last column should be the newly created one"
         );
-        assert.ok(
-            !isNaN(target.querySelector(".o_kanban_group:last-child").dataset.id),
-            "the created column should have the correct id"
-        );
+        assert.ok(getColumn(2).dataset.id, "the created column should have an associated id");
         assert.doesNotHaveClass(
-            target.querySelector(".o_kanban_group:last-child"),
+            getColumn(2),
             "o_column_folded",
             "the created column should not be folded"
         );
+        assert.verifySteps(["name_create"]);
 
-        // fold and unfold the created column, and check that no RPC is done (as there is no record)
-        nbRPCs = 0;
-        const clickColumnAction = await toggleColumnActions(1);
+        // fold and unfold the created column, and check that no RPCs are done (as there are no records)
+        const clickColumnAction = await toggleColumnActions(2);
         await clickColumnAction("Fold");
 
-        assert.hasClass(
-            target.querySelector(".o_kanban_group:last-child"),
-            "o_column_folded",
-            "the created column should now be folded"
-        );
-        await click(target, ".o_kanban_group:last-child");
-        assert.doesNotHaveClass(
-            target.querySelector(".o_kanban_group:last-child"),
-            "o_column_folded"
-        );
-        assert.strictEqual(nbRPCs, 0, "no rpc should have been done when folding/unfolding");
+        assert.hasClass(getColumn(2), "o_column_folded", "the created column should now be folded");
+
+        await click(getColumn(2));
+
+        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
+        assert.verifySteps([], "no rpc should have been done when folding/unfolding");
 
         // quick create a record
         await createRecord();
+
         assert.hasClass(
-            target.querySelector(".o_kanban_group:first-child > div:nth(1)"),
+            getColumn(0).querySelector(":scope > div:nth-child(2)"),
             "o_kanban_quick_create",
             "clicking on create should open the quick_create in the first column"
         );
     });
 
-    QUnit.skipWOWL("auto fold group when reach the limit", async (assert) => {
+    QUnit.test("auto fold group when reach the limit", async (assert) => {
         assert.expect(9);
 
         for (let i = 0; i < 12; i++) {
@@ -4327,37 +4311,26 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
+            async mockRPC(route, args, performRPC) {
                 if (args.method === "web_read_group") {
-                    return this._super.apply(this, arguments).then(function (result) {
-                        result.groups[2].__fold = true;
-                        result.groups[8].__fold = true;
-                        return result;
-                    });
+                    const result = await performRPC(route, args);
+                    result.groups[2].__fold = true;
+                    result.groups[8].__fold = true;
+                    return result;
                 }
-                return this._super(route, args);
             },
         });
 
-        // we look if column are fold/unfold according what is expected
-        assert.doesNotHaveClass(
-            target.querySelector(".o_kanban_group:nth-child(2)"),
-            "o_column_folded"
-        );
-        assert.doesNotHaveClass(
-            target.querySelector(".o_kanban_group:nth-child(4)"),
-            "o_column_folded"
-        );
-        assert.doesNotHaveClass(
-            target.querySelector(".o_kanban_group:nth-child(10)"),
-            "o_column_folded"
-        );
-        assert.hasClass(target.querySelector(".o_kanban_group:nth-child(3)"), "o_column_folded");
-        assert.hasClass(target.querySelector(".o_kanban_group:nth-child(9)"), "o_column_folded");
+        // we look if column are folded/unfolded according to what is expected
+        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(3), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(9), "o_column_folded");
+        assert.hasClass(getColumn(2), "o_column_folded");
+        assert.hasClass(getColumn(8), "o_column_folded");
 
-        // we look if columns are actually fold after we reached the limit
-        assert.hasClass(target.querySelector(".o_kanban_group:nth-child(13)"), "o_column_folded");
-        assert.hasClass(target.querySelector(".o_kanban_group:nth-child(14)"), "o_column_folded");
+        // we look if columns are actually folded after we reached the limit
+        assert.hasClass(getColumn(12), "o_column_folded");
+        assert.hasClass(getColumn(13), "o_column_folded");
 
         // we look if we have the right count of folded/unfolded column
         assert.containsN(target, ".o_kanban_group:not(.o_column_folded)", 10);

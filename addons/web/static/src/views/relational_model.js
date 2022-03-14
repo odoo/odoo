@@ -1010,6 +1010,8 @@ class DynamicList extends DataPoint {
     }
 }
 
+DynamicList.DEFAULT_LIMIT = 80;
+
 export class DynamicRecordList extends DynamicList {
     setup(params) {
         super.setup(...arguments);
@@ -1182,13 +1184,10 @@ export class DynamicRecordList extends DynamicList {
     }
 }
 
-DynamicRecordList.DEFAULT_LIMIT = 80;
-
 export class DynamicGroupList extends DynamicList {
     setup(params, state) {
         super.setup(...arguments);
 
-        this.groupLimit = params.groupLimit || state.groupLimit || this.constructor.DEFAULT_LIMIT;
         this.groupByInfo = params.groupByInfo || {}; // FIXME: is this something specific to the list view?
         this.openGroupsByDefault = params.openGroupsByDefault || false;
         /** @type {Group[]} */
@@ -1362,20 +1361,17 @@ export class DynamicGroupList extends DynamicList {
             this.domain,
             this.fieldNames,
             this.groupBy,
-            {
-                orderby,
-                limit: this.groupLimit,
-                lazy: true,
-            }
+            { orderby, lazy: true }
         );
         this.count = length;
 
         const groupByField = this.groupByField;
-        return groups.map((data) => {
+        let openGroups = 0;
+
+        const groupsParams = groups.map((data) => {
             const groupParams = {
                 ...this.commonGroupParams,
                 aggregates: {},
-                isFolded: !this.openGroupsByDefault,
                 groupByField,
             };
             for (const key in data) {
@@ -1423,6 +1419,9 @@ export class DynamicGroupList extends DynamicList {
                     case "__fold": {
                         // optional
                         groupParams.isFolded = value;
+                        if (!value) {
+                            openGroups++;
+                        }
                         break;
                     }
                     case "__range": {
@@ -1441,10 +1440,26 @@ export class DynamicGroupList extends DynamicList {
                     }
                 }
             }
+            return groupParams;
+        });
 
-            const previousGroup = this.groups.find((g) => g.value === groupParams.value);
+        // Unfold groups that can still be unfolded by default
+        if (this.openGroupsByDefault) {
+            for (const params of groupsParams) {
+                if (openGroups >= this.constructor.DEFAULT_LOAD_LIMIT) {
+                    break;
+                }
+                if (!("isFolded" in params)) {
+                    params.isFolded = false;
+                    openGroups++;
+                }
+            }
+        }
+
+        return groupsParams.map((params) => {
+            const previousGroup = this.groups.find((g) => g.value === params.value);
             const state = previousGroup ? previousGroup.exportState() : {};
-            return this.model.createDataPoint("group", groupParams, state);
+            return this.model.createDataPoint("group", params, state);
         });
     }
 
@@ -1470,7 +1485,7 @@ export class DynamicGroupList extends DynamicList {
     }
 }
 
-DynamicGroupList.DEFAULT_LIMIT = 10;
+DynamicGroupList.DEFAULT_LOAD_LIMIT = 10;
 
 export class Group extends DataPoint {
     setup(params, state) {
@@ -2006,7 +2021,6 @@ export class RelationalModel extends Model {
         } else {
             this.rootParams.openGroupsByDefault = params.openGroupsByDefault || false;
             this.rootParams.limit = params.limit;
-            this.rootParams.groupLimit = params.groupLimit;
         }
 
         // this.db = Object.create(null);
