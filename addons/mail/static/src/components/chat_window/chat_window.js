@@ -38,16 +38,6 @@ export class ChatWindow extends Component {
         return this.messaging && this.messaging.models['ChatWindow'].get(this.props.localId);
     }
 
-    /**
-     * Get the content of placeholder for the autocomplete input of
-     * 'new_message' chat window.
-     *
-     * @returns {string}
-     */
-    get newMessageFormInputPlaceholder() {
-        return this.env._t("Search user...");
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
