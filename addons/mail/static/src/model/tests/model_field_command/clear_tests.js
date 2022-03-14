@@ -2,7 +2,6 @@
 
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import {
-    afterEach,
     beforeEach,
     start,
 } from '@mail/utils/test_utils';
@@ -20,9 +19,6 @@ QUnit.module('clear_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 QUnit.test('clear: should set attribute field undefined if there is no default value', async function (assert) {

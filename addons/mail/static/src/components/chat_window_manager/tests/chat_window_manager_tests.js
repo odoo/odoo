@@ -2,7 +2,6 @@
 
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
@@ -33,9 +32,6 @@ QUnit.module('chat_window_manager_tests.js', {
             this.widget = widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

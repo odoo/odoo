@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     start,
@@ -50,9 +49,6 @@ QUnit.module('hr', {}, function () {
                 { id: 12, display_name: "Luigi" },
                 { id: 13, display_name: "Yoshi" }
             );
-        },
-        afterEach() {
-            afterEach(this);
         },
     });
 

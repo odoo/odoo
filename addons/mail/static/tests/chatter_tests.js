@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 
 import FormView from 'web.FormView';
 import ListView from 'web.ListView';
@@ -96,9 +96,6 @@ QUnit.module('Chatter', {
                 relation_field: "res_id",
             },
         });
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
@@ -396,9 +393,6 @@ QUnit.module('FieldMany2ManyTagsEmail', {
             { id: 12, display_name: "gold", email: 'coucou@petite.perruche' },
             { id: 14, display_name: "silver", email: '' }
         );
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

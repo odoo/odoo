@@ -2,7 +2,6 @@
 
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
@@ -25,9 +24,6 @@ QUnit.module('discuss_sidebar_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

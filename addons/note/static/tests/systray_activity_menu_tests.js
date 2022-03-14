@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import ActivityMenu from '@mail/js/systray/systray_activity_menu';
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 
 import testUtils from 'web.test_utils';
 
@@ -30,9 +30,6 @@ QUnit.module("ActivityMenu", {
                 records: [],
             }
         });
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
+import { afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
 import { editSearchBar } from '@web/../tests/core/commands/command_service_tests';
 import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { browser } from '@web/core/browser/browser';
@@ -21,9 +21,6 @@ QUnit.module('mail', {}, function () {
                 },
             });
             registry.category("command_categories").add("default", { label: ("default") });
-        },
-        afterEach() {
-            afterEach(this);
         },
     });
 
