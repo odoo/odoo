@@ -15,7 +15,7 @@ class AccountMove(models.Model):
 
             # find out stock moves of any kit products
             stock_moves = move._stock_account_get_last_step_stock_moves()
-            stock_moves = stock_moves.filtered(lambda l: l.bom_id and l.bom_id.type == 'phantom')
+            stock_moves = stock_moves.filtered(lambda l: l.bom_line_id.bom_id and l.bom_line_id.bom_id.type == 'phantom')
 
             if not stock_moves:
                 continue
