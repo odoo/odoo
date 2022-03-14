@@ -199,7 +199,7 @@ class ProfitabilityAnalysis(models.Model):
                                     AND BILLL.id IS NULL
                                     AND RINVL.id IS NULL
                                     AND (SOL.id IS NULL
-                                        OR (SOL.is_expense IS NOT TRUE AND SOL.is_downpayment IS NOT TRUE AND SOL.is_service IS NOT TRUE))
+                                        OR (SOL.is_expense IS NOT TRUE AND SOL.is_downpayment IS NOT TRUE AND SOL.is_service IS NOT TRUE AND SOL.invoice_status = 'no'))
 
                                 UNION ALL
 
@@ -271,11 +271,11 @@ class ProfitabilityAnalysis(models.Model):
                                         ELSE 0.0
                                     END AS expense_amount_untaxed_invoiced,
                                     CASE
-                                        WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (SOL.untaxed_amount_to_invoice / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
+                                        WHEN SOL.qty_delivered_method IN ('timesheet', 'manual', 'stock_move') THEN (SOL.untaxed_amount_to_invoice / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                                         ELSE 0.0
                                     END AS amount_untaxed_to_invoice,
                                     CASE
-                                        WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (SOL.untaxed_amount_invoiced / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
+                                        WHEN SOL.qty_delivered_method IN ('timesheet', 'manual', 'stock_move') THEN (SOL.untaxed_amount_invoiced / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                                         ELSE 0.0
                                     END AS amount_untaxed_invoiced,
                                     S.date_order AS line_date
