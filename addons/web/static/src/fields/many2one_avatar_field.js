@@ -12,7 +12,7 @@ Many2OneAvatarField.template = "web.Many2OneAvatarField";
 Many2OneAvatarField.props = {
     ...standardFieldProps,
     placeholder: { type: String, optional: true },
-    relation: Object,
+    relation: String,
 };
 Many2OneAvatarField.extractProps = (fieldName, record) => {
     return {
