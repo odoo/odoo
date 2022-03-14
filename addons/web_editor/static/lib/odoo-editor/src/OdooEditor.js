@@ -18,6 +18,7 @@ import {
     containsUnremovable,
     DIRECTIONS,
     endPos,
+    ensureFocus,
     getCursorDirection,
     getListMode,
     getOuid,
@@ -1893,7 +1894,7 @@ export class OdooEditor extends EventTarget {
                 this.historyStep(true);
                 this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
                 setTimeout(() => {
-                    this.editable.focus();
+                    ensureFocus(this.editable);
                     getDeepRange(this.editable, { select: true });
                 });
             },
