@@ -26,6 +26,7 @@ import {
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     const parentNode = this.parentNode;
+    console.warn("text oDeleteBackward", this, offset);
 
     if (!offset) {
         // Backspace at the beginning of a text node is not a specific case to
@@ -66,6 +67,8 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
 };
 
 HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+    console.warn("html oDeleteBackward", this, this.outerHTML, offset);
+    console.log('>>', document.querySelector('.odoo-editor-editable').innerHTML + '');
     const contentIsZWS = this.textContent === '\u200B';
     let moveDest;
     if (offset) {
@@ -115,6 +118,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
         const parentEl = this.parentNode;
 
         if (!isBlock(this) || isVisibleEmpty(this)) {
+            console.log('----', document.querySelector('.odoo-editor-editable').innerHTML);
             /**
              * Backspace at the beginning of an inline node, nothing has to be
              * done: propagate the backspace. If the node was empty, we remove
@@ -142,6 +146,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
                     return;
                 }
             }
+            console.log('----', document.querySelector('.odoo-editor-editable').innerHTML);
             parentEl.oDeleteBackward(parentOffset, alreadyMoved);
             return;
         }
@@ -162,6 +167,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
         moveDest = leftPos(this);
     }
 
+    console.log('*** 2', document.querySelector('.odoo-editor-editable').innerHTML + '');
     let node = this.childNodes[offset];
     let firstBlockIndex = offset;
     while (node && !isBlock(node)) {
@@ -170,6 +176,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
     }
     let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, firstBlockIndex);
     setSelection(cursorNode, cursorOffset);
+    console.log('*** 3', document.querySelector('.odoo-editor-editable').innerHTML + '');
 
     // Propagate if this is still a block on the left of where the nodes were
     // moved.
@@ -180,9 +187,13 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
         cursorOffset = childNodeIndex(cursorNode) + (cursorOffset === 0 ? 0 : 1);
         cursorNode = cursorNode.parentNode;
     }
+    console.log('*** 4', document.querySelector('.odoo-editor-editable').innerHTML + '');
     if (cursorNode.nodeType !== Node.TEXT_NODE) {
         const { cType } = getState(cursorNode, cursorOffset, DIRECTIONS.LEFT);
+        console.log('get state', cType);
+        console.log('alreadyMoved', alreadyMoved);
         if (cType & CTGROUPS.BLOCK && (!alreadyMoved || cType === CTYPES.BLOCK_OUTSIDE)) {
+            console.log('propagate');
             cursorNode.oDeleteBackward(cursorOffset, alreadyMoved);
         }
     }

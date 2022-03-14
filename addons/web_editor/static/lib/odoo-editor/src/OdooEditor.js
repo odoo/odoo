@@ -1254,6 +1254,9 @@ export class OdooEditor extends EventTarget {
             correctTripleClick: true,
         });
         if (!range) return;
+        console.log("before delete range : ");
+        console.log(this.editable.innerHTML);
+        console.log("----- ");
         let start = range.startContainer;
         let end = range.endContainer;
         // Let the DOM split and delete the range.
@@ -1286,6 +1289,7 @@ export class OdooEditor extends EventTarget {
             currentFragmentTr = parentFragmentTr;
             td.textContent = '';
         });
+        console.log(this.editable.innerHTML, '1');
         this.observerFlush();
         this._toRollback = false; // Errors caught with observerFlush were already handled.
         // If the end container was fully selected, extractContents may have
@@ -1298,6 +1302,7 @@ export class OdooEditor extends EventTarget {
             end.remove();
             end = parent;
         }
+        console.log(this.editable.innerHTML, '2');
         // Same with the start container
         while (
             start &&
@@ -1312,6 +1317,7 @@ export class OdooEditor extends EventTarget {
         if (start) {
             fillEmpty(closestBlock(start));
         }
+        console.log(this.editable.innerHTML, '3');
         fillEmpty(closestBlock(range.endContainer));
         // Ensure trailing space remains visible.
         const joinWith = range.endContainer;
@@ -1323,6 +1329,11 @@ export class OdooEditor extends EventTarget {
             joinWith.textContent = oldText.replace(/ $/, '\u00A0');
             setSelection(joinWith, nodeSize(joinWith));
         }
+        console.log(this.editable.innerHTML, '4');
+        console.log("doJoin", doJoin);
+        console.log("next", next);
+        console.log("next.previousSibling", next?.previousSibling);
+        console.log("joinWith", joinWith);
         // Rejoin blocks that extractContents may have split in two.
         while (
             doJoin &&
@@ -1332,19 +1343,25 @@ export class OdooEditor extends EventTarget {
         ) {
             const restore = preserveCursor(this.document);
             this.observerFlush();
+            console.log(this.editable.innerHTML, '5.x.1');
             const res = this._protect(() => {
+                console.log(this.editable.innerHTML, '5.x.x.1');
                 next.oDeleteBackward();
+                console.log(this.editable.innerHTML, '5.x..x.2');
                 if (!this.editable.contains(joinWith)) {
                     this._toRollback = UNREMOVABLE_ROLLBACK_CODE; // tried to delete too far -> roll it back.
                 } else {
                     next = firstLeaf(next);
                 }
             }, this._currentStep.mutations.length);
+            console.log(this.editable.innerHTML, '5.x.2');
             if ([UNBREAKABLE_ROLLBACK_CODE, UNREMOVABLE_ROLLBACK_CODE].includes(res)) {
                 restore();
                 break;
             }
+            console.log(this.editable.innerHTML, '5.x.3');
         }
+        console.log(this.editable.innerHTML, '5');
         next = joinWith && joinWith.nextSibling;
         if (
             shouldPreserveSpace &&
@@ -1354,10 +1371,14 @@ export class OdooEditor extends EventTarget {
             joinWith.textContent = oldText;
             setSelection(joinWith, nodeSize(joinWith));
         }
+        console.log(this.editable.innerHTML, '6');
         if (joinWith) {
             const el = closestElement(joinWith);
             fillEmpty(el);
         }
+        console.log("after delete range : ");
+        console.log(this.editable.innerHTML);
+        console.log("----- ");
     }
 
     /**
@@ -2026,19 +2047,19 @@ export class OdooEditor extends EventTarget {
     // PASTING / DROPPING
 
     /**
-     * Prepare clipboard data (text/html) for safe pasting into the editor.
+     * Clean clipboard data (text/html) for safe pasting into the editor.
      *
      * @private
      * @param {string} clipboardData
      * @returns {string}
      */
-    _prepareClipboardData(clipboardData) {
+    _cleanHtmlClipboardData(clipboardData) {
         const container = document.createElement('fake-container');
         container.innerHTML = clipboardData;
         for (const child of [...container.childNodes]) {
             this._cleanForPaste(child);
         }
-        console.log('container.innerHTML', container.innerHTML);
+
         return container.innerHTML;
     }
     /**
@@ -2643,12 +2664,12 @@ export class OdooEditor extends EventTarget {
 
         const node = ev.target;
         // handle checkbox lists
-        if (node.tagName == 'LI' && getListMode(node.parentElement) == 'CL') {
+        if (node.tagName === 'LI' && getListMode(node.parentElement) === 'CL') {
             const beforStyle = window.getComputedStyle(node, 'before');
             const style1 = {
                 left: parseInt(beforStyle.getPropertyValue('left'), 10),
                 top: parseInt(beforStyle.getPropertyValue('top'), 10),
-            }
+            };
             style1.right = style1.left + parseInt(beforStyle.getPropertyValue('width'), 10);
             style1.bottom = style1.top + parseInt(beforStyle.getPropertyValue('height'), 10);
 
@@ -2773,31 +2794,63 @@ export class OdooEditor extends EventTarget {
      */
     _onPaste(ev) {
         ev.preventDefault();
-        const clipboardData = ev.clipboardData.getData('text/html');
-        if (clipboardData) {
-            console.warn("pasted html : ", clipboardData);
-            this.execCommand('insertHTML', this._prepareClipboardData(clipboardData));
+
+        const sel = this.document.getSelection();
+        if (!sel.isCollapsed) {
+            this.deleteRange(sel);
+            this.historyStep();
+        }
+
+        const htmlClipboardData = ev.clipboardData.getData('text/html');
+        const plainTextData = ev.clipboardData.getData('text/plain');
+        let cleanHtmlData = null;
+        let shouldForceDeleteFoward = false;
+        console.log('     text data', plainTextData);
+
+        if (htmlClipboardData) {
+            cleanHtmlData = this._cleanHtmlClipboardData(htmlClipboardData);
+            console.log('clean HTML data', cleanHtmlData);
+
+            const paragraphRegex = /^<p>(.+)<\/p>$/;
+
+            // Avoid inserting the opening and closing paragraph tags
+            // in order to ensure we don't add unwanted line breaks
+            if (cleanHtmlData.match(paragraphRegex)) {
+                shouldForceDeleteFoward = true;
+                cleanHtmlData = cleanHtmlData.replace(paragraphRegex, "$1");
+            }
+            console.log('clean HTML data 2', cleanHtmlData);
+        }
+
+        if (cleanHtmlData && plainTextData !== cleanHtmlData) {
+            this.historyPauseSteps();
+            console.warn("pasted html : ", cleanHtmlData);
+            this.execCommand('insertHTML', cleanHtmlData);
+            if (shouldForceDeleteFoward) {
+                this._applyCommand('oDeleteForward');
+            }
+            this.historyUnpauseSteps();
+            this.historyStep();
         } else {
-            const text = ev.clipboardData.getData('text/plain');
-            const splitAroundUrl = text.split(URL_REGEX);
+            const splitAroundUrl = plainTextData.split(URL_REGEX);
             const linkAttributes = this.options.defaultLinkAttributes || {};
+            const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
 
-            const sel = this.document.getSelection();
-            // if (!sel.isCollapsed) {
-            //     this.deleteRange(sel);
-            // }
-            // this.historyStep();
             for (let i = 0; i < splitAroundUrl.length; i++) {
-                // Even indexes will always be plain text, and odd indexes will always be URL.
 
-                if (i % 2 && !closestElement(sel.anchorNode, 'a')) {
-                    const url = /^https?:\/\//gi.test(splitAroundUrl[i])
-                        ? splitAroundUrl[i]
-                        : 'https://' + splitAroundUrl[i];
-                    const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
-                    const urlFileExtention = url.split('.').pop();
-                    const baseEmbedCommand = [
-                        {
+                const url = /^https?:\/\//gi.test(splitAroundUrl[i])
+                    ? splitAroundUrl[i]
+                    : 'https://' + splitAroundUrl[i];
+                const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+                const urlFileExtention = url.split('.').pop();
+                const isImageUrl = ['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention);
+
+                // Even indexes will always be plain text, and odd indexes will always be URL.
+                // only allow images emebed inside an existing link. No other url or video embed.
+                if (i % 2 && (isImageUrl || !selectionIsInsideALink)) {
+                    const baseEmbedCommand = [];
+                    if (!selectionIsInsideALink) {
+                        baseEmbedCommand.push({
                             groupName: 'paste',
                             title: 'Paste as URL',
                             description: 'Create an URL.',
@@ -2816,28 +2869,23 @@ export class OdooEditor extends EventTarget {
                                     sel.collapseToEnd();
                                 }
                             },
-                        },
-                        {
-                            groupName: 'paste',
-                            title: 'Paste as text',
-                            description: 'Simple text paste.',
-                            fontawesome: 'fa-font',
-                            callback: () => {},
-                        },
-                    ];
-
-                    const execCommandAtStepIndex = (index, callback) => {
-                        this._historyRevertUntil(index);
-                        this.historyStep(true);
-                        this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
-
-                        callback();
-
-                        this.historyStep(true);
+                        });
                     }
+                    baseEmbedCommand.push({
+                        groupName: 'paste',
+                        title: 'Paste as text',
+                        description: 'Simple text paste.',
+                        fontawesome: 'fa-font',
+                        callback: () => {},
+                    });
 
-                    if (['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention)) {
-                        const stepIndexBeforeInsert = this._historySteps.length - 1;
+                    const undoAndApplyCommand = (callback) => {
+                        this.historyUndo();
+                        callback();
+                        this.historyStep(true);
+                    };
+
+                    if (isImageUrl) {
                         this.execCommand('insertText', splitAroundUrl[i]);
                         this.commandBar.open({
                             commands: [
@@ -2848,7 +2896,7 @@ export class OdooEditor extends EventTarget {
                                     fontawesome: 'fa-image',
                                     shouldPreValidate: () => false,
                                     callback: () => {
-                                        execCommandAtStepIndex(stepIndexBeforeInsert, () => {
+                                        undoAndApplyCommand(() => {
                                             const img = document.createElement('IMG');
                                             img.setAttribute('src', url);
                                             const sel = this.document.getSelection();
@@ -2862,7 +2910,6 @@ export class OdooEditor extends EventTarget {
                             ].concat(baseEmbedCommand),
                         });
                     } else if (youtubeUrl) {
-                        const stepIndexBeforeInsert = this._historySteps.length - 1;
                         this.execCommand('insertText', splitAroundUrl[i]);
                         this.commandBar.open({
                             commands: [
@@ -2873,7 +2920,7 @@ export class OdooEditor extends EventTarget {
                                     fontawesome: 'fa-youtube-play',
                                     shouldPreValidate: () => false,
                                     callback: () => {
-                                        execCommandAtStepIndex(stepIndexBeforeInsert, () => {
+                                        undoAndApplyCommand(() => {
                                             let videoElement;
                                             if (this.options.getYoutubeVideoElement) {
                                                 videoElement = this.options.getYoutubeVideoElement(youtubeUrl[0]);

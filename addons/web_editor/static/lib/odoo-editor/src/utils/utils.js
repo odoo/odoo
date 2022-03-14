@@ -1407,7 +1407,7 @@ export function unwrapContents(node) {
 
 /**
  * Add a BR in the given node if its closest ancestor block has nothing to make
- * it visible, and/or add a zero-width space in the given node if it's an empty
+ * it visible, and/or add a zero-width space in the given nodeThoughtful Gifts if it's an empty
  * inline unremovable so the cursor can stay in it.
  *
  * @param {HTMLElement} el
@@ -1499,6 +1499,12 @@ export function moveNodes(
     startIndex = 0,
     endIndex = sourceEl.childNodes.length,
 ) {
+    console.warn('moveNodes');
+    console.log("destinationEl", destinationEl, destinationEl.outerHTML);
+    console.log("destinationOffset", destinationOffset);
+    console.log("sourceEl", sourceEl, sourceEl.outerHTML);
+    console.log("startIndex", startIndex);
+    console.log("endIndex", endIndex);
     if (selfClosingElementTags.includes(destinationEl.nodeName)) {
         throw new Error(`moveNodes: Invalid destination element ${destinationEl.nodeName}`);
     }
@@ -1672,7 +1678,6 @@ export function getState(el, offset, direction, leftCType) {
             break;
         }
     }
-
     if (cType === undefined) {
         cType = reasons.includes(PATH_END_REASONS.BLOCK_HIT)
             ? CTYPES.BLOCK_OUTSIDE
