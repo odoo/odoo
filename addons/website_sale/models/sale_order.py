@@ -5,7 +5,7 @@ import random
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
@@ -353,7 +353,7 @@ class SaleOrder(models.Model):
         sent_orders.write({'cart_recovery_email_sent': True})
 
     def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
+        res = super(SaleOrder, self.with_user(SUPERUSER_ID)).action_confirm()
         for order in self:
             if not order.transaction_ids and not order.amount_total and self._context.get('send_email'):
                 order._send_order_confirmation_mail()
