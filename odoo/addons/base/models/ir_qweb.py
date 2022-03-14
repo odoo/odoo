@@ -1655,14 +1655,12 @@ class IrQWeb(models.AbstractModel):
         if not VARNAME_REGEXP.match(expr_as):
             raise ValueError(f'The varname {expr_as!r} can only contain alphanumeric characters and underscores.')
 
+        if el.tag.lower() == 't':
+            self._rstrip_text(options)
 
-        strip = self._rstrip_text(options)
         code = self._flush_text(options, level)
 
-        content_foreach = []
-        if strip and el.tag.lower() != 't':
-            self._append_text(strip, options)
-        content_foreach.extend(
+        content_foreach = (
             self._compile_directives(el, options, level + 1) +
             self._flush_text(options, level + 1, rstrip=True))
 
