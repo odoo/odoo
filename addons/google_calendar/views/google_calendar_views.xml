@@ -10,4 +10,19 @@
             </field>
         </field>
     </record>
+    <record id="view_google_calendar_form" model="ir.ui.view">
+        <field name="name">google_calendar.event.calendar.form</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="google_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="attrs">
+                    {'readonly': [('google_id', '!=', False)]}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>

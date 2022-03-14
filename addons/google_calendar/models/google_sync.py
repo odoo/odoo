@@ -179,7 +179,7 @@ class GoogleSync(models.AbstractModel):
 
     @after_commit
     def _google_delete(self, google_service: GoogleCalendarService, google_id, timeout=TIMEOUT):
-        with google_calendar_token(self.env.user.sudo()) as token:
+        with google_calendar_token(self._get_calendar_user().sudo()) as token:
             if token:
                 google_service.delete(google_id, token=token, timeout=timeout)
                 # When the record has been deleted on our side, we need to delete it on google but we don't want
@@ -188,7 +188,7 @@ class GoogleSync(models.AbstractModel):
 
     @after_commit
     def _google_patch(self, google_service: GoogleCalendarService, google_id, values, timeout=TIMEOUT):
-        with google_calendar_token(self.env.user.sudo()) as token:
+        with google_calendar_token(self._get_calendar_user().sudo()) as token:
             if token:
                 google_service.patch(google_id, values, token=token, timeout=timeout)
                 self.need_sync = False
@@ -197,7 +197,8 @@ class GoogleSync(models.AbstractModel):
     def _google_insert(self, google_service: GoogleCalendarService, values, timeout=TIMEOUT):
         if not values:
             return
-        with google_calendar_token(self.env.user.sudo()) as token:
+
+        with google_calendar_token(self._get_calendar_user().sudo()) as token:
             if token:
                 google_id = google_service.insert(values, token=token, timeout=timeout)
                 self.write({
@@ -223,6 +224,16 @@ class GoogleSync(models.AbstractModel):
 
     def _write_from_google(self, gevent, vals):
         self.write(vals)
+
+    def _get_calendar_user(self):
+        """ Return the responsible user of an event. If the responsible user doesn't exist or hasn't synced with google,
+        it will return the current user.
+        """
+        self.ensure_one()
+        calendar_user = self.env.user
+        if self.env.user != self.user_id and self.user_id and self.user_id.sudo().google_calendar_rtoken:
+            calendar_user = self.user_id
+        return calendar_user
 
     @api.model
     def _create_from_google(self, gevents, vals_list):
