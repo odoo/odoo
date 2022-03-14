@@ -13,20 +13,28 @@ import './commands/align.js';
 import { sanitize } from './utils/sanitize.js';
 import { serializeNode, unserializeNode, serializeSelection } from './utils/serialize.js';
 import {
+    baseTextBlockTagNames,
     closestBlock,
     commonParentGet,
     containsUnremovable,
+    createPBR,
     DIRECTIONS,
     endPos,
     ensureFocus,
+    getBrSibling,
     getCursorDirection,
     getFurthestUneditableParent,
     getListMode,
     getOuid,
+    getSiblingWithContentEditable,
+    inlineTextTagNames,
     insertText,
+    isBlock,
+    isLastBR,
     isColorGradient,
     nodeSize,
     preserveCursor,
+    setCursorEnd,
     setCursorStart,
     setSelection,
     startPos,
@@ -155,6 +163,20 @@ export const CLIPBOARD_WHITELISTS = {
     }
 };
 
+/**
+ * Elements tags that are allowed to contain a navigationNode. A node meets the
+ * requirements if it has [a very similar/the same] behavior as this.editable.
+ * criteria (debatable):
+ * - can be the container of the result of most commands of the powerbox
+ * - behave similarly to this.editable when typing text (i.e. behavior on ENTER)
+ *   (note: <li> is ruled out because of its behavior with ENTER, but it can be
+ *    argued that it should also find itself in this set)
+ */
+const NAVIGATIONNODE_ALLOWED_CONTAINERS = new Set([
+    'DIV',
+    'TD',
+]);
+
 function defaultOptions(defaultObject, object) {
     const newObject = Object.assign({}, defaultObject, object);
     for (const [key, value] of Object.entries(object)) {
@@ -265,6 +287,12 @@ export class OdooEditor extends EventTarget {
             this._pluginAdd(plugin);
         }
 
+        /**
+         * <p> element added temporarily during navigation with
+         * ArrowUp/ArrowDown, between blocks, if there is no existing <p>
+         */
+        this._navigationNode = null;
+
         // -------------------
         // Alter the editable
         // -------------------
@@ -325,6 +353,7 @@ export class OdooEditor extends EventTarget {
 
         this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
+        this.addDomListener(this.document, 'selectionchange', this._handleNavigationNode);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
         this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
         this.addDomListener(this.document, 'mousedown', this._onDoumentMousedown);
@@ -341,6 +370,20 @@ export class OdooEditor extends EventTarget {
                 this._historyMakeSnapshot();
             }, HISTORY_SNAPSHOT_INTERVAL);
         }
+
+        this._navigationNodeObserver = new MutationObserver((mutationList, observer) => {
+            observer.disconnect();
+            const targets = new Set(mutationList.map(mutation => mutation.target));
+            targets.forEach(navigationNode => {
+                if (this._navigationNode === navigationNode) {
+                    /**
+                     * the navigationNode is "validated" in the dom by the
+                     * mutation
+                     */
+                    this._navigationNode = null;
+                }
+            });
+        });
 
         // -------
         // Toolbar
@@ -2625,8 +2668,197 @@ export class OdooEditor extends EventTarget {
                 const startOffset = ev.shiftKey ? selection.anchorOffset : focusOffset;
                 setSelection(startContainer, startOffset, focusNode, focusOffset);
             }
+        } else if (['ArrowDown', 'ArrowUp'].includes(ev.key) && !ev.ctrlKey && !ev.metaKey && !ev.altKey && !ev.defaultPrevented) {
+            this._handleVerticalArrowsNavigation(ev);
         }
     }
+
+    /**
+     * @see getComplexNode
+     */
+    getComplexNodeParent(node, direction, editableContextChange=false) {
+        if (!node || node === this.editable) {
+            return editableContextChange;
+        }
+        do {
+            /**
+             * Exiting a node. A parent node may need a navigationNode
+             * relative to its position at a smaller depth. Only editable
+             * nodes are considered. During parents traversal, the editable
+             * context may change (one of the parents is not editable)
+             */
+            node = node.parentElement;
+            if (!editableContextChange && !node.parentElement.isContentEditable) {
+                editableContextChange = true;
+            }
+            /**
+             * If the current node has a contentEditable=false parent and a
+             * sibling with a contentEditable=true, don't add a navigationNode
+             * since the depth will increase during navigation and
+             * navigationNodes are only added at the same depth or smaller.
+             * (debatable)
+             */
+            if (!node.parentElement.isContentEditable && getSiblingWithContentEditable(node, direction)) {
+                return editableContextChange;
+            }
+        } while (node !== this.editable && !node.parentElement.isContentEditable);
+        return this.getComplexNode(node, direction, editableContextChange);
+    }
+
+    /**
+     * Recursive identification of a "complex" node used for the creation of
+     * the @see _navigationNode . The meaning of "complex" here is that the
+     * node is identified as being in a configuration where it is difficult/not
+     * possible to place the caret in between elements. In this case, a
+     * navigationNode should be inserted.
+     * As such, this function may navigate around the siblings or the parents
+     * of the provided node to identify such a configuration.
+     *
+     * @param {Node} node Current node to identify as "complex" or to navigate
+     *                    from
+     * @param {integer} direction 0 <=> DOWN, 1 <=> UP
+     * @param {boolean} editableContextChange Tracks editable context changes.
+     *                  @see _handleVerticalArrowsNavigation
+     *
+     * @returns {Node|boolean} The "complex" node from which to insert the
+     *                         navigationNode, or a boolean if no navigationNode
+     *                         need to be inserted. In this case, return true
+     *                         if the editable context changed, and false if not
+     */
+    getComplexNode(node, direction, editableContextChange=false) {
+        if (!node || node === this.editable) {
+            return editableContextChange;
+        }
+        // Identify an inline configuration (can be multilines with br elements)
+        if (node.nodeType === Node.TEXT_NODE || inlineTextTagNames.has(node.tagName)) {
+            const br = getBrSibling(node, direction);
+            if (direction) {
+                if (br) {
+                    // node is not on the first line, no navigationNode needed.
+                    return editableContextChange;
+                } else {
+                    /**
+                     * The current node is on the first line, hand over the
+                     * caret responsibility to the parent.
+                     */
+                    return this.getComplexNodeParent(node, direction, editableContextChange);
+                }
+            } else {
+                if (!br || isLastBR(br)) {
+                    /**
+                     * The current node is on the last line, hand over the
+                     * caret responsibility to the parent.
+                     */
+                    return this.getComplexNodeParent(node, direction, editableContextChange);
+                } else {
+                    return editableContextChange;
+                }
+            }
+        }
+        const sibling = (direction) ? node.previousElementSibling : node.nextElementSibling;
+        // Check if sibling should take precedence over a navigationNode
+        if (sibling && sibling.isContentEditable && (sibling.tagName === 'BR' ||
+            baseTextBlockTagNames.has(sibling.tagName) || inlineTextTagNames.has(sibling.tagName))) {
+            /**
+             * Text nodes which do not have a br sibling element are not
+             * considered here, as they should not be allowed outside an inline
+             * configuration. (debatable)
+             */
+            return editableContextChange;
+        }
+        // Identify a complex configuration (which needs a navigationNode)
+        if (node.parentElement.isContentEditable && !baseTextBlockTagNames.has(node.tagName) &&
+            NAVIGATIONNODE_ALLOWED_CONTAINERS.has(node.parentElement.tagName)) {
+            return node;
+        }
+        // Hand over the caret responsibility to the sibling
+        if (sibling) {
+            if (node.parentElement.isContentEditable && !sibling.isContentEditable &&
+                !sibling.querySelector('[contenteditable="true"]')) {
+                /**
+                 * Sibling is not able to handle the caret, but may need a
+                 * navigationNode relative to its position.
+                 */
+                return this.getComplexNode(sibling, direction, editableContextChange);
+            }
+            return editableContextChange;
+        }
+        // Hand over the caret responsibility to the parent
+        return this.getComplexNodeParent(node, direction, editableContextChange);
+    }
+
+    /**
+     * Create a temporary <p><br></p> node when navigating the document with
+     * ArrowUp and ArrowDown keys. This node will appear in between "complex"
+     * blocks or while exiting those blocks. This node will disappear if the
+     * selection change. If the user starts typing in the node, it will be
+     * validated in the dom and won't be removed anymore.
+     *
+     * The purpose of this node is to ease insertion of text in between
+     * "complex" blocks such as contentEditable='false', <table>, <blockquote>,
+     * <pre>, ..., when there is not already a <p>-like element.
+     *
+     * @param {Event} ev ArrowDown or ArrowUp events
+     */
+    _handleVerticalArrowsNavigation(ev) {
+        const direction = ['ArrowDown', 'ArrowUp'].indexOf(ev.key);
+        if (direction === -1) {
+            return;
+        }
+        const sel = this.document.getSelection();
+        const anchorOffset = sel.anchorOffset;
+        const anchorNode = (sel.anchorNode.nodeType !== Node.TEXT_NODE && anchorOffset) ?
+            sel.anchorNode.childNodes[anchorOffset] : sel.anchorNode;
+        const startNode = this.editable.contains(anchorNode) && anchorNode;
+        const complexNode = this.getComplexNode(startNode, direction);
+        if (complexNode.nodeType) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this._setNavigationNode(complexNode, direction);
+        } else if (complexNode) {
+            /**
+             * No navigationNode is needed, but if the configuration analysis
+             * of startNode detected an editable context change, this means that
+             * the caret will have to pass through a contenteditable=false
+             * parent, which is still contained in this.editable. Browsers such
+             * as Mozilla Firefox do not allow this pass through. Chrome allows
+             * it. In Odoo, in the context of this.editable, the adopted
+             * strategy follows the Chrome logic (ArrowUp and ArrowDown should
+             * be enforced).
+             */
+            ev.preventDefault();
+            ev.stopPropagation();
+            let destinationNode = startNode;
+            let textParent;
+            // Reposition on the last text node sibling if any.
+            let sibling = (direction) ? destinationNode.previousSibling : destinationNode.nextSibling;
+            while (sibling && sibling.nodeType === Node.TEXT_NODE) {
+                destinationNode = sibling;
+                sibling = (direction) ? destinationNode.previousSibling : destinationNode.nextSibling;
+            }
+            // Search for the next caret holder (non-editable are excluded).
+            do {
+                let backupNode = destinationNode;
+                textParent = undefined;
+                destinationNode = (direction) ? previousLeaf(destinationNode, this.editable, true) : nextLeaf(destinationNode, this.editable, true);
+                if (destinationNode && !isBlock(destinationNode)) {
+                    textParent = destinationNode.parentElement;
+                } else if (destinationNode === backupNode || destinationNode === this.editable) {
+                    destinationNode = null;
+                }
+            } while (destinationNode && ((textParent && !textParent.isContentEditable) || (!textParent && !destinationNode.isContentEditable)));
+            // Place the caret.
+            if (destinationNode) {
+                if (destinationNode.nodeType === Node.TEXT_NODE && startNode.nodeType === Node.TEXT_NODE) {
+                    // Keep the previous text offset if possible.
+                    setSelection(destinationNode, anchorOffset);
+                } else {
+                    setCursorStart(destinationNode);
+                }
+            }
+        }
+    }
+
     /**
      * @private
      */
@@ -2816,6 +3048,43 @@ export class OdooEditor extends EventTarget {
             this._makeHint(this.editable.firstChild, this.options.placeholder, true);
         }
     }
+
+    /**
+     * @param {Node} sibling (future) sibling of the navigationNode
+     * @param {integer} direction 0 <=> DOWN, 1 <=> UP
+     */
+    _setNavigationNode(sibling, direction) {
+        const paragraph = createPBR();
+        sibling[direction ? 'before': 'after'](paragraph);
+        this._removeNavigationNode();
+        setCursorStart(paragraph);
+        this.historyStep();
+        this._navigationNode = paragraph;
+        this._navigationNodeObserver.observe(this._navigationNode, {
+            attributes: false, childList: true, subtree: true
+        });
+    }
+
+    _removeNavigationNode() {
+        this._navigationNodeObserver.disconnect();
+        if (this._navigationNode) {
+            this._navigationNode.remove();
+            this.historyStep();
+        }
+        this._navigationNode = null;
+    }
+
+    /**
+     * The navigationNode is removed from the dom when the selection changes
+     * unless it is still the powerbox element.
+     */
+    _handleNavigationNode() {
+        const block = this.options.getPowerboxElement();
+        if (this._navigationNode !== block) {
+            this._removeNavigationNode();
+        }
+    }
+
     _makeHint(block, text, temporary = false) {
         const content = block && block.innerHTML.trim();
         if (

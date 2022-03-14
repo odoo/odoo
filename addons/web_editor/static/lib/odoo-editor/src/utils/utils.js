@@ -254,6 +254,24 @@ export function getFurthestUneditableParent(node, parentLimit) {
     return nonEditableElement;
 }
 /**
+ * Return the first sibling in @see direction which contains an element with
+ * isContentEditable=true
+ *
+ * @param {Node} node
+ * @param {integer} direction 0 <=> NEXT, 1 <=> PREVIOUS
+ * @returns {Node} the sibling with a contenteditable="true"
+ */
+export function getSiblingWithContentEditable(node, direction) {
+    let sibling = node;
+    do {
+        sibling = (direction) ? sibling.previousElementSibling : sibling.nextElementSibling;
+        if (sibling && (sibling.isContentEditable || sibling.querySelector('[contenteditable="true"]'))) {
+            return sibling;
+        }
+    } while (sibling);
+    return null;
+}
+/**
  * Returns the closest HTMLElement of the provided Node
  * if a 'selector' is provided, Returns the closest HTMLElement that match the selector
  *
@@ -801,6 +819,70 @@ export function preserveCursor(document) {
 //------------------------------------------------------------------------------
 
 /**
+ * The following set is the intersection of the deprecated list of "inline"
+ * elements, the "flow content category", and the rule that they can contain
+ * text nodes.
+ * Those nodes don't need a @see OdooEditor._navigationNode when navigating
+ * using ArrowUp and ArrowDown.
+ *
+ * Sources:
+ * - inline elements:
+ *   https://developer.mozilla.org/en-US/docs/Web/HTML/Inline_elements
+ * - flow content:
+ *   https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories#flow_content
+ */
+export const inlineTextTagNames = new Set([
+    /**
+     * Intersection of "inline" and "flow content" elements that can contain
+     * text nodes.
+     */
+    'A',
+    'ABBR',
+    'B',
+    'BDI',
+    'BDO',
+    'BUTTON',
+    'CITE',
+    'CODE',
+    'DATA',
+    'DEL',
+    'DFN',
+    'EM',
+    'I',
+    'INPUT',
+    'INS',
+    'KBD',
+    'LABEL',
+    'MARK',
+    'METER',
+    'OUTPUT',
+    'Q',
+    'RUBY',
+    'S',
+    'SAMP',
+    'SMALL',
+    'SPAN',
+    'STRONG',
+    'SUB',
+    'SUP',
+    'TIME',
+    'U',
+    'VAR',
+]);
+/**
+ * Basic "text" containers of the editor. Those nodes don't need a
+ * @see OdooEditor._navigationNode when navigating using ArrowUp and ArrowDown.
+ */
+export const baseTextBlockTagNames = new Set([
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6',
+    'P',
+]);
+/**
  * The following is a complete list of all HTML "block-level" elements.
  *
  * Source:
@@ -1309,6 +1391,13 @@ export function createList(mode) {
     return node;
 }
 
+export function createPBR() {
+    const node = document.createElement('P');
+    const br = document.createElement('BR');
+    node.append(br);
+    return node;
+}
+
 export function insertListAfter(afterNode, mode, content = []) {
     const list = createList(mode);
     afterNode.after(list);
@@ -1339,6 +1428,29 @@ export function toggleClass(node, className) {
  */
 export function isFakeLineBreak(brEl) {
     return !(getState(...rightPos(brEl), DIRECTIONS.RIGHT).cType & (CTGROUPS.INLINE | CTGROUPS.BR));
+}
+/**
+ * Return whether the provided node is a BR element and is the last child of
+ * its parent.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isLastBR(node) {
+    return (node && node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR' && !node.nextSibling);
+}
+/**
+ * Returns the next BR element in the provided direction
+ *
+ * @param {Node} node
+ * @param {integer} direction 0 <=> NEXT, 1 <=> PREVIOUS
+ * @returns {boolean}
+ */
+export function getBrSibling(node, direction) {
+    do {
+        node = (direction) ? node.previousElementSibling : node.nextElementSibling;
+    } while (node && node.tagName !== 'BR');
+    return node;
 }
 /**
  * Checks whether or not the given block has any visible content, except for
