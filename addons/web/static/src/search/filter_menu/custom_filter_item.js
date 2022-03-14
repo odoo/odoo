@@ -174,9 +174,9 @@ export class CustomFilterItem extends Component {
                     condition.value.push(DateTime.local());
                 }
                 if (genericType === "datetime") {
-                    condition.value[0].set({ hour: 0, minute: 0, second: 0 });
+                    condition.value[0] = condition.value[0].set({ hour: 0, minute: 0, second: 0 });
                     if (operator.symbol === "between") {
-                        condition.value[1].set({ hour: 23, minute: 59, second: 59 });
+                        condition.value[1] = condition.value[1].set({ hour: 23, minute: 59, second: 59 });
                     }
                 }
                 break;
