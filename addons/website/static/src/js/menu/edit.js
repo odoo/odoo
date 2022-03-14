@@ -283,6 +283,11 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         // 1. Make sure every .o_not_editable is not editable.
         // 2. Observe changes to mark dirty structures and fields.
         const processRecords = (records) => {
+            // Updating the contenteditable attribute will trigger an
+            // attributes mutation, however these will be filtered out by the
+            // filterMutationRecords method in the OdooEditor.
+            $('#wrap').find('.o_not_editable[contenteditable!=false]').attr('contenteditable', false);
+
             records = this.wysiwyg.odooEditor.filterMutationRecords(records);
             // Skip the step for this stack because if the editor undo the first
             // step that has a dirty element, the following code would have
@@ -292,9 +297,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             for (const record of records) {
                 const $savable = $(record.target).closest(this.savableSelector);
 
-                if (record.attributeName === 'contenteditable') {
-                    continue;
-                }
                 $savable.not('.o_dirty').each(function () {
                     const $el = $(this);
                     if (!$el.closest('[data-oe-readonly]').length) {

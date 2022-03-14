@@ -287,3 +287,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_17_website_edit_menus(self):
         self.start_tour("/", "edit_menus", login="admin")
+
+    def test_18_website_non_editable_content(self):
+        self.start_tour("/", "non_editable_content", login="admin")
