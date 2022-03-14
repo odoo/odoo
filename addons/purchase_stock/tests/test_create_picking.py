@@ -64,6 +64,9 @@ class TestCreatePicking(common.TestProductCommon):
 
         # create new order line
         self.po.write({'order_line': [
+            (1, self.po.order_line[0].id, {
+                "product_qty": self.po.order_line[0].product_uom_qty
+                }),
             (0, 0, {
                 'name': self.product_id_2.name,
                 'product_id': self.product_id_2.id,
@@ -72,6 +75,8 @@ class TestCreatePicking(common.TestProductCommon):
                 'price_unit': 250.0,
                 'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })]})
+        picking_count = self.env["stock.picking"].search_count([("origin", "=", self.po.name)])
+        self.assertEqual(picking_count, 2, 'New picking should be created')
         self.assertEqual(self.po.picking_count, 2, 'New picking should be created')
         moves = self.po.order_line.mapped('move_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
         self.assertEqual(len(moves), 1, 'One moves should have been created')

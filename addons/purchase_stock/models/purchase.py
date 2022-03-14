@@ -333,6 +333,9 @@ class PurchaseOrderLine(models.Model):
         previous_product_qty = {line.id: line.product_uom_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
         if 'product_qty' in values:
+            lines = lines.filtered(lambda s: float_compare(
+                s.product_qty, previous_product_qty[s.id], s.product_uom.rounding
+                ))
             lines.with_context(previous_product_qty=previous_product_qty)._create_or_update_picking()
         return result
 
