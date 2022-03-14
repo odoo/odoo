@@ -79,29 +79,6 @@ export class AttachmentViewer extends Component {
         return this.messaging && this.messaging.models['AttachmentViewer'].get(this.props.localId);
     }
 
-    /**
-     * Compute the style of the image (scale + rotation).
-     *
-     * @returns {string}
-     */
-    get imageStyle() {
-        const attachmentViewer = this.attachmentViewer;
-        let style = `transform: ` +
-            `scale3d(${attachmentViewer.scale}, ${attachmentViewer.scale}, 1) ` +
-            `rotate(${attachmentViewer.angle}deg);`;
-
-        if (attachmentViewer.angle % 180 !== 0) {
-            style += `` +
-                `max-height: ${window.innerWidth}px; ` +
-                `max-width: ${window.innerHeight}px;`;
-        } else {
-            style += `` +
-                `max-height: 100%; ` +
-                `max-width: 100%;`;
-        }
-        return style;
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
