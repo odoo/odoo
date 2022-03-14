@@ -9,7 +9,6 @@
     'category': 'Hidden',
     'depends': ['calendar', 'sms'],
     'data': [
-        'security/sms_security.xml',
         'data/sms_data.xml',
         'views/calendar_views.xml',
     ],
