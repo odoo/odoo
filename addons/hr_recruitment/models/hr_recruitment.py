@@ -182,7 +182,7 @@ class Applicant(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked')
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid')
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing')
-    application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email')
+    application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email or phone or mobile')
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', string='Refuse Reason', tracking=True)
     meeting_ids = fields.One2many('calendar.event', 'applicant_id', 'Meetings')
     meeting_display_text = fields.Char(compute='_compute_meeting_display')
@@ -217,40 +217,42 @@ class Applicant(models.Model):
                 applicant.day_close = False
                 applicant.delay_close = False
 
-    @api.depends('email_from')
+    @api.depends('email_from', 'partner_phone', 'partner_mobile')
     def _compute_application_count(self):
         self.flush(fnames=['email_from'])
-        # Filter and gather emails at the same time
         applicants = self.env['hr.applicant']
-        mails = set()
         for applicant in self:
-            if applicant.email_from:
+            if applicant.email_from or applicant.partner_phone or applicant.partner_mobile:
                 applicants |= applicant
-                mails.add(applicant.email_from.lower())
         # Done via SQL since read_group does not support grouping by lowercase field
-        if mails:
+        if applicants.ids:
             query = Query(self.env.cr, self._table, self._table_query)
-            query.add_where('LOWER("hr_applicant".email_from) in %s', [tuple(mails)])
+            query.add_where('hr_applicant.id in %s', [tuple(applicants.ids)])
+            # Count into the companies that are selected from the multi-company widget
+            company_ids = self.env.context.get('allowed_company_ids')
+            if company_ids:
+                query.add_where('other.company_id in %s', [tuple(company_ids)])
             self._apply_ir_rules(query)
             from_clause, where_clause, where_clause_params = query.get_sql()
+            # In case the applicant phone or mobile is configured in wrong field
             query_str = """
-            SELECT LOWER("%(table)s".email_from) as l_email_from,
-                COUNT("%(table)s".id) as count
-            FROM %(from)s
+            SELECT hr_applicant.id as appl_id,
+                COUNT(other.id) as count
+              FROM hr_applicant
+              JOIN hr_applicant other ON LOWER(other.email_from) = LOWER(hr_applicant.email_from)
+                OR other.partner_phone = hr_applicant.partner_phone OR other.partner_phone = hr_applicant.partner_mobile
+                OR other.partner_mobile = hr_applicant.partner_mobile OR other.partner_mobile = hr_applicant.partner_phone
             %(where)s
-        GROUP BY l_email_from
+        GROUP BY hr_applicant.id
             """ % {
-                'table': self._table,
-                'from': from_clause,
                 'where': ('WHERE %s' % where_clause) if where_clause else '',
             }
             self.env.cr.execute(query_str, where_clause_params)
-
-            application_data_mapped = dict((data['l_email_from'], data['count']) for data in self.env.cr.dictfetchall())
+            application_data_mapped = dict((data['appl_id'], data['count']) for data in self.env.cr.dictfetchall())
         else:
             application_data_mapped = dict()
         for applicant in applicants:
-            applicant.application_count = application_data_mapped.get(applicant.email_from.lower(), 1) - 1
+            applicant.application_count = application_data_mapped.get(applicant.id, 1) - 1
         (self - applicants).application_count = False
 
     @api.depends_context('lang')
@@ -489,16 +491,15 @@ class Applicant(models.Model):
         }
 
     def action_applications_email(self):
-        # Security rules will apply when loading the view, here we just fetch the ids
-        mails = set()
-        for applicant in self:
-            if applicant.email_from:
-                mails.add(applicant.email_from.lower())
+        self.ensure_one()
         self.env.cr.execute("""
-        SELECT id
+        SELECT other.id
           FROM hr_applicant
-         WHERE LOWER(email_from) in %s
-        """, (tuple(mails),)
+          JOIN hr_applicant other ON LOWER(other.email_from) = LOWER(hr_applicant.email_from)
+            OR other.partner_phone = hr_applicant.partner_phone OR other.partner_phone = hr_applicant.partner_mobile
+            OR other.partner_mobile = hr_applicant.partner_mobile OR other.partner_mobile = hr_applicant.partner_phone
+         WHERE hr_applicant.id in %s
+        """, (tuple(self.ids),)
         )
         ids = [res['id'] for res in self.env.cr.dictfetchall()]
         return {
