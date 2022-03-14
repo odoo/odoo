@@ -30,6 +30,26 @@ registerModel({
             const accessToken = this.attachment.accessToken ? `?access_token=${this.attachment.accessToken}` : '';
             return `/web/image/${this.attachment.id}${accessToken}`;
         },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeImageStyle() {
+            let style = `transform: ` +
+                `scale3d(${this.scale}, ${this.scale}, 1) ` +
+                `rotate(${this.angle}deg);`;
+
+            if (this.angle % 180 !== 0) {
+                style += `` +
+                    `max-height: ${window.innerWidth}px; ` +
+                    `max-width: ${window.innerHeight}px;`;
+            } else {
+                style += `` +
+                    `max-height: 100%; ` +
+                    `max-width: 100%;`;
+            }
+            return style;
+        },
     },
     fields: {
         /**
@@ -59,6 +79,12 @@ registerModel({
             inverse: 'attachmentViewer',
             isCausal: true,
             readonly: true,
+        }),
+        /**
+         * Style of the image (scale + rotation).
+         */
+        imageStyle: attr({
+            compute: '_computeImageStyle',
         }),
         /**
          * Determines the source URL to use for the image.
