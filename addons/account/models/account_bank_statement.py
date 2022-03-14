@@ -715,7 +715,7 @@ class AccountBankStatementLine(models.Model):
             **counterpart_vals,
             'name': counterpart_vals.get('name', move_line.name if move_line else ''),
             'move_id': self.move_id.id,
-            'partner_id': self.partner_id.id or (move_line.partner_id.id if move_line else False),
+            'partner_id': self.partner_id.id or counterpart_vals.get('partner_id', move_line.partner_id.id if move_line else False),
             'currency_id': currency_id,
             'account_id': counterpart_vals.get('account_id', move_line.account_id.id if move_line else False),
             'debit': balance if balance > 0.0 else 0.0,
