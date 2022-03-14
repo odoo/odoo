@@ -146,7 +146,11 @@ class Digest(models.Model):
         # create a mail_mail based on values, without attachments
         mail_values = {
             'auto_delete': True,
-            'email_from': self.company_id.partner_id.email_formatted if self.company_id else self.env.user.email_formatted,
+            'email_from': (
+                self.company_id.partner_id.email_formatted
+                or self.env.user.email_formatted
+                or self.env.ref('base.user_root').email_formatted
+            ),
             'email_to': user.email_formatted,
             'body_html': full_mail,
             'state': 'outgoing',
