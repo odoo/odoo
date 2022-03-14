@@ -60,7 +60,8 @@ class ProductProduct(models.Model):
     @api.model
     def _get_tax_included_unit_price(self, company, currency, document_date, document_type,
             is_refund_document=False, product_uom=None, product_currency=None,
-            product_price_unit=None, product_taxes=None, fiscal_position=None
+            product_price_unit=None, product_taxes=None, fiscal_position=None,
+            taxes=None
         ):
         """ Helper to get the price unit from different models.
             This is needed to compute the same unit price in different models (sale order, account move, etc.) with same parameters.
@@ -89,14 +90,21 @@ class ProductProduct(models.Model):
                 product_taxes = product.taxes_id.filtered(lambda x: x.company_id == company)
             elif document_type == 'purchase':
                 product_taxes = product.supplier_taxes_id.filtered(lambda x: x.company_id == company)
+
         # Apply unit of measure.
         if product_uom and product.uom_id != product_uom:
             product_price_unit = product.uom_id._compute_price(product_price_unit, product_uom)
 
-        # Apply fiscal position.
-        if product_taxes and fiscal_position:
+        # Once we have taxes on the line, we shouldn't base the computation on the product taxes anymore
+        if taxes is not None:
+            product_taxes_after_fp = taxes
+        elif product_taxes is not None:
+            # Apply fiscal position on product taxes
             product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
+        else:
+            product_taxes_after_fp = None
 
+        if product_taxes_after_fp is not None and set(product_taxes.ids) != set(product_taxes_after_fp.ids):
             if set(product_taxes.ids) != set(product_taxes_after_fp.ids):
                 flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
                 if any(tax.price_include for tax in flattened_taxes_before_fp):

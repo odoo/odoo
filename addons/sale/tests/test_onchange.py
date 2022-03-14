@@ -82,8 +82,13 @@ class TestOnchangeProductId(TransactionCase):
             'price_include': True,
         })
         tax_include_dst = self.tax_model.create({
-            'name': "Exclude tax",
+            'name': "Include tax after map",
             'amount': 6.00,
+            'price_include': True,
+        })
+        tax_include_extra = self.tax_model.create({
+            'name': "Extra tax",
+            'amount': 10.00,
             'price_include': True,
         })
 
@@ -114,12 +119,14 @@ class TestOnchangeProductId(TransactionCase):
         with order_form.order_line.new() as line:
             line.name = product_product.name
             line.product_id = product_product
+            line.tax_id.add(tax_include_extra)
             line.product_uom_qty = 1.0
             line.product_uom = uom
         sale_order = order_form.save()
 
         # Check the unit price of SO line
-        self.assertRecordValues(sale_order.order_line, [{'price_unit': 106}])
+        self.assertRecordValues(sale_order.order_line, [{'price_unit': 116}])
+        self.assertRecordValues(sale_order, [{'amount_tax': 16}])
 
     def test_pricelist_application(self):
         """ Test different prices are correctly applied based on dates """
