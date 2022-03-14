@@ -468,6 +468,7 @@
       coerce_types = { 'true': !0, 'false': !1, 'null': null };
     
     // Iterate over all name=value pairs.
+    if (params.indexOf('__proto__') !== -1) { return obj; }
     $.each( params.replace( /\+/g, ' ' ).split( '&' ), function(j,v){
       var param = v.split( '=' ),
         key = decode( param[0] ),
