@@ -288,6 +288,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeNewMessageFormInputPlaceholder() {
+            return this.env._t("Search user...");
+        },
+        /**
+         * @private
          * @returns {ThreadViewer}
          */
         _computeThreadViewer() {
@@ -461,6 +468,13 @@ registerModel({
         }),
         name: attr({
             compute: '_computeName',
+        }),
+        /**
+         * The content of placeholder for the autocomplete input of
+         * 'new_message' chat window.
+         */
+        newMessageFormInputPlaceholder: attr({
+            compute: '_computeNewMessageFormInputPlaceholder',
         }),
         /**
          * Determines the `Thread` that should be displayed by `this`.
