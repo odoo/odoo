@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     dragenterFiles,
@@ -28,9 +27,6 @@ QUnit.module('attachment_box_tests.js', {
             this.widget = res.widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

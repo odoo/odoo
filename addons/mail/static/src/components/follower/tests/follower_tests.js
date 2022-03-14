@@ -3,7 +3,6 @@
 import { insert, link } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
@@ -33,9 +32,6 @@ QUnit.module('follower_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

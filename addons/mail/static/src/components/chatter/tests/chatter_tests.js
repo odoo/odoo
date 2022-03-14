@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, afterNextRender, beforeEach, nextAnimationFrame, start } from '@mail/utils/test_utils';
+import { afterNextRender, beforeEach, nextAnimationFrame, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -16,9 +16,6 @@ QUnit.module('chatter_tests.js', {
             this.widget = widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

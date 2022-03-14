@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
 
@@ -13,15 +13,11 @@ QUnit.module('activity_mark_done_popover_tests.js', {
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
-            const { apps, env, widget } = res;
-            this.apps = apps;
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

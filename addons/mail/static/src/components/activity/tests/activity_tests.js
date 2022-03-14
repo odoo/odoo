@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
+import { afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
 import { date_to_str } from 'web.time';
@@ -14,15 +14,11 @@ QUnit.module('activity_tests.js', {
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
-            const { apps, env, widget } = res;
-            this.apps = apps;
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
