@@ -334,6 +334,7 @@ export class Record extends DataPoint {
         this._changes = params.changes || {};
         this.data = { ...this._values, ...this._changes };
         this._invalidFields = new Set();
+        this._requiredFields = new Set();
         this.preloadedData = {};
         this.preloadedDataCaches = {};
         this.selected = false;
@@ -344,6 +345,8 @@ export class Record extends DataPoint {
         this.mode = params.mode || (this.isVirtual ? "edit" : state.mode || "readonly");
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
         markRaw(this);
+
+        this.setRequiredFields();
     }
 
     get evalContext() {
@@ -425,17 +428,37 @@ export class Record extends DataPoint {
         return evalDomain(readonly, this.evalContext);
     }
 
+    setRequiredFields() {
+        for (const fieldName in this.activeFields) {
+            const field = this.activeFields[fieldName];
+            if (field.required) {
+                this._requiredFields.add({ fieldName });
+            }
+            if (field.modifiers && field.modifiers.required) {
+                this._requiredFields.add({
+                    fieldName,
+                    modifier:
+                        typeof field.modifiers.required !== "boolean" && field.modifiers.required,
+                });
+            }
+        }
+    }
+
     /**
      * FIXME: memoize this at some point?
      * @param {string} fieldName
      * @returns {boolean}
      */
     isRequired(fieldName) {
-        if (this.fields[fieldName].required) {
-            return true;
+        for (const required of this._requiredFields) {
+            if (required.fieldName === fieldName) {
+                if (required.modifier) {
+                    return evalDomain(required.modifier, this.evalContext);
+                }
+                return true;
+            }
         }
-        const { required } = this.activeFields[fieldName].modifiers;
-        return evalDomain(required, this.evalContext);
+        return false;
     }
 
     setInvalidField(fieldName) {
@@ -597,6 +620,31 @@ export class Record extends DataPoint {
      */
     async save(options = { stayInEdition: false, noReload: false }) {
         return this.model.mutex.exec(async () => {
+            if (this._requiredFields.size > 0) {
+                let requiredStringArr = [];
+                for (const required of this._requiredFields) {
+                    if (
+                        this.data[required.fieldName] ||
+                        (required.modifier && !evalDomain(required.modifier, this.evalContext))
+                    ) {
+                        break;
+                    }
+                    this.setInvalidField(required.fieldName);
+                    // TODO only add debugMessage if debug mode is active.
+                    if (required.debugMessage) {
+                        requiredStringArr.push(required.fieldName + ":" + required.debugMessage);
+                    } else {
+                        requiredStringArr.push(required.fieldName);
+                    }
+                }
+                if (requiredStringArr.length > 0) {
+                    this.model.notificationService.add(requiredStringArr.join(", "), {
+                        title: this.model.env._t("Required fields: "),
+                        type: "danger",
+                    });
+                    return false;
+                }
+            }
             if (this._invalidFields.size > 0) {
                 let invalidStringArr = [];
                 for (const invalid of this._invalidFields) {
@@ -607,9 +655,10 @@ export class Record extends DataPoint {
                         invalidStringArr.push(invalid.fieldName);
                     }
                 }
-                this.model.notificationService.add(
-                    this.model.env._t("Invalid fields: ") + invalidStringArr.join(", ")
-                );
+                this.model.notificationService.add(invalidStringArr.join(", "), {
+                    title: this.model.env._t("Invalid fields: "),
+                    type: "danger",
+                });
                 return false;
             }
             const changes = this.getChanges();

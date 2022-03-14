@@ -12,6 +12,7 @@ import {
     nextTick,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { toggleActionMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -4221,44 +4222,38 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.skipWOWL("empty required fields cannot be saved", async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         serverData.models.partner.fields.foo.required = true;
         delete serverData.models.partner.fields.foo.default;
 
-        const form = await makeView({
+        const mock = (message, { title, type }) => {
+            assert.strictEqual(message, "foo", "should have a warning with correct message");
+            assert.strictEqual(
+                title,
+                "Required fields: ",
+                "should have a warning with correct title"
+            );
+            assert.strictEqual(type, "danger", "should have a warning of type 'danger'");
+            return () => {};
+        };
+        registry.category("services").add("notification", makeFakeNotificationService(mock), {
+            force: true,
+        });
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: "<form>" + '<group><field name="foo"/></group>' + "</form>",
-            services: {
-                notification: {
-                    notify: function (params) {
-                        if (params.type !== "danger") {
-                            return;
-                        }
-                        assert.strictEqual(
-                            params.title,
-                            "Invalid fields:",
-                            "should have a warning with correct title"
-                        );
-                        assert.strictEqual(
-                            params.message.toString(),
-                            "<ul><li>Foo</li></ul>",
-                            "should have a warning with correct message"
-                        );
-                    },
-                },
-            },
         });
 
-        await click(form.el.querySelector(".o_form_button_save"));
-        assert.hasClass(form.el.querySelector("label.o_form_label"), "o_field_invalid");
-        assert.hasClass(form.el.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
+        await click(target.querySelector(".o_form_button_save"));
+        assert.hasClass(target.querySelector("label.o_form_label"), "o_field_invalid");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
 
-        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
-
-        assert.containsNone(form, ".o_field_invalid");
+        await editInput(target, ".o_field_widget[name=foo] input", "tralala");
+        assert.containsNone(target, ".o_field_invalid");
     });
 
     QUnit.test("changes in a readonly form view are saved directly", async function (assert) {

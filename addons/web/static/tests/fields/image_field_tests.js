@@ -277,7 +277,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("ImageField in x2many list is loaded correctly", async function (assert) {
+    QUnit.test("ImageField in x2many list is loaded correctly", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner_type.fields.image = { name: "image", type: "binary" };
@@ -307,7 +307,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("ImageField with required attribute", async function (assert) {
+    QUnit.test("ImageField with required attribute", async function (assert) {
         assert.expect(2);
 
         await makeView({
@@ -328,9 +328,9 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_save");
 
-        assert.hasClass(
+        assert.containsOnce(
             target.querySelector(".o_form_view"),
-            "o_form_editable",
+            ".o_form_editable",
             "form view should still be editable"
         );
         assert.hasClass(

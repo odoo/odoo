@@ -2,6 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { click, getFixture, patchWithCleanup } from "../helpers/utils";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { makeView, setupViewRegistries } from "../views/helpers";
 import { registry } from "@web/core/registry";
 
@@ -9,7 +10,14 @@ let serverData;
 let target;
 
 // WOWL remove after adapting tests
-let testUtils, makeTestEnvironment, triggerHotkey, nextTick, doAction, core, makeLegacyCommandService, createWebClient;
+let testUtils,
+    makeTestEnvironment,
+    triggerHotkey,
+    nextTick,
+    doAction,
+    core,
+    makeLegacyCommandService,
+    createWebClient;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -378,36 +386,33 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("statusbar with required modifier", async function (assert) {
-        assert.expect(2);
+    QUnit.test("statusbar with required modifier", async function (assert) {
+        assert.expect(3);
 
-        const form = await makeView({
+        const mock = () => {
+            assert.step("Show error message");
+            return () => {};
+        };
+        registry.category("services").add("notification", makeFakeNotificationService(mock), {
+            force: true,
+        });
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: `<form string="Partners">
                     <header><field name="product_id" widget="statusbar" required="1"/></header>
                 </form>`,
-            config: { device: { isMobile: false } },
         });
-        testUtils.mock.intercept(
-            form,
-            "call_service",
-            function (ev) {
-                assert.strictEqual(
-                    ev.data.service,
-                    "notification",
-                    "should display an 'invalid fields' notification"
-                );
-            },
-            true
+
+        await click(target, ".o_form_button_save");
+
+        assert.containsOnce(target, ".o_form_editable", "view should still be in edit");
+        assert.verifySteps(
+            ["Show error message"],
+            "should display an 'invalid fields' notification"
         );
-
-        testUtils.form.clickSave(form);
-
-        assert.containsOnce(form, ".o_form_editable", "view should still be in edit");
-
-        form.destroy();
     });
 
     QUnit.test("statusbar with no value in readonly", async function (assert) {

@@ -58,6 +58,8 @@ export class Field extends Component {
 
         const readonlyFromModifiers = this.props.record.isReadonly(this.props.name);
         const readonlyFromViewMode = !this.props.record.isInEdition;
+        const emptyRequiredValue =
+            this.props.record.isRequired(this.props.name) && !this.props.value;
 
         // Decoration props
         const decorationMap = {};
@@ -87,7 +89,7 @@ export class Field extends Component {
             update: async (value) => {
                 await record.update(this.props.name, value);
                 // We save only if we're on view mode readonly and no readonly field modifier
-                if (readonlyFromViewMode && !readonlyFromModifiers) {
+                if (readonlyFromViewMode && !readonlyFromModifiers && !emptyRequiredValue) {
                     return record.save();
                 }
             },

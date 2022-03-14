@@ -418,11 +418,12 @@ QUnit.module("Fields", (hooks) => {
             3,
             "Three options in non required field"
         );
+
         assert.containsN(
             target.querySelector(".o_field_widget[name='feedback_value']"),
             "option",
             2,
-            "Three options in required field"
+            "Two options in required field"
         );
 
         // change value to update widget modifier values
@@ -434,7 +435,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name='color']"),
             "option",
             2,
-            "Three options in non required field"
+            "Two options in second selection as it is now required"
         );
     });
 });
