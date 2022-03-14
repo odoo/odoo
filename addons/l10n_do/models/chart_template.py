@@ -47,4 +47,3 @@ class AccountChartTemplate(models.Model):
             'show_on_dashboard': True
         }]
         return res
-

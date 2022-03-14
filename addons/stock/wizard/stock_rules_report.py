@@ -47,4 +47,3 @@ class StockRulesReport(models.TransientModel):
         self.ensure_one()
         data = self._prepare_report_data()
         return self.env.ref('stock.action_report_stock_rule').report_action(None, data=data)
-

@@ -6,6 +6,7 @@ from odoo.tests.common import TransactionCase
 
 
 class TestRobustness(TransactionCase):
+
     @classmethod
     def setUpClass(cls):
         super(TestRobustness, cls).setUpClass()
@@ -220,4 +221,3 @@ class TestRobustness(TransactionCase):
                 'location_id': move2.location_id.id,
                 'location_dest_id': move2.location_dest_id.id,
             })]})
-

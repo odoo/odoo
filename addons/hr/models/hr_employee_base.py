@@ -220,4 +220,3 @@ class HrEmployeeBase(models.AbstractModel):
                     # The employees should be working now according to their work schedule
                     working_now += res_employee_ids.ids
         return working_now
-

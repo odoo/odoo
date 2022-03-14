@@ -41,4 +41,3 @@ class ConfirmExpiry(models.TransientModel):
         ctx = dict(self._context, skip_expired=True)
         ctx.pop('default_lot_ids')
         return self.workorder_id.with_context(ctx).record_production()
-

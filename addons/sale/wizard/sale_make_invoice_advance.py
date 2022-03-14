@@ -197,4 +197,3 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'taxes_id': [(6, 0, self.deposit_taxes_id.ids)],
             'company_id': False,
         }
-
