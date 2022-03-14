@@ -354,6 +354,19 @@ export function toggleFormat(editor, format) {
             }
         }
         if (wasCollapsed) {
+            const siblings = [...zws.parentElement.childNodes];
+            if (
+                selectedTextNodes.includes(siblings[0]) &&
+                selectedTextNodes.includes(siblings[siblings.length - 1])
+            ) {
+                zws.parentElement.setAttribute('oe-zws-empty-inline', '');
+            } else {
+                const span = document.createElement('span');
+                span.setAttribute('oe-zws-empty-inline', '');
+                zws.before(span);
+                span.append(zws);
+
+            }
             setSelection(zws, 1);
         } else {
             setSelection(anchorNode, anchorOffset, focusNode, focusOffset);
@@ -375,6 +388,21 @@ export function toggleFormat(editor, format) {
                 newChild.style[style.name] = style.value;
             } else {
                 el.style[style.name] = style.value;
+            }
+            if (zws) {
+                const siblings = [...zws.parentElement.childNodes];
+                if (
+                    selectedTextNodes.includes(siblings[0]) &&
+                    selectedTextNodes.includes(siblings[siblings.length - 1])
+                ) {
+                    zws.parentElement.setAttribute('oe-zws-empty-inline', '');
+                } else {
+                    const span = document.createElement('span');
+                    span.setAttribute('oe-zws-empty-inline', '');
+                    zws.before(span);
+                    span.append(zws);
+
+                }
             }
         }, format, !isAlreadyFormatted);
     }
