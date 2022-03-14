@@ -440,3 +440,24 @@ class TestLeaveRequests(TestHrHolidaysBase):
         leave._onchange_request_parameters()
         self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
         self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
+
+    def test_leave_with_public_holiday_other_company(self):
+        other_company = self.env['res.company'].create({
+            'name': 'Test Company',
+        })
+        # Create a public holiday for the second company
+        p_leave = self.env['resource.calendar.leaves'].create({
+            'date_from': datetime(2022, 3, 11),
+            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+        })
+        p_leave.company_id = other_company
+
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'holiday_type': 'employee',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': datetime(2022, 3, 11),
+            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+        })
+        self.assertEqual(leave.number_of_days, 1)
