@@ -91,7 +91,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 2);
     });
 
-    QUnit.test("action with html help returned by a server action", async function (assert) {
+    QUnit.skipWOWL("action with html help returned by a server action", async function (assert) {
         assert.expect(1);
 
         serverData.actions[2].context = { someKey: 44 };
