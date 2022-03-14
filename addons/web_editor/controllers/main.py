@@ -607,7 +607,15 @@ class Web_Editor(http.Controller):
                     or attachment.type != 'binary'
                     or not attachment.public
                     or not attachment.url.startswith(request.httprequest.path)):
-                raise werkzeug.exceptions.NotFound()
+                # Fallback to URL lookup to allow using shapes that were
+                # imported from data files.
+                attachment = request.env['ir.attachment'].sudo().search([
+                    ('type', '=', 'binary'),
+                    ('public', '=', True),
+                    ('url', '=', request.httprequest.path),
+                ], limit=1)
+                if not attachment:
+                    raise werkzeug.exceptions.NotFound()
             svg = b64decode(attachment.datas).decode('utf-8')
         else:
             svg = self._get_shape_svg(module, 'shapes', filename)
