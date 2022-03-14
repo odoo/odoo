@@ -5,12 +5,14 @@ import werkzeug
 
 from odoo import http, _
 from odoo.addons.auth_signup.models.res_users import SignupError
-from odoo.addons.web.controllers.home import ensure_db, Home, SIGN_UP_REQUEST_PARAMS
+from odoo.addons.web.controllers.home import ensure_db, Home, SIGN_UP_REQUEST_PARAMS, LOGIN_SUCCESSFUL_PARAMS
 from odoo.addons.base_setup.controllers.main import BaseSetup
 from odoo.exceptions import UserError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
+
+LOGIN_SUCCESSFUL_PARAMS.add('account_created')
 
 
 class AuthSignupHome(Home):
@@ -20,9 +22,13 @@ class AuthSignupHome(Home):
         ensure_db()
         response = super().web_login(*args, **kw)
         response.qcontext.update(self.get_auth_signup_config())
-        if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
-            # Redirect if already logged in and redirect param is present
-            return request.redirect(request.params.get('redirect'))
+        if request.session.uid:
+            if request.httprequest.method == 'GET' and request.params.get('redirect'):
+                # Redirect if already logged in and redirect param is present
+                return request.redirect(request.params.get('redirect'))
+            # Add message for non-internal user account without redirect if account was just created
+            if response.location == '/web/login_successful' and kw.get('confirm_password'):
+                return request.redirect_query('/web/login_successful', query={'account_created': True})
         return response
 
     @http.route('/web/signup', type='http', auth='public', website=True, sitemap=False)

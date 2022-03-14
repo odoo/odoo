@@ -173,6 +173,19 @@
         </t>
     </template>
 
+    <template id="web.login_successful" name="Login successful">
+        <t t-call="web.login_layout">
+            <div class="oe_login_form">
+                <p>
+                    You are logged in.
+                </p>
+                <div t-attf-class="clearfix oe_login_buttons text-center mb-1 pt-3">
+                    <a class="btn btn-primary btn-block" href="/web/session/logout">Log out</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="web.test_helpers">
         <t t-call-assets="web.tests_assets" t-js="False"/>
         <style>
