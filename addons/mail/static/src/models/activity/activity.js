@@ -4,6 +4,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, unlink, unlinkAll } from '@mail/model/model_field_command';
 
+const { markup } = owl;
+
 registerModel({
     name: 'Activity',
     identifyingFields: ['id'],
@@ -228,6 +230,13 @@ registerModel({
             }
             return this.note;
         },
+        /**
+         * @private
+         * @returns {Markup} 
+         */
+        _computeNoteAsMarkup() {
+            return markup(this.note);
+        },
     },
     fields: {
         activityViews: many('ActivityView', {
@@ -274,6 +283,9 @@ registerModel({
          */
         note: attr({
             compute: '_computeNote',
+        }),
+        noteAsMarkup: attr({
+            compute: '_computeNoteAsMarkup',
         }),
         /**
          * Determines that an activity is linked to a requesting partner or not.
