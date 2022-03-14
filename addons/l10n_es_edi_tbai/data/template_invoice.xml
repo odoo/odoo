@@ -77,7 +77,7 @@
                 <FechaExpedicionFactura t-if="not is_emission" t-out="datetime_strftime(invoice.l10n_es_tbai_registration_date, '%d-%m-%Y')"/>
                 <FechaExpedicionFactura t-if="is_emission" t-out="datetime_strftime(datetime_now, '%d-%m-%Y')"/>
                 <HoraExpedicionFactura t-if="is_emission" t-out="datetime_strftime(datetime_now, '%H:%M:%S')"/>
-                <FacturaSimplificada t-out="'S' if is_simplified else 'N'"/>
+                <FacturaSimplificada t-if="is_emission" t-out="'S' if is_simplified else 'N'"/>
                 <!-- <FacturaEmitidaSustitucionSimplificada/> TODO True iff is_refund, where rectified invoice is 'simplified' -->
                 <FacturaRectificativa t-if="credit_note_invoices">
                     <Codigo t-out="credit_note_code"/>

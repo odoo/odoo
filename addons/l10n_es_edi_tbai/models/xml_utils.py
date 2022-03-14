@@ -172,7 +172,7 @@ class L10nEsTbaiMiscUtils(models.AbstractModel):
         # Unless force_new is True, only generate new VAT when no chain exists (tests & demo)
         # TODO this condition may be omitted using a noupdate="1" attribute in demo_company.xml
         if not force_new and self.env['res.company'].get_l10n_es_tbai_last_posted_id():
-            return self.company_id.vat
+            return self.env.company.id
         else:
             vat = randint(0, 99999999)
             return "ES" + "{:08}".format(vat) + "TRWAGMYFPDXBNJZSQVHLCKE"[vat % 23]
