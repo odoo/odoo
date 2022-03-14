@@ -1538,7 +1538,32 @@ class TestQWebBasic(TransactionCase):
 
         self.assertEqual(str(rendered).strip(), result.strip())
 
-    def test_space_remove_technical_space(self):
+    def test_space_remove_technical_space_t_foreach(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'master',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='master'>
+                    <section>
+                        <article t-foreach="[0, 1, 2]" t-as="value" t-esc="value"/>
+                        <t t-foreach="[0, 1, 2]" t-as="value">
+                            <article t-esc="value"/>
+                        </t>
+                    </section>
+                </t>'''})
+
+        result = '''
+                    <section>
+                        <article>0</article><article>1</article><article>2</article>
+                            <article>0</article>
+                            <article>1</article>
+                            <article>2</article>
+                    </section>'''
+
+        rendered = self.env['ir.qweb']._render(view.id)
+
+        self.assertEqual(str(rendered), result)
+
+    def test_space_remove_technical_all(self):
         test = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
@@ -1622,8 +1647,7 @@ class TestQWebBasic(TransactionCase):
                         <article>
                             <div>
                 <span>0</span>
-                            </div>
-                            <div>
+                            </div><div>
                 <span>1</span>
                             </div>
 
@@ -1638,7 +1662,6 @@ class TestQWebBasic(TransactionCase):
                     </section>'''
 
         rendered = self.env['ir.qweb']._render(view.id)
-
         self.assertEqual(str(rendered), result)
 
 class FileSystemLoader(object):
