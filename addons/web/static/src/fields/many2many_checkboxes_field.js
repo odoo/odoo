@@ -9,12 +9,20 @@ const { Component } = owl;
 
 export class Many2ManyCheckboxesField extends Component {
     isSelected(item) {
-        return this.props.value.ids.includes(item[0]);
+        return this.props.value.currentIds.includes(item[0]);
     }
 
     onChange(resId, checked) {
-        const operation = checked ? "add" : "delete";
-        this.props.value[operation](resId);
+        if (checked) {
+            this.props.value.replaceWith([...this.props.value.currentIds, resId]);
+        } else {
+            const currentIds = [...this.props.value.currentIds];
+            const index = currentIds.indexOf(resId);
+            if (index > -1) {
+                currentIds.splice(index, 1);
+            }
+            this.props.value.replaceWith(currentIds);
+        }
     }
 }
 

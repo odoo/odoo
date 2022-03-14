@@ -655,7 +655,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skipNotInline(
         "use the limit attribute in arch (in field o2m non inline tree view)",
         async function (assert) {
             assert.expect(2);
@@ -684,7 +684,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("one2many with default_order on view not inline", async function (assert) {
+    QUnit.skipNotInline("one2many with default_order on view not inline", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.records[0].turtles = [1, 2, 3];
@@ -1598,15 +1598,13 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.skipWOWL("onchange returning a command 6 for an x2many", async function (assert) {
-        assert.expect(2);
-
         serverData.models.partner.onchanges = {
-            foo: function (obj) {
+            foo(obj) {
                 obj.turtles = [[6, false, [1, 2, 3]]];
             },
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -1620,17 +1618,16 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
 
-        assert.containsOnce(form, ".o_data_row", "there should be one record in the relation");
+        await clickEdit(target);
+
+        assert.containsOnce(target, ".o_data_row");
 
         // change the value of foo to trigger the onchange
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo]"), "some value");
+        await editInput(target, ".o_field_widget[name=foo] input", "some value");
 
-        assert.containsN(form, ".o_data_row", 3, "there should be three records in the relation");
+        assert.containsN(target, ".o_data_row", 3);
     });
 
     QUnit.skipWOWL(
@@ -3183,6 +3180,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_x2many_list_row_add a");
 
         await editInput(target, 'div[name="turtle_foo"] input', "nora");
+
         await click(target);
 
         assert.strictEqual(
@@ -3323,14 +3321,14 @@ QUnit.module("Fields", (hooks) => {
                     assert.deepEqual(args.args[1].p, [
                         [
                             0,
-                            -1,
+                            "virtual_1",
                             {
                                 foo: "kartoffel",
                             },
                         ],
                         [
                             0,
-                            -2,
+                            "virtual_2",
                             {
                                 foo: "gemuse",
                             },
@@ -3361,8 +3359,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("one2many list (editable): edition, part 3", async function (assert) {
-        assert.expect(4);
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -3472,8 +3468,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("one2many list (editable): discarding required empty data", async function (assert) {
-        assert.expect(7);
-
         serverData.models.turtle.fields.turtle_foo.required = true;
         delete serverData.models.turtle.fields.turtle_foo.default;
 
@@ -9434,7 +9428,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("o2m add a line custom control create non-editable", async function (assert) {
+    QUnit.skip("o2m add a line custom control create non-editable", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -10853,7 +10847,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with many2many_tags in list and list in form with a limit",
         async function (assert) {
             // This test is skipped for now, as it doesn't work, and it can't be fixed in the current
@@ -10861,12 +10855,10 @@ QUnit.module("Fields", (hooks) => {
             // limit is 80, and it would be useless to display so many records with a many2many_tags
             // widget. So it would be nice if we could make it work in the future, but it's no big
             // deal for now.
-            assert.expect(6);
-
             serverData.models.partner.records[0].p = [1];
             serverData.models.partner.records[0].turtles = [1, 2, 3];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -10889,15 +10881,18 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            assert.containsOnce(form, ".o_field_widget[name=p] .o_data_row");
-            assert.containsN(form, ".o_data_row .o_field_many2manytags .badge", 3);
+            assert.containsOnce(target, ".o_field_widget[name=p] .o_data_row");
+            assert.containsN(target, ".o_data_row .o_field_many2manytags .badge", 3);
 
-            await click(form.$(".o_data_row"));
+            await click(target.querySelector(".o_data_row"));
 
             assert.containsOnce(document.body, ".modal .o_form_view");
             assert.containsN(document.body, ".modal .o_field_widget[name=turtles] .o_data_row", 2);
-            assert.isVisible($(".modal .o_field_x2many_list .o_pager"));
-            assert.strictEqual($(".modal .o_field_x2many_list .o_pager").text().trim(), "1-2 / 3");
+            assert.isVisible(target.querySelector(".modal .o_field_x2many_list .o_pager"));
+            assert.strictEqual(
+                target.querySelector(".modal .o_field_x2many_list .o_pager").innerText.trim(),
+                "1-2 / 3"
+            );
         }
     );
 

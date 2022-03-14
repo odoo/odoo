@@ -55,7 +55,7 @@ export class FormViewDialog extends Dialog {
             }
 
             this.readonly = !this.record.isInEdition;
-            this.multiSelect = this.record.resId === -1 && !this.props.disableMultipleSelection; // WOWL this is not good
+            this.multiSelect = this.record.resId === false && !this.props.disableMultipleSelection;
 
             this.record.activeFields = {
                 ...this.record.activeFields,

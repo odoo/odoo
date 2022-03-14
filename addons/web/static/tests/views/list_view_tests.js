@@ -4969,10 +4969,15 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                "<tree decoration-info=\"datetime == '2017-02-27 12:51:35'\" decoration-danger=\"datetime &gt; '2017-02-27 12:51:35' AND datetime &lt; '2017-02-27 10:51:35'\">" +
-                '<field name="datetime"/><field name="int_field"/>' +
-                "</tree>",
+            arch: `
+                <tree
+                    decoration-info="datetime == '2017-02-27 12:51:35'"
+                    decoration-danger="datetime &gt; '2017-02-27 12:51:35' AND datetime &lt; '2017-02-27 10:51:35'"
+                >
+                    <field name="datetime"/>
+                    <field name="int_field"/>
+                </tree>
+            `,
         });
 
         assert.containsOnce(

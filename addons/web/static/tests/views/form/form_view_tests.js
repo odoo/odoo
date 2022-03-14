@@ -2439,7 +2439,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("buttons in form view, new record", async function (assert) {
         // this test simulates a situation similar to the settings forms.
-        assert.expect(7);
+        assert.expect(8);
 
         serverData.models.partner.records = []; // such that we know the created record will be id 1
         // FIXME: there should be no depencency from views to actionService
@@ -2481,9 +2481,11 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
+        assert.verifySteps(["onchange"]);
+
         await click(target.querySelector(".o_form_statusbar button.p"));
 
-        assert.verifySteps(["onchange", "create", "read", "execute_action", "read"]);
+        assert.verifySteps(["create", "read", "execute_action", "read"]);
     });
 
     QUnit.test("buttons in form view, new record, with field id in view", async function (assert) {
@@ -2699,21 +2701,23 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("onchange send only the present fields to the server", async function (assert) {
-        assert.expect(1);
-        serverData.models.partner.records[0].product_id = false;
-        serverData.models.partner.onchanges.foo = (obj) => {
-            obj.foo = obj.foo + " alligator";
-        };
-        serverData.views = {
-            "partner_type,false,list": '<tree><field name="name"/></tree>',
-        };
+    QUnit.skipNotInline(
+        "onchange send only the present fields to the server",
+        async function (assert) {
+            assert.expect(1);
+            serverData.models.partner.records[0].product_id = false;
+            serverData.models.partner.onchanges.foo = (obj) => {
+                obj.foo = obj.foo + " alligator";
+            };
+            serverData.views = {
+                "partner_type,false,list": '<tree><field name="name"/></tree>',
+            };
 
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <field name="foo"/>
                     <field name="p">
@@ -2722,31 +2726,32 @@ QUnit.module("Views", (hooks) => {
                             <field name="product_id"/>
                         </tree>
                     </field>
-                    <field name="timmy"/>
+                    <field name="timmy">
                 </form>`,
-            resId: 1,
-            mockRPC(route, args) {
-                if (args.method === "onchange") {
-                    assert.deepEqual(
-                        args.args[3],
-                        {
-                            display_name: "",
-                            foo: "1",
-                            p: "",
-                            "p.bar": "",
-                            "p.product_id": "",
-                            timmy: "",
-                            "timmy.name": "",
-                        },
-                        "should send only the fields used in the views"
-                    );
-                }
-            },
-        });
+                resId: 1,
+                mockRPC(route, args) {
+                    if (args.method === "onchange") {
+                        assert.deepEqual(
+                            args.args[3],
+                            {
+                                display_name: "",
+                                foo: "1",
+                                p: "",
+                                "p.bar": "",
+                                "p.product_id": "",
+                                timmy: "",
+                                "timmy.name": "",
+                            },
+                            "should send only the fields used in the views"
+                        );
+                    }
+                },
+            });
 
-        await click(target.querySelector(".o_form_button_edit"));
-        await editInput(target, ".o_field_widget[name=foo] input", "tralala");
-    });
+            await click(target.querySelector(".o_form_button_edit"));
+            await editInput(target, ".o_field_widget[name=foo] input", "tralala");
+        }
+    );
 
     QUnit.skipWOWL("onchange only send present fields value", async function (assert) {
         assert.expect(1);
@@ -3774,14 +3779,20 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("discard changes on a new (dirty) form view", async function (assert) {
+    QUnit.skipWOWL("discard changes on a new (dirty) form view", async function (assert) {
         serverData.models.partner.fields.foo.default = "ABC";
+
+        // TODO WOWL: handle save point?
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form><field name="foo"></field></form>',
+            arch: `
+                <form>
+                    <field name="foo"/>
+                </form>
+            `,
             config: {
                 historyBack() {
                     assert.step("history-back");
@@ -3790,20 +3801,40 @@ QUnit.module("Views", (hooks) => {
         });
 
         // edit the foo field
-        assert.strictEqual(target.querySelector("input").value, "ABC", "input should contain ABC");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "ABC",
+            "input should contain ABC"
+        );
         await editInput(target, ".o_field_widget[name=foo] input", "DEF");
 
         // discard the changes and check it has properly been discarded
-        assert.strictEqual(target.querySelector("input").value, "DEF", "input should be DEF");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "DEF",
+            "input should be DEF"
+        );
         await click(target.querySelector(".o_form_button_cancel"));
-        assert.strictEqual(target.querySelector("input").value, "ABC", "input should now be ABC");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "ABC",
+            "input should now be ABC"
+        );
         assert.verifySteps(["history-back"]);
 
         // redirty and discard the field foo (to make sure initial changes haven't been lost)
         await editInput(target, ".o_field_widget[name=foo] input", "GHI");
-        assert.strictEqual(target.querySelector("input").value, "GHI", "input should be GHI");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "GHI",
+            "input should be GHI"
+        );
         await click(target.querySelector(".o_form_button_cancel"));
-        assert.strictEqual(target.querySelector("input").value, "ABC", "input should now be ABC");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "ABC",
+            "input should now be ABC"
+        );
         assert.verifySteps(["history-back"]);
     });
 

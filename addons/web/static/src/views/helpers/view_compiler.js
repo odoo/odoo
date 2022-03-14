@@ -184,7 +184,7 @@ const handleEmpty = (compiled, params) => {
 const handleInvalid = (compiled, params) => {
     // handle Invalid field
     if (compiled.nodeName === "label") {
-        const tAttClass = `o_field_invalid:record.resId and isFieldInvalid(record,'${params.fieldName}')`;
+        const tAttClass = `o_field_invalid: isFieldInvalid(record,'${params.fieldName}')`;
         appendAttr(compiled, "class", tAttClass);
     }
 };

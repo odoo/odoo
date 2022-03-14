@@ -182,7 +182,7 @@ export class KanbanRenderer extends Component {
         switch (field.type) {
             case "one2many":
             case "many2many": {
-                return value.count ? value.resIds : [];
+                return value.count ? value.currentIds : [];
             }
             case "date":
             case "datetime": {

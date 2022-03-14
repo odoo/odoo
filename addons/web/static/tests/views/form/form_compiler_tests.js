@@ -68,7 +68,7 @@ QUnit.module("Form Compiler", () => {
                     <tbody>
                         <tr>
                             <td class="o_td_label">
-                                <label class="o_form_label" for="field_display_name_1" t-esc="record.fields.display_name.string" t-att-class="{o_field_invalid:record.resId and isFieldInvalid(record,'display_name'),o_form_label_empty:record.resId and isFieldEmpty(record,'display_name')}"/>
+                                <label class="o_form_label" for="field_display_name_1" t-esc="record.fields.display_name.string" t-att-class="{o_field_invalid: isFieldInvalid(record,'display_name'),o_form_label_empty:record.resId and isFieldEmpty(record,'display_name')}"/>
                             </td>
                             <td style="width: 100%">
                                 <Field id="'field_display_name_1'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views"/>
@@ -80,7 +80,7 @@ QUnit.module("Form Compiler", () => {
                     <tbody>
                         <tr>
                             <td class="o_td_label">
-                                <label class="o_form_label" for="field_charfield_2" t-esc="record.fields.charfield.string" t-att-class="{o_field_invalid:record.resId and isFieldInvalid(record,'charfield'),o_form_label_empty:record.resId and isFieldEmpty(record,'charfield')}"/>
+                                <label class="o_form_label" for="field_charfield_2" t-esc="record.fields.charfield.string" t-att-class="{o_field_invalid: isFieldInvalid(record,'charfield'),o_form_label_empty:record.resId and isFieldEmpty(record,'charfield')}"/>
                             </td>
                             <td style="width: 100%">
                                 <Field id="'field_charfield_2'" name="'charfield'" record="record" archs="'views' in record.fields.charfield and record.fields.charfield.views"/>

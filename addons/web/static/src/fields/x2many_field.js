@@ -83,7 +83,7 @@ export class X2ManyField extends Component {
 
         const onDelete = (record) => {
             const list = this.list;
-            list.delete(record.resId);
+            list.delete(record.id);
             // + update pager info
             this.render();
         };
@@ -133,6 +133,7 @@ export class X2ManyField extends Component {
                 Object.assign(record._values, newRecord._values);
                 Object.assign(record._changes, newRecord._changes); // don't work with x2many inside,...
                 record.data = { ...record._values, ...record._changes };
+                record.onChanges();
                 record.model.notify();
             },
             title: sprintf(
@@ -145,7 +146,7 @@ export class X2ManyField extends Component {
     onAdd(context) {
         const archInfo = this.fieldInfo.views[this.viewMode];
         if (archInfo.editable) {
-            this.list.addNew(context);
+            this.list.addNew({ context, mode: "edit" });
         } else {
             const form = this.list.views.form;
             const record = this.list.model.createDataPoint("record", {
@@ -166,7 +167,7 @@ export class X2ManyField extends Component {
                 record,
                 save: () => {
                     record.switchMode("readonly");
-                    const newRecord = this.list.model.createDataPoint("record", {
+                    this.list.addNew({
                         context: this.list.context,
                         resModel: this.list.resModel,
                         fields: this.list.fields,
@@ -175,15 +176,7 @@ export class X2ManyField extends Component {
                         mode: "readonly",
                         values: record._values,
                         changes: record._changes,
-                        resId: record.resId,
                     });
-                    this.list._cache[newRecord.resId] = record;
-                    this.list.virtualIds.push(newRecord.resId);
-                    this.list.displayedIds.push(newRecord.resId);
-                    this.list.limit = this.list.limit + 1; // might be not good
-                    this.list._ids = null;
-                    this.list.onChanges();
-                    this.list.model.notify();
                 },
                 title: sprintf(
                     this.env._t("Open: %s"),

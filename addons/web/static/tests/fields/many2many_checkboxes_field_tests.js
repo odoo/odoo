@@ -82,7 +82,7 @@ QUnit.module("Fields", (hooks) => {
         checkboxes = target.querySelectorAll("div.o_field_widget div.custom-checkbox input");
         await click(checkboxes[1]);
         await click(target, ".o_form_button_save");
-        assert.containsN(target, "input:checked", 2);
+        assert.containsN(target, "div.o_field_widget div.custom-checkbox input:checked", 2);
 
         // remove a m2m value by clinking on label
         await click(target, ".o_form_button_edit");
