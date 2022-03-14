@@ -13,7 +13,9 @@ class ProductTemplate(models.Model):
         company_id = kwargs.get('company_id', None) or self.company_id or self.env.company
         currency_id = kwargs.get('currency_id', None) or self.currency_id
         display_extra = kwargs.get('display_extra_price', False)
-        attribute_lines = self.valid_product_template_attribute_line_ids
+        attribute_lines = self.valid_product_template_attribute_line_ids.filtered(
+            lambda line: line.attribute_id.create_variant != "no_variant"
+        )
 
         Attrib = self.env['product.template.attribute.value']
         first_line_attributes = attribute_lines[0].product_template_value_ids._only_active()
