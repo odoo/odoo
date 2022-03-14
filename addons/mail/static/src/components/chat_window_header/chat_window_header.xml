@@ -62,7 +62,7 @@
                         </div>
                     </t>
                     <t t-if="chatWindow.hasShiftNext">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftNext" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="_onClickShiftNext" t-att-title="shiftNextText">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftNext" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="_onClickShiftNext" t-att-title="chatWindow.shiftNextText">
                             <!-- this is reversed automatically when language is rtl -->
                             <i class="fa fa-angle-right"/>
                         </div>

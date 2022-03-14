@@ -295,6 +295,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeShiftNextText() {
+            if (this.messaging.locale.textDirection === 'rtl') {
+                return this.env._t("Shift left");
+            }
+            return this.env._t("Shift right");
+        },
+        /**
+         * @private
          * @returns {ThreadViewer}
          */
         _computeThreadViewer() {
@@ -475,6 +485,9 @@ registerModel({
          */
         newMessageFormInputPlaceholder: attr({
             compute: '_computeNewMessageFormInputPlaceholder',
+        }),
+        shiftNextText: attr({
+            compute: '_computeShiftNextText',
         }),
         /**
          * Determines the `Thread` that should be displayed by `this`.
