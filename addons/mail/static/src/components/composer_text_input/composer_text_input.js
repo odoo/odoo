@@ -49,28 +49,6 @@ export class ComposerTextInput extends Component {
     }
 
     /**
-     * @returns {string}
-     */
-    get textareaPlaceholder() {
-        if (!this.composerView) {
-            return "";
-        }
-        if (!this.composerView.composer.thread) {
-            return "";
-        }
-        if (this.composerView.composer.thread.model === 'mail.channel') {
-            if (this.composerView.composer.thread.correspondent) {
-                return _.str.sprintf(this.env._t("Message %s..."), this.composerView.composer.thread.correspondent.nameOrDisplayName);
-            }
-            return _.str.sprintf(this.env._t("Message #%s..."), this.composerView.composer.thread.displayName);
-        }
-        if (this.composerView.composer.isLog) {
-            return this.env._t("Log an internal note...");
-        }
-        return this.env._t("Send a message to followers...");
-    }
-
-    /**
      * Saves the composer text input state in store
      */
     saveStateInStore() {
