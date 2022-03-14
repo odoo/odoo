@@ -14,6 +14,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         PricelistItem = cls.env['product.pricelist.item']
         SaleOrder = cls.env['sale.order'].with_context(tracking_disable=True)
         SaleOrderLine = cls.env['sale.order.line'].with_context(tracking_disable=True)
+        ResCurrency = cls.env['res.currency']
 
         # set up accounts and products and journals
         cls.setUpAdditionalAccounts()
@@ -73,6 +74,20 @@ class TestSaleOrder(TestCommonSaleNoChart):
             'percent_price': 20
         })
 
+        cls.other_currency = ResCurrency.create({
+            'name': 'OC',
+            'symbol': 'O',
+            'rate_ids': cls.env['res.currency.rate'].create({
+                'currency_id': cls.product_order.currency_id.id,
+                'rate': 1.5,
+            })
+        })
+
+        cls.pricelist_othercurrency = Pricelist.create({
+            'name': 'Pricelist C',
+            'currency_id': cls.other_currency.id,
+        })
+
         # create a generic Sale Order with all classical products and empty pricelist
         cls.sale_order = SaleOrder.create({
             'partner_id': cls.partner_customer_usd.id,
@@ -126,6 +141,24 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # Check that pricelist of the SO has been applied on the sale order lines or not
         for line in self.sale_order.order_line:
             self.assertEquals(line.price_unit, line.product_id.list_price, 'Pricelist of the SO should not be applied on an order line %s' % (line.name,))
+
+    def test_sale_with_pricelist_currency(self):
+        self.sale_order.write({'pricelist_id': self.pricelist_othercurrency.id,
+                               'order_line': [(5,)]})
+        self.env['sale.order.line'].with_context(tracking_disable=True).create({
+            'name': self.product_order.name,
+            'product_id': self.product_order.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product_order.uom_id.id,
+            'order_id': self.sale_order.id,
+            'tax_id': False,
+        })
+
+        currency_price = self.product_order.list_price * self.pricelist_othercurrency.currency_id.rate / self.product_order.currency_id.rate
+        currency_price = self.pricelist_othercurrency.currency_id.round(currency_price)
+
+        self.assertEqual(self.sale_order.order_line.price_unit, currency_price)
+
 
     def test_sale_with_pricelist_discount_included(self):
         """ Test SO with the pricelist and check unit price appeared on its lines """
