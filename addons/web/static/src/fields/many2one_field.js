@@ -229,6 +229,7 @@ Many2OneField.displayName = _lt("Many2one");
 Many2OneField.supportedTypes = ["many2one"];
 Many2OneField.extractProps = (fieldName, record, attrs) => {
     return {
+        placeholder: attrs.placeholder,
         noOpen: Boolean(attrs.options.no_open),
         noCreate: Boolean(attrs.options.no_create),
         canCreate: attrs.can_create && Boolean(JSON.parse(attrs.can_create)),
