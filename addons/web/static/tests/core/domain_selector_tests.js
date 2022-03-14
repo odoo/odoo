@@ -11,17 +11,15 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, mount, triggerEvent } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { createWebClient, doAction } from "../webclient/helpers";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
 import FormView from "web.FormView";
 import legacyViewRegistry from "web.view_registry";
 
-const { xml } = owl;
+const { Component, xml } = owl;
 
 let serverData;
 let env;
 let target;
-let domainSelector;
 
 QUnit.module("Components", (hooks) => {
     hooks.beforeEach(async () => {
@@ -75,7 +73,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("creating a domain from scratch", async (assert) => {
         assert.expect(12);
 
-        class Parent extends LegacyComponent {
+        class Parent extends Component {
             setup() {
                 this.value = "[]";
             }
@@ -96,7 +94,7 @@ QUnit.module("Components", (hooks) => {
         `;
 
         // Create the domain selector and its mock environment
-        domainSelector = await mount(Parent, target, {
+        await mount(Parent, target, {
             env,
             props: {
                 resModel: "partner",
@@ -109,22 +107,18 @@ QUnit.module("Components", (hooks) => {
         // As we gave an empty domain, there should be a visible button to add
         // the first domain part
         assert.containsOnce(
-            domainSelector.el,
+            target,
             ".o_domain_add_first_node_button",
             "there should be a button to create first domain element"
         );
 
         // Clicking on the button should add a visible field selector in the
         // widget so that the user can change the field chain
-        await click(domainSelector.el, ".o_domain_add_first_node_button");
-        assert.containsOnce(
-            domainSelector.el,
-            ".o_field_selector",
-            "there should be a field selector"
-        );
+        await click(target, ".o_domain_add_first_node_button");
+        assert.containsOnce(target, ".o_field_selector", "there should be a field selector");
 
         // Focusing the field selector input should open a field selector popover
-        await click(domainSelector.el, ".o_field_selector");
+        await click(target, ".o_field_selector");
         assert.containsOnce(
             document.body,
             ".o_field_selector_popover",
@@ -142,19 +136,19 @@ QUnit.module("Components", (hooks) => {
         // Clicking the "Bar" field should change the internal domain and this
         // should be displayed in the debug textarea
         await click(document.body.querySelector(".o_field_selector_popover li"));
-        assert.containsOnce(domainSelector.el, "textarea.o_domain_debug_input");
+        assert.containsOnce(target, "textarea.o_domain_debug_input");
         assert.strictEqual(
-            domainSelector.el.querySelector(".o_domain_debug_input").value,
+            target.querySelector(".o_domain_debug_input").value,
             `[("bar", "=", True)]`,
             "the domain input should contain a domain with 'bar'"
         );
 
         // There should be a "+" button to add a domain part; clicking on it
         // should add the default "['id', '=', 1]" domain
-        assert.containsOnce(domainSelector.el, ".fa-plus-circle", "there should be a '+' button");
-        await click(domainSelector.el, ".fa-plus-circle");
+        assert.containsOnce(target, ".fa-plus-circle", "there should be a '+' button");
+        await click(target, ".fa-plus-circle");
         assert.strictEqual(
-            domainSelector.el.querySelector(".o_domain_debug_input").value,
+            target.querySelector(".o_domain_debug_input").value,
             `["&", ("bar", "=", True), ("id", "=", 1)]`,
             "the domain input should contain a domain with 'bar' and 'id'"
         );
@@ -162,16 +156,11 @@ QUnit.module("Components", (hooks) => {
         // There should be two "..." buttons to add a domain group; clicking on
         // the first one, should add this group with defaults "['id', '=', 1]"
         // domains and the "|" operator
-        assert.containsN(
-            domainSelector.el,
-            ".fa-ellipsis-h",
-            2,
-            "there should be two '...' buttons"
-        );
+        assert.containsN(target, ".fa-ellipsis-h", 2, "there should be two '...' buttons");
 
-        await click(domainSelector.el.querySelector(".fa-ellipsis-h"));
+        await click(target.querySelector(".fa-ellipsis-h"));
         assert.strictEqual(
-            domainSelector.el.querySelector(".o_domain_debug_input").value,
+            target.querySelector(".o_domain_debug_input").value,
             `["&", ("bar", "=", True), "&", "|", ("id", "=", 1), ("id", "=", 1), ("id", "=", 1)]`,
             "the domain input should contain a domain with 'bar', 'id' and a subgroup"
         );
@@ -180,17 +169,17 @@ QUnit.module("Components", (hooks) => {
         // the two last ones, should leave a domain with only the "bar" and
         // "foo" fields, with the initial "&" operator
         assert.containsN(
-            domainSelector.el,
+            target,
             ".o_domain_delete_node_button",
             5,
             "there should be five 'x' buttons"
         );
-        let buttons = domainSelector.el.querySelectorAll(".o_domain_delete_node_button");
+        let buttons = target.querySelectorAll(".o_domain_delete_node_button");
         await click(buttons[buttons.length - 1]);
-        buttons = domainSelector.el.querySelectorAll(".o_domain_delete_node_button");
+        buttons = target.querySelectorAll(".o_domain_delete_node_button");
         await click(buttons[buttons.length - 1]);
         assert.strictEqual(
-            domainSelector.el.querySelector(".o_domain_debug_input").value,
+            target.querySelector(".o_domain_debug_input").value,
             `["&", ("bar", "=", True), ("id", "=", 1)]`,
             "the domain input should contain a domain with 'bar' and 'id'"
         );
@@ -343,7 +332,7 @@ QUnit.module("Components", (hooks) => {
 
         let newValue;
 
-        class Parent extends LegacyComponent {
+        class Parent extends Component {
             setup() {
                 this.value = `[("product_id", "ilike", 1)]`;
             }
@@ -363,11 +352,11 @@ QUnit.module("Components", (hooks) => {
             />
         `;
         // Create the domain selector and its mock environment
-        domainSelector = await mount(Parent, target, { env });
+        await mount(Parent, target, { env });
 
         assert.containsOnce(
-            domainSelector.el,
-            ".o_domain_node",
+            target,
+            ".o_domain_node.o_domain_leaf",
             "should have a single domain node"
         );
         newValue = `
@@ -375,17 +364,17 @@ QUnit.module("Components", (hooks) => {
     ['product_id', 'ilike', 1],
     ['id', '=', 0]
 ]`;
-        const input = domainSelector.el.querySelector(".o_domain_debug_input");
+        const input = target.querySelector(".o_domain_debug_input");
         input.value = newValue;
         await triggerEvent(input, null, "change");
         assert.strictEqual(
-            domainSelector.el.querySelector(".o_domain_debug_input").value,
+            target.querySelector(".o_domain_debug_input").value,
             newValue,
             "the domain should not have been formatted"
         );
         assert.containsOnce(
-            domainSelector.el,
-            ".o_domain_node",
+            target,
+            ".o_domain_node.o_domain_leaf",
             "should still have a single domain node"
         );
     });
