@@ -8,10 +8,6 @@ import { ColorList } from "@web/core/colorlist/colorlist";
 const { Component } = owl;
 
 export class ColorPickerField extends Component {
-    get isReadonly() {
-        return this.props.record.activeFields[this.props.name].modifiers.readonly;
-    }
-
     switchColor(colorIndex) {
         this.props.update(colorIndex);
     }

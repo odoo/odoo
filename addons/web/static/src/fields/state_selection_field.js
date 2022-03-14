@@ -20,9 +20,6 @@ export class StateSelectionField extends Component {
     get currentValue() {
         return this.props.value || this.props.options[0][0];
     }
-    get isReadonly() {
-        return this.props.record.isReadonly(this.props.name);
-    }
     get label() {
         return this.props.options.find((o) => o[0] === this.currentValue)[1];
     }
@@ -54,6 +51,7 @@ StateSelectionField.extractProps = (fieldName, record, attrs) => {
     return {
         hideLabel: attrs.options.hide_label,
         options: record.fields[fieldName].selection,
+        readonly: record.isReadonly(fieldName),
     };
 };
 registry.category("fields").add("state_selection", StateSelectionField);

@@ -14,7 +14,7 @@ export class ColorField extends Component {
     }
 
     onClick() {
-        if (this.isReadonly) return;
+        if (this.props.readonly) return;
         const self = this;
         this.dialogService.add(ColorPickerDialog, {
             onColorSelected(hex) {
@@ -23,15 +23,16 @@ export class ColorField extends Component {
             color: self.props.value || "#ffffff",
         });
     }
-
-    get isReadonly() {
-        return this.props.record.activeFields[this.props.name].modifiers.readonly;
-    }
 }
 
 ColorField.template = "web.ColorField";
 ColorField.props = {
     ...standardFieldProps,
+};
+ColorField.extractProps = (fieldName, record) => {
+    return {
+        readonly: record.isReadonly(fieldName),
+    };
 };
 ColorField.supportedTypes = ["char"];
 

@@ -11,29 +11,23 @@ export class StatInfoField extends Component {
     }
 
     get value() {
-        return this.formatter(this.props.value || 0, {
-            field: this.props.record.fields[this.props.name],
-        });
-    }
-
-    get text() {
-        return this.props.labelField
-            ? this.props.record.data[this.props.labelField]
-            : this.props.record.activeFields[this.props.name].string;
+        return this.props.format(this.props.value || 0);
     }
 }
 
 StatInfoField.template = "web.StatInfoField";
 StatInfoField.props = {
     ...standardFieldProps,
-    labelField: { type: String, optional: true },
+    label: { type: String, optional: true },
     noLabel: { type: Boolean, optional: true },
 };
 StatInfoField.supportedTypes = ["float", "integer"];
 StatInfoField.isEmpty = () => false;
 StatInfoField.extractProps = (fieldName, record, attrs) => {
     return {
-        labelField: attrs.options.label_field,
+        label: attrs.options.label_field
+            ? record.data[attrs.options.label_field]
+            : record.activeFields[fieldName].string,
         noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
     };
 };

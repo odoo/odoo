@@ -22,9 +22,7 @@ export class IntegerField extends Component {
 
     get formattedInputValue() {
         if (this.props.inputType === "number") return this.props.value;
-        return this.props.format(this.props.value, {
-            field: this.props.record.fields[this.props.name],
-        });
+        return this.props.format(this.props.value);
     }
 }
 

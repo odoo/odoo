@@ -50,7 +50,6 @@ export class MonetaryField extends Component {
     get formattedValue() {
         return this.props.format(this.props.value, {
             digits: this.currencyDigits,
-            field: this.props.record.fields[this.props.name],
             currencyId: this.currencyId,
         });
     }
@@ -67,7 +66,6 @@ export class MonetaryField extends Component {
         }
         return this.props.format(this.props.value, {
             digits: this.currencyDigits,
-            field: this.props.record.fields[this.props.name],
             noSymbol: true,
         });
     }

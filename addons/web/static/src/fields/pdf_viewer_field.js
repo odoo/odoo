@@ -41,7 +41,7 @@ export class PdfViewerField extends Component {
                             field: this.props.previewImage || this.props.name,
                         })
                 ) +
-                `#page=${this.props.record.data[this.props.name + "_page"] || 1}`
+                `#page=${this.props.defaultPage || 1}`
             );
         }
     }
@@ -72,6 +72,7 @@ PdfViewerField.defaultProps = {
 };
 PdfViewerField.props = {
     ...standardFieldProps,
+    defaultPage: { type: Number, optional: true },
     fileData: { type: String, optional: true },
     fileName: { type: String, optional: true },
     previewImage: { type: String, optional: true },
@@ -79,6 +80,7 @@ PdfViewerField.props = {
 PdfViewerField.template = "web.PdfViewerField";
 PdfViewerField.extractProps = (fieldName, record, attrs) => {
     return {
+        defaultPage: record.data[fieldName + "_page"],
         fileData: record.data[fieldName] || "",
         fileName: record.data[attrs.filename] || "",
         previewImage: attrs.options.preview_image,
