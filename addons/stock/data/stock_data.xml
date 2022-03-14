@@ -15,24 +15,200 @@
             <field name="model_id" ref="base.model_ir_actions_server"/>
             <field name="state">code</field>
             <field name="code">
-quants = env['stock.quant'].sudo().search([])
+start = time.time()
+quants = []
+
+# Query to fetch all problematic quants. It returns the quant_id and the error message linked to it.
+
+query = """SELECT DISTINCT quant_id, error_message FROM (
+WITH sum_product_qty AS (SELECT DISTINCT STOCK_QUANT.id AS quant_id,
+                                         SUM(ROUND(CAST(STOCK_MOVE_LINE.product_qty AS NUMERIC), CAST((CASE WHEN UOM_UOM.rounding = 1.0 THEN 0 ELSE LENGTH(CAST(UOM_UOM.rounding AS VARCHAR))-2 END) AS INT))) AS product_qty_sum,
+                                         UOM_UOM.rounding AS rounding
+                                         FROM stock_quant AS STOCK_QUANT
+                                         LEFT JOIN stock_move_line AS STOCK_MOVE_LINE ON (STOCK_QUANT.product_id = STOCK_MOVE_LINE.product_id 
+                                                                                      AND STOCK_QUANT.location_id = STOCK_MOVE_LINE.location_id
+                                                                                      AND (STOCK_QUANT.lot_id = STOCK_MOVE_LINE.lot_id OR (STOCK_QUANT.lot_id IS NULL AND STOCK_MOVE_LINE.lot_id IS NULL))
+                                                                                      AND (STOCK_QUANT.package_id = STOCK_MOVE_LINE.package_id OR (STOCK_QUANT.package_id IS NULL AND STOCK_MOVE_LINE.package_id IS NULL))
+                                                                                      AND (STOCK_QUANT.owner_id = STOCK_MOVE_LINE.owner_id OR (STOCK_QUANT.owner_id IS NULL AND STOCK_MOVE_LINE.owner_id IS NULL))
+                                                                                      AND STOCK_MOVE_LINE.product_qty != 0)
+                                         LEFT JOIN product_product AS PRODUCT_PRODUCT ON (STOCK_QUANT.product_id = PRODUCT_PRODUCT.id)
+                                         LEFT JOIN product_template AS PRODUCT_TEMPLATE ON (PRODUCT_PRODUCT.product_tmpl_id = PRODUCT_TEMPLATE.id)
+                                         LEFT JOIN uom_uom AS UOM_UOM ON (PRODUCT_TEMPLATE.uom_id = UOM_UOM.id)
+                                         GROUP BY quant_id, rounding
+                                         ORDER BY quant_id)
+SELECT DISTINCT STOCK_QUANT.id AS quant_id,
+                STOCK_MOVE_LINE.id AS sml_id,
+                STOCK_QUANT.reserved_quantity,
+                ROUND(CAST(STOCK_QUANT.reserved_quantity AS NUMERIC), CAST((CASE WHEN UOM_UOM.rounding = 1.0 THEN 0 ELSE LENGTH(CAST(UOM_UOM.rounding AS VARCHAR))-2 END) AS INT)) AS reserved_quantity_rnd,
+                STOCK_MOVE_LINE.product_qty,
+                ROUND(CAST(STOCK_MOVE_LINE.product_qty AS NUMERIC), CAST((CASE WHEN UOM_UOM.rounding = 1.0 THEN 0 ELSE LENGTH(CAST(UOM_UOM.rounding AS VARCHAR))-2 END) AS INT)) AS product_qty_rnd,
+                sum_product_qty.product_qty_sum,
+                UOM_UOM.rounding,
+                CASE
+                    WHEN STOCK_LOCATION.usage IN ('supplier', 'customer', 'inventory', 'production') OR STOCK_LOCATION.scrap_location = 'yes' OR (STOCK_LOCATION.usage = 'transit' AND STOCK_LOCATION.company_id IS NULL) THEN
+                        CASE
+                            WHEN ROUND(CAST(STOCK_QUANT.reserved_quantity AS NUMERIC), CAST((CASE WHEN UOM_UOM.rounding = 1.0 THEN 0 ELSE LENGTH(CAST(UOM_UOM.rounding AS VARCHAR))-2 END) AS INT)) != 0 THEN 'Problematic quant found: `reserved_quantity` field is not 0 while its location should bypass the reservation:'
+                            ELSE ''
+                        END
+                    ELSE CASE
+                            WHEN ROUND(CAST(STOCK_QUANT.reserved_quantity AS NUMERIC), CAST((CASE WHEN UOM_UOM.rounding = 1.0 THEN 0 ELSE LENGTH(CAST(UOM_UOM.rounding AS VARCHAR))-2 END) AS INT)) = 0 AND STOCK_MOVE_LINE.id IS NOT NULL THEN 'Problematic quant found: `reserved_quantity` field is 0 while there is move lines reserved on it:'
+                            ELSE CASE
+                                    WHEN ROUND(CAST(STOCK_QUANT.reserved_quantity AS NUMERIC), CAST((CASE WHEN UOM_UOM.rounding = 1.0 THEN 0 ELSE LENGTH(CAST(UOM_UOM.rounding AS VARCHAR))-2 END) AS INT)) < 0 THEN 'Problematic quant found: `reserved_quantity` field is negative while it should not happen:'
+                                    ELSE CASE
+                                            WHEN ROUND(CAST(STOCK_QUANT.reserved_quantity AS NUMERIC), CAST((CASE WHEN UOM_UOM.rounding = 1.0 THEN 0 ELSE LENGTH(CAST(UOM_UOM.rounding AS VARCHAR))-2 END) AS INT)) != sum_product_qty.product_qty_sum OR (ROUND(CAST(STOCK_QUANT.reserved_quantity AS NUMERIC), CAST((CASE WHEN UOM_UOM.rounding = 1.0 THEN 0 ELSE LENGTH(CAST(UOM_UOM.rounding AS VARCHAR))-2 END) AS INT)) IS NOT NULL AND ROUND(CAST(STOCK_QUANT.reserved_quantity AS NUMERIC), CAST((CASE WHEN UOM_UOM.rounding = 1.0 THEN 0 ELSE LENGTH(CAST(UOM_UOM.rounding AS VARCHAR))-2 END) AS INT)) != 0 AND sum_product_qty.product_qty_sum IS NULL) THEN 'Problematic quant found: `reserved_quantity` field does not reflect the move lines reservation:'
+                                            ELSE CASE
+                                                    WHEN ROUND(CAST(STOCK_QUANT.reserved_quantity AS NUMERIC), CAST((CASE WHEN UOM_UOM.rounding = 1.0 THEN 0 ELSE LENGTH(CAST(UOM_UOM.rounding AS VARCHAR))-2 END) AS INT)) = sum_product_qty.product_qty_sum AND STOCK_MOVE_LINE.product_qty < 0
+                                                    THEN 'Problematic quant found: `reserved_quantity` field correctly reflects the move lines reservation but some are negatives:'
+                                                    ELSE ''
+                                                 END
+                                         END
+                                 END
+                         END
+                END AS error_message
+FROM stock_quant AS STOCK_QUANT
+LEFT JOIN sum_product_qty ON (STOCK_QUANT.id = sum_product_qty.quant_id)
+LEFT JOIN stock_move_line AS STOCK_MOVE_LINE ON (STOCK_QUANT.product_id = STOCK_MOVE_LINE.product_id
+                                             AND STOCK_QUANT.location_id = STOCK_MOVE_LINE.location_id
+                                             AND (STOCK_QUANT.lot_id = STOCK_MOVE_LINE.lot_id OR (STOCK_QUANT.lot_id IS NULL AND STOCK_MOVE_LINE.lot_id IS NULL))
+                                             AND (STOCK_QUANT.package_id = STOCK_MOVE_LINE.package_id OR (STOCK_QUANT.package_id IS NULL AND STOCK_MOVE_LINE.package_id IS NULL))
+                                             AND (STOCK_QUANT.owner_id = STOCK_MOVE_LINE.owner_id OR (STOCK_QUANT.owner_id IS NULL AND STOCK_MOVE_LINE.owner_id IS NULL))
+                                             AND STOCK_MOVE_LINE.product_qty != 0)
+LEFT JOIN product_product AS PRODUCT_PRODUCT ON (STOCK_QUANT.product_id = PRODUCT_PRODUCT.id)
+LEFT JOIN product_template AS PRODUCT_TEMPLATE ON (PRODUCT_PRODUCT.product_tmpl_id = PRODUCT_TEMPLATE.id)
+LEFT JOIN uom_uom AS UOM_UOM ON (PRODUCT_TEMPLATE.uom_id = UOM_UOM.id)
+LEFT JOIN stock_location AS STOCK_LOCATION ON (STOCK_QUANT.location_id = STOCK_LOCATION.id)
+ORDER BY quant_id) AS subquery WHERE error_message != '' order by quant_id;"""
+env.cr.execute(query)
+
+for quant in env.cr.dictfetchall():
+    qnt = {'id': quant.get('quant_id'), 'error_message': quant.get('error_message')}
+    quants.append(qnt)
+
+# Query to fetch all move_line ids that are not linked to a quant despite its `reserved_quantity`.
+
+move_lines_id = list()
+query = """SELECT id FROM (
+SELECT STOCK_MOVE_LINE.id,
+       STOCK_MOVE_LINE.product_qty,
+       STOCK_MOVE_LINE.location_id,
+       CASE
+            WHEN (STOCK_LOCATION.usage IN ('supplier', 'customer', 'inventory', 'production') OR STOCK_LOCATION.scrap_location = 'yes' OR (STOCK_LOCATION.usage = 'transit' AND STOCK_LOCATION.company_id IS NULL)) IS NOT TRUE THEN 'Problematic move line found. There is no existing quants despite its reserved_quantity'
+            ELSE ''
+        END as error_message
+FROM product_product AS PRODUCT_PRODUCT
+LEFT JOIN stock_move_line AS STOCK_MOVE_LINE ON STOCK_MOVE_LINE.product_id = PRODUCT_PRODUCT.id
+LEFT JOIN stock_location AS STOCK_LOCATION ON (STOCK_MOVE_LINE.location_id = STOCK_LOCATION.id)
+LEFT JOIN product_template AS PRODUCT_TEMPLATE ON PRODUCT_TEMPLATE.id = PRODUCT_PRODUCT.product_tmpl_id
+WHERE product_template.type = 'product' AND STOCK_MOVE_LINE.product_qty != 0 AND STOCK_MOVE_LINE.id NOT IN (SELECT DISTINCT STOCK_MOVE_LINE.id AS sml_id
+                                                                                                            FROM stock_quant AS STOCK_QUANT
+                                                                                                            LEFT JOIN stock_move_line AS STOCK_MOVE_LINE ON (STOCK_QUANT.product_id = STOCK_MOVE_LINE.product_id)
+                                                                                                            WHERE STOCK_QUANT.location_id = STOCK_MOVE_LINE.location_id
+                                                                                                            AND (STOCK_QUANT.lot_id = STOCK_MOVE_LINE.lot_id OR (STOCK_QUANT.lot_id IS NULL AND STOCK_MOVE_LINE.lot_id IS NULL))
+                                                                                                            AND (STOCK_QUANT.package_id = STOCK_MOVE_LINE.package_id OR (STOCK_QUANT.package_id IS NULL AND STOCK_MOVE_LINE.package_id IS NULL))
+                                                                                                            AND (STOCK_QUANT.owner_id = STOCK_MOVE_LINE.owner_id OR (STOCK_QUANT.owner_id IS NULL AND STOCK_MOVE_LINE.owner_id IS NULL))
+                                                                                                            AND STOCK_MOVE_LINE.product_qty != 0
+                                                                                                            ORDER BY sml_id)
+ORDER BY STOCK_MOVE_LINE.id) AS subquery WHERE error_message != '' order by id;"""
+env.cr.execute(query)
+
+for move_line in env.cr.dictfetchall():
+    move_lines_id.append(move_line.get('id'))
+
+
+warning = list()
+
+warning_1 = 'Problematic quant found: `reserved_quantity` field is not 0 while its location should bypass the reservation:'
+bypass_ids = list()
+warning_2 = 'Problematic quant found: `reserved_quantity` field is 0 while there is move lines reserved on it:'
+zero_quant_ids = list()
+warning_3 = 'Problematic quant found: `reserved_quantity` field is negative while it should not happen:'
+negative_quant_ids = list()
+warning_4 = 'Problematic quant found: `reserved_quantity` field does not reflect the move lines reservation:'
+difference_qnt_ml_ids = list()
+warning_5 = 'Problematic quant found: `reserved_quantity` field correctly reflects the move lines reservation but some are negatives:'
+negative_ml_ids = list()
+
+####################################################################### Start of report section #######################################################################
+
+n=0
+if quants or move_lines_id:
+    for quant in quants:
+        if quants[n]['error_message'] == warning_1:
+            bypass_ids.append(quants[n]['id'])
+        else:
+            if quants[n]['error_message'] == warning_2:
+                zero_quant_ids.append(quants[n]['id'])
+            else:
+                if quants[n]['error_message'] == warning_3:
+                    negative_quant_ids.append(quants[n]['id'])
+                else:
+                    if quants[n]['error_message'] == warning_4:
+                        difference_qnt_ml_ids.append(quants[n]['id'])
+                    else:
+                        if quants[n]['error_message'] == warning_5:
+                            negative_ml_ids.append(quants[n]['id'])
+        n += 1
+    if bypass_ids:
+        warning.append(warning_1)
+        warning.append(str.join(', ', [str(bypass_id) for bypass_id in bypass_ids]))
+        warning.append('******************')
+    if zero_quant_ids:
+        warning.append(warning_2)
+        warning.append(str.join(', ', [str(zero_quant_id) for zero_quant_id in zero_quant_ids]))
+        warning.append('******************')
+    if negative_quant_ids:
+        warning.append(warning_3)
+        warning.append(str.join(', ', [str(negative_quant_id) for negative_quant_id in negative_quant_ids]))
+        warning.append('******************')
+    if difference_qnt_ml_ids:
+        warning.append(warning_4)
+        warning.append(str.join(', ', [str(difference_qnt_ml_id) for difference_qnt_ml_id in difference_qnt_ml_ids]))
+        warning.append('******************')
+    if negative_ml_ids:
+        warning.append(warning_5)
+        warning.append(str.join(', ', [str(negative_ml_id) for negative_ml_id in negative_ml_ids]))
+        warning.append('******************')
+
+    if move_lines_id:
+        warning.append('\n')
+        warning.append('Problematic move line found: There is no existing quants despite its `reserved_quantity`:')
+        warning.append(str.join(', ', [str(move_line) for move_line in move_lines_id]))
+        warning.append('\n')
+
+    total_time = time.time() - start
+    prepend = list()
+
+    prepend.append('Process took %d seconds' % total_time)
+    prepend.append('Total number of problematic quants found: %s ' % len(quants))
+    prepend.append('Total number of problematic move lines found: %s ' % len(move_lines_id))
+    prepend.append('\n')
+    warning = prepend + warning
+else:
+    warning.append('nothing seems wrong')
+
+warning_str = str.join('\n', warning)
+
+# Write a log record
+log(warning_str, 'info')
+# Has we've just read records, it is safe to commit
+# to save the log record
+env.cr.commit()
+
+####################################################################### Start of fix section #######################################################################
+
+quants_id = []
+qnt = 0
+for quant in quants:
+    quants_id.append(quants[qnt]['id'])
+    qnt += 1
+
+quants = env['stock.quant'].sudo().search([('id','in', quants_id)])
+
 
 move_line_ids = []
-move_line_to_recompute_ids = []
-
-logging = ''
-
+warning = ''
 for quant in quants:
-
-    move_lines = env['stock.move.line'].search([
-        ('product_id', '=', quant.product_id.id),
-        ('location_id', '=', quant.location_id.id),
-        ('lot_id', '=', quant.lot_id.id),
-        ('package_id', '=', quant.package_id.id),
-        ('owner_id', '=', quant.owner_id.id),
-        ('product_qty', '!=', 0),
-        ])
-
+    move_lines = env["stock.move.line"].search([('product_id', '=', quant.product_id.id),('location_id', '=', quant.location_id.id),('lot_id', '=', quant.lot_id.id),('package_id', '=', quant.package_id.id),('owner_id', '=', quant.owner_id.id),('product_qty', '!=', 0)])
     move_line_ids += move_lines.ids
     reserved_on_move_lines = sum(move_lines.mapped('product_qty'))
     move_line_str = str.join(', ', [str(move_line_id) for move_line_id in move_lines.ids])
@@ -41,88 +217,40 @@ for quant in quants:
         # If a quant is in a location that should bypass the reservation, its `reserved_quantity` field
         # should be 0.
         if quant.reserved_quantity != 0:
-            logging += "Problematic quant found: %s (quantity: %s, reserved_quantity: %s)\n" % (quant.id, quant.quantity, quant.reserved_quantity)
-            logging += "its `reserved_quantity` field is not 0 while its location should bypass the reservation\n"
-            if move_lines:
-                logging += "These move lines are reserved on it: %s (sum of the reservation: %s)\n" % (move_line_str, reserved_on_move_lines)
-            else:
-                logging += "no move lines are reserved on it, you can safely reset its `reserved_quantity` to 0\n"
-            logging += '******************\n'
             quant.write({'reserved_quantity': 0})
     else:
         # If a quant is in a reservable location, its `reserved_quantity` should be exactly the sum
         # of the `product_qty` of all the partially_available / assigned move lines with the same
         # characteristics.
-
         if quant.reserved_quantity == 0:
             if move_lines:
-                logging += "Problematic quant found: %s (quantity: %s, reserved_quantity: %s)\n" % (quant.id, quant.quantity, quant.reserved_quantity)
-                logging += "its `reserved_quantity` field is 0 while these move lines are reserved on it: %s (sum of the reservation: %s)\n" % (move_line_str, reserved_on_move_lines)
-                logging += '******************\n'
                 move_lines.with_context(bypass_reservation_update=True).sudo().write({'product_uom_qty': 0})
-                move_line_to_recompute_ids += move_lines.ids
-        elif quant.reserved_quantity &lt; 0:
-            logging += "Problematic quant found: %s (quantity: %s, reserved_quantity: %s)\n" % (quant.id, quant.quantity, quant.reserved_quantity)
-            logging += "its `reserved_quantity` field is negative while it should not happen\n"
+        elif quant.reserved_quantity < 0:
             quant.write({'reserved_quantity': 0})
             if move_lines:
-                logging += "These move lines are reserved on it: %s (sum of the reservation: %s)\n" % (move_line_str, reserved_on_move_lines)
                 move_lines.with_context(bypass_reservation_update=True).sudo().write({'product_uom_qty': 0})
-                move_line_to_recompute_ids += move_lines.ids
-            logging += '******************\n'
         else:
             if reserved_on_move_lines != quant.reserved_quantity:
-                logging += "Problematic quant found: %s (quantity: %s, reserved_quantity: %s)\n" % (quant.id, quant.quantity, quant.reserved_quantity)
-                logging += "its `reserved_quantity` does not reflect the move lines reservation\n"
-                logging += "These move lines are reserved on it: %s (sum of the reservation: %s)\n" % (move_line_str, reserved_on_move_lines)
-                logging += '******************\n'
                 move_lines.with_context(bypass_reservation_update=True).sudo().write({'product_uom_qty': 0})
-                move_line_to_recompute_ids += move_lines.ids
                 quant.write({'reserved_quantity': 0})
             else:
-                if any(move_line.product_qty &lt; 0 for move_line in
-                       move_lines):
-                    logging += "Problematic quant found: %s (quantity: %s, reserved_quantity: %s)\n" % (quant.id, quant.quantity, quant.reserved_quantity)
-                    logging += "its `reserved_quantity` correctly reflects the move lines reservation but some are negatives\n"
-                    logging += "These move lines are reserved on it: %s (sum of the reservation: %s)\n" % (move_line_str, reserved_on_move_lines)
-                    logging += '******************\n'
+                if any(move_line.product_qty < 0 for move_line in move_lines):
                     move_lines.with_context(bypass_reservation_update=True).sudo().write({'product_uom_qty': 0})
-                    move_line_to_recompute_ids += move_lines.ids
                     quant.write({'reserved_quantity': 0})
 
-move_lines = env['stock.move.line'].search([('product_id.type', '=',
-        'product'), ('product_qty', '!=', 0), ('id', 'not in',
-        move_line_ids)])
+
+move_lines = env['stock.move.line'].search([('product_id.type', '=', 'product'),('product_qty', '!=', 0),('id', 'in', move_lines_id)])
 
 move_lines_to_unreserve = []
 
 for move_line in move_lines:
     if not move_line.location_id.should_bypass_reservation():
-        logging += "Problematic move line found: %s (reserved_quantity: %s)\n" % (move_line.id, move_line.product_qty)
-        logging += "There is no exiting quants despite its `reserved_quantity`\n"
-        logging += '******************\n'
         move_lines_to_unreserve.append(move_line.id)
-        move_line_to_recompute_ids.append(move_line.id)
 
 if len(move_lines_to_unreserve) > 1:
     env.cr.execute(""" UPDATE stock_move_line SET product_uom_qty = 0, product_qty = 0 WHERE id in %s ;""" % (tuple(move_lines_to_unreserve), ))
 elif len(move_lines_to_unreserve) == 1:
     env.cr.execute(""" UPDATE stock_move_line SET product_uom_qty = 0, product_qty = 0 WHERE id = %s ;""" % (move_lines_to_unreserve[0]))
-
-if logging:
-    env['ir.logging'].sudo().create({
-        'name': 'Unreserve stock.quant and stock.move.line',
-        'type': 'server',
-        'level': 'DEBUG',
-        'dbname': env.cr.dbname,
-        'message': logging,
-        'func': '_update_reserved_quantity',
-        'path': 'addons/stock/models/stock_quant.py',
-        'line': '0',
-    })
-
-if move_line_to_recompute_ids:
-    env['stock.move.line'].browse(move_line_to_recompute_ids).move_id._recompute_state()
 
             </field>
         </record>
