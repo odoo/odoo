@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 
 import { file } from 'web.test_utils';
 
@@ -11,19 +11,14 @@ QUnit.module('file_uploader', {}, function () {
 QUnit.module('file_uploader_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-        this.apps = [];
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
-            const { apps, env, widget } = res;
+            const { env, widget } = res;
             this.env = env;
-            this.apps = apps;
             this.widget = widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

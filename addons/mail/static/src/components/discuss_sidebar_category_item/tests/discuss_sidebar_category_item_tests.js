@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     start,
@@ -25,9 +24,6 @@ QUnit.module('discuss_sidebar_category_item_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

@@ -3,7 +3,6 @@
 import { insert, insertAndReplace } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     start,
@@ -20,16 +19,12 @@ QUnit.module('message_tests.js', {
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
-            const { afterEvent, apps, env, widget } = res;
+            const { afterEvent, env, widget } = res;
             this.afterEvent = afterEvent;
-            this.apps = apps;
             this.env = env;
             this.widget = widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

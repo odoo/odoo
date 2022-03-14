@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { insert, insertAndReplace, link } from '@mail/model/model_field_command';
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 
 import { str_to_datetime } from 'web.time';
 
@@ -19,9 +19,6 @@ QUnit.module('message_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

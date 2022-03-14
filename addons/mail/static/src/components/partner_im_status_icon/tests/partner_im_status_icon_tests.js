@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
@@ -29,9 +28,6 @@ QUnit.module('partner_im_status_icon_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

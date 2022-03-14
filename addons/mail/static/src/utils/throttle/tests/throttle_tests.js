@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 import throttle from '@mail/utils/throttle/throttle';
 import { nextTick } from '@mail/utils/utils';
 
@@ -30,7 +30,6 @@ QUnit.module('throttle_tests.js', {
         for (const t of this.throttles) {
             t.clear();
         }
-        afterEach(this);
     },
 });
 
