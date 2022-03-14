@@ -498,4 +498,3 @@ class HrEmployeePrivate(models.Model):
 
     def _sms_get_number_fields(self):
         return ['mobile_phone']
-

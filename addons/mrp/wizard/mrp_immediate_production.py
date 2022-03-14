@@ -79,4 +79,3 @@ class MrpImmediateProduction(models.TransientModel):
             productions_to_validate = productions_to_validate - productions_not_to_do
             return productions_to_validate.with_context(skip_immediate=True).button_mark_done()
         return True
-

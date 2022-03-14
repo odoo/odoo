@@ -70,4 +70,3 @@ class StockMoveLine(models.Model):
             stock_valuation_layers |= move._create_dropshipped_returned_svl(forced_quantity=abs(diff))
 
         stock_valuation_layers._validate_accounting_entries()
-

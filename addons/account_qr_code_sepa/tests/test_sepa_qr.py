@@ -60,4 +60,3 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
         """
         self.sepa_qr_invoice.generate_qr_code()
         self.assertEqual(self.sepa_qr_invoice.qr_code_method, 'sct_qr', "SEPA QR-code generator should have been chosen for this invoice.")
-
