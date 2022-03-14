@@ -13,7 +13,6 @@ import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { Layout } from "@web/search/layout";
-import { ViewNotFoundError } from "@web/views/view";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { getActiveActions, getDecoration, processButton } from "../helpers/view_utils";
@@ -252,21 +251,8 @@ export class ListView extends Component {
     }
 
     async openRecord(record) {
-        if (this.props.selectRecord) {
-            const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-            this.props.selectRecord(record.resId, { activeIds });
-        } else {
-            const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
-            try {
-                await this.actionService.switchView("form", { resId: record.resId, resIds });
-            } catch (e) {
-                if (e instanceof ViewNotFoundError) {
-                    // there's no form view in the current action
-                    return;
-                }
-                throw e;
-            }
-        }
+        const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
+        this.props.selectRecord(record.resId, { activeIds });
     }
 
     async onClickCreate() {
@@ -278,15 +264,7 @@ export class ListView extends Component {
             await this.model.root.createRecord(null, this.editable === "top");
             this.render();
         } else {
-            try {
-                await this.actionService.switchView("form", { resId: false });
-            } catch (e) {
-                if (e instanceof ViewNotFoundError) {
-                    // there's no form view in the current action
-                    return;
-                }
-                throw e;
-            }
+            await this.props.createRecord();
         }
     }
 
@@ -467,7 +445,6 @@ ListView.props = {
     ...standardViewProps,
     hasSelectors: { type: Boolean, optional: 1 },
     editable: { type: Boolean, optional: 1 },
-    selectRecord: { type: Function, optional: 1 },
     showButtons: { type: Boolean, optional: 1 },
     onSelectionChanged: { type: Function, optional: 1 },
 };

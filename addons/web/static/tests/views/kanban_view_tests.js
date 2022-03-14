@@ -2033,10 +2033,10 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("quick create record and edit in grouped mode", async (assert) => {
-        assert.expect(6);
+        assert.expect(5);
 
         let newRecordID;
-        const kanban = await makeView({
+        await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -2052,12 +2052,8 @@ QUnit.module("Views", (hooks) => {
                 }
             },
             groupBy: ["bar"],
-        });
-
-        patchWithCleanup(kanban.env.services.action, {
-            async switchView(viewType, props) {
-                assert.strictEqual(viewType, "form");
-                assert.strictEqual(props.resId, newRecordID);
+            selectRecord: (resId) => {
+                assert.strictEqual(resId, newRecordID);
             },
         });
 
@@ -2547,7 +2543,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("quick create record in grouped on date(time) field", async (assert) => {
-        assert.expect(6);
+        assert.expect(7);
 
         const kanban = await makeView({
             type: "kanban",
@@ -2560,11 +2556,8 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["date"],
-        });
-
-        patchWithCleanup(kanban.env.services.action, {
-            async switchView(viewType, props) {
-                assert.deepEqual([props.resId, viewType], [false, "form"]);
+            createRecord: () => {
+                assert.step("createRecord");
             },
         });
 
@@ -2597,6 +2590,8 @@ QUnit.module("Views", (hooks) => {
             ".o_kanban_quick_create",
             "should not have opened the quick create widget"
         );
+
+        assert.verifySteps(["createRecord", "createRecord"]);
     });
 
     QUnit.test(
@@ -3129,7 +3124,7 @@ QUnit.module("Views", (hooks) => {
             color: 0,
         });
 
-        const kanban = await makeView({
+        await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -3146,13 +3141,10 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route) {
                 assert.step(route);
             },
-        });
-
-        patchWithCleanup(kanban.env.services.action, {
-            async switchView(viewType, props) {
+            selectRecord: (resId) => {
                 assert.deepEqual(
-                    [props.resId, viewType],
-                    [1, "form"],
+                    resId,
+                    1,
                     "should trigger an event to open the clicked record in a form view"
                 );
             },
@@ -3266,7 +3258,7 @@ QUnit.module("Views", (hooks) => {
             "product,false,form"
         ] = `<form string="Product"><field name="display_name"/></form>`;
 
-        const kanban = await makeView({
+        await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -3280,15 +3272,8 @@ QUnit.module("Views", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-        });
-
-        patchWithCleanup(kanban.env.services.action, {
-            async switchView(viewType, props) {
-                assert.deepEqual(
-                    [props.resId, viewType],
-                    [1, "form"],
-                    "should trigger an event to open the form view"
-                );
+            selectRecord: (resId) => {
+                assert.strictEqual(resId, 1, "should trigger an event to open the form view");
             },
         });
 
@@ -8109,7 +8094,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(2);
         serverData.models.partner.records = [];
 
-        const kanban = await makeView({
+        await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -8121,16 +8106,13 @@ QUnit.module("Views", (hooks) => {
                 "</div>" +
                 "</t></templates></kanban>",
             groupBy: ["product_id"],
-        });
-
-        patchWithCleanup(kanban.env.services.action, {
-            async switchView() {
-                assert.step("switch_view");
+            createRecord: () => {
+                assert.step("createRecord");
             },
         });
 
         await createRecord();
-        assert.verifySteps(["switch_view"]);
+        assert.verifySteps(["createRecord"]);
     });
 
     QUnit.skipWOWL("keyboard navigation on kanban basic rendering", async (assert) => {

@@ -427,6 +427,16 @@ function makeActionManager(env) {
             loadIrFilters: action.views.some((v) => v[1] === "search"),
             resModel: action.res_model,
             type: view.type,
+            selectRecord: async (resId, { activeIds }) => {
+                if (_getView("form")) {
+                    await switchView("form", { resId, resIds: activeIds });
+                }
+            },
+            createRecord: async () => {
+                if (_getView("form")) {
+                    await switchView("form", { resId: false });
+                }
+            },
         });
 
         if (target === "inline") {

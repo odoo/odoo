@@ -30,6 +30,7 @@ export class SelectCreateDialog extends Dialog {
                     this.close();
                 }
             },
+            createRecord: () => {},
             onSelectionChanged: (selectedRecords) => {
                 this.state.selectedRecords = selectedRecords;
             },

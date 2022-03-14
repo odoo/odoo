@@ -12,7 +12,6 @@ import { useSetupView } from "@web/views/helpers/view_hook";
 import { getActiveActions } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { ViewNotFoundError } from "@web/views/view";
 import { useViewButtons } from "@web/views/view_button/hook";
 
 const { Component } = owl;
@@ -340,16 +339,8 @@ export class KanbanView extends Component {
     }
 
     async openRecord(record) {
-        const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        try {
-            await this.actionService.switchView("form", { resId: record.resId, resIds });
-        } catch (e) {
-            if (e instanceof ViewNotFoundError) {
-                // there's no form view in the current action
-                return;
-            }
-            throw e;
-        }
+        const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
+        this.props.selectRecord(record.resId, { activeIds });
     }
 
     async createRecord(group) {
@@ -360,15 +351,7 @@ export class KanbanView extends Component {
         } else if (onCreate && onCreate !== "quick_create") {
             await this.actionService.doAction(onCreate, { additionalContext: root.context });
         } else {
-            try {
-                await this.actionService.switchView("form", { resId: false });
-            } catch (e) {
-                if (e instanceof ViewNotFoundError) {
-                    // there's no form view in the current action
-                    return;
-                }
-                throw e;
-            }
+            await this.props.createRecord();
         }
     }
 }

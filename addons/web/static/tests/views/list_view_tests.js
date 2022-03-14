@@ -38,7 +38,28 @@ let serverData;
 let target;
 
 // WOWL remove after adapting tests
-let testUtils, Widget, widgetRegistry, widgetRegistryOwl, cpHelpers, FormView, ListView, ListRenderer, core, _t, clickFirst, mixins, BasicModel, RamStorage, AbstractStorageService, loadState, patch, unpatch, ControlPanel, ListController, createView, basicFields;
+let testUtils,
+    Widget,
+    widgetRegistry,
+    widgetRegistryOwl,
+    cpHelpers,
+    FormView,
+    ListView,
+    ListRenderer,
+    core,
+    _t,
+    clickFirst,
+    mixins,
+    BasicModel,
+    RamStorage,
+    AbstractStorageService,
+    loadState,
+    patch,
+    unpatch,
+    ControlPanel,
+    ListController,
+    createView,
+    basicFields;
 
 async function reloadListView(target) {
     await click(target, "input.o_searchview_input");
@@ -269,23 +290,14 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test('editable list with edit="0"', async function (assert) {
-        // FIXME: there should be no dependency from views to actionService
-        const fakeActionService = {
-            start() {
-                return {
-                    switchView(viewType) {
-                        assert.step(`switch to ${viewType}`);
-                    },
-                };
-            },
-        };
-        serviceRegistry.add("action", fakeActionService, { force: true });
-
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree editable="top" edit="0"><field name="foo"/></tree>',
+            selectRecord: (resId, options) => {
+                assert.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
+            },
         });
 
         assert.ok(
@@ -296,7 +308,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_cell"));
         assert.containsNone(target, "tbody tr.o_selected_row", "should not have editable row");
 
-        assert.verifySteps(["switch to form"]);
+        assert.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
     });
 
     QUnit.skipWOWL(
@@ -14514,27 +14526,43 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL('archive/unarchive not available on active readonly models', async function (assert) {
-        assert.expect(2);
+    QUnit.skipWOWL(
+        "archive/unarchive not available on active readonly models",
+        async function (assert) {
+            assert.expect(2);
 
-        this.data.foo.fields.active = { string: 'Active', type: 'boolean', default: true, readonly: true };
+            this.data.foo.fields.active = {
+                string: "Active",
+                type: "boolean",
+                default: true,
+                readonly: true,
+            };
 
-        const list = await createView({
-            View: ListView,
-            model: 'foo',
-            data: this.data,
-            arch: '<tree limit="3"><field name="display_name"/></tree>',
-            viewOptions: {
-                hasActionMenus: true,
-            },
-        });
+            const list = await createView({
+                View: ListView,
+                model: "foo",
+                data: this.data,
+                arch: '<tree limit="3"><field name="display_name"/></tree>',
+                viewOptions: {
+                    hasActionMenus: true,
+                },
+            });
 
-        await testUtils.dom.click(list.$('tbody .o_data_row:first td.o_list_record_selector:first input'));
-        assert.containsOnce(list, '.o_cp_action_menus', 'sidebar should be available');
+            await testUtils.dom.click(
+                list.$("tbody .o_data_row:first td.o_list_record_selector:first input")
+            );
+            assert.containsOnce(list, ".o_cp_action_menus", "sidebar should be available");
 
-        await testUtils.dom.click(list.$('.o_cp_action_menus .dropdown-toggle:contains(Action)'));
-        assert.containsNone(list, 'a:contains(Archive)', 'Archive action should not be available');
+            await testUtils.dom.click(
+                list.$(".o_cp_action_menus .dropdown-toggle:contains(Action)")
+            );
+            assert.containsNone(
+                list,
+                "a:contains(Archive)",
+                "Archive action should not be available"
+            );
 
-        list.destroy();
-    });
+            list.destroy();
+        }
+    );
 });
