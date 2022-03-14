@@ -24,16 +24,6 @@ export class ChatWindowHeader extends Component {
     /**
      * @returns {string}
      */
-    get shiftNextText() {
-        if (this.messaging.locale.textDirection === 'rtl') {
-            return this.env._t("Shift left");
-        }
-        return this.env._t("Shift right");
-    }
-
-    /**
-     * @returns {string}
-     */
     get shiftPrevText() {
         if (this.messaging.locale.textDirection === 'rtl') {
             return this.env._t("Shift right");
