@@ -463,6 +463,24 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
     return [node, offset];
 }
 /**
+ * Guarantee that the focus is on element or one of its children.
+ *
+ * A simple call to element.focus will change the editable context
+ * if one of the parents of the current activeElement is not editable,
+ * and the caret position will not be preserved, even if activeElement is
+ * one of the subchildren of element. This is why the (re)focus is
+ * only called when the current activeElement is not one of the
+ * (sub)children of element.
+ *
+ * @param {Element} element should have the focus or a child with the focus
+ */
+ export function ensureFocus(element) {
+    const activeElement = element.ownerDocument.activeElement;
+    if (activeElement !== element && (!element.contains(activeElement) || !activeElement.isContentEditable)) {
+        element.focus();
+    }
+}
+/**
  * @param {Node} anchorNode
  * @param {number} anchorOffset
  * @param {Node} focusNode

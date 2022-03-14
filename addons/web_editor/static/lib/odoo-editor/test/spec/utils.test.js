@@ -7,6 +7,7 @@ import {
     closestElement,
     descendants,
     endPos,
+    ensureFocus,
     firstLeaf,
     getAdjacentPreviousSiblings,
     getAdjacentNextSiblings,
@@ -33,7 +34,15 @@ import {
     DIRECTIONS,
     isBlock,
 } from '../../src/utils/utils.js';
-import { BasicEditor, testEditor } from '../utils.js';
+import {
+    BasicEditor,
+    insertText,
+    keydown,
+    keyup,
+    nextTickFrame,
+    testEditor,
+    unformat,
+} from '../utils.js';
 
 const cleanTestHtml = () => {
     const testElements = document.querySelectorAll('body>div[contenteditable=true]');
@@ -722,6 +731,90 @@ describe('Utils', () => {
     // Cursor management
     //------------------------------------------------------------------------------
 
+    describe('ensureFocus', () => {
+        it('should preserve the focus on the child of this.editable when executing a powerbox command even if it is enclosed in a contenteditable=false', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <div contenteditable="false"><div contenteditable="true">
+                        <p>[]<br></p>
+                    </div></div>
+                    <p><br></p>`),
+                stepFunction: async editor => {
+                    const sel = document.getSelection();
+                    const element = sel.anchorNode;
+                    await keydown(editor.editable, '/');
+                    await insertText(editor, '/');
+                    await keyup(editor.editable, '/');
+                    await insertText(editor, 'h2');
+                    await keyup(element, '2', { bubbles: true });
+                    await keydown(editor.editable, 'Enter');
+                    const activeElement = document.activeElement;
+                    setCursorStart(activeElement.lastElementChild);
+                    await nextTickFrame();
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false"><div contenteditable="true">
+                        <h2>[]<br></h2>
+                    </div></div>
+                    <p><br></p>`),
+            });
+        });
+        it('should preserve the focus on the child of this.editable even if it is enclosed in a contenteditable=false', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <div contenteditable="false"><div contenteditable="true">
+                        <p>[]<br></p>
+                    </div></div>
+                    <p><br></p>`),
+                stepFunction: async editor => {
+                    ensureFocus(editor.editable);
+                    await nextTickFrame();
+                    let activeElement = document.activeElement;
+                    setCursorStart(activeElement.lastElementChild);
+                    await insertText(editor, 'focusWasConserved');
+                    // Proof that a simple call to Element.focus would change
+                    // the focus in this case.
+                    editor.editable.focus();
+                    await nextTickFrame();
+                    activeElement = document.activeElement;
+                    setCursorStart(activeElement.lastElementChild);
+                    await nextTickFrame();
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false"><div contenteditable="true">
+                        <p>focusWasConserved</p>
+                    </div></div>
+                    <p>[]<br></p>`),
+            });
+        });
+        it('should update the focus when the active element is not the focus target', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <div contenteditable="false"><div contenteditable="true">
+                        <p>[]<br></p>
+                    </div></div>
+                    <div contenteditable="false"><div id="target" contenteditable="true">
+                        <p><br></p>
+                    </div></div>`),
+                stepFunction: async editor => {
+                    const sel = document.getSelection();
+                    const element = editor.editable.querySelector('#target');
+                    ensureFocus(element);
+                    await nextTickFrame();
+                    const activeElement = document.activeElement;
+                    setCursorStart(activeElement.lastElementChild);
+                    await nextTickFrame();
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false"><div contenteditable="true">
+                        <p><br></p>
+                    </div></div>
+                    <div contenteditable="false"><div id="target" contenteditable="true">
+                        <p>[]<br></p>
+                    </div></div>`),
+            });
+        });
+    });
     describe('getNormalizedCursorPosition', () => {
         // TODO: test more.
         it('should move the cursor from after a <b> to within it', () => {

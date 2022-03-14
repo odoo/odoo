@@ -422,6 +422,16 @@ export async function keydown(editable, key, options = {}) {
     await nextTickFrame();
 }
 
+export async function keyup(editable, key, options = {}) {
+    options = Object.assign(
+        { key: key },
+        options
+    );
+    const ev = new KeyboardEvent('keyup', options);
+    editable.dispatchEvent(ev);
+    await nextTickFrame();
+}
+
 export async function deleteForward(editor) {
     editor.execCommand('oDeleteForward');
 }

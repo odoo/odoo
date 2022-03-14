@@ -1,6 +1,6 @@
 import { applyInlineStyle } from '../../src/commands/commands.js';
 import { OdooEditor } from '../../src/OdooEditor.js';
-import { getTraversedNodes } from '../../src/utils/utils.js';
+import { getTraversedNodes, setCursorStart } from '../../src/utils/utils.js';
 import {
     BasicEditor,
     deleteBackward,
@@ -9,6 +9,8 @@ import {
     insertParagraphBreak,
     insertText,
     keydown,
+    keyup,
+    nextTickFrame,
     redo,
     testEditor,
     undo,
