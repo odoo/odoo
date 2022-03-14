@@ -3,7 +3,6 @@
 import BusService from 'bus.BusService';
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
@@ -28,16 +27,12 @@ QUnit.module('discuss_tests.js', {
                 data: this.data,
                 hasDiscuss: true,
             }));
-            const { afterEvent, apps, env, widget } = res;
+            const { afterEvent, env, widget } = res;
             this.afterEvent = afterEvent;
-            this.apps = apps;
             this.env = env;
             this.widget = widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

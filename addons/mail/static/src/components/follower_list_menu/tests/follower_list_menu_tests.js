@@ -2,7 +2,6 @@
 
 import { insert, link } from '@mail/model/model_field_command';
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
@@ -33,9 +32,6 @@ QUnit.module('follower_list_menu_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

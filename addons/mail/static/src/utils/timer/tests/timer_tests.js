@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, nextTick, start } from '@mail/utils/test_utils';
+import { beforeEach, nextTick, start } from '@mail/utils/test_utils';
 import Timer from '@mail/utils/timer/timer';
 
 const { TimerClearedError } = Timer;
@@ -29,7 +29,6 @@ QUnit.module('timer_tests.js', {
         for (const timer of this.timers) {
             timer.clear();
         }
-        afterEach(this);
     },
 });
 

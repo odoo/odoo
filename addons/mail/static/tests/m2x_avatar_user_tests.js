@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Many2OneAvatarUser } from '@mail/js/m2x_avatar_user';
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { doAction } from '@web/../tests/webclient/helpers';
 import { registry } from "@web/core/registry";
@@ -51,9 +51,6 @@ QUnit.module('mail', {}, function () {
             );
 
             target = getFixture();
-        },
-        afterEach() {
-            afterEach(this);
         },
     });
 

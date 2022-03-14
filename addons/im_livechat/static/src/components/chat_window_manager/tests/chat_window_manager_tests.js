@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     start,
@@ -27,9 +26,6 @@ QUnit.module('chat_window_manager_tests.js', {
             this.widget = widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

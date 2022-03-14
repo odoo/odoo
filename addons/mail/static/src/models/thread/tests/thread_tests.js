@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { insert } from '@mail/model/model_field_command';
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
@@ -17,9 +17,6 @@ QUnit.module('thread_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

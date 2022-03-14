@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
+import { afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
 
@@ -21,9 +21,6 @@ QUnit.module('thread_needaction_preview_tests.js', {
             this.widget = widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

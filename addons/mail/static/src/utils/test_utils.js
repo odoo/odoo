@@ -25,7 +25,8 @@ import {
 } from 'web.test_utils';
 import Widget from 'web.Widget';
 import { registry } from '@web/core/registry';
-import { getFixture } from "@web/../tests/helpers/utils";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
 import LegacyRegistry from "web.Registry";
@@ -257,27 +258,14 @@ async function beforeEach(self) {
         data[modelName] = { fields, records };
     }
 
-    const originals = {
-        '_.debounce': _.debounce,
-        '_.throttle': _.throttle,
-    };
-
-    (function patch() {
-        // patch _.debounce and _.throttle to be fast and synchronous
-        _.debounce = _.identity;
-        _.throttle = _.identity;
-    })();
-
-    function unpatch() {
-        _.debounce = originals['_.debounce'];
-        _.throttle = originals['_.throttle'];
-    }
-
     Object.assign(self, {
-        apps: [],
         data,
-        unpatch,
         widget: undefined
+    });
+
+    registerCleanup(() => {
+        self.widget = undefined;
+        self.env = undefined;
     });
 
     Object.defineProperty(self, 'messaging', {
@@ -289,25 +277,6 @@ async function beforeEach(self) {
         },
     });
 }
-
-function afterEach(self) {
-    // The components must be destroyed before the widget, because the
-    // widget might destroy the models before destroying the components,
-    // and the components might still rely on messaging (or other) record(s).
-    while (self.apps.length > 0) {
-        self.apps.pop().destroy();
-    }
-    if (self.widget) {
-        self.widget.destroy();
-        self.widget = undefined;
-    }
-    if (self.messaging) {
-        self.messaging.delete();
-    }
-    self.env = undefined;
-    self.unpatch();
-}
-
 
 function getAfterEvent({ messagingBus }) {
     /**
@@ -359,7 +328,7 @@ function getAfterEvent({ messagingBus }) {
  * Creates a new root Component, with the given props, and mounts it on target.
  * Assumes that self.env is set to the correct value.
  * Components created this way are automatically registered for clean up after
- * the test, which will happen when `afterEach` is called.
+ * the test.
  *
  * @param {Object} self the current QUnit instance
  * @param {Object} Component the class of the component to create
@@ -375,7 +344,10 @@ async function createRootComponent(self, Component, { props = {}, target }) {
         env: self.env,
         test: true,
     });
-    self.apps.push(app);
+    // The components must be destroyed before the widget, because the
+    // widget might destroy the models before destroying the components,
+    // and the components might still rely on messaging (or other) record(s).
+    registerCleanup(() => app.destroy());
     let component;
     await afterNextRender(() => {
         component = app.mount(target);
@@ -388,7 +360,7 @@ async function createRootComponent(self, Component, { props = {}, target }) {
  * componentName and with the given props, and mounts it on target.
  * Assumes that self.env is set to the correct value.
  * Components created this way are automatically registered for clean up after
- * the test, which will happen when `afterEach` is called.
+ * the test.
  *
  * @param {Object} self the current QUnit instance
  * @param {string} componentName the class name of the component to create
@@ -407,11 +379,11 @@ function getClick({ afterNextRender }) {
     };
 }
 
-function getCreateChatterContainerComponent({ afterEvent, apps, env, widget }) {
+function getCreateChatterContainerComponent({ afterEvent, env, widget }) {
     return async function createChatterContainerComponent(props, { waitUntilMessagesLoaded = true } = {}) {
         let chatterContainerComponent;
         async function func() {
-            chatterContainerComponent = await createRootMessagingComponent({ apps, env }, "ChatterContainer", {
+            chatterContainerComponent = await createRootMessagingComponent({ env }, "ChatterContainer", {
                 props,
                 target: widget.el,
             });
@@ -438,67 +410,67 @@ function getCreateChatterContainerComponent({ afterEvent, apps, env, widget }) {
     };
 }
 
-function getCreateComposerComponent({ apps, env, modelManager, widget }) {
+function getCreateComposerComponent({ env, modelManager, widget }) {
     return async function createComposerComponent(composer, props) {
         const composerView = modelManager.messaging.models['ComposerView'].create({
             qunitTest: insertAndReplace({
                 composer: replace(composer),
             }),
         });
-        return await createRootMessagingComponent({ apps, env }, "Composer", {
+        return await createRootMessagingComponent({ env }, "Composer", {
             props: { localId: composerView.localId, ...props },
             target: widget.el,
         });
     };
 }
 
-function getCreateComposerSuggestionComponent({ apps, env, modelManager, widget }) {
+function getCreateComposerSuggestionComponent({ env, modelManager, widget }) {
     return async function createComposerSuggestionComponent(composer, props) {
         const composerView = modelManager.messaging.models['ComposerView'].create({
             qunitTest: insertAndReplace({
                 composer: replace(composer),
             }),
         });
-        await createRootMessagingComponent({ apps, env }, "ComposerSuggestion", {
+        await createRootMessagingComponent({ env }, "ComposerSuggestion", {
             props: { ...props, composerViewLocalId: composerView.localId },
             target: widget.el,
         });
     };
 }
 
-function getCreateMessageComponent({ apps, env, modelManager, widget }) {
+function getCreateMessageComponent({ env, modelManager, widget }) {
     return async function createMessageComponent(message) {
         const messageView = modelManager.messaging.models['MessageView'].create({
             message: replace(message),
             qunitTest: insertAndReplace(),
         });
-        await createRootMessagingComponent({ apps, env }, "Message", {
+        await createRootMessagingComponent({ env }, "Message", {
             props: { localId: messageView.localId },
             target: widget.el,
         });
     };
 }
 
-function getCreateMessagingMenuComponent({ apps, env, widget }) {
+function getCreateMessagingMenuComponent({ env, widget }) {
     return async function createMessagingMenuComponent() {
-        return await createRootComponent({ apps, env }, MessagingMenuContainer, { target: widget.el });
+        return await createRootComponent({ env }, MessagingMenuContainer, { target: widget.el });
     };
 }
 
-function getCreateNotificationListComponent({ apps, env, modelManager, widget }) {
+function getCreateNotificationListComponent({ env, modelManager, widget }) {
     return async function createNotificationListComponent({ filter = 'all' } = {}) {
         const notificationListView = modelManager.messaging.models['NotificationListView'].create({
             filter,
             qunitTestOwner: insertAndReplace(),
         });
-        await createRootMessagingComponent({ apps, env }, "NotificationList", {
+        await createRootMessagingComponent({ env }, "NotificationList", {
             props: { localId: notificationListView.localId },
             target: widget.el,
         });
     };
 }
 
-function getCreateThreadViewComponent({ afterEvent, apps, env, widget }) {
+function getCreateThreadViewComponent({ afterEvent, env, widget }) {
     return async function createThreadViewComponent(threadView, otherProps = {}, { isFixedSize = false, waitUntilMessagesLoaded = true } = {}) {
         let target;
         if (isFixedSize) {
@@ -515,7 +487,7 @@ function getCreateThreadViewComponent({ afterEvent, apps, env, widget }) {
             target = widget.el;
         }
         async function func() {
-            return createRootMessagingComponent({ apps, env }, "ThreadView", { props: { localId: threadView.localId, ...otherProps }, target });
+            return createRootMessagingComponent({ env }, "ThreadView", { props: { localId: threadView.localId, ...otherProps }, target });
         }
         if (waitUntilMessagesLoaded) {
             await afterNextRender(() => afterEvent({
@@ -620,6 +592,11 @@ function getOpenDiscuss({ afterNextRender, discussWidget }) {
  * @returns {Object}
  */
 async function start(param0 = {}) {
+    // patch _.debounce and _.throttle to be fast and synchronous.
+    patchWithCleanup(_, {
+        debounce: func => func,
+        throttle: func => func,
+    });
     let callbacks = {
         init: [],
         mount: [],
@@ -808,7 +785,6 @@ async function start(param0 = {}) {
         legacyPatch(widget, {
             destroy() {
                 destroyCallbacks.forEach(callback => callback({ widget }));
-                this._super(...arguments);
                 legacyUnpatch(widget);
             }
         });
@@ -836,15 +812,18 @@ async function start(param0 = {}) {
         testSetupDoneDeferred.resolve();
         waitUntilEventPromise = Promise.resolve();
     }
-    const apps = [];
     const result = {
         afterEvent,
-        apps,
         env: testEnv,
         mockServer,
         widget,
     };
     const { modelManager } = testEnv.services.messaging;
+    registerCleanup(async() => {
+        widget.destroy();
+        await modelManager.messagingInitializedPromise;
+        modelManager.messaging.delete();
+    });
     if (waitUntilMessagingCondition === 'created') {
         await modelManager.messagingCreatedPromise;
     }
@@ -865,13 +844,13 @@ async function start(param0 = {}) {
         ...result,
         afterNextRender,
         click: getClick({ afterNextRender }),
-        createChatterContainerComponent: getCreateChatterContainerComponent({ afterEvent, apps, env: testEnv, widget }),
-        createComposerComponent: getCreateComposerComponent({ apps, env: testEnv, modelManager, widget }),
-        createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ apps, env: testEnv, modelManager, widget }),
-        createMessageComponent: getCreateMessageComponent({ apps, env: testEnv, modelManager, widget }),
-        createMessagingMenuComponent: getCreateMessagingMenuComponent({ apps, env: testEnv, widget }),
-        createNotificationListComponent: getCreateNotificationListComponent({ apps, env: testEnv, modelManager, widget }),
-        createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, apps, env: testEnv, widget }),
+        createChatterContainerComponent: getCreateChatterContainerComponent({ afterEvent, env: testEnv, widget }),
+        createComposerComponent: getCreateComposerComponent({ env: testEnv, modelManager, widget }),
+        createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: testEnv, modelManager, widget }),
+        createMessageComponent: getCreateMessageComponent({ env: testEnv, modelManager, widget }),
+        createMessagingMenuComponent: getCreateMessagingMenuComponent({ env: testEnv, widget }),
+        createNotificationListComponent: getCreateNotificationListComponent({ env: testEnv, modelManager, widget }),
+        createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: testEnv, widget }),
         messaging: modelManager.messaging,
         openDiscuss,
     };
@@ -931,7 +910,6 @@ function pasteFiles(el, files) {
 //------------------------------------------------------------------------------
 
 export {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,

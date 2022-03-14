@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
@@ -30,9 +29,6 @@ QUnit.module('thread_icon_tests.js', {
             this.widget = widget;
         };
 
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

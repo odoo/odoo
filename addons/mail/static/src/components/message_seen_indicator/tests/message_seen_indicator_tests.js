@@ -2,7 +2,6 @@
 
 import { insert, insertAndReplace, link } from '@mail/model/model_field_command';
 import {
-    afterEach,
     beforeEach,
     createRootMessagingComponent,
     start,
@@ -33,9 +32,6 @@ QUnit.module('message_seen_indicator_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

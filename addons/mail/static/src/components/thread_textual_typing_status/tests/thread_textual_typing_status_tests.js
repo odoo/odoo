@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    afterEach,
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
@@ -30,9 +29,6 @@ QUnit.module('thread_textual_typing_status_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    async afterEach() {
-        afterEach(this);
     },
 });
 

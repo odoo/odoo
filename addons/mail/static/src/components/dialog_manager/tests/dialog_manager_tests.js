@@ -2,7 +2,6 @@
 
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
-    afterEach,
     beforeEach,
     nextAnimationFrame,
     start,
@@ -24,9 +23,6 @@ QUnit.module('dialog_manager_tests.js', {
             this.env = env;
             this.widget = widget;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 

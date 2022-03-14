@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('website_slides', {}, function () {
 QUnit.module('components', {}, function () {
@@ -10,15 +10,11 @@ QUnit.module('activity_tests.js', {
         await beforeEach(this);
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
-            const { apps, env, widget } = res;
-            this.apps = apps;
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
             return res;
         };
-    },
-    afterEach() {
-        afterEach(this);
     },
 });
 
