@@ -7,6 +7,7 @@ from ldap.filter import filter_format
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import AccessDenied
+from odoo.tools.misc import str2bool
 from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
@@ -90,6 +91,9 @@ class CompanyLDAP(models.Model):
         uri = 'ldap://%s:%d' % (conf['ldap_server'], conf['ldap_server_port'])
 
         connection = ldap.initialize(uri)
+        ldap_chase_ref_disabled = self.env['ir.config_parameter'].sudo().get_param('auth_ldap.disable_chase_ref')
+        if str2bool(ldap_chase_ref_disabled):
+            connection.set_option(ldap.OPT_REFERRALS, ldap.OPT_OFF)
         if conf['ldap_tls']:
             connection.start_tls_s()
         return connection
