@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
+import { attr, many, one } from '@mail/model/model_field';
+import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { escape } from '@web/core/utils/strings';
 
 registerModel({
@@ -317,6 +317,35 @@ registerModel({
             return (this.messaging.device.isMobile && this.activeMobileNavbarTabId !== 'mailbox') ? insertAndReplace() : clear();
         },
         /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeOrderedMailboxes() {
+            if (!this.messaging) {
+                return clear();
+            }
+            const orderedMailboxes = this.messaging.models['Thread']
+                .all(thread => thread.isPinned && thread.model === 'mail.box')
+                .sort((mailbox1, mailbox2) => {
+                    if (mailbox1 === this.messaging.inbox) {
+                        return -1;
+                    }
+                    if (mailbox2 === this.messaging.inbox) {
+                        return 1;
+                    }
+                    if (mailbox1 === this.messaging.starred) {
+                        return -1;
+                    }
+                    if (mailbox2 === this.messaging.starred) {
+                        return 1;
+                    }
+                    const mailbox1Name = mailbox1.displayName;
+                    const mailbox2Name = mailbox2.displayName;
+                    return mailbox1Name < mailbox2Name ? -1 : 1;
+                });
+            return replace(orderedMailboxes);
+        },
+        /**
          * Only pinned threads are allowed in discuss.
          *
          * @private
@@ -442,6 +471,9 @@ registerModel({
             compute: '_computeMobileMessagingNavbarView',
             inverse: 'discuss',
             isCausal: true,
+        }),
+        orderedMailboxes: many('Thread', {
+            compute: '_computeOrderedMailboxes',
         }),
         /**
          * Quick search input value in the discuss sidebar (desktop). Useful
