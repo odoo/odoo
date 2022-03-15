@@ -12,6 +12,7 @@ import {
     start,
 } from '@mail/utils/test_utils';
 
+import FormView from 'web.FormView';
 import {
     file,
     makeTestPromise,
@@ -34,6 +35,29 @@ QUnit.module('composer_tests.js', {
             this.env = env;
             this.widget = widget;
             return res;
+        };
+        // FIXME archs could be removed once task-2248306 is done
+        // The mockServer will try to get the list view
+        // of every relational fields present in the main view.
+        // In the case of mail fields, we don't really need them,
+        // but they still need to be defined.
+        this.createView = async (viewParams, ...args) => {
+            await afterNextRender(async () => {
+                const viewArgs = Object.assign(
+                    {
+                        archs: {
+                            'mail.activity,false,list': '<tree/>',
+                            'mail.followers,false,list': '<tree/>',
+                            'mail.message,false,list': '<tree/>',
+                        },
+                    },
+                    viewParams,
+                );
+                const { afterEvent, env, widget } = await start(viewArgs, ...args);
+                this.afterEvent = afterEvent;
+                this.env = env;
+                this.widget = widget;
+            });
         };
     },
     afterEach() {
@@ -1774,13 +1798,27 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
 QUnit.test("Show a default status in the recipient status text when the thread doesn't have a name.", async function (assert) {
     assert.expect(1);
 
-    const { createComposerComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].create({
-        composer: insertAndReplace({ isLog: false }),
-        id: 20,
+    this.data['res.partner'].records.push({ id: 20 });
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
         model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+        res_id: 20,
     });
-    await createComposerComponent(thread.composer, { hasFollowers: true });
+    await afterNextRender(() => document.querySelector('.o_ChatterTopbar_buttonSendMessage').click());
     assert.strictEqual(
         document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
         "To:Followersofthisdocument",
@@ -1791,14 +1829,29 @@ QUnit.test("Show a default status in the recipient status text when the thread d
 QUnit.test("Show a thread name in the recipient status text.", async function (assert) {
     assert.expect(1);
 
-    const { createComposerComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].create({
-        name: "test name",
-        composer: insertAndReplace({ isLog: false }),
-        id: 20,
+    this.data['res.partner'].records.push({ name: "test name", id: 20 });
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
         model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+        res_id: 20,
     });
-    await createComposerComponent(thread.composer, { hasFollowers: true });
+    // hack: provide awareness of name (not received in usual chatter flow)
+    this.messaging.models['Thread'].insert({ id: 20, model: 'res.partner', name: "test name", });
+    await afterNextRender(() => document.querySelector('.o_ChatterTopbar_buttonSendMessage').click());
     assert.strictEqual(
         document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
         "To:Followersof\"testname\"",

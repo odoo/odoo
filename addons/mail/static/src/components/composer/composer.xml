@@ -34,7 +34,7 @@
                                 on: <b><t t-esc="composerView.composer.activeThread.displayName"/></b>
                             </span>
                         </t>
-                        <t t-if="props.hasFollowers and !composerView.composer.isLog">
+                        <t t-if="composerView.hasFollowers and !composerView.composer.isLog">
                             <!-- Text for followers -->
                             <small class="o_Composer_followers">
                                 <b class="text-muted">To: </b>
