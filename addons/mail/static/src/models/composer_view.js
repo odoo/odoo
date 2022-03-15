@@ -579,6 +579,18 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeHasFooter() {
+            return Boolean(
+                this.hasThreadTyping ||
+                this.composer.attachments.length > 0 ||
+                this.messageViewInEditing ||
+                !this.isCompact
+            );
+        },
+        /**
+         * @private
          * @return {boolean}
          */
         _computeHasSuggestions() {
@@ -1034,6 +1046,12 @@ registerModel({
         hasFollowers: attr({
             compute: '_computeHasFollowers',
             default: false,
+        }),
+        /**
+         * Determines whether composer should display a footer.
+         */
+        hasFooter: attr({
+            compute: '_computeHasFooter',
         }),
         /**
          * States whether there is any result currently found for the current
