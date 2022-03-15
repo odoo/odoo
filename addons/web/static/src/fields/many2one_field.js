@@ -8,7 +8,7 @@ import { sprintf, escape } from "@web/core/utils/strings";
 import { standardFieldProps } from "./standard_field_props";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-const { Component, onWillStart, onWillUpdateProps, useState } = owl;
+const { Component, onWillUpdateProps, useState } = owl;
 
 export class Many2OneField extends Component {
     setup() {
@@ -16,23 +16,12 @@ export class Many2OneField extends Component {
         this.action = useService("action");
         this.dialog = useService("dialog");
 
-        this.displayName = "";
-        this.extraLines = [];
-
         this.state = useState({
             isFloating: !this.props.value,
         });
 
-        onWillStart(async () => {
-            [this.displayName, ...this.extraLines] = await this.loadDisplayName(this.props.value);
-        });
         onWillUpdateProps(async (nextProps) => {
             this.state.isFloating = !nextProps.value;
-            if (this.props.value !== nextProps.value) {
-                [this.displayName, ...this.extraLines] = await this.loadDisplayName(
-                    nextProps.value
-                );
-            }
         });
     }
 
@@ -60,22 +49,22 @@ export class Many2OneField extends Component {
             options: this.loadRecordSource.bind(this),
         };
     }
+    get displayName() {
+        return this.props.value ? this.props.value[1].split("\n")[0] : "";
+    }
+    get extraLines() {
+        return this.props.value
+            ? this.props.value[1]
+                  .split("\n")
+                  .map((line) => line.trim())
+                  .slice(1)
+            : [];
+    }
 
     getDomain() {
         return this.props.record
             .getFieldDomain(this.props.name)
             .toList(this.props.record.getFieldContext(this.props.name));
-    }
-
-    async loadDisplayName(value) {
-        // FIXME WOWL should not be done here (in list, we do a name_get by line)
-        if (this.props.alwaysReload && value) {
-            const nameGet = await this.orm.call(this.props.relation, "name_get", [value[0]], {
-                context: this.props.record.getFieldContext(this.props.name),
-            });
-            return nameGet[0][1].split("\n").map((line) => line.trim());
-        }
-        return [this.props.format(value)];
     }
 
     async loadRecordSource(request) {
@@ -215,7 +204,6 @@ Many2OneField.props = {
     canWrite: { type: Boolean, optional: true },
     noQuickCreate: { type: Boolean, optional: true },
     noCreateEdit: { type: Boolean, optional: true },
-    alwaysReload: { type: Boolean, optional: true },
     relation: String,
 };
 Many2OneField.defaultProps = {
@@ -236,7 +224,6 @@ Many2OneField.extractProps = (fieldName, record, attrs) => {
         canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
         noQuickCreate: Boolean(attrs.options.no_quick_create),
         noCreateEdit: Boolean(attrs.options.no_create_edit),
-        alwaysReload: Boolean(attrs.options.always_reload),
         relation: record.fields[fieldName].relation,
     };
 };

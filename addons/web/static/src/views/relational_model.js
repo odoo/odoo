@@ -361,7 +361,12 @@ export class Record extends DataPoint {
             if ([null].includes(value)) {
                 evalContext[fieldName] = false;
             } else if (isX2Many(this.fields[fieldName])) {
-                evalContext[fieldName] = value.records.map((r) => r.resId);
+                if (!value || Array.isArray(value)) {
+                    // no dataPoint created yet
+                    evalContext[fieldName] = value ? [...value] : [];
+                } else {
+                    evalContext[fieldName] = value.records.map((r) => r.resId);
+                }
             } else if (value && this.fields[fieldName].type === "date") {
                 evalContext[fieldName] = value.toFormat("yyyy-LL-dd");
             } else if (value && this.fields[fieldName].type === "datetime") {
@@ -564,57 +569,15 @@ export class Record extends DataPoint {
     async loadRelationalData() {
         const proms = [];
         for (const fieldName in this.activeFields) {
-            if (!isX2Many(this.fields[fieldName])) {
-                continue;
-            }
-            const field = this.activeFields[fieldName];
-            const { relatedFields = {}, views = {}, viewMode, FieldComponent } = field;
-
-            const fields = {
-                id: { name: "id", type: "integer", readonly: true },
-                ...relatedFields,
-                ...FieldComponent.fieldsToFetch,
-            };
-            const activeFields =
-                (views[viewMode] && views[viewMode].activeFields) ||
-                FieldComponent.fieldsToFetch ||
-                {};
-            for (const fieldName in relatedFields) {
-                if (relatedFields[fieldName].active) {
-                    activeFields[fieldName] = relatedFields[fieldName];
-                }
-            }
-            const limit = views[viewMode] && views[viewMode].limit;
-            const orderBy = views[viewMode] && views[viewMode].defaultOrder;
-            const list = this.model.createDataPoint("list", {
-                resModel: this.fields[fieldName].relation,
-                fields,
-                activeFields,
-                context: this.context,
-                rawContext: field.context,
-                getEvalContext: () => this.evalContext,
-                limit,
-                orderBy,
-                field: this.fields[fieldName],
-                resIds: this.data[fieldName] || [],
-                views,
-                viewMode,
-                onChanges: () => {
-                    this.onChanges();
-                    this._changes[fieldName] = list;
-                },
-                onRecordWillSwitchMode: (record, mode) => {
-                    if (mode === "edit") {
-                        this.switchMode("edit");
-                    }
-                },
-            });
-            this._values[fieldName] = list;
-            this.data[fieldName] = list;
-            if (!this.isInvisible(fieldName)) {
-                list.applyCommands(this._changes[fieldName]);
-                this._changes[fieldName] = list;
-                proms.push(list.load());
+            if (this.fields[fieldName].type === "many2one") {
+                proms.push(
+                    this._loadOne2ManyData(fieldName, this.data[fieldName]).then((value) => {
+                        this.data[fieldName] = value;
+                        this._values[fieldName] = value;
+                    })
+                );
+            } else if (isX2Many(this.fields[fieldName])) {
+                proms.push(this._loadX2ManyData(fieldName));
             }
         }
         return Promise.all(proms);
@@ -796,6 +759,73 @@ export class Record extends DataPoint {
     // Protected
     // -------------------------------------------------------------------------
 
+    async _loadOne2ManyData(fieldName, value) {
+        const relation = this.fields[fieldName].relation;
+        const field = this.activeFields[fieldName];
+        if (
+            this.fieldNames.includes(fieldName) &&
+            !this.isInvisible(fieldName) &&
+            value &&
+            (!value[1] || field.options.always_reload)
+        ) {
+            const context = this.getFieldContext(fieldName);
+            const result = await this.model.orm.nameGet(relation, [value[0]], context);
+            return result[0];
+        }
+        return value;
+    }
+
+    _loadX2ManyData(fieldName) {
+        const field = this.activeFields[fieldName];
+        const { relatedFields = {}, views = {}, viewMode, FieldComponent } = field;
+
+        const fields = {
+            id: { name: "id", type: "integer", readonly: true },
+            ...relatedFields,
+            ...FieldComponent.fieldsToFetch,
+        };
+        const activeFields =
+            (views[viewMode] && views[viewMode].activeFields) || FieldComponent.fieldsToFetch || {};
+        for (const fieldName in relatedFields) {
+            if (relatedFields[fieldName].active) {
+                activeFields[fieldName] = relatedFields[fieldName];
+            }
+        }
+        const limit = views[viewMode] && views[viewMode].limit;
+        const orderBy = views[viewMode] && views[viewMode].defaultOrder;
+        const list = this.model.createDataPoint("list", {
+            resModel: this.fields[fieldName].relation,
+            fields,
+            activeFields,
+            context: this.context,
+            rawContext: field.context,
+            getEvalContext: () => this.evalContext,
+            limit,
+            orderBy,
+            field: this.fields[fieldName],
+            resIds: this.data[fieldName] || [],
+            views,
+            viewMode,
+            onChanges: () => {
+                this.onChanges();
+                this._changes[fieldName] = list;
+            },
+            onRecordWillSwitchMode: (record, mode) => {
+                if (mode === "edit") {
+                    this.switchMode("edit");
+                }
+            },
+        });
+        this._values[fieldName] = list;
+        this.data[fieldName] = list;
+        if (!this.isInvisible(fieldName)) {
+            list.applyCommands(this._changes[fieldName]);
+            this._changes[fieldName] = list;
+            return list.load();
+        }
+        return Promise.resolve();
+    }
+
     async _read() {
         const result = await this.model.orm.read(this.resModel, [this.resId], this.fieldNames, {
             bin_size: true,
@@ -807,9 +837,12 @@ export class Record extends DataPoint {
     async _applyChange(fieldName, value) {
         const field = this.fields[fieldName];
         if (field && ["one2many", "many2many"].includes(field.type)) {
-            this.data[fieldName].update(value);
+            await this.data[fieldName].update(value);
             this._changes[fieldName] = this.data[fieldName];
         } else {
+            if (field && field.type === "many2one") {
+                value = await this._loadOne2ManyData(fieldName, value);
+            }
             this.data[fieldName] = value;
             this._changes[fieldName] = value;
         }

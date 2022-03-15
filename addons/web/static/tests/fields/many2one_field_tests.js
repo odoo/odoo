@@ -2822,7 +2822,7 @@ QUnit.module("Fields", (hooks) => {
             `,
             mockRPC(route, { args, method }) {
                 count++;
-                if (method === "name_get" && args[0] === 2) {
+                if (method === "name_get" && args[0][0] === 2) {
                     return Promise.resolve([[2, "hello world\nso much noise"]]);
                 }
             },
