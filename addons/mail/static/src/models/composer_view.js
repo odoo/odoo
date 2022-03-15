@@ -620,6 +620,16 @@ registerModel({
             return clear();
         },
         /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasThreadName() {
+            if (this.threadView) {
+                return this.threadView.hasComposerThreadName;
+            }
+            return clear();
+        },
+        /**
          * Clears the main suggested record on closing mentions.
          *
          * @private
@@ -1059,6 +1069,10 @@ registerModel({
          */
         hasSuggestions: attr({
             compute: '_computeHasSuggestions',
+            default: false,
+        }),
+        hasThreadName: attr({
+            compute: '_computeHasThreadName',
             default: false,
         }),
         hasThreadTyping: attr({
