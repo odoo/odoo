@@ -42,13 +42,6 @@ export class Discuss extends LegacyComponent {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {string}
-     */
-    get addChatInputPlaceholder() {
-        return this.env._t("Search user...");
-    }
-
-    /**
      * @returns {DiscussView}
      */
     get discussView() {

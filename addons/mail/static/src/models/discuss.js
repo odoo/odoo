@@ -243,6 +243,13 @@ registerModel({
          * @private
          * @returns {string}
          */
+        _computeAddChatInputPlaceholder() {
+            return this.env._t("Search user...");
+        },
+        /**
+         * @private
+         * @returns {string}
+         */
         _computeAddingChannelValue() {
             if (!this.discussView) {
                 return "";
@@ -345,6 +352,9 @@ registerModel({
         }),
         addChannelInputPlaceholder: attr({
             compute: '_computeAddChannelInputPlaceholder',
+        }),
+        addChatInputPlaceholder: attr({
+            compute: '_computeAddChatInputPlaceholder',
         }),
         /**
          * Value that is used to create a channel from the sidebar.
