@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.KanbanRenderer" owl="1" t-debug="">
+    <t t-name="web.KanbanRenderer" owl="1">
         <div class="o_kanban_renderer"
             t-att-class="{ o_kanban_sortable: canResequenceRecords }"
             t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.archInfo.className or '' }}"
