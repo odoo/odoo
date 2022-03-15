@@ -610,5 +610,6 @@ export const dragAndDrop = async (fromSelector, toSelector) => {
     for (const target of getDifferentParents(from, to)) {
         triggerEvent(target, null, "mouseenter", toPos);
     }
-    await triggerEvent(from, null, "mouseup", toPos);
+    triggerEvent(from, null, "mouseup", toPos);
+    await triggerEvent(from, null, "click", toPos);
 };

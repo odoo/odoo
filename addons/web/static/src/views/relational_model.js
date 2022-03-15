@@ -10,7 +10,7 @@ import {
 } from "@web/core/l10n/dates";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
-import { isNumeric, isX2Many } from "@web/views/helpers/view_utils";
+import { isNumeric, isRelational, isX2Many } from "@web/views/helpers/view_utils";
 import { isTruthy } from "@web/core/utils/xml";
 import { makeContext } from "@web/core/context";
 import { Model } from "@web/views/helpers/model";
@@ -409,6 +409,10 @@ export class Record extends DataPoint {
         return this.mode === "edit";
     }
 
+    /**
+     * @param {"edit" | "readonly"} mode
+     * @returns {Promise<void>}
+     */
     async switchMode(mode) {
         if (this.mode === mode) {
             return;
@@ -1109,7 +1113,7 @@ class DynamicList extends DataPoint {
             list.splice(index, 0, target);
         }
         const model = this.resModel;
-        const ids = list.map((r) => r[idProperty]);
+        const ids = list.map((r) => r[idProperty]).filter(Boolean);
         // FIMME: can't go though orm, so no context given
         await this.model.rpc("/web/dataset/resequence", { model, ids });
         this.model.notify();
@@ -1422,15 +1426,25 @@ export class DynamicGroupList extends DynamicList {
 
     /**
      * @param {Group[]} groups
-     * @returns {Promise<Group[]>}
+     * @returns {Promise<void>}
      */
     async deleteGroups(groups) {
-        return Promise.all(
+        let shouldReload = false;
+        await Promise.all(
             groups.map(async (group) => {
                 await group.delete();
-                return this.removeGroup(group);
+                if (!this.model.useSampleModel && group.list.records.length) {
+                    shouldReload = true;
+                }
             })
         );
+        if (shouldReload) {
+            await this.model.load();
+        } else {
+            for (const group of groups) {
+                this.removeGroup(group);
+            }
+        }
     }
 
     /**
@@ -1501,17 +1515,7 @@ export class DynamicGroupList extends DynamicList {
                             groupParams.displayName = Array.isArray(value) ? value[1] : value;
                         }
                         if (this.groupedBy("m2x")) {
-                            if (!groupParams.value) {
-                                groupParams.displayName = this.model.env._t("Undefined");
-                            }
-                            if (this.groupByInfo[this.firstGroupBy]) {
-                                groupParams.recordParams = {
-                                    resModel: groupByField.relation,
-                                    resId: groupParams.value,
-                                    activeFields: this.groupByInfo[this.firstGroupBy].activeFields,
-                                    fields: this.groupByInfo[this.firstGroupBy].fields,
-                                };
-                            }
+                            groupParams.recordParams = this.groupByInfo[this.firstGroupBy];
                         }
                         break;
                     }
@@ -1547,27 +1551,29 @@ export class DynamicGroupList extends DynamicList {
                     }
                 }
             }
-            return groupParams;
+            const previousGroup = this.groups.find(
+                (g) => !g.deleted && g.value === groupParams.value
+            );
+            const state = previousGroup ? previousGroup.exportState() : {};
+            return [groupParams, state];
         });
 
         // Unfold groups that can still be unfolded by default
         if (this.openGroupsByDefault) {
-            for (const params of groupsParams) {
+            for (const [params, state] of groupsParams) {
                 if (openGroups >= this.constructor.DEFAULT_LOAD_LIMIT) {
                     break;
                 }
-                if (!("isFolded" in params)) {
+                if (!("isFolded" in { ...params, ...state })) {
                     params.isFolded = false;
                     openGroups++;
                 }
             }
         }
 
-        return groupsParams.map((params) => {
-            const previousGroup = this.groups.find((g) => g.value === params.value);
-            const state = previousGroup ? previousGroup.exportState() : {};
-            return this.model.createDataPoint("group", params, state);
-        });
+        return groupsParams.map(([params, state]) =>
+            this.model.createDataPoint("group", params, state)
+        );
     }
 
     async _loadQuickCreateView() {
@@ -1611,6 +1617,11 @@ export class Group extends DataPoint {
             this.isFolded = params.isFolded;
         } else {
             this.isFolded = true;
+        }
+        if (isRelational(this.groupByField)) {
+            // If the groupBy field is a relational field, the group model must
+            // then be the relation of that field.
+            this.resModel = this.groupByField.relation;
         }
         const listParams = {
             data: params.data,
@@ -1690,10 +1701,19 @@ export class Group extends DataPoint {
         if (!this.isFolded && this.count) {
             await this.list.load();
             if (this.recordParams) {
-                this.record = this.model.createDataPoint("record", this.recordParams);
+                this.record = this.makeRecord(this.recordParams);
                 await this.record.load();
             }
         }
+    }
+
+    makeRecord(params) {
+        return this.model.createDataPoint("record", {
+            resModel: this.resModel,
+            resId: this.value,
+            context: this.context,
+            ...params,
+        });
     }
 
     async toggle() {
@@ -1703,6 +1723,7 @@ export class Group extends DataPoint {
     }
 
     async delete() {
+        this.deleted = true;
         if (this.record) {
             return this.record.delete();
         } else {
@@ -1831,7 +1852,7 @@ export class StaticList extends DataPoint {
         return records;
     }
 
-    async createRecord({ context, mode, resId }) {
+    async createRecord({ mode, resId }) {
         const record = this.model.createDataPoint("record", {
             // context: makeContext([this.context, this.rawContext, context], this.getEvalContext()),
             resModel: this.resModel,

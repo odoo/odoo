@@ -317,7 +317,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         if (this.previousParams === JSON.stringify([this.domain, this.groupBy])) {
             for (const [group, index] of oldGroups) {
                 const newGroup = this.groups.find((g) => isValueEqual(g.value, group.value));
-                if (!newGroup) {
+                if (!group.deleted && !newGroup) {
                     group.empty();
                     this.groups.splice(index, 0, group);
                 }

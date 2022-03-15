@@ -97,14 +97,14 @@ export class FormViewDialog extends Dialog {
 
     discard() {
         if (this.record.isInEdition) {
-            this.model.root.discard();
+            this.record.discard();
         }
         this.close();
     }
 
     async save() {
         if (this.props.save) {
-            await this.props.save();
+            await this.props.save(this.record);
         }
         this.close();
     }

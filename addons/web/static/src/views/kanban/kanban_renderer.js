@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ColorList } from "@web/core/colorlist/colorlist";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -19,6 +19,7 @@ import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { isAllowedDateField } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { SimpleDialog } from "@web/core/dialog/dialog";
@@ -284,7 +285,7 @@ export class KanbanRenderer extends Component {
 
     getGroupClasses(group) {
         const classes = [];
-        if (this.canResequenceGroups) {
+        if (this.canResequenceGroups && group.value) {
             classes.push("o_group_draggable");
         }
         if (!group.count) {
@@ -415,8 +416,14 @@ export class KanbanRenderer extends Component {
     }
 
     editGroup(group) {
-        // TODO
-        console.warn("TODO: Open group", group.id);
+        this.dialog.add(FormViewDialog, {
+            record: group.makeRecord({ mode: "edit" }),
+            title: sprintf(this.env._t("Edit: %s"), group.displayName),
+            save: async (record) => {
+                await record.save({ noReload: true });
+                await this.props.list.load();
+            },
+        });
     }
 
     archiveGroup(group) {

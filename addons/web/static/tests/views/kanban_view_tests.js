@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
+import { makeFakeDialogService, makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     dragAndDrop,
@@ -25,6 +25,7 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanView } from "@web/views/kanban/kanban_view";
+import { session } from "../../src/session";
 
 const serviceRegistry = registry.category("services");
 
@@ -37,15 +38,16 @@ let testUtils,
     widgetRegistryOwl,
     FormRenderer,
     AbstractField,
-    modalCancel,
-    modalOk,
     FieldChar,
-    KanbanRenderer,
     fieldRegistry;
 
 // ----------------------------------------------------------------------------
 // Helpers
 // ----------------------------------------------------------------------------
+
+const patchDialog = (addDialog) => {
+    serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
+};
 
 // Kanban
 const reload = async (kanban, params = {}) => {
@@ -124,7 +126,6 @@ const loadMore = async (columnIndex) => {
 // TODO: do not forget KanbanModel tests
 // /!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\
 
-let addDialog;
 let serverData;
 let target;
 QUnit.module("Views", (hooks) => {
@@ -290,14 +291,8 @@ QUnit.module("Views", (hooks) => {
             views: {},
         };
         target = getFixture();
-        addDialog = (cls, props) => props.confirm();
 
         setupViewRegistries();
-        serviceRegistry.add(
-            "dialog",
-            makeFakeDialogService((...args) => addDialog(...args)),
-            { force: true }
-        );
     });
 
     QUnit.module("KanbanView");
@@ -403,10 +398,11 @@ QUnit.module("Views", (hooks) => {
                 type: "char",
                 default: true,
             };
-            addDialog = (cls, props) => {
+
+            patchDialog((_cls, props) => {
                 assert.step("open-dialog");
                 props.confirm();
-            };
+            });
 
             await makeView({
                 type: "kanban",
@@ -458,10 +454,11 @@ QUnit.module("Views", (hooks) => {
                 type: "char",
                 default: true,
             };
-            addDialog = (cls, props) => {
+
+            patchDialog((_cls, props) => {
                 assert.step("open-dialog");
                 props.confirm();
-            };
+            });
 
             await makeView({
                 type: "kanban",
@@ -724,10 +721,10 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             assert.expect(7);
 
-            addDialog = (cls, props) => {
+            patchDialog((_cls, props) => {
                 assert.step("open-dialog");
                 props.confirm();
-            };
+            });
 
             await makeView({
                 type: "kanban",
@@ -2277,10 +2274,10 @@ QUnit.module("Views", (hooks) => {
         );
 
         // specify a name and save
-        await editInput(document, ".modal input[name=foo]", "test");
-        await click(document, ".modal .btn-primary");
+        await editInput(target, ".modal input[name=foo]", "test");
+        await click(target, ".modal .btn-primary");
 
-        assert.containsNone(document, ".modal", "the modal should be closed");
+        assert.containsNone(target, ".modal", "the modal should be closed");
         assert.containsN(
             target,
             ".o_kanban_group:first-child .o_kanban_record",
@@ -4337,51 +4334,51 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group.o_column_folded", 4);
     });
 
-    QUnit.skipWOWL("hide and display help message (ESC) in kanban quick create", async (assert) => {
-        assert.expect(2);
+    QUnit.test(
+        "hide and display help message (ESC) in kanban quick create [REQUIRE FOCUS]",
+        async (assert) => {
+            assert.expect(2);
 
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<kanban>" +
-                '<field name="product_id"/>' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
-                "</t></templates>" +
-                "</kanban>",
-            groupBy: ["product_id"],
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch:
+                    "<kanban>" +
+                    '<field name="product_id"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                    "</t></templates>" +
+                    "</kanban>",
+                groupBy: ["product_id"],
+            });
+
+            await createColumn();
+            await nextTick(); // Wait for the autofocus to trigger after the update
+
+            assert.containsOnce(target, ".o_discard_msg", "the ESC to discard message is visible");
+
+            // click outside the column (to lose focus)
+            await click(getColumn(0), ".o_kanban_header");
+
+            assert.containsNone(
+                target,
+                ".o_discard_msg",
+                "the ESC to discard message is no longer visible"
+            );
+        }
+    );
+
+    QUnit.test("delete a column in grouped on m2o", async (assert) => {
+        assert.expect(35);
+
+        let resequencedIDs = [];
+        let dialogProps;
+
+        patchDialog((_cls, props) => {
+            assert.ok(true, "a confirm modal should be displayed");
+            dialogProps = props;
         });
-
-        await createColumn();
-        assert.ok(
-            target.querySelector(".o_discard_msg").is(":visible"),
-            "the ESC to discard message is visible"
-        );
-
-        // click outside the column (to lose focus)
-        await testUtils.dom.clickFirst(target, ".o_kanban_header");
-        assert.notOk(
-            target.querySelector(".o_discard_msg").is(":visible"),
-            "the ESC to discard message is no longer visible"
-        );
-    });
-
-    QUnit.skipWOWL("delete a column in grouped on m2o", async (assert) => {
-        assert.expect(37);
-
-        testUtils.mock.patch(KanbanRenderer, {
-            _renderGrouped: function () {
-                this._super.apply(this, arguments);
-                // set delay and revert animation time to 0 so dummy drag and drop works
-                if (this.el.querySelectorel.sortable("instance")) {
-                    this.el.querySelectorel.sortable("option", { delay: 0, revert: 0 });
-                }
-            },
-        });
-
-        let resequencedIDs;
 
         const kanban = await makeView({
             type: "kanban",
@@ -4395,18 +4392,17 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
+            async mockRPC(route, { ids, method }) {
                 if (route === "/web/dataset/resequence") {
-                    resequencedIDs = args.ids;
+                    resequencedIDs = ids;
                     assert.strictEqual(
-                        _.reject(args.ids, !isNaN).length,
+                        ids.filter(isNaN).length,
                         0,
                         "column resequenced should be existing records with IDs"
                     );
-                    return true;
                 }
-                if (args.method) {
-                    assert.step(args.method);
+                if (method) {
+                    assert.step(method);
                 }
             },
         });
@@ -4414,46 +4410,43 @@ QUnit.module("Views", (hooks) => {
         // check the initial rendering
         assert.containsN(target, ".o_kanban_group", 2, "should have two columns");
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:first-child").dataset.id,
-            3,
+            getColumn(0).querySelector(".o_column_title").innerText,
+            "hello",
             'first column should be [3, "hello"]'
         );
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:last-child").dataset.id,
-            5,
+            getColumn(1).querySelector(".o_column_title").innerText,
+            "xmo",
             'second column should be [5, "xmo"]'
         );
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:last-child .o_column_title").innerText,
-            "xmo",
-            "second column should have correct title"
-        );
         assert.containsN(
-            target,
-            ".o_kanban_group:last-child .o_kanban_record",
+            getColumn(1),
+            ".o_kanban_record",
             2,
             "second column should have two records"
         );
 
         // check available actions in kanban header's config dropdown
-        assert.ok(
-            target.querySelector(".o_kanban_group:first-child .o_kanban_toggle_fold").length,
+        await toggleColumnActions(0);
+        assert.containsOnce(
+            getColumn(0),
+            ".o_kanban_toggle_fold",
             "should be able to fold the column"
         );
-        assert.ok(
-            target.querySelector(".o_kanban_group:first-child .o_column_edit").length,
-            "should be able to edit the column"
-        );
-        assert.ok(
-            target.querySelector(".o_kanban_group:first-child .o_column_delete").length,
+        assert.containsOnce(getColumn(0), ".o_column_edit", "should be able to edit the column");
+        assert.containsOnce(
+            getColumn(0),
+            ".o_column_delete",
             "should be able to delete the column"
         );
-        assert.ok(
-            !target.querySelector(".o_kanban_group:first-child .o_column_archive_records").length,
+        assert.containsNone(
+            getColumn(0),
+            ".o_column_archive_records",
             "should not be able to archive all the records"
         );
-        assert.ok(
-            !target.querySelector(".o_kanban_group:first-child .o_column_unarchive_records").length,
+        assert.containsNone(
+            getColumn(0),
+            ".o_column_unarchive_records",
             "should not be able to restore all the records"
         );
 
@@ -4461,103 +4454,109 @@ QUnit.module("Views", (hooks) => {
         let clickColumnAction = await toggleColumnActions(1);
         await clickColumnAction("Delete");
 
-        assert.containsOnce(target, ".modal", "a confirm modal should be displayed");
-
-        await modalCancel(); // click on cancel
+        dialogProps.cancel();
+        await nextTick();
 
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:last-child").dataset.id,
-            5,
+            getColumn(1).querySelector(".o_column_title").innerText,
+            "xmo",
             'column [5, "xmo"] should still be there'
         );
+
+        dialogProps.confirm();
+        await nextTick();
+
         clickColumnAction = await toggleColumnActions(1);
         await clickColumnAction("Delete");
 
-        assert.containsOnce(target, ".modal", "a confirm modal should be displayed");
-
-        await modalOk(); // click on confirm
-
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:last-child").dataset.id,
-            3,
+            getColumn(1).querySelector(".o_column_title").innerText,
+            "hello",
             'last column should now be [3, "hello"]'
         );
         assert.containsN(target, ".o_kanban_group", 2, "should still have two columns");
-        assert.ok(
-            isNaN(target.querySelector(".o_kanban_group:first-child").dataset.id),
+        assert.strictEqual(
+            getColumn(0).querySelector(".o_column_title").innerText,
+            "None",
             "first column should have no id (Undefined column)"
         );
+
         // check available actions on 'Undefined' column
-        assert.ok(
-            target.querySelector(".o_kanban_group:first-child .o_kanban_toggle_fold").length,
+        await toggleColumnActions(0);
+        assert.containsOnce(
+            getColumn(0),
+            ".o_kanban_toggle_fold",
             "should be able to fold the column"
         );
-        assert.ok(
-            !target.querySelector(".o_kanban_group:first-child .o_column_delete").length,
-            "Undefined column could not be deleted"
+        assert.containsNone(getColumn(0), ".o_column_edit", "should be able to edit the column");
+        assert.containsNone(
+            getColumn(0),
+            ".o_column_delete",
+            "should be able to delete the column"
         );
-        assert.ok(
-            !target.querySelector(".o_kanban_group:first-child .o_column_edit").length,
-            "Undefined column could not be edited"
+        assert.containsNone(
+            getColumn(0),
+            ".o_column_archive_records",
+            "should not be able to archive all the records"
         );
-        assert.ok(
-            !target.querySelector(".o_kanban_group:first-child .o_column_archive_records").length,
-            "Records of undefined column could not be archived"
+        assert.containsNone(
+            getColumn(0),
+            ".o_column_unarchive_records",
+            "should not be able to restore all the records"
         );
-        assert.ok(
-            !target.querySelector(".o_kanban_group:first-child .o_column_unarchive_records").length,
-            "Records of undefined column could not be restored"
-        );
-        assert.verifySteps(["web_read_group", "unlink", "web_read_group"]);
+        assert.verifySteps([
+            "web_read_group",
+            "web_search_read",
+            "web_search_read",
+            "unlink",
+            "web_read_group",
+            "web_search_read",
+            "web_search_read",
+        ]);
         assert.strictEqual(
-            kanban.renderer.widgets.length,
+            kanban.model.root.groups.length,
             2,
-            "the old widgets should have been correctly deleted"
+            "the old groups should have been correctly deleted"
         );
 
         // test column drag and drop having an 'Undefined' column
-        await testUtils.dom.dragAndDrop(
-            target.querySelector(".o_column_title:first-child"),
-            target.querySelector(".o_column_title:last"),
-            { position: "right" }
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_column_title",
+            ".o_kanban_group:nth-child(2)"
         );
-        assert.strictEqual(
+        assert.deepEqual(
             resequencedIDs,
-            undefined,
+            [],
             "resequencing require at least 2 not Undefined columns"
         );
         await createColumn();
         await editColumnName("once third column");
         await validateColumn();
 
-        const newColumnID = target.querySelector(".o_kanban_group:last-child").dataset.id;
-        await testUtils.dom.dragAndDrop(
-            target.querySelector(".o_column_title:first-child"),
-            target.querySelector(".o_column_title:last"),
-            { position: "right" }
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_column_title",
+            ".o_kanban_group:nth-child(3)"
         );
+
         assert.deepEqual(
-            [3, newColumnID],
             resequencedIDs,
+            [],
             "moving the Undefined column should not affect order of other columns"
         );
-        await testUtils.dom.dragAndDrop(
-            target.querySelector(".o_column_title:first-child"),
-            target.querySelector(".o_column_title:nth(1)"),
-            { position: "right" }
+
+        await dragAndDrop(
+            ".o_kanban_group:nth-child(2) .o_column_title",
+            ".o_kanban_group:nth-child(3)"
         );
-        await nextTick(); // wait for resequence after drag and drop
-        assert.deepEqual(
-            [newColumnID, 3],
-            resequencedIDs,
-            "moved column should be resequenced accordingly"
-        );
-        assert.verifySteps(["name_create", "read", "read", "read"]);
-        testUtils.mock.unpatch(KanbanRenderer);
+
+        assert.deepEqual(resequencedIDs, [4, 3], "moved column should be resequenced accordingly");
+        assert.verifySteps(["name_create"]);
     });
 
-    QUnit.skipWOWL("create a column, delete it and create another one", async (assert) => {
+    QUnit.test("create a column, delete it and create another one", async (assert) => {
         assert.expect(5);
+
+        patchDialog((_cls, props) => props.confirm());
 
         await makeView({
             type: "kanban",
@@ -4573,33 +4572,32 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
         });
 
-        assert.containsN(target, ".o_kanban_group", 2, "should have two columns");
+        assert.containsN(target, ".o_kanban_group", 2);
 
         await createColumn();
         await editColumnName("new column 1");
         await validateColumn();
 
-        assert.containsN(target, ".o_kanban_group", 3, "should have two columns");
+        assert.containsN(target, ".o_kanban_group", 3);
 
-        const clickColumnAction = await toggleColumnActions(1);
+        const clickColumnAction = await toggleColumnActions(2);
         await clickColumnAction("Delete");
-        await modalOk();
 
-        assert.containsN(target, ".o_kanban_group", 2, "should have twos columns");
+        assert.containsN(target, ".o_kanban_group", 2);
 
         await createColumn();
         await editColumnName("new column 2");
         await validateColumn();
 
-        assert.containsN(target, ".o_kanban_group", 3, "should have three columns");
+        assert.containsN(target, ".o_kanban_group", 3);
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:last-child span:contains(new column 2)").length,
-            1,
+            getColumn(2).querySelector("span").innerText,
+            "new column 2",
             "the last column should be the newly created one"
         );
     });
 
-    QUnit.skipWOWL("edit a column in grouped on m2o", async (assert) => {
+    QUnit.test("edit a column in grouped on m2o", async (assert) => {
         assert.expect(12);
 
         serverData.views["product,false,form"] =
@@ -4618,76 +4616,82 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
+            async mockRPC() {
                 nbRPCs++;
-                return this._super(route, args);
             },
         });
+
         assert.strictEqual(
-            target.querySelector(".o_kanban_group[data-id=5] .o_column_title").innerText,
+            getColumn(1).querySelector(".o_column_title").innerText,
             "xmo",
             'title of the column should be "xmo"'
         );
 
         // edit the title of column [5, 'xmo'] and close without saving
-        let clickColumnAction = await toggleColumnActions(4);
+        let clickColumnAction = await toggleColumnActions(1);
         await clickColumnAction("Edit");
 
         assert.containsOnce(
-            document.body,
+            target,
             ".modal .o_form_editable",
             "a form view should be open in a modal"
         );
         assert.strictEqual(
-            document.querySelector(".modal .o_form_editable input").value,
+            target.querySelector(".modal .o_form_editable input").value,
             "xmo",
             'the name should be "xmo"'
         );
-        await editInput(document, ".modal .o_form_editable input", "ged"); // change the value
+
+        await editInput(target, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
-        await click(document, ".modal-header .close");
-        assert.containsNone(document.body, ".modal");
+        await click(target, ".modal-header .close");
+
+        assert.containsNone(target, ".modal");
         assert.strictEqual(
-            target.querySelector(".o_kanban_group[data-id=5] .o_column_title").innerText,
+            getColumn(1).querySelector(".o_column_title").innerText,
             "xmo",
             'title of the column should still be "xmo"'
         );
         assert.strictEqual(nbRPCs, 0, "no RPC should have been done");
 
         // edit the title of column [5, 'xmo'] and discard
-        clickColumnAction = await toggleColumnActions(4);
+        clickColumnAction = await toggleColumnActions(1);
         await clickColumnAction("Edit");
-        await editInput(document, ".modal .o_form_editable input", "ged"); // change the value
+        await editInput(target, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
-        await click(document, ".model .btn-secondary");
-        assert.containsNone(document.body, ".modal");
+        await click(target, ".modal .btn-secondary");
+
+        assert.containsNone(target, ".modal");
         assert.strictEqual(
-            target.querySelector(".o_kanban_group[data-id=5] .o_column_title").innerText,
+            getColumn(1).querySelector(".o_column_title").innerText,
             "xmo",
             'title of the column should still be "xmo"'
         );
         assert.strictEqual(nbRPCs, 0, "no RPC should have been done");
 
         // edit the title of column [5, 'xmo'] and save
-        clickColumnAction = await toggleColumnActions(4);
+        clickColumnAction = await toggleColumnActions(1);
         await clickColumnAction("Edit");
-        await editInput(document, ".modal .o_form_editable input", "ged"); // change the value
+        await editInput(target, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
-        await click(document, ".modal .btn-primary"); // click on save
-        assert.containsNone(document, ".modal", "the modal should be closed");
+        await click(target, ".modal .btn-primary"); // click on save
+
+        assert.containsNone(target, ".modal", "the modal should be closed");
         assert.strictEqual(
-            target.querySelector(".o_kanban_group[data-id=5] .o_column_title").innerText,
+            getColumn(1).querySelector(".o_column_title").innerText,
             "ged",
             'title of the column should be "ged"'
         );
         assert.strictEqual(nbRPCs, 4, "should have done 1 write, 1 read_group and 2 search_read");
     });
 
-    QUnit.skipWOWL("edit a column propagates right context", async (assert) => {
+    QUnit.test("edit a column propagates right context", async (assert) => {
         assert.expect(4);
 
         serverData.views["product,false,form"] =
             '<form string="Product"><field name="display_name"/></form>';
+
+        patchWithCleanup(session.user_context, { lang: "brol" });
 
         await makeView({
             type: "kanban",
@@ -4701,28 +4705,24 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            session: { user_context: { lang: "brol" } },
-            async mockRPC(route, args) {
-                let context;
-                if (route === "web_search_read" && args.model === "partner") {
-                    context = args.context;
+            async mockRPC(_route, { method, model, kwargs }) {
+                if (model === "partner" && method === "web_search_read") {
                     assert.strictEqual(
-                        context.lang,
+                        kwargs.context.lang,
                         "brol",
                         "lang is present in context for partner operations"
                     );
-                }
-                if (args.model === "product") {
-                    context = args.kwargs.context;
+                } else if (model === "product") {
                     assert.strictEqual(
-                        context.lang,
+                        kwargs.context.lang,
                         "brol",
                         "lang is present in context for product operations"
                     );
                 }
             },
         });
-        const clickColumnAction = await toggleColumnActions(4);
+
+        const clickColumnAction = await toggleColumnActions(1);
         await clickColumnAction("Edit");
     });
 
@@ -5214,10 +5214,12 @@ QUnit.module("Views", (hooks) => {
         };
         // remove last records to have only one column
         serverData.models.partner.records = serverData.models.partner.records.slice(0, 3);
-        addDialog = (cls, props) => {
+
+        patchDialog((_cls, props) => {
             assert.step("open-dialog");
             props.confirm();
-        };
+        });
+
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -6139,6 +6141,8 @@ QUnit.module("Views", (hooks) => {
 
         serverData.models.partner.records = [];
 
+        patchDialog((_cls, props) => props.confirm());
+
         let groups = [
             {
                 product_id: [1, "New"],
@@ -6193,6 +6197,8 @@ QUnit.module("Views", (hooks) => {
         "empty grouped kanban with sample data: add a column and delete it right away",
         async (assert) => {
             assert.expect(9);
+
+            patchDialog((_cls, props) => props.confirm());
 
             await makeView({
                 arch: `
@@ -7423,6 +7429,8 @@ QUnit.module("Views", (hooks) => {
         // add active field on partner model and make all records active
         serverData.models.partner.fields.active = { string: "Active", type: "char", default: true };
 
+        patchDialog((_cls, props) => props.confirm());
+
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -7472,6 +7480,8 @@ QUnit.module("Views", (hooks) => {
                 type: "char",
                 default: true,
             };
+
+            patchDialog((_cls, props) => props.confirm());
 
             await makeView({
                 type: "kanban",
