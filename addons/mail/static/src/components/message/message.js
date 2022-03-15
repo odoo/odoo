@@ -151,19 +151,6 @@ export class Message extends Component {
     }
 
     /**
-     * Tell whether the message is selected in the current thread viewer.
-     *
-     * @returns {boolean}
-     */
-    get isSelected() {
-        return Boolean(
-            this.messageView &&
-            this.messageView.threadView &&
-            this.messageView.threadView.replyingToMessageView === this.messageView
-        );
-    }
-
-    /**
      * @returns {MessageView}
      */
     get messageView() {
