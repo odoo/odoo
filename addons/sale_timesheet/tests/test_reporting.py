@@ -932,3 +932,91 @@ class TestReporting(TestCommonReporting):
         self.assertAlmostEqual(project_stat['expense_amount_untaxed_invoiced'], 0, msg="The expense invoiced amount of the project should be zero, after credit note.")
         self.assertAlmostEqual(project_stat['expense_cost'], 0, msg="The expense costs (credit note) of the project should be zero (not taken into account), after credit note.")
         self.assertAlmostEqual(project_stat['other_revenues'], 0, msg="The other revenues of the project should be zero, as it is balanced by credit note.")
+
+    def test_project_profitability_report(self):
+        """ Test profitability report for a project with a task and a SO with a service and a product
+            added linked to the task."""
+
+        # create Analytic Accounts
+        self.analytic_account_1 = self.env['account.analytic.account'].create({
+            'name': 'Test AA 1',
+            'code': 'AA1',
+            'company_id': self.company_data['company'].id,
+            'partner_id': self.partner_a.id
+        })
+
+        self.sale_order_1 = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'analytic_account_id': self.analytic_account_1.id,
+        })
+        self.so_line_deliver_project = self.env['sale.order.line'].create({
+            'name': self.product_delivery_timesheet3.name,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom': self.product_delivery_timesheet3.uom_id.id,
+            'price_unit': self.product_delivery_timesheet3.list_price,
+            'order_id': self.sale_order_1.id,
+        })
+        self.so_line_deliver_task = self.env['sale.order.line'].create({
+            'name': self.product_delivery_timesheet2.name,
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom': self.product_delivery_timesheet2.uom_id.id,
+            'price_unit': self.product_delivery_timesheet2.list_price,
+            'order_id': self.sale_order_1.id,
+        })
+
+        # this test suppose everything is in the same currency as the current one
+        currency = self.env.company.currency_id
+        rounding = currency.rounding
+        # confirm sales orders
+        self.sale_order_1.action_confirm()
+        self.env['project.profitability.report'].flush()
+
+        project_so_1 = self.so_line_deliver_project.project_id
+
+        task_so_1 = self.so_line_deliver_project.task_id
+
+        self.product_material = self.env['product.product'].create({
+            'name': 'My Material Product',
+            'sale_ok': True,
+            'invoice_policy': 'order',
+            'lst_price': 5,
+        })
+
+        self.env['sale.order.line'].create({
+            'order_id': self.sale_order_1.id,
+            'name': self.product_material.name,
+            'product_id': self.product_material.id,
+            'product_uom_qty': 5,
+            'product_uom': self.product_material.uom_id.id,
+            'price_unit': self.product_material.list_price,
+            'task_id': task_so_1.id,
+        })
+
+        InvoiceWizard = self.env['sale.advance.payment.inv'].with_context(mail_notrack=True)
+
+        # invoice the Sales Order SO1 (based on delivered qty)
+        context = {
+            "active_model": 'sale.order',
+            "active_ids": [self.sale_order_1.id],
+            "active_id": self.sale_order_1.id,
+            'open_invoices': True,
+        }
+        payment = InvoiceWizard.create({
+            'advance_payment_method': 'delivered',
+        })
+        action_invoice = payment.with_context(context).create_invoices()
+        invoice_id = action_invoice['res_id']
+        invoice_1 = self.env['account.move'].browse(invoice_id)
+        invoice_1.action_post()
+
+        project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced', 'other_revenues'], ['project_id'])[0]
+        self.assertTrue(float_is_zero(project_so_1_stat['amount_untaxed_invoiced'], precision_rounding=rounding), "The invoiced amount of the project from SO1 should be 0.0")
+        self.assertTrue(float_is_zero(project_so_1_stat['amount_untaxed_to_invoice'], precision_rounding=rounding), "The amount to invoice of the project from SO1 should be 0.0")
+        self.assertTrue(float_is_zero(project_so_1_stat['timesheet_unit_amount'], precision_rounding=rounding), "The timesheet unit amount of the project from SO1 should be 0.0")
+        self.assertTrue(float_is_zero(project_so_1_stat['timesheet_cost'], precision_rounding=rounding), "The timesheet cost of the project from SO1 should be 0.0")
+        self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_to_invoice'], precision_rounding=rounding), "The expense cost to reinvoice of the project from SO1 should be 0.0")
+        self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
+        self.assertTrue(float_is_zero(project_so_1_stat['expense_cost'], precision_rounding=rounding), "The expense cost of the project from SO1 should be 0.0")
+        self.assertEqual(float_compare(project_so_1_stat['other_revenues'], invoice_1.amount_untaxed, precision_rounding=rounding), 0, "The other revenues of the project from SO1 should be the same as the untaxed amount in invoice")
