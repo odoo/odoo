@@ -742,8 +742,15 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerComponent, messaging } = await start({
+    await start({
+        autoOpenDiscuss: true,
         data: this.data,
+        discuss: {
+            params: {
+                default_active_id: 20,
+            },
+        },
+        hasDiscuss: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
@@ -751,11 +758,6 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
             return this._super(...arguments);
         },
     });
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
-    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -772,8 +774,15 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerComponent, messaging } = await start({
+    await start({
+        autoOpenDiscuss: true,
         data: this.data,
+        discuss: {
+            params: {
+                default_active_id: 20,
+            },
+        },
+        hasDiscuss: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
@@ -781,11 +790,6 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
             return this._super(...arguments);
         },
     });
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
-    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -1382,12 +1386,16 @@ QUnit.test('composer with thread typing notification status', async function (as
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerComponent, messaging } = await start({ data: this.data });
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        discuss: {
+            params: {
+                default_active_id: 20,
+            },
+        },
+        hasDiscuss: true,
     });
-    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     assert.containsOnce(
         document.body,
@@ -1407,8 +1415,15 @@ QUnit.test('current partner notify is typing to other thread members', async fun
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerComponent, messaging } = await start({
+    await start({
+        autoOpenDiscuss: true,
         data: this.data,
+        discuss: {
+            params: {
+                default_active_id: 20,
+            },
+        },
+        hasDiscuss: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
@@ -1416,11 +1431,6 @@ QUnit.test('current partner notify is typing to other thread members', async fun
             return this._super(...arguments);
         },
     });
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
-    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
     document.execCommand('insertText', false, "a");
@@ -1439,8 +1449,15 @@ QUnit.test('current partner is typing should not translate on textual typing sta
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerComponent, messaging } = await start({
+    await start({
+        autoOpenDiscuss: true,
         data: this.data,
+        discuss: {
+            params: {
+                default_active_id: 20,
+            },
+        },
+        hasDiscuss: true,
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
@@ -1449,11 +1466,6 @@ QUnit.test('current partner is typing should not translate on textual typing sta
             return this._super(...arguments);
         },
     });
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
-    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
     document.execCommand('insertText', false, "a");
@@ -1479,8 +1491,15 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerComponent, env, messaging } = await start({
+    const { env } = await start({
+        autoOpenDiscuss: true,
         data: this.data,
+        discuss: {
+            params: {
+                default_active_id: 20,
+            },
+        },
+        hasDiscuss: true,
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
@@ -1489,11 +1508,6 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
             return this._super(...arguments);
         },
     });
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
-    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
     document.execCommand('insertText', false, "a");
@@ -1518,8 +1532,15 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerComponent, env, messaging } = await start({
+    const { env } = await start({
+        autoOpenDiscuss: true,
         data: this.data,
+        discuss: {
+            params: {
+                default_active_id: 20,
+            },
+        },
+        hasDiscuss: true,
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
@@ -1528,11 +1549,6 @@ QUnit.test('current partner notify is typing again to other members every 50s of
             return this._super(...arguments);
         },
     });
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
-    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
     document.execCommand('insertText', false, "a");
