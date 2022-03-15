@@ -21,16 +21,6 @@ export class ChatWindowHeader extends Component {
         return this.messaging && this.messaging.models['ChatWindow'].get(this.props.chatWindowLocalId);
     }
 
-    /**
-     * @returns {string}
-     */
-    get shiftPrevText() {
-        if (this.messaging.locale.textDirection === 'rtl') {
-            return this.env._t("Shift right");
-        }
-        return this.env._t("Shift left");
-    }
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

@@ -305,6 +305,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeShiftPrevText() {
+            if (this.messaging.locale.textDirection === 'rtl') {
+                return this.env._t("Shift right");
+            }
+            return this.env._t("Shift left");
+        },
+        /**
+         * @private
          * @returns {ThreadViewer}
          */
         _computeThreadViewer() {
@@ -488,6 +498,9 @@ registerModel({
         }),
         shiftNextText: attr({
             compute: '_computeShiftNextText',
+        }),
+        shiftPrevText: attr({
+            compute: '_computeShiftPrevText',
         }),
         /**
          * Determines the `Thread` that should be displayed by `this`.
