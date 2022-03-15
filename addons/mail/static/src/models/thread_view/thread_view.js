@@ -87,6 +87,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasComposerThreadTyping() {
+            if (this.threadViewer.threadView_hasComposerThreadTyping !== undefined) {
+                return this.threadViewer.threadView_hasComposerThreadTyping;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasSquashCloseMessages() {
@@ -396,6 +406,15 @@ registerModel({
          */
         hasAutoScrollOnMessageReceived: attr({
             default: true,
+        }),
+        /**
+         * If set, determines whether the composer should display status of
+         * members typing on related thread. When this prop is not provided,
+         * it defaults to composer component default value.
+         */
+        hasComposerThreadTyping: attr({
+            compute: '_computeHasComposerThreadTyping',
+            default: false,
         }),
         /**
          * Last message in the context of the currently displayed thread cache.
