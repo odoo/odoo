@@ -88,27 +88,6 @@ export class Message extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {string}
-     */
-    get avatar() {
-        if (this.messageView.message.author && (!this.messageView.message.originThread || this.messageView.message.originThread.model !== 'mail.channel')) {
-            // TODO FIXME for public user this might not be accessible. task-2223236
-            // we should probably use the correspondig attachment id + access token
-            // or create a dedicated route to get message image, checking the access right of the message
-            return this.messageView.message.author.avatarUrl;
-        } else if (this.messageView.message.author && this.messageView.message.originThread && this.messageView.message.originThread.model === 'mail.channel') {
-            return `/mail/channel/${this.messageView.message.originThread.id}/partner/${this.messageView.message.author.id}/avatar_128`;
-        } else if (this.messageView.message.guestAuthor && (!this.messageView.message.originThread || this.messageView.message.originThread.model !== 'mail.channel')) {
-            return this.messageView.message.guestAuthor.avatarUrl;
-        } else if (this.messageView.message.guestAuthor && this.messageView.message.originThread && this.messageView.message.originThread.model === 'mail.channel') {
-            return `/mail/channel/${this.messageView.message.originThread.id}/guest/${this.messageView.message.guestAuthor.id}/avatar_128?unique=${this.messageView.message.guestAuthor.name}`;
-        } else if (this.messageView.message.message_type === 'email') {
-            return '/mail/static/src/img/email_icon.png';
-        }
-        return '/mail/static/src/img/smiley/avatar.jpg';
-    }
-
-    /**
      * Get the date time of the message at current user locale time.
      *
      * @returns {string}
