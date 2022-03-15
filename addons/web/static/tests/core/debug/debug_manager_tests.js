@@ -336,7 +336,7 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.containsOnce(target, ".some_view");
     });
 
-    QUnit.skipWOWL("can edit a pivot view", async (assert) => {
+    QUnit.test("can edit a pivot view", async (assert) => {
         const mockRPC = async (route, args) => {
             if (args.method === "check_access_rights") {
                 return Promise.resolve(true);
@@ -371,15 +371,14 @@ QUnit.module("DebugMenu", (hooks) => {
         await doAction(webClient, 1234);
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
-            target.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
+            target.querySelector(".modal .o_form_view .o_field_widget span").innerText.trim(),
             "18"
         );
     });
 
-    QUnit.skipWOWL("can edit a search view", async (assert) => {
+    QUnit.test("can edit a search view", async (assert) => {
         const mockRPC = async (route, args) => {
             if (args.method === "check_access_rights") {
                 return Promise.resolve(true);
@@ -410,12 +409,12 @@ QUnit.module("DebugMenu", (hooks) => {
         await legacyExtraNextTick();
         assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
-            target.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
+            target.querySelector(".modal .o_form_view .o_field_widget span").innerText.trim(),
             "293"
         );
     });
 
-    QUnit.skipWOWL("edit search view on action without search_view_id", async (assert) => {
+    QUnit.test("edit search view on action without search_view_id", async (assert) => {
         // When the kanban view will be converted to Owl, this test could be simplified by
         // removing the toy view and using the kanban view directly
         prepareRegistriesWithCleanup();
@@ -473,7 +472,7 @@ QUnit.module("DebugMenu", (hooks) => {
         await legacyExtraNextTick();
         assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
-            target.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
+            target.querySelector(".modal .o_form_view .o_field_widget span").innerText.trim(),
             "293"
         );
     });
