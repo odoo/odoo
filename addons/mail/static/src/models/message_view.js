@@ -119,6 +119,26 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeHasAuthorOpenChat() {
+            if (this.messaging.currentGuest) {
+                return false;
+            }
+            if (!this.message.author) {
+                return false;
+            }
+            if (
+                this.threadView &&
+                this.threadView.thread &&
+                this.threadView.thread.correspondent === this.message.author
+            ) {
+                return false;
+            }
+            return true;
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeMessageActionList() {
@@ -182,6 +202,12 @@ registerModel({
         extraClass: attr({
             compute: '_computeExtraClass',
             default: '',
+        }),
+        /**
+         * Determines whether author open chat feature is enabled on message.
+         */
+        hasAuthorOpenChat: attr({
+            compute: '_computeHasAuthorOpenChat',
         }),
         /**
          * id of the current timeout that will reset isHighlighted to false.
