@@ -561,6 +561,19 @@ registerModel({
             return this.mainSuggestedRecords.length > 0 || this.extraSuggestedRecords.length > 0;
         },
         /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsCompact() {
+            if (this.chatter) {
+                return false;
+            }
+            if (this.messageViewInEditing) {
+                return true;
+            }
+            return clear();
+        },
+        /**
          * Clears the main suggested record on closing mentions.
          *
          * @private
@@ -992,6 +1005,10 @@ registerModel({
          */
         hasToScrollToActiveSuggestion: attr({
             default: false,
+        }),
+        isCompact: attr({
+            compute: '_computeIsCompact',
+            default: true,
         }),
         isFocused: attr({
             default: false,

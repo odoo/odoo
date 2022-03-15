@@ -63,7 +63,7 @@ export class Composer extends Component {
             this.props.hasThreadTyping ||
             this.composerView.composer.attachments.length > 0 ||
             this.composerView.messageViewInEditing ||
-            !this.props.isCompact
+            !this.composerView.isCompact
         );
     }
 
@@ -214,7 +214,6 @@ Object.assign(Composer, {
         hasSendButton: true,
         hasThreadName: false,
         hasThreadTyping: false,
-        isCompact: true,
         isExpandable: false,
     },
     props: {
@@ -252,10 +251,6 @@ Object.assign(Composer, {
             optional: true,
         },
         showAttachmentsFilenames: {
-            type: Boolean,
-            optional: true,
-        },
-        isCompact: {
             type: Boolean,
             optional: true,
         },

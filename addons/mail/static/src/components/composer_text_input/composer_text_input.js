@@ -386,7 +386,6 @@ Object.assign(ComposerTextInput, {
             type: Boolean,
             optional: true,
         },
-        isCompact: Boolean,
         onComposerTextInputSendShortcut: {
             type: Function,
             optional: true,
