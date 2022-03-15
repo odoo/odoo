@@ -29,7 +29,7 @@
                     <div class="o_Message_sidebar" t-att-class="{ 'o-message-squashed align-items-start': messageView.isSquashed }">
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_authorAvatarContainer o_Message_sidebarItem">
-                                <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" t-on-click="_onClickAuthorAvatar" t-att-title="messageView.hasAuthorOpenChat ? OPEN_CHAT : ''" alt="Avatar"/>
+                                <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" t-on-click="_onClickAuthorAvatar" t-att-title="messageView.hasAuthorOpenChat ? messageView.authorAvatarTitleText : ''" alt="Avatar"/>
                                 <t t-if="messageView.message.author and messageView.message.author.im_status">
                                     <PartnerImStatusIcon
                                         className="'o_Message_partnerImStatusIcon'"
