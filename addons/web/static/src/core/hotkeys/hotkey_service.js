@@ -55,6 +55,13 @@ export const hotkeyService = {
                 return;
             }
 
+            if (event.code && event.code.indexOf("Numpad") === 0 && /^\d$/.test(event.key)) {
+                // Ignore all number keys from the Keypad because of a certain input method
+                // of (advance-)ASCII characters on Windows OS: ALT+[numerical code from keypad]
+                // See https://support.microsoft.com/en-us/office/insert-ascii-or-unicode-latin-based-symbols-and-characters-d13f58d3-7bcb-44a7-a4d5-972ee12e50e0#bm1
+                return;
+            }
+
             const hotkey = getActiveHotkey(event);
 
             // Do not dispatch if UI is blocked
