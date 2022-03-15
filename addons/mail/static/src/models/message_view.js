@@ -109,6 +109,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeAuthorAvatarTitleText() {
+            return this.env._t("Open chat");
+        },
+        /**
+         * @private
          * @returns {string|FieldCommand}
          */
         _computeExtraClass() {
@@ -167,6 +174,9 @@ registerModel({
             inverse: 'messageViewOwner',
             isCausal: true,
             readonly: true,
+        }),
+        authorAvatarTitleText: attr({
+            compute: '_computeAuthorAvatarTitleText',
         }),
         /**
          * States the component displaying this message view (if any).

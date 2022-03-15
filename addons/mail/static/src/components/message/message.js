@@ -179,12 +179,6 @@ export class Message extends Component {
     get messageView() {
         return this.messaging && this.messaging.models['MessageView'].get(this.props.localId);
     }
-    /**
-     * @returns {string}
-     */
-    get OPEN_CHAT() {
-        return this.env._t("Open chat");
-    }
 
     /**
      * Make this message viewable in its enclosing scroll environment (usually
