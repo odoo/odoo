@@ -96,28 +96,6 @@ export class Message extends Component {
     }
 
     /**
-     * Determines whether author open chat feature is enabled on message.
-     *
-     * @returns {boolean}
-     */
-    get hasAuthorOpenChat() {
-        if (this.messaging.currentGuest) {
-            return false;
-        }
-        if (!this.messageView.message.author) {
-            return false;
-        }
-        if (
-            this.messageView.threadView &&
-            this.messageView.threadView.thread &&
-            this.messageView.threadView.thread.correspondent === this.messageView.message.author
-        ) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Whether the message is "active", ie: hovered or clicked, and should
      * display additional things (date in sidebar, message actions, etc.)
      *
@@ -406,7 +384,7 @@ export class Message extends Component {
      */
     _onClickAuthorAvatar(ev) {
         markEventHandled(ev, 'Message.ClickAuthorAvatar');
-        if (!this.hasAuthorOpenChat) {
+        if (!this.messageView.hasAuthorOpenChat) {
             return;
         }
         this.messageView.message.author.openChat();
