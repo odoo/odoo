@@ -56,7 +56,7 @@
                         </div>
                     </t>
                     <t t-if="chatWindow.hasShiftPrev">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="_onClickShiftPrev" t-att-title="shiftPrevText">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="_onClickShiftPrev" t-att-title="chatWindow.shiftPrevText">
                             <!-- this is reversed automatically when language is rtl -->
                             <i class="fa fa-angle-left"/>
                         </div>
