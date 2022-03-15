@@ -697,3 +697,22 @@ QUnit.test("protects editable elements: can bypassEditableProtection", async (as
         "the callback still gets called even if triggered from an editable"
     );
 });
+
+QUnit.test("ignore numpad keys", async (assert) => {
+    assert.expect(3);
+
+    const key = '1';
+
+    env.services.hotkey.add(`alt+${key}`, () => assert.step(key));
+    await nextTick();
+
+    let keydown = new KeyboardEvent("keydown", { key, code: "Numpad1", altKey: true });
+    window.dispatchEvent(keydown);
+    await nextTick();
+    assert.verifySteps([]);
+
+    keydown = new KeyboardEvent("keydown", { key: '&', code: "Digit1", altKey: true });
+    window.dispatchEvent(keydown);
+    await nextTick();
+    assert.verifySteps(['1']);
+});
