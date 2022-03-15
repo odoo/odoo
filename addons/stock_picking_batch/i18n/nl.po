@@ -1,37 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
-# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
-# e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Eric Geens <ericgeens@yahoo.com>, 2018
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-# Antoine Gilard <ang@odoo.com>, 2020
+# Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Martin Trigaux, 2022
-# 
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2017-12-13 14:58+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2022-03-15 12:07+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
-msgid ""
-"<span class=\"o_form_label font-weight-bold\" "
-"attrs=\"{'invisible':[('auto_batch', '=', False)]}\">Group by</span>"
+msgid "<span class=\"o_form_label font-weight-bold\" attrs=\"{'invisible':[('auto_batch', '=', False)]}\">Group by</span>"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -57,7 +49,7 @@ msgstr "<strong>Productbarcode</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Responsible:</strong>"
-msgstr "<strong>Verantwoordelijk:</strong>"
+msgstr "<strong>Verantwoordelijke:</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -86,7 +78,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
 msgid "Action Needed"
-msgstr "Vereist actie"
+msgstr "Actie gevraagd"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_ids
@@ -152,7 +144,7 @@ msgstr "Toewijzing"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__allowed_picking_ids
 msgid "Allowed Picking"
-msgstr "Toegestaan picking"
+msgstr "Toegestane picking"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
@@ -191,8 +183,7 @@ msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
-msgid ""
-"Automatically put pickings into batches as they are confirmed when possible."
+msgid "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
 
 #. module: stock_picking_batch
@@ -222,24 +213,24 @@ msgstr "Batch"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
 #, python-format
 msgid "Batch Transfer"
-msgstr "Batchverplaatsing"
+msgstr "Batchpicking"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Lines"
-msgstr "Batchverwerkingsregels"
+msgstr "Batchpickingsregels"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch Transfers"
-msgstr "Batchverplaatsingen"
+msgstr "Batchpickingen"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
-msgstr "Batchverplaatsingen niet gereed"
+msgstr "Batchpicking niet gereed"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
@@ -364,7 +355,7 @@ msgstr "Gedetailleerde bewerkingen"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__done
@@ -391,7 +382,7 @@ msgstr "Volgers (Relaties)"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icoon b.v. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -429,7 +420,7 @@ msgstr "Icoon om uitzondering op activiteit aan te geven."
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -440,9 +431,7 @@ msgstr "indien aangevinkt hebben sommige leveringen een fout."
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #, python-format
-msgid ""
-"If the Automatic Batches feature is enabled, at least one 'Group by' option "
-"must be selected."
+msgid "If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."
 msgstr ""
 
 #. module: stock_picking_batch
@@ -499,7 +488,7 @@ msgstr "Lijst met verplaatsingen behorende bij deze batch"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hoofd bijlage"
+msgstr "Hoofdbijlage"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
@@ -514,7 +503,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
 msgid "Message Delivery error"
-msgstr "Bericht aflever fout"
+msgstr "Bericht afleverfout"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_ids
@@ -530,7 +519,7 @@ msgstr "Modus"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
 msgid "Move Lines"
-msgstr "Mutatie"
+msgstr "Verplaatsingen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
@@ -540,7 +529,7 @@ msgstr "Mijn activiteit deadline"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__name
 msgid "Name of the batch transfer"
-msgstr "Naam van de batch verplaatsing"
+msgstr "Naam van de batchpicking"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
@@ -611,7 +600,7 @@ msgstr "Persoon die verantwoordelijk is voor deze wavepicking"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
 msgid "Picking"
-msgstr "Verplaatsing"
+msgstr "Picken"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_type
@@ -621,11 +610,8 @@ msgstr "Type levering"
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid ""
-"Please add 'Done' quantities to the batch picking to create a new pack."
-msgstr ""
-"Voeg 'Gereed'-hoeveelheden toe aan de batchverzameling om een nieuw pakket "
-"te maken."
+msgid "Please add 'Done' quantities to the batch picking to create a new pack."
+msgstr "Voeg 'Gereed'-hoeveelheden toe aan de batchpicking om een nieuw pakket te maken."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -650,12 +636,12 @@ msgstr "Productverplaatstingen (voorraadverplaatsingsregels)"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Put in Pack"
-msgstr "Stop in pak"
+msgstr "Stop in verpakking"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
@@ -737,12 +723,8 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid ""
-"Some transfers are still waiting for goods. Please check or force their "
-"availability before setting this batch to done."
-msgstr ""
-"Sommige verplaatsingen wachten nog op producten. Controleer deze of forceer "
-"de beschikbaarheid, voordat u deze batch gereed meld."
+msgid "Some transfers are still waiting for goods. Please check or force their availability before setting this batch to done."
+msgstr "Sommige verplaatsingen wachten nog op producten. Controleer deze of forceer de beschikbaarheid, voordat je deze batch gereed meld."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
@@ -753,7 +735,7 @@ msgstr "Bronlocatie"
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
 #: model:mail.message.subtype,name:stock_picking_batch.mt_batch_state
 msgid "Stage Changed"
-msgstr "Fase gewijzigd"
+msgstr "Fase veranderd"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__state
@@ -783,7 +765,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
-msgstr "Voorraad batchverwerking"
+msgstr "Voorraad batchpicking"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_move
+msgid "Stock Move"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_package_destination
@@ -798,7 +785,7 @@ msgstr "Verplaatsingsregels"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
 msgid "Stock moves"
-msgstr "Voorraadmutaties"
+msgstr "Voorraadverplaatsingen"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -807,28 +794,18 @@ msgstr "Samenvatting:"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__show_allocation
-msgid ""
-"Technical Field used to decide whether the button \"Allocation\" should be "
-"displayed."
-msgstr ""
-"Technisch veld dat wordt gebruikt om te beslissen of de knop \"Toewijzing\" "
-"moet worden weergegeven."
+msgid "Technical Field used to decide whether the button \"Allocation\" should be displayed."
+msgstr "Technisch veld dat wordt gebruikt om te beslissen of de knop \"Toewijzing\" moet worden weergegeven."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__show_check_availability
-msgid ""
-"Technical field used to compute whether the check availability button should"
-" be shown."
-msgstr ""
-"Technisch veld waarmee berekend wordt of de beschikbaar knop zichtbaar is."
+msgid "Technical field used to compute whether the check availability button should be shown."
+msgstr "Technisch veld waarmee berekend wordt of de beschikbaar knop zichtbaar is."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__show_validate
-msgid ""
-"Technical field used to decide whether the validate button should be shown."
-msgstr ""
-"Technisch veld dat wordt gebruikt om te beslissen of de valideerknop moet "
-"worden weergegeven."
+msgid "Technical field used to decide whether the validate button should be shown."
+msgstr "Technisch veld dat wordt gebruikt om te beslissen of de bevestig-knop moet worden weergegeven."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -838,7 +815,7 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"De volgende overdrachten kunnen niet worden toegevoegd aan batchoverdracht %s. Controleer hun statussen en bewerkingstypes, als het geen directe overschrijvingen zijn.\n"
+"De volgende verplaatsingen kunnen niet worden toegevoegd aan batchpicking %s. Controleer hun statussen en bewerkingstypes, als het geen directe verplaatsingen zijn.\n"
 "\n"
 "Incompatibiliteit: %s"
 
@@ -849,11 +826,7 @@ msgid ""
 "            (needs to) be done together in order to increase their efficiency.\n"
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
-msgstr ""
-"Het doel van batchverwerking is om bewerkingen te groeperen die mogelijk "
-"samen (moeten) gedaan worden om de efficiëntie te verhogen. Het kan ook "
-"handig zijn om functies toe te wijzen (één persoon = één batch) of helpt het"
-" tijdbeheer van functies (taken die klaar moeten zijn voor 13 uur)."
+msgstr "Het doel van batchverwerking is om bewerkingen te groeperen die mogelijk samen (moeten) gedaan worden om de efficiëntie te verhogen. Het kan ook handig zijn om functies toe te wijzen (één persoon = één batch) of helpt het tijdbeheer van functies (taken die klaar moeten zijn voor 13 uur)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -890,8 +863,7 @@ msgstr "De geselecteerde verplaatsingen moeten behoren tot een uniek bedrijf."
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to the same operation type"
-msgstr ""
-"De geselecteerde verplaatsingen moeten tot hetzelfde bewerkingstype behoren"
+msgstr "De geselecteerde verplaatsingen moeten tot hetzelfde bewerkingstype behoren"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
@@ -907,7 +879,7 @@ msgstr "Activiteiten van vandaag"
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer"
-msgstr "Overplaatsing"
+msgstr "Verplaatsing"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -975,7 +947,7 @@ msgstr "Golven"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
 msgid "Website Messages"
-msgstr "Website berichten"
+msgstr "Websiteberichten"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
@@ -992,7 +964,7 @@ msgstr "Je kunt batchverpaatsingen die gereed zijn niet verwijderen."
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr "U moet een aantal pickings instellen op batch."
+msgstr "Je moet een aantal pickings toevoegen aan de batch."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new

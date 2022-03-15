@@ -1,52 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_sale
-# 
+#
 # Translators:
-# Léonie Bouchat <lbo@odoo.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-# Martin Trigaux, 2019
-# 
+# Martin Trigaux, 2021
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:42+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:28+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
-msgstr ""
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<i class=\"fa fa-check mr-2\"/>Registered"
-msgstr ""
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid "A pricelist item with a positive min. quantity cannot be applied to this event tickets product."
+msgstr "Impossibile applicare al prodotto biglietti evento una voce di listino prezzi con una quantità min. positiva."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
-msgid ""
-"A pricelist item with a positive min. quantity cannot be applied to this "
-"event tickets product."
-msgstr ""
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/product_pricelist.py:0
-#, python-format
-msgid ""
-"A pricelist item with a positive min. quantity will not be applied to the "
-"event tickets products."
-msgstr ""
+msgid "A pricelist item with a positive min. quantity will not be applied to the event tickets products."
+msgstr "Impossibile applicare ai prodotti biglietti evento una voce di listino prezzi con una quantità min. positiva."
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
@@ -56,22 +39,17 @@ msgstr "Biglietti evento"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Free"
-msgstr "Libero"
+msgstr "Gratuito"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
-msgid "N/A"
-msgstr "N/D"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Only"
-msgstr "Solo"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "From"
+msgstr "Da"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Regola listino prezzi"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -79,20 +57,10 @@ msgid "Product"
 msgstr "Prodotto"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Register"
-msgstr "Registra"
-
-#. module: website_event_sale
 #: code:addons/website_event_sale/controllers/main.py:0
 #, python-format
 msgid "Registration"
-msgstr "Iscrizione"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Remaining"
-msgstr "rimasti"
+msgstr "Registrazione"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
@@ -105,56 +73,35 @@ msgid "Sales Order Line"
 msgstr "Riga ordine di vendita"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Sales end on"
-msgstr ""
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Sold Out"
-msgstr "Esauriti"
-
-#. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr "Spiacenti, per l'evento %(event)s i posti %(ticket)s sono esauriti."
+msgstr "I biglietti %(event)s per l'evento %(ticket)s sono esauriti."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
-msgid ""
-"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
-" ticket for the %(event)s event."
-msgstr ""
-"Spiacenti, per l'evento %(event)s sono ancora disponibili solo "
-"%(remaining_seats)dposti %(ticket)s."
+msgid "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event."
+msgstr "Per i biglietti %(ticket)sdell'evento %(event)s sono ancora disponibili solo %(remaining_seats)dposti."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The ticket doesn't match with this product."
-msgstr "Il biglietto non corrisponde a questo prodotto."
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
-msgid "Ticket"
-msgstr "Biglietto"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid ""
-"Tickets\n"
-"                    <span class=\"close\">×</span>"
-msgstr ""
+msgstr "Il biglietto non corrisponde al prodotto."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid "Warning"
-msgstr "Attenzione"
+msgstr "Avviso"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
 msgstr "Sito web"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "to"
+msgstr "a"

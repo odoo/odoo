@@ -1,37 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-# 
+#
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Benedicte HANET <hanetb@gmail.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Clo <clo@odoo.com>, 2016
-# Laura Piraux <lap@odoo.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
-# Fabien Pinckaers <fp@openerp.com>, 2018
-# Stéphane GUILLY <stephane.guilly@laposte.net>, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
-# Marie Willemyns <mwi@odoo.com>, 2019
-# Guillaume Piens <gup@odoo.com>, 2019
-# Moka Tourisme <hello@mokatourisme.fr>, 2020
-# Alain van de Werve <avw@openerp.com>, 2020
-# Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # Martin Trigaux, 2021
-# Cécile Collart <cco@odoo.com>, 2021
-# 
+# Cécile Collart <cco@odoo.com>, 2022
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"PO-Revision-Date: 2021-09-14 12:19+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_check_printing
@@ -47,11 +33,8 @@ msgstr " : Séquence du numéro de chèque"
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid ""
-"Adjust the margins of generated checks to make it fit your printer's "
-"settings."
-msgstr ""
-"Ajuster les marges des chèques générés aux paramètres de votre imprimante."
+msgid "Adjust the margins of generated checks to make it fit your printer's settings."
+msgstr "Ajuster les marges des chèques générés aux paramètres de votre imprimante."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -111,8 +94,7 @@ msgstr "Le numéro de chèque ne peut être constitué que de chiffres"
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr ""
-"Cochez cette option si vos chèques pré-imprimés ne sont pas numérotés."
+msgstr "Cochez cette option si vos chèques pré-imprimés ne sont pas numérotés."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -169,10 +151,9 @@ msgstr "Créé le"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher Nom"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Go to the configuration panel"
@@ -186,12 +167,8 @@ msgstr "ID"
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
-msgstr ""
-"Afin d'imprimer plusieurs chèques à la fois, ils doivent appartenir au même "
-"journal bancaire."
+msgid "In order to print multiple checks at once, they must belong to the same bank journal."
+msgstr "Afin d'imprimer plusieurs chèques à la fois, ils doivent appartenir au même journal de banque."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -206,7 +183,7 @@ msgstr "Pièce comptable"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -279,21 +256,13 @@ msgstr "Paiements"
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"Payments to print as a checks must have 'Check' selected as payment method "
-"and not have already been reconciled"
-msgstr ""
-"Les paiements à imprimer en tant que chèques doivent avoir \"Chèque\" de "
-"sélectionner comme méthode de paiement et ne doivent pas être déjà lettrés"
+msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
+msgstr "Les paiements à imprimer en tant que chèques doivent avoir \"Chèque\" de sélectionner comme méthode de paiement et ne doivent pas être déjà lettrés"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
-msgstr ""
-"Veuillez entrer le numéro du premier chèque pré-imprimé sur lequel vous êtes"
-" sur le point d'imprimer."
+msgid "Please enter the number of the first pre-printed check that you are about to print on."
+msgstr "Veuillez entrer le numéro du premier chèque pré-imprimé sur lequel vous êtes sur le point d'imprimer."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
@@ -305,15 +274,8 @@ msgstr "Mode de paiement préféré"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid ""
-"Preferred payment method when paying this vendor. This is used to filter "
-"vendor bills by preferred payment method to register payments in mass. Use "
-"cases: create bank files for batch wires, check runs."
-msgstr ""
-"Mode de paiement préféré pour ce fournisseur. Ceci est utilisé pour trier "
-"les factures fournisseurs par mode de paiement et enregistrer des paiements "
-"en masse. Cas d'utilisation : création de fichiers de virement bancaires, "
-"impression de chèques."
+msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
+msgstr "Mode de paiement préféré pour ce fournisseur. Ceci est utilisé pour trier les factures fournisseurs par mode de paiement et enregistrer des paiements en masse. Cas d'utilisation : création de fichiers de virement bancaires, impression de chèques."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -377,13 +339,8 @@ msgstr "Numéro de séquence du prochain chèque imprimé."
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"Something went wrong with Check Layout, please select another layout in "
-"Invoicing/Accounting Settings and try again."
-msgstr ""
-"Une erreur s'est produite lors de la mise en page du chèque, merci de "
-"sélectionner une autre mise en page dans les paramètre Facturation / "
-"Comptabilité et de réessayer."
+msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
+msgstr "Une erreur s'est produite lors de la mise en page du chèque, merci de sélectionner une autre mise en page dans les paramètre Facturation / Comptabilité et de réessayer."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -398,34 +355,19 @@ msgstr ""
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
-msgid ""
-"The last check number was %s. In order to avoid a check being rejected by "
-"the bank, you can only use a greater number."
-msgstr ""
-"Le dernier numéro de chèque était %s. Afin d'éviter qu'un chèque ne soit "
-"refusé par la banque, vous ne pouvez utiliser qu'un numéro plus grand."
+msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
+msgstr "Le dernier numéro de chèque était %s. Afin d'éviter qu'un chèque ne soit refusé par la banque, vous ne pouvez utiliser qu'un numéro plus grand."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid ""
-"The selected journal is configured to print check numbers. If your pre-"
-"printed check paper already has numbers or if the current numbering is "
-"wrong, you can change it in the journal configuration page."
-msgstr ""
-"Le journal sélectionné est configuré pour imprimer les numéros de chèques. "
-"Si votre chèque pré-imprimé a déjà un numéro ou si la numérotation existante"
-" est mauvaise, vous pouvez la changer dans la page de configuration du "
-"journal."
+msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
+msgstr "Le journal sélectionné est configuré pour imprimer les numéros de chèques. Si votre chèque pré-imprimé a déjà un numéro ou si la numérotation existante est mauvaise, vous pouvez la changer dans la page de configuration du journal."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid ""
-"This option allows you to print check details (stub) on multiple pages if "
-"they don't fit on a single page."
-msgstr ""
-"Cette option permet d'imprimer les éléments (talons) sur plusieurs pages si "
-"ceux-ci ne tiennent pas sur une page."
+msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
+msgstr "Cette option permet d'imprimer les éléments (talons) sur plusieurs pages si ceux-ci ne tiennent pas sur une page."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -433,18 +375,12 @@ msgstr ""
 msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
-msgstr ""
-"Cette option vous permet d'imprimer un champ de date sur le chèque, selon le"
-" CPA. Elle peut être déactivée si les chèques pré-imprimés le prévoient "
-"déjà."
+msgstr "Cette option vous permet d'imprimer un champ de date sur le chèque, selon le CPA. Elle peut être déactivée si les chèques pré-imprimés le prévoient déjà."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid ""
-"This will allow to save on payments the number of the corresponding check."
-msgstr ""
-"Ceci permettra de sauvegarder sur les paiements le numéro du chèque "
-"correspondant. "
+msgid "This will allow to save on payments the number of the corresponding check."
+msgstr "Ceci permettra de sauvegarder sur les paiements le numéro du chèque correspondant. "
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -459,10 +395,5 @@ msgstr "Chèque annulé"
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"You have to choose a check layout. For this, go in Invoicing/Accounting "
-"Settings, search for 'Checks layout' and set one."
-msgstr ""
-"Vous devez sélectionner une mise en page pour vos chèques. Pour faire cette "
-"sélection, allez dans les paramètres Facturation / Comptabilité, et "
-"choisissez-en une dans le réglage \"Mise en page des chèques\"."
+msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
+msgstr "Vous devez sélectionner une mise en page pour vos chèques. Pour faire cette sélection, allez dans les paramètres Facturation / Comptabilité, et choisissez-en une dans le réglage \"Mise en page des chèques\"."

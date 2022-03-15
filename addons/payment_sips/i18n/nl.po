@@ -1,33 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_sips
-# 
+#
 # Translators:
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Eric Geens <ericgeens@yahoo.com>, 2018
 # Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
-"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/payment_transaction.py:0
-#, python-format
-msgid "Incorrect amount: received %(received).2f, expected %(expected).2f"
-msgstr "Onjuist bedrag: %(received).2f ontvangen, verwacht %(expected).2f"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
@@ -37,7 +28,7 @@ msgstr "Interface versie"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
-msgstr "Handelaar ID"
+msgstr "Merchant ID"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment_transaction.py:0
@@ -48,7 +39,7 @@ msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betaling verwerver"
+msgstr "Betalingsprovider"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_account_payment_method
@@ -99,21 +90,12 @@ msgstr "Test URL"
 #. module: payment_sips
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "The ID solely used to identify the merchant account with Sips"
-msgstr ""
-"De ID die uitsluitend wordt gebruikt om het verkopersaccount bij Sips . te "
-"identificeren"
+msgstr "De ID die uitsluitend wordt gebruikt om het verkopersaccount bij Sips . te identificeren"
 
 #. module: payment_sips
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
-"De betalingsdienstaanbieder die bij deze acquirer moet worden gebruikt"
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/payment_transaction.py:0
-#, python-format
-msgid "This currency is not supported: %s."
-msgstr "Deze valuta wordt niet ondersteund: %s."
+msgstr "De betalingsdienstaanbieder die bij deze profider moet worden gebruikt"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment_transaction.py:0

@@ -1,25 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_iap_mine
-# 
+#
 # Translators:
 # Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
-# 
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-12-07 11:16+0000\n"
-"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2021\n"
+"PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm_iap_mine
@@ -54,14 +53,8 @@ msgstr ""
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
-msgid ""
-"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your "
-"request did not return any result (no credits were used). Try removing some "
-"filters.</span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Je "
-"verzoek heeft geen resultaat opgeleverd (er zijn geen credits gebruikt). "
-"Probeer enkele filters te verwijderen.</span>"
+msgid "<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your request did not return any result (no credits were used). Try removing some filters.</span>"
+msgstr "<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Je verzoek heeft geen resultaat opgeleverd (er zijn geen credits gebruikt). Probeer enkele filters te verwijderen.</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -237,7 +230,7 @@ msgstr "Gereed"
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__draft
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Draft"
-msgstr "In concept"
+msgstr "Concept"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
@@ -395,7 +388,7 @@ msgstr "Lead Credits"
 #. module: crm_iap_mine
 #: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
 msgid "Lead Generation"
-msgstr "Leadgeneratie"
+msgstr "Lead generatie"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
@@ -417,7 +410,7 @@ msgstr "Lead Totaal Credits"
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Lead/Verkoopkans"
+msgstr "Lead/Prospect"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
@@ -428,17 +421,14 @@ msgstr "Leads"
 #. module: crm_iap_mine
 #: model:ir.model.fields,help:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
 msgid "List of available states based on selected countries"
-msgstr ""
-"Lijst met beschikbare provincies/staten op basis van geselecteerde landen"
+msgstr "Lijst met beschikbare provincies/staten op basis van geselecteerde landen"
 
 #. module: crm_iap_mine
 #. openerp-web
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
-msgid ""
-"Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
-msgstr ""
-"Op zoek naar meer opportunities?<br>Probeer de <b>Leadgeneratie</b> tool."
+msgid "Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
+msgstr "Op zoek naar meer opportunities?<br>Probeer de <b>Leadgeneratie</b> tool."
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_148
@@ -462,9 +452,6 @@ msgid "Name already exists!"
 msgstr "Naam bestaat al!"
 
 #. module: crm_iap_mine
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "New"
@@ -502,7 +489,7 @@ msgstr "Aantal leads"
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__opportunity
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Opportunities"
-msgstr "Verkoopkansen"
+msgstr "Prospects"
 
 #. module: crm_iap_mine
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
@@ -570,12 +557,12 @@ msgstr "Reveal"
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__role
 msgid "Role"
-msgstr "Rol"
+msgstr "Functie"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__name
 msgid "Role Name"
-msgstr "Rolnaam"
+msgstr "Functie naam"
 
 #. module: crm_iap_mine
 #: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_role_name_uniq
@@ -675,12 +662,8 @@ msgstr "Soort"
 #. module: crm_iap_mine
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
-msgid ""
-"Up to %d additional credits will be consumed to identify %d contacts per "
-"company."
-msgstr ""
-"Tot %d additionele credits zullen worden gebruikt om %d contacten per "
-"bedrijf te identificeren."
+msgid "Up to %d additional credits will be consumed to identify %d contacts per company."
+msgstr "Tot %d additionele credits zullen worden gebruikt om %d contacten per bedrijf te identificeren."
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -833,4 +816,4 @@ msgstr "verkoop"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "to"
-msgstr "t/m"
+msgstr "tot"

@@ -1,39 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_signup
-# 
+#
 # Translators:
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2016
-# Antonio Trueba, 2016
-# Sandra Figueroa <sandrafigvar@gmail.com>, 2016
-# Alejandro Santana <alejandrosantana@anubia.es>, 2017
-# Pierre-Antoine Magnet <pma@odoo.com>, 2017
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2019
-# Cristopher Cravioto <ccr@odoo.com>, 2019
-# Pilar Marín <pilar@odooperu.pe>, 2019
-# Leonard Camacho <leonard.camacho@gmail.com>, 2019
-# Efrem Jimenez <efj@odoo.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
-# jabelchi, 2021
-# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# Martin Trigaux, 2021
 # marcescu, 2022
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
 "Last-Translator: marcescu, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_signup
@@ -43,22 +27,13 @@ msgstr "<i title=\"Cerrar\" class=\"small fa fa-times\"/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid ""
-"<strong>A password reset has been requested for this user. An email "
-"containing the following link has been sent:</strong>"
-msgstr ""
-"<strong>Se ha solicitado un restablecimiento de contraseña para este "
-"usuario. Se ha enviado un correo electrónico conteniendo el siguiente "
-"enlace:</strong>"
+msgid "<strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>"
+msgstr "<strong>Se ha solicitado un restablecimiento de contraseña para este usuario. Se ha enviado un correo electrónico conteniendo el siguiente enlace:</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid ""
-"<strong>An invitation email containing the following subscription link has "
-"been sent:</strong>"
-msgstr ""
-"<strong>Se ha enviado un correo electrónico de invitación conteniendo el "
-"siguiente enlace de suscripción:</strong>"
+msgid "<strong>An invitation email containing the following subscription link has been sent:</strong>"
+msgstr "<strong>Se ha enviado un correo electrónico de invitación que contiene el siguiente enlace de suscripción:</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -368,22 +343,19 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr "¿Ya tiene una cuenta?"
+msgstr "¿Ya tienes una cuenta?"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
-"Se ha enviado un correo electrónico con las credenciales para restablecer su"
-" contraseña"
+msgstr "Se ha enviado un correo electrónico con las credenciales para restablecer tu contraseña"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
-"Otro usuario ya se ha registrado usando esta dirección de correo electrónico"
+msgstr "Otro usuario ya se ha registrado usando esta dirección de correo electrónico"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
@@ -409,20 +381,18 @@ msgstr "Registro de autenticación: Usuarios no registrados"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Authentication Failed."
-msgstr "Autenticación fallida."
+msgstr "La autenticación falló."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Back to Login"
-msgstr "Volver al Inicio de sesión"
+msgstr "Volver a inicio de sesión"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
-"No se puede enviar el correo electrónico: el usuario %s no tiene dirección "
-"de correo electrónico."
+msgstr "No se puede enviar el correo electrónico: el usuario %s no tiene dirección de correo electrónico."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -432,7 +402,7 @@ msgstr "Cerrar"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de Configuración"
+msgstr "Opciones de configuración"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -464,7 +434,7 @@ msgstr "No se ha podido crear una cuenta nueva."
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Could not reset your password"
-msgstr "No se puede restablecer su contraseña"
+msgstr "No se puede restablecer tu contraseña"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
@@ -479,20 +449,18 @@ msgstr "Derecho de aceso por defecto"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr "¿No tiene una cuenta?"
+msgstr "¿No tienes una cuenta?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
-msgstr ""
-"Habilitar restablecimiento de la contraseña desde la página de inicio de "
-"sesión"
+msgstr "Habilitar restablecimiento de la contraseña desde la página de inicio de sesión"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "Registro libre"
+msgstr "Registro gatris"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -503,23 +471,23 @@ msgstr "Ruta HTTP "
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Invalid signup token"
-msgstr "Palabra de ingreso no válida"
+msgstr "Token de acceso inválido"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "Deje que sus clientes inicien sesión para ver sus documentos"
+msgstr "Deja que tus clientes inicien sesión para ver sus documentos"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
-msgstr "Nunca conectado"
+msgstr "Nunca se conecta"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "No login provided."
-msgstr "No se ha facilitado ningún login"
+msgstr "No se ha facilitado ningún acceso"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
@@ -545,7 +513,7 @@ msgstr "Restablecer contraseña"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr "La contraseña no coincide, por favor, vuelva a escribirla."
+msgstr "La contraseña no coincide, por favor, vuelve a escribirla."
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
@@ -561,8 +529,7 @@ msgstr "Restablecer contraseña"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
-"Restablecimiento de contraseña: usuario o correo electrónico no válido"
+msgstr "Restablecimiento de contraseña: usuario o correo electrónico no válido"
 
 #. module: auth_signup
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
@@ -584,49 +551,49 @@ msgstr "Registrarse"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_expiration
 msgid "Signup Expiration"
-msgstr "Expiración del ingreso"
+msgstr "Expiración del inicio de sesión"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
-msgstr "Palabra de ingreso"
+msgstr "Token de inicio de sesión"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr "Tipo de la palabra de ingreso"
+msgstr "Tipo de token de inicio de sesión"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
-msgstr "La palabra de ingreso es válida"
+msgstr "Token de inicio de sesión inválido"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
 msgid "Signup URL"
-msgstr "URL de ingreso"
+msgstr "URL de inicio de sesión"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr "El acceso no está permitido a usuarios que no hayan sido invitados"
+msgstr "Solo los usuarios invitados pueden registrarse. "
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr "La ficha de registro '%s' ya no es válida"
+msgstr "El token de registro '%s' ya no es válido"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr "La ficha de registro '%s' no es válida"
+msgstr "El token de registro '%s' no es válido"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -638,13 +605,13 @@ msgstr "Registro: plantilla de usuario inválida"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr "Registro: no se ha dado inicio de sesión para el nuevo usuario"
+msgstr "Registro: usuario nuevo sin acceso otorgado"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr "Registro: no se proporciona nombre ni socio para el nuevo usuario"
+msgstr "Registro: no se proporcionó nombre ni socio para el nuevo usuario"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -654,25 +621,18 @@ msgstr "Estado"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr ""
-"Plantilla de usuario para los nuevos usuarios creados a través del ingreso"
+msgstr "Plantilla de usuario para los nuevos usuarios creados a través del inicio de sesión"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "The form was not properly filled in."
-msgstr "El formulario no ha sido rellenado correctamente."
+msgstr "No se llenó el formulario de forma correcta. "
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid ""
-"To send invitations in B2B mode, open a contact or select several ones in "
-"list view and click on 'Portal Access Management' option in the dropdown "
-"menu *Action*."
-msgstr ""
-"Para enviar invitaciones en modo B2B, abre un contacto o seleccciona varios "
-"en la vista modo lista y haz clic en la opción 'Gestión de acceso al Portal'"
-"  del menú desplegable *Acción*."
+msgid "To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*."
+msgstr "Para enviar invitaciones en modo B2B, abre un contacto o selecciona varios en la vista de lista y haz clic en la opción 'Gestión de acceso al portal'  del menú desplegable *Acción*."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -684,7 +644,7 @@ msgstr "Usuarios"
 #: model:ir.cron,cron_name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 #: model:ir.cron,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 msgid "Users: Notify About Unregistered Users"
-msgstr "Usuarios: Notificar sobre usuarios no registrados"
+msgstr "Usuarios: notificar usuarios no registrados"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
@@ -695,29 +655,25 @@ msgstr "¡Bienvenido {{ object.company_id.name }}!"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr "No puede realizar esta acción en un usuario archivado."
+msgstr "Un usuario archivado no puede realizar esta acción."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Su correo electrónico"
+msgstr "Tu correo electrónico"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "Su nombre"
+msgstr "Tu nombre"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr "Por ejemplo, JJohn Smith"
+msgstr "Ej. John Doe"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
-msgid ""
-"{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
-"to connect to Odoo"
-msgstr ""
-"{{ object.create_uid.name }} de {{ object.company_id.name }} le invita a "
-"conectarse con Odoo"
+msgid "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you to connect to Odoo"
+msgstr "{{ object.create_uid.name }} de {{ object.company_id.name }} le invita a conectarse con Odoo"

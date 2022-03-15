@@ -1,25 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_tax_python
-# 
+#
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
-# Julia van Orsouw <Julia@vanorsouw-consultancy.nl>, 2020
-# 
+# Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Julia van Orsouw <Julia@vanorsouw-consultancy.nl>, 2020\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_tax_python
@@ -40,8 +38,8 @@ msgstr ""
 "    - Groep van BTW's: de BTW is een set van sub BTW's.\n"
 "    - Vast: Het BTW bedrag is gelijk ongeacht de prijs.\n"
 "    - Percentage van prijs: Het BTW bedrag is een percentage van de prijs:\n"
-"        Bijv. 100 * 10% = 110 (exclusief BTW)\n"
-"        Bijv. 110 / (1 + 10%) = 100 (inclusief BTW)\n"
+"        Bijv. 100 * (1 + 10%) = 110 (niet inbegrepen in de prijs)\n"
+"        Bijv. 110 / (1 + 10%) = 100 (Percentage van de prijs)\n"
 "    - Percentage van de prijs is inclusief BTW: Het BTW bedrag is een gedeelte van de prijs:\n"
 "        Bijv. 180 / (1 - 10%) = 200 (exclusief BTW)\n"
 "        Bijv. 200 * (1 - 10%) = 180 (inclusief BTW)\n"
@@ -104,7 +102,7 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Bepaal of de belasting zal toegepast worden door de variabele 'result' op True of False te plaatsen.\n"
+"Bepaal of de BTW zal toegepast worden door de variabele 'result' op True of False te plaatsen.\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
@@ -122,7 +120,7 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Bepaal of de belasting zal toegepast worden door de variabele 'result' op True of False te plaatsen.\n"
+"Bepaal of de BTW zal toegepast worden door de variabele 'result' op True of False te plaatsen.\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
@@ -135,12 +133,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
-msgstr "Python Code"
+msgstr "Python code"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr "Belasting"
+msgstr "Btw"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
@@ -151,4 +149,4 @@ msgstr "BTW berekening"
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr "Sjablonen voor belastingen"
+msgstr "Sjablonen voor BTW"

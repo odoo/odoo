@@ -1,29 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_coupon
-# 
+#
 # Translators:
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# Eloïse Stilmant <est@odoo.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
-# gdp Odoo <gdp@odoo.com>, 2020
-# lcaodoo <lca@odoo.com>, 2020
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Martin Trigaux, 2021
 # RHTodoo, 2021
-# Martin Trigaux, 2022
-# 
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2020-12-11 11:04+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Grégory Schreiner <gregory@mokatourisme.fr>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: pos_coupon
@@ -201,15 +196,12 @@ msgstr ""
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/coupon.py:0
 #, python-format
-msgid ""
-"A coupon from the same program has already been reserved for this order."
+msgid "A coupon from the same program has already been reserved for this order."
 msgstr ""
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__promo_barcode
-msgid ""
-"A technical field used as an alternative to the promo_code. This is "
-"automatically generated when promo_code is changed."
+msgid "A technical field used as an alternative to the promo_code. This is automatically generated when promo_code is changed."
 msgstr ""
 
 #. module: pos_coupon
@@ -312,19 +304,18 @@ msgstr ""
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/PromoCodeButton.xml:0
 #, python-format
 msgid "Enter Code"
-msgstr "Erreur code"
+msgstr "Saisir un code"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/js/ControlButtons/PromoCodeButton.js:0
 #, python-format
 msgid "Enter Promotion or Coupon Code"
-msgstr "Entrez le code de promotion ou de coupon"
+msgstr "Saisir le code de promotion ou de coupon"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__is_program_reward
-msgid ""
-"Flag indicating that this order line is a result of coupon/promo program."
+msgid "Flag indicating that this order line is a result of coupon/promo program."
 msgstr ""
 
 #. module: pos_coupon
@@ -453,9 +444,7 @@ msgstr ""
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order__applied_program_ids
-msgid ""
-"Technical field. This is set when the order is validated. We normally get "
-"this value thru the `program_id` of the reward lines."
+msgid "Technical field. This is set when the order is validated. We normally get this value thru the `program_id` of the reward lines."
 msgstr ""
 
 #. module: pos_coupon
@@ -482,9 +471,7 @@ msgstr "Ce coupon est invalide (%s)."
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/pos_config.py:0
 #, python-format
-msgid ""
-"To continue, make the following reward products to be available in Point of "
-"Sale."
+msgid "To continue, make the following reward products to be available in Point of Sale."
 msgstr ""
 
 #. module: pos_coupon
@@ -495,9 +482,7 @@ msgstr "Type"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_config__use_coupon_programs
 msgid "Use coupon and promotion programs in this PoS configuration."
-msgstr ""
-"Utilisez les compagnes de promotion et les coupon dans cette configuration "
-"du PdV."
+msgstr "Utilisez les compagnes de promotion et les coupon dans cette configuration du PdV."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__valid_partner_ids
@@ -531,8 +516,7 @@ msgstr "Votre code coupon"
 #. module: pos_coupon
 #: model:mail.template,subject:pos_coupon.mail_coupon_template
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr ""
-"Votre coupon de récompense de {{ object.program_id.company_id.name }} "
+msgstr "Votre coupon de récompense de {{ object.program_id.company_id.name }} "
 
 #. module: pos_coupon
 #: model:mail.template,name:pos_coupon.mail_coupon_template
