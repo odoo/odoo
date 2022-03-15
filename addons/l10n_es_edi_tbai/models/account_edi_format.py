@@ -223,13 +223,14 @@ class AccountEdiFormat(models.Model):
         if cancel:
             return values  # cancellation invoices do not specify recipients (they stay the same)
 
+        # TODO TicketBai supports simplified invoices WITH recipients: use checkbox in invoice ?
+        # Note that credit notes for simplified invoices are ALWAYS simplified BUT can have a recipient even if invoice doesn't
         partner = invoice.commercial_partner_id if invoice.is_sale_document() else invoice.company_id
         if partner == self.env.ref("l10n_es_edi_tbai.partner_simplified"):
-            return values  # simplified invoices do not specify any recipient
+            # Kept for now because 'recipient' should not be set unless there is an actual recipient (used as condition in template)
+            return values
 
         # === RECIPIENTS (DESTINATARIOS) ===
-        xml_recipients = []  # TicketBAI accepts 1-100 recipients (Odoo only supports one)
-
         eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
 
         nif = False
@@ -259,10 +260,9 @@ class AccountEdiFormat(models.Model):
             'partner': partner,
             'partner_address': ', '.join(filter(lambda x: x, [partner.street, partner.street2, partner.city])),
         }
-        xml_recipients.append(values_dest)
 
         values.update({
-            'recipients': xml_recipients,
+            'recipient': values_dest,
             # TODO for Bizkaia, option below can be "T" (if "in" invoice)
             'thirdparty_or_recipient': "D",  # thirdparty = Tercero, recipient = Destinatario
         })
@@ -277,17 +277,13 @@ class AccountEdiFormat(models.Model):
             return values
 
         # === CREDIT NOTE (RECTIFICATIVA) ===
-        is_refund = invoice.move_type == 'out_refund'  # TODO also in_refund (for Bizkaia)
-        values['is_refund'] = is_refund
-        is_simplified = invoice.partner_id == self.env.ref("l10n_es_edi_tbai.partner_simplified")
-        if is_refund:
+        # TODO values below would have to be adapted for in_invoices (Bizkaia LROE)
+        values['is_refund'] = invoice.move_type == 'out_refund'
+        values['is_simplified'] = invoice.partner_id == self.env.ref("l10n_es_edi_tbai.partner_simplified")
+        if values['is_refund']:
             # TODO check refund codes are legal before sending ? Do not use "defaults" here, show them in wizard
-            values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason or ('R5' if is_simplified else 'R1')
-            values['credit_note_invoices'] = [  # uses a list because TicketBai supports issuing multiple credit notes
-                invoice.reversed_entry_id
-            ]
-        else:
-            values['is_simplified'] = is_simplified  # TODO may not apply to in_invoice (for Bizkaia)
+            values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason or ('R5' if values['is_simplified'] else 'R1')
+            values['credit_note_invoice'] = invoice.reversed_entry_id
 
         # === LINES (DETALLES) ===
         values['invoice_lines'] = [{

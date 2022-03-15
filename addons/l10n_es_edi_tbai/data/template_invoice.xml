@@ -51,9 +51,8 @@
                 <NIF t-out="sender_vat"/>
                 <ApellidosNombreRazonSocial t-out="sender.name"/>
             </Emisor>
-            <Destinatarios t-if="is_emission and not is_simplified">
-                <!-- TODO simplified invoices can have Destinatario ! Not compatible with current way to compute is_simplified. When compatible, use t-if="is_emission and len(recipients) > 0" -->
-                <IDDestinatario t-foreach="recipients" t-as="recipient">
+            <Destinatarios t-if="is_emission and recipient">
+                <IDDestinatario>
                     <NIF t-if="recipient.get('nif')" t-out="recipient['nif']"/>
                     <IDOtro t-else="">
                         <CodigoPais t-if="recipient.get('alt_id_country')" t-out="recipient['alt_id_country']"/>
@@ -67,7 +66,7 @@
                 </IDDestinatario>
             </Destinatarios>
             <VariosDestinatarios t-if="is_emission">N</VariosDestinatarios>
-            <!-- Odoo does not support multi-recipient invoices-->
+            <!-- Odoo does not support multi-recipient invoices (TBAI does)-->
             <EmitidaPorTercerosODestinatario t-if="is_emission" t-out="thirdparty_or_recipient"/>
         </template>
 
@@ -79,21 +78,22 @@
                 <FechaExpedicionFactura t-if="is_emission" t-out="datetime_strftime(datetime_now, '%d-%m-%Y')"/>
                 <HoraExpedicionFactura t-if="is_emission" t-out="datetime_strftime(datetime_now, '%H:%M:%S')"/>
                 <FacturaSimplificada t-if="is_emission" t-out="'S' if is_simplified else 'N'"/>
-                <!-- <FacturaEmitidaSustitucionSimplificada/> TODO True iff is_refund, where rectified invoice is 'simplified' -->
-                <FacturaRectificativa t-if="credit_note_invoices">
+                <FacturaEmitidaSustitucionSimplificada t-if="is_refund" t-out="'S' if (is_simplified and recipient) else 'N'"/>
+                <FacturaRectificativa t-if="credit_note_invoice">
                     <Codigo t-out="credit_note_code"/>
                     <Tipo>I</Tipo>
-                    <!-- TODO also allow credit note Tipo 'S' ? Seems optional.
+                    <!-- TODO also allow credit note Tipo 'S' ? Choice of 'Tipo' seems optional.
                     <ImporteRectificacionSustitutiva>
                         <BaseRectificada>180.00</BaseRectificada>
                         <CuotaRectificada>20.21</CuotaRectificada>
                     </ImporteRectificacionSustitutiva> -->
                 </FacturaRectificativa>
                 <FacturasRectificadasSustituidas t-if="is_refund">
-                    <IDFacturaRectificadaSustituida t-foreach="credit_note_invoices" t-as="c_note">
-                        <SerieFactura t-out="c_note.l10n_es_tbai_sequence"/>
-                        <NumFactura t-out="c_note.l10n_es_tbai_number"/>
-                        <FechaExpedicionFactura t-out="datetime_strftime(c_note.l10n_es_tbai_registration_date, '%d-%m-%Y')"/>
+                    <IDFacturaRectificadaSustituida>
+                        <!-- Odoo does not support issuing a single credit note for multiple invoices (TBAI does)-->
+                        <SerieFactura t-out="credit_note_invoice.l10n_es_tbai_sequence"/>
+                        <NumFactura t-out="credit_note_invoice.l10n_es_tbai_number"/>
+                        <FechaExpedicionFactura t-out="datetime_strftime(credit_note_invoice.l10n_es_tbai_registration_date, '%d-%m-%Y')"/>
                     </IDFacturaRectificadaSustituida>
                 </FacturasRectificadasSustituidas>
             </CabeceraFactura>
@@ -110,12 +110,13 @@
                     </IDDetalleFactura>
                 </DetallesFactura>
                 <ImporteTotalFactura t-out="float_repr(invoice_total)"/>
-                <!-- <RetencionSoportada/> TODO -->
-                <!-- <BaseImponibleACoste/> TODO -->
+                <!-- <RetencionSoportada/> TODO (potentially has to be computed/decided manually) -->
+                <!-- <BaseImponibleACoste/> TODO (only applicable with ClaveRegimenIvaOpTrascendencia 06) -->
                 <Claves>
                     <IDClave>
                         <ClaveRegimenIvaOpTrascendencia t-out="vat_regime_code"/>
-                        <!-- TODO there can be multiple (up to three?) keys -->
+                        <!-- TODO there can be multiple (up to three) keys, all for specific use cases.
+                        Only 01 (regimen general) and 02 (exportaciones) implemented for now (and they're mutually exclusive). -->
                     </IDClave>
                 </Claves>
             </DatosFactura>
@@ -152,12 +153,11 @@
                 <NoExenta t-if="su.get('NoExenta')">
                     <t t-set="nex" t-value="su['NoExenta']"/>
                     <DetalleNoExenta>
-                        <!-- DetalleNoExenta: Up to 2 (not 3!), grouped by TipoNoExenta t-foreach='nex_list' t-as="nex"-->
+                        <!-- TODO DetalleNoExenta: Up to 2, grouped by TipoNoExenta (S1/S2)
+                        Tax info imported from SII which only supports one TipoNoExenta at a time. -->
                         <TipoNoExenta t-out="nex['TipoNoExenta']"/>
                         <DesgloseIVA>
                             <DetalleIVA t-foreach="nex['DesgloseIVA']['DetalleIVA']" t-as="det">
-                                <!-- DetalleIVA: Should distinguish by 'tipos' (OK if recargo/not recargo never mixed)
-                                CHECK if different tax types get separated-->
                                 <BaseImponible t-out="float_repr(det['BaseImponible'])"/>
                                 <TipoImpositivo t-out="float_repr(det['TipoImpositivo'])"/>
                                 <CuotaImpuesto t-out="float_repr(det['CuotaRepercutida'])"/>
