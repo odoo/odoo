@@ -4,7 +4,7 @@
     <t t-name="mail.NotificationAlert" owl="1">
         <div class="o_NotificationAlert" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="messaging">
-                <center t-if="isNotificationBlocked" class="o_notification_alert alert alert-primary">
+                <center t-if="messaging.isNotificationBlocked" class="o_notification_alert alert alert-primary">
                     Odoo Push notifications have been blocked. Go to your browser settings to allow them.
                 </center>
             </t>
