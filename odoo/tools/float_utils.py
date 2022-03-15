@@ -97,6 +97,8 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
         rounded_value = round(normalized_value)     # round to integer
 
     result = rounded_value * rounding_factor # de-normalize
+    if precision_digits:
+        builtins.round(result, precision_digits)
     return result
 
 def float_is_zero(value, precision_digits=None, precision_rounding=None):
