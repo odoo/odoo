@@ -35,22 +35,6 @@ export class Composer extends Component {
     }
 
     /**
-     * Get the current partner image URL.
-     *
-     * @returns {string}
-     */
-    get currentPartnerAvatar() {
-        const avatar = this.messaging.currentUser
-            ? this.env.session.url('/web/image', {
-                    field: 'avatar_128',
-                    id: this.messaging.currentUser.id,
-                    model: 'res.users',
-                })
-            : '/web/static/img/user_menu_avatar.png';
-        return avatar;
-    }
-
-    /**
      * Determine whether composer should display a footer.
      *
      * @returns {boolean}
