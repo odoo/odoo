@@ -540,6 +540,20 @@ registerModel({
             return clear();
         },
         /**
+         * @private
+         * @returns {string}
+         */
+        _computeCurrentPartnerAvatar() {
+            if (this.messaging.currentUser) {
+                return this.env.session.url('/web/image', {
+                    field: 'avatar_128',
+                    id: this.messaging.currentUser.id,
+                    model: 'res.users',
+                });
+            }
+            return '/web/static/img/user_menu_avatar.png';
+        },
+        /**
          * Clears the extra suggested record on closing mentions, and ensures
          * the extra list does not contain any element already present in the
          * main list, which is a requirement for the navigation process.
@@ -950,6 +964,12 @@ registerModel({
             compute: '_computeComposer',
             inverse: 'composerViews',
             required: true,
+        }),
+        /**
+         * Current partner image URL.
+         */
+        currentPartnerAvatar: attr({
+            compute: '_computeCurrentPartnerAvatar',
         }),
         /**
          * Determines whether this composer should be focused at next render.
