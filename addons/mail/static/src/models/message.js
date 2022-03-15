@@ -11,6 +11,8 @@ import { session } from '@web/session';
 import { format } from 'web.field_utils';
 import { getLangDatetimeFormat, str_to_datetime } from 'web.time';
 
+const { markup } = owl;
+
 registerModel({
     name: 'Message',
     identifyingFields: ['id'],
@@ -576,6 +578,12 @@ registerModel({
             return this.date.format('hh:mm');
         },
         /**
+         * @returns {Markup}
+         */
+        _computePrettyBodyAsMarkup() {
+            return markup(this.prettyBody);
+        },
+        /**
          * @private
          * @returns {Thread[]}
          */
@@ -902,6 +910,9 @@ registerModel({
         prettyBody: attr({
             compute: '_computePrettyBody',
             default: "",
+        }),
+        prettyBodyAsMarkup: attr({
+            compute: '_computePrettyBodyAsMarkup',
         }),
         recipients: many('Partner'),
         shortTime: attr({
