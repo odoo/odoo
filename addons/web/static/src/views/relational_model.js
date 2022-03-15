@@ -466,6 +466,25 @@ export class Record extends DataPoint {
         return false;
     }
 
+    /**
+     * FIXME: memoize this at some point?
+     * @param {string} fieldName
+     * @returns {boolean}
+     */
+    isInvisible(fieldName) {
+        if (!this.activeFields[fieldName].modifiers) {
+            return false;
+        }
+        const { invisible } = this.activeFields[fieldName].modifiers;
+        if (typeof invisible === "boolean") {
+            return invisible;
+        } else if (!invisible) {
+            return false;
+        } else {
+            return evalDomain(invisible, this.evalContext);
+        }
+    }
+
     setInvalidField(fieldName) {
         this._invalidFields.add({ fieldName });
         this.model.notify();
@@ -535,7 +554,7 @@ export class Record extends DataPoint {
             const activeField = this.activeFields[fieldName];
             // @FIXME type should not be get like this
             const type = activeField.widget || this.fields[fieldName].type;
-            if (!activeField.invisible && preloadedDataRegistry.contains(type)) {
+            if (!this.isInvisible(fieldName) && preloadedDataRegistry.contains(type)) {
                 proms.push(fetchPreloadedData(preloadedDataRegistry.get(type), fieldName));
             }
         }
@@ -549,7 +568,7 @@ export class Record extends DataPoint {
                 continue;
             }
             const field = this.activeFields[fieldName];
-            const { invisible, relatedFields = {}, views = {}, viewMode, FieldComponent } = field;
+            const { relatedFields = {}, views = {}, viewMode, FieldComponent } = field;
 
             const fields = {
                 id: { name: "id", type: "integer", readonly: true },
@@ -592,7 +611,7 @@ export class Record extends DataPoint {
             });
             this._values[fieldName] = list;
             this.data[fieldName] = list;
-            if (!invisible) {
+            if (!this.isInvisible(fieldName)) {
                 list.applyCommands(this._changes[fieldName]);
                 this._changes[fieldName] = list;
                 proms.push(list.load());
