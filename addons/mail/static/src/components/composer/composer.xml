@@ -9,7 +9,7 @@
                 'o-has-footer': hasFooter,
                 'o-has-header': hasHeader,
                 'o-is-in-thread-view': composerView and composerView.threadView,
-                'o-is-compact': props.isCompact,
+                'o-is-compact': composerView and composerView.isCompact,
                 'o-messaging-in-editing': composerView and composerView.messageViewInEditing,
             }"
             t-attf-class="{{ className }}"
@@ -65,33 +65,32 @@
                 <div
                     class="o_Composer_coreMain"
                     t-att-class="{
-                        'o-composer-is-compact': props.isCompact,
+                        'o-composer-is-compact': composerView.isCompact,
                     }"
                 >
                     <ComposerTextInput
                         className="'o_Composer_textInput'"
                         classNameObj="{
-                            'o-composer-is-compact': props.isCompact,
+                            'o-composer-is-compact': composerView.isCompact,
                             'o_Composer_textInput-mobile': messaging.device.isMobile,
                             'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                         }"
                         localId="composerView.localId"
                         hasMentionSuggestionsBelowPosition="props.hasMentionSuggestionsBelowPosition"
-                        isCompact="props.isCompact"
                         onComposerTextInputSendShortcut="_onComposerTextInputSendShortcut"
                         onPaste="_onPasteTextInput"
                         t-key="composerView.localId"
                     />
-                    <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-mobile': messaging.device.isMobile, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing }">
+                    <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-mobile': messaging.device.isMobile, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing }">
                         <div class="o_Composer_toolButtons"
                             t-att-class="{
                                 'o-composer-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
-                                'o-composer-is-compact': props.isCompact,
+                                'o-composer-is-compact': composerView.isCompact,
                             }">
-                            <t t-if="props.isCompact">
+                            <t t-if="composerView.isCompact">
                                 <div class="o_Composer_toolButtonSeparator"/>
                             </t>
-                            <div class="o_Composer_primaryToolButtons" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
+                            <div class="o_Composer_primaryToolButtons" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }">
                                 <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light"
                                     t-att-class="{
                                         'o-open': composerView.emojisPopoverView,
@@ -112,23 +111,23 @@
                                 </div>
                             </t>
                         </div>
-                        <t t-if="props.isCompact">
+                        <t t-if="composerView.isCompact">
                             <t t-call="mail.Composer.actionButtons"/>
                         </t>
                     </div>
                 </div>
                 <t t-if="hasFooter">
-                    <div class="o_Composer_coreFooter" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
+                    <div class="o_Composer_coreFooter" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }">
                         <t t-if="props.hasThreadTyping">
                             <ThreadTextualTypingStatus className="'o_Composer_threadTextualTypingStatus'" threadLocalId="composerView.composer.activeThread.localId"/>
                         </t>
                         <AttachmentList
                             t-if="composerView.attachmentList"
                             className="'o_Composer_attachmentList'"
-                            classNameObj="{ 'o-composer-is-compact': props.isCompact }"
+                            classNameObj="{ 'o-composer-is-compact': composerView.isCompact }"
                             localId="composerView.attachmentList.localId"
                         />
-                        <t t-if="!props.isCompact">
+                        <t t-if="!composerView.isCompact">
                             <t t-call="mail.Composer.actionButtons"/>
                         </t>
                         <t t-if="composerView.messageViewInEditing">
@@ -141,12 +140,12 @@
     </t>
 
     <t t-name="mail.Composer.actionButtons" owl="1">
-        <div class="o_Composer_actionButtons" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
+        <div class="o_Composer_actionButtons" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }">
             <t t-if="props.hasSendButton">
                 <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonSend btn btn-primary"
                     t-att-class="{
                         'o-last': messaging.device.isMobile or !props.hasDiscardButton,
-                        'o-composer-is-compact': props.isCompact,
+                        'o-composer-is-compact': composerView.isCompact,
                         'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                     }"
                     t-att-disabled="!composerView.composer.canPostMessage ? 'disabled' : ''"
@@ -158,7 +157,7 @@
                 </button>
             </t>
             <t t-if="!messaging.device.isMobile and props.hasDiscardButton">
-                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="_onClickDiscard">
+                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="_onClickDiscard">
                     Discard
                 </button>
             </t>
