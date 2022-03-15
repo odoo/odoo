@@ -1192,6 +1192,8 @@ class ReportSaleDetails(models.AbstractModel):
 
         if (session_ids):
             domain = AND([domain, [('session_id', 'in', session_ids)]])
+            date_start = self.env['pos.session'].browse(session_ids).start_at
+            date_stop = self.env['pos.session'].browse(session_ids).stop_at or fields.Datetime.now()
         else:
             if date_start:
                 date_start = fields.Datetime.from_string(date_start)
@@ -1263,6 +1265,8 @@ class ReportSaleDetails(models.AbstractModel):
             payments = []
 
         return {
+            'date_start': date_start,
+            'date_stop': date_stop,
             'currency_precision': user_currency.decimal_places,
             'total_paid': user_currency.round(total),
             'payments': payments,
@@ -1282,8 +1286,15 @@ class ReportSaleDetails(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         data = dict(data or {})
+        # initialize data keys with their value if provided, else None
+        data.update({
+            'session_ids': data.get('session_ids') or docids,
+            'config_ids': data.get('config_ids'),
+            'date_start': data.get('date_start'),
+            'date_stop': data.get('date_stop')
+        })
         configs = self.env['pos.config'].browse(data['config_ids'])
-        data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs.ids))
+        data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs.ids, data['session_ids']))
         return data
 
 class AccountCashRounding(models.Model):

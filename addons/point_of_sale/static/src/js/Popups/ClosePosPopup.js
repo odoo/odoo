@@ -88,6 +88,13 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         closePaymentsDifferencePopup() {
             this.state.displayPaymentsDifferencePopup = false;
         }
+        async downloadSalesReport() {
+            await this.env.legacyActionManager.do_action('point_of_sale.sale_details_report', {
+                additional_context: {
+                    active_ids: [this.env.pos.pos_session.id],
+                },
+            });
+        }
         handleInputChange(paymentId) {
             let expectedAmount;
             if (paymentId === this.defaultCashDetails.id) {
