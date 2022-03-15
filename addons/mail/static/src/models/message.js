@@ -557,6 +557,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeShortTime() {
+            if (!this.date) {
+                return clear();
+            }
+            return this.date.format('hh:mm');
+        },
+        /**
+         * @private
          * @returns {Thread[]}
          */
         _computeThreads() {
@@ -878,6 +888,9 @@ registerModel({
             default: "",
         }),
         recipients: many('Partner'),
+        shortTime: attr({
+            compute: '_computeShortTime',
+        }),
         subject: attr(),
         subtype_description: attr(),
         subtype_id: attr(),
