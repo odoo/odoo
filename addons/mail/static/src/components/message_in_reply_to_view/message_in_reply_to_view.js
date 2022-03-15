@@ -2,13 +2,9 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, markup } = owl;
+const { Component } = owl;
 
 export class MessageInReplyToView extends Component {
-
-    get contentAsMarkup() {
-        return markup(this.messageInReplyToView.messageView.message.parentMessage.prettyBody);
-    }
 
     /**
      * @returns {MessageInReplyToView}
