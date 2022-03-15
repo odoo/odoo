@@ -23,7 +23,7 @@ tour.register('tour_shop_no_variant_attribute', {
         content: "add to cart",
         trigger: 'a:contains(ADD TO CART)',
     },
-        tourUtils.goToCart(),
+        tourUtils.goToCart({}),
     {
         content: "check no_variant value is present",
         trigger: '.td-product_name:contains(No Variant Attribute: No Variant Value)',

@@ -28,7 +28,7 @@ tour.register('tour_shop_dynamic_variants', {
         extra_trigger: 'body:has(input[type="hidden"][name="product_id"][value=0])',
         trigger: '#add_to_cart',
     },
-        tourUtils.goToCart(),
+        tourUtils.goToCart({}),
     {
         content: "check the variant is in the cart",
         trigger: 'td.td-product_name:contains(Dynamic Product (Dynamic Value 2))',

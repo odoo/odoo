@@ -92,6 +92,7 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
         })
 
         self.env.ref("website_sale.search_count_box").write({"active": True})
+        self.env.ref("website_sale.reduction_code").write({"active": True})
         self.start_tour("/", 'shop_sale_loyalty', login="admin")
 
     def test_02_admin_shop_gift_card_tour(self):
@@ -163,6 +164,7 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'code': 'GIFT_CARD',
         })
 
+        self.env.ref("website_sale.reduction_code").write({"active": True})
         self.start_tour('/', 'shop_sale_gift_card', login='admin')
 
         self.assertEqual(len(gift_card_program.coupon_ids), 2, 'There should be two coupons, one with points, one without')

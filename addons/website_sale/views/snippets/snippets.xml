@@ -221,9 +221,9 @@
                          data-customize-website-views="website_sale.product_quantity"
                          data-no-preview="true"
                          data-reload="/"/>
-            <we-select groups="product.group_product_variant" string="Variants" data-no-preview="true" data-reload="/">
-                <we-button data-customize-website-views="">Options</we-button>
-                <we-button data-customize-website-views="website_sale.product_variants">Products List</we-button>
+            <we-select data-name="variants_opt" groups="product.group_product_variant" string="Variants" data-no-preview="true" data-reload="/">
+                <we-button data-name="variants_options_opt" data-customize-website-views="">Options</we-button>
+                <we-button data-name="variants_products_list_opt" data-customize-website-views="website_sale.product_variants">Products List</we-button>
             </we-select>
             <we-row string="Cart" class="o_we_full_row">
                 <we-button title="Buy Now" class="fa fa-fw fa-bolt o_we_buy_now_btn"

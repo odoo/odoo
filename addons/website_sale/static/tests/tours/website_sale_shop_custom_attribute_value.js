@@ -22,7 +22,7 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
         trigger: 'a:contains(ADD TO CART)',
         run: 'click',
     },
-        tourUtils.goToCart(), 
+        tourUtils.goToCart({}), 
     {
         trigger: 'span:contains(Custom TEST: Wood)',
         extra_trigger: '#cart_products',

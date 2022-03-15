@@ -6,23 +6,10 @@ import tourUtils from 'website_sale.tour_utils';
 
 tour.register('shop_sale_loyalty', {
     test: true,
-    url: '/shop?search=Small%20Cabinet',
+    //url: '/shop?search=Small%20Cabinet',
+    url: '/shop?search=Large%20Cabinet',
 },
     [
-        {
-            content: "open customize menu",
-            extra_trigger: '.oe_website_sale .o_wsale_products_searchbar_form',
-            trigger: '#customize-menu > a',
-        },
-        {
-            content: "enable 'Show # found' if needed",
-            trigger: "#customize-menu label:contains(Show # found)",
-            run: function () {
-                if (!$('#customize-menu label:contains(Show # found) input').prop('checked')) {
-                    $('#customize-menu label:contains(Show # found)').click();
-                }
-            }
-        },
         /* 1. Buy 1 Small Cabinet, enable coupon code & insert 10% code */
         {
             content: "select Small Cabinet",
@@ -38,21 +25,7 @@ tour.register('shop_sale_loyalty', {
             content: "click on 'Add to Cart' button",
             trigger: "a:contains(ADD TO CART)",
         },
-            tourUtils.goToCart(2),
-        {
-            content: "open customize menu",
-            extra_trigger: '.oe_website_sale .oe_cart',
-            trigger: '#customize-menu > a',
-        },
-        {
-            content: "enable 'Promo Code' if needed",
-            trigger: "#customize-menu label:contains(Promo Code)",
-            run: function () {
-                if (!$('#customize-menu label:contains(Promo Code) input').prop('checked')) {
-                    $('#customize-menu label:contains(Promo Code)').click();
-                }
-            }
-        },
+            tourUtils.goToCart({quantity: 2}),
         {
             content: "click on 'I have a promo code'",
             extra_trigger: '.show_coupon',
@@ -121,7 +94,7 @@ tour.register('shop_sale_loyalty', {
             content: "click on 'Add to Cart' button",
             trigger: "a:contains(ADD TO CART)",
         },
-            tourUtils.goToCart(3),
+            tourUtils.goToCart({quantity: 3}),
         {
             content: "check reduction amount got recomputed and merged both discount lines into one only",
             extra_trigger: '.oe_currency_value:contains("-﻿75.50"):not(#cart_total .oe_currency_value:contains("-﻿75.50"))',

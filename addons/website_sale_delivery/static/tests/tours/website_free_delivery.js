@@ -18,7 +18,7 @@ tour.register('check_free_delivery', {
             content: "click on add to cart",
             trigger: '#product_details #add_to_cart',
         },
-            tourUtils.goToCart(),
+            tourUtils.goToCart({}),
         {
             content: "go to checkout",
             extra_trigger: '#cart_products input.js_quantity:propValue(1)',

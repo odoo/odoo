@@ -8,20 +8,6 @@ tour.register('shop_sale_gift_card', {
     url: '/shop?search=Small%20Drawer'
 },
     [
-        {
-            content: 'Open customize menu',
-            extra_trigger: '.oe_website_sale .o_wsale_products_searchbar_form',
-            trigger: '#customize-menu > a',
-        },
-        {
-            content: "Enable 'Show # found' if needed",
-            trigger: '#customize-menu label:contains(Show # found)',
-            run: function () {
-                if (!$('#customize-menu label:contains(Show # found) input').prop('checked')) {
-                    $('#customize-menu label:contains(Show # found)').click();
-                }
-            }
-        },
         // Add a small drawer to the order (50$)
         {
             content: 'select Small Drawer',
@@ -32,34 +18,22 @@ tour.register('shop_sale_gift_card', {
             content: 'Add Small Drawer into cart',
             trigger: 'a:contains(ADD TO CART)',
         },
-            tourUtils.goToCart(1),
+        tourUtils.goToCart({quantity: 1}),
         {
-            content: 'open customize menu',
-            extra_trigger: '.oe_website_sale .oe_cart',
-            trigger: '#customize-menu > a',
-        },
-        {
-            content: 'enable "Promo Code" if needed',
-            trigger: '#customize-menu label:contains(Promo Code)',
-            run: function () {
-                if (!$('#customize-menu label:contains(Promo Code) input').prop('checked')) {
-                    $('#customize-menu label:contains(Promo Code)').click();
-                }
-            }
+            content: "wait the /cart page",
+            trigger: '#cart_products',
         },
         {
             content: 'Click on "I have a promo code"',
-            extra_trigger: '.show_coupon',
             trigger: '.show_coupon',
         },
         {
             content: 'insert gift card code',
-            extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
             run: 'text GIFT_CARD'
         },
         {
-            content: 'validate the git card',
+            content: 'validate the gift card',
             trigger: 'form[name="coupon_code"] .a-submit',
         },
         {
@@ -68,7 +42,6 @@ tour.register('shop_sale_gift_card', {
         },
         {
             content: 'Click on "I have a promo code"',
-            extra_trigger: '.show_coupon',
             trigger: '.show_coupon',
         },
         {
@@ -78,13 +51,13 @@ tour.register('shop_sale_gift_card', {
             run: 'text 10PERCENT'
         },
         {
-            content: 'validate the git card',
+            content: 'validate the gift card',
             trigger: 'form[name="coupon_code"] .a-submit',
         },
         {
             content: 'check gift card amount',
             trigger: '.oe_currency_value:contains("-45.00")',
-            trigger: '.oe_website_sale .oe_cart',
+            extra_trigger: '.oe_website_sale .oe_cart',
             run: function () {}, // it's a check
         },
         {
@@ -109,11 +82,11 @@ tour.register('shop_sale_gift_card', {
             content: "click on 'Add to Cart' button",
             trigger: "a:contains(ADD TO CART)",
         },
-            tourUtils.goToCart(2),
+            tourUtils.goToCart({quantity: 2}),
         {
             content: 'check gift card amount',
             trigger: '.oe_currency_value:contains("-45.00")',
-            trigger: '.oe_website_sale .oe_cart',
+            extra_trigger: '.oe_website_sale .oe_cart',
             run: function () {}, // it's a check
         },
     ],

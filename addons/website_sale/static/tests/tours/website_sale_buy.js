@@ -38,7 +38,7 @@ tour.register('shop_buy_product', {
             extra_trigger: 'label:contains(Steel) input:propChecked',
             trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
         },
-            tourUtils.goToCart(),
+            tourUtils.goToCart({}),
         {
             content: "add suggested",
             extra_trigger: '#wrap:not(:has(#cart_products:contains("Storage Box")))',

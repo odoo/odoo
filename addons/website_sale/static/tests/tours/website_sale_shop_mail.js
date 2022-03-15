@@ -48,7 +48,7 @@ tour.register('shop_mail', {
         content: "click add to cart",
         trigger: '#product_details #add_to_cart',
     },
-        tourUtils.goToCart(),
+        tourUtils.goToCart({}),
     {
         content: "check product is in cart, get cart id, go to backend",
         trigger: 'td.td-product_name:contains("Acoustic Bloc Screens")',
