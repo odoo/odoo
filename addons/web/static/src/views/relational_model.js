@@ -128,11 +128,40 @@ async function archiveOrUnarchiveRecords(model, resModel, resIds, unarchive) {
 class RequestBatcherORM extends ORM {
     constructor() {
         super(...arguments);
-        this.deleteBatches = {};
-        this.readBatches = {};
         this.searchReadBatches = {};
         this.searchReadBatchId = 1;
-        this.unlinkBatches = {};
+        this.batches = {};
+    }
+
+    /**
+     * @param {number[]} ids
+     * @param {any[]} keys
+     * @param {Function} callback
+     * @returns {Promise<any>}
+     */
+    async batch(ids, keys, callback) {
+        const key = JSON.stringify(keys);
+        let batch = this.batches[key];
+        if (!batch) {
+            batch = {
+                deferred: new Deferred(),
+                scheduled: false,
+                ids,
+            };
+            this.batches[key] = batch;
+        }
+        const previousIds = batch.ids;
+        batch.ids = [...new Set([...previousIds, ...ids])];
+
+        if (!batch.scheduled) {
+            batch.scheduled = true;
+            await Promise.resolve();
+            delete this.batches[key];
+            const result = await callback(batch.ids);
+            batch.deferred.resolve(result);
+        }
+
+        return batch.deferred;
     }
 
     /**
@@ -148,30 +177,9 @@ class RequestBatcherORM extends ORM {
      * @returns {Promise<Object[]>}
      */
     async read(resModel, resIds, fields, context) {
-        const key = JSON.stringify([resModel, fields, context]);
-        let batch = this.readBatches[key];
-        if (!batch) {
-            batch = {
-                deferred: new Deferred(),
-                resModel,
-                fields,
-                resIds: [],
-                scheduled: false,
-            };
-            this.readBatches[key] = batch;
-        }
-        const prevIds = this.readBatches[key].resIds;
-        this.readBatches[key].resIds = [...new Set([...prevIds, ...resIds])];
-
-        if (!batch.scheduled) {
-            batch.scheduled = true;
-            await Promise.resolve();
-            delete this.readBatches[key];
-            const allRecords = await super.read(resModel, batch.resIds, fields, context);
-            batch.deferred.resolve(allRecords);
-        }
-
-        const records = await batch.deferred;
+        const records = await this.batch(resIds, ["read", resModel, fields, context], (resIds) =>
+            super.read(resModel, resIds, fields, context)
+        );
         return records.filter((r) => resIds.includes(r.id));
     }
 
@@ -185,29 +193,9 @@ class RequestBatcherORM extends ORM {
      * @returns {Promise<boolean>}
      */
     async unlink(resModel, resIds, context) {
-        const key = JSON.stringify([resModel, context]);
-        let batch = this.unlinkBatches[key];
-        if (!batch) {
-            batch = {
-                deferred: new Deferred(),
-                resModel,
-                resIds: [],
-                scheduled: false,
-            };
-            this.unlinkBatches[key] = batch;
-        }
-        const prevIds = this.unlinkBatches[key].resIds;
-        this.unlinkBatches[key].resIds = [...new Set([...prevIds, ...resIds])];
-
-        if (!batch.scheduled) {
-            batch.scheduled = true;
-            await Promise.resolve();
-            delete this.unlinkBatches[key];
-            const result = await super.unlink(resModel, batch.resIds, context);
-            batch.deferred.resolve(result);
-        }
-
-        return batch.deferred;
+        return this.batch(resIds, ["unlink", resModel, context], (resIds) =>
+            super.unlink(resModel, resIds, context)
+        );
     }
 
     /**
