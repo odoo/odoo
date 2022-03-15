@@ -3,7 +3,7 @@
 
     <t t-name="web.Many2ManyTagsField" owl="1">
         <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
-            <t t-if="props.canQuickEdit">
+            <t t-if="props.canEditColor">
                 <Dropdown togglerClass="'o_tag badge badge-pill o_tag_color_'  + (isTagHidden(tag) ? 0 : tag.colorIndex)">
                     <t t-set-slot="toggler">
                         <t t-call="badge_text"/>

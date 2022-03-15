@@ -55,12 +55,12 @@ Many2ManyTagsField.components = {
 };
 Many2ManyTagsField.template = "web.Many2ManyTagsField";
 Many2ManyTagsField.defaultProps = {
-    canQuickEdit: true,
+    canEditColor: true,
     update: () => {},
 };
 Many2ManyTagsField.props = {
     ...standardFieldProps,
-    canQuickEdit: { type: Boolean, optional: true },
+    canEditColor: { type: Boolean, optional: true },
     colorField: { type: String, optional: true },
     placeholder: { type: String, optional: true },
     update: { type: Function, optional: true },
@@ -76,7 +76,7 @@ Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
     const colorField = attrs.options.color_field;
     return {
         colorField: colorField,
-        canQuickEdit: !attrs.options.no_edit_color,
+        canEditColor: !attrs.options.no_edit_color,
         update: (colorIndex, tagRecord) => {
             tagRecord.update(colorField, colorIndex);
             tagRecord.save();
