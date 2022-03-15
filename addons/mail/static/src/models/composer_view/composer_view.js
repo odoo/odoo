@@ -555,6 +555,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasFollowers() {
+            if (this.chatter) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @return {boolean}
          */
         _computeHasSuggestions() {
@@ -977,6 +987,10 @@ registerModel({
             isCausal: true,
             readonly: true,
             required: true,
+        }),
+        hasFollowers: attr({
+            compute: '_computeHasFollowers',
+            default: false,
         }),
         /**
          * States whether there is any result currently found for the current
