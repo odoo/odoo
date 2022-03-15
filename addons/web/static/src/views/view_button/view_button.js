@@ -19,27 +19,6 @@ const odooToBootstrapClasses = {
     oe_link: "btn-link",
 };
 
-function transformButtonClasses(givenClasses = [], defaultRank) {
-    const classes = [];
-
-    let hasExplicitRank = false;
-    for (let cls of givenClasses) {
-        if (cls in odooToBootstrapClasses) {
-            cls = odooToBootstrapClasses[cls];
-        }
-        classes.push(cls);
-        if (!hasExplicitRank && explicitRankClasses.includes(cls)) {
-            hasExplicitRank = true;
-        }
-    }
-
-    if (!hasExplicitRank) {
-        classes.push(defaultRank || "btn-secondary");
-    }
-
-    return classes;
-}
-
 function iconFromString(iconString) {
     const icon = {};
     if (iconString.startsWith("fa-")) {
@@ -54,13 +33,9 @@ function iconFromString(iconString) {
 
 export class ViewButton extends Component {
     setup() {
-        const classes = transformButtonClasses(this.props.classes, this.props.defaultRank);
         const { name, type, special, debounce } = this.props.clickParams;
         this.disabled = !name && !type && !special;
-        if (this.props.size) {
-            classes.push(`btn-${this.props.size}`);
-        }
-        this.classes = classes.join(" ");
+        this.className = this.getButtonClassName();
 
         if (this.props.icon) {
             this.icon = iconFromString(this.props.icon);
@@ -76,8 +51,41 @@ export class ViewButton extends Component {
             record: this.props.record,
         });
     }
+
+    getButtonClassName() {
+        const classNames = [];
+        let hasExplicitRank = false;
+        for (let cls of this.props.className.split(" ")) {
+            if (cls in odooToBootstrapClasses) {
+                cls = odooToBootstrapClasses[cls];
+            }
+            classNames.push(cls);
+            if (!hasExplicitRank && explicitRankClasses.includes(cls)) {
+                hasExplicitRank = true;
+            }
+        }
+        if (!hasExplicitRank) {
+            classNames.push(this.props.defaultRank || "btn-secondary");
+        }
+        if (this.props.size) {
+            classNames.push(`btn-${this.props.size}`);
+        }
+        return classNames.join(" ");
+    }
 }
 ViewButton.template = "views.ViewButton";
+ViewButton.props = [
+    "record?",
+    "className?",
+    "clickParams?",
+    "icon?",
+    "defaultRank?",
+    "size?",
+    "title?",
+    "string?",
+    "slots?",
+];
 ViewButton.defaultProps = {
+    className: "",
     clickParams: {},
 };

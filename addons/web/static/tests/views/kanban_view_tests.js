@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { makeFakeDialogService, makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     dragAndDrop,
@@ -6506,11 +6506,10 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("resequence columns in grouped by m2o", async (assert) => {
-        assert.expect(6);
+    QUnit.test("resequence columns in grouped by m2o", async (assert) => {
+        assert.expect(8);
 
-        let envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
-        const kanban = await makeView({
+        await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -6518,7 +6517,7 @@ QUnit.module("Views", (hooks) => {
                 "<kanban>" +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
+                '<div><field name="id"/></div>' +
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
@@ -6529,32 +6528,26 @@ QUnit.module("Views", (hooks) => {
             "o_kanban_sortable",
             "columns should be sortable"
         );
-        assert.containsN(target, ".o_kanban_group", 2, "should have two columns");
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:first-child").dataset.id,
-            3,
-            "first column should be id 3 before resequencing"
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
+        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+
+        await dragAndDrop(".o_kanban_group:first-child", ".o_kanban_group:nth-child(2)");
+
+        // Drag & drop on column (not title) should not work
+        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
+        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_column_title",
+            ".o_kanban_group:nth-child(2)"
         );
-        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
-        // there is a 100ms delay on the d&d feature (jquery sortable) for
-        // kanban columns, making it hard to test. So we rather bypass the d&d
-        // for this test, and directly call the event handler
-        envIDs = [2, 4, 1, 3]; // the columns will be inverted
-        kanban._onResequenceColumn({ data: { ids: [5, 3] } });
-
-        await nextTick(); // wait for resequencing before re-rendering
-        await reload(kanban, {}, { reload: false }); // re-render without reloading
-
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:first-child").dataset.id,
-            5,
-            "first column should be id 5 after resequencing"
-        );
-        assert.deepEqual(kanban.exportState().resIds, envIDs);
+        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "xmo");
+        assert.deepEqual(getCardTexts(), ["2", "4", "1", "3"]);
     });
 
-    QUnit.skipWOWL("properly evaluate more complex domains", async (assert) => {
+    QUnit.test("properly evaluate more complex domains", async (assert) => {
         assert.expect(1);
 
         await makeView({
@@ -6579,7 +6572,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(
             target,
-            "button.oe_kanban_action_button",
+            "button.float-right.oe_kanban_action_button",
             "only one button should be visible"
         );
     });

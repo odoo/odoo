@@ -105,12 +105,13 @@
                         </t>
                         <t t-else="">
                             <ViewButton
-                                classes="button.classes"
+                                className="button.className"
                                 clickParams="button.clickParams"
                                 icon="button.icon"
                                 record="group.record"
                                 string="button.string"
-                                title="button.title"/>
+                                title="button.title"
+                            />
                         </t>
                     </t>
                 </div>
@@ -138,13 +139,14 @@
                     <td class="o_data_cell" t-att-class="getCellClass(column)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                             <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
-                                classes="button.classes"
+                                className="button.className"
                                 clickParams="button.clickParams"
                                 defaultRank="button.defaultRank"
                                 icon="button.icon"
                                 record="record"
                                 string="button.string"
-                                title="button.title"/>
+                                title="button.title"
+                            />
                         </t>
                     </td>
                 </t>

@@ -46,7 +46,7 @@ QUnit.module("Form Compiler", () => {
                 <div t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" class="o_form_nosheet">
                     <div class="someClass">
                         lol
-                        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in record.fields.display_name and record.fields.display_name.views"/>
+                        <Field id="'field_display_name_1'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views"/>
                     </div>
                 </div>
             </t>`;
@@ -68,10 +68,10 @@ QUnit.module("Form Compiler", () => {
                     <tbody>
                         <tr>
                             <td class="o_td_label">
-                                <label class="o_form_label" for="field_display_name_0" t-esc="record.fields.display_name.string" t-att-class="{  o_field_invalid: record.resId and isFieldInvalid(record,&quot;display_name&quot;) , o_form_label_empty: record.resId and isFieldEmpty(record,&quot;display_name&quot;) }"/>
+                                <label class="o_form_label" for="field_display_name_1" t-esc="record.fields.display_name.string" t-att-class="{o_field_invalid:record.resId and isFieldInvalid(record,'display_name'),o_form_label_empty:record.resId and isFieldEmpty(record,'display_name')}"/>
                             </td>
                             <td style="width: 100%">
-                                <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in record.fields.display_name and record.fields.display_name.views"/>
+                                <Field id="'field_display_name_1'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views"/>
                             </td>
                         </tr>
                     </tbody>
@@ -80,10 +80,10 @@ QUnit.module("Form Compiler", () => {
                     <tbody>
                         <tr>
                             <td class="o_td_label">
-                                <label class="o_form_label" for="field_charfield_1" t-esc="record.fields.charfield.string" t-att-class="{  o_field_invalid: record.resId and isFieldInvalid(record,&quot;charfield&quot;) , o_form_label_empty: record.resId and isFieldEmpty(record,&quot;charfield&quot;) }"/>
+                                <label class="o_form_label" for="field_charfield_2" t-esc="record.fields.charfield.string" t-att-class="{o_field_invalid:record.resId and isFieldInvalid(record,'charfield'),o_form_label_empty:record.resId and isFieldEmpty(record,'charfield')}"/>
                             </td>
                             <td style="width: 100%">
-                                <Field id="&quot;field_charfield_1&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in record.fields.charfield and record.fields.charfield.views"/>
+                                <Field id="'field_charfield_2'" name="'charfield'" record="record" archs="'views' in record.fields.charfield and record.fields.charfield.views"/>
                             </td>
                         </tr>
                     </tbody>
@@ -93,7 +93,7 @@ QUnit.module("Form Compiler", () => {
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
 
-    QUnit.skipWOWL("properly compile notebook", async (assert) => {
+    QUnit.test("properly compile notebook", async (assert) => {
         const arch = /*xml*/ `
                 <form>
                     <notebook>
@@ -104,27 +104,27 @@ QUnit.module("Form Compiler", () => {
 
         const expected = /*xml*/ `
         <div class="o_notebook">
-            <t t-set="notebook_0" t-value="state.notebook_0 or getActivePage(record, {&quot;page_1&quot;:false,&quot;page_3&quot;:false})"/>
+            <t t-set="notebook_1" t-value="state.notebook_1 or getActivePage(record,{&quot;page_2&quot;:false,&quot;page_4&quot;:false})"/>
             <div class="o_notebook_headers">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a t-on-click.prevent="state.notebook_0 = &quot;page_1&quot;" href="#" class="nav-link" role="tab" t-attf-class="{{ notebook_0 === &quot;page_1&quot; ? 'active' : '' }}">
+                        <a class="nav-link" t-on-click.prevent="()=&gt;state.notebook_1='page_2'" href="#" role="tab" t-attf-class="{{notebook_1==='page_2'?'active':''}}">
                             Page1
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a t-on-click.prevent="state.notebook_0 = &quot;page_3&quot;" href="#" class="nav-link" role="tab" t-attf-class="{{ notebook_0 === &quot;page_3&quot; ? 'active' : '' }}">
+                        <a class="nav-link" t-on-click.prevent="()=&gt;state.notebook_1='page_4'" href="#" role="tab" t-attf-class="{{notebook_1==='page_4'?'active':''}}">
                             Page2
                         </a>
                     </li>
                 </ul>
             </div>
             <div class="tab-content">
-                <div t-if="notebook_0 === &quot;page_1&quot;" class="tab-pane active">
-                    <Field id="&quot;field_charfield_2&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in record.fields.charfield and record.fields.charfield.views"/>
+                <div t-if="notebook_1==='page_2'" class="tab-pane active">
+                    <Field id="'field_charfield_3'" name="'charfield'" record="record" archs="'views' in record.fields.charfield and record.fields.charfield.views"/>
                 </div>
-                <div t-if="notebook_0 === &quot;page_3&quot;" class="tab-pane active">
-                    <Field id="&quot;field_display_name_4&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in record.fields.display_name and record.fields.display_name.views"/>
+                <div t-if="notebook_1==='page_4'" class="tab-pane active">
+                    <Field id="'field_display_name_5'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views"/>
                 </div>
             </div>
         </div>`;
@@ -139,7 +139,7 @@ QUnit.module("Form Compiler", () => {
             </form>`;
 
         const expected = /*xml*/ `
-        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in record.fields.display_name and record.fields.display_name.views" placeholder="&quot;e.g. Contact's Name or //someinfo...&quot;"/>
+            <Field id="'field_display_name_1'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views" placeholder="'e.g. Contact\\'s Name or //someinfo...'"/>
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
@@ -154,14 +154,14 @@ QUnit.module("Form Compiler", () => {
                 <div class="visible1" invisible="0"/>
                 <div class="visible2" invisible="False"/>
                 <div class="visible3" invisible="false"/>
-                <div modifiers="{\&quot;invisible\&quot;: [[\&quot;display_name\&quot;, \&quot;=\&quot;, \&quot;take\&quot;]]}"/>
+                <div modifiers="{'invisible': [['display_name', '=', 'take']]}"/>
             </form>`;
 
         const expected = /*xml*/ `
             <div class="visible1"/>
             <div class="visible2"/>
             <div class="visible3"/>
-            <div t-if="!evalDomain(record,[[&quot;display_name&quot;,&quot;=&quot;,&quot;take&quot;]])"/>
+            <div t-if="!evalDomain(record,[['display_name','=','take']])"/>
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);

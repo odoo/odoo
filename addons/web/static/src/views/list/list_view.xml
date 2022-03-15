@@ -45,16 +45,15 @@
             <t t-if="model.root.selection.length">
                 <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
                     <ListViewHeaderButton
-                        classes="[]"
                         clickParams="button.clickParams"
-                        context="button.context"
                         defaultRank="button.defaultRank"
                         domain="props.domain"
                         icon="button.icon"
                         getSelectedResIds.bind="getSelectedResIds"
                         resModel="model.root.resModel"
                         string="button.string"
-                        title="button.title"/>
+                        title="button.title"
+                    />
                 </t>
                 <t t-call="web.ListView.Selection"/>
             </t>

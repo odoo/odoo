@@ -40,6 +40,7 @@ export class ListViewHeaderButton extends ViewButton {
         });
     }
 }
+ListViewHeaderButton.props = [...ViewButton.props, "resModel", "domain", "getSelectedResIds"];
 
 export class GroupListArchParser extends XMLParser {
     parse(arch, fields) {

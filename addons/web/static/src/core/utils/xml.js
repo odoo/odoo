@@ -1,5 +1,12 @@
 /** @odoo-module **/
 
+/**
+ * XML document to create new elements from. The fact that this is a "text/xml"
+ * document ensures that tagNames and attribute names are case sensitive.
+ */
+const parser = new DOMParser();
+const xmlDocument = parser.parseFromString("<templates/>", "text/xml");
+
 function hasParsingError(parsedDocument) {
     return parsedDocument.getElementsByTagName("parsererror").length > 0;
 }
@@ -13,19 +20,19 @@ export class XMLParser {
 
     /**
      * @param {Element | string} xml
-     * @param {(node: Element, visitChildren: () => any) => any} callback
+     * @param {(el: Element, visitChildren: () => any) => any} callback
      */
     visitXML(xml, callback) {
-        const visit = (node) => {
-            if (node) {
+        const visit = (el) => {
+            if (el) {
                 let didVisitChildren = false;
                 const visitChildren = () => {
-                    for (const child of node.children) {
+                    for (const child of el.children) {
                         visit(child);
                     }
                     didVisitChildren = true;
                 };
-                const shouldVisitChildren = callback(node, visitChildren);
+                const shouldVisitChildren = callback(el, visitChildren);
                 if (shouldVisitChildren !== false && !didVisitChildren) {
                     visitChildren();
                 }
@@ -35,9 +42,12 @@ export class XMLParser {
         visit(xmlDoc);
     }
 
+    /**
+     * @param {string} arch
+     * @returns {Element}
+     */
     parseXML(arch) {
-        const parser = new DOMParser();
-        const cleanedArch = arch.replaceAll(/&amp;nbsp;/g, "");
+        const cleanedArch = arch.replace(/&amp;nbsp;/g, "");
         const xml = parser.parseFromString(cleanedArch, "text/xml");
         if (hasParsingError(xml)) {
             throw new Error(
@@ -48,16 +58,27 @@ export class XMLParser {
     }
 }
 
+/**
+ * @param {string} value
+ * @param {boolean} [falsyIfUndefined]
+ * @returns {boolean}
+ */
 export const isFalsy = (value, falsyIfUndefined) =>
     (value ? /^false|0$/i.test(value) : falsyIfUndefined) || false;
 
+/**
+ * @param {string} value
+ * @param {boolean} [truthyIfUndefined]
+ * @returns {boolean}
+ */
 export const isTruthy = (value, truthyIfUndefined) =>
     (value ? !/^false|0$/i.test(value) : truthyIfUndefined) || false;
 
 /**
  * Combines the existing value of a node attribute with new given parts. The glue
  * is the string used to join the parts.
- * @param {Node} node
+ *
+ * @param {Element} node
  * @param {string} attr
  * @param {string | string[]} parts
  * @param {string} [glue=" "]
@@ -71,9 +92,33 @@ export const combineAttributes = (node, attr, parts, glue = " ") => {
     node.setAttribute(attr, allValues.join(glue));
 };
 
-const xmlDoc = new DOMParser().parseFromString("<xml/>", "text/xml");
-export const makeEl = (string) => {
-    const parent = xmlDoc.createElement("div");
-    parent.innerHTML = string;
-    return parent.children[0];
+/**
+ * XML equivalent of `document.createElement`.
+ *
+ * @param {string} tagName
+ * @param {(Record<string, string> | Element[])[]} tagName
+ * @returns {Element}
+ */
+export const createElement = (tagName, ...args) => {
+    const el = xmlDocument.createElement(tagName);
+    for (const arg of args) {
+        if (Symbol.iterator in arg) {
+            // Children list
+            el.append(...arg);
+        } else if (arg && typeof arg === "object") {
+            // Attributes
+            for (const name in arg) {
+                el.setAttribute(name, arg[name]);
+            }
+        }
+    }
+    return el;
 };
+
+/**
+ * XML equivalent of `document.createTextNode`.
+ *
+ * @param {string} data
+ * @returns {Text}
+ */
+export const createTextNode = (data) => xmlDocument.createTextNode(data);

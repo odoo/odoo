@@ -2,8 +2,9 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { combineAttributes, isTruthy, makeEl, XMLParser } from "@web/core/utils/xml";
+import { combineAttributes, createElement, isTruthy, XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
+import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
@@ -11,7 +12,6 @@ import { useSetupView } from "@web/views/helpers/view_hook";
 import { getActiveActions } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { Layout } from "@web/search/layout";
 import { ViewNotFoundError } from "@web/views/view";
 import { useViewButtons } from "@web/views/view_button/hook";
 
@@ -57,16 +57,16 @@ const TRANSPILED_EXPRESSIONS = [
 // These classes determine whether a click on a record should open it.
 const KANBAN_CLICK_CLASSES = ["oe_kanban_global_click", "oe_kanban_global_click_edit"];
 
-const isValidBox = (node) => node.tagName !== "t" || node.hasAttribute("t-component");
+const isValidBox = (el) => el.tagName !== "t" || el.hasAttribute("t-component");
 
-const hasClass = (node, ...classes) => {
-    const classAttribute = node.getAttribute("class") || "";
-    const attfClassAttribute = node.getAttribute("t-attf-class") || "";
-    const nodeClasses = [
+const hasClass = (el, ...classes) => {
+    const classAttribute = el.getAttribute("class") || "";
+    const attfClassAttribute = el.getAttribute("t-attf-class") || "";
+    const elClasses = [
         ...classAttribute.split(/\s+/),
         ...attfClassAttribute.replace(/{{[^}]+}}/g, "").split(/\s+/),
     ];
-    return classes.some((cls) => nodeClasses.includes(cls));
+    return classes.some((cls) => elClasses.includes(cls));
 };
 
 const applyDefaultAttributes = (kanbanBox) => {
@@ -80,11 +80,11 @@ const applyDefaultAttributes = (kanbanBox) => {
     return kanbanBox;
 };
 
-const extractAttributes = (node, attributes) => {
+const extractAttributes = (el, attributes) => {
     const attrs = Object.create(null);
     for (const attr of attributes) {
-        attrs[attr] = node.getAttribute(attr) || "";
-        node.removeAttribute(attr);
+        attrs[attr] = el.getAttribute(attr) || "";
+        el.removeAttribute(attr);
     }
     return attrs;
 };
@@ -109,7 +109,7 @@ export class KanbanArchParser extends XMLParser {
             (xmlDoc.getAttribute("on_create") || "quick_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltips = {};
-        let kanbanBoxTemplate = makeEl("<t />");
+        let kanbanBoxTemplate = createElement("t");
         let colorField = "color";
         let cardColorField = null;
         let hasHandleWidget = null;
@@ -132,9 +132,9 @@ export class KanbanArchParser extends XMLParser {
                     // Fields without a specified widget are rendered as simple
                     // spans in kanban records.
                     const value = `record.data['${name}']`;
-                    const tesc = makeEl(
-                        `<span t-esc="(Array.isArray(${value}) ? ${value}[1] : ${value}) or ''"/>`
-                    );
+                    const tesc = createElement("span", {
+                        "t-esc": `(Array.isArray(${value}) ? ${value}[1] : ${value}) or ''`,
+                    });
                     node.replaceWith(tesc);
                 } else if (fieldInfo.widget === "handle") {
                     hasHandleWidget = true;
@@ -173,7 +173,7 @@ export class KanbanArchParser extends XMLParser {
         }
 
         // Generates dropdown element
-        const dropdown = makeEl(`<t t-component="'Dropdown'" position="'bottom-end'" />`);
+        const dropdown = createElement("Dropdown", { position: "'bottom-end'" });
         const togglerClass = [];
         const menuClass = [];
         const transfers = [];
@@ -193,10 +193,7 @@ export class KanbanArchParser extends XMLParser {
 
         // Dropdown element
         for (const el of kanbanBox.getElementsByClassName("dropdown")) {
-            const classes = el
-                .getAttribute("class")
-                .split(/\s+/)
-                .filter((cls) => cls && cls !== "dropdown");
+            const classes = el.className.split(/\s+/).filter((cls) => cls && cls !== "dropdown");
             combineAttributes(dropdown, "class", classes);
             if (!dropdownInserted) {
                 transfers.push(() => el.replaceWith(dropdown));
@@ -221,8 +218,7 @@ export class KanbanArchParser extends XMLParser {
             ".dropdown-toggle,.o_kanban_manage_toggle_button"
         )) {
             togglerClass.push(el.getAttribute("class"));
-            const togglerSlot = makeEl(`<t t-set-slot="toggler" />`);
-            togglerSlot.append(...el.children);
+            const togglerSlot = createElement("t", { "t-set-slot": "toggler" }, el.children);
             dropdown.appendChild(togglerSlot);
             if (dropdownInserted) {
                 transfers.push(() => el.remove());
@@ -244,18 +240,19 @@ export class KanbanArchParser extends XMLParser {
             if (field) {
                 colorField = field;
             }
-            el.replaceWith(makeEl(`<t t-call="web.KanbanColorPicker" />`));
+            el.replaceWith(createElement("t", { "t-call": "web.KanbanColorPicker" }));
         }
 
         // Special actions
         for (const el of kanbanBox.querySelectorAll("a[type],button[type]")) {
             const type = el.getAttribute("type");
+            const tag = el.tagName.toLowerCase();
+            combineAttributes(el, "class", `oe_kanban_action oe_kanban_action_${tag}`);
             if (ACTION_TYPES.includes(type)) {
                 // action buttons are debounced in kanban records
                 el.setAttribute("debounce", 300);
                 // Action buttons will be compiled in compileButton, no further
                 // processing is needed here
-                continue;
             } else if (SPECIAL_TYPES.includes(type)) {
                 el.removeAttribute("type");
                 const params = { type };
@@ -267,7 +264,6 @@ export class KanbanArchParser extends XMLParser {
                     const widget = activeFields[fieldName].widget;
                     Object.assign(params, { fieldName, widget, autoOpen });
                 }
-                combineAttributes(el, "class", "oe_kanban_action");
                 const strParams = Object.keys(params)
                     .map((k) => `${k}:"${params[k]}"`)
                     .join(",");

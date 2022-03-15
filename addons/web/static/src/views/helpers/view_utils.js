@@ -46,7 +46,7 @@ export const getIds = (idsList) => {
 
 export function processButton(node) {
     return {
-        classes: (node.getAttribute("class") || "").split(" "),
+        className: node.getAttribute("class") || "",
         icon: node.getAttribute("icon") || false,
         title: node.getAttribute("title") || undefined,
         string: node.getAttribute("string") || undefined,
