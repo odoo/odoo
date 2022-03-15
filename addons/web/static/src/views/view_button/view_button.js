@@ -1,7 +1,8 @@
 /** @odoo-module */
 
 import { debounce as debounceFn } from "@web/core/utils/timing";
-import { LegacyComponent } from "@web/legacy/legacy_component";
+
+const { Component } = owl;
 
 const explicitRankClasses = [
     "btn-primary",
@@ -51,7 +52,7 @@ function iconFromString(iconString) {
     return icon;
 }
 
-export class ViewButton extends LegacyComponent {
+export class ViewButton extends Component {
     setup() {
         const classes = transformButtonClasses(this.props.classes, this.props.defaultRank);
         const { name, type, special, debounce } = this.props.clickParams;
@@ -70,7 +71,7 @@ export class ViewButton extends LegacyComponent {
     }
 
     onClick() {
-        this.trigger("action-button-clicked", {
+        this.env.onClickViewButton({
             clickParams: this.props.clickParams,
             record: this.props.record,
         });

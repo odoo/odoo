@@ -34,7 +34,7 @@ export class ListViewHeaderButton extends ViewButton {
             active_model: resModel,
         };
 
-        this.trigger("action-button-clicked", {
+        this.env.onClickViewButton({
             clickParams,
             record: { resModel, resIds },
         });
