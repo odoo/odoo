@@ -418,7 +418,6 @@ QUnit.module("Fields", (hooks) => {
             3,
             "Three options in non required field"
         );
-
         assert.containsN(
             target.querySelector(".o_field_widget[name='feedback_value']"),
             "option",

@@ -1634,12 +1634,12 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("two occurrences of invalid field in form view", async function (assert) {
+    QUnit.test("two occurrences of invalid field in form view", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.fields.trululu.required = true;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -1652,10 +1652,10 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
         });
 
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_save"));
 
-        assert.containsN(form, ".o_form_label.o_field_invalid", 2);
-        assert.containsN(form, ".o_field_many2one.o_field_invalid", 2);
+        assert.containsN(target, ".o_form_label.o_field_invalid", 2);
+        assert.containsN(target, ".o_field_many2one.o_field_invalid", 2);
     });
 
     QUnit.skipWOWL(
@@ -2171,11 +2171,11 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_field_widget.o_required_modifier");
     });
 
-    QUnit.skipWOWL("required float fields works as expected", async function (assert) {
+    QUnit.test("required float fields works as expected", async function (assert) {
         assert.expect(10);
 
         serverData.models.partner.fields.qux.required = true;
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -2192,34 +2192,31 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(
-            form.el.querySelector('.o_field_widget[name="qux"]'),
-            "o_required_modifier"
-        );
+        assert.hasClass(target.querySelector('.o_field_widget[name="qux"]'), "o_required_modifier");
         assert.strictEqual(
-            form.el.querySelector('.o_field_widget[name="qux"] input').value,
+            target.querySelector('.o_field_widget[name="qux"] input').value,
             "0.0",
             "qux input is 0 by default (float field)"
         );
 
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_save"));
 
         assert.containsNone(
-            form.el,
+            target,
             '.o_field_widget[name="qux"] input',
             "should have switched to readonly"
         );
 
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
 
-        await editInput(form.el.querySelector(".o_field_widget[name=qux] input"), "1");
+        await editInput(target, ".o_field_widget[name=qux] input", "1");
 
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_save"));
 
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
-            form.el.querySelector('.o_field_widget[name="qux"] input').value,
+            target.querySelector('.o_field_widget[name="qux"] input').value,
             "1.0",
             "qux input is properly formatted"
         );
@@ -4221,7 +4218,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["read", "unlink", "history-back"]);
     });
 
-    QUnit.skipWOWL("empty required fields cannot be saved", async function (assert) {
+    QUnit.test("empty required fields cannot be saved", async function (assert) {
         assert.expect(6);
 
         serverData.models.partner.fields.foo.required = true;

@@ -611,10 +611,11 @@ export class Record extends DataPoint {
                 let requiredStringArr = [];
                 for (const required of this._requiredFields) {
                     if (
+                        typeof this.data[required.fieldName] === "number" ||
                         this.data[required.fieldName] ||
                         (required.modifier && !evalDomain(required.modifier, this.evalContext))
                     ) {
-                        break;
+                        continue;
                     }
                     this.setInvalidField(required.fieldName);
                     // TODO only add debugMessage if debug mode is active.

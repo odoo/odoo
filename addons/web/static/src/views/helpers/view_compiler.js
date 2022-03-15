@@ -469,6 +469,14 @@ export class ViewCompiler {
         }
     }
 
+    handleInvalid(compiled, params) {
+        // handle Invalid field
+        if (compiled.nodeName === "label") {
+            const tAttClass = `o_field_invalid: record.resId and isFieldInvalid(record,"${params.fieldName}")`;
+            appendAttr(compiled, "class", tAttClass);
+        }
+    }
+
     makeLabelTd() {
         const labelTd = this.document.createElement("td");
         labelTd.classList.add("o_td_label");
@@ -531,7 +539,6 @@ export class ViewCompiler {
         }
 
         // this.handleReadonly(node, field); // AAB: done by the Field itself (s.t. it works in all views)
-        // this.handleRequired(node, field); // AAB: done by the Field itself (s.t. it works in all views)
         this.handleEmpty(field, { fieldName, widgetName });
 
         const labels = this.getLabels(fieldName);
@@ -545,7 +552,7 @@ export class ViewCompiler {
                 }
             }
             // this.handleReadonly(node, label); // AAB: seems unnecessary on labels
-            // this.handleRequired(node, label); // AAB: seems unnecessary on labels
+            this.handleInvalid(label, { fieldName, widgetName });
             this.handleEmpty(label, { fieldName, widgetName });
         }
         return field;
@@ -753,6 +760,9 @@ export const useViewCompiler = (ViewCompiler, templateKey, activeFields, xmlDoc,
         },
         isFieldEmpty(record, fieldName) {
             return Field.isEmpty(record, fieldName);
+        },
+        isFieldInvalid(record, fieldName) {
+            return record.isInvalid(fieldName);
         },
     });
 
