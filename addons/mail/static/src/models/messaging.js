@@ -178,6 +178,18 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsNotificationBlocked() {
+            const windowNotification = this.browser.Notification;
+            return (
+                windowNotification &&
+                windowNotification.permission !== 'granted' &&
+                !this.isNotificationPermissionDefault
+            );
+        },
+        /**
+         * @private
          * @returns {EventBus}
          */
         _computeMessagingBus() {
@@ -298,6 +310,9 @@ registerModel({
         }),
         isInitialized: attr({
             default: false,
+        }),
+        isNotificationBlocked: attr({
+            compute: '_computeIsNotificationBlocked',
         }),
         /**
          * States whether browser Notification Permission is currently in its
