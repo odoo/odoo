@@ -7,7 +7,7 @@
                 'o_Message_active': isActive,
                 'o-clicked': state.isClicked,
                 'o-discussion': messageView and (messageView.message.is_discussion or messageView.message.is_notification),
-                'o-has-message-selection': threadView and threadView.replyingToMessageView,
+                'o-has-message-selection': messageView and messageView.threadView and messageView.threadView.replyingToMessageView,
                 'o-highlighted': messageView and (messageView.message.isHighlighted or messageView.isHighlighted),
                 'o-mobile': messaging and messaging.device.isMobile,
                 'o-not-discussion': messageView and !(messageView.message.is_discussion or messageView.message.is_notification),
@@ -49,8 +49,8 @@
                                     <t t-esc="shortTime"/>
                                 </div>
                             </t>
-                            <t t-if="!isActive and messageView.message.isCurrentUserOrGuestAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
-                                <MessageSeenIndicator className="'o_Message_seenIndicator'" messageLocalId="messageView.message.localId" threadLocalId="threadView.thread.localId"/>
+                            <t t-if="!isActive and messageView.message.isCurrentUserOrGuestAuthor and messageView.threadView and messageView.threadView.thread and messageView.threadView.thread.hasSeenIndicators">
+                                <MessageSeenIndicator className="'o_Message_seenIndicator'" messageLocalId="messageView.message.localId" threadLocalId="messageView.threadView.thread.localId"/>
                             </t>
                         </t>
                     </div>
@@ -87,10 +87,10 @@
                                         - <t t-esc="messageView.message.dateFromNow"/>
                                     </div>
                                 </t>
-                                <t t-if="messageView.message.isCurrentUserOrGuestAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
-                                    <MessageSeenIndicator className="'o_Message_seenIndicator'" messageLocalId="messageView.message.localId" threadLocalId="threadView.thread.localId"/>
+                                <t t-if="messageView.message.isCurrentUserOrGuestAuthor and messageView.threadView and messageView.threadView.thread and messageView.threadView.thread.hasSeenIndicators">
+                                    <MessageSeenIndicator className="'o_Message_seenIndicator'" messageLocalId="messageView.message.localId" threadLocalId="messageView.threadView.thread.localId"/>
                                 </t>
-                                <t t-if="threadView and messageView.message.originThread and messageView.message.originThread !== threadView.thread">
+                                <t t-if="messageView.threadView and messageView.message.originThread and messageView.message.originThread !== messageView.threadView.thread">
                                     <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': isSelected }">
                                         <t t-if="messageView.message.originThread.model === 'mail.channel'">
                                             (from <a class="o_Message_originThreadLink" t-att-href="messageView.message.originThread.url" t-on-click="_onClickOriginThread"><t t-if="messageView.message.originThread.displayName">#<t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">channel</t></a>)
@@ -100,7 +100,7 @@
                                         </t>
                                     </div>
                                 </t>
-                                <t t-if="threadView and messageView.message.originThread and messageView.message.originThread === threadView.thread and messageView.message.notifications.length > 0">
+                                <t t-if="messageView.threadView and messageView.message.originThread and messageView.message.originThread === messageView.threadView.thread and messageView.message.notifications.length > 0">
                                     <t t-if="messageView.message.failureNotifications.length > 0">
                                         <span class="o_Message_notificationIconClickable o-error" t-on-click="messageView.onClickFailure">
                                             <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope"/>
