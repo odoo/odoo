@@ -25,20 +25,8 @@ export class Many2OneField extends Component {
         });
     }
 
-    get searchLimit() {
-        return this.constructor.searchLimit;
-    }
     get hasExternalButton() {
-        return !this.props.noOpen && !!this.props.value && !this.state.isFloating;
-    }
-    get canCreate() {
-        return this.props.canCreate && !this.props.noCreate;
-    }
-    get canQuickCreate() {
-        return this.canCreate && !this.props.noQuickCreate;
-    }
-    get canCreateEdit() {
-        return this.canCreate && !this.props.noCreateEdit;
+        return this.props.canOpen && !!this.props.value && !this.state.isFloating;
     }
     get sources() {
         return [this.recordSource];
@@ -60,6 +48,9 @@ export class Many2OneField extends Component {
                   .slice(1)
             : [];
     }
+    get resId() {
+        return this.props.value && this.props.value[0];
+    }
 
     getDomain() {
         return this.props.record
@@ -72,7 +63,7 @@ export class Many2OneField extends Component {
             name: request,
             args: this.getDomain(),
             operator: "ilike",
-            limit: this.searchLimit + 1,
+            limit: this.props.searchLimit + 1,
             context: this.props.record.getFieldContext(this.props.name),
         });
 
@@ -82,7 +73,7 @@ export class Many2OneField extends Component {
         }));
 
         // Add "Search more..." option if records count is higher than the limit
-        if (this.searchLimit < records.length) {
+        if (this.props.searchLimit < records.length) {
             options.push({
                 label: this.env._t("Search More..."),
                 classList: "o_m2o_dropdown_option",
@@ -94,7 +85,7 @@ export class Many2OneField extends Component {
 
         if (request.length) {
             // "Quick create" option
-            if (this.canQuickCreate && !records.some((record) => record[1] === request)) {
+            if (this.props.canQuickCreate && !records.some((record) => record[1] === request)) {
                 options.push({
                     label: sprintf(this.env._t(`Create "%s"`), escape(request)),
                     classList: "o_m2o_dropdown_option",
@@ -105,7 +96,7 @@ export class Many2OneField extends Component {
             }
 
             // "Create and Edit" option
-            if (this.canCreateEdit) {
+            if (this.props.canCreateEdit) {
                 options.push({
                     label: this.env._t(`Create and Edit...`),
                     classList: "o_m2o_dropdown_option",
@@ -123,7 +114,7 @@ export class Many2OneField extends Component {
                     unselectable: true,
                 });
             }
-        } else if (!this.props.value && (this.canQuickCreate || this.canCreateEdit)) {
+        } else if (!this.props.value && (this.props.canQuickCreate || this.props.canCreateEdit)) {
             // "Start typing" option
             options.push({
                 label: this.env._t("Start typing..."),
@@ -139,18 +130,15 @@ export class Many2OneField extends Component {
         const action = await this.orm.call(
             this.props.relation,
             "get_formview_action",
-            [[this.props.value[0]]],
+            [[this.resId]],
             { context: this.props.record.getFieldContext(this.props.name) }
         );
         await this.action.doAction(action);
     }
     async openDialog(resId) {
-        const viewId = await this.orm.call(
-            this.props.relation,
-            "get_formview_id",
-            [[this.props.value[0]]],
-            { context: this.props.record.getFieldContext(this.props.name) }
-        );
+        const viewId = await this.orm.call(this.props.relation, "get_formview_id", [[this.resId]], {
+            context: this.props.record.getFieldContext(this.props.name),
+        });
 
         const record = this.env.model.createDataPoint("record", {
             activeFields: {},
@@ -174,7 +162,7 @@ export class Many2OneField extends Component {
         this.openAction();
     }
     onExternalBtnClick() {
-        this.openDialog(this.props.value[0]);
+        this.openDialog(this.resId);
     }
     onChange({ inputValue }) {
         if (!inputValue.length) {
@@ -198,17 +186,21 @@ Many2OneField.template = "web.Many2OneField";
 Many2OneField.props = {
     ...standardFieldProps,
     placeholder: { type: String, optional: true },
-    noOpen: { type: Boolean, optional: true },
-    noCreate: { type: Boolean, optional: true },
+    canOpen: { type: Boolean, optional: true },
     canCreate: { type: Boolean, optional: true },
     canWrite: { type: Boolean, optional: true },
-    noQuickCreate: { type: Boolean, optional: true },
-    noCreateEdit: { type: Boolean, optional: true },
+    canQuickCreate: { type: Boolean, optional: true },
+    canCreateEdit: { type: Boolean, optional: true },
+    searchLimit: { type: Number, optional: true },
     relation: String,
 };
 Many2OneField.defaultProps = {
+    canOpen: true,
     canCreate: true,
     canWrite: true,
+    canQuickCreate: true,
+    canCreateEdit: true,
+    searchLimit: 7,
 };
 Many2OneField.components = {
     AutoComplete,
@@ -216,17 +208,22 @@ Many2OneField.components = {
 Many2OneField.displayName = _lt("Many2one");
 Many2OneField.supportedTypes = ["many2one"];
 Many2OneField.extractProps = (fieldName, record, attrs) => {
+    const noOpen = Boolean(attrs.options.no_open);
+    const noCreate = Boolean(attrs.options.no_create);
+    const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create));
+    const canWrite = attrs.can_write && Boolean(JSON.parse(attrs.can_write));
+    const noQuickCreate = Boolean(attrs.options.no_quick_create);
+    const noCreateEdit = Boolean(attrs.options.no_create_edit);
+
     return {
         placeholder: attrs.placeholder,
-        noOpen: Boolean(attrs.options.no_open),
-        noCreate: Boolean(attrs.options.no_create),
-        canCreate: attrs.can_create && Boolean(JSON.parse(attrs.can_create)),
-        canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
-        noQuickCreate: Boolean(attrs.options.no_quick_create),
-        noCreateEdit: Boolean(attrs.options.no_create_edit),
+        canOpen: !noOpen,
+        canCreate: canCreate && !noCreate,
+        canWrite,
+        canQuickCreate: canCreate && !noQuickCreate,
+        canCreateEdit: canCreate && !noCreateEdit,
         relation: record.fields[fieldName].relation,
     };
 };
-Many2OneField.searchLimit = 7;
 
 registry.category("fields").add("many2one", Many2OneField);
