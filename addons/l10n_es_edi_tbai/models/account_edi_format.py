@@ -147,7 +147,7 @@ class AccountEdiFormat(models.Model):
         elif res[invoice].get('success'):
             # Put attachment in chatter
             invoice.with_context(no_new_invoice=True).message_post(
-                body="<pre>TicketBAI: posted cancelation XML\n" + res[invoice]['message'] + "</pre>",
+                body="<pre>TicketBAI: posted cancellation XML\n" + res[invoice]['message'] + "</pre>",
                 attachment_ids=invoice.l10n_es_tbai_cancel_xml.ids)
 
         # FAILURE

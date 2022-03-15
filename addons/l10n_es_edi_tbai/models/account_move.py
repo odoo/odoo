@@ -15,25 +15,26 @@ class AccountMove(models.Model):
 
     # Stored fields
     l10n_es_tbai_is_required = fields.Boolean(
-        string="Is the Bask EDI (TicketBAI) needed",
+        string="TicketBAI required",
+        help="Is the Bask EDI (TicketBAI) needed",
         compute="_compute_l10n_es_tbai_is_required"
     )
     l10n_es_tbai_chain_index = fields.Integer(
-        string="Unique number representing invoice index in chain (TicketBai).",
-        help="This number is set if and only if an in-chain XML was submitted and did not error.",
+        string="Chain index (TicketBai)",
+        help="Invoice index in chain, set if and only if an in-chain XML was submitted and did not error",
         store=True, copy=False, readonly=True,
     )
 
     # Relations
     l10n_es_tbai_post_xml = fields.Many2one(
         comodel_name="ir.attachment", readonly=True, copy=False,
-        string="Posted XML (confirmed or awaiting response)",
-        help="Stores the posted XML before getting a response. Cleared if rejected by govt."
+        string="Submission XML",
+        help="Submission XML sent to TicketBAI. Kept if accepted or no response (timeout), cleared otherwise."
     )
     l10n_es_tbai_cancel_xml = fields.Many2one(
         comodel_name="ir.attachment", readonly=True, copy=False,
-        string="Posted cancelation XML (confirmed or awaiting response)",
-        help="Stores the posted cancelation XML before getting a response. Cleared if rejected by govt."
+        string="Cancellation XML",
+        help="Cancellation XML sent to TicketBAI. Kept if accepted or no response (timeout), cleared otherwise."
     )
 
     # Non-stored fields
@@ -58,7 +59,7 @@ class AccountMove(models.Model):
         ('R4', "R4: Art. 80 - other"),
         ('R5', "R5: Factura rectificativa en facturas simplificadas")
     ],
-        string="Invoice Refund Reason Code",
+        string="Invoice Refund Reason",
         help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
         "Valor Añadido. Artículo 80. Modificación de la base imponible.",
         copy=False,

@@ -29,7 +29,7 @@ class TicketBaiWebServices():
             message_code = xml_res_node.find('Codigo').text
             messages += message_code + ": " + xml_res_node.find(node_name).text + "\n"
             if message_code in ('005', '019'):
-                already_received = True  # error codes 5/19 mean invoice/cancelation was already received
+                already_received = True  # error codes 5/19 mean XML was already received with that sequence
         return messages, already_received, tbai_id
 
 
