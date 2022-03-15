@@ -69,19 +69,6 @@ export class ComposerSuggestedRecipient extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {string|undefined}
-     */
-    get ADD_AS_RECIPIENT_AND_FOLLOWER_REASON() {
-        if (!this.suggestedRecipientInfo) {
-            return undefined;
-        }
-        return this.env._t(_.str.sprintf(
-            "Add as recipient and follower (reason: %s)",
-            this.suggestedRecipientInfo.reason
-        ));
-    }
-
-    /**
      * @returns {SuggestedRecipientInfo}
      */
     get suggestedRecipientInfo() {
