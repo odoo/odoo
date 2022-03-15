@@ -6,7 +6,7 @@
             t-att-class="{
                 'o-focused': composerView and composerView.isFocused,
                 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
-                'o-has-footer': hasFooter,
+                'o-has-footer': composerView and composerView.hasFooter,
                 'o-has-header': hasHeader,
                 'o-is-in-thread-view': composerView and composerView.threadView,
                 'o-is-compact': composerView and composerView.isCompact,
@@ -116,7 +116,7 @@
                         </t>
                     </div>
                 </div>
-                <t t-if="hasFooter">
+                <t t-if="composerView.hasFooter">
                     <div class="o_Composer_coreFooter" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }">
                         <t t-if="composerView.hasThreadTyping">
                             <ThreadTextualTypingStatus className="'o_Composer_threadTextualTypingStatus'" threadLocalId="composerView.composer.activeThread.localId"/>

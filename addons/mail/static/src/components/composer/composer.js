@@ -35,23 +35,6 @@ export class Composer extends Component {
     }
 
     /**
-     * Determine whether composer should display a footer.
-     *
-     * @returns {boolean}
-     */
-    get hasFooter() {
-        if (!this.composerView) {
-            return false;
-        }
-        return (
-            this.composerView.hasThreadTyping ||
-            this.composerView.composer.attachments.length > 0 ||
-            this.composerView.messageViewInEditing ||
-            !this.composerView.isCompact
-        );
-    }
-
-    /**
      * Determine whether the composer should display a header.
      *
      * @returns {boolean}
