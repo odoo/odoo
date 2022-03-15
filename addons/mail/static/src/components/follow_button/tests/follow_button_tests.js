@@ -14,20 +14,12 @@ QUnit.module('follow_button_tests.js', {
     async beforeEach() {
         await beforeEach(this);
 
-        this.createFollowButtonComponent = async (thread, otherProps = {}) => {
+        this.createFollowButtonComponent = async (thread, target, otherProps = {}) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
-            await createRootMessagingComponent(this, "FollowButton", {
+            await createRootMessagingComponent(thread.env, "FollowButton", {
                 props,
-                target: this.widget.el,
+                target,
             });
-        };
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -35,12 +27,12 @@ QUnit.module('follow_button_tests.js', {
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    await this.createFollowButtonComponent(thread, { isDisabled: true });
+    await this.createFollowButtonComponent(thread, widget.el, { isDisabled: true });
     assert.containsOnce(
         document.body,
         '.o_FollowButton',
@@ -60,12 +52,12 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    await this.createFollowButtonComponent(thread);
+    await this.createFollowButtonComponent(thread, widget.el);
     assert.containsOnce(
         document.body,
         '.o_FollowButton',
@@ -94,13 +86,13 @@ QUnit.test('hover following button', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
     thread.follow();
-    await this.createFollowButtonComponent(thread);
+    await this.createFollowButtonComponent(thread, widget.el);
     assert.containsOnce(
         document.body,
         '.o_FollowButton',
@@ -162,7 +154,8 @@ QUnit.test('click on "follow" button', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    await this.start({
+    const { messaging, widget } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (route.includes('message_subscribe')) {
                 assert.step('rpc:message_subscribe');
@@ -170,11 +163,11 @@ QUnit.test('click on "follow" button', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    await this.createFollowButtonComponent(thread);
+    await this.createFollowButtonComponent(thread, widget.el);
     assert.containsOnce(
         document.body,
         '.o_FollowButton',
@@ -216,7 +209,8 @@ QUnit.test('click on "unfollow" button', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    await this.start({
+    const { messaging, widget } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('rpc:message_unsubscribe');
@@ -224,12 +218,12 @@ QUnit.test('click on "unfollow" button', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
     thread.follow();
-    await this.createFollowButtonComponent(thread);
+    await this.createFollowButtonComponent(thread, widget.el);
     assert.containsOnce(
         document.body,
         '.o_FollowButton',

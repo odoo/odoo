@@ -11,16 +11,6 @@ QUnit.module('discuss', {}, function () {
 QUnit.module('discuss_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-                data: this.data,
-                hasDiscuss: true,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
@@ -47,12 +37,15 @@ QUnit.test('rendering of visitor banner', async function (assert) {
         livechat_visitor_id: 11,
         members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
-    await this.start({
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
         discuss: {
             context: {
                 active_id: 'mail.channel_11',
             },
         },
+        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -144,12 +137,15 @@ QUnit.test('livechat with non-logged visitor should show visitor banner', async 
         livechat_visitor_id: 11,
         members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
-    await this.start({
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
         discuss: {
             context: {
                 active_id: 'mail.channel_11',
             },
         },
+        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -186,12 +182,15 @@ QUnit.test('livechat with logged visitor should show visitor banner', async func
         livechat_visitor_id: 11,
         members: [this.data.currentPartnerId, 12],
     });
-    await this.start({
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
         discuss: {
             context: {
                 active_id: 'mail.channel_11',
             },
         },
+        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -215,12 +214,15 @@ QUnit.test('livechat without visitor should not show visitor banner', async func
         livechat_operator_id: this.data.currentPartnerId,
         members: [this.data.currentPartnerId, 11],
     });
-    await this.start({
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
         discuss: {
             context: {
                 active_id: 'mail.channel_11',
             },
         },
+        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -238,12 +240,15 @@ QUnit.test('non-livechat channel should not show visitor banner', async function
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ id: 11, name: "General" });
-    await this.start({
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
         discuss: {
             context: {
                 active_id: 'mail.channel_11',
             },
         },
+        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,

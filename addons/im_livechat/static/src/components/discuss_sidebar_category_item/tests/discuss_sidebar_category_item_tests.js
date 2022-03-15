@@ -13,13 +13,11 @@ QUnit.module('discuss_sidebar_category_item_tests.js', {
         await beforeEach(this);
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            return start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
             }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -34,11 +32,11 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
         livechat_operator_id: this.data.currentPartnerId,
         members: [this.data.currentPartnerId, this.data.currentPartnerId],
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     const livechatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -69,11 +67,11 @@ QUnit.test('livechat - avatar: should have a partner profile picture for a livec
         livechat_operator_id: this.data.currentPartnerId,
         members: [this.data.currentPartnerId, 10],
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     const livechatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId

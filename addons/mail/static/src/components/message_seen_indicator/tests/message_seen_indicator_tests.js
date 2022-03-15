@@ -14,23 +14,15 @@ QUnit.module('message_seen_indicator_tests.js', {
     async beforeEach() {
         await beforeEach(this);
 
-        this.createMessageSeenIndicatorComponent = async ({ message, thread }, otherProps) => {
+        this.createMessageSeenIndicatorComponent = async ({ message, target, thread }, otherProps) => {
             const props = Object.assign(
                 { messageLocalId: message.localId, threadLocalId: thread.localId },
                 otherProps
             );
-            await createRootMessagingComponent(this, "MessageSeenIndicator", {
+            await createRootMessagingComponent(thread.env, "MessageSeenIndicator", {
                 props,
-                target: this.widget.el,
+                target,
             });
-        };
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -38,8 +30,8 @@ QUnit.module('message_seen_indicator_tests.js', {
 QUnit.test('rendering when just one has received the message', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: insertAndReplace([
@@ -55,13 +47,13 @@ QUnit.test('rendering when just one has received the message', async function (a
             message: insertAndReplace({ id: 100 }),
         }),
     });
-    const message = this.messaging.models['Message'].insert({
-        author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
+    const message = messaging.models['Message'].insert({
+        author: insert({ id: messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
     });
-    await this.createMessageSeenIndicatorComponent({ message, thread });
+    await this.createMessageSeenIndicatorComponent({ message, target: widget.el, thread });
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -82,8 +74,8 @@ QUnit.test('rendering when just one has received the message', async function (a
 QUnit.test('rendering when everyone have received the message', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: insertAndReplace([
@@ -100,13 +92,13 @@ QUnit.test('rendering when everyone have received the message', async function (
             message: insertAndReplace({ id: 100 }),
         }),
     });
-    const message = this.messaging.models['Message'].insert({
-        author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
+    const message = messaging.models['Message'].insert({
+        author: insert({ id: messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
     });
-    await this.createMessageSeenIndicatorComponent({ message, thread });
+    await this.createMessageSeenIndicatorComponent({ message, target: widget.el, thread });
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -127,8 +119,8 @@ QUnit.test('rendering when everyone have received the message', async function (
 QUnit.test('rendering when just one has seen the message', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: insertAndReplace([
@@ -146,13 +138,13 @@ QUnit.test('rendering when just one has seen the message', async function (asser
             message: insertAndReplace({ id: 100 }),
         }),
     });
-    const message = this.messaging.models['Message'].insert({
-        author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
+    const message = messaging.models['Message'].insert({
+        author: insert({ id: messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
     });
-    await this.createMessageSeenIndicatorComponent({ message, thread });
+    await this.createMessageSeenIndicatorComponent({ message, target: widget.el, thread });
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -174,8 +166,8 @@ QUnit.test('rendering when just one has seen the message', async function (asser
 QUnit.test('rendering when just one has seen & received the message', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: insertAndReplace([
@@ -192,13 +184,13 @@ QUnit.test('rendering when just one has seen & received the message', async func
             message: insertAndReplace({ id: 100 }),
         }),
     });
-    const message = this.messaging.models['Message'].insert({
-        author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
+    const message = messaging.models['Message'].insert({
+        author: insert({ id: messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
     });
-    await this.createMessageSeenIndicatorComponent({ message, thread });
+    await this.createMessageSeenIndicatorComponent({ message, target: widget.el, thread });
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -220,8 +212,8 @@ QUnit.test('rendering when just one has seen & received the message', async func
 QUnit.test('rendering when just everyone has seen the message', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: insertAndReplace([
@@ -240,13 +232,13 @@ QUnit.test('rendering when just everyone has seen the message', async function (
             message: insertAndReplace({ id: 100 }),
         }),
     });
-    const message = this.messaging.models['Message'].insert({
-        author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
+    const message = messaging.models['Message'].insert({
+        author: insert({ id: messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
     });
-    await this.createMessageSeenIndicatorComponent({ message, thread });
+    await this.createMessageSeenIndicatorComponent({ message, target: widget.el, thread });
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',

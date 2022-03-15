@@ -15,23 +15,15 @@ QUnit.module('follower_subtype_tests.js', {
     async beforeEach() {
         await beforeEach(this);
 
-        this.createFollowerSubtypeComponent = async ({ follower, followerSubtype }) => {
+        this.createFollowerSubtypeComponent = async ({ follower, followerSubtype, target }) => {
             const props = {
                 followerLocalId: follower.localId,
                 followerSubtypeLocalId: followerSubtype.localId,
             };
-            await createRootMessagingComponent(this, "FollowerSubtype", {
+            await createRootMessagingComponent(follower.env, "FollowerSubtype", {
                 props,
-                target: this.widget.el,
+                target,
             });
-        };
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -39,13 +31,13 @@ QUnit.module('follower_subtype_tests.js', {
 QUnit.test('simplest layout of a followed subtype', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { messaging, widget } = await start({ data: this.data });
 
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.messaging.models['Follower'].create({
+    const follower = messaging.models['Follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -55,7 +47,7 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.messaging.models['FollowerSubtype'].create({
+    const followerSubtype = messaging.models['FollowerSubtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,
@@ -69,6 +61,7 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
     await this.createFollowerSubtypeComponent({
         follower,
         followerSubtype,
+        target: widget.el,
     });
     assert.containsOnce(
         document.body,
@@ -99,13 +92,13 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
 QUnit.test('simplest layout of a not followed subtype', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { messaging, widget } = await start({ data: this.data });
 
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.messaging.models['Follower'].create({
+    const follower = messaging.models['Follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -115,7 +108,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.messaging.models['FollowerSubtype'].create({
+    const followerSubtype = messaging.models['FollowerSubtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,
@@ -126,6 +119,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
     await this.createFollowerSubtypeComponent({
         follower,
         followerSubtype,
+        target: widget.el,
     });
     assert.containsOnce(
         document.body,
@@ -156,13 +150,13 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
 QUnit.test('toggle follower subtype checkbox', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { messaging, widget } = await start({ data: this.data });
 
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.messaging.models['Follower'].create({
+    const follower = messaging.models['Follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -172,7 +166,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.messaging.models['FollowerSubtype'].create({
+    const followerSubtype = messaging.models['FollowerSubtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,
@@ -183,6 +177,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
     await this.createFollowerSubtypeComponent({
         follower,
         followerSubtype,
+        target: widget.el,
     });
     assert.containsOnce(
         document.body,

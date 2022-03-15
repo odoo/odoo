@@ -8,14 +8,6 @@ QUnit.module('composer_suggestion', {}, function () {
 QUnit.module('composer_suggestion_canned_response_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -23,12 +15,12 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const cannedResponse = this.messaging.models['CannedResponse'].create({
+    const cannedResponse = messaging.models['CannedResponse'].create({
         id: 7,
         source: 'hello',
         substitution: "Hello, how are you?",
@@ -50,12 +42,12 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
     assert.expect(5);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const cannedResponse = this.messaging.models['CannedResponse'].create({
+    const cannedResponse = messaging.models['CannedResponse'].create({
         id: 7,
         source: 'hello',
         substitution: "Hello, how are you?",
@@ -97,12 +89,12 @@ QUnit.test('canned response suggestion active', async function (assert) {
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const cannedResponse = this.messaging.models['CannedResponse'].create({
+    const cannedResponse = messaging.models['CannedResponse'].create({
         id: 7,
         source: 'hello',
         substitution: "Hello, how are you?",

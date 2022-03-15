@@ -8,16 +8,6 @@ QUnit.module('notification_list', {}, function () {
 QUnit.module('notification_list_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -42,7 +32,7 @@ QUnit.test('marked as read thread notifications are ordered by last message date
             res_id: 200,
         }
     );
-    const { createNotificationListComponent } = await this.start();
+    const { createNotificationListComponent } = await start({ data: this.data });
     await createNotificationListComponent({ filter: 'all' });
     assert.containsN(
         document.body,
@@ -84,7 +74,7 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
             res_id: 200,
         }
     );
-    const { createNotificationListComponent } = await this.start();
+    const { createNotificationListComponent, widget } = await start({ data: this.data });
     await createNotificationListComponent({ filter: 'all' });
     assert.containsN(
         document.body,
@@ -94,7 +84,7 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
     );
 
     await afterNextRender(() => {
-        this.widget.call('bus_service', 'trigger', 'notification', [{
+        widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel/new_message',
             payload: {
                 id: 100,

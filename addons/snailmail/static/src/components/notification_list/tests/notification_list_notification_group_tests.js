@@ -10,16 +10,6 @@ QUnit.module('notification_list', {}, function () {
 QUnit.module('notification_list_notification_group_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -58,7 +48,7 @@ QUnit.test('mark as read', async function (assert) {
             "action should have the group notification length as unread_counter"
         );
     });
-    const { createNotificationListComponent } = await this.start({ env: { bus } });
+    const { createNotificationListComponent } = await start({ data: this.data, env: { bus } });
     await createNotificationListComponent();
 
     assert.containsOnce(
@@ -109,7 +99,7 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
             notification_type: 'email', // different type from first failure
         }
     );
-    const { createNotificationListComponent } = await this.start();
+    const { createNotificationListComponent } = await start({ data: this.data });
     await createNotificationListComponent();
 
     assert.containsN(
@@ -249,7 +239,7 @@ QUnit.test('grouped notifications by document model', async function (assert) {
         );
     });
 
-    const { createNotificationListComponent } = await this.start({ env: { bus } });
+    const { createNotificationListComponent } = await start({ data: this.data, env: { bus } });
     await createNotificationListComponent();
 
     assert.containsOnce(

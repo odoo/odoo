@@ -12,16 +12,6 @@ QUnit.module('channel_invitation_form', {}, function () {
 QUnit.module('channel_invitation_form_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-                data: this.data,
-                hasDiscuss: true,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
@@ -42,12 +32,15 @@ QUnit.test('should display the channel invitation form after clicking on the inv
         members: [this.data.currentPartnerId, 11],
         public: 'private',
     });
-    await this.start({
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
         discuss: {
             context: {
                 active_id: 13,
             },
         },
+        hasDiscuss: true,
     });
     await afterNextRender(() => document.querySelector(`.o_ThreadViewTopbar_inviteButton`).click());
     assert.containsOnce(
@@ -82,12 +75,15 @@ QUnit.test('should be able to search for a new user to invite from an existing c
         members: [this.data.currentPartnerId, 11],
         public: 'private',
     });
-    await this.start({
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
         discuss: {
             context: {
                 active_id: 13,
             },
         },
+        hasDiscuss: true,
     });
     await afterNextRender(() => document.querySelector(`.o_ThreadViewTopbar_inviteButton`).click());
     await afterNextRender(() => document.execCommand('insertText', false, "TestPartner2"));
@@ -123,12 +119,15 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
         members: [this.data.currentPartnerId, 11],
         public: 'private',
     });
-    await this.start({
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
         discuss: {
             context: {
                 active_id: 13,
             },
         },
+        hasDiscuss: true,
     });
 
     await afterNextRender(() => document.querySelector(`.o_ThreadViewTopbar_inviteButton`).click());

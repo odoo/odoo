@@ -8,14 +8,6 @@ QUnit.module('composer_suggestion', {}, function () {
 QUnit.module('composer_suggestion_partner_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -23,12 +15,12 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const partner = this.messaging.models['Partner'].create({
+    const partner = messaging.models['Partner'].create({
         id: 7,
         im_status: 'online',
         name: "Demo User",
@@ -50,12 +42,12 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
     assert.expect(6);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const partner = this.messaging.models['Partner'].create({
+    const partner = messaging.models['Partner'].create({
         email: "demo_user@odoo.com",
         id: 7,
         im_status: 'online',
@@ -103,12 +95,12 @@ QUnit.test('partner mention suggestion active', async function (assert) {
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    const partner = this.messaging.models['Partner'].create({
+    const partner = messaging.models['Partner'].create({
         id: 7,
         im_status: 'online',
         name: "Demo User",

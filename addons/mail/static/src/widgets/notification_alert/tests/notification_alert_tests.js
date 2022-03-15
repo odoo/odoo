@@ -10,22 +10,6 @@ QUnit.module('notification_alert', {}, function () {
 QUnit.module('notification_alert_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            let { widget } = await start(Object.assign({
-                data: this.data,
-                hasView: true,
-                // View params
-                View: FormView,
-                model: 'mail.message',
-                arch: `
-                    <form>
-                        <widget name="notification_alert"/>
-                    </form>
-                `,
-            }, params));
-            this.widget = widget;
-        };
     },
 });
 
@@ -35,7 +19,13 @@ QUnit.skip('notification_alert widget: display blocked notification alert', asyn
     // is good for rendering... task-227947
     assert.expect(1);
 
-    await this.start({
+    await start({
+        arch: `
+            <form>
+                <widget name="notification_alert"/>
+            </form>
+        `,
+        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -43,6 +33,10 @@ QUnit.skip('notification_alert widget: display blocked notification alert', asyn
                 },
             },
         },
+        hasView: true,
+        model: 'mail.message',
+        // View params
+        View: FormView,
     });
 
     assert.containsOnce(
@@ -55,7 +49,13 @@ QUnit.skip('notification_alert widget: display blocked notification alert', asyn
 QUnit.test('notification_alert widget: no notification alert when granted', async function (assert) {
     assert.expect(1);
 
-    await this.start({
+    await start({
+        arch: `
+            <form>
+                <widget name="notification_alert"/>
+            </form>
+        `,
+        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -63,6 +63,10 @@ QUnit.test('notification_alert widget: no notification alert when granted', asyn
                 },
             },
         },
+        hasView: true,
+        model: 'mail.message',
+        // View params
+        View: FormView,
     });
 
     assert.containsNone(
@@ -75,7 +79,13 @@ QUnit.test('notification_alert widget: no notification alert when granted', asyn
 QUnit.test('notification_alert widget: no notification alert when default', async function (assert) {
     assert.expect(1);
 
-    await this.start({
+    await start({
+        arch: `
+            <form>
+                <widget name="notification_alert"/>
+            </form>
+        `,
+        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -83,6 +93,10 @@ QUnit.test('notification_alert widget: no notification alert when default', asyn
                 },
             },
         },
+        hasView: true,
+        model: 'mail.message',
+        // View params
+        View: FormView,
     });
 
     assert.containsNone(

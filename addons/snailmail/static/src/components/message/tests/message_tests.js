@@ -15,15 +15,6 @@ QUnit.module('message', {}, function () {
 QUnit.module('message_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { afterEvent, env, widget } = res;
-            this.afterEvent = afterEvent;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -46,8 +37,8 @@ QUnit.test('Sent', async function (assert) {
         notification_type: 'snail',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start();
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
@@ -122,8 +113,8 @@ QUnit.test('Canceled', async function (assert) {
         notification_type: 'snail',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start();
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
@@ -198,8 +189,8 @@ QUnit.test('Pending', async function (assert) {
         notification_type: 'snail',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start();
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
@@ -275,7 +266,8 @@ QUnit.test('No Price Available', async function (assert) {
         notification_type: 'snail',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start({
+    const { createThreadViewComponent, messaging } = await start({
+        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
             if (args.method === 'cancel_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
@@ -284,7 +276,7 @@ QUnit.test('No Price Available', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
@@ -368,7 +360,8 @@ QUnit.test('Credit Error', async function (assert) {
         notification_type: 'snail',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start({
+    const { createThreadViewComponent, messaging } = await start({
+        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
             if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
@@ -377,7 +370,7 @@ QUnit.test('Credit Error', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
@@ -466,7 +459,8 @@ QUnit.test('Trial Error', async function (assert) {
         notification_type: 'snail',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start({
+    const { createThreadViewComponent, messaging } = await start({
+        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
             if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
@@ -475,7 +469,7 @@ QUnit.test('Trial Error', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
@@ -578,8 +572,8 @@ QUnit.test('Format Error', async function (assert) {
         notification_type: 'snail',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start({ env: { bus } });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data, env: { bus } });
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
@@ -654,10 +648,11 @@ QUnit.test('Missing Required Fields', async function (assert) {
         );
     });
 
-    const { createThreadViewComponent } = await this.start({
+    const { createThreadViewComponent, messaging } = await start({
+        data: this.data,
         env: { bus },
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({ id: 20, model: 'res.partner' }),

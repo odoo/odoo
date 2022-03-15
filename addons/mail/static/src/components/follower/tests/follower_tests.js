@@ -18,19 +18,11 @@ QUnit.module('follower_tests.js', {
     async beforeEach() {
         await beforeEach(this);
 
-        this.createFollowerComponent = async (follower) => {
-            await createRootMessagingComponent(this, "Follower", {
+        this.createFollowerComponent = async (follower, target) => {
+            await createRootMessagingComponent(follower.env, "Follower", {
                 props: { followerLocalId: follower.localId },
-                target: this.widget.el,
+                target,
             });
-        };
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -38,13 +30,13 @@ QUnit.module('follower_tests.js', {
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { messaging, widget } = await start({ data: this.data });
 
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['Follower'].create({
+    const follower = await messaging.models['Follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -54,7 +46,7 @@ QUnit.test('base rendering not editable', async function (assert) {
         isActive: true,
         isEditable: false,
     });
-    await this.createFollowerComponent(follower);
+    await this.createFollowerComponent(follower, widget.el);
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -85,12 +77,12 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(6);
 
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['Follower'].create({
+    const follower = await messaging.models['Follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -100,7 +92,7 @@ QUnit.test('base rendering editable', async function (assert) {
         isActive: true,
         isEditable: true,
     });
-    await this.createFollowerComponent(follower);
+    await this.createFollowerComponent(follower, widget.el);
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -158,25 +150,23 @@ QUnit.test('click on partner follower details', async function (assert) {
         openFormDef.resolve();
     });
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
-        env: { bus },
-    });
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data, env: { bus } });
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['Follower'].create({
+    const follower = await messaging.models['Follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
         partner: insert({
             email: "bla@bla.bla",
-            id: this.messaging.currentPartner.id,
+            id: messaging.currentPartner.id,
             name: "François Perusse",
         }),
     });
-    await this.createFollowerComponent(follower);
+    await this.createFollowerComponent(follower, widget.el);
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -208,7 +198,8 @@ QUnit.test('click on edit follower', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    await this.start({
+    const { messaging, widget } = await start({
+        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
@@ -217,12 +208,12 @@ QUnit.test('click on edit follower', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
     await thread.fetchData(['followers']);
-    await this.createFollowerComponent(thread.followers[0]);
+    await this.createFollowerComponent(thread.followers[0], widget.el);
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -250,7 +241,8 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
     assert.expect(6);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
+    const { messaging, widget } = await start({
+        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
@@ -267,22 +259,22 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['Follower'].create({
+    const follower = await messaging.models['Follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
         partner: insert({
             email: "bla@bla.bla",
-            id: this.messaging.currentPartner.id,
+            id: messaging.currentPartner.id,
             name: "François Perusse",
         }),
     });
-    await this.createFollowerComponent(follower);
+    await this.createFollowerComponent(follower, widget.el);
     assert.containsOnce(
         document.body,
         '.o_Follower',

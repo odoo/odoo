@@ -14,19 +14,11 @@ QUnit.module('partner_im_status_icon_tests.js', {
     async beforeEach() {
         await beforeEach(this);
 
-        this.createPartnerImStatusIcon = async partner => {
-            await createRootMessagingComponent(this, "PartnerImStatusIcon", {
+        this.createPartnerImStatusIcon = async (partner, target) => {
+            await createRootMessagingComponent(partner.env, "PartnerImStatusIcon", {
                 props: { partnerLocalId: partner.localId },
-                target: this.widget.el
+                target,
             });
-        };
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -34,13 +26,13 @@ QUnit.module('partner_im_status_icon_tests.js', {
 QUnit.test('initially online', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const partner = this.messaging.models['Partner'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'online',
     });
-    await this.createPartnerImStatusIcon(partner);
+    await this.createPartnerImStatusIcon(partner, widget.el);
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon`).length,
         1,
@@ -61,13 +53,13 @@ QUnit.test('initially online', async function (assert) {
 QUnit.test('initially offline', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const partner = this.messaging.models['Partner'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'offline',
     });
-    await this.createPartnerImStatusIcon(partner);
+    await this.createPartnerImStatusIcon(partner, widget.el);
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-offline`).length,
         1,
@@ -78,13 +70,13 @@ QUnit.test('initially offline', async function (assert) {
 QUnit.test('initially away', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const partner = this.messaging.models['Partner'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'away',
     });
-    await this.createPartnerImStatusIcon(partner);
+    await this.createPartnerImStatusIcon(partner, widget.el);
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-away`).length,
         1,
@@ -95,13 +87,13 @@ QUnit.test('initially away', async function (assert) {
 QUnit.test('change icon on change partner im_status', async function (assert) {
     assert.expect(4);
 
-    await this.start();
-    const partner = this.messaging.models['Partner'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'online',
     });
-    await this.createPartnerImStatusIcon(partner);
+    await this.createPartnerImStatusIcon(partner, widget.el);
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-online`).length,
         1,

@@ -8,13 +8,6 @@ QUnit.module('activity', {}, function () {
 QUnit.module('activity_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -33,7 +26,8 @@ QUnit.test('grant course access', async function (assert) {
         request_partner_id: 5,
         res_model: 'slide.channel',
     });
-    const { createChatterContainerComponent } = await this.start({
+    const { createChatterContainerComponent } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (args.method === 'action_grant_access') {
                 assert.strictEqual(args.args.length, 1);
@@ -72,7 +66,8 @@ QUnit.test('refuse course access', async function (assert) {
         request_partner_id: 5,
         res_model: 'slide.channel',
     });
-    const { createChatterContainerComponent } = await this.start({
+    const { createChatterContainerComponent } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (args.method === 'action_refuse_access') {
                 assert.strictEqual(args.args.length, 1);

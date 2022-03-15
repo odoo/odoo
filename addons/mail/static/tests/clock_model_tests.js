@@ -7,23 +7,14 @@ QUnit.module('mail', {}, function () {
 QUnit.module('clock_model_tests', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { apps, env, widget } = res;
-            this.apps = apps;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
 QUnit.test('Deleting all the watchers of a clock should result in the deletion of the clock itself.', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const watcher = this.messaging.models['ClockWatcher'].insert({
+    const { messaging } = await start({ data: this.data });
+    const watcher = messaging.models['ClockWatcher'].insert({
         clock: insertAndReplace({ frequency: 180 * 1000 }),
         qunitTestOwner: insertAndReplace(),
     });

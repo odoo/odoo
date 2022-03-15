@@ -6,14 +6,6 @@ QUnit.module('mail', {}, function () {
 QUnit.module('messaging_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 }, function () {
 
@@ -21,7 +13,8 @@ QUnit.test('openChat: display notification for partner without user', async func
     assert.expect(2);
 
     this.data['res.partner'].records.push({ id: 14 });
-    await this.start({
+    const { messaging } = await start({
+        data: this.data,
         services: {
             notification: {
                 notify(notification) {
@@ -39,13 +32,14 @@ QUnit.test('openChat: display notification for partner without user', async func
         },
     });
 
-    await this.messaging.openChat({ partnerId: 14 });
+    await messaging.openChat({ partnerId: 14 });
 });
 
 QUnit.test('openChat: display notification for wrong user', async function (assert) {
     assert.expect(2);
 
-    await this.start({
+    const { messaging } = await start({
+        data: this.data,
         services: {
             notification: {
                 notify(notification) {
@@ -64,7 +58,7 @@ QUnit.test('openChat: display notification for wrong user', async function (asse
     });
 
     // user id not in this.data
-    await this.messaging.openChat({ userId: 14 });
+    await messaging.openChat({ userId: 14 });
 });
 
 QUnit.test('openChat: open new chat for user', async function (assert) {
@@ -72,9 +66,9 @@ QUnit.test('openChat: open new chat for user', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 14 });
     this.data['res.users'].records.push({ id: 11, partner_id: 14 });
-    await this.start();
 
-    const existingChat = this.messaging.models['Thread'].find(thread =>
+    const { messaging } = await start({ data: this.data });
+    const existingChat = messaging.models['Thread'].find(thread =>
         thread.channel_type === 'chat' &&
         thread.correspondent &&
         thread.correspondent.id === 14 &&
@@ -83,8 +77,8 @@ QUnit.test('openChat: open new chat for user', async function (assert) {
     );
     assert.notOk(existingChat, 'a chat should not exist with the target partner initially');
 
-    await this.messaging.openChat({ partnerId: 14 });
-    const chat = this.messaging.models['Thread'].find(thread =>
+    await messaging.openChat({ partnerId: 14 });
+    const chat = messaging.models['Thread'].find(thread =>
         thread.channel_type === 'chat' &&
         thread.correspondent &&
         thread.correspondent.id === 14 &&
@@ -106,8 +100,8 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
         members: [this.data.currentPartnerId, 14],
         public: 'private',
     });
-    await this.start();
-    const existingChat = this.messaging.models['Thread'].find(thread =>
+    const { messaging } = await start({ data: this.data });
+    const existingChat = messaging.models['Thread'].find(thread =>
         thread.channel_type === 'chat' &&
         thread.correspondent &&
         thread.correspondent.id === 14 &&
@@ -117,7 +111,7 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
     assert.ok(existingChat, 'a chat should initially exist with the target partner');
     assert.strictEqual(existingChat.threadViews.length, 0, 'the chat should not be displayed in a `ThreadView`');
 
-    await this.messaging.openChat({ partnerId: 14 });
+    await messaging.openChat({ partnerId: 14 });
     assert.ok(existingChat, 'a chat should still exist with the target partner');
     assert.strictEqual(existingChat.id, 10, 'the chat should be the existing chat');
     assert.strictEqual(existingChat.threadViews.length, 1, 'the chat should now be displayed in a `ThreadView`');
