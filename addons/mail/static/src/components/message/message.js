@@ -130,9 +130,9 @@ export class Message extends Component {
             return false;
         }
         if (
-            this.threadView &&
-            this.threadView.thread &&
-            this.threadView.thread.correspondent === this.messageView.message.author
+            this.messageView.threadView &&
+            this.messageView.threadView.thread &&
+            this.messageView.threadView.thread.correspondent === this.messageView.message.author
         ) {
             return false;
         }
@@ -211,9 +211,9 @@ export class Message extends Component {
      */
     get isSelected() {
         return Boolean(
-            this.threadView &&
             this.messageView &&
-            this.threadView.replyingToMessageView === this.messageView
+            this.messageView.threadView &&
+            this.messageView.threadView.replyingToMessageView === this.messageView
         );
     }
 
@@ -259,13 +259,6 @@ export class Message extends Component {
      */
     get shortTime() {
         return this.messageView.message.date.format('hh:mm');
-    }
-
-    /**
-     * @returns {ThreadView}
-     */
-    get threadView() {
-        return this.messageView && this.messageView.threadView;
     }
 
     /**
