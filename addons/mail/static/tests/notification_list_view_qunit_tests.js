@@ -2,7 +2,7 @@
 
 import { addFields, patchIdentifyingFields, patchRecordMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import '@mail/models/notification_list_view/notification_list_view'; // ensure the model definition is loaded before the patch
+import '@mail/models/notification_list_view'; // ensure the model definition is loaded before the patch
 
 addFields('NotificationListView', {
     qunitTestOwner: one('QUnitTest', {

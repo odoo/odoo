@@ -42,13 +42,13 @@ The service is provided by the In App Purchase Odoo platform.
     'assets': {
         'mail.assets_discuss_public': [
             'sms/static/src/components/*/*',
-            'sms/static/src/models/*/*.js',
+            'sms/static/src/models/*.js',
         ],
         'web.assets_backend': [
             'sms/static/src/js/fields_phone_widget.js',
             'sms/static/src/js/fields_sms_widget.js',
             'sms/static/src/components/*/*.js',
-            'sms/static/src/models/*/*.js',
+            'sms/static/src/models/*.js',
         ],
         'web.qunit_suite_tests': [
             'sms/static/tests/sms_widget_test.js',
