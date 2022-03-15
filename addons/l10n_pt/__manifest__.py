@@ -23,6 +23,10 @@
            'data/account_tax_report.xml',
            'data/account_tax_data.xml',
            'data/account_chart_template_configure_data.xml',
+           'data/l10n_pt_tax_exemption_reason_data.xml',
+           'views/account_move_views.xml',
+           'views/product_views.xml',
+           'security/ir.model.access.csv',
            ],
     'license': 'LGPL-3',
 }

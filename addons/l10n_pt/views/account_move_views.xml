@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_form_inherit_l10n_pt" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.l10n.pt</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_ids']" position="after">
+                    <field name="l10n_pt_tax_exemption_reason"
+                           attrs="{'invisible': [('parent.country_code', '!=', 'PT')]}"
+                           options="{'no_create': True}"
+                           groups="account.group_account_invoice"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
