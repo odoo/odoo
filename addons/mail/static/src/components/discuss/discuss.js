@@ -44,13 +44,6 @@ export class Discuss extends LegacyComponent {
     /**
      * @returns {string}
      */
-    get addChannelInputPlaceholder() {
-        return this.env._t("Create or search channel...");
-    }
-
-    /**
-     * @returns {string}
-     */
     get addChatInputPlaceholder() {
         return this.env._t("Search user...");
     }
