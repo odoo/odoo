@@ -83,7 +83,7 @@
                                     </div>
                                 </t>
                                 <t t-if="messageView.message.date">
-                                    <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': isSelected }" t-att-title="datetime">
+                                    <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': isSelected }" t-att-title="messageView.message.datetime">
                                         - <t t-esc="messageView.message.dateFromNow"/>
                                     </div>
                                 </t>
