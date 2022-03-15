@@ -21,3 +21,6 @@ class TestUi(HttpCaseWithUserDemo):
         # ensures both fields have different values.
         self.assertEqual(mail.body_arch, '<p><br></p>')
         self.assertEqual(mail.body_html, '<p style="margin:0px 0 14px 0;box-sizing:border-box;"><br></p>')
+
+    def test_02_mass_mailing_snippets_menu_tabs(self):
+        self.start_tour("/web", 'mass_mailing_snippets_menu_tabs', login="demo")
