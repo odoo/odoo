@@ -1,5 +1,4 @@
 from odoo import models, fields
-from odoo.tools import float_is_zero
 
 
 class ProductTemplate(models.Model):
