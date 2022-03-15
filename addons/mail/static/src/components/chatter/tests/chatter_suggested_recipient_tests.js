@@ -8,16 +8,6 @@ QUnit.module('chatter', {}, function () {
 QUnit.module('chatter_suggested_recipients_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -34,7 +24,7 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
         email_cc: "john@test.be",
         partner_ids: [100],
     });
-    const { createChatterContainerComponent } = await this.start ();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
@@ -62,7 +52,7 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
         email_cc: "john@test.be",
         partner_ids: [100],
     });
-    const { createChatterContainerComponent } = await this.start ();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
@@ -89,7 +79,7 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
         id: 10,
         partner_ids: [100],
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
@@ -112,7 +102,7 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
         id: 10,
         email_cc: "john@test.be",
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
@@ -139,7 +129,7 @@ QUnit.test("suggested recipient with partner are checked by default", async func
         id: 10,
         partner_ids: [100],
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
@@ -181,7 +171,7 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    const { createChatterContainerComponent } = await this.start ();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
@@ -224,7 +214,7 @@ QUnit.test("more than 3 suggested recipients: show all of them on click 'show mo
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    const { createChatterContainerComponent } = await this.start ();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
@@ -271,7 +261,7 @@ QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less'
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    const { createChatterContainerComponent } = await this.start ();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
@@ -317,7 +307,7 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    const { createChatterContainerComponent } = await this.start ();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
@@ -357,7 +347,8 @@ QUnit.test("suggested recipients should not be notified when posting an internal
         id: 10,
         partner_ids: [100],
     });
-    const { createChatterContainerComponent } = await this.start({
+    const { createChatterContainerComponent } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.strictEqual(

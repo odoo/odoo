@@ -14,17 +14,6 @@ QUnit.module('messaging_menu', {}, function () {
 QUnit.module('messaging_menu_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            const { discussWidget, env, widget } = res;
-            this.discussWidget = discussWidget;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -40,7 +29,8 @@ QUnit.test('[technical] messaging not created then becomes created', async funct
     assert.expect(2);
 
     const messagingBeforeCreationDeferred = makeTestPromise();
-    const { createMessagingMenuComponent } = await this.start({
+    const { createMessagingMenuComponent } = await start({
+        data: this.data,
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none',
     });
@@ -63,7 +53,8 @@ QUnit.test('[technical] messaging not created then becomes created', async funct
 QUnit.test('messaging not initialized', async function (assert) {
     assert.expect(2);
 
-    const { createMessagingMenuComponent } = await this.start({
+    const { createMessagingMenuComponent } = await start({
+        data: this.data,
         async mockRPC(route) {
             if (route === '/mail/init_messaging') {
                 // simulate messaging never initialized
@@ -93,7 +84,8 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 
     const messagingInitializedProm = makeTestPromise();
 
-    const { createMessagingMenuComponent } = await this.start({
+    const { createMessagingMenuComponent } = await start({
+        data: this.data,
         async mockRPC(route) {
             const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route === '/mail/init_messaging') {
@@ -122,7 +114,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 QUnit.test('basic rendering', async function (assert) {
     assert.expect(21);
 
-    const { createMessagingMenuComponent } = await this.start();
+    const { createMessagingMenuComponent } = await start({ data: this.data });
     await createMessagingMenuComponent();
     assert.strictEqual(
         document.querySelectorAll('.o_MessagingMenu').length,
@@ -263,7 +255,7 @@ QUnit.test('counter is taking into account failure notification', async function
         notification_status: 'exception', // necessary value to have a failure
         notification_type: 'email',
     });
-    const { createMessagingMenuComponent } = await this.start();
+    const { createMessagingMenuComponent } = await start({ data: this.data });
     await createMessagingMenuComponent();
 
     assert.containsOnce(
@@ -281,7 +273,7 @@ QUnit.test('counter is taking into account failure notification', async function
 QUnit.test('switch tab', async function (assert) {
     assert.expect(15);
 
-    const { createMessagingMenuComponent } = await this.start();
+    const { createMessagingMenuComponent } = await start({ data: this.data });
     await createMessagingMenuComponent();
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
@@ -389,9 +381,7 @@ QUnit.test('switch tab', async function (assert) {
 QUnit.test('new message', async function (assert) {
     assert.expect(3);
 
-    const { createMessagingMenuComponent } = await this.start({
-        hasChatWindow: true,
-    });
+    const { createMessagingMenuComponent } = await start({ data: this.data, hasChatWindow: true });
     await createMessagingMenuComponent();
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_toggler`).click()
@@ -418,7 +408,8 @@ QUnit.test('new message', async function (assert) {
 QUnit.test('no new message when discuss is open', async function (assert) {
     assert.expect(3);
 
-    const { createMessagingMenuComponent } = await this.start({
+    const { discussWidget, createMessagingMenuComponent } = await start({
+        data: this.data,
         autoOpenDiscuss: true,
         hasDiscuss: true,
     });
@@ -434,7 +425,7 @@ QUnit.test('no new message when discuss is open', async function (assert) {
     );
 
     // simulate closing discuss app
-    await afterNextRender(() => this.discussWidget.on_detach_callback());
+    await afterNextRender(() => discussWidget.on_detach_callback());
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
         1,
@@ -442,7 +433,7 @@ QUnit.test('no new message when discuss is open', async function (assert) {
     );
 
     // simulate opening discuss app
-    await afterNextRender(() => this.discussWidget.on_attach_callback());
+    await afterNextRender(() => discussWidget.on_attach_callback());
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
         0,
@@ -469,7 +460,7 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
         model: 'mail.channel', // necessary to link message to channel
         res_id: 20, // id of related channel
     });
-    const { createMessagingMenuComponent } = await this.start();
+    const { createMessagingMenuComponent } = await start({ data: this.data });
     await createMessagingMenuComponent();
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
@@ -567,7 +558,7 @@ QUnit.test('filtered previews', async function (assert) {
             res_id: 20, // id of related channel
         },
     );
-    const { createMessagingMenuComponent } = await this.start();
+    const { createMessagingMenuComponent, messaging } = await start({ data: this.data });
     await createMessagingMenuComponent();
 
     await afterNextRender(() =>
@@ -582,7 +573,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['Thread'].findFromIdentifyingData({
+                messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -595,7 +586,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['Thread'].findFromIdentifyingData({
+                messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -617,7 +608,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['Thread'].findFromIdentifyingData({
+                messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -630,7 +621,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['Thread'].findFromIdentifyingData({
+                messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -655,7 +646,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['Thread'].findFromIdentifyingData({
+                messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -668,7 +659,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['Thread'].findFromIdentifyingData({
+                messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -690,7 +681,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['Thread'].findFromIdentifyingData({
+                messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -703,7 +694,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['Thread'].findFromIdentifyingData({
+                messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -719,9 +710,7 @@ QUnit.test('open chat window from preview', async function (assert) {
 
     // channel expected to be found in the menu, only its existence matters, data are irrelevant
     this.data['mail.channel'].records.push({});
-    const { createMessagingMenuComponent } = await this.start({
-        hasChatWindow: true,
-    });
+    const { createMessagingMenuComponent } = await start({ data: this.data, hasChatWindow: true });
     await createMessagingMenuComponent();
 
     await afterNextRender(() =>
@@ -746,7 +735,7 @@ QUnit.test('no code injection in message body preview', async function (assert) 
         model: "mail.channel",
         res_id: 11,
     });
-    const { createMessagingMenuComponent } = await this.start();
+    const { createMessagingMenuComponent } = await start({ data: this.data });
     await createMessagingMenuComponent();
 
     await afterNextRender(() => {
@@ -789,7 +778,7 @@ QUnit.test('no code injection in message body preview from sanitized message', a
         model: "mail.channel",
         res_id: 11,
     });
-    const { createMessagingMenuComponent } = await this.start();
+    const { createMessagingMenuComponent } = await start({ data: this.data });
     await createMessagingMenuComponent();
 
     await afterNextRender(() => {
@@ -832,7 +821,7 @@ QUnit.test('<br/> tags in message body preview are transformed in spaces', async
         model: "mail.channel",
         res_id: 11,
     });
-    const { createMessagingMenuComponent } = await this.start();
+    const { createMessagingMenuComponent } = await start({ data: this.data });
     await createMessagingMenuComponent();
 
     await afterNextRender(() => {
@@ -863,7 +852,8 @@ QUnit.test('<br/> tags in message body preview are transformed in spaces', async
 QUnit.test('rendering with OdooBot has a request (default)', async function (assert) {
     assert.expect(4);
 
-    const { createMessagingMenuComponent } = await this.start({
+    const { createMessagingMenuComponent } = await start({
+        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -902,7 +892,8 @@ QUnit.test('rendering with OdooBot has a request (default)', async function (ass
 QUnit.test('rendering without OdooBot has a request (denied)', async function (assert) {
     assert.expect(2);
 
-    const { createMessagingMenuComponent } = await this.start({
+    const { createMessagingMenuComponent } = await start({
+        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -932,7 +923,8 @@ QUnit.test('rendering without OdooBot has a request (denied)', async function (a
 QUnit.test('rendering without OdooBot has a request (accepted)', async function (assert) {
     assert.expect(2);
 
-    const { createMessagingMenuComponent } = await this.start({
+    const { createMessagingMenuComponent } = await start({
+        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -962,7 +954,8 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
 QUnit.test('respond to notification prompt (denied)', async function (assert) {
     assert.expect(4);
 
-    const { createMessagingMenuComponent } = await this.start({
+    const { createMessagingMenuComponent } = await start({
+        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -1020,7 +1013,7 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
         channel_type: 'group',
         is_pinned: true,
     });
-    const { createMessagingMenuComponent } = await this.start();
+    const { createMessagingMenuComponent, messaging } = await start({ data: this.data });
     await createMessagingMenuComponent();
 
     await afterNextRender(() =>
@@ -1033,7 +1026,7 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${this.messaging.models['Thread'].findFromIdentifyingData({
+            .o_ThreadPreview[data-thread-local-id="${messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
              }).localId}"]`).length,

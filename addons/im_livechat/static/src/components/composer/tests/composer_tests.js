@@ -8,14 +8,6 @@ QUnit.module('composer', {}, function () {
 QUnit.module('composer_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -24,8 +16,8 @@ QUnit.test('livechat: no add attachment button', async function (assert) {
     // visitor PoV. This may likely change in the future with task-2029065.
     assert.expect(2);
 
-    const { createComposerComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { createComposerComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         channel_type: 'livechat',
         id: 10,
         model: 'mail.channel',

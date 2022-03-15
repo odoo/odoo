@@ -14,19 +14,11 @@ QUnit.module('thread_textual_typing_status_tests.js', {
     async beforeEach() {
         await beforeEach(this);
 
-        this.createThreadTextualTypingStatusComponent = async thread => {
-            await createRootMessagingComponent(this, "ThreadTextualTypingStatus", {
+        this.createThreadTextualTypingStatusComponent = async (thread, target) => {
+            await createRootMessagingComponent(thread.env, "ThreadTextualTypingStatus", {
                 props: { threadLocalId: thread.localId },
-                target: this.widget.el,
+                target,
             });
-        };
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -41,12 +33,12 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
         livechat_operator_id: this.data.currentPartnerId,
         members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
-    await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createThreadTextualTypingStatusComponent(thread);
+    await this.createThreadTextualTypingStatusComponent(thread, widget.el);
 
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -56,13 +48,13 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
 
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() => {
-        this.widget.call('bus_service', 'trigger', 'notification', [{
+        widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
                 channel_id: 20,
                 is_typing: true,
-                partner_id: this.messaging.publicPartners[0].id,
-                partner_name: this.messaging.publicPartners[0].name,
+                partner_id: messaging.publicPartners[0].id,
+                partner_name: messaging.publicPartners[0].name,
             },
         }]);
     });

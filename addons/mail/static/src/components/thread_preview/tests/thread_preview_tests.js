@@ -8,16 +8,6 @@ QUnit.module('thread_preview', {}, function () {
 QUnit.module('thread_preview_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -34,7 +24,8 @@ QUnit.test('mark as read', async function (assert) {
         res_id: 11,
     });
 
-    const { click, createMessagingMenuComponent } = await this.start({
+    const { click, createMessagingMenuComponent } = await start({
+        data: this.data,
         hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('set_last_seen_message')) {

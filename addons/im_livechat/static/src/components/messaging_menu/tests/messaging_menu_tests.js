@@ -12,16 +12,6 @@ QUnit.module('messaging_menu', {}, function () {
 QUnit.module('messaging_menu_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -35,7 +25,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
         livechat_operator_id: this.data.currentPartnerId,
         members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
-    const { createMessagingMenuComponent } = await this.start();
+    const { createMessagingMenuComponent, messaging } = await start({ data: this.data });
     await createMessagingMenuComponent();
     assert.containsOnce(
         document.body,
@@ -62,7 +52,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     assert.containsOnce(
         document.body,
         `.o_ThreadPreview[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -81,7 +71,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     assert.containsOnce(
         document.body,
         `.o_ThreadPreview[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId

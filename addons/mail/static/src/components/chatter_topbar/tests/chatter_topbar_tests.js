@@ -10,16 +10,6 @@ QUnit.module('chatter_topbar', {}, function () {
 QUnit.module('chatter_topbar_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -27,7 +17,7 @@ QUnit.test('base rendering', async function (assert) {
     assert.expect(8);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -78,7 +68,7 @@ QUnit.test('base rendering', async function (assert) {
 QUnit.test('base disabled rendering', async function (assert) {
     assert.expect(8);
 
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadModel: 'res.partner',
     }, { waitUntilMessagesLoaded: false });
@@ -124,7 +114,8 @@ QUnit.test('attachment loading is delayed', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start({
+    const { createChatterContainerComponent, env } = await start({
+        data: this.data,
         hasTimeControl: true,
         loadingBaseDelayDuration: 100,
         async mockRPC(route) {
@@ -155,7 +146,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
         "attachments button should not have a loader yet"
     );
 
-    await afterNextRender(async () => this.env.testUtils.advanceTime(100));
+    await afterNextRender(async () => env.testUtils.advanceTime(100));
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCountLoader`).length,
         1,
@@ -167,7 +158,8 @@ QUnit.test('attachment counter while loading attachments', async function (asser
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start({
+    const { createChatterContainerComponent } = await start({
+        data: this.data,
         async mockRPC(route) {
             if (route.includes('/mail/thread/data')) {
                 await makeTestPromise(); // simulate long loading
@@ -207,7 +199,8 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
 
     this.data['res.partner'].records.push({ id: 100 });
     const attachmentPromise = makeTestPromise();
-    const { createChatterContainerComponent } = await this.start({
+    const { createChatterContainerComponent } = await start({
+        data: this.data,
         async mockRPC(route) {
             const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route.includes('/mail/thread/data')) {
@@ -264,7 +257,7 @@ QUnit.test('attachment counter without attachments', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -310,7 +303,7 @@ QUnit.test('attachment counter with attachments', async function (assert) {
             res_model: 'res.partner',
         }
     );
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -342,7 +335,7 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
     assert.expect(8);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -422,7 +415,7 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
             res_model: 'res.partner',
         },
     );
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -475,7 +468,7 @@ QUnit.test('log note/send message switching', async function (assert) {
     assert.expect(8);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -534,7 +527,7 @@ QUnit.test('log note toggling', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -573,7 +566,7 @@ QUnit.test('send message toggling', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',

@@ -263,11 +263,6 @@ async function beforeEach(self) {
         widget: undefined
     });
 
-    registerCleanup(() => {
-        self.widget = undefined;
-        self.env = undefined;
-    });
-
     Object.defineProperty(self, 'messaging', {
         get() {
             if (!this.env || !this.env.services.messaging) {
@@ -330,18 +325,18 @@ function getAfterEvent({ messagingBus }) {
  * Components created this way are automatically registered for clean up after
  * the test.
  *
- * @param {Object} self the current QUnit instance
+ * @param {Object} env the current environment
  * @param {Object} Component the class of the component to create
  * @param {Object} param2
  * @param {Object} [param2.props={}] forwarded to component constructor
  * @param {DOM.Element} param2.target mount target for the component
  * @returns {Component}
  */
-async function createRootComponent(self, Component, { props = {}, target }) {
+async function createRootComponent(env, Component, { props = {}, target }) {
     const app = new App(Component, {
         props,
         templates: window.__OWL_TEMPLATES__,
-        env: self.env,
+        env,
         test: true,
     });
     // The components must be destroyed before the widget, because the
@@ -362,15 +357,15 @@ async function createRootComponent(self, Component, { props = {}, target }) {
  * Components created this way are automatically registered for clean up after
  * the test.
  *
- * @param {Object} self the current QUnit instance
+ * @param {Object} env the current environment
  * @param {string} componentName the class name of the component to create
  * @param {Object} param2
  * @param {Object} [param2.props={}] forwarded to component constructor
  * @param {DOM.Element} param2.target mount target for the component
  * @returns {Component}
  */
-async function createRootMessagingComponent(self, componentName, { props = {}, target }) {
-    return await createRootComponent(self, getMessagingComponent(componentName), { props, target });
+async function createRootMessagingComponent(env, componentName, { props = {}, target }) {
+    return await createRootComponent(env, getMessagingComponent(componentName), { props, target });
 }
 
 function getClick({ afterNextRender }) {
@@ -383,7 +378,7 @@ function getCreateChatterContainerComponent({ afterEvent, env, widget }) {
     return async function createChatterContainerComponent(props, { waitUntilMessagesLoaded = true } = {}) {
         let chatterContainerComponent;
         async function func() {
-            chatterContainerComponent = await createRootMessagingComponent({ env }, "ChatterContainer", {
+            chatterContainerComponent = await createRootMessagingComponent(env, "ChatterContainer", {
                 props,
                 target: widget.el,
             });
@@ -417,7 +412,7 @@ function getCreateComposerComponent({ env, modelManager, widget }) {
                 composer: replace(composer),
             }),
         });
-        return await createRootMessagingComponent({ env }, "Composer", {
+        return await createRootMessagingComponent(env, "Composer", {
             props: { localId: composerView.localId, ...props },
             target: widget.el,
         });
@@ -431,7 +426,7 @@ function getCreateComposerSuggestionComponent({ env, modelManager, widget }) {
                 composer: replace(composer),
             }),
         });
-        await createRootMessagingComponent({ env }, "ComposerSuggestion", {
+        await createRootMessagingComponent(env, "ComposerSuggestion", {
             props: { ...props, composerViewLocalId: composerView.localId },
             target: widget.el,
         });
@@ -444,7 +439,7 @@ function getCreateMessageComponent({ env, modelManager, widget }) {
             message: replace(message),
             qunitTest: insertAndReplace(),
         });
-        await createRootMessagingComponent({ env }, "Message", {
+        await createRootMessagingComponent(env, "Message", {
             props: { localId: messageView.localId },
             target: widget.el,
         });
@@ -463,7 +458,7 @@ function getCreateNotificationListComponent({ env, modelManager, widget }) {
             filter,
             qunitTestOwner: insertAndReplace(),
         });
-        await createRootMessagingComponent({ env }, "NotificationList", {
+        await createRootMessagingComponent(env, "NotificationList", {
             props: { localId: notificationListView.localId },
             target: widget.el,
         });
@@ -487,7 +482,7 @@ function getCreateThreadViewComponent({ afterEvent, env, widget }) {
             target = widget.el;
         }
         async function func() {
-            return createRootMessagingComponent({ env }, "ThreadView", { props: { localId: threadView.localId, ...otherProps }, target });
+            return createRootMessagingComponent(env, "ThreadView", { props: { localId: threadView.localId, ...otherProps }, target });
         }
         if (waitUntilMessagesLoaded) {
             await afterNextRender(() => afterEvent({

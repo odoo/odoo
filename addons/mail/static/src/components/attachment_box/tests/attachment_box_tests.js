@@ -18,15 +18,6 @@ QUnit.module('attachment_box', {}, function () {
 QUnit.module('attachment_box_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = res.env;
-            this.widget = res.widget;
-            return res;
-        };
     },
 });
 
@@ -34,7 +25,7 @@ QUnit.test('base empty rendering', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     const chatterContainerComponent = await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
         threadId: 100,
@@ -79,7 +70,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
             res_model: 'res.partner',
         }
     );
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     const chatterContainerComponent = await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
         threadId: 100,
@@ -110,7 +101,7 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
     assert.expect(5);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
         threadId: 100,
@@ -201,7 +192,8 @@ QUnit.test('view attachments', async function (assert) {
             res_model: 'res.partner',
         },
     );
-    const { createChatterContainerComponent, messaging } = await this.start({
+    const { createChatterContainerComponent, messaging } = await start({
+        data: this.data,
         hasDialog: true,
     });
     await createChatterContainerComponent({
@@ -273,7 +265,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start({ hasDialog: true });
+    const { createChatterContainerComponent } = await start({ data: this.data, hasDialog: true });
     await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
         threadId: 100,

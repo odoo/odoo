@@ -29,6 +29,7 @@ QUnit.module('form_renderer_tests.js', {
         // In the case of mail fields, we don't really need them,
         // but they still need to be defined.
         this.createView = async (viewParams, ...args) => {
+            const startResult = makeDeferred();
             await afterNextRender(async () => {
                 const viewArgs = Object.assign(
                     {
@@ -40,11 +41,9 @@ QUnit.module('form_renderer_tests.js', {
                     },
                     viewParams,
                 );
-                const { afterEvent, env, widget } = await start(viewArgs, ...args);
-                this.afterEvent = afterEvent;
-                this.env = env;
-                this.widget = widget;
+                startResult.resolve(await start(viewArgs, ...args));
             });
+            return startResult;
         };
     },
 });
@@ -466,7 +465,7 @@ QUnit.test('chatter updating', async function (assert) {
         { display_name: "first partner", id: 11 },
         { display_name: "second partner", id: 12 }
     );
-    await this.createView({
+    const { afterEvent } = await this.createView({
         data: this.data,
         hasView: true,
         // View params
@@ -499,7 +498,7 @@ QUnit.test('chatter updating', async function (assert) {
             },
         }
     });
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () => document.querySelector('.o_pager_next').click(),
         message: "should wait until partner 12 thread loaded messages after clicking on next",
@@ -619,7 +618,7 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
         display_name: "Someone",
         id: 100,
     });
-    await this.createView({
+    const { afterEvent } = await this.createView({
         data: this.data,
         hasView: true,
         // View params
@@ -657,7 +656,7 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
         '.o_Message_readMoreLess',
         "there should be only one read more"
     );
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-component-message-read-more-less-inserted',
         func: () => document.querySelector('.o_form_button_edit').click(),
         message: "should wait until read more/less is inserted after clicking on edit",
@@ -669,7 +668,7 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
         "there should still be only one read more after switching to edit mode"
     );
 
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-component-message-read-more-less-inserted',
         func: () => document.querySelector('.o_form_button_cancel').click(),
         message: "should wait until read more/less is inserted after canceling edit",
@@ -708,7 +707,7 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         display_name: "Someone",
         id: 100,
     });
-    await this.createView({
+    const { afterEvent } = await this.createView({
         data: this.data,
         hasView: true,
         // View params
@@ -752,7 +751,7 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         "Read More/Less link should contain 'Read More' as text"
     );
 
-    await afterNextRender(() => this.afterEvent({
+    await afterNextRender(() => afterEvent({
         eventName: 'o-component-message-read-more-less-inserted',
         func: () => document.querySelector('.o_form_button_edit').click(),
         message: "should wait until read more/less is inserted after clicking on edit",

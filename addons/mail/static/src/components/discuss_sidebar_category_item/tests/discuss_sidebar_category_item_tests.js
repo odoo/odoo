@@ -14,16 +14,6 @@ QUnit.module('discuss_sidebar_category_item', {}, function () {
 QUnit.module('discuss_sidebar_category_item_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-                data: this.data,
-                hasDiscuss: true,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
@@ -35,11 +25,15 @@ QUnit.test('channel - avatar: should have correct avatar', async function (asser
         id: 20,
     });
 
-    await this.start();
+    const { messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
+    });
 
     const channelItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -56,7 +50,6 @@ QUnit.test('channel - avatar: should have correct avatar', async function (asser
         '/web/image/mail.channel/20/avatar_128?unique=100111',
         'should link to the correct picture source'
     );
-
 });
 
 QUnit.test('channel - avatar: should update avatar url from bus', async function (assert) {
@@ -67,11 +60,15 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
         id: 20,
      });
 
-    await this.start();
+     const { env, messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
+    });
 
     const channelItemAvatar = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -84,13 +81,13 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
     );
 
     await afterNextRender(() => {
-        this.env.services.rpc({
+        env.services.rpc({
             model: 'mail.channel',
             method: 'write',
             args: [[20], { image_128: 'This field does not matter' }],
         });
     });
-    const result = await this.env.services.rpc({
+    const result = await env.services.rpc({
         model: 'mail.channel',
         method: 'read',
         args: [[20], ['avatarCacheKey']],
@@ -113,11 +110,15 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
         members: [this.data.currentPartnerId, 15],
         public: 'private',
     });
-    await this.start();
+    const { messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
+    });
 
     const chatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -150,13 +151,17 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
         public: 'private',
         last_interest_dt: datetime_to_str(new Date(2021, 0, 2)), // more recent one
     });
-    await this.start();
+    const { messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
+    });
 
-    const chat10 = this.messaging.models['Thread'].findFromIdentifyingData({
+    const chat10 = messaging.models['Thread'].findFromIdentifyingData({
         id: 10,
         model: 'mail.channel',
     });
-    const chat20 = this.messaging.models['Thread'].findFromIdentifyingData({
+    const chat20 = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

@@ -10,14 +10,6 @@ QUnit.module('activity_mark_done_popover', {}, function () {
 QUnit.module('activity_mark_done_popover_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -35,7 +27,7 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await this.start();
+    const { click, createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -89,7 +81,7 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await this.start();
+    const { click, createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -142,7 +134,8 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await this.start({
+    const { click, createChatterContainerComponent } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
@@ -186,7 +179,8 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await this.start({
+    const { click, createChatterContainerComponent } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
@@ -239,7 +233,8 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await this.start({
+    const { click, createChatterContainerComponent } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 assert.step('action_feedback_schedule_next');
@@ -296,7 +291,8 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await this.start({
+    const { click, createChatterContainerComponent } = await start({
+        data: this.data,
         env: { bus },
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {

@@ -18,23 +18,14 @@ QUnit.module('message', {}, function () {
 QUnit.module('message_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { afterEvent, env, widget } = res;
-            this.afterEvent = afterEvent;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
 QUnit.test('basic rendering', async function (assert) {
     assert.expect(12);
 
-    const { createMessageComponent } = await this.start();
-    const message = this.messaging.models['Message'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const message = messaging.models['Message'].create({
         author: insert({ id: 7, display_name: "Demo User" }),
         body: "<p>Test</p>",
         date: moment(),
@@ -49,7 +40,7 @@ QUnit.test('basic rendering', async function (assert) {
     const messageEl = document.querySelector('.o_Message');
     assert.strictEqual(
         messageEl.dataset.messageLocalId,
-        this.messaging.models['Message'].findFromIdentifyingData({ id: 100 }).localId,
+        messaging.models['Message'].findFromIdentifyingData({ id: 100 }).localId,
         "message component should be linked to message store model"
     );
     assert.strictEqual(
@@ -124,12 +115,12 @@ QUnit.test('Notification Sent', async function (assert) {
         notification_type: 'email',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -223,12 +214,12 @@ QUnit.test('Notification Error', async function (assert) {
         notification_type: 'email',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start({ env: { bus } });
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data, env: { bus } });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -275,21 +266,21 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         id: 11,
         members: [this.data.currentPartnerId, 11],
     });
-    const { createThreadViewComponent } = await this.start();
-    const currentPartner = this.messaging.models['Partner'].insert({
-        id: this.messaging.currentPartner.id,
+    const { createThreadViewComponent, messaging, widget } = await start({ data: this.data });
+    const currentPartner = messaging.models['Partner'].insert({
+        id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
     });
-    this.messaging.models['Message'].create({
+    messaging.models['Message'].create({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -311,7 +302,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
 
     // Simulate received channel fetched notification
     await afterNextRender(() => {
-        this.widget.call('bus_service', 'trigger', 'notification', [{
+        widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/fetched',
             payload: {
                 channel_id: 11,
@@ -340,21 +331,21 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         id: 11,
         members: [this.data.currentPartnerId, 11],
     });
-    const { createThreadViewComponent } = await this.start();
-    const currentPartner = this.messaging.models['Partner'].insert({
-        id: this.messaging.currentPartner.id,
+    const { createThreadViewComponent, messaging, widget } = await start({ data: this.data });
+    const currentPartner = messaging.models['Partner'].insert({
+        id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
     });
-    this.messaging.models['Message'].create({
+    messaging.models['Message'].create({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -375,7 +366,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
 
     // Simulate received channel seen notification
     await afterNextRender(() => {
-        this.widget.call('bus_service', 'trigger', 'notification', [{
+        widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/seen',
             payload: {
                 channel_id: 11,
@@ -404,21 +395,21 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         id: 11,
         members: [this.data.currentPartnerId, 11],
     });
-    const { createThreadViewComponent } = await this.start();
-    const currentPartner = this.messaging.models['Partner'].insert({
-        id: this.messaging.currentPartner.id,
+    const { createThreadViewComponent, messaging, widget } = await start({ data: this.data });
+    const currentPartner = messaging.models['Partner'].insert({
+        id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
     });
-    this.messaging.models['Message'].create({
+    messaging.models['Message'].create({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -439,7 +430,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
 
     // Simulate received channel fetched notification
     await afterNextRender(() => {
-        this.widget.call('bus_service', 'trigger', 'notification', [{
+        widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/fetched',
             payload: {
                 channel_id: 11,
@@ -456,7 +447,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
 
     // Simulate received channel seen notification
     await afterNextRender(() => {
-        this.widget.call('bus_service', 'trigger', 'notification', [{
+        widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/seen',
             payload: {
                 channel_id: 11,
@@ -476,18 +467,18 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
 QUnit.test('do not show messaging seen indicator if not authored by me', async function (assert) {
     assert.expect(2);
 
-    const { createThreadViewComponent } = await this.start();
-    const author = this.messaging.models['Partner'].create({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const author = messaging.models['Partner'].create({
         id: 100,
         display_name: "Demo User"
     });
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         channel_type: 'chat',
         id: 11,
         partnerSeenInfos: insertAndReplace([
             {
                 lastFetchedMessage: insert({ id: 100 }),
-                partner: replace(this.messaging.currentPartner),
+                partner: replace(messaging.currentPartner),
             },
             {
                 lastFetchedMessage: insert({ id: 100 }),
@@ -496,12 +487,12 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         ]),
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
     });
-    this.messaging.models['Message'].insert({
+    messaging.models['Message'].insert({
         author: link(author),
         body: "<p>Test</p>",
         id: 100,
@@ -524,12 +515,12 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
 QUnit.test('do not show messaging seen indicator if before last seen by all message', async function (assert) {
     assert.expect(3);
 
-    await this.start();
-    const currentPartner = this.messaging.models['Partner'].insert({
-        id: this.messaging.currentPartner.id,
+    const { env, messaging, widget } = await start({ data: this.data });
+    const currentPartner = messaging.models['Partner'].insert({
+        id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         channel_type: 'chat',
         id: 11,
         messageSeenIndicators: insertAndReplace({
@@ -537,27 +528,27 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         }),
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
     });
-    const lastSeenMessage = this.messaging.models['Message'].create({
+    const lastSeenMessage = messaging.models['Message'].create({
         author: link(currentPartner),
         body: "<p>You already saw me</p>",
         id: 100,
         originThread: link(thread),
     });
-    this.messaging.models['Message'].insert({
+    messaging.models['Message'].insert({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 99,
         originThread: link(thread),
     });
-    this.messaging.models['ThreadPartnerSeenInfo'].insert([
+    messaging.models['ThreadPartnerSeenInfo'].insert([
         {
             lastSeenMessage: link(lastSeenMessage),
-            partner: replace(this.messaging.currentPartner),
+            partner: replace(messaging.currentPartner),
             thread: replace(thread),
         },
         {
@@ -566,9 +557,9 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
             thread: replace(thread),
         },
     ]);
-    await createRootMessagingComponent(this, "Message", {
+     await createRootMessagingComponent(env, "Message", {
         props: { localId: threadViewer.threadView.messageViews[0].localId },
-        target: this.widget.el,
+        target: widget.el,
     });
 
     assert.containsOnce(
@@ -591,18 +582,18 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
 QUnit.test('only show messaging seen indicator if authored by me, after last seen by all message', async function (assert) {
     assert.expect(3);
 
-    const { createThreadViewComponent } = await this.start();
-    const currentPartner = this.messaging.models['Partner'].insert({
-        id: this.messaging.currentPartner.id,
+    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const currentPartner = messaging.models['Partner'].insert({
+        id: messaging.currentPartner.id,
         display_name: "Demo User"
     });
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         channel_type: 'chat',
         id: 11,
         partnerSeenInfos: insertAndReplace([
             {
                 lastSeenMessage: insert({ id: 100 }),
-                partner: replace(this.messaging.currentPartner),
+                partner: replace(messaging.currentPartner),
             },
             {
                 lastFetchedMessage: insert({ id: 100 }),
@@ -615,12 +606,12 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         }),
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
     });
-    this.messaging.models['Message'].insert({
+    messaging.models['Message'].insert({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -649,15 +640,15 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 QUnit.test('allow attachment delete on authored message', async function (assert) {
     assert.expect(5);
 
-    const { createMessageComponent } = await this.start({ hasDialog: true });
-    const message = this.messaging.models['Message'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data, hasDialog: true });
+    const message = messaging.models['Message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
             id: 10,
             name: "BLAH",
             mimetype: 'image/jpeg',
         }),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -699,8 +690,8 @@ QUnit.test('allow attachment delete on authored message', async function (assert
 QUnit.test('prevent attachment delete on non-authored message in channels', async function (assert) {
     assert.expect(2);
 
-    const { createMessageComponent } = await this.start();
-    const message = this.messaging.models['Message'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const message = messaging.models['Message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
             id: 10,
@@ -732,8 +723,8 @@ QUnit.test('prevent attachment delete on non-authored message in channels', asyn
 QUnit.test('subtype description should be displayed if it is different than body', async function (assert) {
     assert.expect(2);
 
-    const { createMessageComponent } = await this.start();
-    const message = this.messaging.models['Message'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const message = messaging.models['Message'].create({
         body: "<p>Hello</p>",
         id: 100,
         subtype_description: 'Bonjour',
@@ -754,8 +745,8 @@ QUnit.test('subtype description should be displayed if it is different than body
 QUnit.test('subtype description should not be displayed if it is similar to body', async function (assert) {
     assert.expect(2);
 
-    const { createMessageComponent } = await this.start();
-    const message = this.messaging.models['Message'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const message = messaging.models['Message'].create({
         body: "<p>Hello</p>",
         id: 100,
         subtype_description: 'hello',
@@ -795,8 +786,8 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         );
         assert.step('do-action:openFormView_some.model_250');
     });
-    const { createMessageComponent } = await this.start({ env: { bus } });
-    const message = this.messaging.models['Message'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data, env: { bus } });
+    const message = messaging.models['Message'].create({
         body: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
         id: 100,
     });
@@ -824,10 +815,11 @@ QUnit.test('chat with author should be opened after clicking on his avatar', asy
 
     this.data['res.partner'].records.push({ id: 10 });
     this.data['res.users'].records.push({ partner_id: 10 });
-    const { createMessageComponent } = await this.start({
+    const { createMessageComponent, messaging } = await start({
+        data: this.data,
         hasChatWindow: true,
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         author: insert({ id: 10 }),
         id: 10,
     });
@@ -863,10 +855,11 @@ QUnit.test('chat with author should be opened after clicking on his im status ic
 
     this.data['res.partner'].records.push({ id: 10 });
     this.data['res.users'].records.push({ partner_id: 10 });
-    const { createMessageComponent } = await this.start({
+    const { createMessageComponent, messaging } = await start({
+        data: this.data,
         hasChatWindow: true,
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         author: insert({ id: 10, im_status: 'online' }),
         id: 10,
     });
@@ -915,12 +908,13 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
         model: 'mail.channel',
         res_id: 11,
     });
-    const { createThreadViewComponent } = await this.start({
+    const { createThreadViewComponent, messaging } = await start({
+        data: this.data,
         hasChatWindow: true,
     });
-    const correspondent = this.messaging.models['Partner'].insert({ id: 10 });
+    const correspondent = messaging.models['Partner'].insert({ id: 10 });
     const thread = await correspondent.getChat();
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -949,8 +943,8 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
 QUnit.test('message should not be considered as "clicked" after clicking on its author name', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent } = await this.start();
-    const message = this.messaging.models['Message'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const message = messaging.models['Message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
@@ -968,8 +962,8 @@ QUnit.test('message should not be considered as "clicked" after clicking on its 
 QUnit.test('message should not be considered as "clicked" after clicking on its author avatar', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent } = await this.start();
-    const message = this.messaging.models['Message'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const message = messaging.models['Message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
@@ -1000,8 +994,8 @@ QUnit.test('message should not be considered as "clicked" after clicking on noti
         notification_status: 'exception',
         notification_type: 'email',
     });
-    const { createThreadViewComponent } = await this.start();
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({

@@ -11,14 +11,6 @@ QUnit.module('activity', {}, function () {
 QUnit.module('activity_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -34,7 +26,7 @@ QUnit.test('activity simplest layout', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -114,7 +106,7 @@ QUnit.test('activity with note layout', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -153,7 +145,7 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
         res_model: 'res.partner',
         state: 'planned',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -196,7 +188,7 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
         res_model: 'res.partner',
         state: 'planned',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -236,7 +228,7 @@ QUnit.test('activity info layout when planned today', async function (assert) {
         res_model: 'res.partner',
         state: 'today',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -279,7 +271,7 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
         res_model: 'res.partner',
         state: 'overdue',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -322,7 +314,7 @@ QUnit.test('activity info layout when planned before yesterday', async function 
         res_model: 'res.partner',
         state: 'overdue',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -361,7 +353,7 @@ QUnit.test('activity with a summary layout', async function (assert) {
         res_model: 'res.partner',
         summary: 'test summary',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -401,7 +393,7 @@ QUnit.test('activity without summary layout', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -451,7 +443,7 @@ QUnit.test('activity details toggle', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -516,7 +508,7 @@ QUnit.test('activity details layout', async function (assert) {
         state: 'planned',
         user_id: 10,
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -600,7 +592,7 @@ QUnit.test('activity with mail template layout', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -699,7 +691,7 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
         res_id: 42,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start({ env: { bus } });
+    const { createChatterContainerComponent } = await start({ data: this.data, env: { bus } });
     await createChatterContainerComponent({
         threadId: 42,
         threadModel: 'res.partner',
@@ -740,7 +732,8 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
         res_id: 42,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start({
+    const { createChatterContainerComponent } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (args.method === 'activity_send_mail') {
                 assert.step('activity_send_mail');
@@ -790,7 +783,7 @@ QUnit.test('activity upload document is available', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     const chatterContainerComponent = await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -826,7 +819,7 @@ QUnit.test('activity click on mark as done', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -876,7 +869,7 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -951,7 +944,7 @@ QUnit.test('activity click on edit', async function (assert) {
         res_id: 42,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start({ env: { bus } });
+    const { createChatterContainerComponent } = await start({ data: this.data, env: { bus } });
     await createChatterContainerComponent({
         threadId: 42,
         threadModel: 'res.partner',
@@ -1019,7 +1012,7 @@ QUnit.test('activity edition', async function (assert) {
         this.data['mail.activity'].records[0].icon = 'fa-check';
         payload.options.on_close();
     });
-    const { createChatterContainerComponent } = await this.start({ env: { bus } });
+    const { createChatterContainerComponent } = await start({ data: this.data, env: { bus } });
     await createChatterContainerComponent({
         threadId: 42,
         threadModel: 'res.partner',
@@ -1083,7 +1076,8 @@ QUnit.test('activity click on cancel', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start({
+    const { createChatterContainerComponent } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 assert.step('unlink');
@@ -1140,7 +1134,7 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -1183,7 +1177,7 @@ QUnit.test('activity mark done popover click on discard', async function (assert
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -1248,7 +1242,7 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start({ env: { bus } });
+    const { createChatterContainerComponent } = await start({ data: this.data, env: { bus } });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -1287,7 +1281,7 @@ QUnit.test('button related to file uploading is replaced when updating activity 
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent, env, messaging } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -1295,7 +1289,7 @@ QUnit.test('button related to file uploading is replaced when updating activity 
 
     // Update the record server side then fetch updated data in order to
     // emulate what happens when using the form view.
-    await this.env.services.rpc({
+    await env.services.rpc({
         model: 'mail.activity',
         method: 'write',
         args: [[activityId], {
@@ -1304,7 +1298,7 @@ QUnit.test('button related to file uploading is replaced when updating activity 
         }],
     });
     await afterNextRender(async () => {
-        const activity = this.messaging.models['Activity'].findFromIdentifyingData({ id: activityId });
+        const activity = messaging.models['Activity'].findFromIdentifyingData({ id: activityId });
         await activity.fetchAndUpdate();
     });
     assert.containsOnce(

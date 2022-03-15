@@ -13,19 +13,11 @@ QUnit.module('partner_im_status_icon_tests.js', {
     async beforeEach() {
         await beforeEach(this);
 
-        this.createPartnerImStatusIcon = async partner => {
-            await createRootMessagingComponent(this, "PartnerImStatusIcon", {
+        this.createPartnerImStatusIcon = async (partner, target) => {
+            await createRootMessagingComponent(partner.env, "PartnerImStatusIcon", {
                 props: { partnerLocalId: partner.localId },
-                target: this.widget.el
+                target,
             });
-        };
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -33,13 +25,13 @@ QUnit.module('partner_im_status_icon_tests.js', {
 QUnit.test('on leave & online', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    const partner = this.messaging.models['Partner'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'leave_online',
     });
-    await this.createPartnerImStatusIcon(partner);
+    await this.createPartnerImStatusIcon(partner, widget.el);
     assert.hasClass(
         document.querySelector('.o_PartnerImStatusIcon_icon'),
         'o-online',
@@ -55,13 +47,13 @@ QUnit.test('on leave & online', async function (assert) {
 QUnit.test('on leave & away', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    const partner = this.messaging.models['Partner'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'leave_away',
     });
-    await this.createPartnerImStatusIcon(partner);
+    await this.createPartnerImStatusIcon(partner, widget.el);
     assert.hasClass(
         document.querySelector('.o_PartnerImStatusIcon_icon'),
         'o-away',
@@ -77,13 +69,13 @@ QUnit.test('on leave & away', async function (assert) {
 QUnit.test('on leave & offline', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    const partner = this.messaging.models['Partner'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'leave_offline',
     });
-    await this.createPartnerImStatusIcon(partner);
+    await this.createPartnerImStatusIcon(partner, widget.el);
     assert.hasClass(
         document.querySelector('.o_PartnerImStatusIcon_icon'),
         'o-offline',

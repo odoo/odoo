@@ -16,21 +16,14 @@ QUnit.module('model_field_command', {}, function () {
 QUnit.module('set_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
 QUnit.test('decrement: should decrease attribute field value', async function (assert) {
     assert.expect(1);
-    await this.start();
+    const { messaging } = await start({ data: this.data });
 
-    const task = this.messaging.models['TestTask'].create({
+    const task = messaging.models['TestTask'].create({
         id: 10,
         difficulty: 5,
     });
@@ -44,9 +37,9 @@ QUnit.test('decrement: should decrease attribute field value', async function (a
 
 QUnit.test('increment: should increase attribute field value', async function (assert) {
     assert.expect(1);
-    await this.start();
+    const { messaging } = await start({ data: this.data });
 
-    const task = this.messaging.models['TestTask'].create({
+    const task = messaging.models['TestTask'].create({
         id: 10,
         difficulty: 5,
     });
@@ -60,9 +53,9 @@ QUnit.test('increment: should increase attribute field value', async function (a
 
 QUnit.test('set: should set a value for attribute field', async function (assert) {
     assert.expect(1);
-    await this.start();
+    const { messaging } = await start({ data: this.data });
 
-    const task = this.messaging.models['TestTask'].create({
+    const task = messaging.models['TestTask'].create({
         id: 10,
         difficulty: 5,
     });
@@ -76,9 +69,9 @@ QUnit.test('set: should set a value for attribute field', async function (assert
 
 QUnit.test('multiple attribute commands combination', async function (assert) {
     assert.expect(1);
-    await this.start();
+    const { messaging } = await start({ data: this.data });
 
-    const task = this.messaging.models['TestTask'].create({
+    const task = messaging.models['TestTask'].create({
         id: 10,
         difficulty: 5,
     });
