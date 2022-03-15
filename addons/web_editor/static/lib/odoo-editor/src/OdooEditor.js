@@ -1025,7 +1025,7 @@ export class OdooEditor extends EventTarget {
                         node && node.after(nodeToRemove);
                     } else {
                         const node = this.idFind(mutation.parentId);
-                        node && node.append(nodeToRemove);
+                        node && node.prepend(nodeToRemove);
                     }
                     break;
                 }

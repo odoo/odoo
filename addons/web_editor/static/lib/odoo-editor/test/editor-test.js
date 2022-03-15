@@ -13,6 +13,7 @@ import './spec/autostep.test.js';
 import './spec/urlRegex.test.js';
 import './spec/collab.test.js';
 import './spec/navigationNode.test.js';
+import './spec/unremovable.test.js';
 
 mocha.run(failures => {
     if (failures) {
