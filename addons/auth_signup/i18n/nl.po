@@ -1,29 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_signup
-# 
+#
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Martin Trigaux, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Thomas Pot <thomas@open2bizz.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2020
+# Martin Trigaux, 2021
 # Bert Burggraaf, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
-# 
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2016-08-05 12:56+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_signup
@@ -33,22 +28,13 @@ msgstr "<i title=\"Close\" class=\"small fa fa-times\"/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid ""
-"<strong>A password reset has been requested for this user. An email "
-"containing the following link has been sent:</strong>"
-msgstr ""
-"<strong>Voor deze gebruiker werd een aanvraag ingediend om het wachtwoord "
-"opnieuw in te stellen. Een e-mail werd verzonden met de volgende "
-"link:</strong>"
+msgid "<strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>"
+msgstr "<strong>Voor deze gebruiker werd een aanvraag ingediend om het wachtwoord opnieuw in te stellen. Een e-mail werd verzonden met de volgende link:</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid ""
-"<strong>An invitation email containing the following subscription link has "
-"been sent:</strong>"
-msgstr ""
-"<strong>Een uitnodigingsemail met de volgende koppeling is "
-"verzonden:</strong>"
+msgid "<strong>An invitation email containing the following subscription link has been sent:</strong>"
+msgstr "<strong>Een uitnodigingsemail met de volgende koppeling is verzonden:</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -358,15 +344,13 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr "Heeft u al een account?"
+msgstr "Heb je al een account?"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
-"Er is een e-mail verzonden met informatie over het resetten van uw "
-"wachtwoord."
+msgstr "Er is een e-mail verzonden met informatie over het resetten van je wachtwoord."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -409,13 +393,12 @@ msgstr "Terug naar login"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
-"E-mail kan niet verzonden worden: gebruiker %s heeft geen e-mailadres. "
+msgstr "E-mail kan niet verzonden worden: gebruiker %s heeft geen e-mailadres. "
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Close"
-msgstr "Afsluiten"
+msgstr "Sluiten"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
@@ -452,7 +435,7 @@ msgstr "Het was niet mogelijk een nieuw account aan te maken."
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Could not reset your password"
-msgstr "Uw wachtwoord kon niet reset worden"
+msgstr "Jouw wachtwoord kon niet opnieuw ingesteld worden"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
@@ -467,7 +450,7 @@ msgstr "Standaard toegangsrechten"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr "Heeft u geen account?"
+msgstr "Heb je geen account?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
@@ -478,7 +461,7 @@ msgstr "Wachtwoord reset vanaf login pagina toestaan"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "Gratis registratie"
+msgstr "Vrije registratie"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -505,7 +488,7 @@ msgstr "Nog nooit verbonden"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "No login provided."
-msgstr "Geen login gegeven"
+msgstr "Geen login opgegeven."
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
@@ -558,7 +541,7 @@ msgstr "Stuur instructies voor het opnieuw instellen van het wachtwoord"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr "Verstuur een uitnodigings e-mail"
+msgstr "Verzend een uitnodigings e-mail"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -639,8 +622,7 @@ msgstr "Status"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr ""
-"Sjabloon gebruiker voor het aanmaken van nieuwe gebruikers, bij aanmelden"
+msgstr "Sjabloon gebruiker voor het aanmaken van nieuwe gebruikers, bij aanmelden"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -650,14 +632,8 @@ msgstr "Dit formulier is niet correct ingesteld."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid ""
-"To send invitations in B2B mode, open a contact or select several ones in "
-"list view and click on 'Portal Access Management' option in the dropdown "
-"menu *Action*."
-msgstr ""
-"Om uitnodigingen in B2B modus te sturen, opent u een contact of selecteert u"
-" er meerdere in een lijstweergave. Klik dan op 'Portaal toegangsbeheer' "
-"optie in het actie menu."
+msgid "To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*."
+msgstr "Om uitnodigingen in B2B modus te sturen, open je een contact of selecteert je er meerdere in een lijstweergave. Klik dan op 'Portaal toegangsbeheer' optie in het actie menu."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -680,18 +656,18 @@ msgstr "Welkom bij {{ object.company_id.name }}!"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr "U kunt deze actie niet uitvoeren op een gearchiveerde gebruiker."
+msgstr "Je kunt deze actie niet uitvoeren op een gearchiveerde gebruiker."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Uw e-mail"
+msgstr "Jouw e-mail"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "Uw naam"
+msgstr "Jouw naam"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -700,9 +676,5 @@ msgstr "b.v. John Doe"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
-msgid ""
-"{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
-"to connect to Odoo"
-msgstr ""
-"{{ object.create_uid.name }} van {{ object.company_id.name }} nodigt u uit "
-"om verbinding te maken met Odoo"
+msgid "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you to connect to Odoo"
+msgstr "{{ object.create_uid.name }} van {{ object.company_id.name }} nodigt je uit om verbinding te maken met Odoo"

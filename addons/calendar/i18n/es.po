@@ -1,53 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* calendar
-# 
+#
 # Translators:
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Angel Catanzariti <angel@exor.com.ar>, 2016
-# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
-# b9b2db555321dc69d8faed263d46c5b6, 2017
-# Paloma Yazmin Reyes Morales <paloma.reyes@jarsa.com.mx>, 2017
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2018
-# Ana Juaristi <ajuaristio@gmail.com>, 2018
-# oihane <oihanecruce@gmail.com>, 2018
-# Javier Ramirez <elbomba887@gmail.com>, 2018
-# José Vicente <txusev@gmail.com>, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
-# Antonio Trueba, 2018
-# Cristopher Cravioto <ccr@odoo.com>, 2019
-# Rick Hunter <rick.hunter.ec@gmail.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
-# Efrem Jimenez <efj@odoo.com>, 2019
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
-# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Martin Trigaux, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # marcescu, 2022
-# 
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:33+0000\n"
-"PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
+"PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: calendar
@@ -319,11 +290,11 @@ msgstr ""
 msgid ""
 "<div>\n"
 "    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"/>\n"
-"    <t t-set=\"is_online = 'appointment_type_id' in object and object.appointment_type_id\"/>\n"
-"    <t t-set=\"target_responsible = object.partner_id == object.partner_id\"/>\n"
-"    <t t-set=\"target_customer = object.partner_id == customer\"/>\n"
-"    <t t-set=\"recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence'\"/>\n"
-"    <t t-set=\"mail_tz = ctx.get('mail_tz')\"/>\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object and object.appointment_type_id\"/>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.partner_id\"/>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"    <t t-set=\"mail_tz\" t-value=\"ctx.get('mail_tz')\"/>\n"
 "    <div>\n"
 "        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n"
 "            <tr>\n"
@@ -402,90 +373,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div>\n"
-"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"/>\n"
-"    <t t-set=\"is_online = 'appointment_type_id' in object and object.appointment_type_id\"/>\n"
-"    <t t-set=\"target_responsible = object.partner_id == object.partner_id\"/>\n"
-"    <t t-set=\"target_customer = object.partner_id == customer\"/>\n"
-"    <t t-set=\"recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence'\"/>\n"
-"    <t t-set=\"mail_tz = ctx.get('mail_tz')\"/>\n"
-"    <div>\n"
-"        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n"
-"            <tr>\n"
-"                <td width=\"130px;\">\n"
-"                    <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
-"                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) \"/>\n"
-"                    </div>\n"
-"                    <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)\"/>\n"
-"                    </div>\n"
-"                    <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)\"/>\n"
-"                    </div>\n"
-"                    <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
-"                        <t t-if=\"not object.allday\">\n"
-"                            <div>\n"
-"                                <t t-out=\"format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)\"/>\n"
-"                            </div>\n"
-"                            <t t-if=\"mail_tz\">\n"
-"                                <div style=\"font-size: 10px; font-weight: normal\">\n"
-"                                    (<t t-out=\"mail_tz\"/>)\n"
-"                                </div>\n"
-"                            </t>\n"
-"                        </t>\n"
-"                    </div>\n"
-"                </td>\n"
-"                <td width=\"20px;\"/>\n"
-"                <td style=\"padding-top: 5px;\">\n"
-"                    <p>\n"
-"                        <strong>Detalles del evento</strong>\n"
-"                    </p>\n"
-"                    <ul>\n"
-"                        <t t-if=\"not is_online and object.display_description\">\n"
-"                            <li>Descripción: <t t-out=\"object.description or ''\"/></li>\n"
-"                        </t>\n"
-"                        <t t-elif=\"is_online and object.description\">\n"
-"                            <t t-set=\"splitted_description\" t-value=\"object.description_to_html_lines()\"/>\n"
-"                            <li>Descripción:\n"
-"                                <ul>\n"
-"                                    <t t-foreach=\"splitted_description\" t-as=\"description_line\">\n"
-"                                        <li t-out=\"description_line or ''\"/>\n"
-"                                    </t>\n"
-"                                </ul>\n"
-"                            </li>\n"
-"                        </t>\n"
-"                        <t t-if=\"object.videocall_location\">\n"
-"                            <li>URL de la junta:\n"
-"                                <a t-att-href=\"object.videocall_location\" target=\"_blank\">\n"
-"                                    <t t-out=\"object.videocall_location or ''\"/>\n"
-"                                </a>\n"
-"                            </li>\n"
-"                        </t>\n"
-"                        <t t-if=\"object.location\">\n"
-"                            <li>Ubicación: <t t-out=\"object.location or ''\"/>\n"
-"                                (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{object.location}}\">Ver mapa</a>)\n"
-"                            </li>\n"
-"                        </t>\n"
-"                        <t t-if=\"recurrent\">\n"
-"                            <li>Cuándo: <t t-out=\"object.recurrence_id.name or ''\"/></li>\n"
-"                        </t>\n"
-"                        <t t-if=\"not object.allday and object.duration\">\n"
-"                            <li>Duración:\n"
-"                                <t t-out=\"('%dH%02d' % (object.duration,round(object.duration*60)%60))\"/>\n"
-"                            </li>\n"
-"                        </t>\n"
-"                    </ul>\n"
-"                </td>\n"
-"            </tr>\n"
-"        </table>\n"
-"    </div>\n"
-"    <div class=\"user_input\">\n"
-"        <hr/>\n"
-"        <p placeholder=\"Ingrese su mensaje aquí\"><br/></p>\n"
-"\n"
-"    </div>\n"
-"</div>\n"
-"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -891,12 +778,8 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_kanban_view
-msgid ""
-"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
-"title=\"Meetings\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Reuniones\" role=\"img\" "
-"title=\"Reuniones\"/>"
+msgid "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" title=\"Meetings\"/>"
+msgstr "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Reuniones\" role=\"img\" title=\"Reuniones\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -905,9 +788,7 @@ msgstr "<span> horas</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid ""
-"<strong>The following attendees have invalid email addresses and won't "
-"receive any email notifications:</strong>"
+msgid "<strong>The following attendees have invalid email addresses and won't receive any email notifications:</strong>"
 msgstr ""
 
 #. module: calendar
@@ -941,13 +822,8 @@ msgstr "Acción requerida"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-msgid ""
-"Actions may trigger specific behavior like opening calendar view or "
-"automatically mark as done when a document is uploaded"
-msgstr ""
-"Las acciones pueden desencadenar comportamientos específicos como abrir la "
-"vista de calendario o marcar automáticamente como hecho cuando un documento "
-"es subido"
+msgid "Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded"
+msgstr "Las acciones pueden desencadenar comportamientos específicos como abrir la vista de calendario o marcar automáticamente como hecho cuando un documento es subido"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -978,8 +854,6 @@ msgstr "Tipo de actividad"
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:0
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
-#: code:addons/calendar/static/src/xml/base_calendar.xml:0
 #, python-format
 msgid "Add"
 msgstr "Añadir"
@@ -991,10 +865,8 @@ msgstr "Mensaje adicional"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
-msgid ""
-"Additional message that would be sent with the notification for the reminder"
-msgstr ""
-"Mensaje adicional que se enviará con la notificación para el recordatorio"
+msgid "Additional message that would be sent with the notification for the reminder"
+msgstr "Mensaje adicional que se enviará con la notificación para el recordatorio"
 
 #. module: calendar
 #. openerp-web
@@ -1027,7 +899,7 @@ msgstr "Archivado"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
 msgid "Attachment Count"
-msgstr "Conteo de archivos adjuntos"
+msgstr "Nº de archivos adjuntos"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__partner_id
@@ -1043,7 +915,7 @@ msgstr "Estado de asistencia"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Attendees"
-msgstr "Asistentes"
+msgstr "Participantes"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
@@ -1062,7 +934,6 @@ msgid "Base Event"
 msgstr "Evento base"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar_event.py:0
 #: code:addons/calendar/models/calendar_event.py:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__busy
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__busy
@@ -1094,18 +965,18 @@ msgstr "Calendario"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr "Alarma de calendario"
+msgstr "Alerta de calendario"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Información del Calendario de Asistentes"
+msgstr "Información en el calendario de los asistentes"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
 msgid "Calendar Event"
-msgstr "Calendario de eventos"
+msgstr "Evento de calendario"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
@@ -1132,7 +1003,7 @@ msgstr "Calendario: Fecha actualizada"
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr "Calendario: Recordatorio de evento"
+msgstr "Calendario: recordatorio de evento"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
@@ -1165,12 +1036,8 @@ msgstr "Comprobado"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
-msgid ""
-"Choose what to do with other events in the recurrence. Updating All Events "
-"is not allowed when dates or time is modified"
-msgstr ""
-"Elija qué hacer con otros eventos en la recurrencia. No se permite "
-"actualizar todos los eventos cuando se modifican las fechas o la hora"
+msgid "Choose what to do with other events in the recurrence. Updating All Events is not allowed when dates or time is modified"
+msgstr "Elige qué hacer con otros eventos recurrentes. No se permite actualizar todos los eventos cuando se modifican las fechas o la hora"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
@@ -1306,7 +1173,7 @@ msgstr "Mostrar descripción"
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1321,7 +1188,7 @@ msgstr "ID del documento"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
 msgid "Document Model"
-msgstr "Modelo de documento"
+msgstr "Modelo del documento"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
@@ -1371,12 +1238,12 @@ msgstr "Correo electrónico"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "Email - 3 Hours"
-msgstr "Email - 3 Horas"
+msgstr "Correo electrónico - 3 Horas"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "Email - 6 Hours"
-msgstr "Email - 6 Horas"
+msgstr "Correo electrónico - 6 Horas"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__mail_template_id
@@ -1386,7 +1253,7 @@ msgstr "Plantilla de correo electrónico"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
 msgid "Email of Invited Person"
-msgstr "Email del invitado"
+msgstr "Correo electrónico del invitado"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_id
@@ -1397,7 +1264,7 @@ msgstr "Empleado"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_date
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "End Date"
-msgstr "Fecha finalización"
+msgstr "Fecha límite"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
@@ -1408,7 +1275,7 @@ msgstr "Tipo final"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__end_date
 msgid "End date"
-msgstr "Fecha de fin"
+msgstr "Fecha límite"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1418,22 +1285,22 @@ msgstr "Termina"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr "Terminando a las"
+msgstr "Termina a las"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event Alarm"
-msgstr "Alarma del evento"
+msgstr "Alerta del evento"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr "Gestor de Alarmas de Eventos"
+msgstr "Gestor de alertas del calendario"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr "Tipo de Reunión"
+msgstr "Tipo de reunión"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
@@ -1461,13 +1328,13 @@ msgstr "Retroalimentación: %(feedback)s"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__1
 msgid "First"
-msgstr "Primera"
+msgstr "Primero"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr "Primero debe especificar la fecha de la invitación."
+msgstr "Primero debes especificar la fecha de la invitación."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
@@ -1482,13 +1349,13 @@ msgstr "Seguidores"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Empresas)"
+msgstr "Seguidores (Contactos)"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__forever
 msgid "Forever"
-msgstr "Por siempre"
+msgstr "Siempre"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__4
@@ -1499,7 +1366,7 @@ msgstr "Cuarto"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Free"
-msgstr "Gratuito"
+msgstr "Libre"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__fri
@@ -1553,21 +1420,17 @@ msgstr "ID"
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
+msgstr "Si se encuentra seleccionado hay nuevos mensajes que requieren su atención."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
-msgid ""
-"If the active field is set to false, it will allow you to hide the event "
-"alarm information without removing it."
-msgstr ""
-"Si el campo activo es falso, le permitirá ocultar la notificación de aviso "
-"del evento sin eliminarlo."
+msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
+msgstr "Si el campo activo es falso, te permitirá ocultar la notificación de aviso del evento sin eliminarlo."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
@@ -1626,7 +1489,7 @@ msgstr "Es un seguidor"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
 msgid "Is the Event Highlighted"
-msgstr "Es el Evento Resaltado"
+msgstr "Es un evento destacado"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
@@ -1647,7 +1510,7 @@ msgstr "Última"
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
@@ -1673,7 +1536,7 @@ msgstr "Última actualización el"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr "Última notificación marcada como leída desde el calendario base"
+msgstr "Última notificación marcada como leída desde el calendario principal"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
@@ -1704,7 +1567,7 @@ msgstr "Zona horaria del correo"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Adjuntos principales"
+msgstr "Archivo adjunto principal"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
@@ -1719,13 +1582,9 @@ msgstr "Reunión"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
-#: code:addons/calendar/models/calendar_event.py:0
 #, python-format
-msgid ""
-"Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
-msgstr ""
-"La reunión '%(name)s' comienza: '%(start_datetime)s' y finaliza: "
-"'%(end_datetime)s'"
+msgid "Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
+msgstr "La reunión '%(name)s' comienza: '%(start_datetime)s' y finaliza: '%(end_datetime)s'"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1769,7 +1628,7 @@ msgstr "Reuniones"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de Envío de Mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
@@ -1837,7 +1696,7 @@ msgstr "No, no asistiré."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No feedback yet"
-msgstr "Todavía no hay feedback"
+msgstr "Todavía no hay retroalimentación"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -1857,29 +1716,27 @@ msgstr "Notificación - 1 Día"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "Notification - 1 Hours"
-msgstr "Notificación - 1 Hora"
+msgstr "Notificación - 1 hora"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "Notification - 15 Minutes"
-msgstr "Notificación - 15 Minutos"
+msgstr "Notificación - 15 minutos"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "Notification - 2 Hours"
-msgstr "Notificación - 2 Horas"
+msgstr "Notificación - 2 horas"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "Notification - 30 Minutes"
-msgstr "Notificación - 30 Minutos"
+msgstr "Notificación - 30 minutos"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
 msgid "Notifications sent to all attendees to remind of the meeting."
-msgstr ""
-"Notificaciones enviadas a todos los asistentes como recordatorio de la "
-"junta."
+msgstr "Notificaciones enviadas a todos los asistentes como recordatorio de la junta."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1958,7 +1815,7 @@ msgstr "Participante"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "Datos del usuario relativos a la empresa"
+msgstr "Datos de contacto del usuario"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
@@ -2162,12 +2019,12 @@ msgstr "Fecha de inicio"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr "Fecha de inicio del evento, sin horas para eventos de día completo"
+msgstr "Fecha de inicio del evento, sin tiempo para eventos que duran un día completo"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Starting at"
-msgstr "Comenzando en"
+msgstr "Comienza el"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
@@ -2192,7 +2049,7 @@ msgstr "Parar"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "Fecha fin del evento, sin horas para eventos de día completo"
+msgstr "Fecha de fin del evento, sin horas para eventos de día completo"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -2214,7 +2071,7 @@ msgstr "Domingo"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists !"
-msgstr "¡El nombre de etiqueta ya existe!"
+msgstr "¡Este nombre de etiqueta ya existe!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
@@ -2224,13 +2081,12 @@ msgstr "Etiquetas"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
-msgstr ""
-"Plantilla utilizada para visualizar el contenido del correo de recordatorio."
+msgstr "Plantilla utilizada para visualizar el contenido del correo de recordatorio."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Tentative"
-msgstr "Tentativa"
+msgstr "Tentativo"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2241,9 +2097,7 @@ msgstr "El"
 #. openerp-web
 #: code:addons/calendar/static/src/models/activity_view/activity_view.js:0
 #, python-format
-msgid ""
-"The activity is linked to a meeting. Deleting it will remove the meeting as "
-"well. Do you want to proceed?"
+msgid "The activity is linked to a meeting. Deleting it will remove the meeting as well. Do you want to proceed?"
 msgstr ""
 
 #. module: calendar
@@ -2253,29 +2107,26 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
-"El calendario se comparte entre los empleados y se integra completamente con\n"
-"             otras aplicaciones como el empleado se va o el negocio\n"
-"             oportunidades."
+"El calendario se comparte entre los empleados y se integra por completo con\n"
+"                otras aplicaciones como las asistencias del empleado las oportunidades\n"
+"                de la empresa."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr "El día debe estar entre 1 y 31."
+msgstr "El día debe ser entre 1 y 31."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
-msgid ""
-"The ending date and time cannot be earlier than the starting date and time."
-msgstr ""
-"La fecha y hora de finalización no pueden ser anteriores a la fecha y hora "
-"de inicio."
+msgid "The ending date and time cannot be earlier than the starting date and time."
+msgstr "La fecha y hora de fin no pueden ser anteriores a la fecha y hora de inicio."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
-msgstr "La fecha de finalización no puede ser anterior a la fecha de inicio."
+msgstr "La fecha de fin no puede ser anterior a la fecha de inicio."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
@@ -2319,12 +2170,8 @@ msgstr "Este evento"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_filters__partner_checked
-msgid ""
-"This field is used to know if the partner is checked in the filter of the "
-"calendar view for the user_id."
-msgstr ""
-"Este campo se utiliza para saber si el partner está seleccionado en el "
-"filtro de la vista de calendario para el user_id."
+msgid "This field is used to know if the partner is checked in the filter of the calendar view for the user_id."
+msgstr "Este campo se utiliza para saber si el partner está seleccionado en el filtro de la vista de calendario para el user_id."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -2347,9 +2194,7 @@ msgstr "Zona horaria"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
 msgid "Timezone used for displaying time in the mail template"
-msgstr ""
-"Zona horaria utilizada para mostrar la hora en la plantilla de correo "
-"electrónico"
+msgstr "Zona horaria utilizada para mostrar la hora en la plantilla de correo electrónico"
 
 #. module: calendar
 #: code:addons/calendar/models/res_users.py:0
@@ -2382,7 +2227,7 @@ msgstr "Tipo"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, python-format
 msgid "Uncertain"
-msgstr "Incierto"
+msgstr "Variable "
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
@@ -2392,12 +2237,12 @@ msgstr "Unidad"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
 msgid "Unread Messages"
-msgstr "Mensajes por leer"
+msgstr "Mensajes sin leer"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contador de mensajes sin leer"
+msgstr "Nº de mensajes sin leer"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
@@ -2455,7 +2300,7 @@ msgstr "No puede actualizar una recurrencia sin un evento base."
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr "No puede duplicar un asistente calendario"
+msgstr "No puedes duplicar un asistente calendario"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
@@ -2490,13 +2335,13 @@ msgstr "en %s"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on the %(position)s %(weekday)s"
-msgstr "en el %(position)s%(weekday)s"
+msgstr "en el %(position)s %(weekday)s"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "until %s"
-msgstr "hasta que %s"
+msgstr "hasta el %s"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder

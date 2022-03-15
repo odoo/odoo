@@ -1,47 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal
-# 
+#
 # Translators:
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# b7db2840ea95169a8b66b2e8c18d323d_52caf48 <e188a842d22a1f8229ec8e1ab8414c94_389188>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
-# Jose Manuel <admin@jaboweb.com>, 2017
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# Carlos Lopez <celm1990@hotmail.com>, 2018
-# renodoo <ren@odoo.com>, 2019
-# Harald Panten <harald.panten@qubiq.es>, 2019
-# Efrem Jimenez <efj@odoo.com>, 2019
-# Luis González <lgonzalez@vauxoo.com>, 2019
-# Antonio Trueba, 2019
-# Mariana Santos Romo <msn@odoo.com>, 2019
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
-# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Martin Trigaux, 2021
-# Rick Hunter <rick.hunter.ec@gmail.com>, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2022
 # David Ramia, 2022
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: David Ramia, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
@@ -64,12 +41,8 @@ msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Volver al modo de edición"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
-msgid ""
-"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
-msgstr ""
-"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
+msgid "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
+msgstr "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -88,14 +61,8 @@ msgstr "<i class=\"fa fa-pencil\"/>Editar"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid ""
-"<small class=\"form-text text-muted\">Changing company name or VAT number is"
-" not allowed once document(s) have been issued for your account. <br/>Please"
-" contact us directly for this operation.</small>"
-msgstr ""
-"<small class=\"form-text text-muted\">Cambiar el nombre de la empresa o el "
-"NIF no se permite una vez que se emitieron documentos para su cuenta.<br/> "
-"Contáctenos directamente para esta operación.</small>"
+msgid "<small class=\"form-text text-muted\">Changing company name or VAT number is not allowed once document(s) have been issued for your account. <br/>Please contact us directly for this operation.</small>"
+msgstr "<small class=\"form-text text-muted\">Cambiar el nombre de la empresa o el NIF no se permite una vez que se emitieron documento(s) para su cuenta.<br/> Contáctenos directamente para esta operación.</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -227,7 +194,7 @@ msgstr ""
 "                        Estimado <t t-out=\"object.user_id.name or ''\">Marc Demo</t>,<br/> <br/>\n"
 "                        ¡Bienvenido al portal de <t t-out=\"object.user_id.company_id.name\">SuEmpresa</t>!<br/><br/>\n"
 "                        Se creó una cuenta para usted y puede iniciar sesión con: <t t-out=\"object.user_id.login\">demo</t><br/><br/>\n"
-"                        De clic en el siguiente botón para elegir una contraseña y activar su cuenta.\n"
+"                        Dé clic en el siguiente botón para elegir una contraseña y activar su cuenta.\n"
 "                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Activar cuenta</strong>\n"
@@ -236,7 +203,7 @@ msgstr ""
 "                                <strong>Iniciar sesión</strong>\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <t t-out=\"object.wizard_id.welcome_message or ''\">Bienvenido al portal de su empresa.</t>\n"
+"                        <t t-out=\"object.wizard_id.welcome_message or ''\">Bienvenido al portal de nuestra empresa.</t>\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -348,23 +315,13 @@ msgstr "Cambiar la contraseña"
 #: code:addons/portal/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
-msgid ""
-"Changing VAT number is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"No se permite cambiar el número de IVA una vez que se han emitido los "
-"documentos de su cuenta. Póngase en contacto con nosotros directamente para "
-"esta operación."
+msgid "Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
+msgstr "No se permite cambiar el número de IVA una vez que se han emitido los documentos de su cuenta. Póngase en contacto con nosotros directamente para esta operación."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid ""
-"Changing company name is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"No se permite cambiar el nombre de la empresa una vez que se han emitidos "
-"documentos para su cuenta. Póngase en contacto con nosotros directamente "
-"para esta operación."
+msgid "Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
+msgstr "No se permite cambiar el nombre de la empresa una vez que se han emitidos documentos para su cuenta. Póngase en contacto con nosotros directamente para esta operación."
 
 #. module: portal
 #. openerp-web
@@ -461,28 +418,20 @@ msgstr "Creado el"
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid ""
-"Currently available to everyone viewing this document, click to restrict to "
-"internal employees."
-msgstr ""
-"Por ahora está disponible a todos los que puedan ver este documento, de clic"
-" aquí para restringirlo a empleados internos."
+msgid "Currently available to everyone viewing this document, click to restrict to internal employees."
+msgstr "Por ahora está disponible a todos los que puedan ver este documento, de clic aquí para restringirlo a empleados internos."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid ""
-"Currently restricted to internal employees, click to make it available to "
-"everyone viewing this document."
-msgstr ""
-"Por ahora está restringido solo para empleados internos, de clic aquí para "
-"hacerlo disponible a cualquiera que esté viendo el documento."
+msgid "Currently restricted to internal employees, click to make it available to everyone viewing this document."
+msgstr "Por ahora está restringido solo para empleados internos, de clic aquí para hacerlo disponible a cualquiera que esté viendo el documento."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
-msgstr "URL para portal"
+msgstr "URL del portal de cliente"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -507,7 +456,7 @@ msgstr "Detalles"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
@@ -623,7 +572,7 @@ msgstr "Es portal"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -669,12 +618,8 @@ msgstr "Mensaje"
 #. module: portal
 #: code:addons/portal/models/mail_thread.py:0
 #, python-format
-msgid ""
-"Model %(model_name)s does not support token signature, as it does not have "
-"%(field_name)s field."
-msgstr ""
-"El modelo %(model_name)s no es compatible con la firma de token, ya que no "
-"tiene el campo %(field_name)s."
+msgid "Model %(model_name)s does not support token signature, as it does not have %(field_name)s field."
+msgstr "El modelo %(model_name)s no es compatible con la firma de token, ya que no tiene el campo %(field_name)s."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -700,7 +645,6 @@ msgstr "Nueva contraseña:"
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
@@ -721,8 +665,7 @@ msgstr "Logo de Odoo"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
-"Upps! Algo anda mal. Intente recargar la pagina e ingresar nuevamente."
+msgstr "Upps! Algo anda mal. Intente recargar la pagina e ingresar nuevamente."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
@@ -795,7 +738,6 @@ msgstr "Anterior"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Previous"
@@ -893,18 +835,14 @@ msgstr "Mostrar como herencia opcional"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_sign_in
 msgid "Sign in"
-msgstr "Registrar entrada"
+msgstr "Identificarse"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
-msgid ""
-"Some fields are required. Please make sure to write a message or attach a "
-"document"
-msgstr ""
-"Se requieren algunos campos. Asegúrese de escribir un mensaje o adjuntar un "
-"documento"
+msgid "Some fields are required. Please make sure to write a message or attach a document"
+msgstr "Se requieren algunos campos. Asegúrese de escribir un mensaje o adjuntar un documento"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -933,36 +871,25 @@ msgstr "¡Gracias!"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
-msgstr ""
-"El archivo adjunto %sno se puede eliminar porque está vinculado a un "
-"mensaje."
+msgstr "El archivo adjunto %sno se puede eliminar porque está vinculado a un mensaje."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid ""
-"The attachment %s cannot be removed because it is not in a pending state."
-msgstr ""
-"El archivo adjunto %s no se puede quitar porque no está en un estado "
-"pendiente."
+msgid "The attachment %s cannot be removed because it is not in a pending state."
+msgstr "El archivo adjunto %s no se puede quitar porque no está en un estado pendiente."
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
-"El archivo adjunto %s no existe o usted no tiene los derechos para acceder a"
-" él."
+msgid "The attachment %s does not exist or you do not have the rights to access it."
+msgstr "El archivo adjunto %s no existe o usted no tiene los derechos para acceder a él."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid ""
-"The attachment does not exist or you do not have the rights to access it."
-msgstr ""
-"El archivo adjunto no existe o usted no tiene los derechos para acceder a "
-"él."
+msgid "The attachment does not exist or you do not have the rights to access it."
+msgstr "El archivo adjunto no existe o usted no tiene los derechos para acceder a él."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -979,11 +906,8 @@ msgstr "El contacto \"%s\" tiene el mismo correo que el usuario existente (%s)."
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid ""
-"The document does not exist or you do not have the rights to access it."
-msgstr ""
-"El archivo adjunto no existe o usted no tiene los derechos para acceder a "
-"él."
+msgid "The document does not exist or you do not have the rights to access it."
+msgstr "El archivo adjunto no existe o usted no tiene los derechos para acceder a él."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -994,11 +918,8 @@ msgstr "La nueva contraseña y su confirmación deben ser idénticas."
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid ""
-"The old password you provided is incorrect, your password was not changed."
-msgstr ""
-"La antigua contraseña que se ha introducido no es correcta. Su contraseña no"
-" se ha cambiado."
+msgid "The old password you provided is incorrect, your password was not changed."
+msgstr "La antigua contraseña que se ha introducido no es correcta. Su contraseña no se ha cambiado."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1015,12 +936,8 @@ msgstr "El partner \"%s\" no tiene acceso al portal."
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
-msgid ""
-"The template \"Portal: new user\" not found for sending email to the portal "
-"user."
-msgstr ""
-"La plantilla \"Portal: usuario nuevo\" no se encontró para enviar un correo "
-"al usuario del portal."
+msgid "The template \"Portal: new user\" not found for sending email to the portal user."
+msgstr "La plantilla \"Portal: usuario nuevo\" no se encontró para enviar un correo al usuario del portal."
 
 #. module: portal
 #. openerp-web
@@ -1042,27 +959,18 @@ msgstr "Esta es una vista previa del portal de clientes."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid ""
-"This partner is linked to an internal User and already has access to the "
-"Portal."
-msgstr ""
-"Este contacto está vinculado a un usuario interno que ya tiene acceso al "
-"portal."
+msgid "This partner is linked to an internal User and already has access to the Portal."
+msgstr "Este contacto está vinculado a un usuario interno que ya tiene acceso al portal."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid ""
-"This text is included at the end of the email sent to new portal users."
-msgstr ""
-"Este texto se incluye al final del correo que se envía a usuarios del portal"
-" nuevos."
+msgid "This text is included at the end of the email sent to new portal users."
+msgstr "Este texto se incluye al final del correo que se envía a usuarios del portal nuevos."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
-"Este texto se incluye en el correo electrónico enviado a los nuevos usuarios"
-" del portal."
+msgstr "Este texto se incluye en el correo electrónico enviado a los nuevos usuarios del portal."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1185,10 +1093,9 @@ msgstr "Escribir un mensaje..."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_share.py:0
-#: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
-msgstr "Le han invitado a acceder a %s"
+msgstr "Usted está invitado a acceder a %s"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0

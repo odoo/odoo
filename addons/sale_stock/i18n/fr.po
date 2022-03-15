@@ -1,52 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
-# Simon CARRIER <carrier.sim@gmail.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
-# f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2016
-# Xavier Symons <xsy@openerp.com>, 2017
-# Florian Hatat, 2017
-# f5f0a0dac17dde787a1d812a6989680e, 2017
-# 6534c450c77b2549e41c52e2051f5839, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# Nancy Bolognesi <nb@microcom.ca>, 2018
-# Melanie Bernard <mbe@odoo.com>, 2018
-# Laura Piraux <lap@odoo.com>, 2018
-# Nathan Grognet <ngr@odoo.com>, 2018
-# Xavier Brochard <xavier@alternatif.org>, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
-# Thomas Dobbelsteyn <tdo@odoo.com>, 2019
-# Marie Willemyns <mwi@odoo.com>, 2019
-# Antoine Lorence <antoine.lorence@gmail.com>, 2019
-# Clo <clo@odoo.com>, 2019
-# Lucas Deliege <lud@openerp.com>, 2019
-# Rémi CAZENAVE, 2019
-# thomas quertinmont <tqu@odoo.com>, 2019
-# omaodoo <oma@odoo.com>, 2019
-# Cécile Collart <cco@odoo.com>, 2020
-# Xavier Belmere <Info@cartmeleon.com>, 2020
-# Vincent Luba <vincent@biz-4-africa.com>, 2020
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# Richard Mathot <rim@odoo.com>, 2020
-# Christophe Ricevuto <cri@nalios.be>, 2021
+# Martin Trigaux, 2021
+# Cécile Collart <cco@odoo.com>, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
-# Martin Trigaux, 2022
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_stock
@@ -75,14 +47,8 @@ msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>Livré</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" role=\"img\" aria-label=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" role=\"img\" aria-label=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
+msgid "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr "<span class=\"fa fa-lg fa-building-o\" title=\"Les valeurs définies ici sont spécifiques à l'entreprise.\" role=\"img\" aria-label=\"Les valeurs définies ici sont spécifiques à l'entreprise.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -97,7 +63,7 @@ msgstr "<span class=\"o_stat_text\">Vendu</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>Référence client :</strong>"
+msgstr "<strong>Référence client:</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -122,8 +88,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un produit stockable est un produit dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
-"Un produit consommable, d'un autre côté, est un produit pour lequel le stock n'est pas géré.\n"
+"Un article stockable est un article dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
+"Un article consommable, par contre, est un article pour lequel le stock n'est pas géré.\n"
 "Un service est un produit immatériel que vous fournissez."
 
 #. module: sale_stock
@@ -136,10 +102,10 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Selon la configuration du produit, la quantité livrée peut être automatiquement calculée par mécanisme:\n"
-"   - Manuel: la quantité est définie manuellement sur la ligne\n"
-"   - Analytique des dépenses: la quantité est la somme des dépenses enregistrées\n"
-"   - Feuilles de temps: la quantité est la somme des heures enregistrées sur les tâches liées à cette ligne de vente\n"
-"   - Mouvements de stock: la quantité provient des transferts confirmés\n"
+" - Manuel: la quantité est définie manuellement sur la ligne\n"
+" - Analytique des dépenses: la quantité est la somme des dépenses enregistrées\n"
+" - Feuilles de temps: la quantité est la somme des heures enregistrées sur les tâches liées à cette ligne de vente\n"
+" - Mouvements de stock: la quantité provient des transferts confirmés\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -231,17 +197,8 @@ msgstr "Livraisons"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
-msgid ""
-"Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
-msgstr ""
-"Date de livraison que vous pouvez promettre au client, calculée à partir du "
-"délai minimum des lignes de commande dans le cas des produits de type "
-"Service. En cas d'expédition, la politique d'expédition de la commande sera "
-"prise en compte pour utiliser soit le délai minimum soit le délai maximum "
-"des lignes de commande."
+msgid "Delivery date you can promise to the customer, computed from the minimum lead time of the order lines in case of Service products. In case of shipping, the shipping policy of the order will be taken into account to either use the minimum or maximum lead time of the order lines."
+msgstr "Date de livraison que vous pouvez promettre au client, calculée à partir du délai minimum des lignes de commande dans le cas des produits de type Service. En cas d'expédition, la politique d'expédition de la commande sera prise en compte pour utiliser soit le délai minimum soit le délai maximum des lignes de commande."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -261,11 +218,8 @@ msgstr "Afficher les incoterms sur les commandes et les factures"
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
-msgid ""
-"Do not forget to change the partner on the following delivery orders: %s"
-msgstr ""
-"N'oubliez pas de changer de partenaire sur les bons de livraison suivants: "
-"%s"
+msgid "Do not forget to change the partner on the following delivery orders: %s"
+msgstr "N'oubliez pas de changer de partenaire sur les bons de livraison suivants: %s"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -330,18 +284,12 @@ msgstr "Qté Disponible aujourd'hui"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr "A un picking en retard"
+msgstr "A un transfert en retard"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
-msgid ""
-"If you deliver all products at once, the delivery order will be scheduled "
-"based on the greatest product lead time. Otherwise, it will be based on the "
-"shortest."
-msgstr ""
-"Si vous livrez tous les articles en même temps, le bon de livraison sera "
-"établi sur base de l'article avec le plus grand délai. Autrement, sur le "
-"plus court."
+msgid "If you deliver all products at once, the delivery order will be scheduled based on the greatest product lead time. Otherwise, it will be based on the shortest."
+msgstr "Si vous livrez tous les articles en même temps, le bon de livraison sera établi sur base de l'article avec le plus grand délai. Autrement, sur le plus court."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -361,12 +309,8 @@ msgstr "Incoterms"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
-msgid ""
-"International Commercial Terms are a series of predefined commercial terms "
-"used in international transactions."
-msgstr ""
-"Les Incoterms sont une série de termes commerciaux prédéfinie utilisés dans "
-"les transactions internationales."
+msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
+msgstr "Les Incoterms sont une série de termes commerciaux prédéfinie utilisés dans les transactions internationales."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
@@ -426,33 +370,20 @@ msgstr "Des actions manuelles pourraient être requises. "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
-msgid ""
-"Margin of error for dates promised to customers. Products will be scheduled "
-"for delivery that many days earlier than the actual promised date, to cope "
-"with unexpected delays in the supply chain."
-msgstr ""
-"Marge d'erreur pour les dates annoncées aux clients. Permet de spécifier le "
-"décalage entre la date de livraison prévue et la date de livraison annoncée "
-"afin de faire face aux retards inattendus dans la chaîne "
-"d'approvisionnement."
+msgid "Margin of error for dates promised to customers. Products will be scheduled for delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain."
+msgstr "Marge d'erreur pour les dates annoncées aux clients. Permet de spécifier le décalage entre la date de livraison prévue et la date de livraison annoncée afin de faire face aux retards inattendus de la chaîne d'approvisionnement."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__security_lead
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid ""
-"Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
-msgstr ""
-"Marge d'erreur sur les dates promises aux clients. Les approvisionnements "
-"seront planifiés avec autant de jours d'avance sur la date promise, afin de "
-"compenser les délais inattendus sur la supply chain."
+msgid "Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain."
+msgstr "Marge d'erreur sur les dates promises aux clients. Les approvisionnements seront planifiés avec autant de jours d'avance sur la date promise, afin de compenser les délais inattendus sur la supply chain."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr "Appliquer des routes spécifiques"
+msgstr "Méthode de mise à jour des des quantités livrées"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -475,12 +406,8 @@ msgstr "Pas de disponibilité future"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
-msgid ""
-"Number of days between the order confirmation and the shipping of the "
-"products to the customer"
-msgstr ""
-"Nombre de jours entre la confirmation de la commande et l'expédition des "
-"articles au client"
+msgid "Number of days between the order confirmation and the shipping of the products to the customer"
+msgstr "Nombre de jours entre la confirmation de la commande et l'expédition des articles au client"
 
 #. module: sale_stock
 #. openerp-web
@@ -578,7 +505,7 @@ msgstr "Bon de commande"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "Annulation Bon de commande"
+msgstr "Annulation Commande"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -628,12 +555,12 @@ msgstr "Sélectionnable dans les lignes de ventes"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
 msgid "Ship all products at once"
-msgstr "Livrer tous les produits en une fois"
+msgstr "Livrer tous les articles en une fois"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr "Livrer les produits dès qu'ils sont disponibles, avec des reliquats"
+msgstr "Livrer les articles dès qu'ils sont disponibles, avec des reliquats"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -647,17 +574,13 @@ msgstr "Vendu dans les 365 derniers jours"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
-msgid ""
-"Some products have already been delivered. Returns can be created from the "
-"Delivery Orders."
-msgstr ""
-"Certains produits ont déjà été livrés. Des retours peuvent être créées "
-"depuis les Bons de livraison."
+msgid "Some products have already been delivered. Returns can be created from the Delivery Orders."
+msgstr "Certains articles ont déjà été livrés. Des retours peuvent être créées depuis les Bons de livraison."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Mouvement de stock"
+msgstr "Mouvement d'inventaire"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
@@ -767,9 +690,7 @@ msgstr "Quand commencer la livraison"
 msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
-msgstr ""
-"Vous ne pouvez pas diminuer la quantité commandée en dessous de la quantité "
-"livrée. Il faut d'abord créer un retour."
+msgstr "Vous ne pouvez pas diminuer la quantité commandée en dessous de la quantité livrée. Il faut d'abord créer un retour."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

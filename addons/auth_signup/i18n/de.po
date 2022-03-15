@@ -1,38 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_signup
-# 
+#
 # Translators:
-# Renzo Meister, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Magdalena Zimprich <magdalena.zimprich@camadeus.at>, 2017
-# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# Niki Waibel, 2017
-# Andi, 2017
-# e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2019
-# Johannes Croe <jcr@odoo.com>, 2019
-# Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
-# Leon Grill <leg@odoo.com>, 2019
-# Robert Förster <hello@suppliot.eu>, 2021
+# Martin Trigaux, 2021
 # Chris Egal <sodaswed@web.de>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
-# 
+# Friederike Fasterling-Nesselbosch, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2016-08-05 12:56+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_signup
@@ -42,20 +28,13 @@ msgstr "<i title=\"Schließen\" class=\"small fa fa-times\"/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid ""
-"<strong>A password reset has been requested for this user. An email "
-"containing the following link has been sent:</strong>"
-msgstr ""
-"Für diesen Benutzer wurde eine Passwortzurücksetzung beantragt. Eine E-Mail "
-"mit dem folgenden Link wurde gesendet:"
+msgid "<strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>"
+msgstr "Für diesen Benutzer wurde eine Passwortzurücksetzung beantragt. Eine E-Mail mit dem folgenden Link wurde gesendet:"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid ""
-"<strong>An invitation email containing the following subscription link has "
-"been sent:</strong>"
-msgstr ""
-"Eine Einladungs-E-Mail mit dem folgenden Bestätigungslink wurde versendet:"
+msgid "<strong>An invitation email containing the following subscription link has been sent:</strong>"
+msgstr "<strong>Eine Einladungs-E-Mail mit dem folgenden Bestätigungslink wurde versendet:</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -365,14 +344,13 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr "Existiert schon ein Benutzer?"
+msgstr "Haben Sie schon einen Benutzer?"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
-"Es wurde eine E-Mail mit Zugangsdaten zur Änderung Ihres Passworts gesendet"
+msgstr "Es wurde eine E-Mail mit Zugangsdaten zur Änderung Ihres Passworts gesendet"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -415,18 +393,17 @@ msgstr "Zurück zur Anmeldung"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
-"E-Mail kann nicht verschickt werden: Benutzer %s hat keine E-Mail Adresse"
+msgstr "E-Mail kann nicht verschickt werden: Benutzer %s hat keine E-Mail Adresse"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Close"
-msgstr "Schließen"
+msgstr "Abschließen"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -452,7 +429,7 @@ msgstr "Kontakt"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Could not create a new account."
-msgstr "Konnte neues Konto nicht anlegen."
+msgstr "Neues Konto konnte nicht angelegt werden."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -473,7 +450,7 @@ msgstr "Standard-Zugriffsrechte"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr "Existiert kein Benutzer?"
+msgstr "Haben Sie noch keinen Benutzer?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
@@ -553,7 +530,7 @@ msgstr "Passwort zurücksetzen"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr "Passwort zurücksetzen: Falscher Benutzername oder E-Mail"
+msgstr "Passwort zurücksetzen: Ungültiger Benutzername oder E-Mail"
 
 #. module: auth_signup
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
@@ -605,9 +582,7 @@ msgstr "Registrierungs URL"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
-"Die Registrierung ist, für Benutzer die nicht eingeladen sind, nicht "
-"erlaubt."
+msgstr "Die Registrierung ist, für Benutzer die nicht eingeladen sind, nicht erlaubt."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
@@ -647,7 +622,7 @@ msgstr "Status"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr "Vorlage 'Benutzer' für neue registrierte Benutzer"
+msgstr "Vorlagenbenutzer für selbstregistrierte Benutzer"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -657,14 +632,8 @@ msgstr "Das Formular wurde nicht ordnungsgemäß ausgefüllt."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid ""
-"To send invitations in B2B mode, open a contact or select several ones in "
-"list view and click on 'Portal Access Management' option in the dropdown "
-"menu *Action*."
-msgstr ""
-"Um Einladungen im B2B-Modus zu versenden, öffnen Sie einen Kontakt oder "
-"wählen Sie in der Listenansicht mehrere aus und klicken Sie im Dropdown-Menü"
-" * Aktion * auf die Option 'Portal Access Management'."
+msgid "To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*."
+msgstr "Um Einladungen im B2B-Modus zu versenden, öffnen Sie einen Kontakt oder wählen Sie in der Listenansicht mehrere aus und klicken Sie im Dropdown-Menü * Aktion * auf die Option 'Portal Access Management'."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -687,8 +656,7 @@ msgstr "Willkommen bei {{ object.company_id.name }}!"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr ""
-"Sie können diese Aktion nicht für einen archivierten Benutzer durchführen."
+msgstr "Sie können diese Aktion nicht für einen archivierten Benutzer durchführen."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -708,9 +676,5 @@ msgstr "z.B. John Doe"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
-msgid ""
-"{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
-"to connect to Odoo"
-msgstr ""
-"{{ object.create_uid.name }} von {{ object.company_id.name }} lädt Sie ein "
-"sich mit Odoo zu verbinden"
+msgid "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you to connect to Odoo"
+msgstr "{{ object.create_uid.name }} von {{ object.company_id.name }} lädt Sie ein sich mit Odoo zu verbinden"

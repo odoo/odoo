@@ -1,32 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_gamification
-# 
+#
 # Translators:
-# 3b9484bffcdca7ec5ba6321d4045e501_78b6a9d <35a8ed28c63a42953fd735259886fa3a_418566>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
-# Renzo Meister, 2018
-# Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
-# 
+# Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_gamification
@@ -42,12 +33,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__badge_ids
-msgid ""
-"All employee badges, linked to the employee either directly or through the "
-"user"
-msgstr ""
-"Alle Mitarbeiterabzeichen, die entweder direkt oder über den Benutzer mit "
-"dem Mitarbeiter verknüpft sind"
+msgid "All employee badges, linked to the employee either directly or through the user"
+msgstr "Alle Mitarbeiterauszeichnungen, die entweder direkt oder über den Benutzer mit dem Mitarbeiter verknüpft sind"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -56,9 +43,9 @@ msgid ""
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
 msgstr ""
-"Weise eine Liste Ziele ausgewählten Benutzern zu, um sie auszuwerten.\n"
-"Der Wettbewerb kann eine Zeitspanne (wöchentlich, monatlich, ..) zur automatischen Erstellung von Zielen enthalten.\n"
-"Die Ziele werden für die gewählten Benutzer oder Gruppenmitglieder angelegt."
+"Weisen Sie ausgewählten Benutzern eine Liste von Zielen zu, um sie zu bewerten.\n"
+"Die Herausforderung kann einen Zeitraum (wöchentlich, monatlich...) für die automatische Erstellung von Zielen verwenden.\n"
+"Die Ziele werden für die angegebenen Benutzer oder Gruppenmitglieder erstellt."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
@@ -69,11 +56,8 @@ msgstr "Auszeichnungen"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid ""
-"Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr ""
-"Auszeichnungen sind Belohnungen für gute Arbeit. Belohnen Sie so die "
-"Mitarbeiter, die sich eine Anerkennung verdient haben."
+msgid "Badges are rewards of good work. Give them to people you believe deserve it."
+msgstr "Auszeichnungen sind Belohnungen für gute Arbeit. Belohnen Sie so die Mitarbeiter, die sich eine Anerkennung verdient haben."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
@@ -112,9 +96,7 @@ msgstr "Ein neues Ziel anlegen"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
-msgstr ""
-"Erklären Sie warum der Mitarbeiter/ die Mitarbeiterin die Auszeichnung "
-"erhält (ist öffentlich sichtbar)."
+msgstr "Erklären Sie warum der Mitarbeiter/ die Mitarbeiterin die Auszeichnung erhält (ist öffentlich sichtbar)."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
@@ -151,7 +133,7 @@ msgstr "Gamification-Pin"
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr "Gamification Benutzer-Pin"
+msgstr "Gamification Benutzer-Abzeichen"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
@@ -224,9 +206,7 @@ msgstr "Mitarbeiter/Mitarbeiterin belohnen mit"
 #: code:addons/hr_gamification/models/gamification.py:0
 #, python-format
 msgid "The selected employee does not correspond to the selected user."
-msgstr ""
-"Der ausgewählte Mitarbeiter/ die ausgewählte Mitarbeiterin entspricht nicht "
-"dem ausgewählten Benutzer."
+msgstr "Der ausgewählte Mitarbeiter entspricht nicht dem ausgewählten Benutzer."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__user_id
@@ -241,24 +221,22 @@ msgstr "Benutzer"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "What are you thankful for?"
-msgstr "Für was wollen Sie sich bedanken?"
+msgstr "Wofür sind Sie dankbar?"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can not send a badge to yourself."
-msgstr "Du kannst dir nicht selbst einen Pin anstecken"
+msgstr "Sie können sich selbst keine Abzeichen verleihen."
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can send badges only to employees linked to a user."
-msgstr ""
-"Es können nur Auszeichnungen an Mitarbeiter/Mitarbeiterinnen vergeben "
-"werden, die mit einem Benutzer verbunden sind."
+msgstr "Es können nur Auszeichnungen an Mitarbeiter/Mitarbeiterinnen vergeben werden, die mit einem Benutzer verbunden sind."
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
-msgstr "diesen Mitarbeiter/eine Mitarbeiterin für gute Arbeit belohnen"
+msgstr "um diesen Mitarbeiter für seine gute Arbeit zu belohnen"

@@ -1,27 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-# 
+#
 # Translators:
-# Marie Willemyns <mwi@odoo.com>, 2019
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# Eloïse Stilmant <est@odoo.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
-# Alexandra Jubert <aju@odoo.com>, 2021
-# Martin Trigaux, 2022
-# 
+# Martin Trigaux, 2021
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2019-03-20 14:59+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: snailmail
@@ -66,12 +61,8 @@ msgstr "Une erreur inconnue est survenue. Veuillez contacter notre"
 #. module: snailmail
 #: code:addons/snailmail/wizard/snailmail_letter_cancel.py:0
 #, python-format
-msgid ""
-"Are you sure you want to discard %s snailmail delivery failures? You won't "
-"be able to re-send these letters later!"
-msgstr ""
-"Êtes-vous sûr(e) de vouloir annuler %s échecs d'envoi de courriers? Vous ne "
-"pourrez plus renvoyer ces lettres après!"
+msgid "Are you sure you want to discard %s snailmail delivery failures? You won't be able to re-send these letters later!"
+msgstr "Êtes-vous sûr(e) de vouloir annuler %s échecs d'envoi de courriers? Vous ne pourrez plus renvoyer ces lettres après!"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -102,7 +93,6 @@ msgstr "Recto-verso"
 
 #. module: snailmail
 #. openerp-web
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "Buy credits"
@@ -243,7 +233,7 @@ msgstr "Rejeter la notification de renvoi par modèle"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__display_name
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher Nom"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_datas
@@ -313,19 +303,13 @@ msgstr "ID"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_cancel
-msgid ""
-"If you want to re-send them, click Cancel now, then click on the "
-"notification and review them one by one by clicking on the red paper-plane "
-"next to each message."
-msgstr ""
-"Si vous voulez les renvoyer, cliquez sur Annuler maintenant, puis cliquez "
-"sur la notification et passez-les en revue une par une en cliquant sur "
-"l'icône d'avion en papier rouge à côté de chaque message."
+msgid "If you want to re-send them, click Cancel now, then click on the notification and review them one by one by clicking on the red paper-plane next to each message."
+msgstr "Si vous voulez les renvoyer, cliquez sur Annuler maintenant, puis cliquez sur la notification et passez-les en revue une par une en cliquant sur l'icône d'avion en papier rouge à côté de chaque message."
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__pending
 msgid "In Queue"
-msgstr "En attente"
+msgstr "Dans la queue"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__info_msg
@@ -393,13 +377,8 @@ msgstr "Notifications par message"
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
 #: model:ir.model.fields,help:snailmail.field_mail_message__message_type
-msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
-msgstr ""
-"Type de message : \"Courriel\" pour les courriers électroniques, "
-"\"Notification\" pour les messages du système, \"Commentaire\" pour les "
-"autres messages tels que les réponses des utilisateurs"
+msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
+msgstr "Type de message : \"Courriel\" pour les courriers électroniques, \"Notification\" pour les messages du système, \"Commentaire\" pour les autres messages tels que les réponses des utilisateurs"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -654,12 +633,8 @@ msgstr "L'adresse du destinataire n'est pas complète"
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid ""
-"The attachment of the letter could not be sent. Please check its content and"
-" contact the support if the problem persists."
-msgstr ""
-"La pièce jointe de la lettre n'a pas pu être envoyée. Merci de vérifier son "
-"contenu et de contacter le support si le problème persiste."
+msgid "The attachment of the letter could not be sent. Please check its content and contact the support if the problem persists."
+msgstr "La pièce jointe de la lettre n'a pas pu être envoyée. Merci de vérifier son contenu et de contacter le support si le problème persiste."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -671,40 +646,26 @@ msgstr "Le pays du partenaire n'est pas couvert par Snailmail."
 #. openerp-web
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
-msgid ""
-"The country to which you want to send the letter is not supported by our "
-"service."
-msgstr ""
-"Le pays auquel vous souhaitez envoyer une lettre n'est pas supporté par "
-"notre service."
+msgid "The country to which you want to send the letter is not supported by our service."
+msgstr "Le pays auquel vous souhaitez envoyer une lettre n'est pas supporté par notre service."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid ""
-"The customer address is not complete. Update the address here and re-send "
-"the letter."
-msgstr ""
-"L'adresse du client n'est pas complète. Mettez à jour l'adresse ici et "
-"renvoyez la lettre."
+msgid "The customer address is not complete. Update the address here and re-send the letter."
+msgstr "L'adresse du client n'est pas complète. Mettez à jour l'adresse ici et renvoyez la lettre."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
-msgstr ""
-"Le document a été correctement envoyé par la poste.<br>Le numéro de suivi "
-"est %s"
+msgstr "Le document a été correctement envoyé par la poste.<br>Le numéro de suivi est %s"
 
 #. module: snailmail
 #. openerp-web
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
-msgid ""
-"The letter could not be sent due to insufficient credits on your IAP "
-"account."
-msgstr ""
-"La lettre n'a pas pu être envoyée car il n'y a pas suffisamment de crédits "
-"sur votre compte IAP."
+msgid "The letter could not be sent due to insufficient credits on your IAP account."
+msgstr "La lettre n'a pas pu être envoyée car il n'y a pas suffisamment de crédits sur votre compte IAP."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -751,31 +712,21 @@ msgstr "Vous êtes sur le point d'envoyer ceci"
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid ""
-"You don't have an IAP account registered for this service.<br>Please go to "
-"<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
-msgstr ""
-"Vous n'avez pas de compte IAP enregistré pour ce service.<br>Merci d'aller "
-"sur <a href=%s target=\"new\">iap.odoo.com</a> pour réclamer votre crédits "
-"gratuits."
+msgid "You don't have an IAP account registered for this service.<br>Please go to <a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
+msgstr "Vous n'avez pas de compte IAP enregistré pour ce service.<br>Merci d'aller sur <a href=%s target=\"new\">iap.odoo.com</a> pour réclamer votre crédits gratuits."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
-msgid ""
-"You don't have enough credits to perform this operation.<br>Please go to "
-"your <a href=%s target=\"new\">iap account</a>."
-msgstr ""
-"Vous n'avez pas assez de crédits pour réaliser cette opération.<br>Veuillez "
-"vous rendre sur votre <a href=%s target=\"new\">compte iap</a>."
+msgid "You don't have enough credits to perform this operation.<br>Please go to your <a href=%s target=\"new\">iap account</a>."
+msgstr "Vous n'avez pas assez de crédits pour réaliser cette opération.<br>Veuillez vous rendre sur votre <a href=%s target=\"new\">compte iap</a>."
 
 #. module: snailmail
 #. openerp-web
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "You need credits on your IAP account to send a letter."
-msgstr ""
-"Vous avez besoin de crédits sur votre compte IAP pour envoyer une lettre."
+msgstr "Vous avez besoin de crédits sur votre compte IAP pour envoyer une lettre."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields

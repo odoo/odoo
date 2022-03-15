@@ -1,30 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* coupon
-# 
+#
 # Translators:
-# Ermin Trevisan <trevi@twanda.com>, 2020
-# Leon Grill <leg@odoo.com>, 2020
-# Oliver Roch <oliver.roch@d9t.de>, 2020
-# Florian Pose <fp@igh.de>, 2020
-# Robert Förster <hello@suppliot.eu>, 2020
-# Kevin Harrings <kha@odoo.com>, 2021
 # Martin Trigaux, 2021
 # Chris Egal <sodaswed@web.de>, 2021
+# Kevin Harrings <kha@odoo.com>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2020-08-21 13:31+0000\n"
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
+"PO-Revision-Date: 2021-09-14 12:21+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: coupon
@@ -69,35 +64,14 @@ msgid "*Valid for following products:"
 msgstr "*Gültig für folgende Artikel:"
 
 #. module: coupon
-#: model:coupon.program,name:coupon.10_percent_coupon
-msgid "10% Discount"
-msgstr "10% Rabatt"
-
-#. module: coupon
-#: model:product.product,name:coupon.product_product_10_percent_discount
-#: model:product.template,name:coupon.product_product_10_percent_discount_product_template
-msgid "10.0% discount on total amount"
-msgstr "10,0% Rabatt auf den Gesamtbetrag"
-
-#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
-msgid ""
-"<span attrs=\"{'invisible': [('discount_type', '!=', "
-"'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
-"class=\"oe_inline\">%</span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('discount_type', '!=', "
-"'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
-"class=\"oe_inline\">%</span>"
+msgid "<span attrs=\"{'invisible': [('discount_type', '!=', 'percentage')],'required': [('discount_type', '=', 'percentage')]}\" class=\"oe_inline\">%</span>"
+msgstr "<span attrs=\"{'invisible': [('discount_type', '!=', 'percentage')],'required': [('discount_type', '=', 'percentage')]}\" class=\"oe_inline\">%</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
-msgid ""
-"<span class=\"o_form_label oe_inline\"> Days</span> <span "
-"class=\"oe_grey\">if 0, infinite use</span>"
-msgstr ""
-"<span class=\"o_form_label oe_inline\">Tage</span> <span "
-"class=\"oe_grey\">falls 0, unbegrenzt</span>"
+msgid "<span class=\"o_form_label oe_inline\"> Days</span> <span class=\"oe_grey\">if 0, infinite use</span>"
+msgstr "<span class=\"o_form_label oe_inline\">Tage</span> <span class=\"oe_grey\">falls 0, unbegrenzt</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -137,11 +111,8 @@ msgstr "<span>Artikel</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
-msgid ""
-"<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
-msgstr ""
-"<strong style=\"font-size: 55px; color: #875A7B\">erhalte kostenlose "
-"Lieferung</strong>"
+msgid "<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
+msgstr "<strong style=\"font-size: 55px; color: #875A7B\">erhalte kostenlose Lieferung</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
@@ -160,14 +131,8 @@ msgstr "Wenn aktiv, ist ein Programm für die Kunden verfügbar"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__promo_code
-msgid ""
-"A promotion code is a code that is associated with a marketing discount. For"
-" example, a retailer might tell frequent customers to enter the promotion "
-"code 'THX001' to receive a 10%% discount on their whole order."
-msgstr ""
-"Ein Aktionscode ist ein Code, der mit einem Marketingrabatt verbunden ist. "
-"Beispielsweise kann ein Einzelhändler Stammkunden den Aktionscode „THX001“ "
-"anbieten, um einen 10 %% auf den gesamten Auftrag zu erhalten."
+msgid "A promotion code is a code that is associated with a marketing discount. For example, a retailer might tell frequent customers to enter the promotion code 'THX001' to receive a 10%% discount on their whole order."
+msgstr "Ein Aktionscode ist ein Code, der mit einem Marketingrabatt verbunden ist. Beispielsweise kann ein Einzelhändler Stammkunden den Aktionscode „THX001“ anbieten, um einen 10 %% auf den gesamten Auftrag zu erhalten."
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__program_type
@@ -254,31 +219,21 @@ msgstr ""
 "Sie können Aktionscodes teilen oder die Aktionen automatisch gewähren, wenn bestimmte Bedingungen erfüllt sind."
 
 #. module: coupon
-#: model:coupon.program,name:coupon.3_cabinets_plus_1_free
-msgid "Buy 3 large cabinets, get one for free"
-msgstr "Kaufen Sie 3 große Schränke, erhalten Sie einen gratis"
-
-#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
 msgid "Cancel"
-msgstr "Stornieren"
+msgstr "Abbrechen"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__cancel
 msgid "Cancelled"
-msgstr "Storniert"
+msgstr "Abgebrochen"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__code
 msgid "Code"
 msgstr "Code"
-
-#. module: coupon
-#: model:coupon.program,name:coupon.10_percent_auto_applied
-msgid "Code for 10% on orders"
-msgstr "Code für 10% auf Bestellungen"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__company_id
@@ -358,9 +313,7 @@ msgstr "Startdatum des Gutscheinprogramms"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__sequence
-msgid ""
-"Coupon program will be applied based on given sequence if multiple programs "
-"are defined on same condition(For minimum amount)"
+msgid "Coupon program will be applied based on given sequence if multiple programs are defined on same condition(For minimum amount)"
 msgstr "Das Gutscheinprogramm wird basierend auf der vorgegebenen Reihenfolge"
 
 #. module: coupon
@@ -490,7 +443,7 @@ msgstr "E-Mail-Assistent"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_to
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_date_to
 msgid "End Date"
-msgstr "Abschlussdatum"
+msgstr "Enddatum"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__expiration_date
@@ -535,12 +488,6 @@ msgid "Free Product - %s"
 msgstr "Gratisprodukt – %s"
 
 #. module: coupon
-#: model:product.product,name:coupon.product_product_free_large_cabinet
-#: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
-msgid "Free Product - Large Cabinet"
-msgstr "Kostenloses Produkt - Großer Schrank"
-
-#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Generate"
 msgstr "Erzeugen"
@@ -558,12 +505,8 @@ msgstr "Gutscheine erstellen"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
-msgid ""
-"Generate and share coupon codes with your customers to get discounts or free"
-" products."
-msgstr ""
-"Erstellen Sie Gutscheincodes und teilen Sie diese mit Ihren Kunden, um "
-"Rabatte oder kostenlose Produkte zu erhalten."
+msgid "Generate and share coupon codes with your customers to get discounts or free products."
+msgstr "Erstellen Sie Gutscheincodes und teilen Sie diese mit Ihren Kunden, um Rabatte oder kostenlose Produkte zu erhalten."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_ids
@@ -607,7 +550,7 @@ msgstr "Ungültiger Partner."
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward____last_update
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule____last_update
 msgid "Last Modified on"
-msgstr "Letzte Änderung am"
+msgstr "Zuletzt geändert am"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__write_uid
@@ -616,7 +559,7 @@ msgstr "Letzte Änderung am"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__write_uid
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert von"
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__write_date
@@ -651,9 +594,7 @@ msgstr "Maximaler Rabattbetrag, der angeboten werden kann"
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__maximum_use_number
 msgid "Maximum number of sales orders in which reward can be provided"
-msgstr ""
-"Maximale Anzahl der Verkaufsaufträge, bei denen eine Prämie angeboten werden"
-" kann"
+msgstr "Maximale Anzahl der Verkaufsaufträge, bei denen eine Prämie angeboten werden kann"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -777,12 +718,8 @@ msgstr "Produkt in diesem Verkaufsauftrag, um den Rabatt anzuwenden."
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_line_product_id
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_line_product_id
-msgid ""
-"Product used in the sales order to apply the discount. Each coupon program "
-"has its own reward product for reporting purpose"
-msgstr ""
-"Produkt in diesem Verkaufsauftrag, um den Rabatt anzuwenden. Jedes "
-"Gutscheinprogramm hat zu Berichtszwecken ein eigenes Prämienprodukt"
+msgid "Product used in the sales order to apply the discount. Each coupon program has its own reward product for reporting purpose"
+msgstr "Produkt in diesem Verkaufsauftrag, um den Rabatt anzuwenden. Jedes Gutscheinprogramm hat zu Berichtszwecken ein eigenes Prämienprodukt"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_specific_product_ids
@@ -793,9 +730,7 @@ msgstr "Produkte"
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_specific_product_ids
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_specific_product_ids
-msgid ""
-"Products that will be discounted if the discount is applied on specific "
-"products"
+msgid "Products that will be discounted if the discount is applied on specific products"
 msgstr "Produkte, die reduziert werden, wenn der Rabatt angewendet wird"
 
 #. module: coupon
@@ -948,23 +883,17 @@ msgstr "Gesendet"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__sequence
 msgid "Sequence"
-msgstr "Sequenz"
+msgstr "Reihenfolge"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
-msgid ""
-"Some selected customers do not have an email address and will not receive "
-"the coupon."
-msgstr ""
-"Einige ausgewählte Kunden haben keine E-Mail-Adresse und werden den Kupon "
-"nicht erhalten."
+msgid "Some selected customers do not have an email address and will not receive the coupon."
+msgstr "Einige ausgewählte Kunden haben keine E-Mail-Adresse und werden den Kupon nicht erhalten."
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Specify a mail template to send the generated coupons as email."
-msgstr ""
-"Geben Sie eine E-Mail-Vorlage an, um die generierten Gutscheine als E-Mail "
-"zu versenden."
+msgstr "Geben Sie eine E-Mail-Vorlage an, um die generierten Gutscheine als E-Mail zu versenden."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
@@ -975,7 +904,7 @@ msgstr "Startdatum"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__state
 msgid "State"
-msgstr "Bundesland"
+msgstr "Status"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
@@ -1031,9 +960,7 @@ msgstr "Das Startdatum muss vor dem Enddatum sein"
 #: code:addons/coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon %s exists but the origin sales order is not validated yet."
-msgstr ""
-"Dieser Gutschein %s existiert, aber der ursprüngliche Verkaufsauftrag wurde "
-"noch nicht bestätigt."
+msgstr "Dieser Gutschein %s existiert, aber der ursprüngliche Verkaufsauftrag wurde noch nicht bestätigt."
 
 #. module: coupon
 #: code:addons/coupon/models/coupon.py:0
@@ -1062,15 +989,7 @@ msgstr "Gesamtzahl der Aufträge"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_uom_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_uom_id
 msgid "Unit of Measure"
-msgstr "Mengeneinheit"
-
-#. module: coupon
-#: model:product.product,uom_name:coupon.product_product_10_percent_discount
-#: model:product.product,uom_name:coupon.product_product_free_large_cabinet
-#: model:product.template,uom_name:coupon.product_product_10_percent_discount_product_template
-#: model:product.template,uom_name:coupon.product_product_free_large_cabinet_product_template
-msgid "Units"
-msgstr "Einheiten"
+msgstr "Maßeinheit"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed

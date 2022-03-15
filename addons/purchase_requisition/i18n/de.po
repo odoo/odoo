@@ -1,46 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-# 
+#
 # Translators:
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# b69269ad567b7550d53748df6a5b0869_97d08cd, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Philipp Hug <philipp@hug.cx>, 2017
-# Niki Waibel, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Andi, 2017
-# e2f <projects@e2f.com>, 2018
-# Renzo Meister, 2018
-# Wolfgang Taferner, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
-# Katharina Moritz <kmo@e2f.com>, 2018
-# Johannes Croe <jcr@odoo.com>, 2019
-# Anja Uebermuth <anja.uebermuth@arts.eu>, 2019
-# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2019
-# Bettina Pfeifer <betzilla@web.de>, 2019
-# Leon Grill <leg@odoo.com>, 2019
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
-# Chris Egal <sodaswed@web.de>, 2021
-# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # Martin Trigaux, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Raymond Vetter, 2021
 # Friederike Fasterling-Nesselbosch, 2022
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"POT-Creation-Date: 2022-03-15 12:07+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_requisition
@@ -163,7 +142,7 @@ msgstr "Vertragsart"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__account_analytic_id
 msgid "Analytic Account"
-msgstr "Analysekonto"
+msgstr "Kostenstelle"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_tag_ids
@@ -228,7 +207,7 @@ msgstr "Kategorie"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Close"
-msgstr "Schließen"
+msgstr "Abschließen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__done
@@ -256,13 +235,8 @@ msgstr "Bestätigt"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Eine Umrechnung zwischen Mengeneinheit ist nur möglich, wenn beide Einheiten"
-" einer Kategorie angehören. Die Umrechnung erfolgt dann auf der Basis der "
-"definierten Relationen."
+msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgstr "Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der Kennzahlen."
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__rfq
@@ -272,17 +246,8 @@ msgstr "Erstelle eine Bestellung im Entwurf"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_product_product__purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_product_template__purchase_requisition
-msgid ""
-"Create a draft purchase order: Based on your product configuration, the "
-"system will create a draft purchase order.Propose a call for tender : If the"
-" 'purchase_requisition' module is installed and this option is selected, the"
-" system will create a draft call for tender."
-msgstr ""
-"Erstellen Sie den Entwurf einer Bestellung: Auf der Grundlage Ihrer "
-"Produktkonfiguration erstellt das System einen Bestellungsentwurf. "
-"Ausschreibungsentwurf vorschlagen: Wenn das Modul \"purchase_requisition\" "
-"installiert und diese Option ausgewählt ist, erstellt das System einen "
-"Ausschreibungsentwurf."
+msgid "Create a draft purchase order: Based on your product configuration, the system will create a draft purchase order.Propose a call for tender : If the 'purchase_requisition' module is installed and this option is selected, the system will create a draft call for tender."
+msgstr "Erstellen Sie den Entwurf einer Bestellung: Auf der Grundlage Ihrer Produktkonfiguration erstellt das System einen Bestellungsentwurf. Ausschreibungsentwurf vorschlagen: Wenn das Modul \"purchase_requisition\" installiert und diese Option ausgewählt ist, erstellt das System einen Ausschreibungsentwurf."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -349,10 +314,8 @@ msgstr "Entwurf"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
-msgid ""
-"Example of purchase agreements include call for tenders and blanket orders."
-msgstr ""
-"Beispiel für Kaufverträge beinhalten Ausschreibungen und Blankoaufträge."
+msgid "Example of purchase agreements include call for tenders and blanket orders."
+msgstr "Beispiel für Kaufverträge beinhalten Ausschreibungen und Blankoaufträge."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
@@ -367,7 +330,7 @@ msgstr "Abonnenten (Partner)"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font für großartiges Icon, z.B. fa-tasks "
+msgstr "FontAwesome Icon, z.B. fa-tasks"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -422,9 +385,7 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
-"angekreuzt ist."
+msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -452,14 +413,14 @@ msgstr "Ist ein Abonnent"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line____last_update
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__write_date
@@ -476,7 +437,7 @@ msgstr "Verspätete Aktivitäten"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
 msgid "Lines"
-msgstr "Linien"
+msgstr "Zeilen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
@@ -486,7 +447,7 @@ msgstr "Hauptanhänge"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
-msgstr "Error beim senden der Nachricht"
+msgstr "Fehler beim Senden der Nachricht"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
@@ -675,7 +636,7 @@ msgstr "Einkauf durch Bestellmeldung"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
-msgstr "Einkaufsbeauftragter"
+msgstr "Einkäufer"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -691,12 +652,7 @@ msgstr "Bestellmeldung Positionen"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
 msgid "Purchase Requisition Type"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
-msgid "Purchase orders"
-msgstr "Bestellungen"
+msgstr "Bestellanforderungsart"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
@@ -795,14 +751,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
-msgid ""
-"Set active to false to hide the Purchase Agreement Types without removing "
-"it."
-msgstr ""
+msgid "Set active to false to hide the Purchase Agreement Types without removing it."
+msgstr "Setzen Sie active auf false, um die Kaufvertragsarten auszublenden, ohne sie zu entfernen."
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -865,22 +819,14 @@ msgstr "Bedingungen und Konditionen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
-msgid ""
-"The expected and scheduled delivery date where all the products are received"
-msgstr ""
-"Das erwartete und disponierte Lieferdatum, an dem alle Produkte geliefert "
-"sind"
+msgid "The expected and scheduled delivery date where all the products are received"
+msgstr "Das erwartete und disponierte Lieferdatum, an dem alle Produkte geliefert sind"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid ""
-"There is already an open blanket order for this supplier. We suggest you "
-"complete this open blanket order, instead of creating a new one."
-msgstr ""
-"Es gibt bereits eine offene Rahmenbestellung für diesen Lieferanten. Wir "
-"schlagen vor, dass Sie diesen offenen Rahmenauftrag abschließen, anstatt "
-"einen neuen zu erstellen."
+msgid "There is already an open blanket order for this supplier. We suggest you complete this open blanket order, instead of creating a new one."
+msgstr "Es gibt bereits eine offene Rahmenbestellung für diesen Lieferanten. Wir schlagen vor, dass Sie diesen offenen Rahmenauftrag abschließen, anstatt einen neuen zu erstellen."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -905,12 +851,12 @@ msgstr "Ungelesene Nachrichten"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Zähler der ungelesenen Nachrichten"
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "UoM"
-msgstr "ME"
+msgstr "UoM"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
@@ -958,33 +904,25 @@ msgstr "Sie können nur Bestellanforderungen im Entwurf löschen."
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
-msgstr ""
-"Sie können die Vereinbarung '%s' nicht bestätigen, da es keine Produktzeile "
-"gibt."
+msgstr "Sie können die Vereinbarung '%s' nicht bestätigen, da es keine Produktzeile gibt."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
-msgstr "Sie können die Pauschalbestellung nicht ohne Preis bestätigen."
+msgstr "Sie können die Rahmenbestellung nicht ohne Preis bestätigen."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
-msgstr "Sie können die Pauschalbestellung nicht ohne Menge bestätigen."
+msgstr "Sie können die Rahmenbestellung nicht ohne Menge bestätigen."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid ""
-"You have to cancel or validate every RfQ before closing the purchase "
-"requisition."
-msgstr ""
-"Sie müssen jede Anfrage stornieren oder validieren, bevor Sie die "
-"Bestellanforderung abschließen."
+msgid "You have to cancel or validate every RfQ before closing the purchase requisition."
+msgstr "Sie müssen jede Anfrage stornieren oder validieren, bevor Sie die Bestellanforderung abschließen."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

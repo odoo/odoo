@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_coupon
-# 
+#
 # Translators:
-# Leon Grill <leg@odoo.com>, 2020
+# Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
-# Martin Trigaux, 2022
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2020-12-11 11:04+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_coupon
@@ -199,20 +198,13 @@ msgstr ""
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/coupon.py:0
 #, python-format
-msgid ""
-"A coupon from the same program has already been reserved for this order."
-msgstr ""
-"Ein Kupon aus demselben Programm wurde bereits für diese Bestellung "
-"reserviert."
+msgid "A coupon from the same program has already been reserved for this order."
+msgstr "Ein Kupon aus demselben Programm wurde bereits für diese Bestellung reserviert."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__promo_barcode
-msgid ""
-"A technical field used as an alternative to the promo_code. This is "
-"automatically generated when promo_code is changed."
-msgstr ""
-"Ein technisches Feld, das als Alternative zum promo_code genutzt wird. Wird "
-"automatisch generiert wenn promo_code geändert wird."
+msgid "A technical field used as an alternative to the promo_code. This is automatically generated when promo_code is changed."
+msgstr "Ein technisches Feld, das als Alternative zum promo_code genutzt wird. Wird automatisch generiert wenn promo_code geändert wird."
 
 #. module: pos_coupon
 #. openerp-web
@@ -236,8 +228,7 @@ msgstr "Auf PoS-Auftrag angewendet"
 #: code:addons/pos_coupon/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Are you sure you want to deactivate %s in this order?"
-msgstr ""
-"Sind sie sicher, dass Sie %s in dieser Reihenfolge deaktivieren möchten?"
+msgstr "Sind sie sicher, dass Sie %s in dieser Reihenfolge deaktivieren möchten?"
 
 #. module: pos_coupon
 #. openerp-web
@@ -308,9 +299,7 @@ msgstr "Programm wird deaktiviert"
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_pos_config_view_form
 msgid "Define the coupon and promotion programs you can use in this PoS."
-msgstr ""
-"Definieren Sie die Gutschein- und Aktionsprogramme, die Sie an diesem "
-"Verkaufsort verwenden können."
+msgstr "Definieren Sie die Gutschein- und Aktionsprogramme, die Sie an diesem Verkaufsort verwenden können."
 
 #. module: pos_coupon
 #. openerp-web
@@ -328,11 +317,8 @@ msgstr "Geben Sie einen Promo- oder Kupon-Code ein"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__is_program_reward
-msgid ""
-"Flag indicating that this order line is a result of coupon/promo program."
-msgstr ""
-"Kennzeichen, das anzeigt, dass diese Auftragszeile das Ergebnis eines "
-"Coupons/Promo-Programms ist."
+msgid "Flag indicating that this order line is a result of coupon/promo program."
+msgstr "Kennzeichen, das anzeigt, dass diese Auftragszeile das Ergebnis eines Coupons/Promo-Programms ist."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order__generated_coupon_ids
@@ -460,13 +446,8 @@ msgstr "Programme zurücksetzen"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order__applied_program_ids
-msgid ""
-"Technical field. This is set when the order is validated. We normally get "
-"this value thru the `program_id` of the reward lines."
-msgstr ""
-"Technisches Feld. Dies wird bei der Validierung der Bestellung festgelegt. "
-"Normalerweise erhalten wir diesen Wert über die \"program_id\" der "
-"Prämienzeilen."
+msgid "Technical field. This is set when the order is validated. We normally get this value thru the `program_id` of the reward lines."
+msgstr "Technisches Feld. Dies wird bei der Validierung der Bestellung festgelegt. Normalerweise erhalten wir diesen Wert über die \"program_id\" der Prämienzeilen."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_ids
@@ -492,12 +473,8 @@ msgstr "Dieser Kupon ist ungültig (%s)."
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/pos_config.py:0
 #, python-format
-msgid ""
-"To continue, make the following reward products to be available in Point of "
-"Sale."
-msgstr ""
-"Um fortzufahren, machen Sie die folgenden Prämienprodukte im Kassensystem "
-"verfügbar."
+msgid "To continue, make the following reward products to be available in Point of Sale."
+msgstr "Um fortzufahren, machen Sie die folgenden Prämienprodukte im Kassensystem verfügbar."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_barcode_rule__type
@@ -507,8 +484,7 @@ msgstr "Typ"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_config__use_coupon_programs
 msgid "Use coupon and promotion programs in this PoS configuration."
-msgstr ""
-"Coupons und Promos in der Konfiguration dieses Kassensystems verwenden."
+msgstr "Coupons und Promos in der Konfiguration dieses Kassensystems verwenden."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__valid_partner_ids
@@ -554,4 +530,4 @@ msgstr "[POS] Kupon: Per E-Mail versenden"
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "no expiration"
-msgstr ""
+msgstr "kein Ablauf"
