@@ -146,6 +146,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsSelected() {
+            return Boolean(
+                this.threadView &&
+                this.threadView.replyingToMessageView === this
+            );
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeMessageActionList() {
@@ -228,6 +238,13 @@ registerModel({
          * be set through @see highlight()
          */
         isHighlighted: attr(),
+        /**
+         * Tells whether the message is selected in the current thread viewer.
+         */
+        isSelected: attr({
+            compute: '_computeIsSelected',
+            default: false,
+        }),
         /**
          * Determines whether this message view should be squashed visually.
          */
