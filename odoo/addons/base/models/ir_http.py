@@ -326,7 +326,7 @@ class IrHttp(models.AbstractModel):
                 filehash = record['checksum']
 
         if not content:
-            if model == 'ir.attachment':
+            if model == 'ir.attachment' and field in {'datas', 'raw'}:
                 content = record.raw
             elif (
                 field_def.related_field and
