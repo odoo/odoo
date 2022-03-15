@@ -57,6 +57,19 @@ registerModel({
         _computeThreadView() {
             return this.hasThreadView ? insertAndReplace() : clear();
         },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeThreadView_hasComposerThreadTyping() {
+            if (this.discussPublicView) {
+                return true;
+            }
+            if (this.discuss) {
+                return true;
+            }
+            return clear();
+        },
     },
     fields: {
         chatter: one('Chatter', {
@@ -148,6 +161,9 @@ registerModel({
             compute: '_computeThreadView',
             inverse: 'threadViewer',
             isCausal: true,
+        }),
+        threadView_hasComposerThreadTyping: attr({
+            compute: '_computeThreadView_hasComposerThreadTyping',
         }),
     },
 });
