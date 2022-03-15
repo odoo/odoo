@@ -4,7 +4,6 @@
         <div class="o_DiscussPublicView d-flex flex-column h-100" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="discussPublicView">
                 <ThreadView t-if="discussPublicView.threadView"
-                    hasComposerThreadTyping="true"
                     localId="discussPublicView.threadView.localId"
                 />
                 <WelcomeView t-if="discussPublicView.welcomeView"

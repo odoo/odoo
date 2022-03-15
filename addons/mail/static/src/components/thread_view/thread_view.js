@@ -69,15 +69,6 @@ Object.assign(ThreadView, {
             type: Boolean,
             optional: true,
         },
-        /**
-         * If set, determines whether the composer should display status of
-         * members typing on related thread. When this prop is not provided,
-         * it defaults to composer component default value.
-         */
-        hasComposerThreadTyping: {
-            type: Boolean,
-            optional: true,
-        },
         hasScrollAdjust: {
             type: Boolean,
             optional: true,
