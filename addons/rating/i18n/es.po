@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* rating
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # 
@@ -13,11 +14,22 @@ msgstr ""
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
+=======
+# Martin Trigaux, 2021
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: rating
@@ -48,11 +60,8 @@ msgstr "Token de acceso para establecer la clasificación del valor"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__message_id
-msgid ""
-"Associated message when posting a review. Mainly used in website addons."
-msgstr ""
-"Mensaje asociado al publicar un comentario. Se utiliza principalmente en el "
-"sitio web add ons."
+msgid "Associated message when posting a review. Mainly used in website addons."
+msgstr "Mensaje asociado al publicar un comentario. Se utiliza principalmente en el sitio web add ons."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__partner_id
@@ -91,6 +100,18 @@ msgstr "Fecha"
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
+<<<<<<< HEAD
+=======
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
+msgid "Dissatisfied"
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
@@ -128,10 +149,16 @@ msgid "Group By"
 msgstr "Agrupar por"
 
 #. module: rating
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__highly_dissatisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Highly dissatisfied"
 msgstr "Altamente insatisfecho"
+=======
+#: model:ir.model.fields,help:rating.field_rating_rating__is_internal
+msgid "Hide to public / portal users, independently from subtype configuration."
+msgstr "Ocultar a los usuarios públicos / del portal, independientemente de la configuración del subtipo."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__id
@@ -155,7 +182,7 @@ msgstr "Imagen"
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin____last_update
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__write_uid

@@ -1,26 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_work_entry
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Carlos Lopez <celm1990@hotmail.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Otto Runarsson <oru@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Sergio Hevia <sah@talleresbernesga.com>, 2021
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
+=======
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:23+0000\n"
+"Last-Translator: José Cabrera Lozano <jose.cabrera@edukative.es>, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_work_entry
@@ -52,6 +65,14 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: hr_work_entry
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
+msgid "Carefull, the Code is used in many references, changing it could lead to unwanted changes."
+msgstr ""
+
+#. module: hr_work_entry
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Code"
 msgstr "Código"
@@ -65,7 +86,7 @@ msgstr "Color"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
 msgid "Company"
-msgstr "Compañía"
+msgstr "Empresa"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__confirmed
@@ -138,12 +159,16 @@ msgstr "Desde"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry
 msgid "HR Work Entry"
+<<<<<<< HEAD
 msgstr "Entrada de Trabajo en HR"
+=======
+msgstr "Entrada de trabajo de RRHH"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "Tipo de Entrada de Trabajo RH"
+msgstr "Tipo de entrada de trabajo de RRHH"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
@@ -154,17 +179,22 @@ msgstr "ID"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
+<<<<<<< HEAD
 msgid ""
 "If the active field is set to false, it will allow you to hide the work "
 "entry type without removing it."
 msgstr ""
+=======
+msgid "If the active field is set to false, it will allow you to hide the work entry type without removing it."
+msgstr "Si el campo activo se establece como falso, podrás ocultar el tipo de entrada de trabajo sin eliminarla."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee____last_update
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry____last_update
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
@@ -205,7 +235,11 @@ msgstr "Período"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
+<<<<<<< HEAD
 msgstr "Detalle del tiempo libre de los recursos"
+=======
+msgstr "Detalle de los recursos de tiempos personales"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -232,7 +266,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
 msgid "Starting time should be before end time."
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "La hora de inicio debe ser antes de la hora límite."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
@@ -242,6 +280,14 @@ msgstr "Estado"
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_type_unique_work_entry_code
 msgid "The same code cannot be associated to multiple work entry types."
+<<<<<<< HEAD
+=======
+msgstr "El mismo código no puede asociarse a múltiples tipos de entrada de trabajo."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Time Off Options"
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 
 #. module: hr_work_entry
@@ -287,7 +333,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry Name"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Nombre de la entrada de trabajo"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
@@ -310,7 +360,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_has_end
 msgid "Work entry must end. Please define an end date or a duration."
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "La entrada de trabajo debe tener un fin. Define una fecha de límite o una duración."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

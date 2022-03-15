@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* lunch
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
 # Martin Trigaux, 2019
 # José Vicente <txusev@gmail.com>, 2019
@@ -21,57 +22,67 @@ msgstr ""
 "POT-Creation-Date: 2019-09-23 13:50+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
+=======
+# Martin Trigaux, 2021
+# Jonatan Gk, 2022
+# marcescu, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:33+0000\n"
+"PO-Revision-Date: 2021-09-14 12:23+0000\n"
+"Last-Translator: marcescu, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
-"title=\"Receive button\"/>"
-msgstr ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
-"title=\"Receive button\"/>"
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" title=\"Receive button\"/>"
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Botón de recibir\" title=\"Botón de recibir\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_report_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+<<<<<<< HEAD
 msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Fecha\" title=\"Fecha\"/>"
+=======
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Periodo\" role=\"img\" title=\"Periodo\"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" title=\"Send notification\"/>"
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_report_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Importe\" title=\"Importe\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Dinero\" title=\"Dinero\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid ""
-"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
-"title=\"Order button\"/>"
-msgstr ""
-"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
-"title=\"Order button\"/>"
+msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" title=\"Order button\"/>"
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Botón de pedido\" title=\"Botón de pedido\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid ""
-"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
-"title=\"Cancel button\"/>"
-msgstr ""
-"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
-"title=\"Cancel button\"/>"
+msgid "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" title=\"Cancel button\"/>"
+msgstr "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Botón de cancelación\" title=\"Botón de cancelación\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -218,6 +229,12 @@ msgid ""
 "            An expense is automatically created at the order receipt.<br>\n"
 "            A payment represents the employee reimbursement to the company."
 msgstr ""
+<<<<<<< HEAD
+=======
+"Un movimiento de efectivo puede ser un gasto o un pago.<br>\n"
+"           n gasto se crea automáticamente en el recibo del pedido.<br>\n"
+"            Un pago representa el reembolso del empleado a la empresa."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
@@ -323,7 +340,7 @@ msgstr "¿Hay extras disponibles para este producto?"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_attachment_count
 msgid "Attachment Count"
-msgstr "Conteo de archivos adjuntos"
+msgstr "Nº de archivos adjuntos"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
@@ -382,7 +399,7 @@ msgstr "Movimientos de Caja"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove_report
 msgid "Cashmoves report"
-msgstr "Reporte de movimientos de caja"
+msgstr "Informe de movimientos de caja"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
@@ -449,7 +466,7 @@ msgstr "Compañía"
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de Configuración"
+msgstr "Opciones de configuración"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_config
@@ -522,6 +539,15 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: lunch
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__cron_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__cron_id
+msgid "Cron"
+msgstr "Cron"
+
+#. module: lunch
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__currency_id
@@ -722,7 +748,7 @@ msgstr "Seguidores (Canales)"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Empresas)"
+msgstr "Seguidores (Contactos)"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__email_formatted
@@ -750,12 +776,8 @@ msgstr "Agrupar por"
 
 #. module: lunch
 #: model:ir.module.category,description:lunch.module_lunch_category
-msgid ""
-"Helps you handle your lunch needs, if you are a manager you will be able to "
-"create new products, cashmoves and to confirm or cancel orders."
-msgstr ""
-"Le ayuda a manejar sus necesidades de comida. Si es un responsable, podrá "
-"crear nuevos productos, movimientos de caja, y confirmar o cancelar pedidos."
+msgid "Helps you handle your lunch needs, if you are a manager you will be able to create new products, cashmoves and to confirm or cancel orders."
+msgstr "Le ayuda a manejar sus necesidades de comida. Si es un responsable, podrá crear nuevos productos, movimientos de caja, y confirmar o cancelar pedidos."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
@@ -878,7 +900,7 @@ msgstr "Lugar del último almuerzo"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__last_order_date
@@ -1032,7 +1054,7 @@ msgstr "Adjuntos principales"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_res_config_settings__currency_id
 msgid "Main currency of the company."
-msgstr "Divisa principal de la compañía."
+msgstr "Moneda principal de la compañía."
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -1318,13 +1340,8 @@ msgstr "Pagos"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
-msgid ""
-"Payments are used to register liquidity movements. You can process those "
-"payments by your own means or by using installed facilities."
-msgstr ""
-"Los pagos se utilizan para registrar movimientos de liquidez. Puede procesar"
-" esos pagos por sus propios medios o utilizando las instalaciones "
-"instaladas."
+msgid "Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities."
+msgstr "Los pagos se utilizan para registrar movimientos de liquidez. Puede procesar esos pagos por sus propios medios o utilizando las instalaciones instaladas."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__phone
@@ -1552,9 +1569,7 @@ msgstr "Calle2"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
-msgstr ""
-"Sumario de todas las órdenes de lanzamiento, agrupadas por vendedor y por "
-"fecha"
+msgstr "Resumen de todos los pedidos de comida, agrupados por proveedor y por fecha."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_sunday
@@ -1569,21 +1584,28 @@ msgstr "El número de productos relacionados con esta categoría"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
+<<<<<<< HEAD
 msgid ""
 "The responsible is the person that will order lunch for everyone. It will be"
 " used as the 'from' when sending the automatic email."
 msgstr ""
 "El responsable es la persona que ordenará el almuerzo para todos. Se "
 "utilizará como el 'de' cuando se envíe el correo electrónico automático."
+=======
+msgid "The responsible is the person that will order lunch for everyone. It will be used as the 'from' when sending the automatic email."
+msgstr "El responsable es la persona que ordenará el almuerzo para todos. Se utilizará como el 'de' cuando se envíe el correo electrónico automático."
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_order.py:0
+#, python-format
+msgid "The vendor related to this order is not available today."
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
-msgid ""
-"There is no previous order recorded. Click on \"My Lunch\" and then create a"
-" new lunch order."
-msgstr ""
-"No hay registrado ningún pedido anterior. Haga clic en \"Mi comida\" y luego"
-" cree un nuevo pedido."
+msgid "There is no previous order recorded. Click on \"My Lunch\" and then create a new lunch order."
+msgstr "No hay registrado ningún pedido anterior. Haga clic en \"Mi comida\" y luego cree un nuevo pedido."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
@@ -1635,9 +1657,7 @@ msgstr "Para Ordenar"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
 msgid "To add some money to your wallet, please contact your lunch manager."
-msgstr ""
-"Para agregar algo de dinero a su billetera, por favor contacte a su gerente "
-"de almuerzo."
+msgstr "Para agregar algo de dinero a su billetera, por favor contacte a su gerente de almuerzo."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_location_action
@@ -1646,12 +1666,8 @@ msgstr "Para ver algunas ubicaciones, cree una con el botón crear"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
-msgid ""
-"To see some products, check if your vendors are available today and that you"
-" have configured some products"
-msgstr ""
-"Para ver algunos productos, verifique si sus proveedores están disponibles "
-"hoy y si ha configurado algunos productos"
+msgid "To see some products, check if your vendors are available today and that you have configured some products"
+msgstr "Para ver algunos productos, verifique si sus proveedores están disponibles hoy y si ha configurado algunos productos"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
@@ -1667,7 +1683,11 @@ msgstr "Pedidos de hoy"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Categoría de aderezos"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_ids_1
@@ -1720,7 +1740,7 @@ msgstr "Mensajes sin leer"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contador de mensajes sin leer"
+msgstr "Nº de mensajes sin leer"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_end_date
@@ -1776,12 +1796,17 @@ msgstr "Miércoles"
 #. module: lunch
 #: code:addons/lunch/controllers/main.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "You are trying to impersonate another user, but this can only be done by a "
 "lunch manager"
 msgstr ""
 "Usted está tratando de hacerse pasar por otro usuario, pero esto sólo lo "
 "puede hacer un jefe de almuerzo."
+=======
+msgid "You are trying to impersonate another user, but this can only be done by a lunch manager"
+msgstr "Usted está tratando de hacerse pasar por otro usuario, pero esto sólo lo puede hacer un jefe de almuerzo."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: lunch
 #: code:addons/lunch/wizard/lunch_line_wizard.py:0
@@ -1830,9 +1855,13 @@ msgstr "Su pedido"
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Your wallet does not contain enough money to order that.To add some money to"
 " your wallet, please contact your lunch manager."
+=======
+msgid "Your wallet does not contain enough money to order that. To add some money to your wallet, please contact your lunch manager."
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 "Para añadir algo de dinero a su billetera, por favor contacte al jefe de "
 "almuerzo."

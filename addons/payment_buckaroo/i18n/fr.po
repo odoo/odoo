@@ -1,27 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_buckaroo
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # 
+=======
+# Martin Trigaux, 2021
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
+=======
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "; multiple order found"
 msgstr "; plusieurs commandes trouvées"
 
@@ -30,6 +42,10 @@ msgstr "; plusieurs commandes trouvées"
 #, python-format
 msgid "; no order found"
 msgstr "; aucune commande trouvée"
+=======
+msgid "An error occurred during processing of your payment (code %s). Please try again."
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_buckaroo
 #: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
@@ -45,6 +61,7 @@ msgstr "Buckaroo : shasign incorrect, %s reçu, %s calculé, pour donnée %s"
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Buckaroo: received data for reference %s"
 msgstr "Buckaroo : données reçues pour la référence %s"
 
@@ -54,6 +71,9 @@ msgstr "Buckaroo : données reçues pour la référence %s"
 msgid ""
 "Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
 "shasign (%s)"
+=======
+msgid "No transaction found matching reference %s."
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 "Buckaroo : données reçues avec des références manquantes (%s) ou pay_id (%s)"
 " ou shasign (%s)"
@@ -74,9 +94,26 @@ msgid "Provider"
 msgstr "Fournisseur"
 
 #. module: payment_buckaroo
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
 msgid "SecretKey"
 msgstr "SecretKey"
+=======
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing transaction keys"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_acquirer_form
+msgid "Secret Key"
+msgstr "Clé secrète"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_buckaroo
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey

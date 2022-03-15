@@ -1,24 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_transfer
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+=======
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_transfer
@@ -66,9 +79,15 @@ msgid "Bank Accounts"
 msgstr "Bankrekeningen"
 
 #. module: payment_transfer
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
 msgid "Manual Payment"
 msgstr "Manuele betaling"
+=======
+#: model_terms:ir.ui.view,arch_db:payment_transfer.transfer_transaction_status
+msgid "Or scan me with your banking app."
+msgstr "Of scan met je bank app."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
@@ -86,7 +105,24 @@ msgid "Provider"
 msgstr "Provider"
 
 #. module: payment_transfer
+<<<<<<< HEAD
 #: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "received data for reference %s"
 msgstr "Data ontvangen voor referentie %s"
+=======
+#: model:ir.model.fields,help:payment_transfer.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "De betalingsdienstaanbieder die bij deze profider moet worden gebruikt"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_transaction.py:0
+#, python-format
+msgid "The customer has selected %(acq_name)s to make the payment."
+msgstr "De klant heeft ervoor gekozen %(acq_name)s om de betaling uit te voeren."
+
+#. module: payment_transfer
+#: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
+msgid "Wire Transfer"
+msgstr "Overschrijving"
+>>>>>>> 9d073c73ba3... temp

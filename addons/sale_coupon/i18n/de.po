@@ -1,25 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_coupon
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Leon Grill <leg@odoo.com>, 2019
 # Wolfgang Taferner, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Martin Trigaux, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
+=======
+"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_coupon
@@ -202,6 +214,7 @@ msgstr "Es wird bereits ein Gutschein auf die gleiche Prämie angewandt."
 #: code:addons/sale_coupon/models/sale_coupon.py:0
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "A minimum of %s %s should be purchased to get the reward"
 msgstr ""
 "Es sollte ein Minimum von %s %s gekauft werden, um die Prämie zu erhalten"
@@ -250,6 +263,10 @@ msgstr "Aktiv"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__promo_applicability
 msgid "Applicability"
 msgstr "Anwendbarkeit"
+=======
+msgid "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+msgstr "Ein Minimum von %(amount)s%(currency)ssollte erworben werden, um die Prämie zu erhalten"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
@@ -311,9 +328,7 @@ msgstr "Auf ersten anwenden"
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
 #, python-format
 msgid "At least one of the required conditions is not met to get the reward!"
-msgstr ""
-"Mindestens eine der erforderlichen Bedingungen für den Erhalt der Prämie ist"
-" nicht erfüllt!"
+msgstr "Mindestens eine der erforderlichen Bedingungen für den Erhalt der Prämie ist nicht erfüllt!"
 
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_program__promo_code_usage__no_code_needed
@@ -511,6 +526,7 @@ msgid "Created on"
 msgstr "Erstellt am"
 
 #. module: sale_coupon
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__currency_id
 msgid "Currency"
 msgstr "Währung"
@@ -544,6 +560,12 @@ msgstr ""
 "Rabatt – Prämie wird als Rabatt ausgezahlt.\n"
 "Gratisprodukt – Prämie in Form eines Gratisproduktes \n"
 "Kostenloser Versand – Prämie in Form von kostenlosem Versand (Liefermodul wird benötigt)"
+=======
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
+msgstr "Rabatt: %(program)s - Auf Produkte mit der folgenden Steuer: %(taxes)s"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__discount_apply_on
@@ -570,7 +592,6 @@ msgid "Discount percentage should be between 1-100"
 msgstr "Rabattprozentsatz sollte zwischen 1 und 100 liegen"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_order.py:0
 #: code:addons/sale_coupon/models/sale_order.py:0
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
@@ -1102,7 +1123,7 @@ msgstr "Verkaufsgutschein"
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_coupon_apply_code
 msgid "Sales Coupon Apply Code"
-msgstr ""
+msgstr "Sales-Coupon Anwendungscode"
 
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_coupon_program
@@ -1255,12 +1276,8 @@ msgstr "Das Aktionsangebot wurde bereits auf diesen Auftrag angewandt"
 #: code:addons/sale_coupon/models/sale_coupon.py:0
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
 #, python-format
-msgid ""
-"The reward products should be in the sales order lines to apply the "
-"discount."
-msgstr ""
-"Die Prämienprodukte sollten in den Verkaufsauftragspositionen sein, um den "
-"Rabatt anzuwenden."
+msgid "The reward products should be in the sales order lines to apply the discount."
+msgstr "Die Prämienprodukte sollten in den Verkaufsauftragspositionen sein, um den Rabatt anzuwenden."
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon__order_id
@@ -1336,10 +1353,15 @@ msgstr "Gültigkeitsdauer für einen Gutschein nach dessen Erstellung"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
+<<<<<<< HEAD
 msgid ""
 "When clicked, the content of the order will be checked to detect (and apply)"
 " possible promotion programs."
 msgstr ""
+=======
+msgid "When clicked, the content of the order will be checked to detect (and apply) possible promotion programs."
+msgstr "Wenn Sie darauf klicken, wird der Inhalt der Bestellung überprüft, um mögliche Werbeprogramme zu erkennen (und anzuwenden)."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
@@ -1350,23 +1372,22 @@ msgstr "Sie können ein Programm im aktiven Zustand nicht löschen"
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "You don't have the required product quantities on your sales order. All the "
 "products should be recorded on the sales order. (Example: You need to have 3"
 " T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
 msgstr ""
+=======
+msgid "You don't have the required product quantities on your sales order. All the products should be recorded on the sales order. (Example: You need to have 3 T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
+msgstr "Sie haben nicht die erforderlichen Produktmengen in Ihrem Kundenauftrag. Alle Produkte sollten auf dem Kundenauftrag erfasst sein. (Beispiel: Sie müssen 3 T-Shirts auf Ihrem Kundenauftrag haben, wenn die Aktion \"Kaufen Sie 2, erhalten Sie 1 gratis\" lautet)."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
 #, python-format
-msgid ""
-"You don't have the required product quantities on your sales order. If the "
-"reward is same product quantity, please make sure that all the products are "
-"recorded on the sales order (Example: You need to have 3 T-shirts on your "
-"sales order if the promotion is 'Buy 2, Get 1 Free'."
-msgstr ""
-"Sie haben nicht die erforderlichen Produktmengen auf Ihrem Verkaufsauftrag. "
-"Wenn die Prämie dieselbe Produktmenge"
+msgid "You don't have the required product quantities on your sales order. If the reward is same product quantity, please make sure that all the products are recorded on the sales order (Example: You need to have 3 T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free'."
+msgstr "Sie haben nicht die erforderlichen Produktmengen auf Ihrem Verkaufsauftrag. Wenn die Prämie dieselbe Produktmenge"
 
 #. module: sale_coupon
 #: model:mail.template,report_name:sale_coupon.mail_template_sale_coupon

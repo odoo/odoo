@@ -1,24 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_authorize
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+=======
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_authorize
@@ -134,19 +146,42 @@ msgid "Provider"
 msgstr "Anbieter"
 
 #. module: payment_authorize
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
 msgstr "Karten speichern"
+=======
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgstr "Daten empfangen mit Statuscode \"%(status)s\" und Fehlercode \"%(error)s\""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:0
+#, python-format
+msgid "Received tampered payment request data."
+msgstr "Es wurden manipulierte Zahlungsanforderungsdaten empfangen."
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_token.py:0
+#, python-format
+msgid "Saved payment methods cannot be restored once they have been deleted."
+msgstr "Gespeicherte Zahlungsmethoden können nicht wieder hergestellt werden, wenn sie einmal gelöscht wurden."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_authorize
 #. openerp-web
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
+<<<<<<< HEAD
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
+=======
+>>>>>>> 9d073c73ba3... temp
 #, python-format
 msgid "Server Error"
 msgstr "Server fehler"
 
 #. module: payment_authorize
+<<<<<<< HEAD
 #: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
@@ -161,6 +196,32 @@ msgid ""
 msgstr ""
 "Der Vorgang kann nicht abgeschlossen werden, weil Details fehlen oder "
 "fehlerhaft sind:"
+=======
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
+msgid "Set Account Currency"
+msgstr "Kontowährung bestimmen"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_login
+msgid "The ID solely used to identify the account with Authorize.Net"
+msgstr "Die ID, die ausschließlich zur Identifizierung des Kontos bei Authorize.Net verwendet wird"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "Der mit diesem Zahlungsanbieter zu verwendende Dienstleister"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_client_key
+msgid "The public client key. To generate directly from Odoo or from Authorize.Net backend."
+msgstr "Der öffentliche Client-Schlüssel. Direkt aus Odoo oder aus dem Authorize.Net Backend zu generieren."
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "Die Transaktion ist nicht mit einem Token verknüpft."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -170,6 +231,7 @@ msgid ""
 msgstr "Dies enthält die eindeutige Referenz"
 
 #. module: payment_authorize
+<<<<<<< HEAD
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
 msgid ""
 "This option allows customers to save their credit card as a payment token "
@@ -181,20 +243,35 @@ msgstr ""
 "speichern und sie für eine spätere Zahlung wiederzuverwenden. Wenn Sie "
 "Abonnements verwalten (wiederkehrende Rechnungsstellung), müssen Sie dem "
 "Kunden automatisch etwas berechnen, wenn Sie eine Rechnung ausstellen."
+=======
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
+msgid "The unique reference for the partner/token combination in the Authorize.net backend."
+msgstr "Die eindeutige Referenz für die Partner/Token-Kombination im Authorize.net Backend."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Unable to fetch Client Key, make sure the API Login and Transaction Key are "
 "correct."
 msgstr ""
+=======
+msgid "There are active tokens linked to this acquirer. To change the payment method type, please disable the acquirer and duplicate it. Then, change the payment method type on the duplicated acquirer."
+msgstr "Es sind aktive Token mit diesem Anbieter verknüpft. Um die Art der Zahlungsmethode zu ändern, deaktivieren Sie bitte den Anbieter und duplizieren Sie ihn. Ändern Sie dann die Art der Zahlungsmethode für den duplizierten Anbieter."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Warning"
 msgstr "Warnung"
+=======
+msgid "This action cannot be performed while the acquirer is disabled."
+msgstr "Diese Aktion kann nicht durchgeführt werden, wenn der Anbieter deaktiviert ist."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_authorize
 #. openerp-web

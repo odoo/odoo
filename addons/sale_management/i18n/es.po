@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Cristian Salamea <ovnicraft@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
@@ -26,11 +27,22 @@ msgstr ""
 "POT-Creation-Date: 2019-10-01 12:08+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
+=======
+# Martin Trigaux, 2021
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:33+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_management
@@ -114,7 +126,7 @@ msgstr "Compañía"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de Configuración"
+msgstr "Opciones de configuración"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -130,13 +142,8 @@ msgstr "Correo electrónico de confirmación"
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"La conversión entre las unidades de medidas sólo pueden ocurrir si "
-"pertenecen a la misma categoría. La conversión se basará en los ratios "
-"establecidos."
+msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgstr "La conversión entre las unidades de medidas sólo pueden ocurrir si pertenecen a la misma categoría. La conversión se basará en los ratios establecidos."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -185,8 +192,12 @@ msgid ""
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
 "Diseñe sus plantillas de ofertas utilizando bloques de diseño<br/>\n"
+<<<<<<< HEAD
 "<em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Aviso: esta opción instalará el módulo de sitio web.</em>\n"
 " "
+=======
+"<em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Aviso: esta opción instalará el módulo de sitio web.</em>"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -224,28 +235,33 @@ msgstr "Tipo de pantalla"
 #: code:addons/sale_management/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
-"No tiene acceso, saltar esta información para el email de resumen del "
-"usuario"
+msgstr "No tiene acceso, saltar esta información para el email de resumen del usuario"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
+<<<<<<< HEAD
 msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
+=======
+msgid "Forbidden product, unit price, quantity, and UoM on non-accountable sale quote line"
+msgstr "Prohibido incluir producto, precio unitario, cantidad o UdM en una línea de pedido de venta virtual"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Da el orden de secuencia al mostrar una lista de productos opcionales."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr ""
-"Indica el orden de secuencia al mostrar una lista de líneas de presupuesto "
-"de venta."
+msgstr "Indica el orden de secuencia al mostrar una lista de líneas de presupuesto de venta."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
@@ -257,17 +273,17 @@ msgstr "ID"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
-msgid ""
-"If unchecked, it will allow you to hide the quotation template without "
-"removing it."
-msgstr ""
-"Si se elimina la selección, podrá ocultar la plantilla de presupuestos sin "
-"eliminarla."
+msgid "If unchecked, it will allow you to hide the quotation template without removing it."
+msgstr "Si se elimina la selección, podrá ocultar la plantilla de presupuestos sin eliminarla."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Indicador clave de rendimiento(KPI) Valor total de venta total"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option____last_update
@@ -275,7 +291,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line____last_update
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_uid
@@ -307,7 +323,11 @@ msgstr "Líneas"
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Falta el producto y/o la unidad de medida en la línea de pedido de venta completa."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -318,8 +338,7 @@ msgstr "Nota"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
-"Número de días para el cálculo de la la fecha de validez del presupuesto"
+msgstr "Número de días para el cálculo de la la fecha de validez del presupuesto"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -440,6 +459,7 @@ msgstr "Quitar uno"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
+<<<<<<< HEAD
 msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
@@ -451,6 +471,15 @@ msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr "Solicitar pago en línea para confirmar pedidos"
+=======
+msgid "Request a online signature to the customer in order to confirm orders automatically."
+msgstr "Solicite una firma en línea al cliente para confirmar los pedidos automáticamente."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
+msgid "Request an online payment to the customer in order to confirm orders automatically."
+msgstr "Solicitar pago en línea al cliente para confirmar pedidos automáticamente."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -494,15 +523,31 @@ msgid "Section"
 msgstr "Sección"
 
 #. module: sale_management
+<<<<<<< HEAD
+=======
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
+msgid "Selling the same product in different sizes or colors? Try the product grid and populate your orders with multiple quantities of each variant. This feature also exists in the Purchase application."
+msgstr "¿Vende el mismo producto en diferentes tamaños o colores? Pruebe la cuadrícula de productos y complete sus pedidos con varias cantidades de cada variante. Esta función también existe en la aplicación Compras."
+
+#. module: sale_management
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sequence
 msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: sale_management
+<<<<<<< HEAD
+=======
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
+msgid "Struggling with a complex product catalog? Try out the Product Configurator to help sales configure a product with different options: colors, size, capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr "¿Tiene problemas con un catálogo de productos complejo? Pruebe el Configurador de productos para ayudar a las ventas a configurar un producto con diferentes opciones: colores, tamaño, capacidad, etc. Haga que la codificación de las órdenes de venta sea más fácil y sin errores."
+
+#. module: sale_management
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
 msgid "Technical field for UX purpose."
-msgstr "Campo técnico para propósitos de usabilidad"
+msgstr "Campo técnico para propósitos de usabilidad."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
@@ -511,29 +556,37 @@ msgstr "Términos y condiciones"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid ""
-"The Administrator can set default Terms & Conditions in Sales Settings. "
-"Terms set here will show up instead if you select this quotation template."
-msgstr ""
-"El administrador puede establecer términos y condiciones por defecto en "
-"Configuraciones de Ventas. Se mostrarán los términos establecidos aquí si "
-"selecciona esta plantilla de presupuesto."
+msgid "The Administrator can set default Terms & Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."
+msgstr "El administrador puede establecer términos y condiciones por defecto en Configuraciones de Ventas. Se mostrarán los términos establecidos aquí si selecciona esta plantilla de presupuesto."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
-msgid ""
-"This e-mail template will be sent on confirmation. Leave empty to send "
-"nothing."
-msgstr ""
-"Se enviará esta plantilla de correo electrónico como confirmación. Déjela en"
-" blanco si no quiere enviar nada."
+msgid "This e-mail template will be sent on confirmation. Leave empty to send nothing."
+msgstr "Se enviará esta plantilla de correo electrónico como confirmación. Déjela en blanco si no quiere enviar nada."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
+<<<<<<< HEAD
 msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
 msgstr ""
+=======
+msgid "This field will be checked if the option line's product is already present in the quotation."
+msgstr "Este campo se verificará si el producto de la línea de opción ya está presente en la cotización."
+
+#. module: sale_management
+#: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
+msgid "Tip: Odoo supports configurable products"
+msgstr "Consejo: Odoo admite productos configurables"
+
+#. module: sale_management
+#: model:digest.tip,name:sale_management.digest_tip_sale_management_1
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
+msgid "Tip: Sell or buy products in bulk with matrixes"
+msgstr "Consejo: Venda o compre productos a granel con matrices"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -582,10 +635,15 @@ msgstr "No puede añadir opciones a un pedido confirmado."
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+=======
+msgid "You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."
+msgstr "No puede cambiar la línea del presupuesto de venta. En vez de eso, debería borrar la línea actual y crear una nueva línea del tipo correcto."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0

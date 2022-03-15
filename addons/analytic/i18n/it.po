@@ -1,31 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
-# Martin Trigaux, 2019
-# Luigi Di Naro <gigidn@gmail.com>, 2019
-# Christian <chris@effeci.info>, 2019
-# Paolo Valier, 2019
-# Alessandro Camilli <alessandrocamilli@openforce.it>, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-# 
+# Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "<span class=\"o_stat_text\">Gross Margin</span>"
+msgstr "<span class=\"o_stat_text\">Margine Lordo</span>"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -79,6 +77,7 @@ msgid "Analytic Account Groups"
 msgstr "Gruppi di conto analitico"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Contabilità analitica"
@@ -147,7 +146,9 @@ msgid "Analytic Tags"
 msgstr "Etichette analitiche"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr "Archiviato"
@@ -174,7 +175,8 @@ msgid "Balance:"
 msgstr "Saldo:"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Category"
 msgstr "Categoria"
 
@@ -212,24 +214,14 @@ msgid "Complete Name"
 msgstr "Nome completo"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni di configurazione"
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Conversioni tra diverse unità di misura sono permesse solo se appartengono "
-"alla stessa categoria. La conversione sarà effettuata utilizzando i rapporti"
-" di conversione delle unità di misura."
-
-#. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-msgid "Cost/Revenue"
-msgstr "Costo/Ricavo"
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
-msgid "Costs & Revenues"
-msgstr "Costi e ricavi"
+msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgstr "Conversioni tra diverse unità di misura sono permesse solo se appartengono alla stessa categoria. La conversione sarà effettuata utilizzando i rapporti di conversione delle unità di misura."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -309,14 +301,14 @@ msgid "Followers"
 msgstr "Follower"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Follower (canali)"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Follower (partner)"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Gross Margin"
+msgstr "Margine lordo"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
@@ -329,6 +321,11 @@ msgstr "Gruppo"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
 msgstr "Raggruppa per..."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
+msgid "Has Message"
+msgstr "Contiene messaggio"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
@@ -352,12 +349,8 @@ msgstr "Se selezionato, alcuni messaggi presentano un errore di consegna."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
-msgid ""
-"If the active field is set to False, it will allow you to hide the account "
-"without removing it."
-msgstr ""
-"Se il campo attivo viene impostato a Falso, consente di nascondere il conto "
-"senza rimuoverlo."
+msgid "If the active field is set to False, it will allow you to hide the account without removing it."
+msgstr "Se il campo attivo viene impostato a Falso, consente di nascondere il conto senza rimuoverlo."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -461,6 +454,11 @@ msgid "Number of unread messages"
 msgstr "Numero di messaggi non letti"
 
 #. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
+msgid "Other"
+msgstr "Altro"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
 msgid "Parent"
 msgstr "Principale"
@@ -518,14 +516,12 @@ msgstr "Ricerca registraioni analitiche"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
 msgid "Search Analytic Tags"
-msgstr ""
+msgstr "Ricerca etichette analitiche"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
-msgstr ""
-"Se il campo \"attivo\" viene impostato come \"falso\", l'etichetta analitica"
-" sarà nascosta senza essere eliminata."
+msgstr "Se il campo \"attivo\" viene impostato come \"falso\", l'etichetta analitica sarà nascosta senza essere eliminata."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
@@ -534,26 +530,19 @@ msgstr "Etichette"
 
 #. module: analytic
 #: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
-msgid ""
-"The percentage of an analytic distribution should be between 0 and 100."
-msgstr ""
-"La percentuale di una distribuzione analitica deve essere compresa tra 0 e "
-"100."
+msgid "The percentage of an analytic distribution should be between 0 and 100."
+msgstr "La percentuale di una distribuzione analitica deve essere compresa tra 0 e 100."
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
-msgid ""
-"The selected account belongs to another company that the one you're trying "
-"to create an analytic item for"
-msgstr ""
-"Il conto selezionato appartiene a un'azienda diversa da quella per la quale "
-"si sta creando un movimento analitico"
+msgid "The selected account belongs to another company than the one you're trying to create an analytic item for"
+msgstr "Il conto selezionato appartiene a un'azienda diversa da quella per la quale si sta creando un movimento analitico"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
-msgid "This allows to classify your analytic accounts."
-msgstr "Permette di classificare i conti analitici."
+msgid "This allows you to classify your analytic accounts."
+msgstr "Consentono di classificare i conti analitici."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -574,6 +563,11 @@ msgstr "Messaggi non letti"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Contatore messaggi non letti"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+msgid "UoM Category"
+msgstr "Categoria unità di misura"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id

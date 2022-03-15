@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # e2f <projects@e2f.com>, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Carlos Lopez <celm1990@hotmail.com>, 2019
@@ -25,14 +26,40 @@ msgstr ""
 "POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
+=======
+# Martin Trigaux, 2021
+# Alejandro Pérez Torregrosa <alejandropereztorregrosa@gmail.com>, 2021
+# marcescu, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-15 12:07+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: marcescu, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_picking_batch
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "<span class=\"o_form_label font-weight-bold\" attrs=\"{'invisible':[('auto_batch', '=', False)]}\">Group by</span>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>FROM</strong>"
+msgstr ""
+
+#. module: stock_picking_batch
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Lot/Serial Number</strong>"
 msgstr "<strong>Número Lote/Serie</strong>"
@@ -51,6 +78,33 @@ msgstr "<strong>Código de barras del producto</strong>"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Responsible:</strong>"
 msgstr "<strong>Responsable</strong> "
+<<<<<<< HEAD
+=======
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>TO</strong>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>→</strong>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
+msgid ""
+"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"Leave this value as '0' if no line limit."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
+msgid ""
+"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"Leave this value as '0' if no transfer limit."
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -86,14 +140,65 @@ msgstr "Añadir a agrupación"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
 msgid "Add to batch"
+<<<<<<< HEAD
+=======
+msgstr "Añadir a agrupación"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
+msgid "Add to wave"
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
 msgid "Attachment Count"
-msgstr "Conteo de archivos adjuntos"
+msgstr "Nº de archivos adjuntos"
 
 #. module: stock_picking_batch
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_auto_confirm
+msgid "Auto-confirm"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
+msgid "Automatic Batches"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
+msgid "Automatically group batches by contacts."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
+msgid "Automatically group batches by destination country."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+msgid "Automatically group batches by their destination location."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+msgid "Automatically group batches by their source location."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
+msgid "Automatically put pickings into batches as they are confirmed when possible."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_backorder_confirmation
+msgid "Backorder Confirmation"
+msgstr "Confirmación de entrega parcial"
+
+#. module: stock_picking_batch
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Barcode"
 msgstr "Código de barras"
@@ -108,28 +213,53 @@ msgstr "Código de barras"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #, python-format
 msgid "Batch Transfer"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Transferir agrupación"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Lines"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Líneas de agrupación de albaranes"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 msgid "Batch Transfers"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Agrupación de albaranes"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Agrupaciones de albaranes no finalizadas"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this transfer"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Agrupación asociada a este albarán"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+msgid "Batches"
+msgstr "Lotes"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -165,6 +295,14 @@ msgstr "Confirmar albarán"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Create a new batch transfer"
+<<<<<<< HEAD
+=======
+msgstr "Crear una nueva agrupación de albaranes"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+msgid "Create a new wave transfer"
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 
 #. module: stock_picking_batch
@@ -216,7 +354,7 @@ msgstr "Seguidores (Canales)"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Empresas)"
+msgstr "Seguidores (Contactos)"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -257,9 +395,16 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
 
 #. module: stock_picking_batch
+<<<<<<< HEAD
 #: model:ir.model,name:stock_picking_batch.model_stock_immediate_transfer
 msgid "Immediate Transfer"
 msgstr "Transferencia inmediata"
+=======
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, python-format
+msgid "If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -281,7 +426,7 @@ msgstr "Es un seguidor"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch____last_update
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_uid
@@ -303,7 +448,11 @@ msgstr "Actividades tardías"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of transfers associated to this batch"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Lista de albaranes asociados a esta agrupación"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
@@ -323,7 +472,16 @@ msgstr "Mensajes"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__name
 msgid "Name of the batch transfer"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Nombre de la agrupación de albaranes"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Siguiente evento en el calendario de actividades."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_date_deadline
@@ -374,7 +532,11 @@ msgstr "Número de mensajes no leidos"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__user_id
 msgid "Person responsible for this batch transfer"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Persona responsable de esta agrupación de albaranes"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
@@ -392,9 +554,16 @@ msgid "Picking Reference"
 msgstr "Referencia de albarán"
 
 #. module: stock_picking_batch
+<<<<<<< HEAD
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
 msgid "Picking to backorder"
 msgstr "Albarán para pedido pendiente"
+=======
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "Please add 'Done' quantities to the batch picking to create a new pack."
+msgstr "Please add 'Done' quantities to the batch picking to create a new pack."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -440,6 +609,34 @@ msgstr "Fecha prevista"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
+<<<<<<< HEAD
+=======
+msgstr "Buscar agrupación de albaranes"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Set quantities"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
+msgid "Show Allocation"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
+msgid "Show Check Availability"
+msgstr "Mostrar verificar disponibilidad"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_clear_qty_button
+msgid "Show Clear Qty Button"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
+msgid "Show Set Qty Button"
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 
 #. module: stock_picking_batch
@@ -450,13 +647,12 @@ msgstr "Seleccionar agrupación"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Mostrar todos los registros que tienen la próxima fecha de acción antes de "
-"hoy"
+msgstr "Mostrar todos los registros que tienen la próxima fecha de acción antes de hoy"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Some products require lots/serial numbers."
 msgstr "Algunos productos requieren lotes/número de serie"
 
@@ -467,6 +663,15 @@ msgid ""
 "Some transfers are still waiting for goods. Please check or force their "
 "availability before setting this batch to done."
 msgstr ""
+=======
+msgid "Some transfers are still waiting for goods. Please check or force their availability before setting this batch to done."
+msgstr "Algunos albaranes todavía están esperando productos. Verifique o fuerce su disponibilidad antes de configurar esta agrupación como realizada."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+msgid "Source Location"
+msgstr "Ubicación de origen"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -502,7 +707,31 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Agrupación de albaranes disponible"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_package_destination
+msgid "Stock Package Destination"
+msgstr "Destino de stock del paquete"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
+msgid "Stock move lines"
+msgstr "Líneas de movimiento disponibles"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
+msgid "Stock moves"
+msgstr "Movimientos disponibles"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -510,12 +739,51 @@ msgid "Summary:"
 msgstr "Resumen"
 
 #. module: stock_picking_batch
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__show_allocation
+msgid "Technical Field used to decide whether the button \"Allocation\" should be displayed."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__show_check_availability
+msgid "Technical field used to compute whether the check availability button should be shown."
+msgstr "Campo técnico utilizado para calcular si se debe mostrar el botón Comprobar disponibilidad."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__show_validate
+msgid "Technical field used to decide whether the validate button should be shown."
+msgstr ""
+
+#. module: stock_picking_batch
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid ""
+"The following transfers cannot be added to batch transfer %s. Please check their states and operation types, if they aren't immediate transfers.\n"
+"\n"
+"Incompatibilities: %s"
+msgstr ""
+
+#. module: stock_picking_batch
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
 "The goal of the batch transfer is to group operations that may\n"
 "            (needs to) be done together in order to increase their efficiency.\n"
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
+<<<<<<< HEAD
+=======
+msgstr "El objetivo de la agrupación de albaraneses agrupar las operaciones que pueden (deben) realizarse juntas para aumentar su eficiencia. También puede ser útil asignar trabajos (una persona = una agrupación) o ayudar a la gestión del tiempo de las operaciones (por ejemplo, tareas a realizar a las 13:00)."
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+msgid ""
+"The goal of the wave transfer is to group operations from differents transfer\n"
+"                    together in order to increase their efficiency.\n"
+"                    It may also be useful to assign jobs (one person = one batch) or\n"
+"                    help the timing management of operations (tasks to be done at 1pm)."
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 
 #. module: stock_picking_batch
@@ -563,7 +831,7 @@ msgstr "Mensajes sin leer"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contador de mensajes sin leer"
+msgstr "Nº de mensajes sin leer"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids

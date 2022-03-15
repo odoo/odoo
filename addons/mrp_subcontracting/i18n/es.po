@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_subcontracting
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
@@ -18,11 +19,23 @@ msgstr ""
 "POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: John Guardado <jgu@odoo.com>, 2019\n"
+=======
+# Paulina Rodriguez <pauli.rodriguez.c@gmail.com>, 2021
+# Martin Trigaux, 2021
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_subcontracting
@@ -56,11 +69,8 @@ msgstr "Tipo de LdM"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
-msgid ""
-"Choose a vendor of type subcontractor if you want to subcontract the product"
-msgstr ""
-"Seleccione un proveedor del tipo subcontratista si desea subcontratar el "
-"producto."
+msgid "Choose a vendor of type subcontractor if you want to subcontract the product"
+msgstr "Seleccione un proveedor del tipo subcontratista si desea subcontratar el producto."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -84,6 +94,37 @@ msgid "Make To Order"
 msgstr "Bajo pedido"
 
 #. module: mrp_subcontracting
+<<<<<<< HEAD
+=======
+#: code:addons/mrp_subcontracting/models/stock_move_line.py:0
+#, python-format
+msgid "Make sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock."
+msgstr ""
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
+msgid "Mandatory"
+msgstr ""
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Nothing to record"
+msgstr ""
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_quant.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Operación no permitida"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_product_product
+msgid "Product"
+msgstr "Producto"
+
+#. module: mrp_subcontracting
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Movimientos de Producto (Stock Move Line)"
@@ -110,6 +151,14 @@ msgid "Register components for subcontracted product"
 msgstr "Registrar componentes para el producto subcontratado"
 
 #. module: mrp_subcontracting
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
+msgid "Reserved"
+msgstr "Reservado"
+
+#. module: mrp_subcontracting
+>>>>>>> 9d073c73ba3... temp
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
@@ -142,7 +191,11 @@ msgstr "Albarán de devolución"
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence subcontracting"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Subcontratación de secuencias"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
@@ -210,9 +263,19 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_users__property_stock_subcontractor
+<<<<<<< HEAD
 msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
+=======
+msgid "The stock location used as source and destination when sending        goods to this contact during a subcontracting process."
+msgstr "La ubicación de stock utilizada como origen y destino al enviar productos a este contacto durante un proceso de subcontratación."
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "This MO isn't related to a subcontracted move"
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -232,6 +295,35 @@ msgid "Warehouse"
 msgstr "Almacén"
 
 #. module: mrp_subcontracting
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_product_produce__subcontract_move_id
 msgid "stock move from the subcontract picking"
+=======
+#: model:ir.model,name:mrp_subcontracting.model_mrp_consumption_warning
+msgid "Wizard in case of consumption in warning/strict and more component has been used for a MO (related to the bom)"
+msgstr ""
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_bom.py:0
+#, python-format
+msgid "You can not set a Bill of Material with operations or by-product line as subcontracting."
+msgstr ""
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "You must enter a serial number for %s"
+msgstr ""
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "You must enter a serial number for each line of %s"
+msgstr ""
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "You must indicate a non-zero amount consumed for at least one of your components"
+>>>>>>> 9d073c73ba3... temp
 msgstr ""

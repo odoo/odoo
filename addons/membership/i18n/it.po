@@ -1,27 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* membership
-# 
+#
 # Translators:
-# Martin Trigaux, 2019
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
-# Paolo Valier, 2019
-# Manuela Feliciani <mfeliciani@alice.it>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-# 
+# Martin Trigaux, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: membership
@@ -41,12 +38,8 @@ msgstr "N. in attesa"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
-msgid ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
-"title=\"Period\"/><strong> From: </strong>"
-msgstr ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
-"title=\"Periodo\"/><strong> Da: </strong>"
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period\"/><strong> From: </strong>"
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Periodo\"/><strong> Da: </strong>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -61,12 +54,8 @@ msgstr "<strong> A:</strong>"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__associate_member
 #: model:ir.model.fields,help:membership.field_res_users__associate_member
-msgid ""
-"A member with whom you want to associate your membership.It will consider "
-"the membership state of the associated member."
-msgstr ""
-"Socio al quale collegare la propria iscrizione. Verrà preso in "
-"considerazione lo stato di iscrizione del socio collegato."
+msgid "A member with whom you want to associate your membership.It will consider the membership state of the associated member."
+msgstr "Socio al quale collegare la propria iscrizione. Verrà preso in considerazione lo stato di iscrizione del socio collegato."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
@@ -115,7 +104,7 @@ msgstr "Annulla"
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_cancel
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_cancel
 msgid "Cancel Membership Date"
-msgstr "Annulla data iscrizione"
+msgstr "Data annullamento iscrizione"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_cancel
@@ -148,11 +137,6 @@ msgid "Company"
 msgstr "Azienda"
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_membership_membership_line__company_id
-msgid "Company related to this journal"
-msgstr "Azienda collegata a questo registro"
-
-#. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
 msgid "Configuration"
 msgstr "Configurazione"
@@ -161,11 +145,6 @@ msgstr "Configurazione"
 #: model:ir.model,name:membership.model_res_partner
 msgid "Contact"
 msgstr "Contatto"
-
-#. module: membership
-#: model_terms:ir.ui.view,arch_db:membership.view_partner_tree
-msgid "Contacts"
-msgstr "Contatti"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__create_uid
@@ -259,8 +238,7 @@ msgstr "Data di fine iscrizione"
 #. module: membership
 #: model:ir.model.constraint,message:membership.constraint_product_template_membership_date_greater
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-"Errore, la data di scadenza non può essere antecedente la data di inizio."
+msgstr "Errore, la data di scadenza non può essere antecedente la data di inizio."
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -377,8 +355,8 @@ msgstr "Effettua iscrizione"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move
-msgid "Journal Entries"
-msgstr "Registrazioni contabili"
+msgid "Journal Entry"
+msgstr "Registrazione contabile"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move_line
@@ -435,6 +413,7 @@ msgstr "Analisi soci"
 #: model:ir.model.fields,field_description:membership.field_product_template__membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__member_lines
 #: model:ir.model.fields,field_description:membership.field_res_users__member_lines
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_graph1
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_pivot
@@ -498,6 +477,7 @@ msgstr "Prodotto iscrizione"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
 msgstr "Prodotti iscrizione"
@@ -542,6 +522,11 @@ msgstr "Iscrizioni"
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Month"
 msgstr "Mese"
+
+#. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_report_membership_tree
+msgid "No data yet!"
+msgstr "Ancora nessun dato."
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__none
@@ -596,6 +581,11 @@ msgid "Pending Amount"
 msgstr "Importo in sospeso"
 
 #. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Product Name"
+msgstr "Nome prodotto"
+
+#. module: membership
 #: model:ir.model,name:membership.model_product_template
 msgid "Product Template"
 msgstr "Modello prodotto"
@@ -639,6 +629,26 @@ msgstr "Data inizio"
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Starting Date Of Membership"
 msgstr "Data di partenza dell'iscrizione"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of # Invoiced"
+msgstr "Somma di # Fatturato"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of # Paid"
+msgstr "Somma di # Pagato"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of Earned Amount"
+msgstr "Somma dell'importo guadagnato"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of Quantity"
+msgstr "Somma di quantità"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form

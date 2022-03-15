@@ -1,23 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_stripe
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
 # 
+=======
+# Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2019\n"
+=======
+"POT-Creation-Date: 2022-02-22 14:45+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_stripe
@@ -44,6 +56,7 @@ msgid "Checkout Image URL"
 msgstr "Abmelde-Bild-URL"
 
 #. module: payment_stripe
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
@@ -56,6 +69,16 @@ msgstr "Abschliessen"
 #, python-format
 msgid "Error"
 msgstr "Fehler"
+=======
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+msgid "Get your Secret and Publishable keys"
+msgstr "Erhalten Sie Ihre Geheim- und veröffentlichbaren Schlüssel (Secret/Publishable Key)"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+msgid "If a webhook is enabled on your Stripe account, this signing secret must be set to authenticate the messages sent from Stripe to Odoo."
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_stripe
 #. openerp-web
@@ -129,8 +152,13 @@ msgstr "Stripe Geheimer Schlüssel"
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Stripe gave us the following info about the problem: '%s'"
 msgstr "Stripe hat uns folgende Informationen über das Problem gegeben: '%s'"
+=======
+msgid "Stripe Proxy: An error occurred when communicating with the proxy."
+msgstr "Stripe-Proxy: Bei der Kommunikation mit dem Proxy ist ein Fehler aufgetreten."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -148,9 +176,30 @@ msgstr "Stripe: kein Auftrag für Referenz %s gefunden"
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid ""
+<<<<<<< HEAD
 "Unable to convert Stripe customer for SCA compatibility. Is there at least "
 "one card for this customer in the Stripe backend?"
 msgstr ""
+=======
+"The communication with the API failed.\n"
+"Stripe gave us the following info about the problem:\n"
+"'%s'"
+msgstr ""
+"Die Kommunikation mit der API ist fehlgeschlagen.\n"
+"Stripe hat uns die folgenden Informationen über das Problem gegeben:\n"
+"'%s'"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
+msgid "The key solely used to identify the account with Stripe"
+msgstr "Der Schlüssel, der ausschließlich zur Identifizierung des Kontos bei Stripe verwendet wird"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "Die Transaktion ist nicht mit einem Token verknüpft."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_stripe
 #. openerp-web
@@ -163,12 +212,28 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "We are not able to add your payment method at the moment. "
 msgstr ""
+=======
+msgid "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+msgstr "Sie können keinen Stripe-Webhook erstellen, wenn Ihr geheimer Stripe-Schlüssel nicht festgelegt ist."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "We're sorry to report that the transaction has failed."
 msgstr ""
 "Leider müssen wir Ihnen mitteilen, dass die Transaktion fehlgeschlagen ist."
+=======
+msgid "You cannot set the acquirer to Test Mode while it is linked with your Stripe account."
+msgstr "Sie können den Acquirer nicht in den Testmodus versetzen, solange er mit Ihrem Stripe-Konto verbunden ist."
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Your Stripe Webhook is already set up."
+msgstr "Ihr Stripe Webhook wurde bereits eingerichtet!"
+>>>>>>> 9d073c73ba3... temp

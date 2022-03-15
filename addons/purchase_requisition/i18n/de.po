@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
@@ -12,18 +13,31 @@
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
+# Raymond Vetter, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+=======
+"POT-Creation-Date: 2022-03-15 12:07+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_requisition
@@ -195,7 +209,11 @@ msgstr "Kategorie"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Close"
+<<<<<<< HEAD
 msgstr "Abschliessen"
+=======
+msgstr "Abschließen"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__done
@@ -223,6 +241,7 @@ msgstr "Bestätigt"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
+<<<<<<< HEAD
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -230,6 +249,10 @@ msgstr ""
 "Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie "
 "derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der "
 "Kennzahlen."
+=======
+msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgstr "Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der Kennzahlen."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__rfq
@@ -239,12 +262,17 @@ msgstr "Erstelle eine Bestellung im Entwurf"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_product_product__purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_product_template__purchase_requisition
+<<<<<<< HEAD
 msgid ""
 "Create a draft purchase order: Based on your product configuration, the "
 "system will create a draft purchase order.Propose a call for tender : If the"
 " 'purchase_requisition' module is installed and this option is selected, the"
 " system will create a draft call for tender."
 msgstr ""
+=======
+msgid "Create a draft purchase order: Based on your product configuration, the system will create a draft purchase order.Propose a call for tender : If the 'purchase_requisition' module is installed and this option is selected, the system will create a draft call for tender."
+msgstr "Erstellen Sie den Entwurf einer Bestellung: Auf der Grundlage Ihrer Produktkonfiguration erstellt das System einen Bestellungsentwurf. Ausschreibungsentwurf vorschlagen: Wenn das Modul \"purchase_requisition\" installiert und diese Option ausgewählt ist, erstellt das System einen Ausschreibungsentwurf."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -306,10 +334,8 @@ msgstr "Entwurf"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
-msgid ""
-"Example of purchase agreements include call for tenders and blanket orders."
-msgstr ""
-"Beispiel für Kaufverträge beinhalten Ausschreibungen und Blankoaufträge."
+msgid "Example of purchase agreements include call for tenders and blanket orders."
+msgstr "Beispiel für Kaufverträge beinhalten Ausschreibungen und Blankoaufträge."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -332,6 +358,14 @@ msgid "Followers (Partners)"
 msgstr "Abonnenten (Partner)"
 
 #. module: purchase_requisition
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "FontAwesome Icon, z.B. fa-tasks"
+
+#. module: purchase_requisition
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specifc period\n"
@@ -631,12 +665,7 @@ msgstr "Bestellmeldung Positionen"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
 msgid "Purchase Requisition Type"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
-msgid "Purchase orders"
-msgstr "Bestellungen"
+msgstr "Bestellanforderungsart"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
@@ -735,6 +764,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
 msgid "Sequence"
 msgstr "Sequenz"
+<<<<<<< HEAD
+=======
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
+msgid "Set active to false to hide the Purchase Agreement Types without removing it."
+msgstr "Setzen Sie active auf false, um die Kaufvertragsarten auszublenden, ohne sie zu entfernen."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -797,19 +834,21 @@ msgstr "Bedingungen und Konditionen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
-msgid ""
-"The expected and scheduled delivery date where all the products are received"
-msgstr ""
-"Das erwartete und disponierte Lieferdatum, an dem alle Produkte geliefert "
-"sind"
+msgid "The expected and scheduled delivery date where all the products are received"
+msgstr "Das erwartete und disponierte Lieferdatum, an dem alle Produkte geliefert sind"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "There is already an open blanket order for this supplier. We suggest you to "
 "use to complete this open blanket order instead of creating a new one."
 msgstr ""
+=======
+msgid "There is already an open blanket order for this supplier. We suggest you complete this open blanket order, instead of creating a new one."
+msgstr "Es gibt bereits eine offene Rahmenbestellung für diesen Lieferanten. Wir schlagen vor, dass Sie diesen offenen Rahmenauftrag abschließen, anstatt einen neuen zu erstellen."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -887,11 +926,13 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Sie können die Vereinbarung '%s' nicht bestätigen, da es keine Produktzeile gibt."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
@@ -906,12 +947,8 @@ msgstr "Sie können die Rahmenbestellung nicht ohne Menge bestätigen."
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid ""
-"You have to cancel or validate every RfQ before closing the purchase "
-"requisition."
-msgstr ""
-"Sie müssen jede Anfrage stornieren oder validieren, bevor Sie die "
-"Bestellanforderung abschließen."
+msgid "You have to cancel or validate every RfQ before closing the purchase requisition."
+msgstr "Sie müssen jede Anfrage stornieren oder validieren, bevor Sie die Bestellanforderung abschließen."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

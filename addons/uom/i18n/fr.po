@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* uom
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Cécile Collart <cco@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # Martin Trigaux, 2019
@@ -21,11 +22,23 @@ msgstr ""
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
 "Last-Translator: gdp Odoo <gdp@odoo.com>, 2019\n"
+=======
+# Martin Trigaux, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2021-09-14 12:27+0000\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: uom
@@ -81,13 +94,8 @@ msgstr "Catégorie"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Il est possible de convertir deux unités de mesures si elles appartiennent à"
-" la même catégorie. Cette conversion utilise les rapports définis pour ces "
-"unités."
+msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgstr "Il est possible de convertir deux unités de mesures si elles appartiennent à la même catégorie. Cette conversion utilise les rapports définis pour ces unités."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -107,6 +115,7 @@ msgid "Days"
 msgstr "Jours"
 
 #. module: uom
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__length
 msgid "Default Length"
 msgstr "Longueur par défaut "
@@ -115,6 +124,17 @@ msgstr "Longueur par défaut "
 #: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__unit
 msgid "Default Units"
 msgstr "Unités par défaut"
+=======
+#: model:ir.model.fields,field_description:uom.field_uom_category__display_name
+#: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
+msgid "Display Name"
+msgstr "Afficher Nom"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_dozen
+msgid "Dozens"
+msgstr "Dizaines"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__volume
@@ -149,23 +169,13 @@ msgstr "Heures"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
-msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of "
-"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-"Combien de fois cette unité de mesure est plus grande que l'unité de mesure "
-"de référence de cette catégorie : 1 x (cette unité) = ratio x (unité de "
-"référence)"
+msgid "How many times this Unit of Measure is bigger than the reference Unit of Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+msgstr "Combien de fois cette unité de mesure est plus grande que l'unité de mesure de référence de cette catégorie : 1 x (cette unité) = ratio x (unité de référence)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
-msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of "
-"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
-"Combien de fois cette unité est plus petite ou plus grande que l'unité de "
-"mesure de référence de cette catégorie : 1 x (unité de référence) = ratio x "
-"(cette unité)"
+msgid "How much bigger or smaller this unit is compared to the reference Unit of Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+msgstr "Combien de fois cette unité est plus petite ou plus grande que l'unité de mesure de référence de cette catégorie : 1 x (unité de référence) = ratio x (cette unité)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -243,12 +253,8 @@ msgstr "Plus petit que l'unité de référence"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
-msgid ""
-"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
-"of Measure that cannot be further split, such as a piece."
-msgstr ""
-"La quantité calculée sera un multiple de cette valeur. Utilisez 1,0 pour une"
-" unité de mesure indivisible telle que la pièce."
+msgid "The computed quantity will be a multiple of this value. Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."
+msgstr "La quantité calculée sera un multiple de cette valeur. Utilisez 1,0 pour une unité de mesure indivisible telle que la pièce."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -268,11 +274,15 @@ msgstr "L'arrondissement doit être strictement positif."
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "The unit of measure %s defined on the order line doesn't belong to the same "
 "category than the unit of measure %s defined on the product. Please correct "
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
+=======
+msgid "The unit of measure %s defined on the order line doesn't belong to the same category as the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category."
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 
 #. module: uom
@@ -292,10 +302,8 @@ msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
-msgid ""
-"Uncheck the active field to disable a unit of measure without deleting it."
-msgstr ""
-"Décochez le champ actif de désactiver une unité de mesure sans la supprimer."
+msgid "Uncheck the active field to disable a unit of measure without deleting it."
+msgstr "Décochez le champ actif de désactiver une unité de mesure sans la supprimer."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -360,6 +368,14 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
+<<<<<<< HEAD
+=======
+msgstr "La catégorie d'unité de mesure %s devrait n'avoir qu'une unité de mesure de référence."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
+msgid "Uom"
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 
 #. module: uom

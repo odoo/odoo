@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_subcontracting
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
@@ -14,11 +15,24 @@ msgstr ""
 "POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+=======
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_subcontracting
@@ -48,15 +62,20 @@ msgstr "Stuklijst"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__type
 msgid "BoM Type"
-msgstr "Stuklijst soort"
+msgstr "Stuklijstsoort"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
+<<<<<<< HEAD
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
 msgstr ""
 "Kies een leverancier van het soort onderaannemer indien u het product wilt "
 "uitbesteden"
+=======
+msgid "Choose a vendor of type subcontractor if you want to subcontract the product"
+msgstr "Kies een leverancier van het soort uitbesteder als je het product wilt uitbesteden"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -80,9 +99,40 @@ msgid "Make To Order"
 msgstr "Maak op order"
 
 #. module: mrp_subcontracting
+<<<<<<< HEAD
+=======
+#: code:addons/mrp_subcontracting/models/stock_move_line.py:0
+#, python-format
+msgid "Make sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock."
+msgstr "Zorg ervoor dat je de gerelateerde herbevoorradingspicking bevestigt of aanpast aan je onderaannemer om inconsistenties in de voorraad te voorkomen."
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
+msgid "Mandatory"
+msgstr "Verplicht"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Nothing to record"
+msgstr "Niets op te nemen"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_quant.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Bewerking niet ondersteund"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_product_product
+msgid "Product"
+msgstr "Product"
+
+#. module: mrp_subcontracting
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Productmutaties (voorraadmutatieregels)"
+msgstr "Productverplaatstingen (voorraadverplaatsingsregels)"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
@@ -98,7 +148,7 @@ msgstr "Productie vastleggen"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Record components"
-msgstr "Componenten opnemen"
+msgstr "Componenten registreren"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
@@ -110,24 +160,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
 msgid "Resupply Subcontractor"
-msgstr "Onderaannemer opnieuw bevoorraden"
+msgstr "Uitbesteder opnieuw bevoorraden"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.location.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
-msgstr "Bevoorraad onderaannemers op bestelling"
+msgstr "Lever uitbesteder op order"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply Subcontractors"
-msgstr "Bevoorraden van onderaannemers"
+msgstr "Bevoorraden van uitbesteders"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply subcontractors with components"
-msgstr "Bevoorraad onderaannemers opnieuw met componenten"
+msgstr "Bevoorraad uitbesteders opnieuw met componenten"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
@@ -138,7 +188,7 @@ msgstr "Retour boeken"
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence subcontracting"
-msgstr "Onderaannemer reeks"
+msgstr "Uitbesteding reeks"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
@@ -148,9 +198,28 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
 msgid "Stock Move"
-msgstr "Voorraadmutatie"
+msgstr "Voorraadverplaatsing"
 
 #. module: mrp_subcontracting
+<<<<<<< HEAD
+=======
+#: model:ir.model,name:mrp_subcontracting.model_stock_rule
+msgid "Stock Rule"
+msgstr "Voorraadregel"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, python-format
+msgid "Subcontract"
+msgstr "UItbesteed"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__subcontract_location_id
+msgid "Subcontract Location"
+msgstr "Uitbestedingslocatie"
+
+#. module: mrp_subcontracting
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid "Subcontracted"
 msgstr "Uitbesteed"
@@ -160,38 +229,42 @@ msgstr "Uitbesteed"
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__mrp_bom__type__subcontract
 #, python-format
 msgid "Subcontracting"
-msgstr "Onderaanneming"
+msgstr "Uitbestedingen"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
 msgid "Subcontracting Location"
-msgstr "Onderaannemerslocatie"
+msgstr "Uitbestedingslocatie"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
 msgid "Subcontracting MTO Rule"
-msgstr "Onderaanneming MTO regel"
+msgstr "Uitbesteding MTO regel"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id
 msgid "Subcontracting MTS Rule"
-msgstr "Onderaannemers MTS regel"
+msgstr "Uitbesteding MTS regel"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
 msgid "Subcontracting Operation Type"
-msgstr "Onderaannemer soort operatie"
+msgstr "Uitbesteding bewerkingssoort"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
 msgid "Subcontractor Location"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Uitbestedingslocatie"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
 msgid "Subcontractors"
-msgstr "Onderaannemers"
+msgstr "Uitbesteders"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
@@ -201,15 +274,30 @@ msgstr "Prijslijst leverancier"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
 msgid "The move is a subcontract receipt"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "De verplaatsing is een ontvangst van een uitbesteding"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_users__property_stock_subcontractor
+<<<<<<< HEAD
 msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
 msgstr ""
+=======
+msgid "The stock location used as source and destination when sending        goods to this contact during a subcontracting process."
+msgstr "De voorraadlocatie die wordt gebruikt als bron en bestemming bij het verzenden van goederen naar deze contactpersoon tijdens een uitbestedingsproces."
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "This MO isn't related to a subcontracted move"
+msgstr "Deze productieorder is niet gerelateerd aan een uitbestede verplaatsing"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
@@ -228,6 +316,36 @@ msgid "Warehouse"
 msgstr "Magazijn"
 
 #. module: mrp_subcontracting
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_product_produce__subcontract_move_id
 msgid "stock move from the subcontract picking"
 msgstr ""
+=======
+#: model:ir.model,name:mrp_subcontracting.model_mrp_consumption_warning
+msgid "Wizard in case of consumption in warning/strict and more component has been used for a MO (related to the bom)"
+msgstr "Wizard in geval van verbruik in waarschuwing/strikt en meer component is gebruikt voor een productieorder (gerelateerd aan de stuklijst)"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_bom.py:0
+#, python-format
+msgid "You can not set a Bill of Material with operations or by-product line as subcontracting."
+msgstr "Je kunt een stuklijst met bewerkingen of bijproductregel niet instellen als uitbesteding."
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "You must enter a serial number for %s"
+msgstr "Je moet een serienummer invoeren voor: %s"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "You must enter a serial number for each line of %s"
+msgstr "Je moet een andere serienummer ingeven voor elk regel %s"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "You must indicate a non-zero amount consumed for at least one of your components"
+msgstr "Je moet een verbruikte hoeveelheid aangeven die niet gelijk is aan nul voor minstens één van je componenten"
+>>>>>>> 9d073c73ba3... temp

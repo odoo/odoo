@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2019
 # LuceEasyPme <luce@easypme.com>, 2019
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
@@ -22,11 +23,28 @@ msgstr ""
 "POT-Creation-Date: 2019-09-30 09:41+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+=======
+# Martin Trigaux, 2021
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
+# Thomas Deleval <thd@odoo.com>, 2021
+# Camille Dantinne <cmd@odoo.com>, 2021
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: event
@@ -41,9 +59,30 @@ msgid "%s (copy)"
 msgstr "%s (copie)"
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.actions.report,print_report_name:event.report_event_registration_badge
 msgid "'Registration Event - %s' % (object.name).replace('/','')"
 msgstr "'Inscription à l'événement  - %s' % (object.name).replace('/','')"
+=======
+#: model:ir.actions.report,print_report_name:event.action_report_event_registration_foldable_badge
+msgid "'Foldable Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), object.name.replace('/',''))"
+msgstr "'Badge pliable - %s - %s' % ((object.event_id.name or 'Événement').replace('/',''), object.name.replace('/',''))"
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
+msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
+msgstr "'Badge pliable - %s' % (object.name or 'Événement').replace('/','')"
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
+msgid "'Full Page Ticket - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), object.name.replace('/',''))"
+msgstr "'Billet pleine page - %s - %s' % ((object.event_id.name or 'Événement').replace('/',''), object.name.replace('/',''))"
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
+msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
+msgstr "'Billet pleine page - %s' % (object.name or 'Évenement').replace('/','')"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -88,6 +127,7 @@ msgstr ""
 "</div>"
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
@@ -104,18 +144,35 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Bouton de "
 "participation\" title=\"A participé à l'évènement\"/>"
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.view_event_form
-msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\"/>"
-msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\"/>"
+=======
+#: model_terms:ir.ui.view,arch_db:event.view_event_kanban
+msgid "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"End date\"/>"
+msgstr "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"Date de fin\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" title=\"Confirm Registration\"/>"
+msgstr "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" title=\"Confirm Registration\"/>"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" title=\"Confirm Registration\"/>"
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" title=\"Confirm Registration\"/>"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_kanban
+msgid "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
+msgstr "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
+>>>>>>> 9d073c73ba3... temp
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+msgid "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title=\"Arrow\"/>"
+msgstr "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title=\"Arrow\"/>"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+<<<<<<< HEAD
 msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel Registration\"/>"
@@ -128,6 +185,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
 msgstr "<i>à</i>"
+=======
+msgid "<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended button\" title=\"Confirm Attendance\"/>"
+msgstr "<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended button\" title=\"Confirmer la participation\"/>"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" title=\"Confirm Attendance\"/>"
+msgstr "<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" title=\"Confirmer la participation\"/>"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -142,12 +208,8 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Les valeurs définies ici sont"
-" propres à l'entreprise.\" groups=\"base.group_multi_company\"/>"
+msgid "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr "<span class=\"fa fa-lg fa-building-o\" title=\"Les valeurs définies ici sont propres à l'entreprise.\" groups=\"base.group_multi_company\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
@@ -751,6 +813,7 @@ msgstr ""
 "            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
+<<<<<<< HEAD
 "                        Bonjour ${object.name},<br/>\n"
 "                        Nous sommes ravis de vous rappeler que l'événement\n"
 "                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
@@ -763,6 +826,27 @@ msgstr ""
 "                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Visualiser l'évènement</a><br/>\n"
+=======
+"                        Bonjour <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"                        Nous sommes ravi de confirmer votre inscription à l'événement\n"
+"                        <t t-if=\"is_online\">\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</strong>\n"
+"                        </t>\n"
+"                        pour le participant <t t-out=\"object.name or ''\">Oscar Morgan</t>.\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br/>\n"
+"                        <strong>Ajoutez cet événement à votre calendrier</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo\n"
+"                        </a>\n"
+"                        <br/><br/>\n"
+>>>>>>> 9d073c73ba3... temp
 "                    </div>\n"
 "                    % endif\n"
 "                    <div>\n"
@@ -859,6 +943,7 @@ msgstr ""
 "                </td></tr>\n"
 "                % endif\n"
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+<<<<<<< HEAD
 "                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
@@ -870,6 +955,15 @@ msgstr ""
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
+=======
+"                    <!-- PWA MARKGETING -->\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <div>\n"
+"                            <strong>Pour une meilleure expérience mobile,</strong>\n"
+"                            <a href=\"/event\">Installez notre application mobile</a>\n"
+"                        </div>\n"
+"                    </t>\n"
+>>>>>>> 9d073c73ba3... temp
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
@@ -909,6 +1003,15 @@ msgstr ""
 "            "
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:event.field_event_event_ticket__description
+#: model:ir.model.fields,help:event.field_event_type_ticket__description
+msgid "A description of the ticket that you want to communicate to your customers."
+msgstr "Description du ticket à communiquer à vos clients."
+
+#. module: event
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction
 msgid "Action Needed"
@@ -936,15 +1039,25 @@ msgstr "Activité d'exception de décoration"
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_state
 msgid "Activity State"
 msgstr "Status de l'activité"
+<<<<<<< HEAD
+=======
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_type_icon
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "Add a description..."
+msgstr "Ajouter une description…"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid ""
-"Add a navigation menu to your event web pages with schedule, tracks, a track"
-" proposal form, etc."
-msgstr ""
-"Ajoutez un menu de navigation aux pages Web de votre événement avec un "
-"calendrier, des parcours, un formulaire de proposition de parcours, etc."
+msgid "Add a navigation menu to your event web pages with schedule, tracks, a track proposal form, etc."
+msgstr "Ajoutez un menu de navigation aux pages Web de votre événement avec un calendrier, des parcours, un formulaire de proposition de parcours, etc."
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -1040,6 +1153,14 @@ msgid "Attendees"
 msgstr "Participants"
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:event.field_event_event__auto_confirm
+msgid "Autoconfirm Registrations. Registrations will automatically be confirmed upon creation."
+msgstr "Confirmation automatique des inscriptions. Les inscriptions seront automatiquement confirmées lors de la création."
+
+#. module: event
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 msgid "Autoconfirm Registrations"
 msgstr "Confirmer automatiquement les inscriptions"
@@ -1060,9 +1181,33 @@ msgid "Available Seats"
 msgstr "Places disponibles"
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:event.field_event_event__badge_back
 msgid "Badge Back"
 msgstr "Verso du badget"
+=======
+#: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
+msgid "Barcode"
+msgstr "Code-barres"
+
+#. module: event
+#: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
+#: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
+msgid "Before the event"
+msgstr "Avant l'événement"
+
+#. module: event
+#: code:addons/event/models/event_stage.py:0
+#: model:event.stage,legend_blocked:event.event_stage_announced
+#: model:event.stage,legend_blocked:event.event_stage_booked
+#: model:event.stage,legend_blocked:event.event_stage_cancelled
+#: model:event.stage,legend_blocked:event.event_stage_done
+#: model:event.stage,legend_blocked:event.event_stage_new
+#: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__blocked
+#, python-format
+msgid "Blocked"
+msgstr "Bloqué"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_front
@@ -1123,6 +1268,19 @@ msgstr "Catégorie"
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
 msgstr "Communication"
+<<<<<<< HEAD
+=======
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
+msgid "Communication related to event registrations"
+msgstr "Communication liée aux inscriptions aux événements"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Community Chat Rooms"
+msgstr "Salles de discussion communautaires"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__company_id
@@ -1135,6 +1293,14 @@ msgstr "Société"
 #, python-format
 msgid "Compose Email"
 msgstr "Rédiger un email"
+<<<<<<< HEAD
+=======
+
+#. module: event
+#: model:event.type,name:event.event_type_data_conference
+msgid "Conference"
+msgstr "Conférence"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -1242,9 +1408,16 @@ msgid "Days"
 msgstr "Jours"
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Delete"
 msgstr "Supprimer"
+=======
+#: model:ir.model.fields,help:event.field_event_event_ticket__seats_max
+#: model:ir.model.fields,help:event.field_event_type_ticket__seats_max
+msgid "Define the number of available tickets. If you have too many registrations you will not be able to sell tickets anymore. Set 0 to ignore this rule set as unlimited."
+msgstr "Définit le nombre de tickets disponibles. Si vous recevez trop d'inscriptions, il ne vous sera plus possible de vendre des tickets. Laisser à 0 pour ignorer cette limite."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -1261,6 +1434,14 @@ msgstr "Description"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__display_name
 msgid "Display Name"
 msgstr "Afficher Nom"
+<<<<<<< HEAD
+=======
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Display Sponsors and Exhibitors on your event pages"
+msgstr "Affichez les sponsors et les exposants sur les pages de votre événement"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -1397,6 +1578,7 @@ msgid ""
 "                            Failed with error:\n"
 "                              - %s\n"
 "\n"
+<<<<<<< HEAD
 "                            You receive this email because you are:\n"
 "                              - the organizer of the event,\n"
 "                              - or the responsible of the event,\n"
@@ -1406,14 +1588,43 @@ msgstr ""
 "                              - Evènement: %s (%s)\n"
 "                              - Prévu: %s\n"
 "                              - Modèle: %s (%s)\n"
+=======
+"You receive this email because you are:\n"
+"  - the organizer of the event,\n"
+"  - or the responsible of the event,\n"
+"  - or the last writer of the template.\n"
+msgstr ""
+"Planificateur d'événements pour :\n"
+"  - Événement : %(event_name)s (%(event_id)s)\n"
+"  - Programmé : %(date)s\n"
+"  - Modèle : %(template_name)s (%(template_id)s)\n"
+>>>>>>> 9d073c73ba3... temp
 "\n"
 "                            A échoué avec l'erreur:\n"
 "                              - %s\n"
 "\n"
+<<<<<<< HEAD
 "                            Vous recevez ce mail parce que vous êtes:\n"
 "                              - l'organisateur de l'évènement,\n"
 "                              - le responsable de l'évènement,\n"
 "                              - ou le dernier à avoir modifié le modèle."
+=======
+"Vous recevez cet email parce que vous êtes :\n"
+"  - l'organisateur de l'événement,\n"
+"  - ou le responsable de l'événement,\n"
+"  - ou le dernier auteur du modèle.\n"
+
+#. module: event
+#: model:ir.model,name:event.model_event_stage
+msgid "Event Stage"
+msgstr "Étape d'Événement"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.event_stage_action
+#: model:ir.ui.menu,name:event.event_stage_menu
+msgid "Event Stages"
+msgstr "Étapes d'Événement"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -1427,6 +1638,24 @@ msgid "Event Type"
 msgstr "Type d'évènement"
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model:ir.actions.act_window,name:event.event_registration_action_tree
+msgid "Event registrations"
+msgstr "Inscriptions à l'événement"
+
+#. module: event
+#: model_terms:ir.actions.act_window,help:event.event_stage_action
+msgid "Event stages are used to track the progress of an Event from its origin until its conclusion."
+msgstr "Les étapes d'un événement sont utilisées pour suivre la progression de ce dernier depuis sa création jusqu'à sa conclusion."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
+msgid "Event's Ticket"
+msgstr "Billet d'événement"
+
+#. module: event
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
@@ -1434,6 +1663,24 @@ msgid "Event: Mail Scheduler"
 msgstr "Événement : planificateur d'e-mail"
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model:mail.template,name:event.event_subscription
+msgid "Event: Registration"
+msgstr "Évènement: inscription"
+
+#. module: event
+#: model:mail.template,name:event.event_registration_mail_template_badge
+msgid "Event: Registration Badge"
+msgstr "Événement : Badge d'inscription"
+
+#. module: event
+#: model:mail.template,name:event.event_reminder
+msgid "Event: Reminder"
+msgstr "Evènement: rappel"
+
+#. module: event
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
@@ -1469,17 +1716,19 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__auto_confirm
-msgid ""
-"Events and registrations will automatically be confirmed upon creation, "
-"easing the flow for simple events."
-msgstr ""
-"Les événements et les inscriptions seront automatiquement confirmés lors de "
-"leur création, ce qui simplifie le déroulement des événements."
+msgid "Events and registrations will automatically be confirmed upon creation, easing the flow for simple events."
+msgstr "Les événements et les inscriptions seront automatiquement confirmés lors de leur création, ce qui simplifie le déroulement des événements."
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Events in New state"
 msgstr "Événements au stade brouillon"
+=======
+#: model:ir.model.fields,help:event.field_event_stage__pipe_end
+msgid "Events will automatically be moved into this stage when they are finished. The event moved into this stage will automatically be set as green."
+msgstr "Les événements seront automatiquement déplacés vers cette étape lorsqu'ils seront terminés. L'événement déplacé dans cette étape sera automatiquement défini comme vert."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1495,12 +1744,33 @@ msgstr "Attendu"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr "Nombre de participants attendus"
+msgstr "Participants attendus"
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
 msgstr "Terminer l'évenement"
+=======
+#: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
+msgid "Foldable Badge"
+msgstr "Badge Pliable"
+
+#. module: event
+#: model:mail.template,report_name:event.event_registration_mail_template_badge
+msgid "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
+msgstr "Badge Pliable - {{ (object.event_id.name or 'Event').replace('/','_') }}"
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
+msgid "Foldable Badge Example"
+msgstr "Exemple de badge pliable"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_stage__fold
+msgid "Folded in Kanban"
+msgstr "Repliée dans la vue Kanban"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
@@ -1522,20 +1792,50 @@ msgstr "Abonnés (Partenaires)"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
-msgid ""
-"For each event you can define a maximum registration of seats(number of "
-"attendees), above this numbers the registrations are not accepted."
-msgstr ""
-"Pour chaque évènement, vous pouvez définir un nombre maximum de places "
-"(nombre de participants), au delà de ce chiffre, les inscriptions ne sont "
-"pas acceptées."
+msgid "For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted."
+msgstr "Pour chaque évènement, vous pouvez définir un nombre maximum de places (nombre de participants), au delà de ce chiffre, les inscriptions ne sont pas acceptées."
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,help:event.field_event_event__seats_min
 msgid ""
 "For each event you can define a minimum reserved seats (number of "
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
+=======
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Foster interactions between attendees by creating virtual conference rooms"
+msgstr "Favorisez les interactions entre les participants en créant des salles de conférence virtuelles"
+
+#. module: event
+#: model:event.stage,description:event.event_stage_new
+msgid "Freshly created"
+msgstr "Fraîchement créé"
+
+#. module: event
+#: model_terms:ir.actions.act_window,help:event.action_registration
+msgid "From this dashboard you can report, analyze and detect trends regarding your event registrations."
+msgstr "À partir de ce tableau de bord, vous pouvez faire du reporting, analyser et détecter les tendances concernant les inscriptions à vos événements."
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
+msgid "Full Page Ticket"
+msgstr "Ticket Pleine Page"
+
+#. module: event
+#: model:mail.template,report_name:event.event_subscription
+msgid "Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}"
+msgstr "Ticket Pleine Page - {{ (object.event_id.name or 'Event').replace('/','') }}"
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
+msgid "Full Page Ticket Example"
+msgstr "Exemple de ticket pleine page"
+
+#. module: event
+#: model:event.stage,description:event.event_stage_done
+msgid "Fully ended"
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 "Pour chaque évènement, vous pouvez définir un nombre minimum de place "
 "réservées (nombre de participants), si vous n'obtenez pas suffisamment "
@@ -1549,6 +1849,31 @@ msgid "Future Activities"
 msgstr "Activités futures"
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:event.field_event_mail__mail_state
+msgid "Global communication Status"
+msgstr ""
+
+#. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Great! Now all you have to do is wait for your attendees to show up!"
+msgstr "Super! Il ne vous reste plus qu'à attendre que vos participants se présentent !"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_stage__legend_done
+msgid "Green Kanban Label"
+msgstr "Étiquette Kanban verte"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_stage__legend_normal
+msgid "Grey Kanban Label"
+msgstr "Étiquette Kanban grise"
+
+#. module: event
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
@@ -1600,12 +1925,17 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Si actif, certains messages ont une erreur de livraison."
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,help:event.field_event_event__state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
 "particular dates the status is set to 'Confirmed'. If the event is over, the"
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
+=======
+#: model:ir.model.fields,help:event.field_event_event__start_sale_datetime
+msgid "If ticketing is used, contains the earliest starting sale date of tickets."
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 "Si un événement est créé, le statut sera \"Brouillon\". Si l'événement est "
 "confirmé pour une date particulière, le statut sera \"Confirmé\". Si "
@@ -1638,9 +1968,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr ""
-"Cette valeur par défaut maximum est sélectionnée si vous choisissez cet "
-"évènement"
+msgstr "Cette valeur par défaut maximum est sélectionnée si vous choisissez cet évènement"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_min
@@ -1847,18 +2175,74 @@ msgstr "Résumé d'activité suivant"
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_type_id
 msgid "Next Activity Type"
 msgstr "Type d'activités à venir"
+<<<<<<< HEAD
+=======
+
+#. module: event
+#: model_terms:ir.actions.act_window,help:event.event_registration_action
+msgid "No Attendees expected yet!"
+msgstr "Aucun participant n'est encore attendu !"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "No more available seats."
 msgstr "Plus de places disponibles."
+=======
+msgid "No more available seats for %s. Raise the limit or remove some other confirmed registrations first."
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "No more seats available for this event."
 msgstr "Plus de places disponibles pour cet événement."
+=======
+msgid "No more available seats for the ticket %s (%s). Raise the limit or remove some other confirmed registrations first."
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event_registration.py:0
+#, python-format
+msgid "No more available seats for this ticket"
+msgstr "Plus de places disponibles pour ce billet"
+
+#. module: event
+#: code:addons/event/models/event_registration.py:0
+#, python-format
+msgid "None"
+msgstr "Aucun"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__note
+#: model:ir.model.fields,field_description:event.field_event_type__note
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Note"
+msgstr "Note"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Notes"
+msgstr "Notes"
+
+#. module: event
+#: model_terms:ir.actions.act_window,help:event.action_event_mail
+msgid "Nothing Scheduled yet!"
+msgstr "Rien de prévu pour le moment !"
+
+#. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Now that your event is ready, click here to move it to another stage."
+msgstr "Maintenant que votre événement est prêt, cliquez ici pour le déplacer vers une autre étape."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -1869,7 +2253,7 @@ msgstr "Nombre d'actions"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
 msgid "Number of Expected Attendees"
-msgstr "Nombre de participants attendus"
+msgstr "Participants attendus"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
@@ -1930,27 +2314,51 @@ msgid "Online Ticketing"
 msgstr "Vente de billets en ligne"
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid ""
 "Online events like webinars do not require a specific location\n"
 "                                            and are hosted online."
+=======
+#: model:ir.model.fields,field_description:event.field_event_event__organizer_id
+msgid "Organizer"
+msgstr "Organisé par"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__legend_blocked
+#: model:ir.model.fields,help:event.field_event_stage__legend_blocked
+msgid "Override the default value displayed for the blocked state for kanban selection."
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 "Les événements en ligne comme les séminaires en ligne ne nécessitent pas un lieu spécifique\n"
 "                                            et son hébergés en ligne."
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,help:event.field_event_type__is_online
 msgid ""
 "Online events like webinars do not require a specific location and are "
 "hosted online."
+=======
+#: model:ir.model.fields,help:event.field_event_event__legend_done
+#: model:ir.model.fields,help:event.field_event_stage__legend_done
+msgid "Override the default value displayed for the done state for kanban selection."
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 "Les événements en ligne comme les séminaires en ligne ne nécessitent pas un "
 "lieu spécifique et sont hébergés en ligne."
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
 msgid "Organizer"
 msgstr "Organisé par"
+=======
+#: model:ir.model.fields,help:event.field_event_event__legend_normal
+#: model:ir.model.fields,help:event.field_event_stage__legend_normal
+msgid "Override the default value displayed for the normal state for kanban selection."
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1973,12 +2381,20 @@ msgid "Physical Event"
 msgstr "Evènement physique"
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,help:event.field_event_registration__origin
 msgid ""
 "Reference of the document that created the registration, for example a sales"
 " order"
 msgstr ""
 "Référence du document ayant créé l'inscription, par exemple une commande"
+=======
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
+msgstr "Prêt à <b>organiser des événements</b> en quelques minutes ? Commençons !"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1986,6 +2402,10 @@ msgid "Register with this event"
 msgstr "S'inscrire à cet évenement"
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: code:addons/event/models/event_ticket.py:0
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_graph
@@ -2070,12 +2490,17 @@ msgstr "Horaire et suivis"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
+<<<<<<< HEAD
 msgid ""
 "Schedule and organize your events efficiently:\n"
 "                track registrations and participations, automate the confirmation emails, sell tickets, etc."
 msgstr ""
 "Planifiez et organisez vos évènements efficacement:\n"
 "                suivez les inscritpions et les participations, automatisez les emails de confirmation, vendez des billets, etc."
+=======
+msgid "Schedule and organize your events: handle registrations, send automated confirmation emails, sell tickets, etc."
+msgstr "Programmez et organisez vos événements : gérez les inscriptions, envoyez des e-mails de confirmation automatisés, vendez des billets, etc."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
@@ -2132,15 +2557,13 @@ msgstr "Marquer comme non confirmé"
 #: model:ir.actions.act_window,name:event.action_event_configuration
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr "Configuration"
+msgstr "Paramètres"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Montrez toutes les enregistrements pour lesquelles la date des prochaines "
-"actions est pour aujourd'hui ou avant"
+msgstr "Montrez toutes les enregistrements pour lesquelles la date des prochaines actions est pour aujourd'hui ou avant"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__origin
@@ -2176,17 +2599,60 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Statut basé sur les activités\n"
-"En retard : la date d'échéance est déjà dépassée\n"
-"Aujourd'hui : la date d'activité est aujourd'hui\n"
-"Planifiée : activités futures"
+"En retard : la date d'échéance est déjà dépassée\n"
+"Aujourd'hui : la date d'activité est aujourd'hui\n"
+"Planifiée : activités futures"
 
 #. module: event
+<<<<<<< HEAD
 #: code:addons/event/models/event.py:0
+=======
+#: model:ir.model.fields,help:event.field_event_tag__color
+msgid "Tag color. No color means no display in kanban or front-end, to distinguish internal tags from public categorization tags."
+msgstr "Couleur de l'étiquette. Aucune couleur signifie aucun affichage dans le kanban ou le front-end, pour distinguer les balises internes des balises de catégorisation publiques."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__tag_ids
+#: model:ir.model.fields,field_description:event.field_event_tag_category__tag_ids
+#: model:ir.model.fields,field_description:event.field_event_type__tag_ids
+#: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
+msgid "Tags"
+msgstr "Étiquettes"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "Task in progress. Click to block or set as done."
+msgstr "Tâche en cours. Cliquez pour bloquer ou marquer comme terminé."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "Task is blocked. Click to unblock or set as done."
+msgstr "Tâche bloquée. Cliquez pour débloquer ou marquer comme terminé."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__event_type_id
+#: model:ir.model.fields,field_description:event.field_event_mail__template_ref
+#: model:ir.model.fields,field_description:event.field_event_type_mail__template_ref
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+msgid "Template"
+msgstr "Modèle"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail__template_model_id
+#: model:ir.model.fields,field_description:event.field_event_type_mail__template_model_id
+msgid "Template Model"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event_event.py:0
+>>>>>>> 9d073c73ba3... temp
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
 msgstr "La date de fin ne peut pas être antérieure à la date de début."
 
 #. module: event
+<<<<<<< HEAD
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid ""
@@ -2202,6 +2668,100 @@ msgstr ""
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
 msgstr "Ce champs contient le modèle du mail qui sera envoyé automatiquement"
+=======
+#: model:event.stage,description:event.event_stage_cancelled
+msgid "The event has been cancelled"
+msgstr "Cet événement a été annulé"
+
+#. module: event
+#: model:event.stage,description:event.event_stage_announced
+msgid "The event has been publicly announced"
+msgstr "Cet événement a été annoncé publiquement"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
+msgid "The event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out, the event will be sold out."
+msgstr "L'événement est complet s'il n'y a plus de places disponibles sur l'événement. Si la billetterie est utilisée et que tous les billets sont épuisés, l'événement sera complet."
+
+#. module: event
+#: code:addons/event/models/event_ticket.py:0
+#, python-format
+msgid ""
+"The following tickets cannot be deleted while they have one or more registrations linked to them:\n"
+"- %s"
+msgstr ""
+
+#. module: event
+#: model:event.stage,description:event.event_stage_booked
+msgid "The place has been reserved"
+msgstr "Cette place a été réservée"
+
+#. module: event
+#: code:addons/event/models/event_ticket.py:0
+#, python-format
+msgid "The stop date cannot be earlier than the start date."
+msgstr "La date de fin ne peut pas être antérieure à la date de début."
+
+#. module: event
+#: code:addons/event/models/event_registration.py:0
+#, python-format
+msgid "There are no more available seats for %s. Raise the limit or remove some other confirmed registrations first."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__ticket_instructions
+#: model:ir.model.fields,help:event.field_event_type__ticket_instructions
+msgid "This information will be printed on your tickets."
+msgstr "Cette information sera imprimée sur vos billets."
+
+#. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "This is the <b>name</b> your guests will see when registering."
+msgstr "C'est le <b>nom</b> que vos invités verront lors de leur inscription."
+
+#. module: event
+#: code:addons/event/models/event_event.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "This step is done. Click to block or set in progress."
+msgstr "Cette étape est terminée. Cliquez pour bloquer ou marquer comme terminé."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
+msgid "Ticket"
+msgstr "Billet"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
+#: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
+msgid "Ticket Instructions"
+msgstr "Instructions sur le billet"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Ticket Intructions"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Ticket Type"
+msgstr "Type de ticket"
+
+#. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one."
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
@@ -2262,8 +2822,24 @@ msgstr "Non confirmé"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
+<<<<<<< HEAD
 msgid "Unconfirmed Seat Reservations"
 msgstr "Places réservées non confirmées"
+=======
+msgid "Unconfirmed Registrations"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
+#: model_terms:ir.ui.view,arch_db:event.view_event_tree
+msgid "Unconfirmed Seats"
+msgstr "Places non confirmées"
+
+#. module: event
+#: model_terms:ir.actions.act_window,help:event.action_event_mail
+msgid "Under this technical menu you will find all scheduled communication related to your events."
+msgstr "Sous ce menu technique, vous trouverez toutes les communications programmées liées à vos événements."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -2316,9 +2892,21 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Visibility"
 msgstr "Visibilité"
+=======
+#: code:addons/event/models/event_event.py:0
+#, python-format
+msgid "Value should be True or False (not %s)"
+msgstr "Les valeurs doivent être VRAI ou Faux (pas %s)"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__address_id
+msgid "Venue"
+msgstr "Lieu"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0
@@ -2327,6 +2915,16 @@ msgid "WARNING: Event Scheduler Error for event: %s"
 msgstr "ATTENTION: Erreur de planificateur d'évènement pour l'évènement: %s"
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
+#: model_terms:ir.actions.act_window,help:event.event_registration_action
+#: model_terms:ir.actions.act_window,help:event.event_registration_action_kanban
+msgid "Wait until Attendees register to your Event or create their registrations manually."
+msgstr ""
+
+#. module: event
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
 msgid "Website Messages"
@@ -2347,10 +2945,25 @@ msgstr "Semaines"
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "You must wait the event confirmation before doing this action."
 msgstr ""
 "Vous devez attendre la confirmation de l'évènement avant de pouvoir faire "
 "cette action."
+=======
+msgid "When will your event take place? <b>Select</b> the start and end dates <b>and click Apply</b>."
+msgstr "Quand se déroule votre événement ? <b>Selectionnez</b> les dates de début et de fin <b>et cliquez sur Appliquer</b>."
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__is_ongoing
+msgid "Whether event has begun"
+msgstr "Si l'événement a commencé"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "You can also add a description to help your coworkers understand the meaning and purpose of the stage."
+msgstr "Vous pouvez aussi ajouter une description pour aider vos co-équipiers à comprendre la signification et le but de cette étape."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -2400,7 +3013,27 @@ msgid "on "
 msgstr "sur "
 
 #. module: event
+<<<<<<< HEAD
 #: code:addons/event/models/event.py:0
+=======
+#: model:ir.model.fields,help:event.field_event_event__event_registrations_started
+msgid "registrations have started if the current datetime is after the earliest starting date of tickets."
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
+msgid "reserved +"
+msgstr "reservé +"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+msgid "to"
+msgstr "à"
+
+#. module: event
+#: code:addons/event/models/event_registration.py:0
+>>>>>>> 9d073c73ba3... temp
 #, python-format
 msgid "today"
 msgstr "aujourd'hui"

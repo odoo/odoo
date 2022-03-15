@@ -1,22 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_paypal
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
+=======
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_paypal
@@ -57,6 +69,14 @@ msgid ""
 "                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
 "                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
 msgstr ""
+<<<<<<< HEAD
+=======
+"Guten Tag\n"
+"                <br/><br/>\n"
+"                Sie haben eine Zahlung von Paypal erhalten.<br/>\n"
+"                Bitte folgen Sie den Anweisungen von Paypal, um Ihr Konto zu konfigurieren.<br/>\n"
+"                Helfen Sie uns anschließend, Ihre Anmeldeinformation für Paypal in Odoo zu vervollständigen.<br/><br/>"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
@@ -69,6 +89,15 @@ msgid "Merchant Account ID"
 msgstr ""
 
 #. module: payment_paypal
+<<<<<<< HEAD
+=======
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Keine Transaktion gefunden, die der Referenz %s entspricht."
+
+#. module: payment_paypal
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid "PDT Identity Token"
 msgstr ""
@@ -109,16 +138,20 @@ msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr "Paypal: Daten mit fehlender Referenz (%s) oder txn_id (%s) erhalten."
 
 #. module: payment_paypal
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Anbieter"
 
 #. module: payment_paypal
+=======
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
 msgid "Set Paypal credentials"
 msgstr ""
 
 #. module: payment_paypal
+<<<<<<< HEAD
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
 msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
@@ -126,6 +159,11 @@ msgid ""
 msgstr ""
 "Die Händler-ID stellt sicher, daß die eingehenden Nachrichten von Paypal "
 "gültig und sicher sind."
+=======
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid "The public business email solely used to identify the account with PayPal"
+msgstr "Die öffentliche Geschäfts-E-Mail, die ausschließlich zur Identifizierung des PayPal-Kontos verwendet wird"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type

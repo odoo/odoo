@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_adyen
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # 
 msgid ""
@@ -12,11 +13,23 @@ msgstr ""
 "POT-Creation-Date: 2019-09-09 12:16+0000\n"
 "PO-Revision-Date: 2019-09-09 12:33+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
+=======
+# Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2021
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_adyen
@@ -67,19 +80,49 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Ask customers to tip before paying."
 msgstr ""
+=======
+msgstr "Fragen Sie Kunden nach einem Trinkgeld"
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
+msgstr "Authentifizierung fehlgeschlagen. Bitte überprüfen Sie Ihre Adyen-Anmeldedaten."
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Cancelling the payment failed. Please cancel it manually on the payment terminal."
+msgstr "Die Stornierung der Zahlung ist fehlgeschlagen. Bitte stornieren Sie sie manuell am Zahlungsterminal."
+>>>>>>> 9d073c73ba3... temp
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+<<<<<<< HEAD
+msgid "Authentication failed. Please check your Adyen credentials."
 msgstr ""
+=======
+msgid "Cannot process transactions with negative amount."
+msgstr "Transaktion mit negativem Betrag kann nicht durchgeführt werden."
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Could not connect to the Odoo server, please check your internet connection and try again."
+msgstr "Verbindung zum Odoo-Server konnte nicht hergestellt werden, bitte prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: pos_adyen
 #. openerp-web
@@ -91,9 +134,14 @@ msgstr ""
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_config.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
+=======
+msgid "Please configure a tip product for POS %s to support tipping with Adyen."
+msgstr "Bitte konfigurieren Sie ein Trinkgeldprodukt für PoS %sum Trinkgeld mit Adyen zu unterstützen."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
@@ -122,15 +170,24 @@ msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_response
+<<<<<<< HEAD
 msgid ""
 "Technical field used to buffer the latest asynchronous notification from "
 "Adyen."
 msgstr ""
+=======
+msgid "Technical field used to buffer the latest asynchronous notification from Adyen."
+msgstr "Technisches Feld, das zur Pufferung der letzten asynchronen Benachrichtigung von Adyen verwendet wird."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Technical field used to determine if the terminal is still connected."
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Technisches Feld, um festzustellen, ob das Terminal noch verbunden ist."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
@@ -142,6 +199,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "The connection to your payment terminal failed. Please check if it is still "
 "connected to the internet."
@@ -158,6 +216,15 @@ msgid ""
 "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
 "to-get-the-api-key/#description"
 msgstr ""
+=======
+msgid "The connection to your payment terminal failed. Please check if it is still connected to the internet."
+msgstr "Die Verbindung mit Ihrem Zahlungsterminal ist fehlgeschlagen. Bitte prüfen Sie die Internetverbindung."
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
+msgid "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description"
+msgstr "Bei der Verbindung mit Adyen verwendet: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier

@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
@@ -11,18 +12,30 @@
 # Chris Egal <sodaswed@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
 "Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+=======
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
@@ -210,14 +223,17 @@ msgid "Complete Name"
 msgstr "Vollständiger Name"
 
 #. module: analytic
+<<<<<<< HEAD
+=======
+#: model:ir.model,name:analytic.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfiguration "
+
+#. module: analytic
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie "
-"derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der "
-"Kennzahlen."
+msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgstr "Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der Kennzahlen."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
@@ -235,9 +251,7 @@ msgstr "Kosten & Erlöse"
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
-msgstr ""
-"Kosten werden automatisch hinterlegt, wenn Sie Lieferantenrechnungen, Spesen"
-" oder Stundenzettel erfassen."
+msgstr "Kosten werden automatisch hinterlegt, wenn Sie Lieferantenrechnungen, Auslagen oder Stundenzettel erfassen."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -350,12 +364,8 @@ msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
-msgid ""
-"If the active field is set to False, it will allow you to hide the account "
-"without removing it."
-msgstr ""
-"Mit Aktivierung wird die Anzeige für das Finanzkonto verborgen, ohne es "
-"löschen zu müssen."
+msgid "If the active field is set to False, it will allow you to hide the account without removing it."
+msgstr "Mit Aktivierung wird die Anzeige für das Finanzkonto verborgen, ohne es löschen zu müssen."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -502,10 +512,10 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"Erlöse werden automatisch erzeugt, wenn Sie einen Kundenrechnung anlegen.\n"
-"Kundenrechnungen können auf der Grundlage von Kundenaufträgen erstellt werden.\n"
-"(Festpreisrechnungen), auf Stundenzetteln (auf der Grundlage der geleisteten Arbeit) oder\n"
-"auf Spesen (z.B. Neuabrechnung von Reisekosten)."
+"Umsätze werden automatisch erstellt, wenn Sie Kundenrechnungen\n"
+"generieren. Kundenrechnungen können auf der Grundlage von Kundenaufträgen erstellt werden\n"
+"(Festpreisrechnungen), auf Stundenzetteln (basierend auf der geleisteten Arbeit) oder\n"
+"auf Auslagen (z. B. Weiterberechnung von Reisekosten)."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -520,9 +530,7 @@ msgstr "Suche Analytische Stichwörter"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
-msgstr ""
-"Setzen Sie active auf false, um das Analytic Tag auszublenden, ohne es zu "
-"entfernen."
+msgstr "Setzen Sie active auf false, um das Analytic Tag auszublenden, ohne es zu entfernen."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
@@ -531,21 +539,23 @@ msgstr "Stichwörter"
 
 #. module: analytic
 #: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
-msgid ""
-"The percentage of an analytic distribution should be between 0 and 100."
-msgstr ""
-"Der Prozentsatz einer analytischen Verteilung sollte zwischen 0 und 100 "
-"liegen."
+msgid "The percentage of an analytic distribution should be between 0 and 100."
+msgstr "Der Prozentsatz einer analytischen Verteilung sollte zwischen 0 und 100 liegen."
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "The selected account belongs to another company that the one you're trying "
 "to create an analytic item for"
 msgstr ""
 "Das ausgewählte Konto gehört zu einem anderen Unternehmen, für das Sie ein "
 "Analyseelement erstellen möchten"
+=======
+msgid "The selected account belongs to another company than the one you're trying to create an analytic item for"
+msgstr "Das ausgewählte Konto gehört zu einem anderen Unternehmen als dem, für das Sie ein Analyseelement erstellen möchten"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
@@ -560,7 +570,7 @@ msgstr "Total"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
 msgid "Unit of Measure"
-msgstr "Mengeneinheit"
+msgstr "Maßeinheit"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread
@@ -571,6 +581,14 @@ msgstr "Ungelesene Nachrichten"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Anzahl ungelesener Nachrichten"
+<<<<<<< HEAD
+=======
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+msgid "UoM Category"
+msgstr "Maßeinheit Kategorie"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id

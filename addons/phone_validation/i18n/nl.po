@@ -1,29 +1,50 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* phone_validation
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-13 11:29+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+=======
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: phone_validation
+<<<<<<< HEAD
+=======
+#: code:addons/phone_validation/models/phone_blacklist.py:0
+#, python-format
+msgid " Please correct the number and try again."
+msgstr " Corrigeer het nummer en probeer het opnieuw."
+
+#. module: phone_validation
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_needaction
 msgid "Action Needed"
@@ -56,6 +77,24 @@ msgid "Blacklist Date"
 msgstr "Blacklist datum"
 
 #. module: phone_validation
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Telefoon op blacklist is een mobiel nummer"
+
+#. module: phone_validation
+#: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
+msgid "Blacklisted Phone Numbers"
+msgstr "Op de blacklist geplaatste telefoonnummers"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Telefoon op blacklist Is een vaste lijn"
+
+#. module: phone_validation
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid ""
 "Blacklisted phone numbers means that the recipient won't receive SMS "
@@ -86,10 +125,15 @@ msgstr "Schermnaam"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized
+<<<<<<< HEAD
 msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+=======
+msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
+msgstr "Veld gebruikt om opgeschoond telefoonnummer in te bewaren. Helpt bij het versnellen van zoekopdrachten en vergelijkingen."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
@@ -122,7 +166,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
@@ -131,6 +175,7 @@ msgid "If checked, some messages have a delivery error."
 msgstr "indien aangevinkt hebben sommige leveringen een fout."
 
 #. module: phone_validation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
@@ -138,10 +183,16 @@ msgid ""
 msgstr ""
 "Als het e-mail adres op de blacklist staat, zal het contact geen "
 "bulkmailingen ontvangen, van geen enkele lijst."
+=======
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
+msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
+msgstr "Als het telefoonnummer op de blacklist staat, ontvangt de contactpersoon geen mass-sms meer van welke lijst dan ook"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Impossible number %s: probably invalid number of digits"
 msgstr "Onmogelijk nummer %s: waarschijnlijk foutief nummer of getal"
 
@@ -151,6 +202,20 @@ msgstr "Onmogelijk nummer %s: waarschijnlijk foutief nummer of getal"
 #, python-format
 msgid "Invalid number %s"
 msgstr "Foutief nummer %s"
+=======
+msgid "Impossible number %s: probably invalid number of digits."
+msgstr "Onmogelijk nummer %s: waarschijnlijk ongeldig aantal cijfers."
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
+msgid "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
+msgstr "Geeft aan of een op de blacklist geplaatst telefoonnummer een mobiel nummer is. Helpt bij het onderscheiden welk nummer op de blacklist staat als het model zowel een mobiel als een telefoon veld bevat."
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
+msgid "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
+msgstr "Geeft aan of een op de blacklist geplaatst nummer een telefoonnummer is. Helpt bij het onderscheiden welk nummer op de blacklist staat als een model zowel een mobiel als een telefoon veld bevat."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
@@ -159,7 +224,6 @@ msgid "Invalid number %s: probably incorrect prefix"
 msgstr "Foutief cijfer %s: waarschijnlijk foutief voorvoegsel"
 
 #. module: phone_validation
-#: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Invalid primary phone field on model %s"
@@ -276,9 +340,32 @@ msgid "Phone Number"
 msgstr "Telefoonnummer"
 
 #. module: phone_validation
+<<<<<<< HEAD
 #: model:ir.model,name:phone_validation.model_phone_validation_mixin
 msgid "Phone Validation Mixin"
 msgstr "Telefoonvalidatie mixin"
+=======
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "Telefoon/mobiel"
+
+#. module: phone_validation
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
+msgid "Please enter at least 3 characters when searching a Phone/Mobile number."
+msgstr "Voer minstens 3 tekens in bij het zoeken naar een telefoonnummer/mobiel nummer."
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "Reason"
+msgstr "Reden"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+msgid "Remove phone from blacklist"
+msgstr "Verwijder de telefoon van de blacklist"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized

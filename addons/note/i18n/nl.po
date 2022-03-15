@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* note
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
@@ -11,18 +12,30 @@
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-09 12:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+=======
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: note
@@ -39,6 +52,7 @@ msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Gesloten\" title=\"Ges
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
 msgstr "Actie gevraagd"
+<<<<<<< HEAD
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity_type__category
@@ -51,6 +65,13 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+=======
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid "Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded"
+msgstr "Acties kunnen specifiek gedrag doen afgaan zoals het openen van de kalender weergave of automatisch als gereed markeren wanneer een bestand geüpload is"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -110,7 +131,7 @@ msgstr "Voeg een nieuwe notitie toe"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
-msgstr "Archief"
+msgstr "Archiveren"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
@@ -162,7 +183,7 @@ msgstr "Datum verwerkt"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
-msgstr "Verwijder"
+msgstr "Verwijderen"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__display_name
@@ -207,6 +228,14 @@ msgid "Followers (Partners)"
 msgstr "Volgers (Relaties)"
 
 #. module: note
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
+
+#. module: note
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
 msgstr "Toekomstige activiteiten"
@@ -237,7 +266,7 @@ msgstr "Icoon om uitzondering op activiteit aan te geven."
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
 #: model:ir.model.fields,help:note.field_note_note__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
@@ -358,7 +387,7 @@ msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
 msgstr ""
-"Notities zijn privé, tenzij je ze deelt door een volger op een notitie uit te nodigen.\n"
+"Notities zijn privé, maar niet als je ze deelt door een volger op een notitie uit te nodigen.\n"
 "     (Handig voor het maken van notulen)."
 
 #. module: note
@@ -494,7 +523,7 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
 msgid "Tag Name"
-msgstr "Label naam"
+msgstr "Labelnaam"
 
 #. module: note
 #: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq

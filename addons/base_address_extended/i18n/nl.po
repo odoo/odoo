@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_address_extended
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
@@ -14,14 +15,27 @@ msgstr ""
 "POT-Creation-Date: 2019-08-12 11:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+=======
+# Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_address_extended
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid ""
 "Change how the system computes the full street field based on the different "
@@ -29,6 +43,33 @@ msgid ""
 msgstr ""
 "Wijzig hoe het systeem de straatnaam berekend gebaseerd op verschillende "
 "subvelden van de straat."
+=======
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "<span> - </span>"
+msgstr "<span> - </span>"
+
+#. module: base_address_extended
+#: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
+msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
+msgstr "Vink deze optie aan om uzelf ervan te verzekeren dat elk adres dat aangemaakt wordt een plaats heeft ingesteld uit de lijst van plaatsen."
+
+#. module: base_address_extended
+#: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_city_extended_form
+msgid "Cities"
+msgstr "Plaatsen"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_city
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_city_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_tree
+msgid "City"
+msgstr "Plaats"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -80,6 +121,50 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number
 msgid "House"
 msgstr "Huisnr."
+<<<<<<< HEAD
+=======
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "House #"
+msgstr ""
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city____last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__name
+msgid "Name"
+msgstr "Naam"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
+msgid "Search City"
+msgstr "Zoek plaats"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "State"
+msgstr "Status"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number

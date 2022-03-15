@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Wynand Tastenhoye <wta@odoo.com>, 2019
@@ -16,11 +17,24 @@ msgstr ""
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+=======
+# Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
@@ -34,7 +48,7 @@ msgstr "%d dagen te laat"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr "%sis niet de referentie van een rapport"
+msgstr "%s is niet de referentie van een rapport"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -48,17 +62,13 @@ msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Terug naar bewerken"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
-msgid ""
-"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
+msgid "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
 msgstr "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Vorige\" title=\"Vorige\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr ""
-"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Volgende\" "
-"title=\"Volgende\"/>"
+msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Volgende\" title=\"Volgende\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -66,6 +76,14 @@ msgid "<i class=\"fa fa-pencil\"/> Edit"
 msgstr "<i class=\"fa fa-pencil\"/> Bewerk"
 
 #. module: portal
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "<small class=\"form-text text-muted\">Changing company name or VAT number is not allowed once document(s) have been issued for your account. <br/>Please contact us directly for this operation.</small>"
+msgstr "<small class=\"form-text text-muted\">Het wijzigen van de bedrijfsnaam of het btw-nummer is niet toegestaan zodra document(en) zijn uitgegeven voor je account. <br/>Neem voor deze operatie rechtstreeks contact met ons op.</small>"
+
+#. module: portal
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Filter By:</span>"
 msgstr "<span class=\"small mr-1 navbar-text\">Filter op:</span>"
@@ -198,6 +216,7 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
+<<<<<<< HEAD
 "                        Beste ${object.user_id.name or ''},<br/> <br/>\n"
 "                        Je hebt toegang gekregen tot ${object.user_id.company_id.name}'s portaal.<br/>\n"
 "                        Uw inloggegevens zijn:\n"
@@ -211,6 +230,21 @@ msgstr ""
 "                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
 "                        </ul>\n"
 "                        ${object.wizard_id.welcome_message or ''}\n"
+=======
+"                        Beste <t t-out=\"object.user_id.name or ''\">Marc Demo</t>,<br/> <br/>\n"
+"                        Welkom bij <t t-out=\"object.user_id.company_id.name\">YourCompany</t>'s portaal!<br/><br/>\n"
+"                        Er is een account voor je aangemaakt met de volgende login: <t t-out=\"object.user_id.login\">demo</t><br/><br/>\n"
+"                        Klik op de onderstaande knop om een wachtwoord te kiezen en je account te activeren.\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Activeer account</strong>\n"
+"                            </a>\n"
+"                            <a href=\"/web/login\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px;\">\n"
+"                                <strong>Log in</strong>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <t t-out=\"object.wizard_id.welcome_message or ''\">Welkom op het portaal van ons bedrijf.</t>\n"
+>>>>>>> 9d073c73ba3... temp
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -317,20 +351,24 @@ msgstr "Avatar"
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Cancel"
 msgstr "Annuleren"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Change Password"
+msgstr "Wijzig wachtwoord"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid ""
-"Changing VAT number is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"Het wijzigen van een BTW nummer is niet toegestaan zodra documenten zijn "
-"uitgegeven voor uw account. Neem direct contact met ons op voor deze "
-"bewerking."
+msgid "Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
+msgstr "Het wijzigen van een BTW nummer is niet toegestaan zodra documenten zijn uitgegeven voor je account. Neem direct contact met ons op voor deze bewerking."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+<<<<<<< HEAD
 msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
@@ -338,6 +376,10 @@ msgstr ""
 "Het wijzigen van de bedrijfsnaam is niet toegestaan nadat document (en) voor"
 " uw account zijn uitgegeven. Neem rechtstreeks contact met ons op voor deze "
 "bewerking."
+=======
+msgid "Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
+msgstr "Het wijzigen van de bedrijfsnaam is niet toegestaan nadat document(en) voor je account zijn uitgegeven. Neem rechtstreeks contact met ons op voor deze bewerking."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -349,7 +391,7 @@ msgstr "Plaats"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Click here to see your document."
-msgstr "Klik hier om uw document te bekijken."
+msgstr "Klik hier om je document te bekijken."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -411,6 +453,23 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: portal
+<<<<<<< HEAD
+=======
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Currently available to everyone viewing this document, click to restrict to internal employees."
+msgstr "Momenteel beschikbaar voor iedereen die dit document bekijkt. Klik om dit te beperken tot interne werknemers."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Currently restricted to internal employees, click to make it available to everyone viewing this document."
+msgstr "Momenteel beperkt tot interne werknemers. Klik om het beschikbaar te maken voor iedereen die dit document bekijkt."
+
+#. module: portal
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
 msgstr "Klant portaal URL"
@@ -425,7 +484,7 @@ msgstr "Beste"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Delete"
-msgstr "Verwijder"
+msgstr "Verwijderen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -574,8 +633,18 @@ msgstr "Bericht"
 #. module: portal
 #: code:addons/portal/models/mail_thread.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Model %s does not support token signature, as it does not have %s field."
+=======
+msgid "Model %(model_name)s does not support token signature, as it does not have %(field_name)s field."
+msgstr "Model %(model_name)s ondersteunt geen tokenhandtekening, aangezien het geen %(field_name)s veld heeft."
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "Multi company reports are not supported."
+>>>>>>> 9d073c73ba3... temp
 msgstr ""
 "Model %s ondersteund geen token handtekening omdat deze het veld %s niet "
 "heeft."
@@ -613,9 +682,7 @@ msgstr "Odoo logo"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
-"Oeps! Er is iets mis gegaan. Probeer de pagina te herladen en terug in te "
-"loggen."
+msgstr "Oeps! Er is iets mis gegaan. Probeer de pagina te herladen en terug in te loggen."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -623,6 +690,23 @@ msgid "Phone"
 msgstr "Telefoon"
 
 #. module: portal
+<<<<<<< HEAD
+=======
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Please enter your password to confirm you own this account"
+msgstr "Voer je wachtwoord in om te bevestigen dat je de eigenaar bent van dit account"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, python-format
+msgid "Portal Access Management"
+msgstr "Portaal toegangsbeheer"
+
+#. module: portal
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
 msgstr "Portaal toegang URL"
@@ -679,7 +763,7 @@ msgstr "Gerelateerde document ID"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_model
 msgid "Related Document Model"
-msgstr "Gerelateerde document model"
+msgstr "Gerelateerde documentmodel"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -700,7 +784,7 @@ msgid ""
 msgstr ""
 "Selecteer welke contactpersonen onderdeel moeten uitmaken van het portaal.\n"
 "                        Het e-mail adres van ieder geselecteerd contactpersoon moet geldig en uniek zijn.\n"
-"                        Indien nodig, kunt u een e-mail adres van een contactpersoon direct in de lijst wijzigen."
+"                        Indien nodig, kun je een e-mail adres van een contactpersoon direct in de lijst wijzigen."
 
 #. module: portal
 #. openerp-web
@@ -731,10 +815,15 @@ msgstr "Sommige contacten hebben geen geldig e-mailadres: "
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
 "Sommige contacten hebben hetzelfde e-mailadres als een bestaande portaal "
 "gebruiker:"
+=======
+msgid "Some fields are required. Please make sure to write a message or attach a document"
+msgstr "Sommige velden zijn verplicht. Zorg ervoor dat je een bericht schrijft of een document bijvoegt"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -764,50 +853,109 @@ msgstr "Straat"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr "Danku!"
+msgstr "Bedankt!"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
-msgstr ""
-"De bijlage %s kan niet verwijderd worden omdat het niet gekoppeld is aan een"
-" bericht."
+msgstr "De bijlage %s kan niet verwijderd worden omdat het niet gekoppeld is aan een bericht."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr ""
+=======
+msgid "The attachment %s cannot be removed because it is not in a pending state."
+msgstr "De bijlage %s kan niet verwijderd worden omdat het niet in een in afwachting fase zit."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
 msgstr ""
+=======
+msgid "The attachment %s does not exist or you do not have the rights to access it."
+msgstr "De bijlage %s bestaat niet of je hebt geen rechten om ze te bekijken."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
 msgstr ""
+=======
+msgid "The attachment does not exist or you do not have the rights to access it."
+msgstr "De bijlage bestaat niet of je hebt geen rechten om ze te bekijken."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid "The contact \"%s\" does not have a valid email."
+msgstr "De contactpersoon \"%s\" heeft geen geldig e-mailadres."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid "The contact \"%s\" has the same email has an existing user (%s)."
+msgstr "Het contact \"%s\" heeft hetzelfde e-mailadres en heeft een bestaande gebruiker (%s)."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "The document does not exist or you do not have the rights to access it."
 msgstr ""
+=======
+msgid "The document does not exist or you do not have the rights to access it."
+msgstr "Het document bestaat niet of je hebt geen rechten om het te bekijken."
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "The new password and its confirmation must be identical."
+msgstr "Het nieuwe wachtwoord en haar bevestiging moeten identiek zijn."
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "The old password you provided is incorrect, your password was not changed."
+msgstr "Het oude wachtwoord wat je hebt ingevoerd is niet correct. Jouw wachtwoord is niet gewijzigd."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid "The partner \"%s\" already has the portal access."
+msgstr "De relatie \"%s\" heeft al toegang tot het portaal."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid "The partner \"%s\" has no portal access."
+msgstr "De relatie \"%s\" heeft geen toegang tot het portaal."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_chatter.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "The file <strong>%s</strong> could not be saved."
 msgstr ""
+=======
+msgid "The template \"Portal: new user\" not found for sending email to the portal user."
+msgstr "De sjabloon \"Portaal: nieuwe gebruiker\" niet gevonden voor het verzenden van e-mail naar de portaalgebruiker."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #. openerp-web
@@ -829,17 +977,25 @@ msgstr "Dit is een voorbeeld van het klantenportaal."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
+<<<<<<< HEAD
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
 "Deze tekst wordt ingevoegd in de e-mail welke wordt verzonden aan de portaal"
 " gebruikers."
+=======
+msgid "This partner is linked to an internal User and already has access to the Portal."
+msgstr "Deze relatie is gekoppeld aan een interne Gebruiker en heeft al toegang tot het portaal."
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "This text is included at the end of the email sent to new portal users."
+msgstr "Deze tekst staat aan het einde van de e-mail die naar nieuwe portaalgebruikers wordt verzonden."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
-"Deze tekst wordt toegevoegd aan de e-mail, welke wordt verzonden aan nieuwe "
-"gebruikers van het portaal."
+msgstr "Deze tekst wordt toegevoegd aan de e-mail, welke wordt verzonden aan nieuwe gebruikers van het portaal."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -890,7 +1046,7 @@ msgstr "BTW-nummer"
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
-msgstr "Website berichten"
+msgstr "Websiteberichten"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
@@ -930,31 +1086,35 @@ msgstr "Schrijf een reactie..."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_share.py:0
-#: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
-msgstr "U bent uitgenodigd voor toegang tot %s"
+msgstr "Je bent uitgenodigd voor toegang tot %s"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "You have been invited to access the following document:"
-msgstr "U bent uitgenodigd om het volgende document te bekijken:"
+msgstr "Je bent uitgenodigd om het volgende document te bekijken:"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "You must be"
-msgstr "U moet zijn"
+msgstr "Je moet zijn"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
 "U moet een e-mail adres in uw voorkeuren hebben ingesteld om e-mails te "
 "kunnen versturen."
+=======
+msgid "You should first grant the portal access to the partner \"%s\"."
+msgstr "Je moet eerst portaaltoegang verlenen aan de relatie \"%s\"."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -964,7 +1124,7 @@ msgstr "Uw Odoo account bij ${object.user_id.company_id.name}"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
 msgid "Your contact"
-msgstr "Uw contact"
+msgstr "Jouw contact"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -1003,6 +1163,14 @@ msgstr "ingelogd"
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
 msgstr "odoo"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "password"
+msgstr "wachtwoord"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

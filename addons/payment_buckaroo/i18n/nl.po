@@ -1,28 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_buckaroo
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+=======
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "; multiple order found"
 msgstr "; meerdere orders gevonden"
 
@@ -31,6 +44,10 @@ msgstr "; meerdere orders gevonden"
 #, python-format
 msgid "; no order found"
 msgstr "; geen order gevonden"
+=======
+msgid "An error occurred during processing of your payment (code %s). Please try again."
+msgstr "Er is een fout opgetreden tijdens het verwerken van de betaling (code %s ). Probeer het opnieuw."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_buckaroo
 #: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
@@ -46,6 +63,7 @@ msgstr "Buckaroo: ongeldig shasign, %s ontvangen, %s berekend voor data %s"
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Buckaroo: received data for reference %s"
 msgstr "Buckaroo: data ontvangen voor referentie %s"
 
@@ -57,11 +75,23 @@ msgid ""
 "shasign (%s)"
 msgstr ""
 "Buckaroo: data ontvangen zonder referentie (%s), pay_id (%s) of shasign (%s)"
+=======
+msgid "No transaction found matching reference %s."
+msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Betalingsprovider"
+<<<<<<< HEAD
+=======
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Betaalwijzes"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
@@ -74,6 +104,7 @@ msgid "Provider"
 msgstr "Provider"
 
 #. module: payment_buckaroo
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
 msgid "SecretKey"
 msgstr "Geheime sleutel"
@@ -82,3 +113,41 @@ msgstr "Geheime sleutel"
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
 msgid "WebsiteKey"
 msgstr "Websitesleutel"
+=======
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing transaction keys"
+msgstr "Gegevens ontvangen met ontbrekende transactiesleutels"
+
+#. module: payment_buckaroo
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_acquirer_form
+msgid "Secret Key"
+msgstr "Geheime sleutel"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "De betalingsdienstaanbieder die bij deze provider moet worden gebruikt"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
+msgid "The key solely used to identify the website with Buckaroo"
+msgstr "De sleutel die uitsluitend wordt gebruikt om de website te identificeren met Buckaroo"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Unknown status code: %s"
+msgstr "Onbekende statuscode: %s"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
+msgid "Website Key"
+msgstr "Websitesleutel"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Your payment was refused (code %s). Please try again."
+msgstr "Je betaling is geweigerd (code %s). Probeer het opnieuw."
+>>>>>>> 9d073c73ba3... temp

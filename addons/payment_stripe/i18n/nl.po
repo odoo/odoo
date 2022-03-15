@@ -1,24 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_stripe
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
+=======
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+=======
+"POT-Creation-Date: 2022-02-22 14:45+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_stripe
@@ -52,11 +64,17 @@ msgid "Close"
 msgstr "Sluiten"
 
 #. module: payment_stripe
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Error"
 msgstr "Fout"
+=======
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+msgid "If a webhook is enabled on your Stripe account, this signing secret must be set to authenticate the messages sent from Stripe to Odoo."
+msgstr "Als een webhook is ingeschakeld op je Stripe-account, moet dit signing secret  worden ingesteld om de berichten die van Stripe naar Odoo worden verzonden, te verifiëren."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_stripe
 #. openerp-web
@@ -69,6 +87,14 @@ msgstr ""
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Betalingsprovider"
+<<<<<<< HEAD
+=======
+
+#. module: payment_stripe
+#: model:ir.actions.act_window,name:payment_stripe.action_payment_acquirer_onboarding
+msgid "Payment Acquirers"
+msgstr "Betaalproviders"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
@@ -115,7 +141,28 @@ msgstr "Stripe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Stripe betalingsinteresse ID"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
+msgid "Stripe Payment Method ID"
+msgstr "Stripe-betaalmethode-ID"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Stripe Proxy error: %(error)s"
+msgstr "Stripe Proxy-fout: %(error)s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Stripe Proxy: An error occurred when communicating with the proxy."
+msgstr "Stripe Proxy: er is een fout opgetreden bij de communicatie met de proxy."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
@@ -123,9 +170,15 @@ msgid "Stripe Publishable Key"
 msgstr "Stripe publiceerbare sleutel"
 
 #. module: payment_stripe
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Stripe Secret Key"
 msgstr "Stripe geheime sleutel"
+=======
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "De betalingsdienstaanbieder die bij deze profider moet worden gebruikt"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -135,7 +188,16 @@ msgstr ""
 "Stripe heeft ons de volgende informatie gegeven over het probleem: '%s'"
 
 #. module: payment_stripe
+<<<<<<< HEAD
 #: code:addons/payment_stripe/models/payment.py:0
+=======
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
+msgid "The key solely used to identify the account with Stripe"
+msgstr "De sleutel die uitsluitend wordt gebruikt om het account bij Stripe te identificeren"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+>>>>>>> 9d073c73ba3... temp
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
 msgstr "Stripe: %s orders gevonden voor referentie %s"
@@ -158,15 +220,25 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "Unable to save card"
 msgstr "Kon kaart niet opslaan"
+=======
+msgid "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+msgstr "Je kunt geen Stripe Webhook maken als je Stripe Secret Key niet is ingesteld."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "We are not able to add your payment method at the moment. "
 msgstr ""
+=======
+msgid "You cannot set the acquirer to Test Mode while it is linked with your Stripe account."
+msgstr "Je kunt de provider niet in de testmodus zetten terwijl deze is gekoppeld aan je Stripe-account."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0

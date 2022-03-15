@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* repair
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Florian Hatat, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Laura Piraux <lap@odoo.com>, 2019
@@ -16,18 +17,32 @@
 # Cécile Collart <cco@odoo.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Cécile Collart <cco@odoo.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
+# Thomas Deleval <thd@odoo.com>, 2021
+# Camille Dantinne <cmd@odoo.com>, 2022
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-23 13:50+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+=======
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: repair
@@ -207,6 +222,14 @@ msgstr "Activité d'exception de décoration"
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
 msgid "Activity State"
 msgstr "Status de l'activité"
+<<<<<<< HEAD
+=======
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__type__add
@@ -277,13 +300,8 @@ msgstr "Catégorie"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
-msgid ""
-"Choose partner for whom the order will be invoiced and delivered. You can "
-"find a partner by its Name, TIN, Email or Internal Reference."
-msgstr ""
-"Choisissez le partenaire pour qui la commande sera facturée et livrée. Vous "
-"pouvez trouver un partenaire par son nom, son TIN, son courriel ou sa "
-"référence interne."
+msgid "Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference."
+msgstr "Choisissez le partenaire pour qui la commande sera facturée et livrée. Vous pouvez trouver un partenaire par son nom, son TIN, son courriel ou sa référence interne."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -317,16 +335,11 @@ msgstr "Confirmé"
 #: model:ir.model.fields,help:repair.field_repair_fee__product_uom_category_id
 #: model:ir.model.fields,help:repair.field_repair_line__product_uom_category_id
 #: model:ir.model.fields,help:repair.field_repair_order__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Il est possible de convertir deux unités de mesures si elles appartiennent à"
-" la même catégorie. Cette conversion utilise les rapports définis pour ces "
-"unités."
+msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgstr "Il est possible de convertir deux unités de mesures si elles appartiennent à la même catégorie. Cette conversion utilise les rapports définis pour ces unités."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -422,6 +435,14 @@ msgstr "Emplacement de dest"
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
 msgid "Display Name"
 msgstr "Afficher Nom"
+<<<<<<< HEAD
+=======
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid "Do you confirm you want to repair"
+msgstr "Confirmez-vous que vous voulez réparer"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -440,6 +461,14 @@ msgstr "Brouillon"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+<<<<<<< HEAD
+=======
+msgid "Draft invoices for this order will be cancelled. Do you confirm the action?"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+>>>>>>> 9d073c73ba3... temp
 msgid "End Repair"
 msgstr "Terminer la Réparation"
 
@@ -559,6 +588,14 @@ msgid "Inventory Move"
 msgstr "Mouvement de stock"
 
 #. module: repair
+<<<<<<< HEAD
+=======
+#: model:ir.actions.act_window,name:repair.action_repair_move_lines
+msgid "Inventory Moves"
+msgstr "Mouvement de stock"
+
+#. module: repair
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
 msgid "Invoice"
 msgstr "Facture"
@@ -668,6 +705,10 @@ msgid "Location"
 msgstr "Lieu"
 
 #. module: repair
+<<<<<<< HEAD
+=======
+#: model:ir.model,name:repair.model_stock_lot
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:repair.field_repair_line__lot_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
@@ -719,13 +760,13 @@ msgid "No Invoice"
 msgstr "Pas de facture"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Pas de compte défini pour l'article \"%s\"."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
 msgstr "Pas de liste de prix trouvée"
@@ -737,7 +778,16 @@ msgid "No product defined on fees."
 msgstr "Aucun produit défini sur les frais."
 
 #. module: repair
+<<<<<<< HEAD
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
+=======
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
+msgid "No repair order found. Let's create one!"
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+>>>>>>> 9d073c73ba3... temp
 #, python-format
 msgid "No valid pricelist line found."
 msgstr "Aucune ligne de liste de prix valide n'a été trouvée."
@@ -794,8 +844,7 @@ msgstr "Pièces"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Please define an accounting sales journal for the company %s (%s)."
-msgstr ""
-"Veuillez définir un journal comptable des ventes pour l'entreprise %s (%s)."
+msgstr "Veuillez définir un journal comptable des ventes pour l'entreprise %s (%s)."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -818,6 +867,15 @@ msgid "Print Quotation"
 msgstr "Imprimer le devis"
 
 #. module: repair
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:repair.field_repair_order__priority
+msgid "Priority"
+msgstr "Priorité"
+
+#. module: repair
+#: model:ir.model,name:repair.model_product_product
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_id
@@ -826,6 +884,14 @@ msgid "Product"
 msgstr "Article"
 
 #. module: repair
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Product Moves"
+msgstr "Mouvements de produits"
+
+#. module: repair
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
 msgid "Product Quantity"
 msgstr "Quantité d'articles"
@@ -944,6 +1010,11 @@ msgstr "Référence de l'ordre de réparation"
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:repair.field_stock_lot__repair_order_ids
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 msgid "Repair Orders"
@@ -974,9 +1045,7 @@ msgstr "Etiquettes de réparation"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
-msgstr ""
-"La réparation doit être annulée pour pouvoir être rétablie à l'état de "
-"brouillon."
+msgstr "La réparation doit être annulée pour pouvoir être rétablie à l'état de brouillon."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -997,7 +1066,16 @@ msgid "Repair must be under repair in order to end reparation."
 msgstr "La réparation doit être en cours pour pouvoir prendre fin."
 
 #. module: repair
+<<<<<<< HEAD
 #: code:addons/repair/wizard/repair_cancel.py:0
+=======
+#: model:ir.model.fields,field_description:repair.field_stock_lot__repair_order_count
+msgid "Repair order count"
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/stock_lot.py:0
+>>>>>>> 9d073c73ba3... temp
 #, python-format
 msgid "Repair order is not invoiced."
 msgstr "L'ordre de réparation n'est pas facturé."
@@ -1047,15 +1125,8 @@ msgstr "Rechercher un ordre de réparation"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__invoice_method
-msgid ""
-"Selecting 'Before Repair' or 'After Repair' will allow you to generate "
-"invoice before or after the repair is done respectively. 'No invoice' means "
-"you don't want to generate invoice for this repair order."
-msgstr ""
-"Sélectionner \"Avant la réparation\" ou \"Après la réparation\" vous "
-"permettra de générer la facture respectivement avant ou après la réparation."
-" \"Pas de facture\" signifie que vous ne voulez pas générer une facture pour"
-" cet ordre de réparation."
+msgid "Selecting 'Before Repair' or 'After Repair' will allow you to generate invoice before or after the repair is done respectively. 'No invoice' means you don't want to generate invoice for this repair order."
+msgstr "Sélectionner \"Avant la réparation\" ou \"Après la réparation\" vous permettra de générer la facture respectivement avant ou après la réparation. \"Pas de facture\" signifie que vous ne voulez pas générer une facture pour cet ordre de réparation."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1077,9 +1148,13 @@ msgstr "Marquer comme brouillon"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
+<<<<<<< HEAD
 msgstr ""
 "Montrez toutes les enregistrements pour lesquelles la date des prochaines "
 "actions est pour aujourd'hui ou avant"
+=======
+msgstr "Montrez toutes les enregistrements pour lesquelles la date des prochaines actions est pour aujourd'hui ou avant"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
@@ -1161,12 +1236,8 @@ msgstr "Le nom de l'ordre de réparation doit être unique!"
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
-msgid ""
-"The product unit of measure you chose has a different category than the "
-"product unit of measure."
-msgstr ""
-"L'unité de mesure que vous avez choisie est dans une catégorie différente "
-"que l'unité de mesure de l'article."
+msgid "The product unit of measure you chose has a different category than the product unit of measure."
+msgstr "L'unité de mesure que vous avez choisie est dans une catégorie différente que l'unité de mesure de l'article."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1187,12 +1258,8 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state
-msgid ""
-"The status of a repair line is set automatically to the one of the linked "
-"repair order."
-msgstr ""
-"L'état d'une ligne de réparation est automatiquement défini sur l'état de "
-"l'ordre de réparation associé."
+msgid "The status of a repair line is set automatically to the one of the linked repair order."
+msgstr "L'état d'une ligne de réparation est automatiquement défini sur l'état de l'ordre de réparation associé."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
@@ -1310,9 +1377,22 @@ msgid "Website communication history"
 msgstr "Historique de communication du site web"
 
 #. module: repair
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
 msgid "Yes"
 msgstr "Oui"
+=======
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You can not delete a repair order once it has been confirmed. You must first cancel it."
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You can not delete a repair order which is linked to an invoice which has been posted once."
+msgstr ""
+>>>>>>> 9d073c73ba3... temp
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1321,7 +1401,7 @@ msgid "You can not enter negative quantities."
 msgstr "Vous ne pouvez pas entrer des quantités négatives."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
@@ -1334,6 +1414,25 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
+<<<<<<< HEAD
 msgstr ""
 "Vous devez sélectionner une adresse de facturation dans le formulaire de "
 "réparation."
+=======
+msgstr "Vous devez sélectionner une adresse de facturation dans le formulaire de réparation."
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid "from location"
+msgstr "depuis l'emplacement"
+
+#. module: repair
+#: model:mail.template,report_name:repair.mail_template_repair_quotation
+msgid "{{ (object.name or '').replace('/','_') }}"
+msgstr "{{ (object.name or '').replace('/','_') }}"
+
+#. module: repair
+#: model:mail.template,subject:repair.mail_template_repair_quotation
+msgid "{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+>>>>>>> 9d073c73ba3... temp

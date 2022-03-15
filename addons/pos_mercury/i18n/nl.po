@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_mercury
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
@@ -14,11 +15,23 @@ msgstr ""
 "POT-Creation-Date: 2019-09-13 11:26+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+=======
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2021
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_mercury
@@ -35,6 +48,14 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+<<<<<<< HEAD
+=======
+"In de <i>Vantiv-configuraties</i> wordt gedefinieerd welke Vantiv-rekening wordt gebruikt bij\n"
+" de verwerking van creditcardtransacties in het Point Of Sale. Het opzetten van een Vantiv\n"
+" configuratie maakt het mogelijk om betalingen toe te staan met verschillende creditcards cards\n"
+" (bijv. Visa, MasterCard, Discovery, American Express, ...). Na het opzetten van deze\n"
+"configuratie moet je deze koppelen aan een Point Of Sale betaalmethode."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: pos_mercury
 #. openerp-web
@@ -102,7 +123,7 @@ msgstr "Kaartlezer"
 #. module: pos_mercury
 #: model_terms:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Configure your card reader"
-msgstr "Configureer uw kaartlezer"
+msgstr "Configureer je kaartlezer"
 
 #. module: pos_mercury
 #. openerp-web
@@ -132,6 +153,7 @@ msgstr "Creditcard"
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Credit card refunds are not supported. Instead select your credit card "
 "payment method, click 'Validate' and refund the original charge manually "
@@ -140,6 +162,10 @@ msgstr ""
 "Terugbetalingen van creditcards worden niet ondersteund. Selecteer in plaats"
 " daarvan uw creditcard betalingsmethode, klik op 'Bevestigen' en restitueer "
 "het oorspronkelijke bedrag handmatig via de Vantiv-backend."
+=======
+msgid "Credit card refunds are not supported. Instead select your credit card payment method, click 'Validate' and refund the original charge manually through the Vantiv backend."
+msgstr "Terugbetalingen van creditcards worden niet ondersteund. Selecteer in plaats daarvan je creditcard betalingsmethode, klik op 'Bevestigen' en restitueer het oorspronkelijke bedrag handmatig via de Vantiv-backend."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__display_name
@@ -161,7 +187,7 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
-"Om snel orders af te handelen: swipe gewoon een creditcard wanneer u op het betaalscherm zit\n"
+"Om snel orders af te handelen: swipe gewoon een creditcard wanneer je op het betaalscherm zit\n"
 "(zonder iets anders te hebben ingedrukt) dit rekent het volledige bedrag van de order af\n"
 "van de kaart."
 
@@ -188,8 +214,7 @@ msgstr "ID"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
-msgstr ""
-"ID van de handelaar om hem te authenticeren op de betalingsprovider server"
+msgstr "ID van de handelaar om hem te authenticeren op de betalingsprovider server"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -197,6 +222,11 @@ msgid ""
 "If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+<<<<<<< HEAD
+=======
+"Als je nog geen Vantiv account heeft kun je Vantiv contacteren op +1(800) 846-4472\n"
+"om een account aan te maken."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
@@ -265,12 +295,16 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "No response from server (connected to network?)"
-msgstr "Geen reacties van server (geconnecteerd met netwerk?)"
+msgstr "Geen reacties van server (verbonden met netwerk?)"
 
 #. module: pos_mercury
 #. openerp-web
+<<<<<<< HEAD
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+=======
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+>>>>>>> 9d073c73ba3... temp
 #, python-format
 msgid "Odoo error while processing transaction."
 msgstr "Odoo error tijdens transactie verwerking."
@@ -298,11 +332,8 @@ msgstr "Deels goedgekeurd"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_pwd
-msgid ""
-"Password of the merchant to authenticate him on the payment provider server"
-msgstr ""
-"Wachtwoord van de handelaar om zichzelf mee te authenticeren op het "
-"betaalprovider platform"
+msgid "Password of the merchant to authenticate him on the payment provider server"
+msgstr "Wachtwoord van de handelaar om zichzelf mee te authenticeren op het betaalprovider platform"
 
 #. module: pos_mercury
 #. openerp-web
@@ -326,12 +357,16 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Stel je Vantiv handelaar account in."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Kassa orders"
+msgstr "Kassaorders"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment_method
@@ -341,7 +376,7 @@ msgstr "Kassa betaalmethodes"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Kassa betalingen"
+msgstr "Kassabetalingen"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
@@ -417,12 +452,8 @@ msgstr "De naam van de kaarteigenaar"
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
-msgid ""
-"This can be caused by a badly executed swipe or by not having your keyboard "
-"layout set to US QWERTY (not US International)."
-msgstr ""
-"Dit kan veroorzaakt zijn door een slechte swipe of door uw keyboard layout "
-"die niet op US QWERTY staat (niet VS internationaal)."
+msgid "This can be caused by a badly executed swipe or by not having your keyboard layout set to US QWERTY (not US International)."
+msgstr "Dit kan veroorzaakt zijn door een slechte swipe of door je keyboard layout die niet op US QWERTY staat (niet VS internationaal)."
 
 #. module: pos_mercury
 #. openerp-web
@@ -443,7 +474,11 @@ msgid ""
 "                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Het gebruik van de Vantiv-integratie in het Point Of Sale is eenvoudig: je hoeft alleen maar te klikken op de bijhorende betaalmethode . Daarna kan het bedrag worden aangepast (bijv. voor cashback) net als op elke andere betaalregel. Wanneer de betaalregel is ingesteld, kan een kaart door de kaartlezer worden geveegd."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
@@ -496,7 +531,7 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
-"Wij ondersteunen momenteel de MagTek Dynamag kaartlezer. Het kan direct geconnecteerd\n"
+"Wij ondersteunen momenteel de MagTek Dynamag kaartlezer. Deze kan direct verbonden\n"
 "worden met de kassa of het kan verbonden worden met de IoTBox."
 
 #. module: pos_mercury

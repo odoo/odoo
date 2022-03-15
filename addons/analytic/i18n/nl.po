@@ -1,25 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Bert Burggraaf, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+=======
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
@@ -208,12 +221,8 @@ msgstr "Volledige naam"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Conversie tussen maateenheden kan alleen plaatsvinden als deze behoren tot "
-"dezelfde categorie. De conversie wordt gemaakt op basis van ratio's."
+msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgstr "Conversie tussen maateenheden kan alleen plaatsvinden als deze behoren tot dezelfde categorie. De conversie wordt gemaakt op basis van ratio's."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
@@ -232,7 +241,7 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"Kosten worden automatisch aangemaakt wanneer u leveranciersfacturen,\n"
+"Kosten worden automatisch aangemaakt wanneer je leveranciersfacturen,\n"
 "declaraties of urenstaten registreert."
 
 #. module: analytic
@@ -337,21 +346,17 @@ msgstr "ID"
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "indien aangevinkt hebben sommige leveringen een fout."
+msgstr "Indien aangevinkt hebben sommige leveringen een fout."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
-msgid ""
-"If the active field is set to False, it will allow you to hide the account "
-"without removing it."
-msgstr ""
-"Als het veld \"actief\" uitstaat, kunt u de grootboekrekening verbergen "
-"zonder deze te verwijderen."
+msgid "If the active field is set to False, it will allow you to hide the account without removing it."
+msgstr "Als het veld \"actief\" uitstaat, kun je de grootboekrekening verbergen zonder deze te verwijderen."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -362,8 +367,13 @@ msgid ""
 "                your margins easily."
 msgstr ""
 "In Odoo worden verkopen en projecten geïmplementeerd door gebruik\n"
+<<<<<<< HEAD
 "te maken van kostenplaatsen. U kan kosten en omzet eenvoudig\n"
 "vergelijken om uw marges te analyseren."
+=======
+"te maken van kostenplaatsen. Je kunt kosten en omzet eenvoudig\n"
+"vergelijken om je marges te analyseren."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -483,7 +493,7 @@ msgstr "Percentage"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
@@ -499,7 +509,7 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"Omzetten worden automatisch aangemaakt wanneer u verkoopfacturen\n"
+"Omzetten worden automatisch aangemaakt wanneer je verkoopfacturen\n"
 "aanmaakt. Verkoopfacturen kunnen gebaseerd zijn op verkopen (met vaste prijs),\n"
 "op urenstaten (gebaseerd op de geleverde prestaties) of op declaraties\n"
 "(bijv. herfactureren van reiskosten)."
@@ -517,9 +527,13 @@ msgstr "Zoek kostenplaatslabel"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
+<<<<<<< HEAD
 msgstr ""
 "Zet actief naar onwaar om het kostenplaatslabel te verbergen zonder het te "
 "verwijderen."
+=======
+msgstr "Zet actief naar onwaar om het kostenplaatslabel te verbergen zonder het te verwijderen."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
@@ -528,14 +542,20 @@ msgstr "Labels"
 
 #. module: analytic
 #: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
+<<<<<<< HEAD
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
 msgstr ""
 "Het percentage of een kostenplaatsverdeling moet liggen tussen 0 en 100."
+=======
+msgid "The percentage of an analytic distribution should be between 0 and 100."
+msgstr "Het percentage of een kostenplaatsverdeling moet liggen tussen 0 en 100."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "The selected account belongs to another company that the one you're trying "
 "to create an analytic item for"
@@ -547,6 +567,15 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "This allows to classify your analytic accounts."
 msgstr "Dit staat u toe om kostenplaatsen te definiëren."
+=======
+msgid "The selected account belongs to another company than the one you're trying to create an analytic item for"
+msgstr "De geselecteerde rekening behoort bij een ander bedrijf dan het bedrijf waarvoor je een kostenplaats probeert aan te maken."
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
+msgid "This allows you to classify your analytic accounts."
+msgstr "Hiermee kun je je kostenplaatsen classificeren."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree

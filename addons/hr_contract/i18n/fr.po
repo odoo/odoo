@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_contract
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
@@ -20,11 +21,26 @@ msgstr ""
 "POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+=======
+# Martin Trigaux, 2021
+# Tivisse <yti@odoo.com>, 2021
+# Eloïse Stilmant <est@odoo.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_contract
@@ -63,11 +79,46 @@ msgid ""
 "                                Calendar Mismatch : The employee's calendar does not match its current contract calendar. This could lead to unexpected behaviors.\n"
 "                            </span>"
 msgstr ""
+<<<<<<< HEAD
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "<span class=\"text-muted\">(If fixed-term contract)</span>"
 msgstr "<span class=\"text-muted\"/>"
+=======
+"<span attrs=\"{'invisible': [('calendar_mismatch', '=', False)]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"</span>\n"
+"<span class=\"o_calendar_warning_tooltip text-danger\">\n"
+"Incohérence entre les calendriers : le calendrier de l'employé ne correspond pas à son calendrier de contrat actuel. Cela pourrait conduire à des comportements inattendus.\n"
+"</span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid ""
+"<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In Contract Since\">\n"
+"                                    In Contract Since\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In Contract Since\">\n"
+"                                    En contrat depuis\n"
+"                                </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid ""
+"<span class=\"o_stat_text text-danger\">\n"
+"                                    Contracts\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text text-danger\">\n"
+"                                    Contrats\n"
+"                                </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : [('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In Contract Since</span>"
+msgstr "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : [('contract_warning', '=', True)]}\" title=\"In Contract Since\"> En contrat depuis</span>"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -83,6 +134,19 @@ msgstr "Nécessite une action"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__active
 msgid "Active"
 msgstr "Active"
+<<<<<<< HEAD
+=======
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__active_employee
+msgid "Active Employee"
+msgstr "Employé Actif"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Active Employees"
+msgstr "Employés actifs"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_ids
@@ -98,6 +162,14 @@ msgstr "Activité d'exception de décoration"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_state
 msgid "Activity State"
 msgstr "Status de l'activité"
+<<<<<<< HEAD
+=======
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
@@ -168,6 +240,15 @@ msgid "Contract"
 msgstr "Contrat"
 
 #. module: hr_contract
+<<<<<<< HEAD
+=======
+#: code:addons/hr_contract/models/hr_contract.py:0
+#, python-format
+msgid "Contract %(contract)s: start date (%(start)s) must be earlier than contract end date (%(end)s)."
+msgstr ""
+
+#. module: hr_contract
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
 msgid "Contract Count"
 msgstr "Nombre de contrat(s)"
@@ -269,6 +350,20 @@ msgid "Department"
 msgstr "Département"
 
 #. module: hr_contract
+<<<<<<< HEAD
+=======
+#: model:ir.model,name:hr_contract.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "Assistant de départ"
+
+#. module: hr_contract
+#: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
+#, python-format
+msgid "Departure date can't be earlier than the start date of current contract."
+msgstr "La date de départ ne peut pas être antérieure à la date de début du contrat actuel."
+
+#. module: hr_contract
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
 msgid "Display Name"
 msgstr "Nom affiché"
@@ -486,6 +581,24 @@ msgstr "Résumé d'activité suivant"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_id
 msgid "Next Activity Type"
 msgstr "Type d'activités à venir"
+<<<<<<< HEAD
+=======
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "No Contracts"
+msgstr "Aucun contrat"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Not Running"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
+msgid "Not Under Contract"
+msgstr "Pas sous contrat"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
@@ -560,6 +673,29 @@ msgid "Search Contract"
 msgstr "Rechercher dans les contrats"
 
 #. module: hr_contract
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Search Reference Contracts"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
+msgid "Set Contract End Date"
+msgstr "Définir la date de fin du contrat"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_departure_wizard__set_date_end
+msgid "Set the end date on the current contract."
+msgstr "Fixez la date de fin du contrat en cours."
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Show all records which have a next action date before today"
+msgstr "Affichez tous les enregistrements dont la prochaine date d'action est antérieure à aujourd'hui"
+
+#. module: hr_contract
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
 msgid "Start Date"
 msgstr "Date de début"

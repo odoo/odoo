@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* digest
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Jerther, 2019
@@ -15,11 +16,23 @@ msgstr ""
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+=======
+# Cécile Collart <cco@odoo.com>, 2021
+# Martin Trigaux, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: digest
@@ -34,6 +47,7 @@ msgstr ""
 "${', '.join(users.mapped('name'))} s'est connecté. Dites-lui bonjour dans le"
 
 #. module: digest
+<<<<<<< HEAD
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
 msgid ""
 "% set users = object.env['res.users'].search([('share', '=' , False)], limit=10, order='id desc')\n"
@@ -43,6 +57,11 @@ msgstr ""
 "% set users = object.env['res.users'].search([('share', '=' , False)], limit=10, order='id desc')\n"
 "    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
 "    <strong style=\"font-size: 16px;\">Saviez-vous...?</strong>"
+=======
+#: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
+msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
+msgstr "<span class=\"button\" id=\"button_open_report\">Ouvrir le Rapport</span>"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
@@ -222,9 +241,7 @@ msgstr "Activé"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
-msgstr ""
-"Ajoutez des nouveaux utilisateurs comme destinataire d'un email périodique "
-"comprenant des mesures clés"
+msgstr "Ajoutez des nouveaux utilisateurs comme destinataire d'un email périodique comprenant des mesures clés"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
@@ -343,9 +360,15 @@ msgid "Group by"
 msgstr "Regrouper par"
 
 #. module: digest
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "How to customize your digest?"
 msgstr "Comment personnaliser votre digest?"
+=======
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
+msgid "Have a question about a document? Click on the responsible user's picture to start a conversation. If his avatar has a green dot, he is online."
+msgstr "Une question à propos d'un document? Cliquez sur la photo de l'utilisateur responsable pour commencer une discussion. Si une boule verte apparait, il est en ligne."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
@@ -419,12 +442,8 @@ msgstr "Nom"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid ""
-"New users are automatically added as recipient of the following digest "
-"email."
-msgstr ""
-"Les nouveaux utilisateurs sont ajoutés automatiquement comme destinataire du"
-" digest d'email suivant."
+msgid "New users are automatically added as recipient of the following digest email."
+msgstr "Les nouveaux utilisateurs sont ajoutés automatiquement comme destinataire du digest d'email suivant."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
@@ -438,6 +457,25 @@ msgid "Periodicity"
 msgstr "Périodicité"
 
 #. module: digest
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
+msgid "Powered by"
+msgstr "Fourni par"
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "Prefer a broader overview ?"
+msgstr "Vous préférez une vue d'ensemble plus large?"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
+msgid "Press ALT in any screen to highlight shortcuts for every button in the screen. It is useful to process multiple documents in batch."
+msgstr "Appuyez sur ALT dans n'importe quel écran pour mettre en lumière les raccourcis de tous les boutons. Surtout utile si vous traitez plusieurs documents d'un coup."
+
+#. module: digest
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__quarterly
 msgid "Quarterly"
 msgstr "Trimestriel"
@@ -477,7 +515,61 @@ msgstr "S'inscrire"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__tip_description
 msgid "Tip description"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Description  du pourboire"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_2
+msgid "Tip: A calculator in Odoo"
+msgstr "Astuce: Une calculatrice dans Odoo"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
+msgid "Tip: Click on an avatar to chat with a user"
+msgstr "Astuce: Cliquez sur son avatar pour discuter avec un utilisateur"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
+msgid "Tip: How to ping users in internal notes?"
+msgstr "Astuce: Comment mentionner des utilisateurs dans une note interne?"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
+msgid "Tip: Knowledge is power"
+msgstr "Astuce: La connaissance, c'est le pouvoir"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
+msgid "Tip: Speed up your workflow with shortcuts"
+msgstr "Astuce: Accélérez votre travail grâce aux raccourcis"
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_2
+msgid "Tip: A calculator in Odoo"
+msgstr "Astuce:  Une calculatrice dans Odoo"
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_1
+msgid "Tip: Click on an avatar to chat with a user"
+msgstr "Astuce: Cliquez sur son avatar pour discuter avec un utilisateur"
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_3
+msgid "Tip: How to ping users in internal notes?"
+msgstr "Astuce: Comment mentionner des utilisateurs dans une note interne?"
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_4
+msgid "Tip: Knowledge is power"
+msgstr "Astuce: La connaissance, c'est le pouvoir"
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_0
+msgid "Tip: Speed up your workflow with shortcuts"
+msgstr "Astuce: Accélérez votre travail grâce aux raccourcis"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_2
@@ -485,14 +577,24 @@ msgid "To reach your full potential with Odoo, have a look at our"
 msgstr "Pour atteindre votre plein potentiel avec Odoo, consultez les "
 
 #. module: digest
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Unsubscribe me"
 msgstr "Désinscrivez-moi"
+=======
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
+msgid "Type \"@\" to notify someone in a message, or \"#\" to link to a channel. Try to notify @OdooBot to test the feature."
+msgstr "Saisissez \"@\" pour notifier quelqu'un dans un message, ou \"#\" pour un canal de discussion. Essayez de notifier @OdooBot pour tester la fonctionnalité."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Utilisé pour afficher un résumé dans la base de modèles d'e-mails sur commande"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
@@ -505,11 +607,32 @@ msgid "Users having already received this tip"
 msgstr "Utilisateurs ayant déjà reçu ce conseil"
 
 #. module: digest
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "Want to add your own KPIs?<br/>"
+msgstr ""
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "Want to customize this email?"
+msgstr "Personnaliser cet email?"
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "We have noticed you did not connect these last few days. We have automatically switched your preference to %(new_perioridicy_str)s Digests."
+msgstr ""
+
+#. module: digest
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__weekly
 msgid "Weekly"
 msgstr "Hebdomadaire"
 
 #. module: digest
+<<<<<<< HEAD
 #: model:digest.digest,name:digest.digest_digest_default
 msgid "Weekly Stats in Odoo"
 msgstr "Statistiques hebdomadaires dans Odoo"
@@ -522,6 +645,11 @@ msgid ""
 msgstr ""
 "Vous pouvez mentionner des collègues en utilisant le \"@\" pour les "
 "identifier. Ils seront notifiés instantanément.<br>"
+=======
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_2
+msgid "When editing a number, you can use formulae by typing the `=` character. This is useful when computing a margin or a discount on a quotation, sale order or invoice."
+msgstr "Lorsque vous saisissez un nombre, vous pouvez utiliser des formules en commençant par le caractère \"=\". Ceci est par exemple très utile lorsque vous calculez une marge ou une remise sur un devis, un bon de commande ou une facture."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1

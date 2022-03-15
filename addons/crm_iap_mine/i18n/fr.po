@@ -1,5 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
+<<<<<<< HEAD
 # 	* crm_iap_lead
 # 
 # Translators:
@@ -14,18 +15,33 @@
 # Nicolas Roussey <nro@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # 
+=======
+# 	* crm_iap_mine
+#
+# Translators:
+# Martin Trigaux, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2021
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+=======
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: crm_iap_lead
@@ -74,6 +90,7 @@ msgstr ""
 "<p>Odoo S.A.</p>\n"
 "</div>"
 
+<<<<<<< HEAD
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
@@ -84,6 +101,17 @@ msgid ""
 "            No leads could be generated according to your search criteria\n"
 "        </p>"
 msgstr ""
+=======
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your request did not return any result (no credits were used). Try removing some filters.</span>"
+msgstr "<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Votre demande n'a renvoyé aucun résultat (aucun crédit n'a été utilisé). Essayez de supprimer certains filtres.</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
+msgstr "<span class=\"col-md-6\">Contacts additionnels par Société</span>"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
@@ -230,6 +258,7 @@ msgstr "Créé le"
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__display_name
 msgid "Display Name"
 msgstr "Afficher Nom"
+<<<<<<< HEAD
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_151
@@ -240,6 +269,8 @@ msgstr ""
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_158
 msgid "Diversified Financial Services"
 msgstr ""
+=======
+>>>>>>> 9d073c73ba3... temp
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_159
@@ -311,9 +342,7 @@ msgstr "Générer des pistes"
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr ""
-"Générer de nouvelles pistes en fonction de leur pays, de leur secteur "
-"d'activité, de leur taille, etc."
+msgstr "Générer de nouvelles pistes en fonction de leur pays, de leur secteur d'activité, de leur taille, etc."
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_ids
@@ -458,6 +487,7 @@ msgstr "Piste/opportunité"
 msgid "Leads"
 msgstr "Pistes"
 
+<<<<<<< HEAD
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid ""
@@ -466,6 +496,19 @@ msgid ""
 msgstr ""
 "Assurez-vous de savoir si vous devez être conforme au RGPD pour stocker des "
 "données personnelles."
+=======
+#. module: crm_iap_mine
+#: model:ir.model.fields,help:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
+msgid "List of available states based on selected countries"
+msgstr "Liste des états disponibles en fonction des pays sélectionnés"
+
+#. module: crm_iap_mine
+#. openerp-web
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
+msgstr "À la recherche de plus d'opportunités?<br>Essayez l'outil de <b>Génération de Pistes</b>."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_148
@@ -488,11 +531,16 @@ msgstr "Nom"
 msgid "Name already exists!"
 msgstr "Le nom existe déjà!"
 
+<<<<<<< HEAD
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+=======
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+>>>>>>> 9d073c73ba3... temp
 #, python-format
 msgid "New"
 msgstr "Nouveau"
@@ -717,10 +765,27 @@ msgstr "Type"
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Up to %d additional credits will be consumed to identify %d contacts per "
 "company."
 msgstr ""
+=======
+msgid "Up to %d additional credits will be consumed to identify %d contacts per company."
+msgstr "Jusqu'à %d crédits addtionnels seront consommés afin d'identifier %d contacts par entreprise."
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "What do you need ?"
+msgstr "De quoi avez-vous besoin?"
+
+#. module: crm_iap_mine
+#. openerp-web
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Which Industry do you want to target?"
+msgstr "Quel secteur voulez-vous cibler?"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138

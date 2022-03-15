@@ -1,8 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* maintenance
-# 
+#
 # Translators:
+<<<<<<< HEAD
 # Jan Meyer, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Martin Trigaux, 2019
@@ -11,18 +12,32 @@
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # 
+=======
+# Martin Trigaux, 2021
+# Chris Egal <sodaswed@web.de>, 2021
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
+# Raymond Vetter, 2021
+# Friederike Fasterling-Nesselbosch, 2021
+#
+>>>>>>> 9d073c73ba3... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+=======
+"POT-Creation-Date: 2022-03-15 12:05+0000\n"
+"PO-Revision-Date: 2021-09-14 12:23+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+>>>>>>> 9d073c73ba3... temp
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: maintenance
@@ -87,12 +102,17 @@ msgstr "<strong>Wartung:</strong>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_defaults
+<<<<<<< HEAD
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
 "Ein Python Dictionary, das ausgewertet wird, wenn neue Datensätze für diesen"
 " Alias angelegt werden."
+=======
+msgid "A Python dictionary that will be evaluated to provide default values when creating new records for this alias."
+msgstr "Ein Python Dictionary, das ausgewertet wird, wenn neue Datensätze für diesen Alias angelegt werden."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
@@ -345,10 +365,15 @@ msgstr "Dashboard"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__effective_date
+<<<<<<< HEAD
 msgid ""
 "Date at which the equipment became effective. This date will be used to "
 "compute the Mean Time Between Failure."
 msgstr ""
+=======
+msgid "Date at which the equipment became effective. This date will be used to compute the Mean Time Between Failure."
+msgstr "Datum, an dem das Gerät in Betrieb genommen wurde. Dieses Datum wird für die Berechnung der mittleren Ausfallzeit herangezogen."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__next_action_date
@@ -362,12 +387,8 @@ msgstr "Angefordertes Datum für Wartung"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__schedule_date
-msgid ""
-"Date the maintenance team plans the maintenance.  It should not differ much "
-"from the Request Date. "
-msgstr ""
-"Datum, an dem das Wartungsteam die Wartung plant. Es sollte nicht allzusehr "
-"vom Anforderungsdatum abweichen."
+msgid "Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. "
+msgstr "Datum, an dem das Wartungsteam die Wartung plant. Es sollte nicht allzusehr vom Anforderungsdatum abweichen."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__close_date
@@ -444,10 +465,15 @@ msgstr "E-Mail Alias"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_id
+<<<<<<< HEAD
 msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create a new equipment under this category."
 msgstr ""
+=======
+msgid "Email alias for this equipment category. New emails will automatically create a new equipment under this category."
+msgstr "E-Mail-Alias für diese Gerätekategorie. Bei neuen E-Mails wird automatisch ein neues Gerät unter dieser Kategorie angelegt."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
@@ -522,10 +548,8 @@ msgstr "In Wartungspipeline zugeklappt"
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action_link
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_todo_request_action_from_dashboard
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
-msgid ""
-"Follow the process of the request and communicate with the collaborator."
-msgstr ""
-"Folgen Sie Ihrer Anfrage und kommunizieren Sie mit anderen Mitwirkenden"
+msgid "Follow the process of the request and communicate with the collaborator."
+msgstr "Folgen Sie Ihrer Anfrage und kommunizieren Sie mit anderen Mitwirkenden"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_follower_ids
@@ -549,6 +573,15 @@ msgid "Followers (Partners)"
 msgstr "Abonnenten (Partner)"
 
 #. module: maintenance
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "FontAwesome Icon, z.B. fa-tasks"
+
+#. module: maintenance
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Future Activities"
@@ -562,6 +595,16 @@ msgid "Group by..."
 msgstr "Gruppierung ..."
 
 #. module: maintenance
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__has_message
+msgid "Has Message"
+msgstr "Hat eine Nachricht"
+
+#. module: maintenance
+>>>>>>> 9d073c73ba3... temp
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__3
 msgid "High"
 msgstr "Hoch"
@@ -582,12 +625,8 @@ msgstr "ID"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
-msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr ""
-"ID des übergeordneten Alias Datensatz (Beispiel: Projekt welches den Alias "
-"für die Erstellung von Aufgaben beinhaltet)."
+msgid "ID of the parent record holding the alias (example: project holding the task creation alias)"
+msgstr "ID des übergeordneten Alias Datensatz (Beispiel: Projekt welches den Alias für die Erstellung von Aufgaben beinhaltet)."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_icon
@@ -617,6 +656,14 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
+<<<<<<< HEAD
+=======
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_bounced_content
+msgid "If set, this content will automatically be sent out to unauthorized users instead of the default message."
+msgstr "Wenn diese Option gesetzt ist, wird dieser Inhalt anstelle der Standardnachricht automatisch an nicht autorisierte Benutzer gesendet."
+>>>>>>> 9d073c73ba3... temp
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__normal
@@ -850,6 +897,15 @@ msgid "Model"
 msgstr "Modell"
 
 #. module: maintenance
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Deadline für meine Aktivitäten"
+
+#. module: maintenance
+>>>>>>> 9d073c73ba3... temp
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "Mein Inventar"
@@ -966,20 +1022,13 @@ msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_force_thread_id
-msgid ""
-"Optional ID of a thread (record) to which all incoming messages will be "
-"attached, even if they did not reply to it. If set, this will disable the "
-"creation of new records completely."
-msgstr ""
-"Optionale ID eines Themenstrangs dem alle eingehenden Nachrichten zugeordnet"
-" werden, auch wenn auf sie nicht geantwortet wird. Wenn gesetzt, verhindert "
-"dies die Anlage neuer Datensätze vollständig."
+msgid "Optional ID of a thread (record) to which all incoming messages will be attached, even if they did not reply to it. If set, this will disable the creation of new records completely."
+msgstr "Optionale ID eines Themenstrangs dem alle eingehenden Nachrichten zugeordnet werden, auch wenn auf sie nicht geantwortet wird. Wenn gesetzt, verhindert dies die Anlage neuer Datensätze vollständig."
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
 msgid "Overall Equipment Effectiveness (OEE)"
-msgstr ""
-"Gesamteffektivität des Inventars (Overall Equipment Effectiveness, OEE)"
+msgstr "Gesamteffektivität des Inventars (Overall Equipment Effectiveness, OEE)"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__owner_user_id
@@ -1002,6 +1051,7 @@ msgstr "Zugehörige Diskussion"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_model_id
+<<<<<<< HEAD
 msgid ""
 "Parent model holding the alias. The model holding the alias reference is not"
 " necessarily the model given by alias_model_id (example: project "
@@ -1010,6 +1060,10 @@ msgstr ""
 "Das übergeordnete Datenmodell des Alias. Dieses Modell, welches die EMail "
 "Alias Referenz enthält, gehört nicht zwangsläufig zum Modell unterhalb von "
 "alias_model_id (Beispiel: project (parent_model) und task (model))"
+=======
+msgid "Parent model holding the alias. The model holding the alias reference is not necessarily the model given by alias_model_id (example: project (parent_model) and task (model))"
+msgstr "Das übergeordnete Datenmodell des Alias. Dieses Modell, welches die EMail Alias Referenz enthält, gehört nicht zwangsläufig zum Modell unterhalb von alias_model_id (Beispiel: project (parent_model) und task (model))"
+>>>>>>> 9d073c73ba3... temp
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
@@ -1182,11 +1236,8 @@ msgstr "Seriennummer"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__archive
-msgid ""
-"Set archive to true to hide the maintenance request without deleting it."
-msgstr ""
-"Setzen Sie Archivierung auf Wahr um die Wartungsanfrage zu verbergen ohne "
-"sie zu löschen."
+msgid "Set archive to true to hide the maintenance request without deleting it."
+msgstr "Setzen Sie Archivierung auf Wahr um die Wartungsanfrage zu verbergen ohne sie zu löschen."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1270,37 +1321,18 @@ msgstr "Techniker"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_model_id
-msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr ""
-"Das Odoo Datenmodell auf das sich der Alias bezieht. Jeglicher E-Mail "
-"Posteingang ohne Bezug zu einer bereits vorhandenen E-Mail  führt "
-"üblicherweise zur Erstellung eines neuen Datensatz (z.B. Projektaufgabe)."
+msgid "The model (Odoo Document Kind) to which this alias corresponds. Any incoming email that does not reply to an existing record will cause the creation of a new record of this model (e.g. a Project Task)"
+msgstr "Das Odoo Datenmodell auf das sich der Alias bezieht. Jeglicher E-Mail Posteingang ohne Bezug zu einer bereits vorhandenen E-Mail  führt üblicherweise zur Erstellung eines neuen Datensatz (z.B. Projektaufgabe)."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_name
-msgid ""
-"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
-"<jobs@example.odoo.com>"
-msgstr ""
-"Die Bezeichnung des E-Mail-Alias, z.B. 'jobs', falls Sie E-Mails an z.B. "
-"<jobs@example.odoo.com> erhalten möchten"
+msgid "The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>"
+msgstr "Die Bezeichnung des E-Mail-Alias, z.B. 'jobs', falls Sie E-Mails an z.B. <jobs@example.odoo.com> erhalten möchten"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_user_id
-msgid ""
-"The owner of records created upon receiving emails on this alias. If this "
-"field is not set the system will attempt to find the right owner based on "
-"the sender (From) address, or will use the Administrator account if no "
-"system user is found for that address."
-msgstr ""
-"Besitzer, der als Folge des Empfangs einer E-Mails an diesen Alias "
-"​​erstellt wurde. Wenn dieses Feld nicht ausgefüllt wird, wird das System "
-"versuchen, den richtigen Besitzer auf der Basis des Absenders zu finden oder"
-" das Administrator-Konto verwenden, wenn kein System-Benutzer für diese "
-"Adresse gefunden wird."
+msgid "The owner of records created upon receiving emails on this alias. If this field is not set the system will attempt to find the right owner based on the sender (From) address, or will use the Administrator account if no system user is found for that address."
+msgstr "Besitzer, der als Folge des Empfangs einer E-Mails an diesen Alias ​​erstellt wurde. Wenn dieses Feld nicht ausgefüllt wird, wird das System versuchen, den richtigen Besitzer auf der Basis des Absenders zu finden oder das Administrator-Konto verwenden, wenn kein System-Benutzer für diese Adresse gefunden wird."
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -1405,12 +1437,8 @@ msgstr ""
 #. module: maintenance
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
-msgid ""
-"You cannot delete an equipment category containing equipments or maintenance"
-" requests."
-msgstr ""
-"Sie können keine Ausstattungskategorie löschen, bei der Gegenstände "
-"zugewiesen sind oder Wartungsanfragen laufen."
+msgid "You cannot delete an equipment category containing equipments or maintenance requests."
+msgstr "Sie können keine Ausstattungskategorie löschen, bei der Gegenstände zugewiesen sind oder Wartungsanfragen laufen."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
