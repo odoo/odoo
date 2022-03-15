@@ -271,11 +271,11 @@ class ProfitabilityAnalysis(models.Model):
                                         ELSE 0.0
                                     END AS expense_amount_untaxed_invoiced,
                                     CASE
-                                        WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (SOL.untaxed_amount_to_invoice / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
+                                        WHEN SOL.qty_delivered_method IN ('timesheet', 'manual', 'stock_move') AND SOL.is_service IS TRUE THEN (SOL.untaxed_amount_to_invoice / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                                         ELSE 0.0
                                     END AS amount_untaxed_to_invoice,
                                     CASE
-                                        WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (SOL.untaxed_amount_invoiced / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
+                                        WHEN SOL.qty_delivered_method IN ('timesheet', 'manual', 'stock_move') AND SOL.is_service IS TRUE THEN (SOL.untaxed_amount_invoiced / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                                         ELSE 0.0
                                     END AS amount_untaxed_invoiced,
                                     S.date_order AS line_date
