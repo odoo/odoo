@@ -13,16 +13,6 @@ QUnit.module('dialog_manager', {}, function () {
 QUnit.module('dialog_manager_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign(
-                { hasDialog: true },
-                params,
-                { data: this.data }
-            ));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
@@ -38,7 +28,9 @@ QUnit.test('[technical] messaging not created', async function (assert) {
     assert.expect(2);
 
     const messagingBeforeCreationDeferred = makeDeferred();
-    await this.start({
+    await start({
+        data: this.data,
+        hasDialog: true,
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none',
     });
@@ -62,7 +54,10 @@ QUnit.test('[technical] messaging not created', async function (assert) {
 QUnit.test('initial mount', async function (assert) {
     assert.expect(1);
 
-    await this.start();
+    await start({
+        data: this.data,
+        hasDialog: true,
+    });
     assert.containsOnce(
         document.body,
         '.o_DialogManager',

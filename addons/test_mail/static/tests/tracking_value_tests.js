@@ -14,7 +14,7 @@ QUnit.module('tracking_value_tests.js', {
         await beforeEach(this);
 
         this.start = async params => {
-            return await start({
+            return start({
                 arch: `<form>
                             <sheet>
                                 <field name="boolean_field"/>

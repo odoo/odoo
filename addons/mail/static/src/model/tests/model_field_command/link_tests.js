@@ -12,22 +12,15 @@ QUnit.module('model_field_command', {}, function () {
 QUnit.module('field_command_link_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
 QUnit.test('link: should link a record to an empty x2one field', async function (assert) {
     assert.expect(2);
-    await this.start();
+    const { messaging } = await start({ data: this.data });
 
-    const contact = this.messaging.models['TestContact'].create({ id: 10 });
-    const address = this.messaging.models['TestAddress'].create({ id: 10 });
+    const contact = messaging.models['TestContact'].create({ id: 10 });
+    const address = messaging.models['TestAddress'].create({ id: 10 });
     contact.update({ address: link(address) });
     assert.strictEqual(
         contact.address,
@@ -43,14 +36,14 @@ QUnit.test('link: should link a record to an empty x2one field', async function 
 
 QUnit.test('link: should replace a record to a non-empty x2one field', async function (assert) {
     assert.expect(3);
-    await this.start();
+    const { messaging } = await start({ data: this.data });
 
-    const contact = this.messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].create({
         id: 10,
         address: insertAndReplace({ id: 10 }),
     });
-    const address10 = this.messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
-    const address20 = this.messaging.models['TestAddress'].create({ id: 20 });
+    const address10 = messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
+    const address20 = messaging.models['TestAddress'].create({ id: 20 });
     contact.update({ address: link(address20) });
     assert.strictEqual(
         contact.address,
@@ -71,10 +64,10 @@ QUnit.test('link: should replace a record to a non-empty x2one field', async fun
 
 QUnit.test('link: should link a record to an empty x2many field', async function (assert) {
     assert.expect(3);
-    await this.start();
+    const { messaging } = await start({ data: this.data });
 
-    const contact = this.messaging.models['TestContact'].create({ id: 10 });
-    const task = this.messaging.models['TestTask'].create({ id: 10 });
+    const contact = messaging.models['TestContact'].create({ id: 10 });
+    const task = messaging.models['TestTask'].create({ id: 10 });
     contact.update({ tasks: link(task) });
     assert.strictEqual(
         contact.tasks.length,
@@ -95,14 +88,14 @@ QUnit.test('link: should link a record to an empty x2many field', async function
 
 QUnit.test('link: should link and add a record to a non-empty x2many field', async function (assert) {
     assert.expect(5);
-    await this.start();
+    const { messaging } = await start({ data: this.data });
 
-    const contact = this.messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].create({
         id: 10,
         tasks: insertAndReplace({ id: 10 }),
     });
-    const task10 = this.messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
-    const task20 = this.messaging.models['TestTask'].create({ id: 20 });
+    const task10 = messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
+    const task20 = messaging.models['TestTask'].create({ id: 20 });
     contact.update({ tasks: link(task20) });
     assert.strictEqual(
         contact.tasks.length,

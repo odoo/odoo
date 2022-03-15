@@ -12,15 +12,6 @@ QUnit.module('thread_view', {}, function () {
 QUnit.module('thread_view_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { afterEvent, env, widget } = res;
-            this.afterEvent = afterEvent;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -40,12 +31,12 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         id: 20,
         members: [this.data.currentPartnerId, 11],
     }];
-    const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -57,7 +48,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         "should have an out of office alert on thread view"
     );
     const formattedDate = returningDate.toDate().toLocaleDateString(
-        this.messaging.locale.language.replace(/_/g, '-'),
+        messaging.locale.language.replace(/_/g, '-'),
         { day: 'numeric', month: 'short' }
     );
     assert.ok(

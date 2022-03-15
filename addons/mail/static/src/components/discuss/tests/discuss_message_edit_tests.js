@@ -8,17 +8,6 @@ QUnit.module('discuss', {}, function () {
 QUnit.module('discuss_message_edit_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start(Object.assign({}, params, {
-                data: this.data,
-                hasDiscuss: true,
-            }));
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -32,12 +21,14 @@ QUnit.test('click on message edit button should open edit composer', async funct
         model: 'mail.channel',
         res_id: 20,
     });
-    const { click, openDiscuss } = await this.start({
+    const { click, openDiscuss } = await start({
+        data: this.data,
         discuss: {
             params: {
                 default_active_id: 'mail.channel_20',
             },
         },
+        hasDiscuss: true,
     });
     await openDiscuss();
     await click('.o_Message');

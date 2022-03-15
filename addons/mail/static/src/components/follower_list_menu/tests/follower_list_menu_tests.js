@@ -17,20 +17,12 @@ QUnit.module('follower_list_menu_tests.js', {
     async beforeEach() {
         await beforeEach(this);
 
-        this.createFollowerListMenuComponent = async (thread, otherProps = {}) => {
+        this.createFollowerListMenuComponent = async (thread, target, otherProps = {}) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
-            await createRootMessagingComponent(this, "FollowerListMenu", {
+            await createRootMessagingComponent(thread.env, "FollowerListMenu", {
                 props,
-                target: this.widget.el,
+                target,
             });
-        };
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -38,12 +30,12 @@ QUnit.module('follower_list_menu_tests.js', {
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    await this.createFollowerListMenuComponent(thread, { isDisabled: true });
+    await this.createFollowerListMenuComponent(thread, widget.el, { isDisabled: true });
     assert.containsOnce(
         document.body,
         '.o_FollowerListMenu',
@@ -75,12 +67,12 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(5);
 
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    await this.createFollowerListMenuComponent(thread);
+    await this.createFollowerListMenuComponent(thread, widget.el);
 
     assert.containsOnce(
         document.body,
@@ -155,14 +147,12 @@ QUnit.test('click on "add followers" button', async function (assert) {
         res_id: 100,
         res_model: 'res.partner',
     });
-    await this.start({
-        env: { bus },
-    });
-    const thread = this.messaging.models['Thread'].create({
+    const { messaging, widget } = await start({ data: this.data, env: { bus } });
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    await this.createFollowerListMenuComponent(thread);
+    await this.createFollowerListMenuComponent(thread, widget.el);
 
     assert.containsOnce(
         document.body,
@@ -230,36 +220,36 @@ QUnit.test('click on remove follower', async function (assert) {
     assert.expect(6);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const self = this;
-    await this.start({
+    const { messaging, widget } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('message_unsubscribe');
                 assert.deepEqual(
                     args.args,
-                    [[100], [self.messaging.currentPartner.id]],
+                    [[100], [messaging.currentPartner.id]],
                     "message_unsubscribe should be called with right argument"
                 );
             }
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    await this.messaging.models['Follower'].create({
+    await messaging.models['Follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
         partner: insert({
             email: "bla@bla.bla",
-            id: this.messaging.currentPartner.id,
+            id: messaging.currentPartner.id,
             name: "François Perusse",
         }),
     });
-    await this.createFollowerListMenuComponent(thread);
+    await this.createFollowerListMenuComponent(thread, widget.el);
 
     await afterNextRender(() => {
         document.querySelector('.o_FollowerListMenu_buttonFollowers').click();

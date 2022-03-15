@@ -12,16 +12,6 @@ QUnit.module('discuss', {}, function () {
 QUnit.module('discuss_pinned_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-                data: this.data,
-                hasDiscuss: true,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
@@ -31,16 +21,20 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     // channel that is expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
+    const { messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
+    });
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${this.messaging.inbox.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.localId}"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -55,9 +49,13 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     // channel that is expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
+    const { messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
+    });
 
-    const threadGeneral = this.messaging.models['Thread'].findFromIdentifyingData({
+    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -83,7 +81,10 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
         is_minimized: true,
         state: 'open',
     });
-    await this.start({
+    const { messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
         async mockRPC(route, args) {
             if (args.method === 'action_unfollow') {
                 assert.step('action_unfollow');
@@ -95,7 +96,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
         },
     });
 
-    const threadGeneral = this.messaging.models['Thread'].findFromIdentifyingData({
+    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -132,15 +133,19 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     // channel that is expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
-    const threadGeneral = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { env, messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
+    });
+    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
 
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${this.messaging.inbox.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.localId}"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
@@ -163,7 +168,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     // Simulate receiving a leave channel notification
     // (e.g. from user interaction from another device or browser tab)
     await afterNextRender(() => {
-        this.env.services.bus_service.trigger('notification', [{
+        env.services.bus_service.trigger('notification', [{
             type: 'mail.channel/unpin',
             payload: {
                 channel_type: 'channel',
@@ -200,8 +205,12 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
         id: 20, // random unique id, will be referenced in the test
         is_pinned: false, // expected value for this test
     });
-    await this.start();
-    const threadGeneral = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
+    });
+    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

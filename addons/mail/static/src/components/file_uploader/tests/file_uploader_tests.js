@@ -11,14 +11,6 @@ QUnit.module('file_uploader', {}, function () {
 QUnit.module('file_uploader_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -26,7 +18,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
     assert.expect(2);
 
     this.data['res.partner'].records.push({ id: 100 }, { id: 101 });
-    const { afterNextRender, createChatterContainerComponent } = await this.start();
+    const { afterNextRender, createChatterContainerComponent, messaging } = await start({ data: this.data });
     const firstChatterContainerComponent = await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -50,7 +42,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         [file1]
     ));
     assert.strictEqual(
-        this.messaging.models['Attachment'].all().length,
+        messaging.models['Attachment'].all().length,
         1,
         'Uploaded file should be the only attachment created'
     );
@@ -65,7 +57,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         [file2]
     ));
     assert.strictEqual(
-        this.messaging.models['Attachment'].all().length,
+        messaging.models['Attachment'].all().length,
         2,
         'Uploaded file should be the only attachment added'
     );

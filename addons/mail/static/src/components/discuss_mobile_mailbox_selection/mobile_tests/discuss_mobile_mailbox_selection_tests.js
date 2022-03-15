@@ -12,35 +12,26 @@ QUnit.module('discuss_mobile_mailbox_selection', {}, function () {
 QUnit.module('discuss_mobile_mailbox_selection_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign(
-                {
-                    autoOpenDiscuss: true,
-                    data: this.data,
-                    env: {
-                        browser: {
-                            innerHeight: 640,
-                            innerWidth: 360,
-                        },
-                        device: {
-                            isMobile: true,
-                        },
-                    },
-                    hasDiscuss: true,
-                },
-                params,
-            ));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
 QUnit.test('select another mailbox', async function (assert) {
     assert.expect(7);
 
-    await this.start();
+    const { messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        env: {
+            browser: {
+                innerHeight: 640,
+                innerWidth: 360,
+            },
+            device: {
+                isMobile: true,
+            },
+        },
+        hasDiscuss: true,
+    });
     assert.containsOnce(
         document.body,
         '.o_Discuss',
@@ -58,20 +49,20 @@ QUnit.test('select another mailbox', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector('.o_Discuss_thread').dataset.threadLocalId,
-        this.messaging.inbox.localId,
+        messaging.inbox.localId,
         "inbox mailbox should be opened initially"
     );
     assert.containsOnce(
         document.body,
         `.o_DiscussMobileMailboxSelection_button[
-            data-mailbox-local-id="${this.messaging.starred.localId}"
+            data-mailbox-local-id="${messaging.starred.localId}"
         ]`,
         "should have a button to open starred mailbox"
     );
 
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussMobileMailboxSelection_button[
-            data-mailbox-local-id="${this.messaging.starred.localId}"]
+            data-mailbox-local-id="${messaging.starred.localId}"]
         `).click()
     );
     assert.containsOnce(
@@ -81,7 +72,7 @@ QUnit.test('select another mailbox', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector('.o_Discuss_thread').dataset.threadLocalId,
-        this.messaging.starred.localId,
+        messaging.starred.localId,
         "starred mailbox should be opened after clicking on it"
     );
 });
@@ -90,12 +81,25 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
     assert.expect(3);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+
+    const { messaging } = await start({
+        autoOpenDiscuss: true,
+        data: this.data,
         discuss: {
             context: {
                 active_id: 20,
             },
-        }
+        },
+        env: {
+            browser: {
+                innerHeight: 640,
+                innerWidth: 360,
+            },
+            device: {
+                isMobile: true,
+            },
+        },
+        hasDiscuss: true,
     });
     assert.hasClass(
         document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="channel"]'),
@@ -111,7 +115,7 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
     );
     assert.hasClass(
         document.querySelector(`.o_DiscussMobileMailboxSelection_button[data-mailbox-local-id="${
-            this.messaging.inbox.localId
+            messaging.inbox.localId
         }"]`),
         'o-active',
         "'Inbox' mailbox should be auto-selected after click on mailbox tab"

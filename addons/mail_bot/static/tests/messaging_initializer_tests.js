@@ -6,14 +6,6 @@ QUnit.module('mail_bot', {}, function () {
 QUnit.module('messaging_initializer_tests.js', {
     beforeEach() {
         beforeEach(this);
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
@@ -23,7 +15,8 @@ QUnit.test('OdooBot initialized at init', async function (assert) {
     // implementing _mockMailChannelInitOdooBot task-2300480
     assert.expect(2);
 
-    await this.start({
+    await start({
+        data: this.data,
         env: {
             session: {
                 odoobot_initialized: false,

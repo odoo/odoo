@@ -14,31 +14,22 @@ QUnit.module('attachment_list', {}, function () {
 QUnit.module('attachment_list_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { afterEvent, env, widget } = res;
-            this.afterEvent = afterEvent;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
 QUnit.test('simplest layout', async function (assert) {
     assert.expect(8);
 
-    const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['Attachment'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
         name: "test.txt",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -52,7 +43,7 @@ QUnit.test('simplest layout', async function (assert) {
     const attachmentEl = document.querySelector('.o_AttachmentList .o_AttachmentCard');
     assert.strictEqual(
         attachmentEl.dataset.id,
-        this.messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }).localId,
+        messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }).localId,
         "attachment component should be linked to attachment store model"
     );
     assert.strictEqual(
@@ -91,7 +82,8 @@ QUnit.test('simplest layout', async function (assert) {
 QUnit.test('simplest layout + editable', async function (assert) {
     assert.expect(7);
 
-    const { createMessageComponent } = await this.start({
+    const { createMessageComponent, messaging } = await start({
+        data: this.data,
         async mockRPC(route, args) {
             if (route.includes('web/image/750')) {
                 assert.ok(
@@ -102,15 +94,15 @@ QUnit.test('simplest layout + editable', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const attachment = this.messaging.models['Attachment'].create({
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
         name: "test.txt",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -157,16 +149,16 @@ QUnit.test('simplest layout + editable', async function (assert) {
 QUnit.test('layout with card details and filename and extension', async function (assert) {
     assert.expect(2);
 
-    const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['Attachment'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
         name: "test.txt",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -187,18 +179,19 @@ QUnit.test('layout with card details and filename and extension', async function
 QUnit.test('view attachment', async function (assert) {
     assert.expect(3);
 
-    const { createMessageComponent } = await this.start({
+    const { createMessageComponent, messaging } = await start({
+        data: this.data,
         hasDialog: true,
     });
-    const attachment = this.messaging.models['Attachment'].create({
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
         mimetype: 'image/png',
         name: "test.png",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -225,16 +218,16 @@ QUnit.test('view attachment', async function (assert) {
 QUnit.test('close attachment viewer', async function (assert) {
     assert.expect(3);
 
-    const { createMessageComponent } = await this.start({ hasDialog: true });
-    const attachment = this.messaging.models['Attachment'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data, hasDialog: true });
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
         mimetype: 'image/png',
         name: "test.png",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -266,7 +259,8 @@ QUnit.test('close attachment viewer', async function (assert) {
 QUnit.test('clicking on the delete attachment button multiple times should do the rpc only once', async function (assert) {
     assert.expect(2);
 
-    const { createMessageComponent } = await this.start({
+    const { createMessageComponent, messaging } = await start({
+        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
             if (route === '/mail/attachment/delete') {
@@ -276,15 +270,15 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
             return this._super(...arguments);
         },
     });
-    const attachment = this.messaging.models['Attachment'].create({
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
         name: "test.txt",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -317,16 +311,16 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
      */
     assert.expect(1);
 
-    const { createMessageComponent } = await this.start({ hasDialog: true });
-    const attachment = this.messaging.models['Attachment'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data, hasDialog: true });
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
         mimetype: 'image/png',
         name: "test.png",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -351,16 +345,16 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
 QUnit.test('plain text file is viewable', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['Attachment'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
         name: "test.txt",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -376,16 +370,16 @@ QUnit.test('plain text file is viewable', async function (assert) {
 QUnit.test('HTML file is viewable', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['Attachment'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.html",
         id: 750,
         mimetype: 'text/html',
         name: "test.html",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -400,16 +394,16 @@ QUnit.test('HTML file is viewable', async function (assert) {
 QUnit.test('ODT file is not viewable', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['Attachment'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.odt",
         id: 750,
         mimetype: 'application/vnd.oasis.opendocument.text',
         name: "test.odt",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -424,16 +418,16 @@ QUnit.test('ODT file is not viewable', async function (assert) {
 QUnit.test('DOCX file is not viewable', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['Attachment'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.docx",
         id: 750,
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         name: "test.docx",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });

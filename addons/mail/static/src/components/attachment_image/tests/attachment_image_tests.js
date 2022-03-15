@@ -12,31 +12,22 @@ QUnit.module('attachment_image', {}, function () {
 QUnit.module('attachment_image_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { afterEvent, env, widget } = res;
-            this.afterEvent = afterEvent;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
 QUnit.test('auto layout with image', async function (assert) {
     assert.expect(3);
 
-    const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['Attachment'].create({
+    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
         mimetype: 'image/png',
         name: "test.png",
     });
-    const message = this.messaging.models['Message'].create({
+    const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(this.messaging.currentPartner),
+        author: link(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });

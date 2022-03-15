@@ -14,13 +14,11 @@ QUnit.module('discuss_sidebar_category_tests.js', {
         await beforeEach(this);
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            return start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
             }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -198,7 +196,7 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     await afterNextRender(() => {
         document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`).click();
@@ -206,7 +204,7 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -223,7 +221,7 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     await afterNextRender(() => {
         document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`).click();
@@ -231,7 +229,7 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -249,9 +247,9 @@ QUnit.test('channel - states: close should update the value on the server', asyn
         is_discuss_sidebar_category_channel_open: true,
     });
     const currentUserId = this.data.currentUserId;
-    await this.start();
+    const { env } = await this.start();
 
-    const initalSettings = await this.env.services.rpc({
+    const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -265,7 +263,7 @@ QUnit.test('channel - states: close should update the value on the server', asyn
     await afterNextRender(() => {
         document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`).click();
     });
-    const newSettings = await this.env.services.rpc({
+    const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -286,9 +284,9 @@ QUnit.test('channel - states: open should update the value on the server', async
         is_discuss_sidebar_category_channel_open: false,
     });
     const currentUserId = this.data.currentUserId;
-    await this.start();
+    const { env } = await this.start();
 
-    const initalSettings = await this.env.services.rpc({
+    const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -302,7 +300,7 @@ QUnit.test('channel - states: open should update the value on the server', async
     await afterNextRender(() => {
         document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`).click();
     });
-    const newSettings = await this.env.services.rpc({
+    const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -322,10 +320,10 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
     });
-    await this.start();
+    const { messaging, env } = await this.start();
 
     await afterNextRender(() => {
-        this.env.services.bus_service.trigger('notification', [{
+        env.services.bus_service.trigger('notification', [{
             type: "res.users.settings/changed",
             payload: {
                 is_discuss_sidebar_category_channel_open: false,
@@ -335,7 +333,7 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -352,10 +350,10 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    await this.start();
+    const { env, messaging } = await this.start();
 
     await afterNextRender(() => {
-        this.env.services.bus_service.trigger('notification', [{
+        env.services.bus_service.trigger('notification', [{
             type: "res.users.settings/changed",
             payload: {
                 is_discuss_sidebar_category_channel_open: true,
@@ -365,7 +363,7 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -378,12 +376,12 @@ QUnit.test('channel - states: the active category item should be visble even if 
     assert.expect(4);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
+    const { messaging } = await this.start();
 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -391,7 +389,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     );
 
     const channel = document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        this.messaging.models['Thread'].findFromIdentifyingData({
+        messaging.models['Thread'].findFromIdentifyingData({
             id: 20,
             model: 'mail.channel',
         }).localId
@@ -408,7 +406,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -418,14 +416,14 @@ QUnit.test('channel - states: the active category item should be visble even if 
 
     await afterNextRender(() => {
         document.querySelector(`.o_DiscussSidebarMailbox[data-thread-local-id="${
-            this.messaging.inbox.localId
+            messaging.inbox.localId
         }"]`).click();
     });
 
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -557,7 +555,7 @@ QUnit.test('chat - states: close manually by clicking the title', async function
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     await afterNextRender(() => {
         document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
@@ -565,7 +563,7 @@ QUnit.test('chat - states: close manually by clicking the title', async function
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -587,7 +585,7 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     await afterNextRender(() => {
         document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
@@ -595,7 +593,7 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -613,9 +611,9 @@ QUnit.test('chat - states: close should call update server data', async function
         is_discuss_sidebar_category_chat_open: true,
     });
     const currentUserId = this.data.currentUserId;
-    await this.start();
+    const { env } = await this.start();
 
-    const initalSettings = await this.env.services.rpc({
+    const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -629,7 +627,7 @@ QUnit.test('chat - states: close should call update server data', async function
     await afterNextRender(() => {
         document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
     });
-    const newSettings = await this.env.services.rpc({
+    const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -650,9 +648,9 @@ QUnit.test('chat - states: open should call update server data', async function 
         is_discuss_sidebar_category_chat_open: false,
     });
     const currentUserId = this.data.currentUserId;
-    await this.start();
+    const { env } = await this.start();
 
-    const initalSettings = await this.env.services.rpc({
+    const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -666,7 +664,7 @@ QUnit.test('chat - states: open should call update server data', async function 
     await afterNextRender(() => {
         document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
     });
-    const newSettings = await this.env.services.rpc({
+    const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -691,10 +689,10 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
     });
-    await this.start();
+    const { env, messaging } = await this.start();
 
     await afterNextRender(() => {
-        this.env.services.bus_service.trigger('notification', [{
+        env.services.bus_service.trigger('notification', [{
             type: "res.users.settings/changed",
             payload: {
                 is_discuss_sidebar_category_chat_open: false,
@@ -704,7 +702,7 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -726,10 +724,10 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    await this.start();
+    const { env, messaging } = await this.start();
 
     await afterNextRender(() => {
-        this.env.services.bus_service.trigger('notification', [{
+        env.services.bus_service.trigger('notification', [{
             type: "res.users.settings/changed",
             payload: {
                 is_discuss_sidebar_category_chat_open: true,
@@ -739,7 +737,7 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -757,12 +755,12 @@ QUnit.test('chat - states: the active category item should be visble even if the
         message_unread_counter: 0,
         public: 'private',
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -770,7 +768,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     );
 
     const chat = document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        this.messaging.models['Thread'].findFromIdentifyingData({
+        messaging.models['Thread'].findFromIdentifyingData({
             id: 10,
             model: 'mail.channel',
         }).localId
@@ -787,7 +785,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -797,14 +795,14 @@ QUnit.test('chat - states: the active category item should be visble even if the
 
     await afterNextRender(() => {
         document.querySelector(`.o_DiscussSidebarMailbox[data-thread-local-id="${
-            this.messaging.inbox.localId
+            messaging.inbox.localId
         }"]`).click();
     });
 
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId

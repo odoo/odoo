@@ -14,21 +14,12 @@ QUnit.module('thread_icon_tests.js', {
     async beforeEach() {
         await beforeEach(this);
 
-        this.createThreadIcon = async thread => {
-            await createRootMessagingComponent(this, "ThreadIcon", {
+        this.createThreadIcon = async (thread, target) => {
+            await createRootMessagingComponent(thread.env, "ThreadIcon", {
                 props: { threadLocalId: thread.localId },
-                target: this.widget.el
+                target,
             });
         };
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-
     },
 });
 
@@ -45,12 +36,12 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         id: 20,
         members: [this.data.currentPartnerId, 17],
     });
-    await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread);
+    await this.createThreadIcon(thread, widget.el);
 
     assert.containsOnce(
         document.body,
@@ -65,7 +56,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
 
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
-        this.widget.call('bus_service', 'trigger', 'notification', [{
+        widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
                 channel_id: 20,
@@ -88,7 +79,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
 
     // simulate receive typing notification from demo "no longer is typing"
     await afterNextRender(() => {
-        this.widget.call('bus_service', 'trigger', 'notification', [{
+        widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
                 channel_id: 20,

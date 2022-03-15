@@ -13,21 +13,12 @@ QUnit.module('thread_icon_tests.js', {
     async beforeEach() {
         await beforeEach(this);
 
-        this.createThreadIcon = async thread => {
-            await createRootMessagingComponent(this, "ThreadIcon", {
+        this.createThreadIcon = async (thread, target) => {
+            await createRootMessagingComponent(thread.env, "ThreadIcon", {
                 props: { threadLocalId: thread.localId },
-                target: this.widget.el
+                target,
             });
         };
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
-
     },
 });
 
@@ -44,12 +35,12 @@ QUnit.test('thread icon of a chat when correspondent is on leave & online', asyn
         id: 20,
         members: [this.data.currentPartnerId, 7],
     });
-    await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread);
+    await this.createThreadIcon(thread, widget.el);
 
     assert.containsOnce(
         document.body,
@@ -76,12 +67,12 @@ QUnit.test('thread icon of a chat when correspondent is on leave & away', async 
         id: 20,
         members: [this.data.currentPartnerId, 7],
     });
-    await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread);
+    await this.createThreadIcon(thread, widget.el);
 
     assert.containsOnce(
         document.body,
@@ -108,12 +99,12 @@ QUnit.test('thread icon of a chat when correspondent is on leave & offline', asy
         id: 20,
         members: [this.data.currentPartnerId, 7],
     });
-    await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { messaging, widget } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread);
+    await this.createThreadIcon(thread, widget.el);
 
     assert.containsOnce(
         document.body,

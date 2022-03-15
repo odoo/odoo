@@ -16,15 +16,6 @@ QUnit.module('message', {}, function () {
 QUnit.module('message_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { afterEvent, env, widget } = res;
-            this.afterEvent = afterEvent;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -47,8 +38,8 @@ QUnit.test('Notification Sent', async function (assert) {
         notification_type: 'sms',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start();
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
@@ -144,8 +135,8 @@ QUnit.test('Notification Error', async function (assert) {
         notification_type: 'sms',
         res_partner_id: 12,
     });
-    const { createThreadViewComponent } = await this.start({ env: { bus } });
-    const threadViewer = this.messaging.models['ThreadViewer'].create({
+    const { createThreadViewComponent, messaging } = await start({ data: this.data, env: { bus } });
+    const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({

@@ -8,14 +8,6 @@ QUnit.module('chatter', {}, function () {
 QUnit.module('chatter_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -30,7 +22,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
             res_id: 100,
         });
     }
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent, messaging } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -57,7 +49,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
     );
     assert.strictEqual(
         document.querySelector(`.o_Chatter_thread`).dataset.threadLocalId,
-        this.messaging.models['Thread'].findFromIdentifyingData({
+        messaging.models['Thread'].findFromIdentifyingData({
             id: 100,
             model: 'res.partner',
         }).localId,
@@ -73,7 +65,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
 QUnit.test('base rendering when chatter has no record', async function (assert) {
     assert.expect(10);
 
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     const chatterContainerComponent = await createChatterContainerComponent({
         threadModel: 'res.partner',
     }, { waitUntilMessagesLoaded: false });
@@ -150,7 +142,7 @@ QUnit.test('base rendering when chatter has attachments', async function (assert
             res_model: 'res.partner',
         }
     );
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -190,7 +182,7 @@ QUnit.test('show attachment box', async function (assert) {
             res_model: 'res.partner',
         }
     );
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -235,7 +227,7 @@ QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async 
     assert.expect(10);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -322,7 +314,7 @@ QUnit.test('should display subject when subject is not the same as the thread na
         res_id: 100,
         subject: "Salutations, voyageur",
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -353,7 +345,7 @@ QUnit.test('should not display subject when subject is the same as the thread na
         res_id: 100,
         subject: "Salutations, voyageur",
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -376,7 +368,7 @@ QUnit.test('should not display user notification messages in chatter', async fun
         model: 'res.partner',
         res_id: 100,
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -393,7 +385,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
     assert.expect(2);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -426,7 +418,7 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
     assert.expect(2);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
@@ -462,7 +454,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     assert.expect(2);
 
     this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await start({ data: this.data });
     await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',

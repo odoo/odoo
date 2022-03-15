@@ -14,13 +14,11 @@ QUnit.module('discuss_sidebar_category_tests.js', {
         await beforeEach(this);
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            return start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
             }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });
@@ -123,12 +121,12 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_livechat_open: true,
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -138,14 +136,14 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
     // fold the livechat category
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            this.messaging.discuss.categoryLivechat.localId}"]
+            messaging.discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -168,12 +166,12 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_livechat_open: false,
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -183,14 +181,14 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
     // open the livechat category
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            this.messaging.discuss.categoryLivechat.localId}"]
+            messaging.discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -214,9 +212,9 @@ QUnit.test('livechat - states: close should update the value on the server', asy
         is_discuss_sidebar_category_livechat_open: true,
     });
     const currentUserId = this.data.currentUserId;
-    await this.start();
+    const { env, messaging } = await this.start();
 
-    const initalSettings = await this.env.services.rpc({
+    const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -229,11 +227,11 @@ QUnit.test('livechat - states: close should update the value on the server', asy
 
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            this.messaging.discuss.categoryLivechat.localId}"]
+            messaging.discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
-    const newSettings = await this.env.services.rpc({
+    const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -260,9 +258,9 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
         is_discuss_sidebar_category_livechat_open: false,
     });
     const currentUserId = this.data.currentUserId;
-    await this.start();
+    const { env, messaging } = await this.start();
 
-    const initalSettings = await this.env.services.rpc({
+    const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -275,11 +273,11 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
 
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            this.messaging.discuss.categoryLivechat.localId}"]
+            messaging.discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
-    const newSettings = await this.env.services.rpc({
+    const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -301,12 +299,12 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
         livechat_operator_id: this.data.currentPartnerId,
         members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
-    await this.start();
+    const { env, messaging } = await this.start();
 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -314,7 +312,7 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
     );
 
     await afterNextRender(() => {
-        this.env.services.bus_service.trigger('notification', [{
+        env.services.bus_service.trigger('notification', [{
             type: "res.users.settings/changed",
             payload: {
                 is_discuss_sidebar_category_livechat_open: false,
@@ -324,7 +322,7 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -347,12 +345,12 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
         user_id: this.data.currentUserId,
         is_discuss_sidebar_category_livechat_open: false,
     });
-    await this.start();
+    const { env, messaging } = await this.start();
 
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -360,7 +358,7 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
     );
 
     await afterNextRender(() => {
-        this.env.services.bus_service.trigger('notification', [{
+        env.services.bus_service.trigger('notification', [{
             type: "res.users.settings/changed",
             payload: {
                 is_discuss_sidebar_category_livechat_open: true,
@@ -370,7 +368,7 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -390,12 +388,12 @@ QUnit.test('livechat - states: category item should be invisible if the catgory 
         livechat_operator_id: this.data.currentPartnerId,
         members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -404,7 +402,7 @@ QUnit.test('livechat - states: category item should be invisible if the catgory 
 
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            this.messaging.discuss.categoryLivechat.localId}"]
+            messaging.discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
@@ -412,7 +410,7 @@ QUnit.test('livechat - states: category item should be invisible if the catgory 
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -431,12 +429,12 @@ QUnit.test('livechat - states: the active category item should be visble even if
         livechat_operator_id: this.data.currentPartnerId,
         members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
-    await this.start();
+    const { messaging } = await this.start();
 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -444,7 +442,7 @@ QUnit.test('livechat - states: the active category item should be visble even if
     );
 
     const livechat = document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        this.messaging.models['Thread'].findFromIdentifyingData({
+        messaging.models['Thread'].findFromIdentifyingData({
             id: 11,
             model: 'mail.channel',
         }).localId
@@ -456,7 +454,7 @@ QUnit.test('livechat - states: the active category item should be visble even if
 
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            this.messaging.discuss.categoryLivechat.localId}"]
+            messaging.discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
@@ -464,7 +462,7 @@ QUnit.test('livechat - states: the active category item should be visble even if
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['Thread'].findFromIdentifyingData({
+            messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId

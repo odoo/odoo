@@ -17,13 +17,11 @@ QUnit.module('discuss_inbox_tests.js', {
         await beforeEach(this);
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            return start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
             }));
-            this.env = env;
-            this.widget = widget;
         };
     },
 });

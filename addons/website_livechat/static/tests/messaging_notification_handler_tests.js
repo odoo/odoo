@@ -13,14 +13,6 @@ QUnit.module('website_livechat', {}, function () {
 QUnit.module('messaging_notification_handler_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, {
-                data: this.data,
-            }, params));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
@@ -31,7 +23,7 @@ QUnit.test('should open chat window on send chat request to website visitor', as
         display_name: "Visitor #11",
         id: 11,
     });
-    await this.start({
+    const { env, widget } = await start({
         data: this.data,
         hasChatWindow: true,
         hasView: true,
@@ -48,8 +40,8 @@ QUnit.test('should open chat window on send chat request to website visitor', as
         `,
         res_id: 11,
     });
-    mock.intercept(this.widget, 'execute_action', payload => {
-        this.env.services.rpc({
+    mock.intercept(widget, 'execute_action', payload => {
+        env.services.rpc({
             route: '/web/dataset/call_button',
             params: {
                 args: [payload.data.env.resIDs],

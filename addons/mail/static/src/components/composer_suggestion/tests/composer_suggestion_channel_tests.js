@@ -8,14 +8,6 @@ QUnit.module('composer_suggestion', {}, function () {
 QUnit.module('composer_suggestion_channel_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const res = await start({ ...params, data: this.data });
-            const { env, widget } = res;
-            this.env = env;
-            this.widget = widget;
-            return res;
-        };
     },
 });
 
@@ -23,8 +15,8 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -48,8 +40,8 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
         id: 20,
         name: "General",
     });
-    const { createComposerSuggestionComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -80,8 +72,8 @@ QUnit.test('channel mention suggestion active', async function (assert) {
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent } = await this.start();
-    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

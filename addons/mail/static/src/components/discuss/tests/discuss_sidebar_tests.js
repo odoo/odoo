@@ -14,16 +14,6 @@ QUnit.module('discuss', {}, function () {
 QUnit.module('discuss_sidebar_tests.js', {
     async beforeEach() {
         await beforeEach(this);
-
-        this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-                data: this.data,
-                hasDiscuss: true,
-            }));
-            this.env = env;
-            this.widget = widget;
-        };
     },
 });
 
@@ -38,7 +28,10 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
         public: 'public',
     });
     const searchReadDef = makeDeferred();
-    await this.start({
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
         async mockRPC(route, args) {
             const res = await this._super(...arguments);
             if (args.method === 'search_read') {
@@ -90,7 +83,10 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
         public: 'public',
     });
     const searchReadDef = makeDeferred();
-    await this.start({
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
         async mockRPC(route, args) {
             const res = await this._super(...arguments);
             if (args.method === 'search_read') {
@@ -140,7 +136,11 @@ QUnit.test('sidebar channels should be ordered case insensitive alphabetically',
         { id: 21, name: "Abc" },
         { id: 22, name: "Xyz" }
     );
-    await this.start();
+    await start({
+        autoOpenDiscuss: true,
+        data: this.data,
+        hasDiscuss: true,
+    });
     const results = document.querySelectorAll('.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem_name');
     assert.deepEqual(
         [results[0].textContent, results[1].textContent, results[2].textContent, results[3].textContent],
