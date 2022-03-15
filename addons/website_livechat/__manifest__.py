@@ -23,7 +23,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
     'assets': {
         'mail.assets_discuss_public': [
             'website_livechat/static/src/components/*/*',
-            'website_livechat/static/src/models/*/*.js',
+            'website_livechat/static/src/models/*.js',
         ],
         'web.assets_frontend': [
             'mail/static/src/js/utils.js',
@@ -38,14 +38,14 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'web.assets_backend': [
             'website_livechat/static/src/components/*/*.js',
             'website_livechat/static/src/components/*/*.scss',
-            'website_livechat/static/src/models/*/*.js',
+            'website_livechat/static/src/models/*.js',
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
             'website_livechat/static/src/components/*/tests/*.js',
-            'website_livechat/static/src/models/*/tests/*.js',
+            'website_livechat/static/tests/*.js',
             'website_livechat/static/tests/helpers/*.js',
         ],
         'web.assets_qweb': [

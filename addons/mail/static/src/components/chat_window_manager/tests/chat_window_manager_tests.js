@@ -234,7 +234,7 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     /**
      * InnerWith computation uses following info:
      * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
-     * (others: @see mail/static/src/models/chat_window_manager/chat_window_manager.js:visual)
+     * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 325px
      * - start/end/between gap width: 10px/10px/5px
@@ -868,7 +868,7 @@ QUnit.test('focus next visible chat window when closing current chat window with
     /**
      * computation uses following info:
      * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
-     * (others: @see mail/static/src/models/chat_window_manager/chat_window_manager.js:visual)
+     * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 325px
      * - start/end/between gap width: 10px/10px/5px
@@ -1062,7 +1062,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     /**
      * computation uses following info:
      * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
-     * (others: @see mail/static/src/models/chat_window_manager/chat_window_manager.js:visual)
+     * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 325px
      * - start/end/between gap width: 10px/10px/5px
@@ -1280,7 +1280,7 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
     /**
      * computation uses following info:
      * ([mocked] global window width: 900px)
-     * (others: @see `mail/static/src/models/chat_window_manager/chat_window_manager.js:visual`)
+     * (others: @see `mail/static/src/models/chat_window_manager.js:visual`)
      *
      * - chat window width: 325px
      * - start/end/between gap width: 10px/10px/5px
@@ -1406,7 +1406,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     /**
      * computation uses following info:
      * ([mocked] global window width: 900px)
-     * (others: @see `mail/static/src/models/chat_window_manager/chat_window_manager.js:visual`)
+     * (others: @see `mail/static/src/models/chat_window_manager.js:visual`)
      *
      * - chat window width: 325px
      * - start/end/between gap width: 10px/10px/5px
@@ -1665,7 +1665,7 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', as
     /**
      * InnerWith computation uses following info:
      * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
-     * (others: @see mail/static/src/models/chat_window_manager/chat_window_manager.js:visual)
+     * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 325px
      * - start/end/between gap width: 10px/10px/5px
@@ -2064,7 +2064,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
     /**
      * computation uses following info:
      * ([mocked] global window width: 900px)
-     * (others: @see `mail/static/src/models/chat_window_manager/chat_window_manager.js:visual`)
+     * (others: @see `mail/static/src/models/chat_window_manager.js:visual`)
      *
      * - chat window width: 325px
      * - start/end/between gap width: 10px/10px/5px

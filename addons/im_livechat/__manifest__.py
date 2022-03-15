@@ -44,13 +44,13 @@ Help your customers with this chat, and analyse their feedback.
     'assets': {
         'mail.assets_discuss_public': [
             'im_livechat/static/src/components/*/*',
-            'im_livechat/static/src/models/*/*.js',
+            'im_livechat/static/src/models/*.js',
         ],
         'web.assets_backend': [
             'im_livechat/static/src/js/im_livechat_channel_form_view.js',
             'im_livechat/static/src/js/im_livechat_channel_form_controller.js',
             'im_livechat/static/src/components/*/*.js',
-            'im_livechat/static/src/models/*/*.js',
+            'im_livechat/static/src/models/*.js',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
         ],

@@ -50,7 +50,7 @@
     'auto_install': False,
     'assets': {
         'mail.assets_discuss_public': [
-            'hr/static/src/models/*/*.js',
+            'hr/static/src/models/*.js',
         ],
         'web.assets_backend': [
             'hr/static/src/scss/hr.scss',
@@ -61,7 +61,7 @@
             'hr/static/src/js/standalone_m2o_avatar_employee.js',
             'hr/static/src/js/user_menu.js',
             'hr/static/src/js/work_permit_upload.js',
-            'hr/static/src/models/*/*.js',
+            'hr/static/src/models/*.js',
         ],
         'web.assets_qweb': [
             'hr/static/src/xml/*.xml',
