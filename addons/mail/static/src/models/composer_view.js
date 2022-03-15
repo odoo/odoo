@@ -588,6 +588,16 @@ registerModel({
          * @private
          * @returns {boolean|FieldCommand}
          */
+        _computeHasThreadTyping() {
+            if (this.threadView && this.threadView.hasComposerThreadTyping !== undefined) {
+                return this.threadView.hasComposerThreadTyping;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
         _computeIsCompact() {
             if (this.chatter) {
                 return false;
@@ -1031,6 +1041,10 @@ registerModel({
          */
         hasSuggestions: attr({
             compute: '_computeHasSuggestions',
+            default: false,
+        }),
+        hasThreadTyping: attr({
+            compute: '_computeHasThreadTyping',
             default: false,
         }),
         /**

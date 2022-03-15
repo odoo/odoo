@@ -118,7 +118,7 @@
                 </div>
                 <t t-if="hasFooter">
                     <div class="o_Composer_coreFooter" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }">
-                        <t t-if="props.hasThreadTyping">
+                        <t t-if="composerView.hasThreadTyping">
                             <ThreadTextualTypingStatus className="'o_Composer_threadTextualTypingStatus'" threadLocalId="composerView.composer.activeThread.localId"/>
                         </t>
                         <AttachmentList
