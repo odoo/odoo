@@ -4,8 +4,6 @@ import { insert } from '@mail/model/model_field_command';
 import { beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
-QUnit.module('models', {}, function () {
-QUnit.module('thread', {}, function () {
 QUnit.module('thread_tests.js', {
     async beforeEach() {
         await beforeEach(this);
@@ -140,6 +138,4 @@ QUnit.test('create (chat)', async function (assert) {
     assert.strictEqual(partner.name, "Demo");
 });
 
-});
-});
 });

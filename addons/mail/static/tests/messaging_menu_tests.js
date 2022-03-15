@@ -3,8 +3,6 @@
 import { beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
-QUnit.module('models', {}, function () {
-QUnit.module('messaging_menu', {}, function () {
 QUnit.module('messaging_menu_tests.js', {
     async beforeEach() {
         await beforeEach(this);
@@ -33,6 +31,4 @@ QUnit.test('messaging menu counter should ignore unread messages in channels tha
     );
 });
 
-});
-});
 });

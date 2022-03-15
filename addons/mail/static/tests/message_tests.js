@@ -6,8 +6,6 @@ import { beforeEach, start } from '@mail/utils/test_utils';
 import { str_to_datetime } from 'web.time';
 
 QUnit.module('mail', {}, function () {
-QUnit.module('models', {}, function () {
-QUnit.module('message', {}, function () {
 QUnit.module('message_tests.js', {
     async beforeEach() {
         await beforeEach(this);
@@ -177,6 +175,4 @@ QUnit.test('message with body "test" should not be considered empty', async func
     assert.notOk(message.isEmpty);
 });
 
-});
-});
 });
