@@ -2,10 +2,16 @@
 """Utilities for generating, parsing and checking XML/XSD files on top of the lxml.etree module."""
 
 import base64
+import logging
+import requests
+import zipfile
 from io import BytesIO
 from lxml import etree
 
 from odoo.exceptions import UserError
+
+
+_logger = logging.getLogger(__name__)
 
 
 class odoo_resolver(etree.Resolver):
@@ -46,7 +52,7 @@ def _check_with_xsd(tree_or_str, stream, env=None):
             attachment = env['ir.attachment'].search([('name', '=', stream)])
             if not attachment:
                 raise FileNotFoundError()
-            stream = BytesIO(base64.b64decode(attachment.datas))
+            stream = BytesIO(attachment.raw)
     xsd_schema = etree.XMLSchema(etree.parse(stream, parser=parser))
     try:
         xsd_schema.assertValid(tree_or_str)
@@ -139,3 +145,143 @@ def cleanup_xml_node(xml_node_or_string, remove_blank_text=True, remove_blank_no
 
     leaf_iter(None, xml_node, indent_level)
     return xml_node
+
+
+def load_xsd_files_from_url(env, url, file_name, force_reload=False,
+                            request_max_timeout=10, xsd_name_prefix='', xsd_names_filter=None, modify_xsd_content=None):
+    """Load XSD file or ZIP archive and save it as ir.attachment.
+
+    If the XSD file/archive has already been saved in database, then just return the attachment.
+    In such a case, the attachment content can also be updated by force if desired.
+    If the attachment is a ZIP archive, then a force reload will also update all attachments from the archive.
+
+    When the attachment is a ZIP archive, every file inside will also be saved as attachments.
+    Filtering which file will be saved can be done by providing a list of `xsd_names`
+
+    The XSD files content can be modified by providing the `modify_xsd_content` function as argument.
+    Typically, this is used when XSD files depend on each other (with the schemaLocation attribute),
+    but it can be used for any purpose.
+
+    :param odoo.api.Environment env: environment of calling module
+    :param str url: URL of XSD file/ZIP archive
+    :param str file_name: the name given to the XSD attachment
+    :param bool force_reload: if True, reload the attachment from URL, even if it is already cached
+    :param int request_max_timeout: maximum time (in seconds) before the request times out
+    :param str xsd_name_prefix: if provided, will be added as a prefix to every XSD file name
+    :param list | str xsd_names_filter: if provided, will only save the XSD files with these names
+    :param func modify_xsd_content: function that takes the xsd content as argument and returns a modified version of it
+    :rtype: odoo.api.ir.attachment | bool
+    :return: the main attachment or False if an error occurred (see warning logs)
+    """
+    if not url.endswith(('.xsd', '.zip')):
+        _logger.warning("The given URL (%s) needs to lead to an XSD file or a ZIP archive", url)
+        return False
+
+    is_zip = url.endswith('.zip')
+
+    fetched_attachment = env['ir.attachment'].search([('name', '=', file_name)])
+    if fetched_attachment:
+        if not force_reload:
+            _logger.info("Retrieved attachment from database, with name: %s", fetched_attachment.name)
+            return fetched_attachment
+        _logger.info("Found the attachment with name %s in database, but forcing the reloading.", fetched_attachment.name)
+
+    try:
+        _logger.info("Fetching file/archive from given URL: %s", url)
+        response = requests.get(url, timeout=request_max_timeout)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as error:
+        _logger.warning('HTTP error: %s with the given URL: %s', error, url)
+        return False
+    except requests.exceptions.ConnectionError as error:
+        _logger.warning('Connection error: %s with the given URL: %s', error, url)
+        return False
+    except requests.exceptions.Timeout as error:
+        _logger.warning('Request timeout: %s with the given URL: %s', error, url)
+        return False
+
+    content = response.content
+    if modify_xsd_content and not is_zip:
+        content = modify_xsd_content(content)
+
+    if fetched_attachment:
+        _logger.info("Updating the content of ir.attachment with name: %s", file_name)
+        fetched_attachment.raw = content
+        return fetched_attachment
+
+    _logger.info("Saving XSD file as ir.attachment, with name: %s", file_name)
+    main_attachment = env['ir.attachment'].create({
+        'name': file_name,
+        'raw': content,
+        'public': True,
+    })
+
+    if not is_zip:
+        return main_attachment
+
+    _logger.info("Unzipping loaded archive, with name %s", file_name)
+    if xsd_names_filter and not isinstance(xsd_names_filter, list):
+        xsd_names_filter = [xsd_names_filter]
+
+    archive = zipfile.ZipFile(BytesIO(content))
+    for file_path in archive.namelist():
+        if not file_path.endswith('.xsd'):
+            continue
+
+        file_name = file_path.rsplit('/', 1)[-1]
+
+        if xsd_names_filter and file_name not in xsd_names_filter:
+            continue
+
+        if xsd_name_prefix:
+            file_name = f'{xsd_name_prefix}.{file_name}'
+
+        attachment = env['ir.attachment'].search([('name', '=', file_name)])
+        if attachment and not force_reload:
+            continue
+
+        if force_reload:
+            _logger.info("Updating the content of ir.attachment with name: %s", file_name)
+        else:
+            _logger.info("Saving XSD file as ir.attachment, with name: %s", file_name)
+        try:
+            content = archive.read(file_path)
+            if modify_xsd_content:
+                content = modify_xsd_content(content)
+            env['ir.attachment'].create({
+                'name': file_name,
+                'raw': content,
+                'public': True,
+            })
+        except KeyError:
+            _logger.warning("Failed to retrieve XSD file with name %s from ZIP archive", file_name)
+
+    return fetched_attachment
+
+
+def validate_xml_from_attachment(env, xml_content, xsd_name, reload_files_function=None):
+    """Try and validate the XML content with an XSD attachment.
+    If the XSD attachment cannot be found in database, (re)load it.
+
+    A skip_xsd key can be provided in the context in order to skip the XSD validation.
+    This should be used during tests to avoid loading XSD files (and making http requests every time).
+
+    :param odoo.api.Environment env: environment of calling module
+    :param xml_content: the XML content to validate
+    :param xsd_name: the XSD file name in database
+    :param reload_files_function: function that will be called to try and (re)load XSD files
+    :return: the result of the function :func:`odoo.tools.xml_utils._check_with_xsd`
+    """
+    if env.context.get('skip_xsd', False):
+        return
+    try:
+        _check_with_xsd(xml_content, xsd_name, env)
+    except FileNotFoundError:
+        if not reload_files_function:
+            _logger.warning("You need to provide a function used to (re)load XSD files")
+            return
+        reload_files_function()
+        try:
+            _check_with_xsd(xml_content, xsd_name, env)
+        except FileNotFoundError:
+            _logger.warning("The XSD file(s) could not be found, even after a reload")
