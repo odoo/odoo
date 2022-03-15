@@ -1975,7 +1975,11 @@ var SnippetsMenu = Widget.extend({
      */
     _callForEachChildSnippet: function ($snippet, callback) {
         var self = this;
-        var defs = _.map($snippet.add(globalSelector.all($snippet)), function (el) {
+        var defs = _.map($snippet.add(globalSelector.all($snippet).filter(function () {
+            const $contentEditableParents = $(this).parentsUntil($snippet, '[contenteditable]');
+            const editableMarkerEl = $contentEditableParents.length && $contentEditableParents[0];
+            return editableMarkerEl && editableMarkerEl.getAttribute('contenteditable') !== 'false';
+        })), function (el) {
             var $snippet = $(el);
             return self._createSnippetEditor($snippet).then(function (editor) {
                 if (editor) {
