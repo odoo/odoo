@@ -151,7 +151,7 @@ class Forum(models.Model):
             self.update(default_stats)
             return
 
-        result = dict.fromkeys(self.ids, default_stats)
+        result = {cid: dict(default_stats) for cid in self.ids}
         read_group_res = self.env['forum.post'].read_group(
             [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
             ['forum_id', 'views', 'child_count', 'favourite_count'],
