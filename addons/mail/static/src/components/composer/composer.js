@@ -44,7 +44,7 @@ export class Composer extends Component {
             return false;
         }
         return (
-            (this.props.hasThreadName && this.composerView.composer.thread) ||
+            (this.composerView.hasThreadName && this.composerView.composer.thread) ||
             (this.composerView.hasFollowers && !this.composerView.composer.isLog) ||
             this.composerView.threadView && this.composerView.threadView.replyingToMessageView
         );
@@ -178,7 +178,6 @@ Object.assign(Composer, {
         hasCurrentPartnerAvatar: true,
         hasDiscardButton: false,
         hasSendButton: true,
-        hasThreadName: false,
         isExpandable: false,
     },
     props: {
@@ -196,10 +195,6 @@ Object.assign(Composer, {
             optional: true,
         },
         hasSendButton: {
-            type: Boolean,
-            optional: true,
-        },
-        hasThreadName: {
             type: Boolean,
             optional: true,
         },
