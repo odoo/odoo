@@ -129,15 +129,6 @@ class Website(main.Website):
         return super().autocomplete(search_type, term, order, limit, max_nb_chars, options)
 
     @http.route()
-    def get_switchable_related_views(self, key):
-        views = super(Website, self).get_switchable_related_views(key)
-        if key == 'website_sale.product':
-            if not request.env.user.has_group('product.group_product_variant'):
-                view_product_variants = request.website.viewref('website_sale.product_variants')
-                views = [v for v in views if v['id'] != view_product_variants.id]
-        return views
-
-    @http.route()
     def toggle_switchable_view(self, view_key):
         super(Website, self).toggle_switchable_view(view_key)
         if view_key in ('website_sale.products_list_view', 'website_sale.add_grid_or_list_option'):
