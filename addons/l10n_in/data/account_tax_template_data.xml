@@ -28,11 +28,31 @@
                         <field name="tag_name">BASE CGST (RC)</field>
                         <field name="sequence">4</field>
                     </record>
+                    <record id="tax_report_line_non_itc_sgst_base" model="account.tax.report.line">
+                        <field name="name">SGST Non ITC</field>
+                        <field name="tag_name">BASE SGST NON ITC</field>
+                        <field name="sequence">5</field>
+                    </record>
+                    <record id="tax_report_line_non_itc_cgst_base" model="account.tax.report.line">
+                        <field name="name">CGST Non ITC</field>
+                        <field name="tag_name">BASE CGST NON ITC</field>
+                        <field name="sequence">6</field>
+                    </record>
+                    <record id="tax_report_line_other_non_itc_sgst_base" model="account.tax.report.line">
+                        <field name="name">SGST Other Non ITC</field>
+                        <field name="tag_name">BASE SGST OTHER NON ITC</field>
+                        <field name="sequence">7</field>
+                    </record>
+                    <record id="tax_report_line_other_non_itc_cgst_base" model="account.tax.report.line">
+                        <field name="name">CGST Other Non ITC</field>
+                        <field name="tag_name">BASE CGST OTHER NON ITC</field>
+                        <field name="sequence">8</field>
+                    </record>
                 </field>
             </record>
             <record id="tax_report_line_gst" model="account.tax.report.line">
                 <field name="name">GST-TAX</field>
-                <field name="sequence">1</field>
+                <field name="sequence">2</field>
                 <field name="children_line_ids">
                     <record id="tax_report_line_sgst" model="account.tax.report.line">
                         <field name="name">SGST</field>
@@ -54,11 +74,31 @@
                         <field name="tag_name">CGST (RC)</field>
                         <field name="sequence">4</field>
                     </record>
+                    <record id="tax_report_line_non_itc_sgst" model="account.tax.report.line">
+                        <field name="name">SGST Non ITC</field>
+                        <field name="tag_name">SGST NON ITC</field>
+                        <field name="sequence">5</field>
+                    </record>
+                    <record id="tax_report_line_non_itc_cgst" model="account.tax.report.line">
+                        <field name="name">CGST Non ITC</field>
+                        <field name="tag_name">CGST NON ITC</field>
+                        <field name="sequence">6</field>
+                    </record>
+                    <record id="tax_report_line_other_non_itc_sgst" model="account.tax.report.line">
+                        <field name="name">SGST Other Non ITC</field>
+                        <field name="tag_name">SGST OTHER NON ITC</field>
+                        <field name="sequence">7</field>
+                    </record>
+                    <record id="tax_report_line_other_non_itc_cgst" model="account.tax.report.line">
+                        <field name="name">CGST Other Non ITC</field>
+                        <field name="tag_name">CGST OTHER NON ITC</field>
+                        <field name="sequence">8</field>
+                    </record>
                 </field>
             </record>
             <record id="tax_report_line_igst_root_base" model="account.tax.report.line">
                 <field name="name">IGST-BASE</field>
-                <field name="sequence">2</field>
+                <field name="sequence">3</field>
                 <field name="children_line_ids">
                     <record id="tax_report_line_igst_base" model="account.tax.report.line">
                         <field name="name">IGST</field>
@@ -70,11 +110,21 @@
                         <field name="tag_name">BASE IGST (RC)</field>
                         <field name="sequence">4</field>
                     </record>
+                    <record id="tax_report_line_igst_non_itc_base" model="account.tax.report.line">
+                        <field name="name">IGST Non ITC</field>
+                        <field name="tag_name">BASE IGST NON ITC</field>
+                        <field name="sequence">5</field>
+                    </record>
+                    <record id="tax_report_line_igst_other_non_itc_base" model="account.tax.report.line">
+                        <field name="name">IGST Other Non ITC</field>
+                        <field name="tag_name">BASE OTHER IGST NON ITC</field>
+                        <field name="sequence">6</field>
+                    </record>
                 </field>
             </record>
             <record id="tax_report_line_igst_root" model="account.tax.report.line">
-                <field name="name">IGST</field>
-                <field name="sequence">2</field>
+                <field name="name">IGST-TAX</field>
+                <field name="sequence">4</field>
                 <field name="children_line_ids">
                     <record id="tax_report_line_igst" model="account.tax.report.line">
                         <field name="name">IGST</field>
@@ -86,11 +136,21 @@
                         <field name="tag_name">IGST (RC)</field>
                         <field name="sequence">4</field>
                     </record>
+                    <record id="tax_report_line_non_itc_igst" model="account.tax.report.line">
+                        <field name="name">IGST Non ITC</field>
+                        <field name="tag_name">IGST NON ITC</field>
+                        <field name="sequence">5</field>
+                    </record>
+                    <record id="tax_report_line_other_non_itc_igst" model="account.tax.report.line">
+                        <field name="name">IGST Other Non ITC</field>
+                        <field name="tag_name">IGST OTHER NON ITC</field>
+                        <field name="sequence">6</field>
+                    </record>
                 </field>
             </record>
             <record id="tax_report_line_cess_root_base" model="account.tax.report.line">
                 <field name="name">CESS-BASE</field>
-                <field name="sequence">2</field>
+                <field name="sequence">5</field>
                 <field name="children_line_ids">
                     <record id="tax_report_line_cess_base" model="account.tax.report.line">
                         <field name="name">CESS</field>
@@ -102,11 +162,27 @@
                         <field name="tag_name">BASE CESS (RC)</field>
                         <field name="sequence">4</field>
                     </record>
+                    <record id="tax_report_line_non_itc_cess_base" model="account.tax.report.line">
+                        <field name="name">CESS Non ITC</field>
+                        <field name="tag_name">BASE CESS NON ITC</field>
+                        <field name="sequence">5</field>
+                    </record>
+                    <record id="tax_report_line_other_non_itc_cess_base" model="account.tax.report.line">
+                        <field name="name">CESS Other Non ITC</field>
+                        <field name="tag_name">BASE CESS OTHER NON ITC</field>
+                        <field name="sequence">6</field>
+                    </record>
+                    <!-- The government can impose CESS for purposes such as disaster relief in specific states. So not tax link with this, If government add CESS in specific states then use this in repartition lines-->
+                    <record id="tax_report_line_state_cess_base" model="account.tax.report.line">
+                        <field name="name">State CESS</field>
+                        <field name="tag_name">BASE State CESS</field>
+                        <field name="sequence">9</field>
+                    </record>
                 </field>
             </record>
             <record id="tax_report_line_cess_root" model="account.tax.report.line">
                 <field name="name">CESS-TAX</field>
-                <field name="sequence">2</field>
+                <field name="sequence">6</field>
                 <field name="children_line_ids">
                     <record id="tax_report_line_cess" model="account.tax.report.line">
                         <field name="name">CESS</field>
@@ -118,43 +194,27 @@
                         <field name="tag_name">CESS (RC)</field>
                         <field name="sequence">4</field>
                     </record>
-                </field>
-            </record>
-            <record id="tax_report_line_gst_others_base" model="account.tax.report.line">
-                <field name="name">Others-BASE</field>
-                <field name="sequence">3</field>
-                <field name="children_line_ids">
-                    <record id="tax_report_line_exempt_base" model="account.tax.report.line">
-                        <field name="name">Exempt</field>
-                        <field name="tag_name">BASE Exempt</field>
+                    <record id="tax_report_line_non_itc_cess" model="account.tax.report.line">
+                        <field name="name">CESS Non ITC</field>
+                        <field name="tag_name">CESS NON ITC</field>
                         <field name="sequence">5</field>
                     </record>
-                    <record id="tax_report_line_nil_rated_base" model="account.tax.report.line">
-                        <field name="name">Nil Rated</field>
-                        <field name="tag_name">BASE Nil Rated</field>
+                    <record id="tax_report_line_other_non_itc_cess" model="account.tax.report.line">
+                        <field name="name">CESS Other Non ITC</field>
+                        <field name="tag_name">CESS OTHER NON ITC</field>
                         <field name="sequence">6</field>
                     </record>
-                    <record id="tax_report_line_zero_rated_base" model="account.tax.report.line">
-                        <field name="name">Zero Rated</field>
-                        <field name="tag_name">BASE Zero Rated</field>
-                        <field name="sequence">7</field>
-                    </record>
-                    <record id="tax_report_line_non_gst_supplies_base" model="account.tax.report.line">
-                        <field name="name">Non GST Supplies</field>
-                        <field name="tag_name">BASE Non GST Supplies</field>
-                        <field name="sequence">8</field>
-                    </record>
                     <!-- The government can impose CESS for purposes such as disaster relief in specific states. So not tax link with this, If government add CESS in specific states then use this in repartition lines-->
-                    <record id="tax_report_line_state_cess_base" model="account.tax.report.line">
+                    <record id="tax_report_line_state_cess" model="account.tax.report.line">
                         <field name="name">State CESS</field>
-                        <field name="tag_name">BASE State CESS</field>
+                        <field name="tag_name">State CESS</field>
                         <field name="sequence">9</field>
                     </record>
                 </field>
             </record>
             <record id="tax_report_line_gst_others" model="account.tax.report.line">
-                <field name="name">Others-TAX</field>
-                <field name="sequence">3</field>
+                <field name="name">Others</field>
+                <field name="sequence">8</field>
                 <field name="children_line_ids">
                     <record id="tax_report_line_exempt" model="account.tax.report.line">
                         <field name="name">Exempt</field>
@@ -175,12 +235,6 @@
                         <field name="name">Non GST Supplies</field>
                         <field name="tag_name">Non GST Supplies</field>
                         <field name="sequence">8</field>
-                    </record>
-                    <!-- The government can impose CESS for purposes such as disaster relief in specific states. So not tax link with this, If government add CESS in specific states then use this in repartition lines-->
-                    <record id="tax_report_line_state_cess" model="account.tax.report.line">
-                        <field name="name">State CESS</field>
-                        <field name="tag_name">State CESS</field>
-                        <field name="sequence">9</field>
                     </record>
                 </field>
             </record>
@@ -616,7 +670,7 @@ if tax &gt; result:result=tax</field>
     </record>
     <record id="nil_rated_purchase" model="account.tax.template">
         <field name="name">Nil Rated</field>
-        <field name="description">Nil Rat</field>
+        <field name="description">Nil Rated</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
@@ -701,6 +755,70 @@ if tax &gt; result:result=tax</field>
         <field name="tax_group_id" ref="igst_group"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_igst_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10053'),                 'minus_report_line_ids': [ref('tax_report_line_igst')],             }),         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_igst_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11234'),                 'plus_report_line_ids': [ref('tax_report_line_igst')],             }),         ]"/>
+    </record>
+    <record id="sgst_purchase_non_itc_2_5" model="account.tax.template">
+        <field name="name">SGST Purchase Non ITC 2.5%</field>
+        <field name="description">SGST Non ITC 2.5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_non_itc_sgst_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10051'),                 'minus_report_line_ids': [ref('tax_report_line_non_itc_sgst')],             })         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_non_itc_sgst_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11232'),                 'plus_report_line_ids': [ref('tax_report_line_non_itc_sgst')],             })         ]"/>
+    </record>
+    <record id="cgst_purchase_non_itc_2_5" model="account.tax.template">
+        <field name="name">CGST Purchase Non ITC 2.5%</field>
+        <field name="description">CGST Non ITC 2.5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_non_itc_cgst_base')],             }),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10052'),                 'minus_report_line_ids': [ref('tax_report_line_non_itc_cgst')],             })         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_non_itc_cgst_base')],             }),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11233'),                 'plus_report_line_ids': [ref('tax_report_line_non_itc_cgst')],             })         ]"/>
+    </record>
+    <record id="gst_non_itc_purchase_5" model="account.tax.template">
+        <field name="name">GST NON ITC 5%</field>
+        <field name="description">GST NON ITC 5%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">5.0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="gst_group"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_purchase_non_itc_2_5'), ref('cgst_purchase_non_itc_2_5'),])]"/>
+    </record>
+    <record id="sgst_purchase_other_non_itc_2_5" model="account.tax.template">
+        <field name="name">SGST Purchase Other Non ITC 2.5%</field>
+        <field name="description">SGST Other Non ITC 2.5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_other_non_itc_sgst_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10051'),                 'minus_report_line_ids': [ref('tax_report_line_other_non_itc_sgst')],             })         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_other_non_itc_sgst_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11232'),                 'plus_report_line_ids': [ref('tax_report_line_other_non_itc_sgst')],             })         ]"/>
+    </record>
+    <record id="cgst_purchase_other_non_itc_2_5" model="account.tax.template">
+        <field name="name">CGST Purchase Other Non ITC 2.5%</field>
+        <field name="description">CGST Other Non ITC 2.5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_other_non_itc_cgst_base')],             }),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10052'),                 'minus_report_line_ids': [ref('tax_report_line_other_non_itc_cgst')],             })         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_other_non_itc_cgst_base')],             }),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11233'),                 'plus_report_line_ids': [ref('tax_report_line_other_non_itc_cgst')],             })         ]"/>
+    </record>
+    <record id="gst_other_non_itc_purchase_5" model="account.tax.template">
+        <field name="name">GST OTHER NON ITC 5%</field>
+        <field name="description">GST OTHER NON ITC 5%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">5.0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="gst_group"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_purchase_other_non_itc_2_5'), ref('cgst_purchase_other_non_itc_2_5'),])]"/>
     </record>
     <record id="sgst_purchase_0_5" model="account.tax.template">
         <field name="name">SGST Purchase 0.5%</field>
