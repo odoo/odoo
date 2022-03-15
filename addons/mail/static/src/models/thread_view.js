@@ -89,6 +89,16 @@ registerModel({
          * @private
          * @returns {boolean|FieldCommand}
          */
+        _computeHasComposerThreadName() {
+            if (this.threadViewer.discuss) {
+                return this.threadViewer.discuss.thread === this.messaging.inbox;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
         _computeHasComposerThreadTyping() {
             if (this.threadViewer.threadView_hasComposerThreadTyping !== undefined) {
                 return this.threadViewer.threadView_hasComposerThreadTyping;
@@ -406,6 +416,10 @@ registerModel({
          */
         hasAutoScrollOnMessageReceived: attr({
             default: true,
+        }),
+        hasComposerThreadName: attr({
+            compute: '_computeHasComposerThreadName',
+            default: false,
         }),
         /**
          * If set, determines whether the composer should display status of
