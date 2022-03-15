@@ -60,6 +60,13 @@ registerModel({
             return clear();
         },
         /**
+         * @private
+         * @returns {string}
+         */
+        _computeMobileNewMessageInputPlaceholder() {
+            return this.env._t("Search user...");
+        },
+        /**
          * @returns {FieldCommand}
          */
         _computeNotificationListView() {
@@ -106,6 +113,9 @@ registerModel({
             compute: '_computeMobileMessagingNavbarView',
             inverse: 'messagingMenu',
             isCausal: true,
+        }),
+        mobileNewMessageInputPlaceholder: attr({
+            compute: '_computeMobileNewMessageInputPlaceholder',
         }),
         /**
          * States all the pinned channels that have unread messages.

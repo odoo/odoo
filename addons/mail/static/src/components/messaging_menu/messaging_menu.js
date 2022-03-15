@@ -45,13 +45,6 @@ export class MessagingMenu extends Component {
         return this.messaging && this.messaging.models['MessagingMenu'].get(this.props.localId);
     }
 
-    /**
-     * @returns {string}
-     */
-    get mobileNewMessageInputPlaceholder() {
-        return this.env._t("Search user...");
-    }
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
