@@ -3,8 +3,6 @@
 import { beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
-QUnit.module('models', {}, function () {
-QUnit.module('attachment', {}, function () {
 QUnit.module('attachment_tests.js', {
     async beforeEach() {
         await beforeEach(this);
@@ -133,6 +131,4 @@ QUnit.test('isViewable', async function (assert) {
     assert.ok(attachment.isViewable);
 });
 
-});
-});
 });

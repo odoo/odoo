@@ -10,8 +10,6 @@ import FormView from 'web.FormView';
 import { mock } from 'web.test_utils';
 
 QUnit.module('website_livechat', {}, function () {
-QUnit.module('models', {}, function () {
-QUnit.module('messaging_notification_handler', {}, function () {
 QUnit.module('messaging_notification_handler_tests.js', {
     async beforeEach() {
         await beforeEach(this);
@@ -82,6 +80,4 @@ QUnit.test('should open chat window on send chat request to website visitor', as
     );
 });
 
-});
-});
 });
