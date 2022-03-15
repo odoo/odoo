@@ -3,8 +3,6 @@
 import { beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail_bot', {}, function () {
-QUnit.module('models', {}, function () {
-QUnit.module('messaging_initializer', {}, function () {
 QUnit.module('messaging_initializer_tests.js', {
     beforeEach() {
         beforeEach(this);
@@ -45,6 +43,4 @@ QUnit.test('OdooBot initialized at init', async function (assert) {
     );
 });
 
-});
-});
 });

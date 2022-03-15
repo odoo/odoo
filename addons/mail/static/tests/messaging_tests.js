@@ -3,8 +3,6 @@
 import { beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
-QUnit.module('models', {}, function () {
-QUnit.module('messaging', {}, function () {
 QUnit.module('messaging_tests.js', {
     async beforeEach() {
         await beforeEach(this);
@@ -127,6 +125,4 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
 
 });
 
-});
-});
 });
