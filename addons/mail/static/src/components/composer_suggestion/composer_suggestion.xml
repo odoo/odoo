@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ComposerSuggestion" owl="1">
-        <a class="o_ComposerSuggestion dropdown-item" t-att-class="{ 'active': props.isActive }" href="#" t-att-title="record and title()" role="menuitem" t-on-click="_onClick">
+        <a class="o_ComposerSuggestion dropdown-item" t-att-class="{ 'active bg-300': props.isActive }" href="#" t-att-title="record and title()" role="menuitem" t-on-click="_onClick">
             <t t-if="record">
                 <t t-if="isCannedResponse">
                     <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.source"/></span>
