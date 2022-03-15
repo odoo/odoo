@@ -1410,7 +1410,7 @@ QUnit.module("Views", (hooks) => {
         serverData.views["partner,some_view_ref,form"] =
             "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>";
 
-        let prom = makeDeferred();
+        const prom = makeDeferred();
 
         await makeView({
             type: "kanban",
@@ -1481,7 +1481,7 @@ QUnit.module("Views", (hooks) => {
         serverData.views["partner,some_view_ref,form"] =
             "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>";
 
-        let prom = makeDeferred();
+        const prom = makeDeferred();
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -1553,7 +1553,7 @@ QUnit.module("Views", (hooks) => {
                 "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>";
 
             let shouldDelayOnchange = false;
-            let prom = makeDeferred();
+            const prom = makeDeferred();
             await makeView({
                 type: "kanban",
                 resModel: "partner",
@@ -1661,7 +1661,7 @@ QUnit.module("Views", (hooks) => {
                 "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>";
 
             let shouldDelayOnchange = false;
-            let prom = makeDeferred();
+            const prom = makeDeferred();
             await makeView({
                 type: "kanban",
                 resModel: "partner",
@@ -2156,7 +2156,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("quick create is disabled until record is created and read", async (assert) => {
         assert.expect(6);
 
-        let prom = makeDeferred();
+        const prom = makeDeferred();
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -2976,7 +2976,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("quick create record while adding a new column", async (assert) => {
         assert.expect(10);
 
-        let prom = makeDeferred();
+        const prom = makeDeferred();
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -3037,7 +3037,7 @@ QUnit.module("Views", (hooks) => {
 
         serverData.views["partner,some_view_ref,form"] = '<form><field name="int_field"/></form>';
 
-        let prom = makeDeferred();
+        const prom = makeDeferred();
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -6161,7 +6161,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             type: "kanban",
             async mockRPC(route, { method }, performRpc) {
-                let result = await performRpc(...arguments);
+                const result = await performRpc(...arguments);
                 if (method === "web_read_group") {
                     // override read_group to return a single, empty group
                     return {
@@ -8541,7 +8541,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("set cover image", async (assert) => {
         assert.expect(7);
 
-        await makeView({
+        serviceRegistry.add("dialog", dialogService, { force: true });
+        const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -8569,37 +8570,38 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route, args) {
                 if (args.model === "partner" && args.method === "write") {
                     assert.step(String(args.args[0][0]));
-                    return this._super(route, args);
                 }
-                return this._super(route, args);
-            },
-            intercepts: {
-                switch_view: function (event) {
-                    assert.deepEqual(
-                        _.pick(event.data, "mode", "model", "res_id", "view_type"),
-                        {
-                            mode: "readonly",
-                            resModel: "partner",
-                            res_id: 1,
-                            view_type: "form",
-                        },
-                        "should trigger an event to open the clicked record in a form view"
-                    );
-                },
             },
         });
 
-        testUtils.kanban.toggleRecordDropdown(getCard(0));
-        await click(getCard(0), "[data-type=set_cover]");
+        patchWithCleanup(kanban.env.services.action, {
+            switchView(viewType, props) {
+                assert.deepEqual(
+                    _.pick(props, "mode", "model", "res_id", "view_type"),
+                    {
+                        mode: "readonly",
+                        resModel: "partner",
+                        res_id: 1,
+                        view_type: "form",
+                    },
+                    "should trigger an event to open the clicked record in a form view"
+                );
+            },
+        });
+        toggleRecordDropdown(0);
+        await nextTick();
+        await click(getCard(0), ".oe_kanban_action");
+        await nextTick();
         assert.containsNone(getCard(0), "img", "Initially there is no image.");
 
-        await click($(".modal").find("img[data-id='1']"));
-        await testUtils.modal.clickButton("Select");
+        await click(document.body, ".modal img[data-id='1']");
+        await click(document.body.querySelector(".modal .btn-primary"));
+        await nextTick();
         assert.containsOnce(target, 'img[data-src*="/web/image/1"]');
 
-        testUtils.kanban.toggleRecordDropdown(getCard(1));
+        toggleRecordDropdown(1);
         await click(getCard(1), "[data-type=set_cover]");
-        $(".modal").find("img[data-id='2']").dblclick();
+        await triggerEvent(document.body, ".modal img[data-id='2']", "dblclick");
         await nextTick();
         assert.containsOnce(target, 'img[data-src*="/web/image/2"]');
         await click(target, ".o_kanban_record:first-child .o_attachment_image");

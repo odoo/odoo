@@ -173,7 +173,7 @@ export class KanbanArchParser extends XMLParser {
         }
 
         // Generates dropdown element
-        const dropdown = makeEl(`<t t-component="'Dropdown'" />`);
+        const dropdown = makeEl(`<t t-component="'Dropdown'" position="'bottom-end'" />`);
         const togglerClass = [];
         const menuClass = [];
         const transfers = [];

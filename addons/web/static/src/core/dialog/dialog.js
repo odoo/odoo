@@ -41,3 +41,19 @@ Dialog.defaultProps = {
     technical: true,
     title: "Odoo",
 };
+
+export class SimpleDialog extends Component {
+    setup() {
+        useActiveElement("modal");
+        useHotkey("escape", () => {
+            this.props.close();
+        });
+        useChildSubEnv({ inDialog: true });
+    }
+}
+SimpleDialog.template = "web.SimpleDialog";
+SimpleDialog.props = {
+    close: Function,
+    isActive: { optional: true },
+    "*": true,
+};

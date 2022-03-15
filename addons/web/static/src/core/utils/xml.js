@@ -20,7 +20,7 @@ export class XMLParser {
             if (node) {
                 let didVisitChildren = false;
                 const visitChildren = () => {
-                    for (let child of node.children) {
+                    for (const child of node.children) {
                         visit(child);
                     }
                     didVisitChildren = true;
@@ -71,8 +71,9 @@ export const combineAttributes = (node, attr, parts, glue = " ") => {
     node.setAttribute(attr, allValues.join(glue));
 };
 
+const xmlDoc = new DOMParser().parseFromString("<xml/>", "text/xml");
 export const makeEl = (string) => {
-    const parent = document.createElement("div");
+    const parent = xmlDoc.createElement("div");
     parent.innerHTML = string;
     return parent.children[0];
 };

@@ -21,8 +21,9 @@ import { isAllowedDateField } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
+import { SimpleDialog } from "@web/core/dialog/dialog";
 
-const { Component, markup, useState, useRef } = owl;
+const { Component, markup, useState, useRef, onWillStart, onMounted } = owl;
 const { COLORS } = ColorList;
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
@@ -33,6 +34,56 @@ const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
 const isNull = (value) => [null, undefined].includes(value);
 
 const formatterRegistry = registry.category("formatters");
+
+class KanbanCoverImageDialog extends Component {
+    setup() {
+        this.id = _.uniqueId("o_cover_image_upload");
+        this.orm = useService("orm");
+        const { record, fieldName } = this.props;
+        this.coverId = record && record.data[fieldName];
+        this.state = useState({
+            selectedAttachmentId: this.coverId,
+        });
+        this.fileInput = useRef("fileInput");
+        onWillStart(async () => {
+            this.attachments = await this.orm.searchRead(
+                "ir.attachment",
+                [
+                    ["res_model", "=", record.resModel],
+                    ["res_id", "=", record.resId],
+                    ["mimetype", "ilike", "image"],
+                ],
+                ["id", "name"]
+            );
+        });
+        onMounted(() => {
+            if (!this.props.autoOpen && this.attachments.length === 0) {
+                this.fileInput.el.click();
+            }
+        });
+    }
+
+    selectAttachment(attachment) {
+        if (this.state.selectedAttachmentId !== attachment.id) {
+            this.state.selectedAttachmentId = attachment.id;
+        } else {
+            this.state.selectedAttachmentId = null;
+        }
+    }
+
+    removeCover() {
+        this.state.selectedAttachmentId = null;
+        this.setCover();
+    }
+
+    async setCover() {
+        await this.props.record.update(this.props.fieldName, this.state.selectedAttachmentId);
+        await this.props.record.save();
+        this.props.close();
+    }
+}
+KanbanCoverImageDialog.template = "web.KanbanCoverImageDialog";
+KanbanCoverImageDialog.components = { SimpleDialog };
 
 export class KanbanRenderer extends Component {
     setup() {
@@ -435,8 +486,8 @@ export class KanbanRenderer extends Component {
                     field.relation === "ir.attachment" &&
                     widget === "attachment_image"
                 ) {
-                    // TODO
-                    console.warn("TODO: Update record", record.id, { fieldName, autoOpen });
+                    this.dialog.add(KanbanCoverImageDialog, { record, fieldName, autoOpen });
+                    // console.warn("TODO: Update record", record.id, { fieldName, autoOpen });
                 } else {
                     const warning = sprintf(
                         this.env._t(
@@ -574,4 +625,5 @@ KanbanRenderer.components = {
     KanbanAnimatedNumber,
     Dropdown,
     DropdownItem,
+    KanbanCoverImageDialog,
 };
