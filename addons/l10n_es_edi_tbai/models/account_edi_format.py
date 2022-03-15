@@ -199,9 +199,6 @@ class AccountEdiFormat(models.Model):
         xml_str = self.env.ref(template_name)._render(values)
         xml_doc = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_str)
         xml_doc = self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
-        print("===TBAI")
-        print(etree.tostring(xml_doc, encoding="UTF-8").decode())
-        print("===/TBAI")
 
         # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
         invoice._update_l10n_es_tbai_submitted_xml(xml_doc=xml_doc, cancel=cancel)
@@ -410,11 +407,12 @@ class AccountEdiFormat(models.Model):
         if company.l10n_es_tbai_tax_agency == "bizkaia":
             sender = invoices.company_id if invoices.is_sale_document() else invoices.commercial_partner_id
             values = {
+                'is_submission': not cancel,
                 'sender': sender,
                 'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
                 'tbai_b64_list': [b64encode(etree.tostring(invoice_xml, encoding="UTF-8")).decode()],
             }
-            lroe_str = self.env.ref('l10n_es_edi_tbai.template_LROE_240_1_1')._render(values)
+            lroe_str = self.env.ref('l10n_es_edi_tbai.template_LROE_240_main')._render(values)
             invoice_xml = L10nEsTbaiXmlUtils._cleanup_xml_content(lroe_str)
             xml_str = etree.tostring(invoice_xml, encoding="UTF-8")
 
