@@ -3246,7 +3246,7 @@
     <record id="project_2_task_6_account_analytic_line_19" model="account.analytic.line">
         <field name="name">Quality analysis</field>
         <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="date" eval="(DateTime.now() + relativedelta(days=1)).strftime('%Y-%m-%d')"/>
+        <field name="date" eval="(DateTime.now() - relativedelta(days=1)).strftime('%Y-%m-%d')"/>
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_2"/>
         <field name="task_id" ref="project.project_2_task_6"/>
