@@ -7,7 +7,6 @@ import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { _lt } from 'web.core';
-import { format } from 'web.field_utils';
 import Popover from "web.Popover";
 import { getLangDatetimeFormat } from 'web.time';
 
@@ -238,88 +237,6 @@ export class Message extends Component {
      */
     get shortTime() {
         return this.messageView.message.date.format('hh:mm');
-    }
-
-    /**
-     * @returns {Object}
-     */
-    get trackingValues() {
-        return this.messageView.message.tracking_value_ids.map(trackingValue => {
-            const value = Object.assign({}, trackingValue);
-            value.changed_field = _.str.sprintf(this.env._t("%s:"), value.changed_field);
-            /**
-             * Maps tracked field type to a JS formatter. Tracking values are
-             * not always stored in the same field type as their origin type.
-             * Field types that are not listed here are not supported by
-             * tracking in Python. Also see `create_tracking_values` in Python.
-             */
-            switch (value.field_type) {
-                case 'boolean':
-                    value.old_value = value.old_value ? _lt('Yes') : _lt('No');
-                    value.new_value = value.new_value ? _lt('Yes') : _lt('No');
-                    break;
-                /**
-                 * many2one formatter exists but is expecting id/name_get or data
-                 * object but only the target record name is known in this context.
-                 *
-                 * Selection formatter exists but requires knowing all
-                 * possibilities and they are not given in this context.
-                 */
-                case 'char':
-                case 'many2one':
-                case 'selection':
-                    value.old_value = format.char(value.old_value);
-                    value.new_value = format.char(value.new_value);
-                    break;
-                case 'date':
-                    if (value.old_value) {
-                        value.old_value = moment.utc(value.old_value);
-                    }
-                    if (value.new_value) {
-                        value.new_value = moment.utc(value.new_value);
-                    }
-                    value.old_value = format.date(value.old_value);
-                    value.new_value = format.date(value.new_value);
-                    break;
-                case 'datetime':
-                    if (value.old_value) {
-                        value.old_value = moment.utc(value.old_value);
-                    }
-                    if (value.new_value) {
-                        value.new_value = moment.utc(value.new_value);
-                    }
-                    value.old_value = format.datetime(value.old_value);
-                    value.new_value = format.datetime(value.new_value);
-                    break;
-                case 'float':
-                    value.old_value = format.float(value.old_value);
-                    value.new_value = format.float(value.new_value);
-                    break;
-                case 'integer':
-                    value.old_value = format.integer(value.old_value);
-                    value.new_value = format.integer(value.new_value);
-                    break;
-                case 'monetary':
-                    value.old_value = format.monetary(value.old_value, undefined, {
-                        currency: value.currency_id
-                            ? this.env.session.currencies[value.currency_id]
-                            : undefined,
-                        forceString: true,
-                    });
-                    value.new_value = format.monetary(value.new_value, undefined, {
-                        currency: value.currency_id
-                            ? this.env.session.currencies[value.currency_id]
-                            : undefined,
-                        forceString: true,
-                    });
-                    break;
-                case 'text':
-                    value.old_value = format.text(value.old_value);
-                    value.new_value = format.text(value.new_value);
-                    break;
-            }
-            return value;
-        });
     }
 
     //--------------------------------------------------------------------------

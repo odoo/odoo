@@ -141,9 +141,9 @@
                             <t t-if="messageView.message.subtype_description and !messageView.message.isBodyEqualSubtypeDescription">
                                 <p t-esc="messageView.message.subtype_description"/>
                             </t>
-                            <t t-if="trackingValues.length > 0">
+                            <t t-if="messageView.message.trackingValues.length > 0">
                                 <ul class="o_Message_trackingValues">
-                                    <t t-foreach="trackingValues" t-as="value" t-key="value.id">
+                                    <t t-foreach="messageView.message.trackingValues" t-as="value" t-key="value.id">
                                         <li>
                                             <div class="o_Message_trackingValue">
                                                 <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
