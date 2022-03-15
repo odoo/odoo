@@ -236,6 +236,13 @@ registerModel({
          * @private
          * @returns {string}
          */
+        _computeAddChannelInputPlaceholder() {
+            return this.env._t("Create or search channel...");
+        },
+        /**
+         * @private
+         * @returns {string}
+         */
         _computeAddingChannelValue() {
             if (!this.discussView) {
                 return "";
@@ -335,6 +342,9 @@ registerModel({
          */
         activeMobileNavbarTabId: attr({
             default: 'mailbox',
+        }),
+        addChannelInputPlaceholder: attr({
+            compute: '_computeAddChannelInputPlaceholder',
         }),
         /**
          * Value that is used to create a channel from the sidebar.
