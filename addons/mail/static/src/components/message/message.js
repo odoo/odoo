@@ -230,15 +230,6 @@ export class Message extends Component {
         }
     }
 
-    /**
-     * Get the shorttime format of the message date.
-     *
-     * @returns {string}
-     */
-    get shortTime() {
-        return this.messageView.message.date.format('hh:mm');
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

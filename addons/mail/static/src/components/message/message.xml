@@ -46,7 +46,7 @@
                         <t t-else="">
                             <t t-if="isActive and messageView.message.date">
                                 <div class="o_Message_date o_Message_sidebarItem mt-1" t-att-class="{ 'o-message-selected': isSelected }">
-                                    <t t-esc="shortTime"/>
+                                    <t t-esc="messageView.message.shortTime"/>
                                 </div>
                             </t>
                             <t t-if="!isActive and messageView.message.isCurrentUserOrGuestAuthor and messageView.threadView and messageView.threadView.thread and messageView.threadView.thread.hasSeenIndicators">
