@@ -24,7 +24,7 @@ L10N_ES_EDI_TBAI_URLS = {
     },
     'invoice_prod': {
         'araba': 'https://ticketbai.araba.eus/TicketBAI/v1/facturas/',
-        'bizkaia': '',  # TODO find this
+        'bizkaia': 'https://sarrerak.bizkaia.eus/N3B4000M/aurkezpena',
         'gipuzkoa': 'https://tbai-z.egoitza.gipuzkoa.eus/sarrerak/alta'
     },
     'qr_test': {
@@ -44,7 +44,7 @@ L10N_ES_EDI_TBAI_URLS = {
     },
     'cancel_prod': {
         'araba': 'https://ticketbai.araba.eus/TicketBAI/v1/anulaciones/',
-        'bizkaia': '',  # TODO find this
+        'bizkaia': 'https://sarrerak.bizkaia.eus/N3B4000M/aurkezpena',
         'gipuzkoa': 'https://tbai-z.egoitza.gipuzkoa.eus/sarrerak/baja'
     },
     'xsd': {

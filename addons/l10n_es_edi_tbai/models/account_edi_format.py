@@ -199,6 +199,9 @@ class AccountEdiFormat(models.Model):
         xml_str = self.env.ref(template_name)._render(values)
         xml_doc = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_str)
         xml_doc = self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
+        print("===TBAI")
+        print(etree.tostring(xml_doc, encoding="UTF-8").decode())
+        print("===/TBAI")
 
         # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
         invoice._update_l10n_es_tbai_submitted_xml(xml_doc=xml_doc, cancel=cancel)
@@ -348,27 +351,34 @@ class AccountEdiFormat(models.Model):
         cert_private, cert_public = company.l10n_es_tbai_certificate_id._get_key_pair()
         public_key = cert_public.public_key()
 
+        p12 = company.l10n_es_tbai_certificate_id._get_p12()
+        cert_p12 = p12.get_certificate()
+        issuer = cert_p12.get_issuer()
+
         # Identifiers
-        doc_id = "id-" + str(uuid4())
-        signature_id = "sig-" + doc_id
-        kinfo_id = "ki-" + doc_id
-        sp_id = "sp-" + doc_id
+        document_id = "Document-" + str(uuid4())
+        signature_id = "Signature-" + document_id
+        keyinfo_id = "KeyInfo-" + document_id
+        sigproperties_id = "SignatureProperties-" + document_id
 
         # Render digital signature scaffold from QWeb
         values = {
             'dsig': {
-                'document_id': doc_id,
+                'document_id': document_id,
                 'x509_certificate': L10nEsTbaiXmlUtils._base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
                 'public_modulus': L10nEsTbaiXmlUtils._base64_print(b64encode(L10nEsTbaiXmlUtils._int_to_bytes(public_key.public_numbers().n))),
                 'public_exponent': L10nEsTbaiXmlUtils._base64_print(b64encode(L10nEsTbaiXmlUtils._int_to_bytes(public_key.public_numbers().e))),
                 'iso_now': datetime.now().isoformat(),
-                'keyinfo_id': kinfo_id,
+                'keyinfo_id': keyinfo_id,
                 'signature_id': signature_id,
-                'sigpolicy_id': sp_id,
+                'sigproperties_id': sigproperties_id,
+                'reference_uri': "Reference-" + document_id,
                 'sigpolicy_description': "Política de Firma TicketBAI 1.0",  # í = &#237;
                 'sigpolicy_url': company.get_l10n_es_tbai_url_sigpolicy(),
                 'sigpolicy_digest': company.get_l10n_es_tbai_url_sigpolicy(get_hash=True),
                 'sigcertif_digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
+                'x509_issuer_description': "CN={}, OU={}, O={}, C={}".format(issuer.CN, issuer.OU, issuer.O, issuer.C),
+                'x509_serial_number': cert_p12.get_serial_number(),
             }
         }
         xml_sig_str = self.env.ref('l10n_es_edi_tbai.template_digital_signature')._render(values)
@@ -450,19 +460,25 @@ class AccountEdiFormat(models.Model):
             }}
 
         response_data = response.content.decode(response.encoding)
+        # TODO: error handling for empty/non-XML responses from server ?
         response_data = etree.fromstring(bytes(response_data, 'utf-8'))
 
         # ===== WIP =====
         if company.l10n_es_tbai_tax_agency == "bizkaia":
-            # GLOBAL (batch)
+            # GLOBAL STATUS (batch)
             # message = response.headers['eus-bizkaia-n3-mensaje-respuesta']
             # response_code = response.headers['eus-bizkaia-n3-tipo-respuesta']
-            # response_success = (response_code != "Incorrecto")
+            # response_success = (response_code == "Correcto")
 
-            # INVOICE (only one in batch)
-            # equivalent of get_response_values for Bizkaia (todo select ES/EU based on get_lang)
-            message = (response_data.find(r'.//CodigoErrorRegistro').text) + ": " + (response_data.find(r'.//DescripcionErrorRegistroES').text or '')
-            response_success = response_data.find(r'.//EstadoRegistro').text != "Incorrecto"
+            # INVOICE STATUS (only one in batch)
+            # TODO move to/override get_response_values for Bizkaia (also select ES/EU based on get_lang)
+            response_success = response_data.find(r'.//EstadoRegistro').text == "Correcto"
+            message = ''
+            if not response_success:
+                response_code = response_data.find(r'.//CodigoErrorRegistro').text
+                if response_code == "B4_2000003":  # already received
+                    response_success = True
+                message = response_code + ": " + (response_data.find(r'.//DescripcionErrorRegistroES').text or '')
 
         else:
             # Error management

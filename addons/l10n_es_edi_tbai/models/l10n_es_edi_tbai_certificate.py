@@ -3,6 +3,7 @@
 
 from base64 import b64decode
 from datetime import datetime
+from OpenSSL import crypto
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.serialization import pkcs12
@@ -36,3 +37,7 @@ class Certificate(models.Model):
         )
 
         return private_key, certificate
+
+    def _get_p12(self):
+        # Cryptography's pkcs12 does not contain issuer data ? TODO alternative without OpenSSL
+        return crypto.load_pkcs12(b64decode(self.with_context(bin_size=False).content), self.password.encode())

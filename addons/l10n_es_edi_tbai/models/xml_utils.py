@@ -66,7 +66,7 @@ class L10nEsTbaiXmlUtils():
         return sig_elem
 
     @staticmethod
-    def _get_uri(uri, reference):
+    def _get_uri(uri, reference, base_uri=""):
         """
         Returns the content within `reference` that is identified by `uri`.
         Canonicalization is used to convert node reference to an octet stream.
@@ -78,8 +78,8 @@ class L10nEsTbaiXmlUtils():
         Returns an UTF-8 encoded bytes string.
         """
         node = reference.getroottree()
-        if uri == "":
-            # Empty URI: whole document, without signature
+        if uri == base_uri:
+            # Base URI: whole document, without signature (default is empty URI)
             return L10nEsTbaiXmlUtils._canonicalize_node(
                 re.sub(r"^[^\n]*<ds:Signature.*<\/ds:Signature>", r"",
                        etree.tostring(node).decode("utf-8"),
@@ -98,14 +98,14 @@ class L10nEsTbaiXmlUtils():
         raise Exception('URI "' + uri + '" not found')
 
     @staticmethod
-    def _reference_digests(node):
+    def _reference_digests(node, base_uri=""):
         """
         Processes the references from node and computes their digest values as specified in
         https://www.w3.org/TR/xmldsig-core/#sec-DigestMethod
         https://www.w3.org/TR/xmldsig-core/#sec-DigestValue
         """
         for reference in node.findall("ds:Reference", namespaces=L10nEsTbaiXmlUtils.NS_MAP):
-            ref_node = L10nEsTbaiXmlUtils._get_uri(reference.get("URI", ""), reference)
+            ref_node = L10nEsTbaiXmlUtils._get_uri(reference.get("URI", ""), reference, base_uri=base_uri)
             lib = hashlib.new("sha256")
             lib.update(ref_node)
             reference.find("ds:DigestValue", namespaces=L10nEsTbaiXmlUtils.NS_MAP).text = b64encode(lib.digest())
