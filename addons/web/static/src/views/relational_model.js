@@ -165,6 +165,23 @@ class RequestBatcherORM extends ORM {
     }
 
     /**
+     * Entry point to batch "name_get" calls. If the `resModel` argument has
+     * already been called, the given ids are added to the previous list of ids
+     * to perform a single name_get call.
+     *
+     * @param {string} resModel
+     * @param {number[]} resIds
+     * @param {object} context
+     * @returns {Promise<[number, string][]>}
+     */
+    async nameGet(resModel, resIds, context) {
+        const pairs = await this.batch(resIds, ["name_get", resModel, context], (resIds) =>
+            super.nameGet(resModel, resIds, context)
+        );
+        return pairs.filter(([id]) => resIds.includes(id));
+    }
+
+    /**
      * Entry point to batch "read" calls. If the `fields` and `resModel`
      * arguments have already been called, the given ids are added to the
      * previous list of ids to perform a single read call. Once the server
