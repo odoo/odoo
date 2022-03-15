@@ -6,7 +6,7 @@
     </t>
 
     <t t-name="web.SelectCreateDialogFooter" owl="1">
-        <t t-if="!props.disableMultipleSelection">
+        <t t-if="props.multiSelect">
             <button class="btn btn-primary o_select_button" t-att-disabled="state.selectedRecords.length === 0" data-hotkey="v" t-on-click="select">Select</button>
         </t>
         <t t-if="!props.noCreate">

@@ -34,6 +34,11 @@ export class SelectCreateDialog extends Dialog {
             onSelectionChanged: (selectedRecords) => {
                 this.state.selectedRecords = selectedRecords;
             },
+            display: {
+                controlPanel: {
+                    "top-left": false,
+                },
+            },
         };
 
         onWillStart(async () => {
@@ -42,7 +47,8 @@ export class SelectCreateDialog extends Dialog {
                 context: this.props.context || {},
                 views: [[false, "search"]],
             });
-            this.propsView.searchViewId = search.name;
+            this.propsView.searchViewId =
+                search.name !== this.props.resModel + " search" ? search.name : undefined;
         });
     }
 

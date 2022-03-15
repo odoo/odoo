@@ -4,8 +4,8 @@
     <t t-name="web.ControlPanel" owl="1">
         <div class="o_control_panel" t-ref="root">
             <div t-if="display['top']" class="o_cp_top">
-                <div t-if="display['top-left']" class="o_cp_top_left">
-                    <t t-slot="control-panel-top-left">
+                <div class="o_cp_top_left">
+                    <t t-slot="control-panel-top-left" t-if="display['top-left']">
                         <t t-call="web.Breadcrumbs" />
                     </t>
                 </div>
