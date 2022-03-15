@@ -8,6 +8,13 @@ registerModel({
     identifyingFields: ['id'],
     recordMethods: {
         /**
+         * @private
+         * @returns {string}
+         */
+        _computeDialogText() {
+            return this.env._t("Please complete customer's information");
+        },
+        /**
          * Prevents selecting a recipient that does not have a partner.
          *
          * @private
@@ -25,6 +32,9 @@ registerModel({
         },
     },
     fields: {
+        dialogText: attr({
+            compute: '_computeDialogText',
+        }),
         /**
          * Determines the email of `this`. It serves as visual clue when
          * displaying `this`, and also serves as default partner email when
