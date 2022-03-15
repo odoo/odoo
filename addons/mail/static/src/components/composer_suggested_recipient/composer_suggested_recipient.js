@@ -82,13 +82,6 @@ export class ComposerSuggestedRecipient extends Component {
     }
 
     /**
-     * @returns {string}
-     */
-    get PLEASE_COMPLETE_CUSTOMER_S_INFORMATION() {
-        return this.env._t("Please complete customer's information");
-    }
-
-    /**
      * @returns {SuggestedRecipientInfo}
      */
     get suggestedRecipientInfo() {
