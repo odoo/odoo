@@ -4,28 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class NotificationAlert extends Component {
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @returns {boolean}
-     */
-    get isNotificationBlocked() {
-        if (!this.messaging) {
-            return false;
-        }
-        const windowNotification = this.messaging.browser.Notification;
-        return (
-            windowNotification &&
-            windowNotification.permission !== "granted" &&
-            !this.messaging.isNotificationPermissionDefault
-        );
-    }
-
-}
+export class NotificationAlert extends Component {}
 
 Object.assign(NotificationAlert, {
     props: {},
