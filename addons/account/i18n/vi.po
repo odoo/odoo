@@ -1941,7 +1941,7 @@ msgstr "Tài khoản được phép"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows to tag analytic entries and to manage analytic distributions"
-msgstr "Cho phép gắn thẻ các mục phân tích và quản lý phân phối"
+msgstr "Cho phép gắn thẻ các mục phân tích và để quản lý phân bổ vào tài khoản quản trị"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4900,18 +4900,18 @@ msgstr "Hiển thị trên Hoá đơn"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Credit Notes"
-msgstr "Phân phối cho giấy báo có"
+msgstr "Phân bổ cho giấy báo có"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Invoices"
-msgstr "Phân phối cho các hóa đơn"
+msgstr "Phân bổ cho Hóa đơn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution for Refund Invoices"
-msgstr "Phân phối cho các hóa đơn hoàn tiền"
+msgstr "Phân bổ cho Hóa đơn điều chỉnh giảm"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
@@ -6642,14 +6642,14 @@ msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
 msgstr ""
-"Mỗi phân phối hóa đơn và giấy báo có phải chứa chính xác một dòng cho cơ sở."
+"Mỗi phân bổ hóa đơn và giấy báo có phải chứa chính xác một dòng cho cơ sở."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
-msgstr "Phân phối hóa đơn và giấy báo có phải có cùng số dòng."
+msgstr "Phân bổ hóa đơn và giấy báo có phải có cùng số dòng."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6658,7 +6658,7 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
-"Việc phân phối hóa đơn và giấy báo có phải khớp nhau (tỷ lệ phần trăm giống "
+"Việc phân bổ hóa đơn và giấy báo có phải khớp nhau (tỷ lệ phần trăm giống "
 "nhau, theo cùng một thứ tự)."
 
 #. module: account
@@ -12334,7 +12334,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
-msgstr "Công ty trực thuộc dây chuyền phân phối này."
+msgstr "Công ty mà dòng phân bổ này thuộc về."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_fiscal_country_id
@@ -12494,7 +12494,7 @@ msgid ""
 "though they don't generate any tag: %s . This probably means you forgot to "
 "set a tag_name on these lines."
 msgstr ""
-"Các dòng báo cáo thuế sau đây được sử dụng trong một số mẫu phân phối thuế "
+"Các dòng báo cáo thuế sau đây được sử dụng trong một số mẫu phân bổ thuế "
 "mặc dù chúng không tạo bất kỳ thẻ nào: %s . Điều này có thể có nghĩa là bạn "
 "đã quên đặt tag_name trên những dòng này."
 
@@ -12737,9 +12737,9 @@ msgid ""
 " to work properly, invoice distribution lines should be arranged in the same"
 " order as the credit note distribution lines they correspond to."
 msgstr ""
-"Thứ tự mà các đường phân phối được hiển thị và khớp. Để việc hoàn lại tiền "
-"hoạt động bình thường, các đường phân phối hóa đơn nên được sắp xếp theo thứ"
-" tự giống như các đường phân phối giấy báo có mà chúng khớp với."
+"Thứ tự mà các dòng phân bổ được hiển thị và khớp. Để việc hoàn lại tiền "
+"hoạt động bình thường, các dòng phân bổ hóa đơn nên được sắp xếp theo thứ"
+" tự giống như các dòng phân bổ giấy báo có mà chúng khớp với."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
