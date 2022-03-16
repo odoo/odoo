@@ -235,7 +235,6 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 await destinationOrder.add_product(this.env.pos.db.get_product_by_id(orderline.productId), {
                     quantity: -qty,
                     price: orderline.price,
-                    lst_price: orderline.price,
                     extras: { price_manually_set: true },
                     merge: false,
                     refunded_orderline_id: orderline.id,
