@@ -480,7 +480,6 @@ body.editor_enable.editor_has_snippets {
 
         @mixin large-component() {
             flex: 1 1 auto;
-            width: $o-we-sidebar-content-available-room * .6;
         }
 
         we-button, we-toggler {
@@ -864,6 +863,7 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 align-items: center;
                 min-height: $o-we-sidebar-content-field-height;
+                flex: 1 1 auto;
             }
         }
 
@@ -1510,6 +1510,7 @@ body.editor_enable.editor_has_snippets {
         .o_we_m2m {
             we-list, we-list > div, we-list we-select {
                 margin-top: 0;
+                flex: 1 1 auto;
             }
         }
 
@@ -1525,6 +1526,10 @@ body.editor_enable.editor_has_snippets {
             .o_we_user_value_widget {
                 margin-top: 0;
                 min-width: 4em; // Ideally rely on actual natural min-width, but does not work...
+
+                we-toggler {
+                    width: $o-we-sidebar-content-available-room * .6;
+                }
             }
             we-button, .o_we_so_color_palette {
                 &.o_we_user_value_widget {
@@ -1535,6 +1540,7 @@ body.editor_enable.editor_has_snippets {
             > div {
                 display: flex;
                 align-items: center;
+                flex: 0 1 auto;
 
                 > :not(.d-none) ~ * {
                     margin-left: $o-we-sidebar-content-field-multi-spacing;
@@ -1558,7 +1564,6 @@ body.editor_enable.editor_has_snippets {
                 width: 100%;
             }
             > div {
-                flex: 0 1 auto;
                 min-width: 0;
                 margin-top: $o-we-sidebar-content-field-spacing;
             }
