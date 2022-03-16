@@ -8,6 +8,7 @@
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
 # Jan Prokop, 2022
+# Viktor Dičér <viktor.dicer@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Jan Prokop, 2022\n"
+"Last-Translator: Viktor Dičér <viktor.dicer@gmail.com>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,12 +33,12 @@ msgstr "Vytvoriť faktúru"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Vytvoriť objednávku"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "Zobraziť projekt"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
@@ -52,7 +53,7 @@ msgstr "Vygenerovaná úloha"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "Má objednávky na fakturáciu"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -61,6 +62,8 @@ msgid ""
 "Invoice as soon as this service is sold, and create a task in an existing "
 "project to track the time spent."
 msgstr ""
+"Fakturujte hneď po predaji tejto služby a vytvorte úlohu v existujúcom projekte "
+"na sledovanie stráveného času."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -70,6 +73,9 @@ msgid ""
 "project for the order with a task for each sales order line to track the "
 "time spent."
 msgstr ""
+"Fakturujte objednané množstvá hneď po predaji tejto služby a vytvorte projekt "
+"pre objednávku s úlohou pre každý riadok zákazky odberateľa "
+"na sledovanie stráveného času"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -78,12 +84,15 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold, and create an "
 "empty project for the order to track the time spent."
 msgstr ""
+"Fakturujte objednané množstvá hneď po predaji tejto služby a vytvorte prázdny"
+" projekt pre objednávku na sledovanie stráveného času."
+
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "Fakturujte objednané množstvá hneď po predaji tejto služby."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -109,12 +118,12 @@ msgstr "Nič"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "Počet projektov"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
 msgid "Number of invoices"
-msgstr ""
+msgstr "Počet objednávok"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -146,7 +155,7 @@ msgstr "Projekt"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Projekt a úloha"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -162,7 +171,7 @@ msgstr "Projekt vygenerovaný položkou zákazky odberateľa"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "Projektová objednávka"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -200,7 +209,7 @@ msgstr "Objednávka "
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 msgid "Sales Order Id"
-msgstr ""
+msgstr "Id objednávky"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -219,6 +228,8 @@ msgid ""
 "Sales Order Item to which the time spent on this task will be added, in "
 "order to be invoiced to your customer."
 msgstr ""
+"Položka objednávky, ku ktorej sa pripočíta čas strávený touto úlohou, "
+" bude fakturovaná vášmu zákazníkovi."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -247,30 +258,30 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "Objednávka, ku ktorej je projekt pripojený"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Objednávka, ku ktorej je úloha pripojená"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Hľadať vo faktúre"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Hľadať v objednávke"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Hľadať v položkách objednávky"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -369,7 +380,7 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "There is nothing to invoice in this project."
-msgstr ""
+msgstr "V tomto projekte nie je čo fakturovať."
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -404,9 +415,9 @@ msgstr "Ak chcete úlohu zmazať, musíte ju odstrániť z objednávky."
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "for sale order item:"
-msgstr ""
+msgstr "pre položku objednávky"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "for sale order:"
-msgstr ""
+msgstr "pre objednávku"
