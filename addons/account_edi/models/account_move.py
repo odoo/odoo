@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_TIME_FORMAT
 
 
 class AccountMove(models.Model):
@@ -26,7 +27,11 @@ class AccountMove(models.Model):
         compute='_compute_edi_error_message')
     # Technical field to display the documents that will be processed by the CRON
     edi_web_services_to_process = fields.Text(
-        compute='_compute_edi_web_services_to_process')
+        compute='_compute_edi_web_services_to_process',
+        help="Technical field to display the documents that will be processed by the CRON")
+    edi_cron_schedule = fields.Char(
+        compute='_compute_edi_cron_schedule',
+        help="Field to display the next scheduled activation of the 'EDI : Perform web services operations' scheduled action")
     edi_show_cancel_button = fields.Boolean(
         compute='_compute_edi_show_cancel_button')
     edi_show_abandon_cancel_button = fields.Boolean(
@@ -86,7 +91,16 @@ class AccountMove(models.Model):
             format_web_services = to_process.edi_format_id.filtered(lambda f: f._needs_web_services())
             move.edi_web_services_to_process = ', '.join(f.name for f in format_web_services)
 
-    @api.depends('edi_document_ids.state')
+    @api.depends('state', 'edi_document_ids.state')
+    def _compute_edi_cron_schedule(self):
+        cron = self.sudo().env.ref('account_edi.ir_cron_edi_network', raise_if_not_found=False)
+        if not cron or cron.active is False:
+            schedule = _("never (no active cron)")
+        elif cron.nextcall:
+            schedule = cron.nextcall.time().strftime(DEFAULT_SERVER_TIME_FORMAT) if cron.nextcall.date() == fields.datetime.today().date() else cron.nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        for move in self:
+            move.edi_cron_schedule = False or schedule
+
     def _compute_show_reset_to_draft_button(self):
         # OVERRIDE
         super()._compute_show_reset_to_draft_button()
