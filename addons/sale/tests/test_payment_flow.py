@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from unittest.mock import ANY, patch
 
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -45,7 +46,12 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
         route_values = self._prepare_pay_values()
         route_values['sale_order_id'] = self.order.id
 
-        tx_context = self.get_tx_checkout_context(**route_values)
+        with patch(
+            'odoo.addons.payment.controllers.portal.PaymentPortal'
+            '._compute_show_tokenize_input_mapping'
+        ) as patched:
+            tx_context = self.get_tx_checkout_context(**route_values)
+            patched.assert_called_once_with(ANY, logged_in=ANY, sale_order_id=ANY)
 
         self.assertEqual(tx_context['currency_id'], self.order.currency_id.id)
         self.assertEqual(tx_context['partner_id'], self.order.partner_id.id)
