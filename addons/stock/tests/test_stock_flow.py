@@ -2102,3 +2102,25 @@ class TestStockFlow(TestStockCommon):
 
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking_out.id)])
         self.assertEqual(bo.state, 'assigned')
+
+    def test_stock_move_with_partner_id(self):
+        """ Ensure that the partner_id of the picking entry is
+        transmitted to the SM upon object creation.
+        """
+        partner_1 = self.env['res.partner'].create({'name': 'Hubert Bonisseur de la Bath'})
+        partner_2 = self.env['res.partner'].create({'name': 'Donald Clairvoyant du Bled'})
+        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'type': 'product'})
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        f = Form(self.env['stock.picking'])
+        f.partner_id = partner_1
+        f.picking_type_id = wh.out_type_id
+        with f.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 5
+        picking = f.save()
+
+        self.assertEqual(picking.move_lines.partner_id, partner_1)
+
+        picking.write({'partner_id': partner_2.id})
+        self.assertEqual(picking.move_lines.partner_id, partner_2)
