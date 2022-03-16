@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 $oi-default-size: 1em;   // Normally 13px
+$oi-fw-ratio: 1.28571429; // Matches .fa-fw
 
 $oi-sizes: (
     'small': (
@@ -37,12 +38,10 @@ $oi-sizes: (
     }
 }
 
-.oi-fw, .fa-fw {
-    &:before {
-        display: inline-block;
-        width: var(--oi-fw-width, $oi-default-size * 1.3);
-        text-align: center;
-    }
+.oi-fw {
+    display: inline-block;
+    width: calc($oi-fw-ratio * var(--oi-font-size, #{$oi-default-size}));
+    text-align: center;
 }
 
 // Print CSS variables for each size/breakpoint
@@ -53,14 +52,8 @@ $oi-sizes: (
 
         @each $-key, $-values in $oi-sizes {
             .oi#{$-infix}-#{$-key} {
-                &:before {
-                    @each $-rule, $-value in $-values {
-                        @include print-variable('oi-#{$-rule}', $-value);
-                    }
-                }
-
-                &.oi-fw:before {
-                    @include print-variable('oi-fw-width', map-get($-values, 'font-size') * 1.3);
+                @each $-rule, $-value in $-values {
+                    @include print-variable('oi-#{$-rule}', $-value);
                 }
             }
         }
