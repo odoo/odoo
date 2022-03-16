@@ -104,6 +104,11 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'number_of_days': number_of_days,
         })
         holiday.with_user(SUPERUSER_ID).action_validate()
+
+        # The leave type and timesheet are linked to the same project and task'
+        self.assertEqual(holiday.timesheet_ids.project_id.id, self.internal_project.id)
+        self.assertEqual(holiday.timesheet_ids.task_id.id, self.internal_task_leaves.id)
+
         self.assertEqual(len(holiday.timesheet_ids), number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day between %s and %s)' % (fields.Datetime.to_string(self.leave_start_datetime), fields.Datetime.to_string(self.leave_end_datetime)))
 
         # manager refuse the leave
