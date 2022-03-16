@@ -24,21 +24,16 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
 
         # ==== Config ====
 
-        cls.certificate = cls.env['l10n_es_edi.certificate'].create({
-            'content': base64.encodebytes(
-                misc.file_open("l10n_es_edi_tbai/demo/certificates/sello_entidad_act.p12", 'rb').read()),
-            'password': 'IZDesa2021',
-        })
-
         cls.company_data['company'].write({
             'name': 'EUS Company',
             'country_id': cls.env.ref('base.es').id,
-            'state_id': cls.env.ref('base.state_es_ss').id,  # TODO test all states (codes in res_company.l10n_es_tbai_tax_agency)
-            'l10n_es_tbai_certificate_id': cls.certificate.id,
+            'state_id': cls.env.ref('base.state_es_ss').id,
             'vat': cls.env['l10n_es.edi.tbai.misc_util']._random_vat(force_new=True),  # random VAT (so chain is new)
             'l10n_es_tbai_test_env': True,
-            'l10n_es_tbai_tax_agency': 'gipuzkoa',  # TODO test all
         })
+
+        cls.certificate = None
+        cls._set_tax_agency('gipuzkoa')
 
         # ==== Business ====
 
@@ -56,6 +51,30 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         cls.product_t = cls.env["product.product"].create(
             {"name": "Test product"})
         cls.partner_t = cls.env["res.partner"].create({"name": "Test partner", "vat": "ESF35999705"})
+
+    @classmethod
+    def _set_tax_agency(cls, agency):
+        if agency == "araba":
+            cert_name = 'araba_1234.p12'
+            cert_password = '1234'
+        elif agency == 'bizkaia':
+            cert_name = 'bizkaia_111111.p12'
+            cert_password = '111111'
+        elif agency == 'gipuzkoa':
+            cert_name = 'gipuzkoa_IZDesa2021.p12'
+            cert_password = 'IZDesa2021'
+        else:
+            raise ValueError("Unknown tax agency: " + agency)
+
+        cls.certificate = cls.env['l10n_es_edi.certificate'].create({
+            'content': base64.encodebytes(
+                misc.file_open("l10n_es_edi_tbai/demo/certificates/" + cert_name, 'rb').read()),
+            'password': cert_password,
+        })
+        cls.company_data['company'].write({
+            'l10n_es_tbai_tax_agency': agency,
+            'l10n_es_tbai_certificate_id': cls.certificate.id,
+        })
 
     @classmethod
     def _get_tax_by_xml_id(cls, trailing_xml_id):

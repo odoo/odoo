@@ -16,7 +16,9 @@ class TestEdiXmls(TestEsEdiTbaiCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.attachment']._l10n_es_tbai_load_xsd_attachments()  # Gov. XSD download
+        for agency in ('araba', 'bizkaia', 'gipuzkoa'):
+            cls._set_tax_agency(agency)
+            cls.env['ir.attachment']._l10n_es_tbai_load_xsd_attachments()  # Gov. XSD download
 
         cls.out_invoice = cls.env['account.move'].create({
             'name': 'INV/01',

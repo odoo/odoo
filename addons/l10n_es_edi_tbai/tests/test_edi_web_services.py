@@ -53,12 +53,10 @@ class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
 
         cls.moves = cls.out_invoice + cls.in_invoice
 
-    # TODO: test other agencies (once working)
+    # TODO: test other agencies (once licenses can be published)
     def test_edi_gipuzkoa(self):
-        self.env.company.l10n_es_tbai_tax_agency = 'gipuzkoa'
-
+        self._set_tax_agency('gipuzkoa')
         self.moves.action_process_edi_web_services()
         generated_files = self._process_documents_web_services(self.moves, {'es_tbai'})
         self.assertTrue(generated_files)
         self.assertRecordValues(self.out_invoice, [{'edi_state': 'sent'}])
-        # self.assertRecordValues(self.in_invoice, [{'edi_state': 'sent'}]) # Will be required for Bizkaia
