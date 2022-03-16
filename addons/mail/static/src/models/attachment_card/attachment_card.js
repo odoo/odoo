@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { one } from '@mail/model/model_field';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -31,7 +31,6 @@ registerModel({
                 return;
             }
             if (this.attachmentList.composerViewOwner) {
-                this.component.trigger('o-attachment-removed', { attachmentLocalId: this.attachment.localId });
                 this.attachment.remove();
             } else {
                 this.update({ attachmentDeleteConfirmDialog: insertAndReplace() });
@@ -58,9 +57,5 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        /**
-         * States the OWL component of this attachment card.
-         */
-        component: attr(),
     },
 });

@@ -31,7 +31,6 @@ registerModel({
                 return;
             }
             if (this.attachmentList.composerViewOwner) {
-                this.component.trigger('o-attachment-removed', { attachmentLocalId: this.attachment.localId });
                 this.attachment.remove();
             } else {
                 this.update({ attachmentDeleteConfirmDialog: insertAndReplace() });
@@ -100,10 +99,6 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        /**
-         * States the OWL component of this attachment image.
-         */
-        component: attr(),
         /**
          * Determines the max height of this attachment image in px.
          */

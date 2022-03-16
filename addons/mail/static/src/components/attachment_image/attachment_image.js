@@ -1,18 +1,10 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class AttachmentImage extends LegacyComponent {
+const { Component } = owl;
 
-    /**
-     * @override
-     */
-    setup() {
-        super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentImage' });
-    }
+export class AttachmentImage extends Component {
 
     /**
      * @returns {AttachmentImage}
