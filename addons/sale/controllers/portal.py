@@ -175,17 +175,13 @@ class CustomerPortal(portal.CustomerPortal):
                     order_sudo.partner_id.country_id,
                 ) for acquirer in acquirers_sudo.filtered('fees_active')
             }
-            # Prevent public partner from saving payment methods but force it for logged in partners
-            # buying subscription products
-            show_tokenize_input = logged_in \
-                and not request.env['payment.acquirer'].sudo()._is_tokenization_required(
-                    sale_order_id=order_sudo.id
-                )
             values.update({
                 'acquirers': acquirers_sudo,
                 'tokens': tokens,
                 'fees_by_acquirer': fees_by_acquirer,
-                'show_tokenize_input': show_tokenize_input,
+                'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
+                    acquirers_sudo, logged_in=logged_in, sale_order_id=order_sudo.id
+                ),
                 'amount': order_sudo.amount_total,
                 'currency': order_sudo.pricelist_id.currency_id,
                 'partner_id': order_sudo.partner_id.id,
