@@ -43,7 +43,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False)
     website_language_count = fields.Integer(
         string='Number of languages',
-        compute='_compute_website_language_count',
+        related='website_id.language_count',
         readonly=True)
     website_default_lang_id = fields.Many2one(
         string='Default language',
@@ -206,11 +206,6 @@ class ResConfigSettings(models.TransientModel):
             self.website_default_lang_id = False
         elif self.website_default_lang_id not in language_ids:
             self.website_default_lang_id = language_ids[0]
-
-    @api.depends('language_ids')
-    def _compute_website_language_count(self):
-        for config in self:
-            config.website_language_count = len(config.language_ids)
 
     def action_website_create_new(self):
         return {
