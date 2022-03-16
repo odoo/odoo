@@ -217,13 +217,6 @@ registerModel({
          * @private
          * @returns {boolean}
          */
-        _computeHasHiddenChatWindows() {
-            return this.allOrderedHidden.length > 0;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
         _computeHasVisibleChatWindows() {
             return this.allOrderedVisible.length > 0;
         },
@@ -339,9 +332,6 @@ registerModel({
         chatWindows: many('ChatWindow', {
             inverse: 'manager',
             isCausal: true,
-        }),
-        hasHiddenChatWindows: attr({
-            compute: '_computeHasHiddenChatWindows',
         }),
         hasVisibleChatWindows: attr({
             compute: '_computeHasVisibleChatWindows',

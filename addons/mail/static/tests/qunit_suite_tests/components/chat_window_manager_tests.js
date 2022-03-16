@@ -2456,5 +2456,69 @@ QUnit.test('chat window should remain folded when new message is received', asyn
     );
 });
 
+QUnit.test('should not have chat window hidden menu in mobile (transition from 2 chat windows in desktop to mobile)', async function (assert) {
+    /**
+     * computation uses following info:
+     * ([mocked] global window width: 900px)
+     * (others: @see `mail/static/src/models/chat_window_manager.js:visual`)
+     *
+     * - chat window width: 325px
+     * - start/end/between gap width: 10px/10px/5px
+     * - hidden menu width: 200px
+     * - global width: 1080px
+     *
+     * Not enough space for 2 visible chat windows:
+     *  10 + 325 + 5 + 325 + 10 = 675 > 600
+     * Enough space for 1 visible chat window + hidden menu:
+     *  10 + 325 + 5 + 200 + 10 = 550 < 600
+     */
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 11 }, { id: 12 });
+    const { click, createMessagingMenuComponent, messaging } = await this.start({
+        env: {
+            browser: {
+                innerWidth: 600, // enough to fit 1 chat window + hidden menu
+            },
+        },
+    });
+    await createMessagingMenuComponent();
+    // open, from systray menu, chat windows of channels with id 1, 2
+    await click('.o_MessagingMenu_toggler');
+    await click(`
+        .o_MessagingMenu_dropdownMenu
+        .o_NotificationList_preview[data-thread-local-id="${
+            messaging.models['Thread'].findFromIdentifyingData({
+                id: 11,
+                model: 'mail.channel',
+            }).localId
+        }"]
+    `);
+    await click('.o_MessagingMenu_toggler');
+    await click(`
+        .o_MessagingMenu_dropdownMenu
+        .o_NotificationList_preview[data-thread-local-id="${
+            messaging.models['Thread'].findFromIdentifyingData({
+                id: 12,
+                model: 'mail.channel',
+            }).localId
+        }"]
+    `);
+    // simulate resize to go into mobile
+    await afterNextRender(
+        () => messaging.device.update({
+            globalWindowInnerWidth: 300,
+            isMobile: true,
+            isMobileDevice: true,
+            sizeClass: 0, // XS
+        }),
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindowManager_hiddenMenu',
+        "should not have any chat window hidden menu in mobile (transition from desktop having 2 visible chat windows)",
+    );
+});
+
 });
 });
