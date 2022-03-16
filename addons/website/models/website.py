@@ -68,7 +68,10 @@ class Website(models.Model):
     country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
                                          string='Country Groups', help='Used when multiple websites have the same domain.')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company, required=True)
-    language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
+    language_ids = fields.Many2many(
+        'res.lang', 'website_lang_rel', 'website_id', 'lang_id', string="Languages",
+        default=_active_languages, required=True)
+    language_count = fields.Integer('Number of languages', compute='_compute_language_count')
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
     cookies_bar = fields.Boolean('Cookies Bar', help="Display a customizable cookies bar on your website.")
@@ -151,6 +154,11 @@ class Website(models.Model):
     def _compute_has_social_default_image(self):
         for website in self:
             website.has_social_default_image = bool(website.social_default_image)
+
+    @api.depends('language_ids')
+    def _compute_language_count(self):
+        for website in self:
+            website.language_count = len(website.language_ids)
 
     def _compute_menu(self):
         for website in self:
