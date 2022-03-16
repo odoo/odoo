@@ -132,7 +132,12 @@
                 <div>
                     <h1 class="o_wslides_quiz_modal_title mt-3 display-4 font-weight-bold">Amazing!</h1>
                     <div class="pb-3">
-                        <h4 class="o_wslides_quiz_modal_xp_gained pb-2 d-flex fade">You gained <span class="badge badge-pill badge-success text-white font-weight-bold ml-2 mr-1"><t t-esc="widget.quiz.quizKarmaWon"/> XP</span> !</h4>
+                        <h4 class="o_wslides_quiz_modal_xp_gained pb-2 d-flex fade">
+                            <t t-if="widget.quiz.quizKarmaWon > 0">
+                                You gained <span class="badge badge-pill badge-success text-white font-weight-bold ml-2 mr-1"><t t-esc="widget.quiz.quizKarmaWon"/> XP</span> !
+                            </t>
+                            <t t-else="">You did it!</t>
+                        </h4>
                         <div class="mt-5 mb-4">
                             <div class="progress">
                                 <div class="progress-bar" role="progressbar" t-att-aria-valuenow="widget.quiz.rankProgress.previous_rank.progress" aria-valuemin="0" aria-valuemax="100"
