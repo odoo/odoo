@@ -1313,7 +1313,9 @@ const Wysiwyg = Widget.extend({
             if (!this.lastMediaClicked) {
                 return;
             }
-            new weWidgets.ImageCropWidget(this, this.lastMediaClicked).appendTo(this.$editable);
+            new weWidgets.ImageCropWidget(this, this.lastMediaClicked).appendTo(this.odooEditor.document.body);
+            this.odooEditor.toolbarHide();
+            $(this.lastMediaClicked).on('image_cropper_destroyed', () => this.odooEditor.toolbarShow());
         });
         $toolbar.find('#image-transform').click(e => {
             if (!this.lastMediaClicked) {
