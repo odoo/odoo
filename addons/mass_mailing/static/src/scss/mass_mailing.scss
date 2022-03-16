@@ -52,14 +52,36 @@
             width: 135px;
         }
     }
-    // For large devices, limit the width of subject and adjust the emoji widget accordingly
-    @include media-breakpoint-up(md) {
-        input.o_field_char.o_field_widget {
-            min-width: 86%;
+}
+
+.o_form_view.o_mass_mailing_mailing_form {
+    .o_mass_mailing_subject {
+        // Place the favorite button without breaking the emoji widget
+        padding-right: 50px;
+        .o_mass_mailing_favorite {
+            margin-right: -50px;
         }
-        .o_mail_add_emoji {
-            right: 14%;
-            bottom: 4px;
+        .o_mail_emojis_dropdown {
+            bottom: 0;
+        }
+        span.o_field_char {
+            // Override widget CSS attributes to place
+            // the favorite button next to the subject
+            margin-right: 1rem;
+            min-width: 0;
+            width: auto!important;
+            max-width: calc(100vw - 300px);
+        }
+        .fa-star {
+            color: $o-main-favorite-color;
+        }
+    }
+}
+
+.o_xxs_form_view.o_mass_mailing_mailing_form {
+    .o_mass_mailing_subject {
+        span.o_field_char {
+            max-width: 90vw!important;
         }
     }
 }
