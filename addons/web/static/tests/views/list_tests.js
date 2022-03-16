@@ -1335,8 +1335,8 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('.o_group_header:first()'));
 
-        assert.ok(!list.$('thead .o_list_record_selector input')[0].checked,
-            "Head selector should be unchecked");
+        assert.ok(list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be checked");
 
         list.destroy();
     });

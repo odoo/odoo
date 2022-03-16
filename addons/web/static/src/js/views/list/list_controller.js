@@ -76,7 +76,8 @@ var ListController = BasicController.extend({
      */
     getActiveDomain: function () {
         var self = this;
-        if (this.$('thead .o_list_record_selector input').prop('checked')) {
+        const $closedHeaders = this.$('tbody .o_group_header.o_group_has_content:not(.o_group_open)');
+        if (this.$('thead .o_list_record_selector input').prop('checked') && $closedHeaders.length === 0) {
             var searchQuery = this._controlPanel ? this._controlPanel.getSearchQuery() : {};
             var record = self.model.get(self.handle, {raw: true});
             return record.getDomain().concat(searchQuery.domain || []);
