@@ -70,7 +70,7 @@ class WebsiteEventController(http.Controller):
         domain_search = {'website_specific': website.website_domain()}
 
         if searches['search']:
-            domain_search['search'] = [('name', 'ilike', searches['search'])]
+            domain_search['search'] = ['|', ('address_id.city', 'ilike', searches['search']), ('name', 'ilike', searches['search'])]
 
         current_date = None
         current_type = None
