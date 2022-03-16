@@ -61,7 +61,7 @@ class PaymentPortal(portal.CustomerPortal):
         :param str acquirer_id: The desired acquirer, as a `payment.acquirer` id
         :param str access_token: The access token used to authenticate the partner
         :param str invoice_id: The account move for which a payment id made, as a `account.move` id
-        :param dict kwargs: Optional data. This parameter is not used here
+        :param dict kwargs: Optional data passed to helper methods.
         :return: The rendered checkout form
         :rtype: str
         :raise: werkzeug.exceptions.NotFound if the access token is invalid
@@ -134,7 +134,9 @@ class PaymentPortal(portal.CustomerPortal):
             'acquirers': acquirers_sudo,
             'tokens': payment_tokens,
             'fees_by_acquirer': fees_by_acquirer,
-            'show_tokenize_input': logged_in,  # Prevent public partner from saving payment methods
+            'show_tokenize_input': self._compute_show_tokenize_input_mapping(
+                acquirers_sudo, logged_in=logged_in, **kwargs
+            ),
             'reference_prefix': reference,
             'amount': amount,
             'currency': currency,
@@ -148,6 +150,26 @@ class PaymentPortal(portal.CustomerPortal):
             **self._get_custom_rendering_context_values(**kwargs),
         }
         return request.render(self._get_payment_page_template_xmlid(**kwargs), rendering_context)
+
+    @staticmethod
+    def _compute_show_tokenize_input_mapping(acquirers_sudo, logged_in=False, **kwargs):
+        """ Determine for each acquirer whether the tokenization input should be shown or not.
+
+        :param recordset acquirers_sudo: The acquirers for which to determine whether the
+                                         tokenization input should be shown or not, as a sudoed
+                                         `payment.acquirer` recordset.
+        :param bool logged_in: Whether the user is logged in or not.
+        :param dict kwargs: The optional data passed to the helper methods.
+        :return: The mapping of the computed value for each acquirer id.
+        :rtype: dict
+        """
+        show_tokenize_input_mapping = {}
+        for acquirer in acquirers_sudo:
+            show_tokenize_input = acquirer.allow_tokenization \
+                                  and not acquirer._is_tokenization_required(**kwargs) \
+                                  and logged_in
+            show_tokenize_input_mapping[acquirer.id] = show_tokenize_input
+        return show_tokenize_input_mapping
 
     def _get_payment_page_template_xmlid(self, **kwargs):
         return 'payment.pay'

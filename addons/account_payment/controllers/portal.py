@@ -37,7 +37,9 @@ class PortalAccount(portal.PortalAccount):
             'acquirers': acquirers_sudo,
             'tokens': tokens,
             'fees_by_acquirer': fees_by_acquirer,
-            'show_tokenize_input': logged_in,  # Prevent public partner from saving payment methods
+            'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
+                acquirers_sudo, logged_in=logged_in
+            ),
             'amount': invoice.amount_residual,
             'currency': invoice.currency_id,
             'partner_id': partner.id,

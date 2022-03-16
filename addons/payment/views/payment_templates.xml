@@ -97,10 +97,7 @@
                             </div>
                         </t>
                         <!-- === "Save my payment details" checkbox === -->
-                        <!-- Only included if partner is known and if the choice is given -->
-                        <t t-set="tokenization_required"
-                           t-value="acquirer._is_tokenization_required(provider=acquirer.provider)"/>
-                        <label t-if="show_tokenize_input and acquirer.allow_tokenization and not tokenization_required">
+                        <label t-if="show_tokenize_input[acquirer.id]">
                             <input name="o_payment_save_as_token" type="checkbox"/>
                             Save my payment details
                         </label>
