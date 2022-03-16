@@ -6,8 +6,9 @@
     'version': '0.3',
     'depends': [
         'l10n_it_edi',
-        'account_edi',
-        'account_edi_proxy_client',
+        'account',
+        'edi',
+        'edi_proxy_client',
     ],
     'auto_install': ['l10n_it_edi'],
     'author': 'Odoo',
@@ -16,7 +17,7 @@ E-invoice implementation for Italy with the web-service. Ability to send and rec
 and then fetched by this module.
     """,
     'category': 'Accounting/Localizations/EDI',
-    'website': 'http://www.odoo.com/',
+    'website': 'https://www.odoo.com/',
     'data': [
         'data/cron.xml',
         'views/l10n_it_view.xml',

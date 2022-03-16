@@ -50,7 +50,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
         cls.invoice.action_post()
 
     def test_edi_json(self):
-        json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice)
+        json_value = self.env["edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice)
         expected = {
             "Version": "1.1",
             "TranDtls": {"TaxSch": "GST", "SupTyp": "B2B", "RegRev": "N", "IgstOnIntra": "N"},

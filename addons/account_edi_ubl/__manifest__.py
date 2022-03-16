@@ -6,7 +6,7 @@
     ''',
     'version': '1.0',
     'category': 'Accounting/Accounting',
-    'depends': ['account_edi'],
+    'depends': ['edi', 'account'],
     'data': [
         'data/ubl_templates.xml',
         'data/account_edi_data.xml',

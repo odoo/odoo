@@ -148,6 +148,10 @@
                                         </div>
                                     </group>
                                     <!-- email alias end -->
+                                    <group string="Electronic Data Interchange" attrs="{'invisible': [('compatible_edi_ids', '=', [])]}">
+                                        <field name="compatible_edi_ids" invisible="1" />
+                                        <field name="edi_format_ids" widget="many2many_checkboxes"/>
+                                    </group>
                                     <group string="Payment Communications" attrs="{'invisible': [('type', '!=', 'sale')]}">
                                         <field name="invoice_reference_type"/>
                                         <field name="invoice_reference_model" attrs="{'invisible': [('invoice_reference_type', '=', 'none')]}"/>

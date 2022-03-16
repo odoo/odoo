@@ -47,23 +47,23 @@ class AccountMove(models.Model):
 
     l10n_it_einvoice_id = fields.Many2one('ir.attachment', string="Electronic invoice", compute='_compute_l10n_it_einvoice')
 
-    @api.depends('edi_document_ids', 'edi_document_ids.attachment_id')
+    @api.depends('edi_flow_ids', 'edi_flow_ids.edi_file_ids')
     def _compute_l10n_it_einvoice(self):
         fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         for invoice in self:
-            einvoice = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == fattura_pa)
-            invoice.l10n_it_einvoice_id = einvoice.attachment_id
-            invoice.l10n_it_einvoice_name = einvoice.attachment_id.name
+            flow = invoice.edi_flow_ids.filtered(lambda d: d.edi_format_id == fattura_pa)
+            invoice.l10n_it_einvoice_id = flow.file_ids.attachment_id
+            invoice.l10n_it_einvoice_name = flow.file_ids.attachment_id.name
 
     def _check_before_xml_exporting(self):
         # DEPRECATED use AccountEdiFormat._l10n_it_edi_check_invoice_configuration instead
-        errors = self.env['account.edi.format']._l10n_it_edi_check_invoice_configuration(self)
+        errors = self.env['edi.format']._l10n_it_edi_check_invoice_configuration(self)
         if errors:
-            raise UserError(self.env['account.edi.format']._format_error_message(_("Invalid configuration:"), errors))
+            raise UserError(self.env['edi.format']._format_error_message(_("Invalid configuration:"), errors))
 
     def invoice_generate_xml(self):
         self.ensure_one()
-        report_name = self.env['account.edi.format']._l10n_it_edi_generate_electronic_invoice_filename(self)
+        report_name = self.env['edi.format']._l10n_it_edi_generate_electronic_invoice_filename(self)
 
         data = "<?xml version='1.0' encoding='UTF-8'?>" + str(self._export_as_xml())
         description = _('Italian invoice: %s', self.move_type)
@@ -147,13 +147,13 @@ class AccountMove(models.Model):
 
         formato_trasmissione = "FPA12" if self._is_commercial_partner_pa() else "FPR12"
 
-        document_type = self.env['account.edi.format']._l10n_it_get_document_type(self)
-        if self.env['account.edi.format']._l10n_it_is_simplified_document_type(document_type):
+        document_type = self.env['edi.format']._l10n_it_get_document_type(self)
+        if self.env['edi.format']._l10n_it_is_simplified_document_type(document_type):
             formato_trasmissione = "FSM10"
 
         # b64encode returns a bytestring, the template tries to turn it to string,
         # but only gets the repr(pdf) --> "b'<base64_data>'"
-        pdf = self.env.ref('account.account_invoices')._render_qweb_pdf(self.id)[0]
+        pdf = self.env.ref('account.account_invoices')._render_qweb_pdf(self.ids)[0]
         pdf = base64.b64encode(pdf).decode()
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
@@ -200,7 +200,7 @@ class AccountMove(models.Model):
         :return: The XML content as str.
         '''
         template_values = self._prepare_fatturapa_export_values()
-        if not self.env['account.edi.format']._l10n_it_is_simplified_document_type(template_values['document_type']):
+        if not self.env['edi.format']._l10n_it_is_simplified_document_type(template_values['document_type']):
             content = self.env['ir.qweb']._render('l10n_it_edi.account_invoice_it_FatturaPA_export', template_values)
         else:
             content = self.env['ir.qweb']._render('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', template_values)

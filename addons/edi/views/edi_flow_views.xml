@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tree_edi_flow" model="ir.ui.view">
+            <field name="name">edi.flow.tree</field>
+            <field name="model">edi.flow</field>
+            <field name="arch" type="xml">
+                <tree create="false" delete="false" edit="false"
+                      decoration-info="blocking_level == 'info'"
+                      decoration-warning="blocking_level == 'warning'"
+                      decoration-danger="blocking_level == 'error'"
+                      decoration-muted="aborted">
+                    <field name="edi_format_name" />
+                    <field name="stage" />
+                    <field name="aborted" invisible="1"/>
+                    <field name="error" invisible="1"/>
+                    <field name="blocking_level" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

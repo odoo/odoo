@@ -3,12 +3,12 @@ import base64
 import io
 from PyPDF2 import PdfFileWriter
 
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingEDICommon
 from odoo.tests import tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUBLBE(AccountEdiTestCommon):
+class TestUBLBE(AccountTestInvoicingEDICommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='l10n_be.l10nbe_chart_template', edi_format_ref='l10n_be_edi.edi_efff_1'):
@@ -63,7 +63,7 @@ class TestUBLBE(AccountEdiTestCommon):
         self.env.ref('account.account_invoices_without_payment')._l10n_be_edi_add_pdf_into_invoice_xml(invoice, stream_data)
         pdf_buffer.close()
 
-        attachment = invoice._get_edi_attachment(self.edi_format)
+        attachment = invoice._get_edi_files(edi_format=self.edi_format).attachment_id
         self.assertTrue(attachment)
         xml_content = base64.b64decode(attachment.datas)
 

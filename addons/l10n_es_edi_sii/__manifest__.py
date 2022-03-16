@@ -26,7 +26,8 @@
     """,
     'depends': [
         'l10n_es',
-        'account_edi',
+        'account',
+        'edi',
     ],
     'data': [
         'data/account_tax_data.xml',

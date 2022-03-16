@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from freezegun import freeze_time
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingEDICommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestAccountEdiFacturx(AccountEdiTestCommon):
+class TestAccountEdiFacturx(AccountTestInvoicingEDICommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None, edi_format_ref='account_edi_facturx.edi_facturx_1_0_05'):

@@ -597,6 +597,13 @@
             </field>
         </record>
 
+        <record id="account.action_open_edi_flows" model="ir.actions.act_window">
+            <field name="name">Electronic invoicing</field>
+            <field name="res_model">edi.flow</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('res_id', '=', active_id), ('res_model', '=', 'account.move'), ('error', '!=', False)]</field>
+        </record>
+
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">account.move.form</field>
             <field name="model">account.move</field>
@@ -645,6 +652,18 @@
                                 attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '!=', 'entry')]}"/>
                         <button name="button_cancel" string="Cancel" type="object" groups="account.group_account_invoice" data-hotkey="w"
                                 attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '==', 'entry')]}"/>
+                        <field name="edi_show_cancel_button" invisible="1"/>
+                        <field name="edi_show_abandon_cancel_button" invisible="1"/>
+                        <button name="button_cancel_posted_moves"
+                                string="Request EDI Cancellation"
+                                type="object"
+                                groups="account.group_account_invoice"
+                                attrs="{'invisible' : [('edi_show_cancel_button', '=', False)]}"/>
+                        <button name="abandon_edi_cancellation"
+                                string="Call off EDI Cancellation"
+                                type="object"
+                                groups="account.group_account_invoice"
+                                attrs="{'invisible' : [('edi_show_abandon_cancel_button', '=', False)]}"/>
                         <button name="button_draft" string="Reset to Draft" type="object" groups="account.group_account_invoice"
                                 attrs="{'invisible' : [('show_reset_to_draft_button', '=', False)]}" data-hotkey="q" />
                         <!-- Set as Checked -->
@@ -652,6 +671,44 @@
                                 attrs="{'invisible' : [('to_check', '=', False)]}" data-hotkey="k" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
+                    <!-- EDI -->
+                    <field name="edi_blocking_level" invisible="1" />
+                    <field name="edi_error_count" invisible="1" />
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': ['|', ('edi_web_services_to_process', 'in', ['', False]), ('state', '=', 'draft')]}">
+                         <div>The invoice will be processed asynchronously by the following E-invoicing service :
+                            <field name="edi_web_services_to_process" class="oe_inline"/>
+                         </div>
+                         <button name="action_process_edi_web_services" type="object" class="oe_link" string="Process now" />
+                    </div>
+                    <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'error')]}">
+                        <div class="o_row">
+                            <div>
+                                <field name="edi_error_message" />
+                            </div>
+                            <button name="%(account.action_open_edi_flows)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" />
+                            <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry processing" />
+                        </div>
+                    </div>
+                    <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'warning')]}">
+                        <div class="o_row">
+                            <div>
+                                <field name="edi_error_message" />
+                            </div>
+                            <button name="%(account.action_open_edi_flows)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" />
+                        </div>
+                    </div>
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'info')]}">
+                        <div class="o_row">
+                            <div>
+                                <field name="edi_error_message" />
+                            </div>
+                            <button name="%(account.action_open_edi_flows)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" />
+                        </div>
+                    </div>
                     <!-- Invoice outstanding credits -->
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-warning mb-0" role="alert"
@@ -1268,6 +1325,24 @@
                                 </group>
                                 <!-- Internal note -->
                                 <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                            </page>
+                            <page id="edi_flows"
+                                  string="EDI Flows"
+                                  groups="base.group_no_one"
+                                  attrs="{'invisible': [('edi_flow_ids', '=', [])]}">
+                                <field name="edi_flow_ids">
+                                    <tree create="false" delete="false" edit="false"
+                                          decoration-info="blocking_level == 'info'"
+                                          decoration-warning="blocking_level == 'warning'"
+                                          decoration-danger="blocking_level == 'error'"
+                                          decoration-muted="aborted">
+                                        <field name="edi_format_name" />
+                                        <field name="stage" />
+                                        <field name="aborted" invisible="1"/>
+                                        <field name="error" invisible="1"/>
+                                        <field name="blocking_level" invisible="1"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>

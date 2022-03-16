@@ -6,15 +6,36 @@ from odoo.tests.common import Form
 
 from pathlib import PureWindowsPath
 
-import base64
 import logging
 import markupsafe
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+class EdiFormat(models.Model):
+    _inherit = 'edi.format'
+
+    def _get_edi_format_settings(self, document=None, stage=None, flow_type=None):
+        self.ensure_one()
+        if self.code != 'ubl_2_1':
+            return super()._get_edi_format_settings(document, stage, flow_type)
+        return {
+            'needs_web_services': False,
+            'attachments_required_in_mail': False,
+            'document_needs_embedding': document and document.is_sale_document() and document.state != 'draft',
+            'stages': {
+                'send': {
+                    'Initialized': {
+                        'new_state': 'to_send',
+                        'action': self._create_attachment,
+                    },
+                    'XML File Created': {
+                        'new_state': 'sent',
+                        'make_attachments_official': True,
+                    },
+                }
+            }
+        }
 
     ####################################################
     # Helpers
@@ -209,54 +230,65 @@ class AccountEdiFormat(models.Model):
         xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
         xml_content += self.env['ir.qweb']._render('account_edi_ubl.export_ubl_invoice', self._get_ubl_values(invoice))
         xml_name = '%s_ubl_2_1.xml' % (invoice.name.replace('/', '_'))
-        return self.env['ir.attachment'].create({
+        return {
             'name': xml_name,
             'raw': xml_content.encode(),
             'res_model': 'account.move',
             'res_id': invoice.id,
-            'mimetype': 'application/xml'
-        })
+            'mimetype': 'application/xml',
+            'code': 'XML',
+        }
 
     ####################################################
     # Account.edi.format override
     ####################################################
 
-    def _create_invoice_from_xml_tree(self, filename, tree):
+    def _import_document_from_xml_tree(self, filename, tree):
         # OVERRIDE
         self.ensure_one()
         if self.code == 'ubl_2_1' and self._is_ubl(filename, tree):
             return self._create_invoice_from_ubl(tree)
-        return super()._create_invoice_from_xml_tree(filename, tree)
+        return super()._import_document_from_xml_tree(filename, tree)
 
-    def _update_invoice_from_xml_tree(self, filename, tree, invoice):
+    def _update_document_from_xml_tree(self, filename, tree, invoice):
         # OVERRIDE
         self.ensure_one()
         if self.code == 'ubl_2_1' and self._is_ubl(filename, tree):
             return self._update_invoice_from_ubl(tree, invoice)
-        return super()._update_invoice_from_xml_tree(filename, tree, invoice)
+        return super()._update_document_from_xml_tree(filename, tree, invoice)
 
-    def _is_compatible_with_journal(self, journal):
+    def _is_format_applicable(self, journal):
         # OVERRIDE
         self.ensure_one()
         if self.code != 'ubl_2_1':
-            return super()._is_compatible_with_journal(journal)
+            return super()._is_format_applicable(journal)
         return journal.type == 'sale'
 
-    def _is_enabled_by_default_on_journal(self, journal):
+    def _is_format_available_by_default(self, journal):
         # OVERRIDE
         # UBL is disabled by default to prevent conflict with other implementations of UBL.
         self.ensure_one()
         if self.code != 'ubl_2_1':
-            return super()._is_enabled_by_default_on_journal(journal)
+            return super()._is_format_available_by_default(journal)
         return False
 
-    def _post_invoice_edi(self, invoices):
-        # OVERRIDE
+    def _create_attachment(self, flows):
+        """ Create the ir.attachment containing the factur-x xml.
+        The kwargs should contain a recordset of invoices.
+        """
         self.ensure_one()
         if self.code != 'ubl_2_1':
-            return super()._post_invoice_edi(invoices)
+            return super()._create_attachment(flows)
         res = {}
-        for invoice in invoices:
-            attachment = self._export_ubl(invoice)
-            res[invoice] = {'success': True, 'attachment': attachment}
+        moves = flows._get_documents()
+        for flow in flows:
+            for invoice in moves.filtered(lambda m: m.id == flow.res_id):
+                attachment_vals = self._export_ubl(invoice)
+                res[invoice.id] = {'success': True, 'attachment': flow._create_or_update_edi_files([attachment_vals])}
         return res
+
+    def _is_format_required(self, document, document_type=''):
+        self.ensure_one()
+        if self.code != 'ubl_2_1':
+            return super()._is_format_required(document, document_type)
+        return document_type in ('invoice', 'payment') and document.is_invoice(include_receipts=True)

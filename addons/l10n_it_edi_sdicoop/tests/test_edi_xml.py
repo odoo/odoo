@@ -4,17 +4,17 @@
 import datetime
 import logging
 from lxml import etree
-from freezegun import freeze_time
 
 from odoo import tools
 from odoo.tests import tagged
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingEDICommon
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestItEdi(AccountEdiTestCommon):
+class TestItEdi(AccountTestInvoicingEDICommon):
 
     @classmethod
     def setUpClass(cls):
@@ -253,7 +253,7 @@ class TestItEdi(AccountEdiTestCommon):
         })
 
         # We create this because we are unable to post without a proxy user existing
-        cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
+        cls.proxy_user = cls.env['edi_proxy_client.user'].create({
             'id_client': 'l10n_it_edi_sdicoop_test',
             'company_id': cls.company.id,
             'edi_format_id': cls.edi_format.id,

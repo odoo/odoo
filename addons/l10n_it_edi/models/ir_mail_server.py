@@ -32,14 +32,13 @@ class FetchmailServer(models.Model):
         """ Search sent l10n_it_edi fatturaPA invoices """
 
         conditions = [
-            ('move_id', "!=", False),
-            ('edi_format_id.code', '=', 'fattura_pa'),
-            ('attachment_id.name', '=', att_name),
+            ('edi_flow_ids.edi_format_id.code', '=', 'fattura_pa'),
+            ('edi_flow_ids.edi_file_ids.attachment_id.name', '=', att_name),
         ]
         if send_state:
-            conditions.append(('move_id.l10n_it_send_state', '=', send_state))
+            conditions.append(('l10n_it_send_state', '=', send_state))
 
-        return self.env['account.edi.document'].search(conditions, limit=1).move_id
+        return self.env['account.move'].search(conditions, limit=1)
 
     @api.constrains('l10n_it_is_pec', 'server_type')
     def _check_pec(self):

@@ -12,6 +12,7 @@ from . import account_tax_report
 from . import account_reconcile_model
 from . import account_payment_term
 from . import account_move
+from . import account_move_edi
 from . import account_move_line_tax_details
 from . import account_analytic_default
 from . import account_partial_reconcile
@@ -33,3 +34,4 @@ from . import ir_actions_report
 from . import res_currency
 from . import res_bank
 from . import mail_thread
+from . import edi_flow

@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields
+from odoo.modules.module import get_module_resource
 from odoo.tests.common import TransactionCase, HttpCase, tagged, Form
+from odoo.addons.edi.tests.common import EdiTestCommon
+from odoo.tools.misc import file_open
 
 import json
 import time
@@ -535,6 +538,81 @@ class AccountTestInvoicingCommon(TransactionCase):
         :return:                An instance of etree.
         '''
         return etree.fromstring(xml_tree_str)
+
+
+@tagged('post_install', '-at_install')
+class AccountTestInvoicingEDICommon(AccountTestInvoicingCommon, EdiTestCommon):
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None, edi_format_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        super().EDISetUpClass(edi_format_ref=edi_format_ref)
+        cls.journal = cls.company_data['default_journal_sale']
+        cls.journal.edi_format_ids = [(6, 0, cls.edi_format.ids)]
+
+    def _create_empty_vendor_bill(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'journal_id': self.company_data['default_journal_purchase'].id,
+        })
+        return invoice
+
+    def update_invoice_from_file(self, module_name, subfolder, filename, invoice):
+        file_path = get_module_resource(module_name, subfolder, filename)
+        file = file_open(file_path, 'rb').read()
+
+        attachment = self.env['ir.attachment'].create({
+            'name': filename,
+            'datas': base64.encodebytes(file),
+            'res_id': invoice.id,
+            'res_model': 'account.move',
+        })
+
+        invoice.message_post(attachment_ids=[attachment.id])
+
+    def create_invoice_from_file(self, module_name, subfolder, filename):
+        file_path = get_module_resource(module_name, subfolder, filename)
+        file = file_open(file_path, 'rb').read()
+
+        attachment = self.env['ir.attachment'].create({
+            'name': filename,
+            'datas': base64.encodebytes(file),
+            'res_model': 'account.move',
+        })
+        journal_id = self.company_data['default_journal_sale']
+        action_vals = journal_id.with_context(default_move_type='in_invoice').create_invoice_from_attachment(attachment.ids)
+        return self.env['account.move'].browse(action_vals['res_id'])
+
+    def assert_generated_file_equal(self, invoice, expected_values, applied_xpath=None):
+        invoice.action_post()
+        invoice.edi_flow_ids._process_documents_web_services(with_commit=False)  # synchronous are called in post, but there's no CRON in tests for asynchronous
+        edi_file = invoice._get_edi_files(self.edi_format)
+        if not edi_file or not edi_file.attachment_id:
+            raise ValueError('No attachment was generated after posting EDI')
+        attachment = edi_file.attachment_id
+        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        current_etree = self.get_xml_tree_from_string(xml_content)
+        expected_etree = self.get_xml_tree_from_string(expected_values)
+        if applied_xpath:
+            expected_etree = self.with_applied_xpath(expected_etree, applied_xpath)
+        self.assertXmlTreeEqual(current_etree, expected_etree)
+
+    def _process_documents_web_services(self, moves, formats_to_return=None):
+        """ Generates and returns EDI files for the specified moves.
+        formats_to_return is an optional parameter used to pass a set of codes from
+        the formats we want to return the files for (in case we want to test specific formats).
+        Other formats will still generate documents, they simply won't be returned.
+        """
+        moves.edi_flow_ids._process_documents_web_services(with_commit=False)
+
+        flows_to_return = moves.edi_flow_ids
+        if formats_to_return is not None:
+            flows_to_return = flows_to_return.filtered(lambda x: x.edi_format_id.code in formats_to_return)
+
+        attachments = flows_to_return.edi_file_ids.attachment_id
+        data_str_list = []
+        for attachment in attachments.with_context(bin_size=False):
+            data_str_list.append(base64.decodebytes(attachment.datas))
+        return data_str_list
 
 
 @tagged('post_install', '-at_install')

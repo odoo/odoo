@@ -1040,3 +1040,14 @@ class AccountPayment(models.Model):
             'res_id': self.destination_journal_id.id,
         }
         return action
+
+    ####################################
+    # EDI implementation
+    ####################################
+
+    def action_process_edi_web_services(self, with_commit=True):
+        return self.move_id.action_process_edi_web_services(with_commit)
+
+    def action_retry_edi_documents_error(self):
+        self.ensure_one()
+        return self.move_id.action_retry_edi_documents_error()

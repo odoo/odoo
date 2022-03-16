@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingEDICommon
 from odoo.tests import tagged
 from odoo import Command
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nBeEdi(AccountEdiTestCommon):
+class TestL10nBeEdi(AccountTestInvoicingEDICommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='l10n_be.l10nbe_chart_template', edi_format_ref='l10n_be_edi.edi_efff_1'):

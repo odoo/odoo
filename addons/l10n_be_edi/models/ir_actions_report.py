@@ -12,7 +12,9 @@ class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
     def _l10n_be_edi_add_pdf_into_invoice_xml(self, invoice, stream_data):
-        edi_attachment = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'efff_1').attachment_id
+        edi_format = self.env.ref('l10n_be_edi.edi_efff_1')
+        edi_file_ids = invoice.edi_flow_ids._get_relevants(edi_format=edi_format).edi_file_ids
+        edi_attachment = edi_file_ids[0].attachment_id  # efff only create one file
         if not edi_attachment:
             return
 

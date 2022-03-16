@@ -9,13 +9,14 @@ from freezegun import freeze_time
 
 from odoo import tools
 from odoo.tests import tagged
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingEDICommon
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 
 _logger = logging.getLogger(__name__)
 
+
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class PecMailServerTests(AccountEdiTestCommon):
+class PecMailServerTests(AccountTestInvoicingEDICommon):
     """ Main test class for the l10n_it_edi vendor bills XML import from a PEC mail account"""
 
     fake_test_content = """<?xml version="1.0" encoding="UTF-8"?>
@@ -70,11 +71,17 @@ class PecMailServerTests(AccountEdiTestCommon):
             'res_id': cls.invoice.id,
             'res_model': 'account.move',
         })
-        cls.edi_document = cls.env['account.edi.document'].create({
+        cls.edi_flow = cls.env['edi.flow'].create({
             'edi_format_id': cls.edi_format.id,
-            'move_id': cls.invoice.id,
+            'res_id': cls.invoice.id,
+            'res_model': cls.invoice._name,
+            'state': 'sent',
+            'flow_type': 'send',
+        })
+        cls.edi_file = cls.env['edi.file'].create({
+            'edi_flow_id': cls.edi_flow.id,
             'attachment_id': cls.attachment.id,
-            'state': 'sent'
+            'code': 'test',
         })
 
         # Initialize the fetchmail server that has to be tested
@@ -154,8 +161,8 @@ class PecMailServerTests(AccountEdiTestCommon):
         with patch.object(self.server._cr, 'commit', return_value=None):
             self.server._message_receipt_invoice(receipt_type, receipt_mail_attachment)
 
-        # Check the Destination state of the edi_document
-        self.assertTrue(destination_state, self.edi_document.state)
+        # Check the Destination state of the edi_flow
+        self.assertTrue(destination_state, self.edi_flow.state)
 
     def test_ricevuta_consegna(self):
         """ Test a receipt adapted from https://www.fatturapa.gov.it/export/documenti/messaggi/v1.0/IT01234567890_11111_RC_001.xml """

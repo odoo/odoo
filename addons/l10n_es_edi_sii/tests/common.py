@@ -5,11 +5,11 @@ from datetime import datetime
 
 from odoo.tests import tagged
 from odoo.tools import misc
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingEDICommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestEsEdiCommon(AccountEdiTestCommon):
+class TestEsEdiCommon(AccountTestInvoicingEDICommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='l10n_es.account_chart_template_full', edi_format_ref='l10n_es_edi_sii.edi_es_sii'):

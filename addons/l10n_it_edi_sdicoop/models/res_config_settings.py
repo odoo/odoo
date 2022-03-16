@@ -20,27 +20,27 @@ class ResConfigSettings(models.TransientModel):
     def _create_proxy_user(self, company_id):
         fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         edi_identification = fattura_pa._get_proxy_identification(company_id)
-        self.env['account_edi_proxy_client.user']._register_proxy_user(company_id, fattura_pa, edi_identification)
+        self.env['edi_proxy_client.user']._register_proxy_user(company_id, fattura_pa, edi_identification)
 
-    @api.depends('company_id.account_edi_proxy_client_ids', 'company_id.account_edi_proxy_client_ids.active')
+    @api.depends('company_id.edi_proxy_client_ids', 'company_id.edi_proxy_client_ids.active')
     def _compute_l10n_it_edi_sdicoop_demo_mode(self):
         for config in self:
-            config.l10n_it_edi_sdicoop_demo_mode = self.env['account_edi_proxy_client.user']._get_demo_state()
+            config.l10n_it_edi_sdicoop_demo_mode = self.env['edi_proxy_client.user']._get_demo_state()
 
     def _set_l10n_it_edi_sdicoop_demo_mode(self):
         for config in self:
-            self.env['ir.config_parameter'].set_param('account_edi_proxy_client.demo', config.l10n_it_edi_sdicoop_demo_mode)
+            self.env['ir.config_parameter'].set_param('edi_proxy_client.demo', config.l10n_it_edi_sdicoop_demo_mode)
 
-    @api.depends('company_id.account_edi_proxy_client_ids', 'company_id.account_edi_proxy_client_ids.active')
+    @api.depends('company_id.edi_proxy_client_ids', 'company_id.edi_proxy_client_ids.active')
     def _compute_is_edi_proxy_active(self):
         for config in self:
-            config.is_edi_proxy_active = config.company_id.account_edi_proxy_client_ids
+            config.is_edi_proxy_active = config.company_id.edi_proxy_client_ids
 
-    @api.depends('company_id.account_edi_proxy_client_ids', 'company_id.account_edi_proxy_client_ids.active')
+    @api.depends('company_id.edi_proxy_client_ids', 'company_id.edi_proxy_client_ids.active')
     def _compute_l10n_it_edi_proxy_current_state(self):
         fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         for config in self:
-            proxy_user = config.company_id.account_edi_proxy_client_ids.search([
+            proxy_user = config.company_id.edi_proxy_client_ids.search([
                 ('company_id', '=', config.company_id.id),
                 ('edi_format_id', '=', fattura_pa.id),
             ], limit=1)
@@ -61,25 +61,25 @@ class ResConfigSettings(models.TransientModel):
         if not edi_identification:
             return
 
-        self.env['account_edi_proxy_client.user']._register_proxy_user(self.company_id, fattura_pa, edi_identification)
+        self.env['edi_proxy_client.user']._register_proxy_user(self.company_id, fattura_pa, edi_identification)
 
     def _set_l10n_it_edi_sdicoop_register_demo_mode(self):
 
         fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         for config in self:
 
-            proxy_user = self.env['account_edi_proxy_client.user'].search([
+            proxy_user = self.env['edi_proxy_client.user'].search([
                 ('company_id', '=', config.company_id.id),
                 ('edi_format_id', '=', fattura_pa.id)
             ], limit=1)
 
-            real_proxy_users = self.env['account_edi_proxy_client.user'].sudo().search([
+            real_proxy_users = self.env['edi_proxy_client.user'].sudo().search([
                 ('id_client', 'not like', 'demo'),
             ])
 
             # Update the config as per the selected radio button
             previous_demo_state = proxy_user._get_demo_state()
-            self.env['ir.config_parameter'].set_param('account_edi_proxy_client.demo', config.l10n_it_edi_sdicoop_demo_mode)
+            self.env['ir.config_parameter'].set_param('edi_proxy_client.demo', config.l10n_it_edi_sdicoop_demo_mode)
 
             # If the user is trying to change from a state in which they have a registered official or testing proxy client
             # to another state, we should stop them
@@ -95,5 +95,5 @@ class ResConfigSettings(models.TransientModel):
                 # If there is a demo user, and we are transitioning from demo to test or production, we should
                 # delete all demo users and then create the new user.
                 elif proxy_user.id_client[:4] == 'demo' and config.l10n_it_edi_sdicoop_demo_mode != 'demo':
-                    self.env['account_edi_proxy_client.user'].search([('id_client', '=like', 'demo%')]).sudo().unlink()
+                    self.env['edi_proxy_client.user'].search([('id_client', '=like', 'demo%')]).sudo().unlink()
                     self._create_proxy_user(config.company_id)

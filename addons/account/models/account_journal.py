@@ -6,6 +6,7 @@ from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.tools import remove_accents
 import logging
 import re
+from collections import defaultdict
 
 _logger = logging.getLogger(__name__)
 
@@ -202,6 +203,20 @@ class AccountJournal(models.Model):
     selected_payment_method_codes = fields.Char(
         compute='_compute_selected_payment_method_codes',
         help='Technical field used to hide or show payment method options if needed.'
+    )
+    # EDI fields
+    edi_format_ids = fields.Many2many(
+        comodel_name='edi.format',
+        string='Electronic invoicing',
+        help='Send XML/EDI invoices',
+        domain="[('id', 'in', compatible_edi_ids)]",
+        compute='_compute_edi_format_ids',
+        readonly=False, store=True,
+    )
+    compatible_edi_ids = fields.Many2many(
+        comodel_name='edi.format',
+        compute='_compute_compatible_edi_ids',
+        help='EDI format that support moves in this journal',
     )
 
     _sql_constraints = [
@@ -567,6 +582,8 @@ class AccountJournal(models.Model):
                 if len(journal_entry) > 0:
                     field_string = self._fields['restrict_mode_hash_table'].get_description(self.env)['string']
                     raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.", field_string))
+        if vals.get('edi_format_ids'):
+            old_edi_format_ids = self.edi_format_ids
         result = super(AccountJournal, self).write(vals)
 
         # Ensure the liquidity accounts are sharing the same foreign currency.
@@ -581,6 +598,16 @@ class AccountJournal(models.Model):
         for record in self:
             if record.restrict_mode_hash_table and not record.secure_sequence_id:
                 record._create_secure_sequence(['secure_sequence_id'])
+
+        # Don't allow the user to deactivate an edi format having at least one flows to be processed.
+        if vals.get('edi_format_ids'):
+            diff_edi_format_ids = old_edi_format_ids - self.edi_format_ids
+            flows = self.env['edi.flow'].search([
+                ('edi_format_id', 'in', diff_edi_format_ids.ids),
+                ('state', 'not in', ('sent', 'cancelled')),
+            ])
+            if any(f._get_documents().journal_id.id in self.ids for f in flows):
+                raise UserError(_('Cannot deactivate (%s) on this journal because not all documents are edi flows are done', ', '.join(flows.edi_format_id.mapped('display_name'))))
 
         return result
 
@@ -619,9 +646,6 @@ class AccountJournal(models.Model):
         # Don't get the digits on 'chart_template_id' since the chart template could be a custom one.
         random_account = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
         digits = len(random_account.code) if random_account else 6
-
-        liquidity_type = self.env.ref('account.data_account_type_liquidity')
-        current_assets_type = self.env.ref('account.data_account_type_current_assets')
 
         if journal_type in ('bank', 'cash'):
             has_liquidity_accounts = vals.get('default_account_id')
@@ -928,3 +952,42 @@ class AccountJournal(models.Model):
         """ Check if the payment method is available on this journal. """
         self.ensure_one()
         return self.filtered_domain(self.env['account.payment.method']._get_payment_method_domain(payment_method_code))
+
+    ####################################
+    # EDI implementation
+    ####################################
+
+    @api.depends('type', 'company_id', 'company_id.account_fiscal_country_id')
+    def _compute_compatible_edi_ids(self):
+        invoices_edi_formats = self.env['edi.format'].search([('applicability', 'like', 'accounting')])
+        for journal in self:
+            journal.compatible_edi_ids = invoices_edi_formats.filtered(lambda f: f._is_format_applicable(journal))
+
+    @api.depends('type', 'company_id', 'company_id.account_fiscal_country_id')
+    def _compute_edi_format_ids(self):
+        invoices_edi_formats = self.env['edi.format'].search([('applicability', 'like', 'accounting')])
+        journal_ids = self.ids
+        if journal_ids:
+            self._cr.execute('''
+                SELECT
+                    move.journal_id,
+                    ARRAY_AGG(flow.edi_format_id) AS edi_format_ids
+                FROM edi_flow flow
+                JOIN account_move move ON move.id = flow.res_id AND flow.res_model = 'account.move'
+                WHERE flow.state NOT IN ('sent', 'cancelled') AND move.journal_id IN %s
+                GROUP BY move.journal_id
+            ''', [tuple(journal_ids)])
+            protected_edi_formats_per_journal = {r[0]: set(r[1]) for r in self._cr.fetchall()}
+        else:
+            protected_edi_formats_per_journal = defaultdict(set)
+
+        for journal in self:
+            enabled_edi_formats = invoices_edi_formats.filtered(
+                lambda e: e._is_format_applicable(journal) and e._is_format_available_by_default(journal)
+            )
+
+            # The existing edi formats that are already in use, so we can't remove it.
+            protected_edi_format_ids = protected_edi_formats_per_journal.get(journal.id, set())
+            protected_edi_formats = journal.edi_format_ids.filtered(lambda e: e.id in protected_edi_format_ids)
+
+            journal.edi_format_ids = enabled_edi_formats + protected_edi_formats

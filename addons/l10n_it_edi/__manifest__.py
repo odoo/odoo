@@ -8,15 +8,16 @@
     'depends': [
         'l10n_it',
         'fetchmail',
-        'account_edi'
+        'account',
+        'edi',
     ],
-    'auto_install': ['l10n_it', 'account_edi'],
+    'auto_install': ['l10n_it', 'account', 'edi'],
     'author': 'Odoo',
     'description': """
 E-invoice implementation
     """,
     'category': 'Accounting/Localizations/EDI',
-    'website': 'http://www.odoo.com/',
+    'website': 'https://www.odoo.com/',
     'data': [
         'security/ir.model.access.csv',
         'data/account_edi_data.xml',
