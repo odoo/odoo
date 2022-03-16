@@ -406,7 +406,7 @@ class MrpProduction(models.Model):
             else:
                 action['views'] = form_view
             action['res_id'] = pickings.id
-        action['context'] = dict(self._context, default_origin=self.name, create=False)
+        action['context'] = dict(self._context, default_origin=self.name)
         return action
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')

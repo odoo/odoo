@@ -193,6 +193,11 @@
                             <field name="product_tmpl_id" invisible="1"/>
                             <field name="forecasted_issue" invisible="1"/>
                             <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', 'in', (False, ''))], 'readonly': [('state', '!=', 'draft')]}"/>
+                             <label for="bom_id" name="bom_label"/>
+                            <div class='o_row d-flex' name="bom_div">
+                                <field name="bom_id"
+                                    context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </div>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row no-gutters d-flex">
                                 <div attrs="{'invisible': [('state', '=', 'draft')]}" class="o_row">
@@ -216,11 +221,6 @@
                                 <field name="lot_producing_id"
                                     context="{'default_product_id': product_id, 'default_company_id': company_id}" attrs="{'invisible': [('product_tracking', 'in', ('none', False))]}"/>
                                 <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" attrs="{'invisible': ['|', ('product_tracking', 'in', ('none', False)), ('lot_producing_id', '!=', False)]}"/>
-                            </div>
-                            <label for="bom_id" name="bom_label"/>
-                            <div class='o_row d-flex' name="bom_div">
-                                <field name="bom_id"
-                                    context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </div>
                         </group>
                         <group name="group_extra_info">
@@ -434,7 +434,7 @@
                                         <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <span t-attf-class="badge #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['none'].indexOf(record.state.raw_value) > -1 ? 'badge-danger' : ['confirmed'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : 'badge-primary'}"><t t-esc="record.state.value"/></span>
+                                        <span t-attf-class="badge #{['cancel'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['none'].indexOf(record.state.raw_value) > -1 ? 'badge-danger' : ['progress'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' : ['done', 'to_close'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : 'badge-primary'}"><t t-esc="record.state.value"/></span>
                                     </div>
                                 </div>
                             </div>

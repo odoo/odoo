@@ -31,7 +31,7 @@ class ProductTemplate(models.Model):
         compute='_compute_mrp_product_qty', compute_sudo=False)
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
-        help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
+        help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added. In case the product is subcontracted, this can be used to determine the date at which components should be sent to the subcontractor.")
     is_kits = fields.Boolean(compute='_compute_is_kits', compute_sudo=False)
 
     def _compute_bom_count(self):
