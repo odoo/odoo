@@ -125,35 +125,11 @@
         </field>
     </record>
 
-    <record id="mailing_list_view_form_simplified_footer" model="ir.ui.view">
-        <field name="name">mailing.list.form.simplified.footer</field>
-        <field name="model">mailing.list</field>
-        <field name="inherit_id" ref="mailing_list_view_form_simplified"/>
-        <field name="mode">primary</field>
-        <field name="priority" eval="30"/>
-        <field name="arch" type="xml">
-            <xpath expr="//form" position="inside">
-                <footer>
-                    <button string="Create" name="close_dialog" type="object" class="btn-primary" data-hotkey="q"/>
-                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
-                </footer>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="open_create_mass_mailing_list" model="ir.actions.act_window">
-        <field name="name">Create a Mailing List</field>
-        <field name="res_model">mailing.list</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="mailing_list_view_form_simplified_footer"/>
-        <field name="target">new</field>
-    </record>
-
     <record id="mailing_list_view_kanban" model="ir.ui.view">
         <field name="name">mailing.list.view.kanban</field>
         <field name="model">mailing.list</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile o_kanban_mailing_list" on_create="mass_mailing.open_create_mass_mailing_list" sample="1">
+            <kanban class="o_kanban_mobile o_kanban_mailing_list" sample="1">
                 <field name="name"/>
                 <field name="contact_count"/>
                 <field name="contact_count_email"/>
