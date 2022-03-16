@@ -64,7 +64,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("ImageField");
 
     QUnit.test("ImageField is correctly rendered", async function (assert) {
-        assert.expect(8);
+        assert.expect(10);
 
         serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
         serverData.models.partner.records[0].document = MY_IMAGE;
@@ -124,6 +124,16 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_edit");
 
+        assert.containsOnce(
+            target,
+            ".o_form_image_controls .o_select_file_button",
+            "the image can be edited"
+        );
+        assert.containsOnce(
+            target,
+            ".o_form_image_controls .o_clear_file_button",
+            "the image can be deleted"
+        );
         assert.strictEqual(
             target.querySelector("input.o_input_file").getAttribute("accept"),
             "image/*",
@@ -134,7 +144,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "ImageField is correctly replaced when given an incorrect value",
         async function (assert) {
-            assert.expect(7);
+            assert.expect(9);
 
             serverData.models.partner.records[0].document = "incorrect_base64_value";
 
@@ -191,6 +201,19 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelector(".o_field_widget[name='document'] > img").style.maxWidth,
                 "90px",
                 "the image should correctly set its attributes"
+            );
+
+            await click(target, ".o_form_button_edit");
+
+            assert.containsOnce(
+                target,
+                ".o_form_image_controls .o_select_file_button",
+                "the image can be edited"
+            );
+            assert.containsNone(
+                target,
+                ".o_form_image_controls .o_clear_file_button",
+                "the image cannot be deleted as it has not been uploaded"
             );
         }
     );

@@ -6,7 +6,7 @@
             <FileUploader
                 acceptedFileExtensions="props.acceptedFileExtensions"
                 fileUploadStyle="sizeStyle"
-                isEmpty="!props.value || !isValid"
+                isEmpty="!props.value || !state.isValid"
                 onUploaded.bind="onFileUploaded"
                 onRemove.bind="onFileRemove"
                 type="'image'"
