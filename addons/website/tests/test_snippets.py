@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import html
+from werkzeug.urls import url_encode
 
 from odoo.tests import HttpCase, tagged
 from odoo.addons.website.tools import MockRequest
@@ -26,7 +27,11 @@ class TestSnippets(HttpCase):
             's_map',  # avoid call to maps.google.com
         ]
         snippets_names = ','.join(set(el.attrib['data-snippet'] for el in data_snippet_els if el.attrib['data-snippet'] not in blacklist))
-        self.start_tour("/web#action=website.website_editor&path=/&snippets_names=%s" % snippets_names, "snippets_all_drag_and_drop", login='admin', timeout=300)
+        snippets_names_encoded = url_encode({'snippets_names': snippets_names})
+        path = url_encode({
+            'path': '/?' + snippets_names_encoded
+        })
+        self.start_tour("/web#action=website.website_editor&%s" % path, "snippets_all_drag_and_drop", login='admin', timeout=300)
 
     def test_04_countdown_preview(self):
         self.start_tour("/?enable_editor=1", "snippet_countdown", login='admin')

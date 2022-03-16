@@ -2,6 +2,7 @@ odoo.define("website.tour.snippets_all_drag_and_drop", async function (require) 
 "use strict";
 
 const snippetsEditor = require('web_editor.snippet.editor');
+const websiteTourUtils = require('website.tour_utils');
 
 snippetsEditor.SnippetEditor.include({
     removeSnippet: async function (shouldRecordUndo = true) {
@@ -16,8 +17,10 @@ let snippetsNames = (new URL(document.location.href)).searchParams.get('snippets
 // When this test is loaded in the backend, the search params aren't as easy to
 // read as before. Little trickery to make this test run.
 const searchParams = new URLSearchParams(window.location.href.split('#')[1]).get('path');
-snippetsNames = new URLSearchParams(searchParams.split('/')[1]).get('snippets_names');
-snippetsNames = snippetsNames.split(',');
+if (searchParams) {
+    snippetsNames = new URLSearchParams(searchParams.split('/')[1]).get('snippets_names') || '';
+    snippetsNames = snippetsNames.split(',');
+}
 let steps = [];
 let n = 0;
 for (const snippet of snippetsNames) {
@@ -64,6 +67,7 @@ for (const snippet of snippetsNames) {
 tour.register("snippets_all_drag_and_drop", {
     test: true,
 }, [
+    websiteTourUtils.clickOnEdit(),
     {
         content: "Ensure snippets are actually passed at the test.",
         trigger: "#oe_snippets",

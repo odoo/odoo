@@ -121,9 +121,9 @@ function changePaddingSize(direction) {
  */
 function clickOnEdit(position = "bottom") {
     return {
-        trigger: "a[data-action=edit]",
+        trigger: ".o_menu_systray .o_edit_website_container a",
         content: Markup(_t("<b>Click Edit</b> to start designing your homepage.")),
-        extra_trigger: ".homepage",
+        extra_trigger: "iframe .homepage",
         position: position,
     };
 }
