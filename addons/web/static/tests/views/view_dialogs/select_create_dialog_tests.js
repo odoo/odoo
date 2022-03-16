@@ -1,12 +1,6 @@
 /** @odoo-module */
 
-import {
-    click,
-    findChildren,
-    getFixture,
-    nextTick,
-    patchWithCleanup,
-} from "@web/../tests/helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView } from "@web/../tests/views/helpers";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
