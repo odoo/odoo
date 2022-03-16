@@ -582,7 +582,7 @@ export class Record extends DataPoint {
         for (const fieldName in this.activeFields) {
             if (this.fields[fieldName].type === "many2one") {
                 proms.push(
-                    this._loadOne2ManyData(fieldName, this.data[fieldName]).then((value) => {
+                    this._loadMany2OneData(fieldName, this.data[fieldName]).then((value) => {
                         this.data[fieldName] = value;
                         this._values[fieldName] = value;
                     })
@@ -771,7 +771,7 @@ export class Record extends DataPoint {
     // Protected
     // -------------------------------------------------------------------------
 
-    async _loadOne2ManyData(fieldName, value) {
+    async _loadMany2OneData(fieldName, value) {
         const relation = this.fields[fieldName].relation;
         const field = this.activeFields[fieldName];
         if (
@@ -852,7 +852,7 @@ export class Record extends DataPoint {
             this._changes[fieldName] = this.data[fieldName];
         } else {
             if (field && field.type === "many2one") {
-                value = await this._loadOne2ManyData(fieldName, value);
+                value = await this._loadMany2OneData(fieldName, value);
             }
             this.data[fieldName] = value;
             this._changes[fieldName] = value;
