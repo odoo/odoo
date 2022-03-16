@@ -799,6 +799,19 @@ class MailActivityMixin(models.AbstractModel):
         self.env['mail.activity'].search(domain).unlink()
         return True
 
+    def _get_activity_where_statement(self):
+        """This function was created to be able inherit it and
+        add extra conditions to where statement used in
+        '_read_progress_bar' function. When inherited, super
+        should be called in start of function scope.
+
+        * Adicionado pela Multidados
+
+        Returns:
+            str: Additional where conditions.
+        """
+        return f"res_model = '{self._name}' "
+
     def _read_progress_bar(self, domain, group_by, progress_bar):
         group_by_fname = group_by.partition(':')[0]
         if not (progress_bar['field'] == 'activity_state' and self._fields[group_by_fname].store):
@@ -826,6 +839,7 @@ class MailActivityMixin(models.AbstractModel):
         ]
         from_clause, where_clause, where_params = query.get_sql()
         tz = self._context.get('tz') or self.env.user.tz or 'UTC'
+        activity_where_stat = self._get_activity_where_statement()
         select_query = """
             SELECT 1 AS id, count(*) AS "__count", {fields}
             FROM {from_clause}
@@ -840,7 +854,7 @@ class MailActivityMixin(models.AbstractModel):
                 FROM mail_activity
                 JOIN res_users ON (res_users.id = mail_activity.user_id)
                 JOIN res_partner ON (res_partner.id = res_users.partner_id)
-                WHERE res_model = '{model}'
+                WHERE {activity_where_stat}
                 GROUP BY res_id
             ) AS "_last_activity_state" ON ("{table}".id = "_last_activity_state".res_id)
             WHERE {where_clause}
@@ -848,7 +862,7 @@ class MailActivityMixin(models.AbstractModel):
         """.format(
             fields=', '.join(select_terms),
             from_clause=from_clause,
-            model=self._name,
+            activity_where_stat=activity_where_stat,
             table=self._table,
             where_clause=where_clause or '1=1',
             group_by=', '.join(groupby_terms),
