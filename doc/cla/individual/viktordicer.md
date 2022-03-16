@@ -1,4 +1,4 @@
-Indonesia, 2019-04-24
+Slovakia, 2022-03-16
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
