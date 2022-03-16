@@ -66,4 +66,5 @@ class TestEdiXmls(TestEsEdiTbaiCommon):
         with freeze_time(self.frozen_today):
             xml_doc = self.edi_format._l10n_es_tbai_get_invoice_xml(self.out_invoice, cancel=False)
             xml_expected = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST)
+            xml_doc.remove(xml_doc.find("ds:Signature", namespaces=L10nEsTbaiXmlUtils.NS_MAP))
             self.assertXmlTreeEqual(xml_doc, xml_expected)

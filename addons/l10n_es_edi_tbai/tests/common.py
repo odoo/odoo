@@ -111,6 +111,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
       <NumFactura>01</NumFactura>
       <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
       <HoraExpedicionFactura>___ignore___</HoraExpedicionFactura>
+      <FacturaSimplificada>N</FacturaSimplificada>
     </CabeceraFactura>
     <DatosFactura>
       <DescripcionFactura>manual</DescripcionFactura>
@@ -163,67 +164,5 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
     </Software>
     <NumSerieDispositivo>___ignore___</NumSerieDispositivo>
   </HuellaTBAI>
-  <ds:Signature Id="___ignore___">
-    <ds:SignedInfo>
-      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
-      <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-      <ds:Reference URI="">
-        <ds:Transforms>
-          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-        </ds:Transforms>
-        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-        <ds:DigestValue>___ignore___</ds:DigestValue>
-      </ds:Reference>
-      <ds:Reference URI="___ignore___">
-        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-        <ds:DigestValue>___ignore___</ds:DigestValue>
-      </ds:Reference>
-      <ds:Reference URI="___ignore___">
-        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-        <ds:DigestValue>___ignore___</ds:DigestValue>
-      </ds:Reference>
-    </ds:SignedInfo>
-    <ds:SignatureValue>___ignore___</ds:SignatureValue>
-    <ds:KeyInfo Id="___ignore___">
-      <ds:X509Data>
-        <ds:X509Certificate>___ignore___</ds:X509Certificate>
-      </ds:X509Data>
-      <ds:KeyValue>
-        <ds:RSAKeyValue>
-          <ds:Modulus>___ignore___</ds:Modulus>
-          <ds:Exponent>AQAB</ds:Exponent>
-        </ds:RSAKeyValue>
-      </ds:KeyValue>
-    </ds:KeyInfo>
-    <ds:Object>
-      <etsi:QualifyingProperties Target="___ignore___">
-        <etsi:SignedProperties Id="___ignore___">
-          <etsi:SignedSignatureProperties>
-            <etsi:SigningTime>___ignore___</etsi:SigningTime>
-            <etsi:SigningCertificateV2>
-              <etsi:Cert>
-                <etsi:CertDigest>
-                  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256"/>
-                  <ds:DigestValue>___ignore___</ds:DigestValue>
-                </etsi:CertDigest>
-              </etsi:Cert>
-            </etsi:SigningCertificateV2>
-            <etsi:SignaturePolicyIdentifier>
-              <etsi:SignaturePolicyId>
-                <etsi:SigPolicyId>
-                  <etsi:Identifier>https://www.gipuzkoa.eus/TicketBAI/signature</etsi:Identifier>
-                  <etsi:Description>Pol&#237;tica de Firma TicketBAI 1.0</etsi:Description>
-                </etsi:SigPolicyId>
-                <etsi:SigPolicyHash>
-                  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256"/>
-                  <ds:DigestValue>___ignore___</ds:DigestValue>
-                </etsi:SigPolicyHash>
-              </etsi:SignaturePolicyId>
-            </etsi:SignaturePolicyIdentifier>
-          </etsi:SignedSignatureProperties>
-        </etsi:SignedProperties>
-      </etsi:QualifyingProperties>
-    </ds:Object>
-  </ds:Signature>
 </T:TicketBai>
 """.encode("utf-8")
