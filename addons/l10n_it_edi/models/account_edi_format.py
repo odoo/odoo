@@ -11,6 +11,7 @@ from lxml import etree
 from datetime import datetime
 import re
 import logging
+import json
 
 
 _logger = logging.getLogger(__name__)
@@ -343,36 +344,6 @@ class AccountEdiFormat(models.Model):
                 if elements:
                     invoice_form.l10n_it_stamp_duty = float(elements[0].text)
 
-                # List of all amount discount (will be add after all article to avoid to have a negative sum)
-                discount_list = []
-                percentage_global_discount = 1.0
-
-                # Global discount. <2.1.1.8>
-                discount_elements = body_tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione')
-                total_discount_amount = 0.0
-                if discount_elements:
-                    for discount_element in discount_elements:
-                        discount_line = discount_element.xpath('.//Tipo')
-                        discount_sign = -1
-                        if discount_line and discount_line[0].text == 'SC':
-                            discount_sign = 1
-                        discount_percentage = discount_element.xpath('.//Percentuale')
-                        if discount_percentage and discount_percentage[0].text:
-                            percentage_global_discount *= 1 - float(discount_percentage[0].text)/100 * discount_sign
-
-                        discount_amount_text = discount_element.xpath('.//Importo')
-                        if discount_amount_text and discount_amount_text[0].text:
-                            discount_amount = float(discount_amount_text[0].text) * discount_sign * -1
-                            discount = {}
-                            discount["seq"] = 0
-
-                            if discount_amount < 0:
-                                discount["name"] = _('GLOBAL DISCOUNT')
-                            else:
-                                discount["name"] = _('GLOBAL EXTRA CHARGE')
-                            discount["amount"] = discount_amount
-                            discount["tax"] = []
-                            discount_list.append(discount)
 
                 # Comment. <2.1.1.11>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento//Causale')
@@ -457,7 +428,7 @@ class AccountEdiFormat(models.Model):
                             # Sequence.
                             line_elements = element.xpath('.//NumeroLinea')
                             if line_elements:
-                                invoice_line_form.sequence = int(line_elements[0].text) * 2
+                                invoice_line_form.sequence = int(line_elements[0].text)
 
                             # Product.
                             line_elements = element.xpath('.//Descrizione')
@@ -536,57 +507,51 @@ class AccountEdiFormat(models.Model):
                                             percentage,
                                             invoice_line_form.name))
 
-                            # Discount in cascade mode.
-                            # if 3 discounts : -10% -50€ -20%
-                            # the result must be : (((price -10%)-50€) -20%)
-                            # Generic form : (((price -P1%)-A1€) -P2%)
-                            # It will be split in two parts: fix amount and pourcent amount
-                            # example: (((((price - A1€) -P2%) -A3€) -A4€) -P5€)
-                            # pourcent: 1-(1-P2)*(1-P5)
-                            # fix amount: A1*(1-P2)*(1-P5)+A3*(1-P5)+A4*(1-P5) (we must take account of all
-                            # percentage present after the fix amount)
-                            line_elements = element.xpath('.//ScontoMaggiorazione')
-                            total_discount_amount = 0.0
-                            total_discount_percentage = percentage_global_discount
-                            if line_elements:
-                                for line_element in line_elements:
-                                    discount_line = line_element.xpath('.//Tipo')
-                                    discount_sign = -1
-                                    if discount_line and discount_line[0].text == 'SC':
-                                        discount_sign = 1
-                                    discount_percentage = line_element.xpath('.//Percentuale')
-                                    if discount_percentage and discount_percentage[0].text:
-                                        pourcentage_actual = 1 - float(discount_percentage[0].text)/100 * discount_sign
-                                        total_discount_percentage *= pourcentage_actual
-                                        total_discount_amount *= pourcentage_actual
+                            # Discounts
+                            discount_elements = element.xpath('.//ScontoMaggiorazione')
+                            if discount_elements:
+                                discount_element = discount_elements[0]
+                                discount_percentage = discount_element.xpath('.//Percentuale')
+                                # Special case of only 1 percentage discount
+                                if discount_percentage and len(discount_elements) == 1:
+                                    discount_type = discount_element.xpath('.//Tipo')
+                                    discount_sign = 1
+                                    if discount_type and discount_type[0].text == 'MG':
+                                        discount_sign = -1
+                                    invoice_line_form.discount = discount_sign * float(discount_percentage[0].text)
+                                # Discounts in cascade summarized in 1 percentage
+                                else:
+                                    total = float(element.xpath('.//PrezzoTotale')[0].text)
+                                    discount = 100 - (100 * total) / (invoice_line_form.quantity * invoice_line_form.price_unit)
+                                    invoice_line_form.discount = discount
 
-                                    discount_amount = line_element.xpath('.//Importo')
-                                    if discount_amount and discount_amount[0].text:
-                                        total_discount_amount += float(discount_amount[0].text) * discount_sign * -1
 
-                                # Save amount discount.
-                                if total_discount_amount != 0:
-                                    discount = {}
-                                    discount["seq"] = invoice_line_form.sequence + 1
+                # Global discount summarized in 1 amount
+                discount_elements = body_tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione')
+                if discount_elements:
+                    taxable_amount = float(json.loads(invoice_form.tax_totals_json)['amount_untaxed'])
+                    discounted_amount = taxable_amount
+                    for discount_element in discount_elements:
+                        discount_type = discount_element.xpath('.//Tipo')
+                        discount_sign = 1
+                        if discount_type and discount_type[0].text == 'MG':
+                            discount_sign = -1
+                        discount_amount = discount_element.xpath('.//Importo')
+                        if discount_amount:
+                            discounted_amount -= discount_sign * float(discount_amount[0].text)
+                            continue
+                        discount_percentage = discount_element.xpath('.//Percentuale')
+                        if discount_percentage:
+                            discounted_amount *= 1 - discount_sign * float(discount_percentage[0].text) / 100
 
-                                    if total_discount_amount < 0:
-                                        discount["name"] = _('DISCOUNT: %s', invoice_line_form.name)
-                                    else:
-                                        discount["name"] = _('EXTRA CHARGE: %s', invoice_line_form.name)
-                                    discount["amount"] = total_discount_amount
-                                    discount["tax"] = []
-                                    for tax in invoice_line_form.tax_ids:
-                                        discount["tax"].append(tax)
-                                    discount_list.append(discount)
-                            invoice_line_form.discount = (1 - total_discount_percentage) * 100
+                    general_discount = discounted_amount - taxable_amount
+                    sequence = len(elements) + 1
 
-                # Apply amount discount.
-                for discount in discount_list:
-                    with invoice_form.invoice_line_ids.new() as invoice_line_form_discount:
-                        invoice_line_form_discount.tax_ids.clear()
-                        invoice_line_form_discount.sequence = discount["seq"]
-                        invoice_line_form_discount.name = discount["name"]
-                        invoice_line_form_discount.price_unit = discount["amount"]
+                    with invoice_form.invoice_line_ids.new() as invoice_line_global_discount:
+                        invoice_line_global_discount.tax_ids.clear()
+                        invoice_line_global_discount.sequence = sequence
+                        invoice_line_global_discount.name = 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE'
+                        invoice_line_global_discount.price_unit = general_discount
 
             new_invoice = invoice_form.save()
             new_invoice.l10n_it_send_state = "other"
