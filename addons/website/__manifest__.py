@@ -160,6 +160,8 @@
             ('prepend', 'website/static/src/scss/secondary_variables.scss'),
         ],
         'web.assets_tests': [
+            ('include', 'web_editor.assets_wysiwyg'),
+            ('include', 'website.assets_wysiwyg'),
             'website/static/tests/tours/**/*',
         ],
         'web.assets_backend': [

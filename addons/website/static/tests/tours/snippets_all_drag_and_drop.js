@@ -13,6 +13,10 @@ snippetsEditor.SnippetEditor.include({
 const tour = require("web_tour.tour");
 
 let snippetsNames = (new URL(document.location.href)).searchParams.get('snippets_names') || '';
+// When this test is loaded in the backend, the search params aren't as easy to
+// read as before. Little trickery to make this test run.
+const searchParams = new URLSearchParams(window.location.href.split('#')[1]).get('path');
+snippetsNames = new URLSearchParams(searchParams.split('/')[1]).get('snippets_names');
 snippetsNames = snippetsNames.split(',');
 let steps = [];
 let n = 0;
@@ -21,10 +25,10 @@ for (const snippet of snippetsNames) {
     const snippetSteps = [{
         content: `Drop ${snippet} snippet [${n}/${snippetsNames.length}]`,
         trigger: `#oe_snippets .oe_snippet:has( > [data-snippet='${snippet}']) .oe_snippet_thumbnail`,
-        run: "drag_and_drop #wrap",
+        run: "drag_and_drop iframe #wrap",
     }, {
         content: `Edit ${snippet} snippet`,
-        trigger: `#wrap.o_editable [data-snippet='${snippet}']`,
+        trigger: `iframe #wrap.o_editable [data-snippet='${snippet}']`,
     }, {
         content: `check ${snippet} setting are loaded, wait panel is visible`,
         trigger: ".o_we_customize_panel",
@@ -45,13 +49,13 @@ for (const snippet of snippetsNames) {
     if (snippet === 's_google_map') {
         snippetSteps.splice(1, 3, {
             content: 'Close API Key popup',
-            trigger: ".modal-footer .btn-secondary",
+            trigger: "iframe .modal-footer .btn-secondary",
         });
     } else if (['s_popup', 's_newsletter_subscribe_popup'].includes(snippet)) {
         snippetSteps[2]['in_modal'] = false;
         snippetSteps.splice(3, 2, {
             content: `Hide the ${snippet} popup`,
-            trigger: ".s_popup_close",
+            trigger: "iframe .s_popup_close",
         });
     }
     steps = steps.concat(snippetSteps);
@@ -78,11 +82,11 @@ tour.register("snippets_all_drag_and_drop", {
     {
         content: "Drop s_text_image snippet",
         trigger: "#oe_snippets .oe_snippet:has( > [data-snippet='s_text_image']) .oe_snippet_thumbnail",
-        run: "drag_and_drop #wrap"
+        run: "drag_and_drop iframe #wrap"
     },
     {
         content: "Edit s_text_image snippet",
-        trigger: "#wrap.o_editable [data-snippet='s_text_image']"
+        trigger: "iframe #wrap.o_editable [data-snippet='s_text_image']"
     },
     {
         content: "check setting are loaded, wait panel is visible",

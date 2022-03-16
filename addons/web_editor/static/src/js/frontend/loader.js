@@ -27,6 +27,9 @@ async function getWysiwygClass(options, additionnalAssets = []) {
     const wysiwygAlias = options.wysiwygAlias || 'web_editor.wysiwyg';
     if (!wysiwygPromise[wysiwygAlias]) {
         wysiwygPromise[wysiwygAlias] = new Promise(async (resolve) => {
+            if (odoo.__DEBUG__.services[wysiwygAlias]) {
+                return resolve();
+            }
             await loadWysiwyg(additionnalAssets);
             // Wait the loading of the service and his dependencies (use string to
             // avoid parsing of require function).
