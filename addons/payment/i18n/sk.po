@@ -82,7 +82,7 @@ msgstr "<span class=\"o_stat_text\">Platobná metóda uložená</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span><i class=\"fa fa-arrow-right\"/> Get my Stripe keys</span>"
-msgstr ""
+msgstr  "<span><i class=\"fa fa-arrow-right\"/> Získať môj Stripe kľúč</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -98,6 +98,8 @@ msgid ""
 "<span>Start selling directly without an account; an email will be sent by "
 "Paypal to create your new account and collect your payments.</span>"
 msgstr ""
+"<span>Začnite predávať priamo bez účtu; Paypal vám pošle e-mail na vytvorenie "
+"vášho nového účtu a prevzatie vašich platieb.</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
@@ -120,6 +122,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment acquirer configuration."
 msgstr ""
+"<strong>Upozornenie!</strong> Čaká sa na vrátenie peňazí za túto platbu.\n"
+"                       Počkajte chvíľu, kým sa spracuje. Ak vrátenie operácia neprebehne"
+"                       do pár minút, skontrolujte prosím konfiguráciu príjemcu platby."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -128,28 +133,31 @@ msgid ""
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
 
+
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
 "<strong>Warning</strong> Make sure your are logged in as the right partner "
 "before making this payment."
 msgstr ""
+"<strong>Upozornenie</strong> Pred uskutočnením tejto platby sa uistite, "
+"že ste prihlásení ako správny partner."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
-msgstr ""
+msgstr "<strong>Upozornenie</strong> Chýba mena alebo je nesprávna."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
-msgstr ""
+msgstr "<strong>Upozornenie</strong> Pre platbu musíte byť prihlásený."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Platobná transakcia s referenciou %s už existuje"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -158,6 +166,8 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(acq_name)s)."
 msgstr ""
+"Požiadavka na vrátenie %(amount)s bola odoslaná. Platba bude čoskoro vytvorená. "
+" Referencia transakcie: %(ref)s (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -170,7 +180,7 @@ msgstr "Pre vytvorenie novej platobnej transakcie je potrebný token."
 #, python-format
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
-msgstr ""
+msgstr "Transakcia s referenciou %(ref)s bola iniciovaná (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -179,6 +189,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token_name)s (%(acq_name)s)."
 msgstr ""
+"Transakcia s referenciou %(ref)s bola iniciovaná pomocou platobnej "
+"metódy %(token_name)s (%(acq_name)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
