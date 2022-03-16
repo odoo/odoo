@@ -25,10 +25,16 @@
                 <xpath expr="//header" position="after">
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
                         attrs="{'invisible': ['|', ('edi_web_services_to_process', 'in', ['', False]), ('state', '=', 'draft')]}">
-                         <div>The invoice will be sent asynchronously to :
-                            <field name="edi_web_services_to_process" class="oe_inline"/>
-                         </div>
-                         <button name="action_process_edi_web_services" type="object" class="oe_link" string="Send now" /> 
+                            <group>
+                                <div>
+                                The invoice will be sent to / updated from:
+                                <field name="edi_web_services_to_process"/>
+                                . Scheduled for:
+                                <field name="edi_network_cron_schedule"/>
+                                .
+                                </div>
+                            </group>
+                            <button name="action_process_edi_web_services" type="object" class="oe_link" string="Send / Update"/>
                     </div>
                     <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': [('edi_error_count', '=', 0)]}">
