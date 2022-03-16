@@ -129,6 +129,191 @@ QUnit.module('widgets', {
         ]);
     });
 
+    QUnit.test('exporting all data in grouped list view', async function (assert) {
+        assert.expect(6);
+
+        testUtils.mock.patch(framework, {
+            blockUI: () => assert.step('block UI'),
+            unblockUI: () => assert.step('unblock UI'),
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            groupBy: ['foo'],
+            domain: [['bar', '!=', 'glou']],
+            arch: '<tree><field name="foo"/></tree>',
+            viewOptions: {
+                hasSidebar: true,
+            },
+            mockRPC: function (route) {
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV'},
+                        {tag: 'xls', label: 'Excel'},
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            field_type: "one2many",
+                            string: "Activities",
+                            required: false,
+                            value: "activity_ids/id",
+                            id: "activity_ids",
+                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
+                            relation_field: "res_id",
+                            children: true,
+                        }, {
+                            children: false,
+                            field_type: 'char',
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: 'Foo',
+                            value: "foo",
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                get_file: function (params) {
+                    assert.step(params.url);
+                    const data = JSON.parse(params.data.data);
+                    assert.deepEqual(
+                        data,
+                        {
+                            "model": "partner",
+                            "fields": [{"name": "foo", "label": "Foo"}],
+                            "ids": false,
+                            "domain": [['bar', '!=', 'glou'], ['bar', '!=', 'glou']],
+                            "groupby": ["foo"],
+                            "context": {},
+                            "import_compat": false
+                        });
+                    params.complete();
+                },
+            },
+        });
+
+        // expand groups
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        await testUtils.dom.click(list.$('.o_group_header:eq(1)'));
+
+        await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
+
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
+
+        assert.strictEqual($('.modal').length, 1, "a modal dialog should be open");
+
+        // select the field Description, click on add, then export and close
+        await testUtils.dom.click($('.modal .o_tree_column:contains(Foo) .o_add_field'));
+        await testUtils.dom.click($('.modal span:contains(Export)'));
+        await testUtils.dom.click($('.modal span:contains(Close)'));
+        assert.verifySteps([
+            'block UI',
+            '/web/export/csv',
+            'unblock UI',
+        ]);
+        list.destroy();
+        testUtils.mock.unpatch(framework);
+    });
+
+    QUnit.test('exporting a single group in grouped list view', async function (assert) {
+        assert.expect(6);
+
+        testUtils.mock.patch(framework, {
+            blockUI: () => assert.step('block UI'),
+            unblockUI: () => assert.step('unblock UI'),
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            groupBy: ['foo'],
+            domain: [['bar', '!=', 'glou']],
+            arch: '<tree><field name="foo"/></tree>',
+            viewOptions: {
+                hasSidebar: true,
+            },
+            mockRPC: function (route) {
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV'},
+                        {tag: 'xls', label: 'Excel'},
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            field_type: "one2many",
+                            string: "Activities",
+                            required: false,
+                            value: "activity_ids/id",
+                            id: "activity_ids",
+                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
+                            relation_field: "res_id",
+                            children: true,
+                        }, {
+                            children: false,
+                            field_type: 'char',
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: 'Foo',
+                            value: "foo",
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                get_file: function (params) {
+                    assert.step(params.url);
+                    const data = JSON.parse(params.data.data);
+                    assert.deepEqual(
+                        data,
+                        {
+                            "model": "partner",
+                            "fields": [{"name": "foo", "label": "Foo"}],
+                            "ids": [1, 2],
+                            "domain": [["bar", "!=", "glou"]],
+                            "groupby": ["foo"],
+                            "context": {},
+                            "import_compat": false
+                        });
+                    params.complete();
+                },
+            },
+        });
+
+        // expand the first group
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+
+        await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
+
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
+
+        assert.strictEqual($('.modal').length, 1, "a modal dialog should be open");
+
+        // select the field Description, click on add, then export and close
+        await testUtils.dom.click($('.modal .o_tree_column:contains(Foo) .o_add_field'));
+        await testUtils.dom.click($('.modal span:contains(Export)'));
+        await testUtils.dom.click($('.modal span:contains(Close)'));
+        assert.verifySteps([
+            'block UI',
+            '/web/export/csv',
+            'unblock UI',
+        ]);
+        list.destroy();
+        testUtils.mock.unpatch(framework);
+    });
+
     QUnit.test('exporting view with non-exportable field', async function (assert) {
         assert.expect(0);
 

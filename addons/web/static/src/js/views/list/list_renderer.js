@@ -1040,8 +1040,7 @@ var ListRenderer = BasicRenderer.extend({
         this.selection = [];
         var self = this;
         var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
-        var $closedHeaders = this.$('tbody .o_group_header.o_group_has_content:not(.o_group_open)');
-        var allChecked = $inputs.length > 0 && $closedHeaders.length === 0;
+        var allChecked = $inputs.length > 0;
         $inputs.each(function (index, input) {
             if (input.checked) {
                 self.selection.push($(input).closest('tr').data('id'));
