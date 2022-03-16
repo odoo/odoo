@@ -265,7 +265,7 @@ class DeliveryCarrier(models.Model):
                     'price': 0.0,
                     'error_message': _('Error: this delivery method is not available for this address.'),
                     'warning_message': False}
-        price = self.fixed_price
+        price = order.pricelist_id.get_product_price(self.product_id, 1.0, order.partner_id)
         company = self.company_id or order.company_id or self.env.company
         if company.currency_id and company.currency_id != order.currency_id:
             price = company.currency_id._convert(price, order.currency_id, company, fields.Date.today())
