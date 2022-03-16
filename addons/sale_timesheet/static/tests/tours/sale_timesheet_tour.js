@@ -368,6 +368,9 @@ tour.register('sale_timesheet_tour', {
     trigger: ".o_field_widget[name=description] h3:contains('Milestones')",
     content: "Milestones title must be in description",
     run: function () {},
-}]);
-
+},
+// This step is currently needed in order to prevent a session timeout at the end of the test.
+tour.stepUtils.toggleHomeMenu(),
+...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
+]);
 });
