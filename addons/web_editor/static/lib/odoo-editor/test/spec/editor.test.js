@@ -13,6 +13,7 @@ import {
     testEditor,
     undo,
     unformat,
+    triggerEvent,
 } from '../utils.js';
 
 async function twoDeleteForward(editor) {
@@ -3193,6 +3194,47 @@ X[]
             });
         });
     });
+
+    describe('automatic link creation when typing a space after an url', () => {
+        it('should transform url after space', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a http://test.com b http://test.com[] c http://test.com d</p>',
+                stepFunction: async (editor) => {
+                    editor.testMode = false;
+                    const selection = document.getSelection();
+                    const anchorOffset = selection.anchorOffset;
+                    const p = editor.editable.querySelector('p');
+                    const textNode = p.childNodes[0];
+                    triggerEvent(editor.editable, 'keydown', {key: ' ', code: 'Space'});
+                    textNode.textContent = "a http://test.com b http://test.com\u00a0 c http://test.com d";
+                    selection.extend(textNode, anchorOffset + 1);
+                    selection.collapseToEnd();
+                    triggerEvent(editor.editable, 'input', {data: ' ', inputType: 'insertText' });
+                    triggerEvent(editor.editable, 'keyup', {key: ' ', code: 'Space'});
+                },
+                contentAfter: '<p>a http://test.com b <a href="http://test.com">http://test.com</a>&nbsp;[] c http://test.com d</p>',
+            });
+        });
+        it('should not transform url after two space', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a http://test.com b http://test.com [] c http://test.com d</p>',
+                stepFunction: async (editor) => {
+                    editor.testMode = false;
+                    const selection = document.getSelection();
+                    const anchorOffset = selection.anchorOffset;
+                    const p = editor.editable.querySelector('p');
+                    const textNode = p.childNodes[0];
+                    triggerEvent(editor.editable, 'keydown', {key: ' ', code: 'Space'});
+                    textNode.textContent = "a http://test.com b http://test.com \u00a0 c http://test.com d";
+                    selection.extend(textNode, anchorOffset + 1);
+                    selection.collapseToEnd();
+                    triggerEvent(editor.editable, 'input', {data: ' ', inputType: 'insertText' });
+                    triggerEvent(editor.editable, 'keyup', {key: ' ', code: 'Space'});
+                },
+                contentAfter: '<p>a http://test.com b http://test.com &nbsp;[] c http://test.com d</p>',
+            });
+        });
+    })
 
     describe('history', () => {
         describe('undo', () => {
