@@ -1,3 +1,4 @@
+import { URL_REGEX, URL_REGEX_WITH_INFOS } from '../../src/OdooEditor.js';
 import {
     BasicEditor,
     click,
@@ -12,8 +13,30 @@ const convertToLink = createLink;
 const unlink = async function (editor) {
     editor.execCommand('unlink');
 };
+const testUrlRegex = (url) => {
+    it(`should be a link: ${url}`, () => {
+        window.chai.assert.exists(url.match(URL_REGEX));
+        window.chai.assert.exists(url.match(URL_REGEX_WITH_INFOS));
+    });
+}
+const testNotUrlRegex = (url) => {
+    it(`should be a link: ${url}`, () => {
+        window.chai.assert.notExists(url.match(URL_REGEX));
+        window.chai.assert.notExists(url.match(URL_REGEX_WITH_INFOS));
+    });
+}
 
 describe('Link', () => {
+    describe('regex', () => {
+        testUrlRegex('http://google.com');
+        testUrlRegex('https://google.com');
+        testUrlRegex('http://google.com/foo#test');
+        testUrlRegex('a.bcd.ef');
+        testUrlRegex('a.bc.de');
+        testNotUrlRegex('google.com');
+        testNotUrlRegex('a.bc.d');
+        testNotUrlRegex('a.b.bc');
+    });
     describe('insert Link', () => {
         // This fails, but why would the cursor stay inside the link
         // if the next text insert should be outside of the link (see next test)
