@@ -463,9 +463,10 @@ class PosConfig(models.Model):
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
-            for key in self._get_forbidden_change_fields():
-                if key in vals.keys():
-                    field_name = self._fields[key].get_description(self.env)["string"]
+            field_names = self.fields_get(allfields=self._get_forbidden_change_fields(), attributes=["string"])
+            for fname, info in field_names.items():
+                if fname in vals.keys():
+                    field_name = info["string"]
                     forbidden_fields.append(field_name)
             if len(forbidden_fields) > 0:
                 raise UserError(_(

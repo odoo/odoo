@@ -3124,6 +3124,12 @@ class BaseModel(metaclass=MetaModel):
         has_access = functools.partial(self.check_access_rights, raise_exception=False)
         readonly = not (has_access('write') or has_access('create'))
 
+        translated_attrs = ('string', 'help')
+        translations = {}
+        if self.env.lang:
+            for key in translated_attrs:
+                translations[key] = getattr(self.env['ir.translation'], f'get_field_{key}')(self._name)
+
         res = {}
         for fname, field in self._fields.items():
             if allfields and fname not in allfields:
@@ -3131,11 +3137,21 @@ class BaseModel(metaclass=MetaModel):
             if field.groups and not self.env.su and not self.user_has_groups(field.groups):
                 continue
 
-            description = field.get_description(self.env)
+            description = {'type': field.type}
+            for attr, prop in field.description_attrs:
+                if attr in translated_attrs:
+                    continue
+                value = getattr(field, prop)
+                if callable(value):
+                    value = value(self.env)
+                if value is not None:
+                    description[attr] = value
             description['name'] = fname
             if readonly:
                 description['readonly'] = True
                 description['states'] = {}
+            for key in translated_attrs:
+                description[key] = translations[key].get(fname, getattr(field, key)) if translations else getattr(field, key)
             if attributes:
                 description = {key: val
                                for key, val in description.items()

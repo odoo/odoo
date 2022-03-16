@@ -793,19 +793,7 @@ class Field(MetaField('DummyField', (object,), {})):
     # Field description
     #
 
-    def get_description(self, env):
-        """ Return a dictionary that describes the field ``self``. """
-        desc = {'type': self.type}
-        for attr, prop in self.description_attrs:
-            value = getattr(self, prop)
-            if callable(value):
-                value = value(env)
-            if value is not None:
-                desc[attr] = value
-
-        return desc
-
-    # properties used by get_description()
+    # properties used by fields_get()
     _description_store = property(attrgetter('store'))
     _description_manual = property(attrgetter('manual'))
     _description_related = property(attrgetter('related'))

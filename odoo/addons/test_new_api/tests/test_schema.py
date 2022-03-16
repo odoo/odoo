@@ -84,7 +84,7 @@ class TestReflection(common.TransactionCase):
                             for sel in ir_field.selection_ids:
                                 self.assertSelectionXID(sel)
 
-                field_description = field.get_description(self.env)
+                field_description = self.env[field.model_name].fields_get(allfields=[field.name], attributes=['sortable'])[field.name]
                 if field.type in ('many2many', 'one2many'):
                     self.assertFalse(field_description['sortable'])
                 elif field.store and field.column_type:

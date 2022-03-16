@@ -310,7 +310,8 @@ class SelectionConverter(models.AbstractModel):
     @api.model
     def record_to_html(self, record, field_name, options):
         if 'selection' not in options:
-            options = dict(options, selection=dict(record._fields[field_name].get_description(self.env)['selection']))
+            selection = record.fields_get(allfields=[field_name], attributes=['selection'])[field_name]['selection']
+            options = dict(options, selection=dict(selection))
         return super(SelectionConverter, self).record_to_html(record, field_name, options)
 
 

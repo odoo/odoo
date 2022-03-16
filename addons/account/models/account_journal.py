@@ -560,7 +560,7 @@ class AccountJournal(models.Model):
             if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
                 journal_entry = self.env['account.move'].search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
                 if len(journal_entry) > 0:
-                    field_string = self._fields['restrict_mode_hash_table'].get_description(self.env)['string']
+                    field_string = self.fields_get(allfields=['restrict_mode_hash_table'], attributes=['string'])['restrict_mode_hash_table']['string']
                     raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.", field_string))
         result = super(AccountJournal, self).write(vals)
 

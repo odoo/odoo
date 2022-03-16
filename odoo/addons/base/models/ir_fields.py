@@ -313,7 +313,7 @@ class IrFieldsConverter(models.AbstractModel):
     def _str_to_selection(self, model, field, value):
         # get untranslated values
         env = self.with_context(lang=None).env
-        selection = field.get_description(env)['selection']
+        selection = model.fields_get(allfields=[field.name], attributes=['selection'])[field.name]['selection']
 
         for item, label in selection:
             label = ustr(label)
