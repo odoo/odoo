@@ -8,6 +8,7 @@ from freezegun import freeze_time
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.payment.controllers.portal import PaymentPortal
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
@@ -407,3 +408,17 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
                 **self._prepare_transaction_values(self.create_token().id, 'token')
             )
             self.assertEqual(patched.call_count, 1)
+
+    def test_tokenization_input_is_show_to_logged_in_users(self):
+        self.acquirer.allow_tokenization = True
+        show_tokenize_input = PaymentPortal._compute_show_tokenize_input_mapping(
+            self.acquirer, logged_in=True
+        )
+        self.assertDictEqual(show_tokenize_input, {self.acquirer.id: True})
+
+    def test_tokenization_input_is_hidden_for_logged_out_users(self):
+        self.acquirer.allow_tokenization = False
+        show_tokenize_input = PaymentPortal._compute_show_tokenize_input_mapping(
+            self.acquirer, logged_in=True
+        )
+        self.assertDictEqual(show_tokenize_input, {self.acquirer.id: False})
