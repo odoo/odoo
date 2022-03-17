@@ -62,7 +62,7 @@ class ProductPublicCategory(models.Model):
         if with_description:
             search_fields.append('website_description')
             fetch_fields.append('website_description')
-            mapping['description'] = {'name': 'website_description', 'type': 'text', 'match': True}
+            mapping['description'] = {'name': 'website_description', 'type': 'text', 'match': True, 'html': True}
         return {
             'model': 'product.public.category',
             'base_domain': [], # categories are not website-specific
