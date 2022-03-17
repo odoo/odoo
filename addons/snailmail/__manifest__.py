@@ -39,10 +39,10 @@ Allows users to send documents by post
             'snailmail/static/src/models/*.js',
         ],
         'web.tests_assets': [
-            'snailmail/static/tests/**/*',
+            'snailmail/static/tests/helpers/*.js',
         ],
         'web.qunit_suite_tests': [
-            'snailmail/static/src/components/*/tests/*.js',
+            'snailmail/static/tests/qunit_suite_tests/**/*.js',
         ],
         'web.assets_qweb': [
             'snailmail/static/src/components/*/*.xml',
