@@ -108,6 +108,55 @@
         .o_kanban_record {
             width: 350px;
         }
+        &.o_kanban_ungrouped {
+            padding: 0;
+            .o_mailing_list_kanban_grouped {
+                display: none !important;
+            }
+        }
+        &.o_kanban_grouped .o_mailing_list_kanban_ungrouped {
+            display: none !important;
+        }
+        .o_mailing_list_kanban_ungrouped {
+            .o_mailing_list_kanban_stats > div {
+                min-width: 70px;
+            }
+            .o_mailing_list_kanban_stats > a {
+                flex-wrap: wrap;
+                &:hover {
+                    font-weight: normal;
+                }
+                @include media-breakpoint-down(xs) {
+                    font-size: 1.4rem;
+                    height: 40px;
+                    margin-bottom: 30px;
+                    min-width: 90px;
+                    width: 30%;
+                }
+            }
+            .o_mailing_list_kanban_button {
+                background: transparent;
+                border-width: 0;
+                outline: 0;
+                padding: 0;
+                font-weight: 300;
+                &:hover {
+                    font-weight: normal;
+                }
+                &.o_mailing_list_kanban_big_nb {
+                    text-align: left;
+                    font-size: 300%;
+                    @include media-breakpoint-up(sm) {
+                        text-align: right;
+                    }
+                }
+            }
+            .text-large {
+                line-height: 1.1em;
+                font-size: 120%;
+                font-weight: 300;
+            }
+        }
     }
 }
 
