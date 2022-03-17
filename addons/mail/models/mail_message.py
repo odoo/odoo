@@ -9,7 +9,7 @@ from collections import defaultdict
 from operator import itemgetter
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, MissingError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import groupby
@@ -1012,11 +1012,14 @@ class Message(models.Model):
                     })
 
             if message_sudo.model and message_sudo.res_id:
-                record_name = self.env[message_sudo.model] \
-                    .browse(message_sudo.res_id) \
-                    .sudo() \
-                    .with_prefetch(thread_ids_by_model_name[message_sudo.model]) \
-                    .display_name
+                try:
+                    record_name = self.env[message_sudo.model] \
+                        .browse(message_sudo.res_id) \
+                        .sudo() \
+                        .with_prefetch(thread_ids_by_model_name[message_sudo.model]) \
+                        .display_name
+                except MissingError:
+                    record_name = False
             else:
                 record_name = False
 
