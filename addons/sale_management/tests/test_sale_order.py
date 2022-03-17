@@ -283,3 +283,61 @@ class TestSaleOrder(TestSaleCommon):
             "If a pricelist is set without discount included, the discount "
             "shall be computed according to the price unit and the subtotal."
             "price")
+
+    def test_04_update_pricelist_option_line(self):
+        """
+        This test checks that option line's values are correctly
+        updated after a pricelist update
+        """
+
+        # Necessary for _onchange_discount() check
+        self.env.user.write({
+            'groups_id': [(4, self.env.ref('product.group_discount_per_so_line').id)],
+        })
+
+        self.sale_order.write({
+            'sale_order_template_id': self.quotation_template_no_discount.id
+        })
+        self.sale_order.onchange_sale_order_template_id()
+
+        self.assertEqual(
+            self.sale_order.sale_order_option_ids[0].price_unit,
+            self.pub_option_price,
+            "If no pricelist is set, the unit price shall be the option's product price.")
+
+        self.assertEqual(
+            self.sale_order.sale_order_option_ids[0].discount, 0,
+            "If no pricelist is set, the discount should be 0.")
+
+        self.sale_order.write({
+            'pricelist_id': self.discount_included_price_list.id,
+        })
+        self.sale_order.update_prices()
+
+        self.assertEqual(
+            self.sale_order.sale_order_option_ids[0].price_unit,
+            self.pl_option_price,
+            "If a pricelist is set with discount included,"
+            " the unit price shall be the option's product discounted price.")
+
+        self.assertEqual(
+            self.sale_order.sale_order_option_ids[0].discount, 0,
+            "If a pricelist is set with discount included,"
+            " the discount should be 0.")
+
+        self.sale_order.write({
+            'pricelist_id': self.discount_excluded_price_list.id,
+        })
+        self.sale_order.update_prices()
+
+        self.assertEqual(
+            self.sale_order.sale_order_option_ids[0].price_unit,
+            self.pub_option_price,
+            "If a pricelist is set without discount included,"
+            " the unit price shall be the option's product sale price.")
+
+        self.assertEqual(
+            self.sale_order.sale_order_option_ids[0].discount,
+            self.pl_option_discount,
+            "If a pricelist is set without discount included,"
+            " the discount should be correctly computed.")
