@@ -511,6 +511,7 @@ class BaseModel(metaclass=MetaModel):
     _sql_constraints = []       #: SQL constraints [(name, sql_def, message)]
 
     _rec_name = None            #: field to use for labeling records, default: ``name``
+    _rec_names_search = None    #: fields to consider in ``name_search``
     _order = 'id'               #: default order field for searching results
     _parent_name = 'parent_id'  #: the many2one field used as parent field
     _parent_store = False
@@ -1920,11 +1921,14 @@ class BaseModel(metaclass=MetaModel):
         for the name_get part to solve some access rights issues.
         """
         args = list(args or [])
-        # optimize out the default criterion of ``ilike ''`` that matches everything
-        if not self._rec_name:
-            _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
-        elif not (name == '' and operator == 'ilike'):
-            args += [(self._rec_name, operator, name)]
+        search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
+        if not search_fnames:
+            _logger.warning("Cannot execute name_search, no _rec_name or _rec_names_search defined on %s", self._name)
+        # optimize out the default criterion of ``like ''`` that matches everything
+        elif not (name == '' and operator in ('like', 'ilike')):
+            aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
+            domain = aggregator([[(field_name, operator, name)] for field_name in search_fnames])
+            args += domain
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
     @api.model

@@ -19,6 +19,7 @@ class PickingType(models.Model):
     _name = "stock.picking.type"
     _description = "Picking Type"
     _order = 'sequence, id'
+    _rec_names_search = ['name', 'warehouse_id.name']
     _check_company_auto = True
 
     def _default_show_operations(self):
@@ -163,14 +164,6 @@ class PickingType(models.Model):
                 name = picking_type.name
             res.append((picking_type.id, name))
         return res
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        domain = []
-        if name:
-            domain = ['|', ('name', operator, name), ('warehouse_id.name', operator, name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.onchange('code')
     def _onchange_picking_code(self):

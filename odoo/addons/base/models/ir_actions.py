@@ -728,6 +728,7 @@ class IrActionsTodo(models.Model):
     """
     _name = 'ir.actions.todo'
     _description = "Configuration Wizards"
+    _rec_name = 'action_id'
     _order = "sequence, id"
 
     action_id = fields.Many2one('ir.actions.actions', string='Action', required=True, index=True)
@@ -755,9 +756,6 @@ class IrActionsTodo(models.Model):
         if open_todo:
             open_todo.write({'state': 'done'})
 
-    def name_get(self):
-        return [(record.id, record.action_id.name) for record in self]
-
     def unlink(self):
         if self:
             try:
@@ -769,13 +767,6 @@ class IrActionsTodo(models.Model):
             except ValueError:
                 pass
         return super(IrActionsTodo, self).unlink()
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        if name:
-            return self._search(expression.AND([[('action_id', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
-        return super(IrActionsTodo, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def action_launch(self):
         """ Launch Action of Wizard"""

@@ -19,6 +19,7 @@ class Location(models.Model):
     _parent_store = True
     _order = 'complete_name, id'
     _rec_name = 'complete_name'
+    _rec_names_search = ['complete_name', 'barcode']
     _check_company_auto = True
 
     @api.model
@@ -215,18 +216,6 @@ class Location(models.Model):
         res = super().create(vals_list)
         self.invalidate_cache(['warehouse_id'])
         return res
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        """ search full name and barcode """
-        args = args or []
-        if operator == 'ilike' and not (name or '').strip():
-            domain = []
-        elif operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('barcode', operator, name), ('complete_name', operator, name)]
-        else:
-            domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):
         """Returns the location where the product has to be put, if any compliant

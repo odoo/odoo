@@ -6,6 +6,7 @@ from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -103,11 +104,9 @@ class MaintenanceEquipment(models.Model):
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         equipment_ids = []
-        if name:
+        if name and operator not in expression.NEGATIVE_TERM_OPERATORS and operator != '=':
             equipment_ids = self._search([('name', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
-        if not equipment_ids:
-            equipment_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
-        return equipment_ids
+        return equipment_ids or super()._name_search(name, args, operator, limit, name_get_uid)
 
     name = fields.Char('Equipment Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',

@@ -19,6 +19,7 @@ class PurchaseOrder(models.Model):
     _name = "purchase.order"
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Purchase Order"
+    _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
 
     @api.depends('order_line.price_total')
@@ -160,14 +161,6 @@ class PurchaseOrder(models.Model):
     def _compute_date_calendar_start(self):
         for order in self:
             order.date_calendar_start = order.date_approve if (order.state in ['purchase', 'done']) else order.date_order
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        domain = []
-        if name:
-            domain = ['|', ('name', operator, name), ('partner_ref', operator, name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.depends('date_order', 'currency_id', 'company_id', 'company_id.currency_id')
     def _compute_currency_rate(self):

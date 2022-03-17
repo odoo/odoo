@@ -15,6 +15,7 @@ class MrpBom(models.Model):
     _description = 'Bill of Material'
     _inherit = ['mail.thread']
     _rec_name = 'product_tmpl_id'
+    _rec_names_search = ['product_tmpl_id', 'code']
     _order = "sequence, id"
     _check_company_auto = True
 
@@ -207,16 +208,6 @@ class MrpBom(models.Model):
     def _unlink_except_running_mo(self):
         if self.env['mrp.production'].search([('bom_id', 'in', self.ids), ('state', 'not in', ['done', 'cancel'])], limit=1):
             raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
-
-    @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        domain = []
-        if (name or '').strip():
-            domain = ['|', (self._rec_name, operator, name), ('code', operator, name)]
-            if operator in NEGATIVE_TERM_OPERATORS:
-                domain = domain[1:]
-        return self._search(AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.model
     def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):

@@ -38,6 +38,7 @@ class AccountJournal(models.Model):
     _order = 'sequence, type, code'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _check_company_auto = True
+    _rec_names_search = ['name', 'code']
 
     def _default_inbound_payment_methods(self):
         return self.env.ref('account.account_payment_method_manual_in')
@@ -690,17 +691,6 @@ class AccountJournal(models.Model):
                 name = "%s (%s)" % (name, journal.currency_id.name)
             res += [(journal.id, name)]
         return res
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-
-        if operator == 'ilike' and not (name or '').strip():
-            domain = []
-        else:
-            connector = '&' if operator in expression.NEGATIVE_TERM_OPERATORS else '|'
-            domain = [connector, ('code', operator, name), ('name', operator, name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def action_configure_bank_journal(self):
         """ This function is called by the "configure" button of bank journals,

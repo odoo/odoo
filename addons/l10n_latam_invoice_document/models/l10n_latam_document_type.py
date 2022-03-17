@@ -8,6 +8,7 @@ class L10nLatamDocumentType(models.Model):
     _name = 'l10n_latam.document.type'
     _description = 'Latam Document Type'
     _order = 'sequence, id'
+    _rec_names_search = ['name', 'code']
 
     active = fields.Boolean(default=True)
     sequence = fields.Integer(
@@ -42,12 +43,3 @@ class L10nLatamDocumentType(models.Model):
                 name = '(%s) %s' % (rec.code, name)
             result.append((rec.id, name))
         return result
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        if operator == 'ilike' and not (name or '').strip():
-            domain = []
-        else:
-            domain = ['|', ('name', 'ilike', name), ('code', 'ilike', name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)

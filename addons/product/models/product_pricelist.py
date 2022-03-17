@@ -9,6 +9,7 @@ from odoo.tools import get_lang
 class Pricelist(models.Model):
     _name = "product.pricelist"
     _description = "Pricelist"
+    _rec_names_search = ['name', 'currency_id']  # TODO check if should be removed
     _order = "sequence asc, id desc"
 
     def _default_currency_id(self):
@@ -52,45 +53,6 @@ class Pricelist(models.Model):
 
     def name_get(self):
         return [(pricelist.id, '%s (%s)' % (pricelist.name, pricelist.currency_id.name)) for pricelist in self]
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if name and operator == '=' and not args:
-            # search on the name of the pricelist and its currency, opposite of name_get(),
-            # Used by the magic context filter in the product search view.
-            query_args = {'name': name, 'limit': limit, 'lang': get_lang(self.env).code}
-            query = """SELECT p.id
-                       FROM ((
-                                SELECT pr.id, pr.name
-                                FROM product_pricelist pr JOIN
-                                     res_currency cur ON
-                                         (pr.currency_id = cur.id)
-                                WHERE pr.name || ' (' || cur.name || ')' = %(name)s
-                            )
-                            UNION (
-                                SELECT tr.res_id as id, tr.value as name
-                                FROM ir_translation tr JOIN
-                                     product_pricelist pr ON (
-                                        pr.id = tr.res_id AND
-                                        tr.type = 'model' AND
-                                        tr.name = 'product.pricelist,name' AND
-                                        tr.lang = %(lang)s
-                                     ) JOIN
-                                     res_currency cur ON
-                                         (pr.currency_id = cur.id)
-                                WHERE tr.value || ' (' || cur.name || ')' = %(name)s
-                            )
-                        ) p
-                       ORDER BY p.name"""
-            if limit:
-                query += " LIMIT %(limit)s"
-            self._cr.execute(query, query_args)
-            ids = [r[0] for r in self._cr.fetchall()]
-            # regular search() to apply ACLs - may limit results below limit in some cases
-            pricelist_ids = self._search([('id', 'in', ids)], limit=limit, access_rights_uid=name_get_uid)
-            if pricelist_ids:
-                return pricelist_ids
-        return super()._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _get_products_price(self, products, quantity, uom=None, date=False):
         """Compute the pricelist prices for the specified products, qty & uom.

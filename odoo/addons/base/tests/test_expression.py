@@ -633,7 +633,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         # Test2: inheritance + relational fields
         users = self._search(Users, [('child_ids.name', 'like', 'test_B')])
         self.assertEqual(users, b1, 'searching through inheritance failed')
-        
+
         # Special =? operator mean "is equal if right is set, otherwise always True"
         users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', False)])
         self.assertEqual(users, a + b1 + b2, '(x =? False) failed')
@@ -1202,6 +1202,35 @@ class TestQueries(TransactionCase):
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
         ''']):
             Model.search([])
+
+    def test_rec_names_search(self):
+        Model = self.env['ir.model']
+
+        # search on both 'name' and 'model'
+        self.assertEqual(Model._rec_names_search, ['name', 'model'])
+
+        Model.name_search('partner')
+        with self.assertQueries(['''
+            SELECT "ir_model".id
+            FROM "ir_model"
+            WHERE ("ir_model"."name" ILIKE %s OR ("ir_model"."model"::text ILIKE %s))
+            ORDER BY "ir_model"."model"
+            LIMIT 100
+        ''']):
+            Model.name_search('foo')
+
+        Model.name_search('partner', operator='not ilike')
+        with self.assertQueries(['''
+            SELECT "ir_model".id
+            FROM "ir_model"
+            WHERE (
+                "ir_model"."name" NOT ILIKE %s
+                AND (("ir_model"."model"::text NOT ILIKE %s) OR "ir_model"."model" IS NULL)
+            )
+            ORDER BY "ir_model"."model"
+            LIMIT 100
+        ''']):
+            Model.name_search('foo', operator='not ilike')
 
 
 class TestMany2one(TransactionCase):

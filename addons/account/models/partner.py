@@ -293,6 +293,15 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
+    @property
+    def _order(self):
+        res = super()._order
+        partner_search_mode = self.env.context.get('res_partner_search_mode')
+        if partner_search_mode not in ('customer', 'supplier'):
+            return res
+        order_by_field = f"{partner_search_mode}_rank DESC"
+        return '%s, %s' % (order_by_field, res) if res else order_by_field
+
     @api.depends_context('company')
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line'].with_context(state='posted', company_id=self.env.company.id)._query_get()
@@ -500,20 +509,6 @@ class ResPartner(models.Model):
         compute='_compute_duplicated_bank_account_partners_count',
         help='Technical field holding the amount partners that share the same account number as any set on this partner.',
     )
-
-    def _get_name_search_order_by_fields(self):
-        res = super()._get_name_search_order_by_fields()
-        partner_search_mode = self.env.context.get('res_partner_search_mode')
-        if not partner_search_mode in ('customer', 'supplier'):
-            return res
-        order_by_field = 'COALESCE(res_partner.%s, 0) DESC,'
-        if partner_search_mode == 'customer':
-            field = 'customer_rank'
-        else:
-            field = 'supplier_rank'
-
-        order_by_field = order_by_field % field
-        return '%s, %s' % (res, order_by_field % field) if res else order_by_field
 
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
