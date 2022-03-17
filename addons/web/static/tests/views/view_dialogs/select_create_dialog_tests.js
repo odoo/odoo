@@ -82,7 +82,7 @@ QUnit.module("ViewDialogs", (hooks) => {
 
     QUnit.module("SelectCreateDialog");
 
-    QUnit.test(
+    QUnit.skipWOWL(
         "SelectCreateDialog use domain, group_by and search default",
         async function (assert) {
             assert.expect(3);
@@ -113,6 +113,8 @@ QUnit.module("ViewDialogs", (hooks) => {
                                 lang: "en",
                                 tz: "taht",
                                 uid: 7,
+                                search_default_foo: "piou",
+                                search_default_groupby_bar: true,
                             },
                             domain: [
                                 "&",
@@ -121,20 +123,22 @@ QUnit.module("ViewDialogs", (hooks) => {
                                 ["display_name", "ilike", "piou"],
                                 ["foo", "ilike", "piou"],
                             ],
-                            fields: ["display_name", "foo"],
+                            fields: ["display_name", "foo", "bar"],
                             groupby: ["bar"],
                             orderby: "",
                             lazy: true,
+                            limit: 80,
                         },
                         "should search with the complete domain (domain + search), and group by 'bar'"
                     );
                 }
                 if (search === 0 && args.method === "web_search_read") {
-                    search++;
                     assert.deepEqual(
                         args.kwargs,
                         {
                             context: {
+                                search_default_foo: "piou",
+                                search_default_groupby_bar: true,
                                 bin_size: true,
                                 lang: "en",
                                 tz: "taht",
@@ -148,9 +152,9 @@ QUnit.module("ViewDialogs", (hooks) => {
                                 ["foo", "ilike", "piou"],
                             ],
                             fields: ["display_name", "foo"],
+                            model: "partner",
                             limit: 80,
-                            offset: 0,
-                            order: "",
+                            sort: "",
                         },
                         "should search with the complete domain (domain + search)"
                     );
@@ -159,6 +163,8 @@ QUnit.module("ViewDialogs", (hooks) => {
                         args.kwargs,
                         {
                             context: {
+                                search_default_foo: "piou",
+                                search_default_groupby_bar: true,
                                 bin_size: true,
                                 lang: "en",
                                 tz: "taht",
@@ -166,9 +172,9 @@ QUnit.module("ViewDialogs", (hooks) => {
                             }, // not part of the test, may change
                             domain: [["display_name", "like", "a"]],
                             fields: ["display_name", "foo"],
+                            model: "partner",
                             limit: 80,
-                            offset: 0,
-                            order: "",
+                            sort: "",
                         },
                         "should search with the domain"
                     );
@@ -186,10 +192,8 @@ QUnit.module("ViewDialogs", (hooks) => {
                 },
             });
             await nextTick();
-
             const modal = target.querySelector(".modal");
             removeFacet(modal, "Bar");
-            await nextTick();
             removeFacet(modal);
         }
     );
