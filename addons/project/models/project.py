@@ -1722,9 +1722,12 @@ class Task(models.Model):
             # since we use sudo to create tasks, we need to check
             # if the portal user could really create the tasks based on the ir rule.
             tasks.with_user(self.env.user).check_access_rule('create')
+        current_partner = self.env.user.partner_id
         for task in tasks:
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
+            if current_partner not in task.message_partner_ids:
+                task.message_subscribe(current_partner.ids)
         return tasks
 
     def write(self, vals):
