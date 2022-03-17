@@ -26,6 +26,8 @@ Odoo Web Editor widget.
             'web_editor/static/src/xml/*.xml',
         ],
         'web_editor.assets_wysiwyg': [
+            # dependency
+            'web/core/commands/default_providers',
 
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
@@ -56,6 +58,7 @@ Odoo Web Editor widget.
             'web_editor/static/lib/odoo-editor/src/commands/toggleList.js',
 
             # utils
+            'web_editor/static/src/js/wysiwyg/linkDialogCommand.js',
             'web_editor/static/src/js/wysiwyg/PeerToPeer.js',
 
             # odoo utils
