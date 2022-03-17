@@ -13,7 +13,7 @@
                 <Subcapitulo>1.1</Subcapitulo>
                 <Operacion t-out="'A00' if is_submission else 'AN0'"/>
                 <Version>1.0</Version>
-                <Ejercicio>2022</Ejercicio>
+                <Ejercicio t-out="fiscal_year"/>
                 <ObligadoTributario>
                     <NIF t-out="sender_vat"/>
                     <ApellidosNombreRazonSocial t-out="sender.name"/>

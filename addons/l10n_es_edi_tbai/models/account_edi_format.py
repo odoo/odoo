@@ -411,6 +411,7 @@ class AccountEdiFormat(models.Model):
                 'sender': sender,
                 'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
                 'tbai_b64_list': [b64encode(etree.tostring(invoice_xml, encoding="UTF-8")).decode()],
+                'fiscal_year': str(invoices.date.year),
             }
             lroe_str = self.env.ref('l10n_es_edi_tbai.template_LROE_240_main')._render(values)
             invoice_xml = L10nEsTbaiXmlUtils._cleanup_xml_content(lroe_str)
@@ -447,7 +448,7 @@ class AccountEdiFormat(models.Model):
 
         # Post and retrieve response
         try:
-            response = TicketBaiWebServices()._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=10)
+            response = TicketBaiWebServices()._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=0.01)
         except (ValueError, RequestException) as e:
             return {invoices: {
                 'success': False, 'error': str(e), 'blocking_level': 'warning', 'response': None
