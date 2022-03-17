@@ -33,10 +33,14 @@ export const hotkeyService = {
         let nextToken = 0;
         let overlaysVisible = false;
 
-        browser.addEventListener("keydown", onKeydown);
-        browser.addEventListener("keyup", removeHotkeyOverlays);
-        browser.addEventListener("blur", removeHotkeyOverlays);
-        browser.addEventListener("click", removeHotkeyOverlays);
+        addListeners(browser);
+
+        function addListeners(target) {
+            target.addEventListener("keydown", onKeydown);
+            target.addEventListener("keyup", removeHotkeyOverlays);
+            target.addEventListener("blur", removeHotkeyOverlays);
+            target.addEventListener("click", removeHotkeyOverlays);
+        }
 
         /**
          * Handler for keydown events.
@@ -375,6 +379,12 @@ export const hotkeyService = {
                 return () => {
                     unregisterHotkey(token);
                 };
+            },
+            /**
+             * @param {HTMLIFrameElement} iframe
+             */
+            registerIframe(iframe) {
+                addListeners(iframe.contentWindow);
             },
         };
     },
