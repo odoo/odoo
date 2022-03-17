@@ -8,6 +8,7 @@ class City(models.Model):
     _name = 'res.city'
     _description = 'City'
     _order = 'name'
+    _rec_names_search = ['name', 'zipcode']
 
     name = fields.Char("Name", required=True, translate=True)
     zipcode = fields.Char("Zip")
@@ -20,14 +21,3 @@ class City(models.Model):
             name = city.name if not city.zipcode else '%s (%s)' % (city.name, city.zipcode)
             res.append((city.id, name))
         return res
-
-    @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        ''' Enable searching by zipcode of a city
-        '''
-        args = list(args or [])
-        domain = []
-        if name:
-            connector = '!' if operator in expression.NEGATIVE_TERM_OPERATORS else '|'
-            domain = [connector, ('zipcode', 'ilike', name), (self._rec_name, operator, name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)

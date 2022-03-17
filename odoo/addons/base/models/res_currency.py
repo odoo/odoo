@@ -8,6 +8,7 @@ import time
 
 from lxml import etree
 from odoo import api, fields, models, tools, _
+from odoo.tools import parse_date
 
 _logger = logging.getLogger(__name__)
 
@@ -17,12 +18,11 @@ except ImportError:
     _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
     num2words = None
 
-CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
-
 
 class Currency(models.Model):
     _name = "res.currency"
     _description = "Currency"
+    _rec_names_search = ['name', 'full_name']
     _order = 'active desc, name'
 
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
@@ -143,15 +143,6 @@ class Currency(models.Model):
     def _compute_date(self):
         for currency in self:
             currency.date = currency.rate_ids[:1].name
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        results = super(Currency, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
-        if not results:
-            name_match = CURRENCY_DISPLAY_PATTERN.match(name)
-            if name_match:
-                results = super(Currency, self)._name_search(name_match.group(1), args, operator=operator, limit=limit, name_get_uid=name_get_uid)
-        return results
 
     def name_get(self):
         return [(currency.id, tools.ustr(currency.name)) for currency in self]
@@ -308,6 +299,7 @@ class Currency(models.Model):
 class CurrencyRate(models.Model):
     _name = "res.currency.rate"
     _description = "Currency Rate"
+    _rec_names_search = ['name', 'rate']
     _order = "name desc"
 
     name = fields.Date(string='Date', required=True, index=True,
@@ -419,22 +411,7 @@ class CurrencyRate(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if operator in ['=', '!=']:
-            try:
-                date_format = '%Y-%m-%d'
-                if self._context.get('lang'):
-                    lang_id = self.env['res.lang']._search([('code', '=', self._context['lang'])], access_rights_uid=name_get_uid)
-                    if lang_id:
-                        date_format = self.browse(lang_id).date_format
-                name = time.strftime('%Y-%m-%d', time.strptime(name, date_format))
-            except ValueError:
-                try:
-                    args.append(('rate', operator, float(name)))
-                except ValueError:
-                    return []
-                name = ''
-                operator = 'ilike'
-        return super(CurrencyRate, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+        return super()._name_search(parse_date(self.env, name), args, operator, limit, name_get_uid)
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
