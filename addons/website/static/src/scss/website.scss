@@ -1310,6 +1310,10 @@ span.list-inline-item.o_add_language:last-child {
 
 // Footer scrolltop button
 @if o-website-value('footer-scrolltop') {
+    #o_footer_scrolltop_wrapper {
+        position: relative;
+        z-index: 1;
+    }
     #o_footer_scrolltop {
         $-footer-color: o-color('footer');
         $-copyright-color: o-color('copyright');
