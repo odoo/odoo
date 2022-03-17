@@ -637,7 +637,7 @@ class SaleOrderLine(models.Model):
                 'sale',
                 fiscal_position=self.order_id.fiscal_position_id,
                 product_price_unit=self._get_display_price(product),
-                product_currency=self.currency_id
+                product_currency=self.order_id.currency_id
             )
 
         self.update(vals)
@@ -675,7 +675,7 @@ class SaleOrderLine(models.Model):
                 'sale',
                 fiscal_position=self.order_id.fiscal_position_id,
                 product_price_unit=self._get_display_price(product),
-                product_currency=self.currency_id
+                product_currency=self.order_id.currency_id
             )
 
     def name_get(self):
