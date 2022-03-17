@@ -422,7 +422,7 @@ registerModel({
         /**
          * @private
          * @param {Object} data
-         * @param {string} data.sender
+         * @param {number} data.sender
          * @param {string[]} data.notifications
          */
         _handleNotificationRtcPeerToPeer({ sender, notifications }) {
