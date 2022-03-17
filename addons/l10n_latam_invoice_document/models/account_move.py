@@ -48,7 +48,7 @@ class AccountMove(models.Model):
     l10n_latam_document_number = fields.Char(
         compute='_compute_l10n_latam_document_number', inverse='_inverse_l10n_latam_document_number',
         string='Document Number', readonly=True, states={'draft': [('readonly', False)]})
-    l10n_latam_use_documents = fields.Boolean(related='journal_id.l10n_latam_use_documents')
+    l10n_latam_use_documents = fields.Boolean(compute='_compute_l10n_latam_use_documents')
     l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')
     l10n_latam_document_type_id_code = fields.Char(related='l10n_latam_document_type_id.code', string='Doc Type')
 
@@ -68,6 +68,11 @@ class AccountMove(models.Model):
             lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_document_type_id
             and not x.l10n_latam_manual_document_number and x.state == 'draft' and not x.posted_before).name = '/'
         super(AccountMove, self - without_doc_type - manual_documents)._compute_name()
+
+    @api.depends('journal_id')
+    def _compute_l10n_latam_use_documents(self):
+        for move in self:
+            move.l10n_latam_use_documents = move.journal_id.l10n_latam_company_use_documents and move.journal_id.l10n_latam_use_documents
 
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_manual_document_number(self):
