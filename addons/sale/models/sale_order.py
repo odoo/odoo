@@ -41,6 +41,12 @@ class SaleOrder(models.Model):
         ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
     ]
 
+    @property
+    def _rec_names_search(self):
+        if self._context.get('sale_show_partner_name'):
+            return ['name', 'partner_id.name']
+        return ['name']
+
     #=== FIELDS ===#
 
     name = fields.Char(
@@ -1236,19 +1242,6 @@ class SaleOrder(models.Model):
                 res.append((order.id, name))
             return res
         return super().name_get()
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if self._context.get('sale_show_partner_name'):
-            if operator == 'ilike' and not (name or '').strip():
-                domain = []
-            elif operator in ('ilike', 'like', '=', '=like', '=ilike'):
-                domain = expression.AND([
-                    args or [],
-                    ['|', ('name', operator, name), ('partner_id.name', operator, name)]
-                ])
-                return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
-        return super()._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     #=== BUSINESS METHODS ===#
 

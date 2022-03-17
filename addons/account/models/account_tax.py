@@ -78,6 +78,7 @@ class AccountTax(models.Model):
     _description = 'Tax'
     _order = 'sequence,id'
     _check_company_auto = True
+    _rec_names_search = ['name', 'description']
 
     @api.model
     def _default_tax_group(self):
@@ -256,19 +257,6 @@ class AccountTax(models.Model):
                 name += ' (%s)' % tax_scope.get(record.tax_scope)
             name_list += [(record.id, name)]
         return name_list
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        """ Returns a list of tuples containing id, name, as internally it is called {def name_get}
-            result format: {[(id, name), (id, name), ...]}
-        """
-        args = args or []
-        if operator == 'ilike' and not (name or '').strip():
-            domain = []
-        else:
-            connector = '&' if operator in expression.NEGATIVE_TERM_OPERATORS else '|'
-            domain = [connector, ('description', operator, name), ('name', operator, name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):

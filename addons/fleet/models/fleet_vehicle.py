@@ -22,6 +22,7 @@ class FleetVehicle(models.Model):
     _name = 'fleet.vehicle'
     _description = 'Vehicle'
     _order = 'license_plate asc, acquisition_date asc'
+    _rec_names_search = ['name', 'driver_id.name']
 
     def _get_default_state(self):
         state = self.env.ref('fleet.fleet_vehicle_state_registered', raise_if_not_found=False)
@@ -348,15 +349,6 @@ class FleetVehicle(models.Model):
         if 'co2' in fields:
             fields.remove('co2')
         return super(FleetVehicle, self).read_group(domain, fields, groupby, offset, limit, orderby, lazy)
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        if operator == 'ilike' and not (name or '').strip():
-            domain = []
-        else:
-            domain = ['|', ('name', operator, name), ('driver_id.name', operator, name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def return_action_to_open(self):
         """ This opens the xml view specified in xml_id for the current vehicle """

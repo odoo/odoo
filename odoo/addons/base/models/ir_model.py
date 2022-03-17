@@ -147,6 +147,7 @@ class IrModel(models.Model):
     _name = 'ir.model'
     _description = "Models"
     _order = 'model'
+    _rec_names_search = ['name', 'model']
 
     def _default_field_id(self):
         if self.env.context.get('install_mode'):
@@ -247,15 +248,6 @@ class IrModel(models.Model):
         self.env.cr.execute("SELECT id FROM ir_model WHERE model=%s", (name,))
         result = self.env.cr.fetchone()
         return result and result[0]
-
-    # overridden to allow searching both on model name (field 'model') and model
-    # description (field 'name')
-    @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        if args is None:
-            args = []
-        domain = args + ['|', ('model', operator, name), ('name', operator, name)]
-        return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
 
     def _drop_table(self):
         for model in self:
@@ -1499,7 +1491,7 @@ class IrModelConstraint(models.Model):
         for data in self.sorted(key='id', reverse=True):
             name = tools.ustr(data.name)
             if data.model.model in self.env:
-                table = self.env[data.model.model]._table    
+                table = self.env[data.model.model]._table
             else:
                 table = data.model.model.replace('.', '_')
             typ = data.type
