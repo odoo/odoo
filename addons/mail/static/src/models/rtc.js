@@ -36,7 +36,7 @@ registerModel({
              */
             this._dataChannels = {};
             /**
-             * Set of peerTokens, used to track which calls are outgoing,
+             * Set of RtcSession.ids, used to track which calls are outgoing,
              * which is used when attempting to recover a failed peer connection by
              * inverting the call direction.
              */
@@ -128,7 +128,7 @@ registerModel({
             }
         },
         /**
-         * @param {number|String} sender id of the session that sent the notification
+         * @param {number} sender id of the session that sent the notification
          * @param {String} content JSON
          */
         async handleNotification(sender, content) {
@@ -147,18 +147,18 @@ registerModel({
             switch (event) {
                 case "offer":
                     this._addLogEntry(sender, `received notification: ${event}`, { step: 'received offer' });
-                    await this._handleRtcTransactionOffer(rtcSession.peerToken, payload);
+                    await this._handleRtcTransactionOffer(rtcSession, payload);
                     break;
                 case "answer":
                     this._addLogEntry(sender, `received notification: ${event}`, { step: 'received answer' });
-                    await this._handleRtcTransactionAnswer(rtcSession.peerToken, payload);
+                    await this._handleRtcTransactionAnswer(rtcSession, payload);
                     break;
                 case "ice-candidate":
-                    await this._handleRtcTransactionICECandidate(rtcSession.peerToken, payload);
+                    await this._handleRtcTransactionICECandidate(rtcSession, payload);
                     break;
                 case "disconnect":
                     this._addLogEntry(sender, `received notification: ${event}`, { step: ' peer cleanly disconnected ' });
-                    this._removePeer(rtcSession.peerToken);
+                    this._removePeer(rtcSession.id);
                     break;
                 case 'trackChange':
                     this._handleTrackChange(rtcSession, payload);
@@ -202,7 +202,7 @@ registerModel({
             if (this._peerConnections) {
                 const peerTokens = Object.keys(this._peerConnections);
                 for (const token of peerTokens) {
-                    this._removePeer(token);
+                    this._removePeer(Number(token));
                 }
             }
 
@@ -312,7 +312,7 @@ registerModel({
                 this.update({ audioTrack });
                 await this.async(() => this.updateVoiceActivation());
                 for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
-                    await this._updateRemoteTrack(peerConnection, 'audio', { token });
+                    await this._updateRemoteTrack(peerConnection, 'audio', { sessionId: Number(token) });
                 }
             }
         },
@@ -396,14 +396,14 @@ registerModel({
         },
         /**
          * @private
-         * @param {String} token
+         * @param {RtcSession} rtcSession
          */
-        async _callPeer(token) {
-            const peerConnection = this._createPeerConnection(token);
+        async _callPeer(rtcSession) {
+            const peerConnection = this._createPeerConnection(rtcSession);
             for (const trackKind of TRANSCEIVER_ORDER) {
-                await this._updateRemoteTrack(peerConnection, trackKind, { initTransceiver: true, token });
+                await this._updateRemoteTrack(peerConnection, trackKind, { initTransceiver: true, sessionId: rtcSession.id });
             }
-            this._outGoingCallTokens.add(token);
+            this._outGoingCallTokens.add(rtcSession.id);
         },
         /**
          * Call all the sessions that do not have an already initialized peerConnection.
@@ -414,18 +414,18 @@ registerModel({
             if (!this.channel.rtcSessions) {
                 return;
             }
-            for (const session of this.channel.rtcSessions) {
-                if (session.peerToken in this._peerConnections) {
+            for (const rtcSession of this.channel.rtcSessions) {
+                if (rtcSession.peerToken in this._peerConnections) {
                     continue;
                 }
-                if (session === this.currentRtcSession) {
+                if (rtcSession === this.currentRtcSession) {
                     continue;
                 }
-                session.update({
+                rtcSession.update({
                     connectionState: 'Not connected: sending initial RTC offer',
                 });
-                this._addLogEntry(session.peerToken, 'init call', { step: 'init call' });
-                this._callPeer(session.peerToken);
+                this._addLogEntry(rtcSession.id, 'init call', { step: 'init call' });
+                this._callPeer(rtcSession);
             }
         },
         /**
@@ -439,29 +439,29 @@ registerModel({
          * Creates and setup a RTCPeerConnection.
          *
          * @private
-         * @param {String} token
+         * @param {RtcSession} rtcSession
          */
-        _createPeerConnection(token) {
+        _createPeerConnection(rtcSession) {
             const peerConnection = new window.RTCPeerConnection({ iceServers: this.iceServers });
-            this._addLogEntry(token, `RTCPeerConnection created`, { step: 'peer connection created' });
+            this._addLogEntry(rtcSession.id, `RTCPeerConnection created`, { step: 'peer connection created' });
             peerConnection.onicecandidate = async (event) => {
                 if (!event.candidate) {
                     return;
                 }
-                await this._notifyPeers([token], {
+                await this._notifyPeers([rtcSession.id], {
                     event: 'ice-candidate',
                     payload: { candidate: event.candidate },
                 });
             };
             peerConnection.oniceconnectionstatechange = (event) => {
-                this._onICEConnectionStateChange(peerConnection.iceConnectionState, token);
+                this._onICEConnectionStateChange(peerConnection.iceConnectionState, rtcSession);
             };
             peerConnection.onconnectionstatechange = (event) => {
-                this._onConnectionStateChange(peerConnection.connectionState, token);
+                this._onConnectionStateChange(peerConnection.connectionState, rtcSession);
             };
             peerConnection.onicecandidateerror = async (error) => {
-                this._addLogEntry(token, `ice candidate error`);
-                this._recoverConnection(token, { delay: this.recoveryTimeout, reason: 'ice candidate error' });
+                this._addLogEntry(rtcSession.id, `ice candidate error`);
+                this._recoverConnection(rtcSession, { delay: this.recoveryTimeout, reason: 'ice candidate error' });
             };
             peerConnection.onnegotiationneeded = async (event) => {
                 const offer = await peerConnection.createOffer();
@@ -469,22 +469,22 @@ registerModel({
                     await peerConnection.setLocalDescription(offer);
                 } catch (e) {
                     // Possibly already have a remote offer here: cannot set local description
-                    this._addLogEntry(token, `couldn't setLocalDescription`, { error: e });
+                    this._addLogEntry(rtcSession.id, `couldn't setLocalDescription`, { error: e });
                     return;
                 }
-                this._addLogEntry(token, `sending notification: offer`, { step: 'sending offer' });
-                await this._notifyPeers([token], {
+                this._addLogEntry(rtcSession.id, `sending notification: offer`, { step: 'sending offer' });
+                await this._notifyPeers([rtcSession.id], {
                     event: 'offer',
                     payload: { sdp: peerConnection.localDescription },
                 });
             };
             peerConnection.ontrack = ({ transceiver, track }) => {
-                this._addLogEntry(token, `received ${track.kind} track`);
-                this._updateExternalSessionTrack(track, token);
+                this._addLogEntry(rtcSession.id, `received ${track.kind} track`);
+                this._updateExternalSessionTrack(track, rtcSession);
             };
             const dataChannel = peerConnection.createDataChannel("notifications", { negotiated: true, id: 1 });
             dataChannel.onmessage = (event) => {
-                this.handleNotification(token, event.data);
+                this.handleNotification(rtcSession.id, event.data);
             };
             dataChannel.onopen = async () => {
                 /**
@@ -492,7 +492,7 @@ registerModel({
                  * even when it is disabled on the sender-side.
                  */
                 try {
-                    await this._notifyPeers([token], {
+                    await this._notifyPeers([rtcSession.id], {
                         event: 'trackChange',
                         type: 'peerToPeer',
                         payload: {
@@ -507,11 +507,11 @@ registerModel({
                     if (!(e instanceof DOMException) || e.name !== "OperationError") {
                         throw e;
                     }
-                    this._addLogEntry(token, `failed to send on datachannel; dataChannelInfo: ${this._serializeRTCDataChannel(dataChannel)}`, { error: e });
+                    this._addLogEntry(rtcSession.id, `failed to send on datachannel; dataChannelInfo: ${this._serializeRTCDataChannel(dataChannel)}`, { error: e });
                 }
             };
-            this._peerConnections[token] = peerConnection;
-            this._dataChannels[token] = dataChannel;
+            this._peerConnections[rtcSession.id] = peerConnection;
+            this._dataChannels[rtcSession.id] = dataChannel;
             return peerConnection;
         },
         /**
@@ -526,12 +526,12 @@ registerModel({
         },
         /**
          * @private
-         * @param {String} fromToken
+         * @param {RtcSession} rtcSession
          * @param {Object} param1
          * @param {Object} param1.sdp Session Description Protocol
          */
-        async _handleRtcTransactionAnswer(fromToken, { sdp }) {
-            const peerConnection = this._peerConnections[fromToken];
+        async _handleRtcTransactionAnswer(rtcSession, { sdp }) {
+            const peerConnection = this._peerConnections[rtcSession.id];
             if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState) || peerConnection.signalingState === 'stable') {
                 return;
             }
@@ -543,18 +543,18 @@ registerModel({
             try {
                 await peerConnection.setRemoteDescription(rtcSessionDescription);
             } catch (e) {
-                this._addLogEntry(fromToken, 'answer handling: Failed at setting remoteDescription', { error: e });
+                this._addLogEntry(rtcSession.id, 'answer handling: Failed at setting remoteDescription', { error: e });
                 // ignored the transaction may have been resolved by another concurrent offer.
             }
         },
         /**
          * @private
-         * @param {String} fromToken
+         * @param {RtcSession} rtcSession
          * @param {Object} param1
          * @param {Object} param1.candidate RTCIceCandidateInit
          */
-        async _handleRtcTransactionICECandidate(fromToken, { candidate }) {
-            const peerConnection = this._peerConnections[fromToken];
+        async _handleRtcTransactionICECandidate(rtcSession, { candidate }) {
+            const peerConnection = this._peerConnections[rtcSession.id];
             if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState)) {
                 return;
             }
@@ -562,18 +562,18 @@ registerModel({
             try {
                 await peerConnection.addIceCandidate(rtcIceCandidate);
             } catch (error) {
-                this._addLogEntry(fromToken, 'ICE candidate handling: failed at adding the candidate to the connection', { error });
-                this._recoverConnection(fromToken, { delay: this.recoveryTimeout, reason: 'failed at adding ice candidate' });
+                this._addLogEntry(rtcSession.id, 'ICE candidate handling: failed at adding the candidate to the connection', { error });
+                this._recoverConnection(rtcSession, { delay: this.recoveryTimeout, reason: 'failed at adding ice candidate' });
             }
         },
         /**
          * @private
-         * @param {String} fromToken
+         * @param {RtcSession} rtcSession
          * @param {Object} param1
          * @param {Object} param1.sdp Session Description Protocol
          */
-        async _handleRtcTransactionOffer(fromToken, { sdp }) {
-            const peerConnection = this._peerConnections[fromToken] || this._createPeerConnection(fromToken);
+        async _handleRtcTransactionOffer(rtcSession, { sdp }) {
+            const peerConnection = this._peerConnections[rtcSession.id] || this._createPeerConnection(rtcSession);
 
             if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState)) {
                 return;
@@ -586,32 +586,32 @@ registerModel({
             try {
                 await peerConnection.setRemoteDescription(rtcSessionDescription);
             } catch (e) {
-                this._addLogEntry(fromToken, 'offer handling: failed at setting remoteDescription', { error: e });
+                this._addLogEntry(rtcSession.id, 'offer handling: failed at setting remoteDescription', { error: e });
                 return;
             }
-            await this._updateRemoteTrack(peerConnection, 'audio', { token: fromToken });
-            await this._updateRemoteTrack(peerConnection, 'video', { token: fromToken });
+            await this._updateRemoteTrack(peerConnection, 'audio', { sessionId: rtcSession.id });
+            await this._updateRemoteTrack(peerConnection, 'video', { sessionId: rtcSession.id });
 
             let answer;
             try {
                 answer = await peerConnection.createAnswer();
             } catch (e) {
-                this._addLogEntry(fromToken, 'offer handling: failed at creating answer', { error: e });
+                this._addLogEntry(rtcSession.id, 'offer handling: failed at creating answer', { error: e });
                 return;
             }
             try {
                 await peerConnection.setLocalDescription(answer);
             } catch (e) {
-                this._addLogEntry(fromToken, 'offer handling: failed at setting localDescription', { error: e });
+                this._addLogEntry(rtcSession.id, 'offer handling: failed at setting localDescription', { error: e });
                 return;
             }
 
-            this._addLogEntry(fromToken, `sending notification: answer`, { step: 'sending answer' });
-            await this._notifyPeers([fromToken], {
+            this._addLogEntry(rtcSession.id, `sending notification: answer`, { step: 'sending answer' });
+            await this._notifyPeers([rtcSession.id], {
                 event: 'answer',
                 payload: { sdp: peerConnection.localDescription },
             });
-            this._recoverConnection(fromToken, { delay: this.recoveryTimeout, reason: 'standard answer timeout' });
+            this._recoverConnection(rtcSession, { delay: this.recoveryTimeout, reason: 'standard answer timeout' });
         },
         /**
          * @private
@@ -645,7 +645,7 @@ registerModel({
         },
         /**
          * @private
-         * @param {String[]} targetToken
+         * @param {number[]} targetToken
          * @param {Object} param1
          * @param {String} param1.event
          * @param {Object} [param1.payload]
@@ -684,28 +684,27 @@ registerModel({
             }
         },
         /**
-         * @param {string} token
+         * @param {RtcSession} rtcSession
          * @param {string} [reason]
          */
-        async _onRecoverConnectionTimeout(token, reason) {
-            const rtcSession = this.messaging.models['RtcSession'].insert({ id: token });
+        async _onRecoverConnectionTimeout(rtcSession, reason) {
             rtcSession.update({ connectionRecoveryTimeout: clear() });
-            const peerConnection = this._peerConnections[token];
+            const peerConnection = this._peerConnections[rtcSession.id];
             if (!peerConnection || !this.channel) {
                 return;
             }
-            if (this._outGoingCallTokens.has(token)) {
+            if (this._outGoingCallTokens.has(rtcSession.id)) {
                 return;
             }
             if (peerConnection.iceConnectionState === 'connected') {
                 return;
             }
-            this._addLogEntry(token, `calling back to recover ${peerConnection.iceConnectionState} connection, reason: ${reason}`);
-            await this._notifyPeers([token], {
+            this._addLogEntry(rtcSession.id, `calling back to recover ${peerConnection.iceConnectionState} connection, reason: ${reason}`);
+            await this._notifyPeers([rtcSession.id], {
                 event: 'disconnect',
             });
-            this._removePeer(token);
-            this._callPeer(token);
+            this._removePeer(rtcSession.id);
+            this._callPeer(rtcSession);
         },
         /**
          * Pings the server to ensure this session is kept alive.
@@ -729,19 +728,18 @@ registerModel({
          * from the receiving end.
          *
          * @private
-         * @param {String} token
+         * @param {RtcSession} rtcSession
          * @param {Object} [param1]
          * @param {number} [param1.delay] in ms
          * @param {string} [param1.reason]
          */
-        _recoverConnection(token, { delay = 0, reason = '' } = {}) {
-            const rtcSession = this.messaging.models['RtcSession'].insert({ id: token });
+        _recoverConnection(rtcSession, { delay = 0, reason = '' } = {}) {
             if (rtcSession.connectionRecoveryTimeout) {
                 return;
             }
             rtcSession.update({
                 connectionRecoveryTimeout: this.messaging.browser.setTimeout(
-                    this._onRecoverConnectionTimeout.bind(this, token, reason),
+                    this._onRecoverConnectionTimeout.bind(this, rtcSession, reason),
                     delay,
                 ),
             });
@@ -750,26 +748,26 @@ registerModel({
          * Cleans up a peer by closing all its associated content and the connection.
          *
          * @private
-         * @param {String} token
+         * @param {number} sessionId
          */
-        _removePeer(token) {
-            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: token });
+        _removePeer(sessionId) {
+            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: sessionId });
             if (rtcSession) {
                 rtcSession.reset();
             }
-            const dataChannel = this._dataChannels[token];
+            const dataChannel = this._dataChannels[sessionId];
             if (dataChannel) {
                 dataChannel.close();
             }
-            delete this._dataChannels[token];
-            const peerConnection = this._peerConnections[token];
+            delete this._dataChannels[sessionId];
+            const peerConnection = this._peerConnections[sessionId];
             if (peerConnection) {
                 this._removeRemoteTracks(peerConnection);
                 peerConnection.close();
             }
-            delete this._peerConnections[token];
-            this._outGoingCallTokens.delete(token);
-            this._addLogEntry(token, 'peer removed', { step: 'peer removed' });
+            delete this._peerConnections[sessionId];
+            this._outGoingCallTokens.delete(sessionId);
+            this._addLogEntry(sessionId, 'peer removed', { step: 'peer removed' });
         },
         /**
          * Terminates the Transceivers of the peer connection.
@@ -910,7 +908,7 @@ registerModel({
             }
             await this._toggleLocalVideoTrack(trackOptions);
             for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
-                await this._updateRemoteTrack(peerConnection, 'video', { token });
+                await this._updateRemoteTrack(peerConnection, 'video', { sessionId: Number(token) });
             }
             if (!this.currentRtcSession) {
                 return;
@@ -941,21 +939,17 @@ registerModel({
             if (!this.videoTrack) {
                 this.currentRtcSession.removeVideo();
             } else {
-                this._updateExternalSessionTrack(this.videoTrack, this.currentRtcSession.peerToken);
+                this._updateExternalSessionTrack(this.videoTrack, this.currentRtcSession);
             }
         },
         /**
-         * Updates the RtcSession associated to the token with a new track.
+         * Updates the RtcSession with a new track.
          *
          * @private
          * @param {Track} [track]
-         * @param {String} token the token of video
+         * @param {RtcSession} rtcSession
          */
-        _updateExternalSessionTrack(track, token) {
-            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: token });
-            if (!rtcSession) {
-                return;
-            }
+        _updateExternalSessionTrack(track, rtcSession) {
             const stream = new window.MediaStream();
             stream.addTrack(track);
 
@@ -1062,17 +1056,17 @@ registerModel({
          * @param {String} trackKind
          * @param {Object} [param2]
          * @param {boolean} [param2.initTransceiver]
-         * @param {String} [param2.token]
+         * @param {number} [param2.sessionId]
          */
-        async _updateRemoteTrack(peerConnection, trackKind, { initTransceiver, token } = {}) {
-            this._addLogEntry(token, `updating ${trackKind} transceiver`);
+        async _updateRemoteTrack(peerConnection, trackKind, { initTransceiver, sessionId } = {}) {
+            this._addLogEntry(sessionId, `updating ${trackKind} transceiver`);
             const track = trackKind === 'audio' ? this.audioTrack : this.videoTrack;
             const fullDirection = track ? 'sendrecv' : 'recvonly';
             const limitedDirection = track ? 'sendonly' : 'inactive';
             let transceiverDirection = fullDirection;
             if (trackKind === 'video') {
-                const focusedToken = this.messaging.focusedRtcSession && this.messaging.focusedRtcSession.peerToken;
-                transceiverDirection = !focusedToken || focusedToken === token ? fullDirection : limitedDirection;
+                const focusedSessionId = this.messaging.focusedRtcSession && this.messaging.focusedRtcSession.id;
+                transceiverDirection = !focusedSessionId || focusedSessionId === sessionId ? fullDirection : limitedDirection;
             }
             let transceiver;
             if (initTransceiver) {
@@ -1096,7 +1090,7 @@ registerModel({
                 // ignored, the transceiver is probably already removed
             }
             if (trackKind === 'video') {
-                this._notifyPeers([token], {
+                this._notifyPeers([sessionId], {
                     event: 'trackChange',
                     type: 'peerToPeer',
                     payload: {
@@ -1118,28 +1112,27 @@ registerModel({
         /**
          * @private
          * @param {String} state the new state of the connection
-         * @param {String} token of the peer whose the connection changed
+         * @param {RtcSession} rtcSession of the peer whose the connection changed
          */
-        async _onConnectionStateChange(state, token) {
-            this._addLogEntry(token, `connection state changed: ${state}`);
+        async _onConnectionStateChange(state, rtcSession) {
+            this._addLogEntry(rtcSession.id, `connection state changed: ${state}`);
             switch (state) {
                 case "closed":
-                    this._removePeer(token);
+                    this._removePeer(rtcSession.id);
                     break;
                 case "failed":
                 case "disconnected":
-                    await this._recoverConnection(token, { delay: this.recoveryDelay, reason: `connection ${state}` });
+                    await this._recoverConnection(rtcSession, { delay: this.recoveryDelay, reason: `connection ${state}` });
                     break;
             }
         },
         /**
          * @private
          * @param {String} connectionState the new state of the connection
-         * @param {String} token of the peer whose the connection changed
+         * @param {RtcSession} rtcSession id of the rtcSession of the peer whose the connection changed
          */
-        async _onICEConnectionStateChange(connectionState, token) {
-            this._addLogEntry(token, `ICE connection state changed: ${connectionState}`, { state: connectionState });
-            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: token });
+        async _onICEConnectionStateChange(connectionState, rtcSession) {
+            this._addLogEntry(rtcSession.id, `ICE connection state changed: ${connectionState}`, { state: connectionState });
             if (!rtcSession) {
                 return;
             }
@@ -1148,11 +1141,11 @@ registerModel({
             });
             switch (connectionState) {
                 case "closed":
-                    this._removePeer(token);
+                    this._removePeer(rtcSession.id);
                     break;
                 case "failed":
                 case "disconnected":
-                    await this._recoverConnection(token, { delay: this.recoveryDelay, reason: `ice connection ${connectionState}` });
+                    await this._recoverConnection(rtcSession, { delay: this.recoveryDelay, reason: `ice connection ${connectionState}` });
                     break;
             }
         },
