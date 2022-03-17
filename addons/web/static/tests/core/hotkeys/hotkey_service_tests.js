@@ -9,6 +9,7 @@ import { makeTestEnv } from "../../helpers/mock_env";
 import {
     destroy,
     getFixture,
+    makeDeferred,
     mount,
     nextTick,
     patchWithCleanup,
@@ -841,4 +842,35 @@ QUnit.test("ignore numpad keys", async (assert) => {
     window.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps(["1"]);
+});
+
+QUnit.test("within iframes", async (assert) => {
+    assert.expect(5);
+    env.services.hotkey.add("enter", () => assert.step("called"));
+    await nextTick();
+
+    // Dispatch directly to target to show that the hotkey service works as expected
+    target.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(["called"]);
+
+    // Append an iframe to target and wait until it is fully loaded.
+    const iframe = document.createElement("iframe");
+    iframe.srcdoc = "<h1>Hello world!</h1>";
+    const def = makeDeferred();
+    iframe.onload = def.resolve;
+    target.appendChild(iframe);
+    await def;
+
+    // Dispatch an hotkey from within the iframe
+    const h1 = iframe.contentDocument.querySelector("h1");
+    h1.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    await nextTick();
+    assert.verifySteps([]);
+
+    // Register the iframe to the hotkey service
+    env.services.hotkey.registerIframe(iframe);
+    h1.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(["called"]);
 });
