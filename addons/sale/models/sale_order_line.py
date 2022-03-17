@@ -105,7 +105,7 @@ class SaleOrderLine(models.Model):
     product_uom_qty = fields.Float(
         string="Quantity",
         compute='_compute_product_uom_qty',
-        digits='Product Unit of Measure',
+        digits='Product Unit of Measure', default=1.0,
         store=True, readonly=False, required=True, precompute=True)
     product_uom = fields.Many2one(
         comodel_name='uom.uom',
@@ -343,8 +343,6 @@ class SaleOrderLine(models.Model):
                 line.product_uom_qty = 0.0
                 continue
 
-            # Default value = 1.0
-            line.product_uom_qty = line.product_uom_qty or 1.0
             if not line.product_packaging_id:
                 continue
             packaging_uom = line.product_packaging_id.product_uom_id
@@ -879,6 +877,10 @@ class SaleOrderLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('display_type') or self.default_get(['display_type']).get('display_type'):
+                vals['product_uom_qty'] = 0.0
+
         lines = super().create(vals_list)
         for line in lines:
             if line.product_id and line.state == 'sale':
