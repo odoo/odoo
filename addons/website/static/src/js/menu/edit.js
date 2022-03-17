@@ -453,6 +453,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             powerboxCommands: this._getSnippetsCommands(),
             showEmptyElementHint: false,
             getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
+            bindLinkTool: true,
         }, collaborationConfig);
         return wysiwygLoader.createWysiwyg(this,
             Object.assign(params, this.wysiwygOptions),
