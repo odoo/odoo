@@ -26,6 +26,10 @@
                         </div>
                     </group>
                 </group>
+                <div>
+                    <span class="text-muted">Attention: Regenerating these work entries will result in all the manual
+                        configurations (work entry type, homeworking location, ...) to be lost.</span>
+                </div>
                 <field name="search_criteria_completed" invisible="1"/>
                 <field name="valid" invisible="1"/>
                 <div attrs="{'invisible': ['|', ('search_criteria_completed', '=', False), ('valid', '=', True)]}">
