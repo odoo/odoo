@@ -601,6 +601,10 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertEqual(form.name, False)
         self.assertEqual(form.display_name, False)
 
+        record = form.save()
+        self.assertEqual(record.display_name, False)
+        self.assertEqual(record.name_get(), [(record.id, "")])
+
 
 class TestComputeOnchange(common.TransactionCase):
 
