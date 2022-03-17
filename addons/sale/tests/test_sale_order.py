@@ -583,6 +583,59 @@ class TestSaleOrder(TestSaleCommon):
         self.assertEqual(line.price_subtotal, 17527.41)
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
 
+    def test_discount_and_amount_undiscounted(self):
+        """When adding a discount on a SO line, this test ensures that amount undiscounted is
+        consistent with the used tax"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': 100.0,
+                'discount': 1.00,
+            })]
+        })
+        sale_order.action_confirm()
+        line = sale_order.order_line
+
+        # test discount and qty 1
+        self.assertEqual(sale_order.amount_undiscounted, 100.0)
+        self.assertEqual(line.price_subtotal, 99.0)
+
+        # more quantity 1 -> 3
+        sale_form = Form(sale_order)
+        with sale_form.order_line.edit(0) as line_form:
+            line_form.product_uom_qty = 3.0
+            line_form.price_unit = 100.0
+        sale_order = sale_form.save()
+
+        self.assertEqual(sale_order.amount_undiscounted, 300.0)
+        self.assertEqual(line.price_subtotal, 297.0)
+
+        # undiscounted
+        with sale_form.order_line.edit(0) as line_form:
+            line_form.discount = 0.0
+        sale_order = sale_form.save()
+        self.assertEqual(line.price_subtotal, 300.0)
+        self.assertEqual(sale_order.amount_undiscounted, 300.0)
+
+        # Same with an included-in-price tax
+        sale_order = sale_order.copy()
+        line = sale_order.order_line
+        line.tax_id = [(0, 0, {
+            'name': 'Super Tax',
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'price_include': True,
+        })]
+        line.discount = 50.0
+        sale_order.action_confirm()
+
+        # 300 with 10% incl tax -> 272.72 total tax excluded without discount
+        # 136.36 price tax excluded with discount applied
+        self.assertEqual(sale_order.amount_undiscounted, 272.72)
+        self.assertEqual(line.price_subtotal, 136.36)
+
     def test_free_product_and_price_include_fixed_tax(self):
         """ Check that fixed tax include are correctly computed while the price_unit is 0
         """
