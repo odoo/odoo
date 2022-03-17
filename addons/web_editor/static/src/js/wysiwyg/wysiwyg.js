@@ -93,6 +93,7 @@ const Wysiwyg = Widget.extend({
         this._isOnline = true;
         this._signalOnline = this._signalOnline.bind(this);
         this._oNotEditableObservers = new Map();
+        Wysiwyg.activeWysiwygs.add(this);
     },
     /**
      *
@@ -648,6 +649,7 @@ const Wysiwyg = Widget.extend({
      * @override
      */
     destroy: function () {
+        Wysiwyg.activeWysiwygs.delete(this);
         if (this._collaborationChannelName) {
             Wysiwyg.activeCollaborationChannelNames.delete(this._collaborationChannelName);
         }
@@ -961,6 +963,9 @@ const Wysiwyg = Widget.extend({
             await this.snippetsMenu.cleanForSave();
         }
     },
+    isSelectionInEditable: function () {
+        return this.odooEditor.isSelectionInEditable();
+    },
     /**
      * Start or resume the Odoo field changes muation observers.
      *
@@ -1050,6 +1055,19 @@ const Wysiwyg = Widget.extend({
         for (let observerData of this.odooFieldObservers) {
             observerData.observer.disconnect();
         }
+    },
+    /**
+     * Open the link tools or the image link tool depending on the selection.
+     */
+    openLinkToolsFromSelection() {
+        const targetEl = this.odooEditor.document.getSelection().getRangeAt(0).startContainer;
+        // Link tool is different if the selection is an image or a text.
+        if (targetEl instanceof HTMLElement
+                && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
+            core.bus.trigger('activate_image_link_tool');
+            return;
+        }
+        this.toggleLinkTools();
     },
     /**
      * Toggle the Link tools/dialog to edit links. If a snippet menu is present,
@@ -1247,6 +1265,9 @@ const Wysiwyg = Widget.extend({
             fragment.append(element);
             return this.odooEditor.execCommand('insertFragment', fragment);
         }
+    },
+    getInSelection(selector) {
+        return getInSelection(this.odooEditor.document, selector);
     },
 
     //--------------------------------------------------------------------------
@@ -1565,17 +1586,11 @@ const Wysiwyg = Widget.extend({
      * Handle custom keyboard shortcuts.
      */
     _handleShortcuts: function (e) {
+        const options = this._editorOptions();
         // Open the link tool when CTRL+K is pressed.
-        if (e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+        if (options.bindLinkTool && e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
-            const targetEl = this.odooEditor.document.getSelection().getRangeAt(0).startContainer;
-            // Link tool is different if the selection is an image or a text.
-            if (targetEl instanceof HTMLElement
-                    && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
-                core.bus.trigger('activate_image_link_tool');
-                return;
-            }
-            this.toggleLinkTools();
+            this.openLinkToolsFromSelection();
         }
         // Override selectAll (CTRL+A) to restrict it to the editable zone / current snippet and prevent traceback.
         if (e && e.key === 'a' && (e.ctrlKey || e.metaKey)) {
@@ -2195,6 +2210,7 @@ const Wysiwyg = Widget.extend({
 
 });
 Wysiwyg.activeCollaborationChannelNames = new Set();
+Wysiwyg.activeWysiwygs = new Set();
 //--------------------------------------------------------------------------
 // Public helper
 //--------------------------------------------------------------------------
