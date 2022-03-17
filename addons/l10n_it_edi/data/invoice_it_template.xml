@@ -147,7 +147,7 @@
                             </DatiBollo>
                         </DatiGeneraliDocumento>
                         <DatiOrdineAcquisto t-if="record.ref">
-                            <IdDocumento t-esc="record.ref" />
+                            <IdDocumento t-esc="record.ref[:20]" />
                         </DatiOrdineAcquisto>
                         <DatiDDT t-if="record.l10n_it_ddt_id">
                             <!--2.1.8-->
