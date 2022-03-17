@@ -14,6 +14,18 @@
                   <span t-esc="record.contact_count_sms.value" class="ml-3"/>
               </a>
             </xpath>
+            <xpath expr="//div[hasclass('o_mailing_list_kanban_stats')]//a" position="after">
+                <a class="mr-sm-0 mr-3 text-large" tabindex="-1"
+                    name="action_view_contacts_sms" type="object">
+                    <span class="font-weight-normal">
+                        <field name="contact_count_sms"/>
+                    </span>
+                    <br/>
+                    <span class="text-secondary">
+                        <i class="fa fa-phone"/> Contacts
+                    </span>
+                </a>
+            </xpath>
         </field>
     </record>
 
