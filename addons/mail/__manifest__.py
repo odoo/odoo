@@ -143,19 +143,13 @@
             'mail/static/src/env/test_env.js',
             'mail/static/src/utils/test_utils.js',
             'mail/static/tests/helpers/*.js',
+            'mail/static/tests/models/*.js',
         ],
         'web.qunit_suite_tests': [
-            'mail/static/tests/*.js',
-            'mail/static/tests/systray/systray_activity_menu_tests.js',
-            'mail/static/tests/tools/debug_manager_tests.js',
-            'mail/static/tests/webclient/commands/*.js',
-            'mail/static/src/components/*/tests/*.js',
-            'mail/static/src/model/tests/**/*.js',
-            'mail/static/src/utils/*/tests/*.js',
-            'mail/static/src/widgets/*/tests/*.js',
+            'mail/static/tests/qunit_suite_tests/**/*.js',
         ],
         'web.qunit_mobile_suite_tests': [
-            'mail/static/src/components/*/mobile_tests/*.js',
+            'mail/static/tests/qunit_mobile_suite_tests/**/*.js',
         ],
         'web.assets_qweb': [
             'mail/static/src/xml/*.xml',

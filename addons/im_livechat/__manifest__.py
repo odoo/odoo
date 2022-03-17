@@ -54,10 +54,12 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
         ],
-        'web.qunit_suite_tests': [
-            'im_livechat/static/src/components/*/tests/*.js',
-            'im_livechat/static/src/legacy/public_livechat.js',
+        'web.tests_assets': [
             'im_livechat/static/tests/helpers/*.js',
+        ],
+        'web.qunit_suite_tests': [
+            'im_livechat/static/tests/qunit_suite_tests/components/**/*.js',
+            'im_livechat/static/src/legacy/public_livechat.js',
         ],
         'web.assets_qweb': [
             'im_livechat/static/src/components/*/*.xml',

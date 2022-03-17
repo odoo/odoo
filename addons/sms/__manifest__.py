@@ -52,7 +52,7 @@ The service is provided by the In App Purchase Odoo platform.
         ],
         'web.qunit_suite_tests': [
             'sms/static/tests/sms_widget_test.js',
-            'sms/static/src/components/*/tests/*.js',
+            'sms/static/tests/qunit_suite_tests/**/*.js',
         ],
         'web.assets_qweb': [
             'sms/static/src/components/*/*.xml',

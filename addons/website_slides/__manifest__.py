@@ -97,7 +97,7 @@ Featuring
             'website_slides/static/src/js/portal_chatter.js',
         ],
         'web.assets_tests': [
-            'website_slides/static/src/tests/**/*',
+            'website_slides/static/tests/tours/*.js',
         ],
         'website.assets_editor': [
             'website_slides/static/src/js/website_slides.editor.js',
@@ -112,10 +112,10 @@ Featuring
             'website_slides/static/src/js/slides_embed.js',
         ],
         'web.tests_assets': [
-            'website_slides/static/src/tests/helpers/*.js',
+            'website_slides/static/tests/helpers/*.js',
         ],
         'web.qunit_suite_tests': [
-            'website_slides/static/src/components/*/tests/*.js',
+            'website_slides/static/tests/qunit_suite_tests/**/*.js',
         ],
         'web.assets_qweb': [
             'website_slides/static/src/components/*/*.xml',
