@@ -97,3 +97,4 @@ class MentalHealthNotes(models.Model):
                                        ('angry', 'Angry'),
                                        ('euphoric', 'Euphoric')],
                             help='Select the mood of the client.')
+    homework = fields.Text(string='Homework Assignment')
