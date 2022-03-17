@@ -28,6 +28,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'web.assets_frontend': [
             'mail/static/src/js/utils.js',
             'im_livechat/static/src/legacy/public_livechat.js',
+            'im_livechat/static/src/legacy/widgets/*',
             'website_livechat/static/src/legacy/public_livechat.js',
             'im_livechat/static/src/legacy/public_livechat.scss',
             'website_livechat/static/src/legacy/public_livechat.scss',
