@@ -53,16 +53,16 @@ var MediaDialog = Dialog.extend({
         }, options));
 
         if (!options.noImages) {
-            this.imageWidget = new MediaModules.ImageWidget(this, media, options);
+            this.imageWidget = this.getImageWidget(media, options);
         }
         if (!options.noDocuments) {
-            this.documentWidget = new MediaModules.DocumentWidget(this, media, options);
+            this.documentWidget = this.getDocumentWidget(media, options);
         }
         if (!options.noIcons) {
-            this.iconWidget = new MediaModules.IconWidget(this, media, options);
+            this.iconWidget = this.getIconWidget(media, options);
         }
         if (!options.noVideos) {
-            this.videoWidget = new MediaModules.VideoWidget(this, media, options);
+            this.videoWidget = this.getVideoWidget(media, options);
         }
 
         if (this.imageWidget && $media.is('img')) {
@@ -109,6 +109,42 @@ var MediaDialog = Dialog.extend({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+
+    /**
+     * @param {Object} media
+     * @param {Object} options
+     * @returns {ImageWidget}
+     */
+    getImageWidget: function (media, options) {
+        return new MediaModules.ImageWidget(this, media, options);
+    },
+
+    /**
+     * @param {Object} media
+     * @param {Object} options
+     * @returns {DocumentWidget}
+     */
+    getDocumentWidget: function (media, options) {
+        return new MediaModules.DocumentWidget(this, media, options);
+    },
+
+    /**
+     * @param {Object} media
+     * @param {Object} options
+     * @returns {IconWidget}
+     */
+    getIconWidget: function (media, options) {
+        return new MediaModules.IconWidget(this, media, options);
+    },
+
+    /**
+     * @param {Object} media
+     * @param {Object} options
+     * @returns {VideoWidget}
+     */
+    getVideoWidget: function (media, options) {
+        return new MediaModules.VideoWidget(this, media, options);
+    },
 
     /**
      * Returns whether the document widget is currently active.

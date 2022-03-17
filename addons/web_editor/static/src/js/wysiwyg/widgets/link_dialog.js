@@ -184,7 +184,7 @@ const _DialogLinkWidget = Link.extend({
 const LinkDialog = Dialog.extend({
     init: function (parent, ...args) {
         this._super(...arguments);
-        this.linkWidget = new _DialogLinkWidget(this, ...args);
+        this.linkWidget = this.getLinkWidget(...args);
     },
     start: async function () {
         const res = await this._super(...arguments);
@@ -195,6 +195,13 @@ const LinkDialog = Dialog.extend({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+
+    /**
+     * @param {...any} args
+     */
+    getLinkWidget: function (...args) {
+        return new _DialogLinkWidget(this, ...args);
+    },
 
     /**
      * @override

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ChatterTopbar" t-inherit="mail.ChatterTopbar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_ChatterTopbar_rightSection')]/child::*" position="before">
+            <button class="btn btn-link o_ChatterTopbar_button" type="button" t-att-disabled="chatter.isDisabled" t-on-click="chatter.onClickChatterSearchArticle">
+                <i class="fa fa-book"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

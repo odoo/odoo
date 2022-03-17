@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- Article Tree layout -->
+    <template id="knowledge_article_tree_template" name="Article Tree">
+        <section t-if="favourites">
+            <div class="h4 mb-0">Favourites</div>
+            <ul class="o_tree_favourite m-0 px-0 py-2">
+                <li t-foreach="favourites" t-as="favourite"
+                    t-attf-class="#{ 'bg-light font-weight-bold' if favourite.id == active_article_id else '' }"
+                    t-att-data-article-id="favourite.id">
+                    <div class="d-flex">
+                        <button class="o_article_icon btn btn-link text-secondary p-0" type="button">
+                            <i t-attf-class="fa fa-fw #{favourite.icon}"/>
+                        </button>
+                        <div class="o_article_name flex-grow-1 text-truncate">
+                            <t t-out="favourite.name"/>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="o_section" data-section="workspace">
+            <div class="o_section_header d-flex h4 mb-0">
+                <div class="flex-grow-1 text-truncate">Workspace</div>
+                <button class="o_section_create btn btn-link text-secondary rounded p-0" type="button">
+                    <i class="fa fa-fw fa-plus"/>
+                </button>
+            </div>
+            <ul class="o_tree m-0 px-0 py-2">
+                <t t-call="knowledge.articles_template">
+                    <t t-set="articles" t-value="public_articles"/>
+                </t>
+            </ul>
+        </section>
+
+        <section t-if="shared_articles" class="o_section mb-3" data-section="shared">
+            <div class="o_section_header d-flex h4 mb-0">
+                <div class="flex-grow-1 text-truncate">Shared</div>
+            </div>
+            <ul class="o_tree m-0 px-0 py-2">
+                <t t-call="knowledge.articles_template">
+                    <t t-set="articles" t-value="shared_articles"/>
+                </t>
+            </ul>
+        </section>
+
+        <section class="o_section mb-3" data-section="private">
+            <div class="o_section_header d-flex h4 mb-0">
+                <div class="flex-grow-1 text-truncate">Private</div>
+                <button class="o_section_create btn btn-link text-secondary rounded p-0" type="button">
+                    <i class="fa fa-fw fa-plus"/>
+                </button>
+            </div>
+            <ul class="o_tree m-0 px-0 py-2">
+                <t t-call="knowledge.articles_template">
+                    <t t-set="articles" t-value="private_articles"/>
+                </t>
+            </ul>
+        </section>
+    </template>
+
+    <template id="articles_template">
+        <t t-foreach="articles" t-as="article">
+            <li t-attf-id="article_#{article.id}" t-att-data-article-id="article.id">
+                <div t-attf-class="o_article d-flex #{ 'bg-light font-weight-bold' if article.id == active_article_id else '' }">
+                    <button class="o_article_caret btn btn-link text-secondary p-0" type="button">
+                        <i class="fa fa-fw fa-caret-down align-self-center"/>
+                    </button>
+                    <div class="btn-group dropdown">
+                        <button class="o_article_icon btn btn-link text-secondary p-0" type="button" t-attf-id="o_article_dropdown_#{article.id}" data-toggle="dropdown" aria-expanded="true">
+                            <i t-attf-class="fa fa-fw #{article.icon}"/>
+                        </button>
+                        <div class="o_article_dropdown dropdown-menu p-0" role="menu" t-attf-aria-labelledby="o_article_dropdown_#{article.id}">
+                            <i class="fa fa-fw fa-file" data-icon-name="fa-file"/>
+                            <i class="fa fa-fw fa-book" data-icon-name="fa-book"/>
+                            <i class="fa fa-fw fa-user" data-icon-name="fa-user"/>
+                            <i class="fa fa-fw fa-address-book" data-icon-name="fa-address-book"/>
+                            <i class="fa fa-fw fa-calendar" data-icon-name="fa-calendar"/>
+                            <i class="fa fa-fw fa-code" data-icon-name="fa-code"/>
+                            <i class="fa fa-fw fa-car" data-icon-name="fa-car"/>
+                            <i class="fa fa-fw fa-comment" data-icon-name="fa-comment"/>
+                            <i class="fa fa-fw fa-bullhorn" data-icon-name="fa-bullhorn"/>
+                        </div>
+                    </div>
+                    <div class="o_article_name flex-grow-1 text-truncate">
+                        <t t-out="article.name"/>
+                    </div>
+                    <button class="o_article_create btn btn-link text-secondary p-0" type="button">
+                        <i class="fa fa-fw fa-plus"/>
+                    </button>
+                </div>
+            </li>
+        </t>
+    </template>
+</data>
+</odoo>
