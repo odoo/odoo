@@ -5,9 +5,9 @@
         <div class="o_Activity d-flex p-2" t-attf-class="{{ className }}" t-on-click="activityView.onClickActivity" t-ref="root">
             <t t-if="activityView">
                 <div class="o_Activity_sidebar mr-3">
-                    <div class="o_Activity_user position-relative">
+                    <div class="o_Activity_user position-relative h-100 w-100">
                         <t t-if="activityView.activity.assignee">
-                            <img class="o_Activity_userAvatar rounded-circle w-100" t-attf-src="/web/image/res.users/{{ activityView.activity.assignee.id }}/avatar_128" t-att-alt="activityView.activity.assignee.nameOrDisplayName"/>
+                            <img class="o_Activity_userAvatar rounded-circle h-100 w-100" t-attf-src="/web/image/res.users/{{ activityView.activity.assignee.id }}/avatar_128" t-att-alt="activityView.activity.assignee.nameOrDisplayName"/>
                         </t>
                         <div class="o_Activity_iconContainer d-flex align-items-center justify-content-center rounded-circle w-50 h-50 text-white"
                             t-att-class="{
