@@ -58,8 +58,9 @@ export class GraphView extends Component {
      */
     getContext() {
         // expand context object? change keys?
-        const { measure, groupBy, mode } = this.model.metaData;
+        const { measure, groupBy, mode, context } = this.model.metaData;
         return {
+            active_id: context.active_id,
             graph_measure: measure,
             graph_mode: mode,
             graph_groupbys: groupBy.map((gb) => gb.spec),

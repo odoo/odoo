@@ -271,7 +271,14 @@ var BoardRenderer = FormRenderer.extend({
                     var viewInfo = viewsInfo[viewType];
                     var xml = new DOMParser().parseFromString(viewInfo.arch, "text/xml")
                     var key = xml.documentElement.getAttribute("js_class");
-                    var View = viewRegistry.get(key || viewType);
+                    var View = null;
+                    try {
+                        var View = viewRegistry.get(key);
+                    } catch (e) {}
+
+                    if (!View || !View.prototype.searchMenuTypes) {
+                        View = viewRegistry.get(viewType)
+                    }
 
                     const searchQuery = {
                         context: context,
