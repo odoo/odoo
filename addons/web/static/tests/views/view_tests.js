@@ -1234,7 +1234,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("rendering with loaded arch attribute 'js_class'", async function (assert) {
+    QUnit.test("rendering with loaded arch attribute 'js_class'", async function (assert) {
         assert.expect(4);
         const mockRPC = (_, args) => {
             assert.deepEqual(args.kwargs.views, [[2, "toy"]]);
@@ -1258,7 +1258,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("rendering with given arch attribute 'js_class'", async function (assert) {
+    QUnit.test("rendering with given arch attribute 'js_class'", async function (assert) {
         const mockRPC = () => {
             throw new Error("no RPC expected");
         };
@@ -1277,7 +1277,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "rendering with loaded arch attribute 'js_class' and given jsClass",
         async function (assert) {
             assert.expect(3);
@@ -1306,7 +1306,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "rendering with given arch attribute 'js_class' and given jsClass",
         async function (assert) {
             class ToyView2 extends Component {}
