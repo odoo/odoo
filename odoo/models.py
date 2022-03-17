@@ -1831,7 +1831,7 @@ class BaseModel(metaclass=MetaModel):
         """
         names = dict(self.name_get())
         for record in self:
-            record.display_name = names.get(record.id, False)
+            record.display_name = names.get(record.id) or False
 
     def name_get(self):
         """Returns a textual representation for the records in ``self``, with
@@ -1852,7 +1852,7 @@ class BaseModel(metaclass=MetaModel):
         if name in self._fields:
             convert = self._fields[name].convert_to_display_name
             for record in self:
-                result.append((record.id, convert(record[name], record)))
+                result.append((record.id, convert(record[name], record) or ""))
         else:
             for record in self:
                 result.append((record.id, "%s,%s" % (record._name, record.id)))
