@@ -1042,19 +1042,29 @@ class MrpProduction(models.Model):
         self.ensure_one()
         update_info = []
         move_to_unlink = self.env['stock.move']
+        procurements = []
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
             old_qty = move.product_uom_qty
             new_qty = old_qty * factor
             if new_qty > 0:
                 move.write({'product_uom_qty': new_qty})
                 move._action_assign()
+                if move.procure_method == 'make_to_order':
+                    procurement_qty = new_qty - old_qty
+                    values = move._prepare_procurement_values()
+                    procurements.append(self.env['procurement.group'].Procurement(
+                        move.product_id, procurement_qty, move.product_uom,
+                        move.location_id, move.name, move.origin, move.company_id, values))
                 update_info.append((move, old_qty, new_qty))
             else:
                 if move.quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
                 move._action_cancel()
                 move_to_unlink |= move
+
         move_to_unlink.unlink()
+        if procurements:
+            self.env['procurement.group'].run(procurements)
         return update_info
 
     def _get_ready_to_produce_state(self):
