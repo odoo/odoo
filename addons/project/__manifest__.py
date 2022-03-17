@@ -88,6 +88,9 @@
             'project/static/src/scss/project_rightpanel.scss',
             'project/static/src/scss/project_widgets.scss',
         ],
+        "web.assets_backend_legacy_lazy": [
+            'project/static/src/js/*_legacy.js',
+        ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',
             'project/static/src/js/portal_rating.js',
