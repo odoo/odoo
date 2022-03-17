@@ -203,7 +203,7 @@ class AccountMove(models.Model):
             sequence = regex_sub(r"[^0-9A-Za-z.\_\-\/]", "", sequence)  # remove forbidden characters
             sequence = regex_sub(r"[\s]+", " ", sequence)  # no more than once consecutive whitespace allowed
             # TODO (optional) issue warning if sequence uses chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
-            self.l10n_es_tbai_sequence = sequence + ("TEST" if record.company_id.l10n_es_tbai_test_env else "")
+            self.l10n_es_tbai_sequence = sequence + ("TEST" if record.company_id.l10n_es_edi_test_env else "")
 
     @ api.depends('name')
     def _compute_l10n_es_tbai_number(self):

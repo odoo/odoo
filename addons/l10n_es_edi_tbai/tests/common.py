@@ -29,7 +29,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
             'country_id': cls.env.ref('base.es').id,
             'state_id': cls.env.ref('base.state_es_ss').id,
             'vat': cls.env['l10n_es.edi.tbai.misc_util']._random_vat(force_new=True),  # random VAT (so chain is new)
-            'l10n_es_tbai_test_env': True,
+            'l10n_es_edi_test_env': True,
         })
 
         cls.certificate = None

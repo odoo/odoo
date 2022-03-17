@@ -70,13 +70,6 @@ class ResCompany(models.Model):
         default=False,  # TODO set default based on region ?
     )
 
-    l10n_es_tbai_test_env = fields.Boolean(
-        string="Test Mode (TicketBai)",
-        help="Use the test environment (TicketBai)",
-        copy=False,
-        default=False
-    )
-
     # === TBAI CHAIN HEAD ===
     l10n_es_tbai_chain_sequence = fields.Many2one(
         comodel_name='ir.sequence',
@@ -137,7 +130,7 @@ class ResCompany(models.Model):
 
     def _get_l10n_es_tbai_url(self, prefix):
         if self.country_code == 'ES':
-            suffix = 'test' if self.l10n_es_tbai_test_env else 'prod'
+            suffix = 'test' if self.l10n_es_edi_test_env else 'prod'
             if prefix in ('xsd', 'sigpolicy'):  # XSD schemas and signature policies are the same for test/prod
                 suffix = ''
             return L10N_ES_EDI_TBAI_URLS[prefix + suffix][self.l10n_es_tbai_tax_agency]

@@ -448,7 +448,7 @@ class AccountEdiFormat(models.Model):
 
         # Post and retrieve response
         try:
-            response = TicketBaiWebServices()._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=0.01)
+            response = TicketBaiWebServices()._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=10)
         except (ValueError, RequestException) as e:
             return {invoices: {
                 'success': False, 'error': str(e), 'blocking_level': 'warning', 'response': None
