@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import _, Command, fields, models
 from odoo.exceptions import UserError
 
 
@@ -125,6 +125,36 @@ class MassMailingList(models.Model):
     # ------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------
+
+    def action_open_import(self):
+        """Open the mailing list contact import wizard."""
+        action = self.env['ir.actions.actions']._for_xml_id('mass_mailing.mailing_contact_import_action')
+        action['context'] = {
+            **self.env.context,
+            'default_mailing_list_ids': self.ids,
+            'default_subscription_list_ids': [
+                Command.create({'list_id': mailing_list.id})
+                for mailing_list in self
+            ],
+        }
+        return action
+
+    def action_send_mailing(self):
+        """Open the mailing form view, with the current lists set as recipients."""
+        view = self.env.ref('mass_mailing.mailing_mailing_view_form_full_width')
+        action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing.mailing_mailing_action_mail')
+
+        action.update({
+            'context': {
+                **self.env.context,
+                'default_contact_list_ids': self.ids,
+            },
+            'target': 'current',
+            'view_type': 'form',
+            'views': [(view.id, 'form')],
+        })
+
+        return action
 
     def action_view_contacts(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_view_mass_mailing_contacts")
