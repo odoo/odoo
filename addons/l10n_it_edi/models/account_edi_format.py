@@ -418,10 +418,6 @@ class AccountEdiFormat(models.Model):
                                 invoice_line_form.sequence = int(line_elements[0].text)
 
                             # Product.
-                            line_elements = element.xpath('.//Descrizione')
-                            if line_elements:
-                                invoice_line_form.name = " ".join(line_elements[0].text.split())
-
                             elements_code = element.xpath('.//CodiceArticolo')
                             if elements_code:
                                 for element_code in elements_code:
@@ -433,17 +429,22 @@ class AccountEdiFormat(models.Model):
                                             invoice_line_form.product_id = product
                                             break
                                     if partner:
-                                        product_supplier = self.env['product.supplierinfo'].search([('name', '=', partner.id), ('product_code', '=', code.text)], limit=1)
-                                        if product_supplier and product_supplier.product_id:
+                                        product_supplier = self.env['product.supplierinfo'].search([('name', '=', partner.id), ('product_code', '=', code.text)], limit=2)
+                                        if product_supplier and len(product_supplier) == 1 and product_supplier.product_id:
                                             invoice_line_form.product_id = product_supplier.product_id
                                             break
                                 if not invoice_line_form.product_id:
                                     for element_code in elements_code:
                                         code = element_code.xpath('.//CodiceValore')[0]
-                                        product = self.env['product.product'].search([('default_code', '=', code.text)], limit=1)
-                                        if product:
+                                        product = self.env['product.product'].search([('default_code', '=', code.text)], limit=2)
+                                        if product and len(product) == 1:
                                             invoice_line_form.product_id = product
                                             break
+
+                            # Label.
+                            line_elements = element.xpath('.//Descrizione')
+                            if line_elements:
+                                invoice_line_form.name = " ".join(line_elements[0].text.split())
 
                             # Price Unit.
                             line_elements = element.xpath('.//PrezzoUnitario')
@@ -502,7 +503,7 @@ class AccountEdiFormat(models.Model):
                                 # Special case of only 1 percentage discount
                                 if discount_percentage and len(discount_elements) == 1:
                                     discount_type = discount_element.xpath('.//Tipo')
-                                    discount_sign = 1 
+                                    discount_sign = 1
                                     if discount_type and discount_type[0].text == 'MG':
                                         discount_sign = -1
                                     invoice_line_form.discount = discount_sign * float(discount_percentage[0].text)
@@ -520,7 +521,7 @@ class AccountEdiFormat(models.Model):
                     discounted_amount = taxable_amount
                     for discount_element in discount_elements:
                         discount_type = discount_element.xpath('.//Tipo')
-                        discount_sign = 1 
+                        discount_sign = 1
                         if discount_type and discount_type[0].text == 'MG':
                             discount_sign = -1
                         discount_amount = discount_element.xpath('.//Importo')
