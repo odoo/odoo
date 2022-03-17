@@ -48,7 +48,10 @@ const BaseAnimatedHeader = animations.Animation.extend({
         // We can rely on transitionend which is well supported but not on
         // transitionstart, so we listen to a custom odoo event.
         this._transitionCount = 0;
-        this.$el.on('odoo-transitionstart.BaseAnimatedHeader', () => this._adaptToHeaderChangeLoop(1));
+        this.$el.on('odoo-transitionstart.BaseAnimatedHeader', () => {
+            this.el.classList.add('o_transitioning');
+            this._adaptToHeaderChangeLoop(1);
+        });
         this.$el.on('transitionend.BaseAnimatedHeader', () => this._adaptToHeaderChangeLoop(-1));
 
         return this._super(...arguments);
@@ -58,7 +61,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      */
     destroy: function () {
         this._toggleFixedHeader(false);
-        this.$el.removeClass('o_header_affixed o_header_is_scrolled o_header_no_transition');
+        this.$el.removeClass('o_header_affixed o_header_is_scrolled o_header_no_transition o_transitioning');
         this.$navbarCollapses.off('.BaseAnimatedHeader');
         this.$el.off('.BaseAnimatedHeader');
         this._super(...arguments);
@@ -114,6 +117,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
             // When we detected all transitionend events, we need to stop the
             // setTimeout fallback.
             clearTimeout(this._changeLoopTimer);
+            this.el.classList.remove('o_transitioning');
         }
     },
     /**
