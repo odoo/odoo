@@ -2238,6 +2238,11 @@ class IrModelData(models.Model):
         self = self.with_context({MODULE_UNINSTALL_FLAG: True})
         loaded_xmlids = self.pool.loaded_xmlids
 
+        # Load all xmlids of state that were changed to be loaded in a hook but they were noupdate=False
+        cr.execute("SELECT module, name FROM ir_model_data WHERE module='base' AND model='res.country.state'")
+        rows = cr.dictfetchall()
+        self.pool.loaded_xmlids.update("%(module)s.%(name)s" % row for row in rows)
+
         query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data
                     WHERE module IN %s AND res_id IS NOT NULL AND COALESCE(noupdate, false) != %s ORDER BY id DESC
                 """
