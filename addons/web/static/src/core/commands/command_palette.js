@@ -79,6 +79,7 @@ export class CommandPalette extends Component {
     setup() {
         this.keyId = 1;
         this.keepLast = new KeepLast();
+        this._sessionId = CommandPalette.lastSessionId++;
         this.DefaultCommandItem = DefaultCommandItem;
         this.activeElement = useService("ui").activeElement;
         this.inputRef = useAutofocus();
@@ -265,6 +266,7 @@ export class CommandPalette extends Component {
         await this.setCommands(this.state.namespace, {
             searchValue,
             activeElement: this.activeElement,
+            sessionId: this._sessionId,
         });
         if (this.inputRef.el) {
             this.inputRef.el.focus();
@@ -316,4 +318,5 @@ export class CommandPalette extends Component {
         return { namespace, searchValue };
     }
 }
+CommandPalette.lastSessionId = 0;
 CommandPalette.template = "web.CommandPalette";
