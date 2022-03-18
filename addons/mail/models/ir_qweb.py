@@ -10,7 +10,7 @@ class IrQweb(models.AbstractModel):
     def _get_template_cache_keys(self):
         return super()._get_template_cache_keys() + ['raise_on_code']
 
-    def _compile_directives(self, el, options, indent):
-        if options.get('raise_on_code'):
+    def _compile_directives(self, el, compile_context, indent):
+        if compile_context.get('raise_on_code'):
             raise PermissionError("This rendering mode prohibits the use of directives.")
-        return super()._compile_directives(el, options, indent)
+        return super()._compile_directives(el, compile_context, indent)

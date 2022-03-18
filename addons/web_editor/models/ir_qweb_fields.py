@@ -44,10 +44,10 @@ class IrQWeb(models.AbstractModel):
     """
     _inherit = 'ir.qweb'
 
-    def _compile_node(self, el, options, indent):
-        snippet_key = options.get('snippet-key')
-        if snippet_key == options['template'] \
-                or options.get('snippet-sub-call-key') == options['template']:
+    def _compile_node(self, el, compile_context, indent):
+        snippet_key = compile_context.get('snippet-key')
+        if snippet_key == compile_context['template'] \
+                or compile_context.get('snippet-sub-call-key') == compile_context['template']:
             # Get the path of element to only consider the first node of the
             # snippet template content (ignoring all ancestors t elements which
             # are not t-call ones)
@@ -67,11 +67,11 @@ class IrQWeb(models.AbstractModel):
                 elif 'data-snippet' not in el.attrib:
                     el.attrib['data-snippet'] = snippet_key.split('.', 1)[-1]
 
-        return super()._compile_node(el, options, indent)
+        return super()._compile_node(el, compile_context, indent)
 
     # compile directives
 
-    def _compile_directive_snippet(self, el, options, indent):
+    def _compile_directive_snippet(self, el, compile_context, indent):
         key = el.attrib.pop('t-snippet')
         el.set('t-call', key)
         el.set('t-options', f"{{'snippet-key': {key!r}}}")
@@ -84,18 +84,18 @@ class IrQWeb(models.AbstractModel):
             escape(pycompat.to_text(view.id)),
             escape(pycompat.to_text(el.findtext('keywords')))
         )
-        self._append_text(div, options)
-        code = self._compile_node(el, options, indent)
-        self._append_text('</div>', options)
+        self._append_text(div, compile_context)
+        code = self._compile_node(el, compile_context, indent)
+        self._append_text('</div>', compile_context)
         return code
 
-    def _compile_directive_snippet_call(self, el, options, indent):
+    def _compile_directive_snippet_call(self, el, compile_context, indent):
         key = el.attrib.pop('t-snippet-call')
         el.set('t-call', key)
         el.set('t-options', f"{{'snippet-key': {key!r}}}")
-        return self._compile_node(el, options, indent)
+        return self._compile_node(el, compile_context, indent)
 
-    def _compile_directive_install(self, el, options, indent):
+    def _compile_directive_install(self, el, compile_context, indent):
         key = el.attrib.pop('t-install')
         thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
         if self.user_has_groups('base.group_system'):
@@ -108,10 +108,10 @@ class IrQWeb(models.AbstractModel):
                 module.id,
                 escape(pycompat.to_text(thumbnail))
             )
-            self._append_text(div, options)
+            self._append_text(div, compile_context)
         return []
 
-    def _compile_directive_placeholder(self, el, options, indent):
+    def _compile_directive_placeholder(self, el, compile_context, indent):
         el.set('t-att-placeholder', el.attrib.pop('t-placeholder'))
         return []
 
