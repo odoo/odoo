@@ -343,7 +343,7 @@ class Website(models.Model):
 
             # if fiscal position, update the order lines taxes
             if sale_order.fiscal_position_id:
-                sale_order._compute_tax_id()
+                sale_order.order_line._compute_tax_id()
 
             # if values, then make the SO update
             if values:
