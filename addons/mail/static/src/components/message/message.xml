@@ -2,24 +2,24 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message" owl="1">
-        <div class="o_Message position-relative pt-1"
-            t-att-class="{
-                'o_Message_active': isActive,
-                'o-clicked': state.isClicked,
-                'o-discussion': messageView and (messageView.message.is_discussion or messageView.message.is_notification),
-                'o-has-message-selection': messageView and messageView.threadView and messageView.threadView.replyingToMessageView,
-                'o-highlighted': messageView and (messageView.message.isHighlighted or messageView.isHighlighted),
-                'o-mobile': messaging and messaging.device.isMobile,
-                'o-not-discussion': messageView and !(messageView.message.is_discussion or messageView.message.is_notification),
-                'o-notification': messageView and messageView.message.message_type === 'notification',
-                'o-selected': isSelected,
-                'o-squashed': messageView and messageView.isSquashed,
-                'o-starred': messageView and messageView.message.isStarred,
-                'mt-3': messageView and !messageView.isSquashed and messageView.threadView,
-            }" t-attf-class="{{ messageView and messageView.extraClass }} {{ className }}" t-on-click="_onClick" t-on-mouseenter="() => state.isHovered = true" t-on-mouseleave="() => state.isHovered = false" t-att-data-message-local-id="messageView and messageView.message.localId"
-            t-ref="root"
-        >
-            <t t-if="messageView" name="rootCondition">
+        <t t-if="messageView">
+            <div class="o_Message position-relative pt-1"
+                t-att-class="{
+                    'o_Message_active': isActive,
+                    'o-clicked': state.isClicked,
+                    'o-discussion': messageView.message.is_discussion or messageView.message.is_notification,
+                    'o-has-message-selection': messageView.threadView and messageView.threadView.replyingToMessageView,
+                    'o-highlighted': messageView.message.isHighlighted or messageView.isHighlighted,
+                    'o-mobile': messaging.device.isMobile,
+                    'o-not-discussion': !(messageView.message.is_discussion or messageView.message.is_notification),
+                    'o-notification': messageView.message.message_type === 'notification',
+                    'o-selected': isSelected,
+                    'o-squashed': messageView.isSquashed,
+                    'o-starred': messageView.message.isStarred,
+                    'mt-3': !messageView.isSquashed and messageView.threadView,
+                }" t-attf-class="{{ messageView.extraClass }} {{ className }}" t-on-click="_onClick" t-on-mouseenter="() => state.isHovered = true" t-on-mouseleave="() => state.isHovered = false" t-att-data-message-local-id="messageView.message.localId"
+                t-ref="root"
+            >
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" messageInReplyToViewLocalId="messageView.messageInReplyToView.localId"/>
                 <div t-if="isActive and messageView.messageActionList" class="o_Message_actionListContainer pl-5 pr-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
                     <MessageActionList localId="messageView.messageActionList.localId"/>
@@ -170,8 +170,8 @@
                         </div>
                     </div>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
