@@ -1283,7 +1283,7 @@ class StockMove(models.Model):
         product_id = self.product_id.with_context(lang=self._get_lang())
         return {
             'product_description_variants': self.description_picking and self.description_picking.replace(product_id._get_description(self.picking_type_id), ''),
-            'date_planned': self.date,
+            'date_planned': self._get_mto_procurement_date(),
             'date_deadline': self.date_deadline,
             'move_dest_ids': self,
             'group_id': group_id,
@@ -1293,6 +1293,9 @@ class StockMove(models.Model):
             'orderpoint_id': self.orderpoint_id,
             'product_packaging_id': self.product_packaging_id,
         }
+
+    def _get_mto_procurement_date(self):
+        return self.date
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         self.ensure_one()

@@ -152,9 +152,8 @@ class StockRule(models.Model):
             self.env['purchase.order.line'].sudo().create(po_line_values)
 
     def _get_lead_days(self, product, **values):
-        """Add the company security lead time, days to purchase and the supplier
-        delay to the cumulative delay and cumulative description. The days to
-        purchase and company lead time are always displayed for onboarding
+        """Add the company security lead time and the supplier delay to the cumulative delay
+        and cumulative description. The company lead time is always displayed for onboarding
         purpose in order to indicate that those options are available.
         """
         delay, delay_description = super()._get_lead_days(product, **values)
@@ -170,10 +169,7 @@ class StockRule(models.Model):
         security_delay = buy_rule.picking_type_id.company_id.po_lead
         if not bypass_delay_description:
             delay_description.append((_('Purchase Security Lead Time'), _('+ %d day(s)', security_delay)))
-        days_to_purchase = buy_rule.company_id.days_to_purchase
-        if not bypass_delay_description:
-            delay_description.append((_('Days to Purchase'), _('+ %d day(s)', days_to_purchase)))
-        return delay + supplier_delay + security_delay + days_to_purchase, delay_description
+        return delay + supplier_delay + security_delay, delay_description
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):

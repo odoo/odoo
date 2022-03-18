@@ -97,6 +97,12 @@ class StockWarehouseOrderpoint(models.Model):
     qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty')
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False)
 
+    days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
+    visibility_days = fields.Float(
+        compute='_compute_visibility_days', inverse='_set_visibility_days', readonly=False,
+        help="Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
+             "The value depends on the type of the route (Buy or Manufacture)")
+
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
         ('product_location_check', 'unique (product_id, location_id, company_id)', 'A replenishment rule already exists for this product on this location.'),
@@ -133,6 +139,17 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.rule_ids = False
                 continue
             orderpoint.rule_ids = orderpoint.product_id._get_rules_from_location(orderpoint.location_id, route_ids=orderpoint.route_id)
+
+    @api.depends('route_id', 'product_id')
+    def _compute_visibility_days(self):
+        self.visibility_days = 0
+
+    def _set_visibility_days(self):
+        return True
+
+    @api.depends('route_id', 'product_id')
+    def _compute_days_to_order(self):
+        self.days_to_order = 0
 
     @api.constrains('product_id')
     def _check_product_uom(self):
@@ -251,7 +268,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
-    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty')
+    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:
@@ -260,8 +277,10 @@ class StockWarehouseOrderpoint(models.Model):
             qty_to_order = 0.0
             rounding = orderpoint.product_uom.rounding
             if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
-                qty_to_order = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - orderpoint.qty_forecast
-
+                # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
+                product_context = orderpoint._get_product_context(visibility_days=orderpoint.visibility_days)
+                qty_forecast_with_visibility = orderpoint.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + orderpoint._quantity_in_progress()[orderpoint.id]
+                qty_to_order = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - qty_forecast_with_visibility
                 remainder = orderpoint.qty_multiple > 0 and qty_to_order % orderpoint.qty_multiple or 0.0
                 if float_compare(remainder, 0.0, precision_rounding=rounding) > 0:
                     qty_to_order += orderpoint.qty_multiple - remainder
@@ -291,14 +310,16 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_lead_days_values(self):
         self.ensure_one()
-        return dict()
+        return {
+            'days_to_order': self.days_to_order,
+        }
 
-    def _get_product_context(self):
+    def _get_product_context(self, visibility_days=0):
         """Used to call `virtual_available` when running an orderpoint."""
         self.ensure_one()
         return {
             'location': self.location_id.id,
-            'to_date': datetime.combine(self.lead_days_date, time.max)
+            'to_date': datetime.combine(self.lead_days_date + relativedelta.relativedelta(days=visibility_days), time.max)
         }
 
     def _get_orderpoint_action(self):
