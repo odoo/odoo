@@ -297,15 +297,15 @@ class QwebTracker():
                 return method_compile(self, template)
 
             render_template = method_compile(self, template)
-            def profiled_method_compile(self, values):
+            def profiled_method_compile(self, values, gen0=None):
                 ref = render_template.options.get('ref')
                 ref_xml = render_template.options.get('ref_xml')
                 qweb_tracker = QwebTracker(ref, ref_xml, self.env.cr)
                 self = self.with_context(qweb_tracker=qweb_tracker)
                 if qweb_tracker.execution_context_enabled:
                     with ExecutionContext(template=ref):
-                        return render_template(self, values)
-                return render_template(self, values)
+                        return render_template(self, values, gen0)
+                return render_template(self, values, gen0)
             return profiled_method_compile
         return _tracked_compile
 
