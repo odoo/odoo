@@ -462,7 +462,7 @@
         <div t-if="next_rank_id" class="font-weight-bold text-muted mt-1">Next rank:</div>
         <t t-if="next_rank_id or user.rank_id" t-call="website_profile.profile_next_rank_card">
             <t t-set="bg_class" t-valuef="bg-200"/>
-            <t t-set="img_max_width" t-valuef="50%"/>
+            <t t-set="img_max_width" t-value="'50%'"/>
         </t>
         <div t-if="next_rank_id" t-field="next_rank_id.description_motivational"/>
         <div t-else="">Congratulations, you have reached the last rank!</div>
