@@ -527,7 +527,7 @@ class Web_Editor(http.Controller):
         """
         svg = None
         if module == 'illustration':
-            attachment = request.env['ir.attachment'].sudo().search([('url', '=like', request.httprequest.path), ('public', '=', True)], limit=1)
+            attachment = request.env['ir.attachment'].sudo().search([('url', '=', request.httprequest.path), ('public', '=', True)], limit=1)
             if not attachment:
                 raise werkzeug.exceptions.NotFound()
             svg = b64decode(attachment.datas).decode('utf-8')
