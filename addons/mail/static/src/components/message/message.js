@@ -9,7 +9,7 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 import { _lt } from 'web.core';
 import Popover from "web.Popover";
 
-const { Component, onWillUnmount, useRef, useState } = owl;
+const { Component, onWillUnmount, useRef } = owl;
 
 const READ_MORE = _lt("Read More");
 const READ_LESS = _lt("Read Less");
@@ -23,13 +23,6 @@ export class Message extends Component {
         super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'MessageView' });
         useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'MessageView' });
-        this.state = useState({
-            /**
-             * Determine whether the message is hovered. When message is hovered
-             * it displays message actions.
-             */
-             isHovered: false,
-        });
         useUpdate({ func: () => this._update() });
         /**
          * Value of the last rendered prettyBody. Useful to compare to new value
@@ -88,14 +81,16 @@ export class Message extends Component {
      */
     get isActive() {
         return Boolean(
-            this.state.isHovered ||
-            (this.messageView && this.messageView.isClicked) ||
+            this.messageView &&
             (
-                this.messageView &&
-                this.messageView.messageActionList &&
+                this.messageView.isHovered ||
+                this.messageView.isClicked ||
                 (
-                    this.messageView.messageActionList.reactionPopoverView ||
-                    this.messageView.messageActionList.deleteConfirmDialog
+                    this.messageView.messageActionList &&
+                    (
+                        this.messageView.messageActionList.reactionPopoverView ||
+                        this.messageView.messageActionList.deleteConfirmDialog
+                    )
                 )
             )
         );
