@@ -3,6 +3,7 @@
 
 {
     'name': 'Italy - E-invoicing (SdiCoop)',
+    'icon': '/l10n_it/static/description/icon.png',
     'version': '0.3',
     'depends': [
         'l10n_it_edi',

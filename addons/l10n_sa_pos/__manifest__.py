@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'K.S.A. - Point of Sale',
+    'icon': '/l10n_sa/static/description/icon.png',
     'author': 'Odoo S.A',
     'category': 'Accounting/Localizations/Point of Sale',
     'description': """
