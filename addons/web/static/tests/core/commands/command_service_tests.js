@@ -25,7 +25,7 @@ const commandProviderRegistry = registry.category("command_provider");
 export async function editSearchBar(searchValue) {
     const searchBar = document.querySelector(".o_command_palette_search input");
     await testUtils.fields.editInput(searchBar, searchValue);
-    searchBar.dispatchEvent(new Event("keydown"));
+    // searchBar.dispatchEvent(new KeyboardEvent("keydown", { key: "" }));
     await nextTick();
 }
 
