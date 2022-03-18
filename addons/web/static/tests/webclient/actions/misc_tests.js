@@ -11,6 +11,7 @@ import {
     getFixture,
     hushConsole,
     legacyExtraNextTick,
+    nextTick,
     patchWithCleanup,
 } from "../../helpers/utils";
 import {
@@ -372,8 +373,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL('action with "no_breadcrumbs" set to true', async function (assert) {
-        assert.expect(2);
+    QUnit.test('action with "no_breadcrumbs" set to true', async function (assert) {
         serverData.actions[4].context = { no_breadcrumbs: true };
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -383,43 +383,39 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".o_control_panel .breadcrumb-item");
     });
 
-    QUnit.skipWOWL(
-        "document's title is updated when an action is executed",
-        async function (assert) {
-            assert.expect(8);
-            const defaultTitle = { zopenerp: "Odoo" };
-            const webClient = await createWebClient({ serverData });
-            let currentTitle = webClient.env.services.title.getParts();
-            assert.deepEqual(currentTitle, defaultTitle);
-            let currentHash = webClient.env.services.router.current.hash;
-            assert.deepEqual(currentHash, {});
-            await doAction(webClient, 4);
-            currentTitle = webClient.env.services.title.getParts();
-            assert.deepEqual(currentTitle, {
-                ...defaultTitle,
-                action: "Partners Action 4",
-            });
-            currentHash = webClient.env.services.router.current.hash;
-            assert.deepEqual(currentHash, { action: 4, model: "partner", view_type: "kanban" });
-            await doAction(webClient, 8);
-            currentTitle = webClient.env.services.title.getParts();
-            assert.deepEqual(currentTitle, {
-                ...defaultTitle,
-                action: "Favorite Ponies",
-            });
-            currentHash = webClient.env.services.router.current.hash;
-            assert.deepEqual(currentHash, { action: 8, model: "pony", view_type: "list" });
-            await testUtils.dom.click($(target).find("tr.o_data_row:first"));
-            await legacyExtraNextTick();
-            currentTitle = webClient.env.services.title.getParts();
-            assert.deepEqual(currentTitle, {
-                ...defaultTitle,
-                action: "Twilight Sparkle",
-            });
-            currentHash = webClient.env.services.router.current.hash;
-            assert.deepEqual(currentHash, { action: 8, id: 4, model: "pony", view_type: "form" });
-        }
-    );
+    QUnit.test("document's title is updated when an action is executed", async function (assert) {
+        const defaultTitle = { zopenerp: "Odoo" };
+        const webClient = await createWebClient({ serverData });
+        let currentTitle = webClient.env.services.title.getParts();
+        assert.deepEqual(currentTitle, defaultTitle);
+        let currentHash = webClient.env.services.router.current.hash;
+        assert.deepEqual(currentHash, {});
+        await doAction(webClient, 4);
+        currentTitle = webClient.env.services.title.getParts();
+        assert.deepEqual(currentTitle, {
+            ...defaultTitle,
+            action: "Partners Action 4",
+        });
+        currentHash = webClient.env.services.router.current.hash;
+        assert.deepEqual(currentHash, { action: 4, model: "partner", view_type: "kanban" });
+        await doAction(webClient, 8);
+        currentTitle = webClient.env.services.title.getParts();
+        assert.deepEqual(currentTitle, {
+            ...defaultTitle,
+            action: "Favorite Ponies",
+        });
+        currentHash = webClient.env.services.router.current.hash;
+        assert.deepEqual(currentHash, { action: 8, model: "pony", view_type: "list" });
+        await click(target.querySelector("tr.o_data_row .o_field_char"));
+        await nextTick();
+        currentTitle = webClient.env.services.title.getParts();
+        assert.deepEqual(currentTitle, {
+            ...defaultTitle,
+            action: "Twilight Sparkle",
+        });
+        currentHash = webClient.env.services.router.current.hash;
+        assert.deepEqual(currentHash, { action: 8, id: 4, model: "pony", view_type: "form" });
+    });
 
     QUnit.test(
         "on_reverse_breadcrumb handler is correctly called (legacy)",
@@ -504,50 +500,47 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".o_content").scrollTop, 100);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'executing an action with target != "new" closes all dialogs',
         async function (assert) {
-            assert.expect(4);
             serverData.views["partner,false,form"] = `
-      <form>
-        <field name="o2m">
-          <tree><field name="foo"/></tree>
-          <form><field name="foo"/></form>
-        </field>
-      </form>`;
+                <form>
+                    <field name="o2m">
+                    <tree><field name="foo"/></tree>
+                    <form><field name="foo"/></form>
+                    </field>
+                </form>
+                `;
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             assert.containsOnce(target, ".o_list_view");
-            await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_list_view .o_data_row .o_list_char"));
             assert.containsOnce(target, ".o_form_view");
-            await testUtils.dom.click(target.querySelector(".o_form_view .o_data_row"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_form_view .o_data_row .o_data_cell"));
             assert.containsOnce(document.body, ".modal .o_form_view");
             await doAction(webClient, 1); // target != 'new'
             assert.containsNone(document.body, ".modal");
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'executing an action with target "new" does not close dialogs',
         async function (assert) {
             assert.expect(4);
             serverData.views["partner,false,form"] = `
-      <form>
-        <field name="o2m">
-          <tree><field name="foo"/></tree>
-          <form><field name="foo"/></form>
-        </field>
-      </form>`;
+                <form>
+                    <field name="o2m">
+                    <tree><field name="foo"/></tree>
+                    <form><field name="foo"/></form>
+                    </field>
+                </form>
+                `;
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             assert.containsOnce(target, ".o_list_view");
-            await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
             assert.containsOnce(target, ".o_form_view");
-            await testUtils.dom.click($(target).find(".o_form_view .o_data_row:first"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_form_view .o_data_row .o_data_cell"));
             assert.containsOnce(document.body, ".modal .o_form_view");
             await doAction(webClient, 5); // target 'new'
             assert.containsN(document.body, ".modal .o_form_view", 2);

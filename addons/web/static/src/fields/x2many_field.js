@@ -126,6 +126,7 @@ export class X2ManyField extends Component {
             resId: record.resId,
         });
         this.dialogService.add(FormViewDialog, {
+            parent: this,
             archInfo: form, // FIXME: might not be there
             record: newRecord,
             save: () => {
@@ -163,6 +164,7 @@ export class X2ManyField extends Component {
                 viewMode: "form",
             });
             this.dialogService.add(FormViewDialog, {
+                parent: this,
                 archInfo: form, // FIXME: might not be there
                 record,
                 save: () => {

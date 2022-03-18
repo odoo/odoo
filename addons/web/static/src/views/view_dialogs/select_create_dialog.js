@@ -34,11 +34,7 @@ export class SelectCreateDialog extends Dialog {
             onSelectionChanged: (selectedRecords) => {
                 this.state.selectedRecords = selectedRecords;
             },
-            display: {
-                controlPanel: {
-                    "top-left": false,
-                },
-            },
+            noBreadcrumbs: true,
         };
 
         onWillStart(async () => {

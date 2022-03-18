@@ -417,6 +417,7 @@ export class KanbanRenderer extends Component {
 
     editGroup(group) {
         this.dialog.add(FormViewDialog, {
+            parent: this,
             record: group.makeRecord({ mode: "edit" }),
             title: sprintf(this.env._t("Edit: %s"), group.displayName),
             save: async (record) => {

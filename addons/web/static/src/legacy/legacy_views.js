@@ -55,7 +55,10 @@ function registerView(name, LegacyView) {
                 context: Object.assign({}, this.user.context, this.props.action.context),
             });
 
-            const { actionFlags, breadcrumbs } = this.env.config;
+            const { actionFlags, breadcrumbs, noBreadcrumbs } = this.env.config;
+            if (noBreadcrumbs) {
+                action.context.no_breadcrumbs = true;
+            }
             this.viewParams = Object.assign({}, actionFlags, {
                 action,
                 // legacy views automatically add the last part of the breadcrumbs

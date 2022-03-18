@@ -38,4 +38,5 @@ export const standardViewProps = {
     searchMenuTypes: { type: Array, elements: String },
     selectRecord: { type: Function },
     createRecord: { type: Function },
+    noBreadcrumbs: { type: Boolean, optional: 1 },
 };

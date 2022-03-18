@@ -150,6 +150,7 @@ export class Many2OneField extends Component {
             viewId,
         });
         this.dialog.add(FormViewDialog, {
+            parent: this,
             record,
             title: sprintf(
                 this.env._t("Open: %s"),

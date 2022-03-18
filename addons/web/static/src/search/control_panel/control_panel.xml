@@ -6,42 +6,44 @@
             <div t-if="display['top']" class="o_cp_top">
                 <div class="o_cp_top_left">
                     <t t-slot="control-panel-top-left" t-if="display['top-left']">
-                        <t t-call="web.Breadcrumbs" />
+                        <t t-call="web.Breadcrumbs" t-if="!env.config.noBreadcrumbs"/>
                     </t>
                 </div>
-                <div t-if="display['top-right']" class="o_cp_top_right">
-                    <t t-slot="control-panel-top-right">
+                <div class="o_cp_top_right">
+                    <t t-slot="control-panel-top-right" t-if="display['top-right']">
                         <SearchBar/>
                     </t>
                 </div>
             </div>
             <div t-if="display['bottom']" class="o_cp_bottom">
-                <div t-if="display['bottom-left']" class="o_cp_bottom_left">
-                    <t t-slot="control-panel-bottom-left"/>
+                <div class="o_cp_bottom_left">
+                    <t t-slot="control-panel-bottom-left" t-if="display['bottom-left']"/>
                 </div>
-                <div t-if="display['bottom-right']" class="o_cp_bottom_right">
-                    <t t-slot="control-panel-bottom-right">
-                        <div class="btn-group o_search_options position-static" role="search">
-                            <t t-foreach="searchMenus" t-as="menu" t-key="menu.key">
-                                <t t-component="menu.Component"/>
-                            </t>
+                <div class="o_cp_bottom_right">
+                    <t t-if="display['bottom-right']">
+                        <t t-slot="control-panel-bottom-right">
+                            <div class="btn-group o_search_options position-static" role="search">
+                                <t t-foreach="searchMenus" t-as="menu" t-key="menu.key">
+                                    <t t-component="menu.Component"/>
+                                </t>
+                            </div>
+                        </t>
+
+                        <div class="o_cp_pager" role="search">
+                                <Pager t-if="pagerProps and pagerProps.total > 0" t-props="pagerProps"/>
                         </div>
-                    </t>
 
-                    <div class="o_cp_pager" role="search">
-                            <Pager t-if="pagerProps and pagerProps.total > 0" t-props="pagerProps"/>
-                    </div>
-
-                    <t t-if="env.config.viewSwitcherEntries.length > 1">
-                        <nav class="btn-group o_cp_switch_buttons">
-                            <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
-                                <button class="btn btn-light o_switch_view "
-                                    t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
-                                    t-att-data-tooltip="view.name"
-                                    t-on-click="() => this.onViewClicked(view.type)"
-                                    />
-                            </t>
-                        </nav>
+                        <t t-if="env.config.viewSwitcherEntries.length > 1">
+                            <nav class="btn-group o_cp_switch_buttons">
+                                <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                                    <button class="btn btn-light o_switch_view "
+                                        t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
+                                        t-att-data-tooltip="view.name"
+                                        t-on-click="() => this.onViewClicked(view.type)"
+                                        />
+                                </t>
+                            </nav>
+                        </t>
                     </t>
                 </div>
             </div>
