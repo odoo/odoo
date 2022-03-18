@@ -251,7 +251,7 @@
                             <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
                             <small t-if="next_rank_id" class="font-weight-bold mt-1">Next rank:</small>
                             <t t-if="next_rank_id or user.rank_id" t-call="website_profile.profile_next_rank_card">
-                                <t t-set="img_max_width" t-valuef="40%"/>
+                                <t t-set="img_max_width" t-value="'40%'"/>
                             </t>
 
                             <table class="table table-sm w-100" id="o_wprofile_sidebar_table">
