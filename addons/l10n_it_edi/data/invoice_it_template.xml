@@ -20,7 +20,7 @@
                 </Descrizione>
                 <Quantita t-esc="format_numbers(line.quantity)"/>
                 <UnitaMisura t-if="line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')" t-esc="line.product_uom_id.name"/>
-                <PrezzoUnitario t-esc="'%.06f' % (line.price_subtotal / (( 1 - (line.discount or 0.0) / 100.0) * line.quantity))"/>
+                <PrezzoUnitario t-esc="'%.06f' % (line.price_subtotal / (( 1 - (line.discount or 0.0) / 100.0) * line.quantity) if line.discount != 100.0 else line.price_unit)"/>
                 <ScontoMaggiorazione t-if="line.discount != 0">
                     <!-- [2.2.1.10] -->
                     <Tipo t-esc="discount_type(line.discount)"/>
@@ -52,7 +52,7 @@
                     <DatiTrasmissione>
                         <IdTrasmittente>
                             <IdPaese t-esc="get_vat_country(record.company_id.vat)"/>
-                            <IdCodice t-esc="get_vat_number(record.company_id.vat)"/>
+                            <IdCodice t-esc="record.company_id.l10n_it_codice_fiscale or get_vat_number(record.company_id.vat)"/>
                         </IdTrasmittente>
                         <ProgressivoInvio t-esc="record.name.replace('/','')[-10:]"/>
                         <FormatoTrasmissione t-esc="formato_trasmissione"/>
@@ -72,7 +72,7 @@
                                 <IdPaese t-esc="get_vat_country(record.company_id.vat)"/>
                                 <IdCodice t-esc="get_vat_number(record.company_id.vat)"/>
                             </IdFiscaleIVA>
-                            <CodiceFiscale t-if="record.company_id.l10n_it_codice_fiscale and not test_mode" t-esc="record.company_id.l10n_it_codice_fiscale"/>
+                            <CodiceFiscale t-if="record.company_id.l10n_it_codice_fiscale" t-esc="record.company_id.l10n_it_codice_fiscale"/>
                             <Anagrafica>
                                 <Denominazione t-esc="record.company_id.partner_id.display_name"/>
                             </Anagrafica>
@@ -147,7 +147,7 @@
                             </DatiBollo>
                         </DatiGeneraliDocumento>
                         <DatiOrdineAcquisto t-if="record.ref">
-                            <IdDocumento t-esc="record.ref" />
+                            <IdDocumento t-esc="record.ref[:20]" />
                         </DatiOrdineAcquisto>
                         <DatiDDT t-if="record.l10n_it_ddt_id">
                             <!--2.1.8-->

@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Moka Tourisme <hello@mokatourisme.fr>, 2020
-# Martin Trigaux, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
@@ -12,6 +11,7 @@
 # Chaplet34 <charleskolie2@gmail.com>, 2020
 # Thomas Deleval <thd@odoo.com>, 2021
 # Gwladys Jouble <g.jouble@vieconnect.io>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Gwladys Jouble <g.jouble@vieconnect.io>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,6 +97,12 @@ msgid "Display Name"
 msgstr "Nom affiché"
 
 #. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "Download"
+msgstr "Télécharger"
+
+#. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 #: model:ir.cron,cron_name:account_edi.ir_cron_edi_network
 #: model:ir.cron,name:account_edi.ir_cron_edi_network
@@ -118,6 +124,11 @@ msgstr "format EDI"
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
 msgstr "Format EDI qui supporte les mouvements dans ce journal"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
+msgid "Edi Content"
+msgstr ""
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -190,18 +201,6 @@ msgid "Error"
 msgstr "Erreur"
 
 #. module: account_edi
-#: code:addons/account_edi/models/account_edi_document.py:0
-#, python-format
-msgid "Error when cancelling the journal entry."
-msgstr "Erreur lors de l'annulation de l'écriture de journal."
-
-#. module: account_edi
-#: code:addons/account_edi/models/account_edi_document.py:0
-#, python-format
-msgid "Error when processing the journal entry."
-msgstr "Erreur lors du traitement de l'écriture de journal."
-
-#. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
 msgid "Format Name"
 msgstr "Format du Nom"
@@ -226,6 +225,15 @@ msgstr "Combien d'EDIs sont en statut d'erreur dans ce déplacement?"
 #: model:ir.model.fields,field_description:account_edi.field_mail_template__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"Invalid invoice configuration:\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
@@ -323,15 +331,6 @@ msgid "State"
 msgstr "État"
 
 #. module: account_edi
-#: model:ir.model.fields,help:account_edi_extended.field_account_edi_document__error
-msgid ""
-"The text of the last error that happened during Electronic Invoice "
-"operation."
-msgstr ""
-"Le test de la dernière erreur qui s'est produite lors de l'opération de "
-"facturation électronique."
-
-#. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_web_services_to_process
@@ -368,9 +367,24 @@ msgid "The payment will be sent asynchronously to :"
 msgstr "Le paiement sera envoyé de manière asynchrone à:"
 
 #. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__error
+msgid ""
+"The text of the last error that happened during Electronic Invoice "
+"operation."
+msgstr ""
+"Le test de la dernière erreur qui s'est produite lors de l'opération de "
+"facturation électronique."
+
+#. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
 msgid "This code already exists"
 msgstr "Le code existe déjà:"
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_edi_document.py:0
+#, python-format
+msgid "This document is being sent by another process already. "
+msgstr ""
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel

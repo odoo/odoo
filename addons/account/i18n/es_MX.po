@@ -4553,7 +4553,7 @@ msgstr "Incoterm determinado de su empresa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
 msgid "Default PoS Receivable Account"
-msgstr "Cuenta por cobrar predeterminada del PDV"
+msgstr "Cuenta por cobrar predeterminada del PdV"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -6674,6 +6674,16 @@ msgid ""
 msgstr ""
 "La distribución de facturas y notas de crédito debe contener cada una "
 "exactamente una línea para la base."
+
+#. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
+msgstr ""
+"La repartición de facturas y notas de crédito debe tener por lo menos una "
+"línea de repartición de impuestos."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -9358,7 +9368,7 @@ msgstr "Reporte de líneas de impuesto añadido"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_pos_receivable_account_id
 msgid "PoS receivable account"
-msgstr "Cuenta por cobrar PDV"
+msgstr "Cuenta por cobrar PdV"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_url
