@@ -223,7 +223,7 @@ class AccountEdiFormat(models.Model):
         # TODO TicketBai supports simplified invoices WITH recipients: use checkbox in invoice ?
         # Note that credit notes for simplified invoices are ALWAYS simplified BUT can have a recipient even if invoice doesn't
         partner = invoice.commercial_partner_id if invoice.is_sale_document() else invoice.company_id
-        if partner == self.env.ref("l10n_es_edi_tbai.partner_simplified"):
+        if partner == self.env.ref("l10n_es_edi_sii.partner_simplified"):
             # Kept for now because 'recipient' should not be set unless there is an actual recipient (used as condition in template)
             return values
 
@@ -276,7 +276,7 @@ class AccountEdiFormat(models.Model):
         # === CREDIT NOTE (RECTIFICATIVA) ===
         # TODO values below would have to be adapted for in_invoices (Bizkaia LROE)
         values['is_refund'] = invoice.move_type == 'out_refund'
-        values['is_simplified'] = invoice.partner_id == self.env.ref("l10n_es_edi_tbai.partner_simplified")
+        values['is_simplified'] = invoice.partner_id == self.env.ref("l10n_es_edi_sii.partner_simplified")
         if values['is_refund']:
             # TODO check refund codes are legal before sending ? Do not use "defaults" here, show them in wizard
             values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason or ('R5' if values['is_simplified'] else 'R1')
