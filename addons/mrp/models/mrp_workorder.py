@@ -460,7 +460,7 @@ class MrpWorkorder(models.Model):
             bom = self.env['mrp.bom']
             moves = production.move_raw_ids | production.move_finished_ids
 
-            for workorder in self:
+            for workorder in workorders:
                 bom = workorder.operation_id.bom_id or workorder.production_id.bom_id
                 previous_workorder = workorders_by_bom[bom][-1:]
                 previous_workorder.next_work_order_id = workorder.id
