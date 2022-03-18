@@ -27,8 +27,7 @@ class AccountAnalyticDefault(models.Model):
         if any(not default.analytic_id and not default.analytic_tag_ids for default in self):
             raise ValidationError(_('An analytic default requires at least an analytic account or an analytic tag.'))
 
-    @api.model
-    def account_get(self, product_id=None, partner_id=None, account_id=None, user_id=None, date=None, company_id=None):
+    def _retrieve_account_get_domain(self, product_id=None, partner_id=None, account_id=None, user_id=None, date=None, company_id=None):
         domain = []
         if product_id:
             domain += ['|', ('product_id', '=', product_id)]
@@ -48,17 +47,27 @@ class AccountAnalyticDefault(models.Model):
         if date:
             domain += ['|', ('date_start', '<=', date), ('date_start', '=', False)]
             domain += ['|', ('date_stop', '>=', date), ('date_stop', '=', False)]
+        return domain
+
+    def _retrieve_account_get_index(self):
+        self.ensure_one()
+        index = 0
+        if self.product_id: index += 1
+        if self.partner_id: index += 1
+        if self.account_id: index += 1
+        if self.company_id: index += 1
+        if self.user_id: index += 1
+        if self.date_start: index += 1
+        if self.date_stop: index += 1
+        return index
+
+    @api.model
+    def account_get(self, product_id=None, partner_id=None, account_id=None, user_id=None, date=None, company_id=None):
+        domain = self._retrieve_account_get_domain(product_id=product_id, partner_id=partner_id, account_id=account_id, user_id=user_id, date=date, company_id=company_id)
         best_index = -1
         res = self.env['account.analytic.default']
         for rec in self.search(domain):
-            index = 0
-            if rec.product_id: index += 1
-            if rec.partner_id: index += 1
-            if rec.account_id: index += 1
-            if rec.company_id: index += 1
-            if rec.user_id: index += 1
-            if rec.date_start: index += 1
-            if rec.date_stop: index += 1
+            index = rec._retrieve_account_get_index()
             if index > best_index:
                 res = rec
                 best_index = index
