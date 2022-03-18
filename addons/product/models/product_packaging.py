@@ -19,13 +19,12 @@ class ProductPackaging(models.Model):
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
     product_id = fields.Many2one('product.product', string='Product', check_company=True)
     qty = fields.Float('Contained Quantity', default=1, digits='Product Unit of Measure', help="Quantity of products contained in the packaging.")
-    barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification. Scan this packaging barcode from a transfer in the Barcode app to move all the contained units")
+    barcode = fields.Char('Barcode', index="unique", copy=False, help="Barcode used for packaging identification. Scan this packaging barcode from a transfer in the Barcode app to move all the contained units")
     product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', index=True)
 
     _sql_constraints = [
         ('positive_qty', 'CHECK(qty > 0)', 'Contained Quantity should be positive.'),
-        ('barcode_uniq', 'unique(barcode)', 'A barcode can only be assigned to one packaging.'),
     ]
 
     @api.constrains('barcode')

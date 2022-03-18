@@ -9,7 +9,5 @@ class FleetVehicleState(models.Model):
     _order = 'sequence asc'
     _description = 'Vehicle Status'
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(required=True, translate=True, index="unique")
     sequence = fields.Integer(help="Used to order the note stages")
-
-    _sql_constraints = [('fleet_state_name_unique', 'unique(name)', 'State name already exists')]

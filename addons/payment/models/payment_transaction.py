@@ -36,7 +36,7 @@ class PaymentTransaction(models.Model):
         related='acquirer_id.company_id', store=True, index=True)
     reference = fields.Char(
         string="Reference", help="The internal reference of the transaction", readonly=True,
-        required=True)  # Already has an index from the UNIQUE SQL constraint
+        required=True, index="unique")  # Already has an index from the UNIQUE SQL constraint
     acquirer_reference = fields.Char(
         string="Acquirer Reference", help="The acquirer reference of the transaction",
         readonly=True)  # This is not the same thing as the acquirer reference of the token
@@ -121,10 +121,6 @@ class PaymentTransaction(models.Model):
     partner_state_id = fields.Many2one(string="State", comodel_name='res.country.state')
     partner_country_id = fields.Many2one(string="Country", comodel_name='res.country')
     partner_phone = fields.Char(string="Phone")
-
-    _sql_constraints = [
-        ('reference_uniq', 'unique(reference)', "Reference must be unique!"),
-    ]
 
     #=== COMPUTE METHODS ===#
 

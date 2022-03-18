@@ -476,7 +476,10 @@ class Registry(Mapping):
             self.has_trigram = sql.install_pg_trgm(cr)
 
         for indexname, tablename, columnname, index in expected:
-            assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
+            assert index in ('btree', 'unique', 'btree_not_null', 'trigram', True, False, None)
+            if index == 'unique':
+                # It is already create by postgreSQL because of constraints
+                continue
             if index and indexname not in existing:
                 method = 'btree'
                 operator = ''

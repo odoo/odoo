@@ -42,7 +42,7 @@ class AccountEdiProxyClientUser(models.Model):
     _description = 'Account EDI proxy user'
 
     active = fields.Boolean(default=True)
-    id_client = fields.Char(required=True)
+    id_client = fields.Char(required=True, index="unique")
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.company)
     edi_format_id = fields.Many2one('account.edi.format', required=True)
@@ -52,7 +52,6 @@ class AccountEdiProxyClientUser(models.Model):
     refresh_token = fields.Char(groups="base.group_system")
 
     _sql_constraints = [
-        ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
         ('unique_edi_identification_per_format', 'unique(edi_identification, edi_format_id)', 'This edi identification is already assigned to a user'),
     ]
 

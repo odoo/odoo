@@ -9,10 +9,7 @@ class L10nArAfipResponsibilityType(models.Model):
     _description = 'AFIP Responsibility Type'
     _order = 'sequence'
 
-    name = fields.Char(required=True, index='trigram')
+    name = fields.Char(required=True, index='unique')
     sequence = fields.Integer()
-    code = fields.Char(required=True, index=True)
+    code = fields.Char(required=True, index='unique')
     active = fields.Boolean(default=True)
-
-    _sql_constraints = [('name', 'unique(name)', 'Name must be unique!'),
-                        ('code', 'unique(code)', 'Code must be unique!')]

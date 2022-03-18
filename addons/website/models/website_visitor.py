@@ -31,10 +31,10 @@ class WebsiteVisitor(models.Model):
     _order = 'last_connection_datetime DESC'
 
     name = fields.Char('Name')
-    access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, copy=False, groups='website.group_website_publisher')
+    access_token = fields.Char(required=True, index="unique", default=lambda x: uuid.uuid4().hex, copy=False, groups='website.group_website_publisher')
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
-    partner_id = fields.Many2one('res.partner', string="Contact", help="Partner of the last logged in user.", index='btree_not_null')
+    partner_id = fields.Many2one('res.partner', string="Contact", help="Partner of the last logged in user.", index='unique')
     parent_id = fields.Many2one('website.visitor', string="Parent", ondelete='set null', index='btree_not_null', help="Main identity")
     partner_image = fields.Binary(related='partner_id.image_1920')
 
@@ -59,11 +59,6 @@ class WebsiteVisitor(models.Model):
     last_connection_datetime = fields.Datetime('Last Connection', default=fields.Datetime.now, help="Last page view date", readonly=True)
     time_since_last_action = fields.Char('Last action', compute="_compute_time_statistics", help='Time since last page view. E.g.: 2 minutes ago')
     is_connected = fields.Boolean('Is connected ?', compute='_compute_time_statistics', help='A visitor is considered as connected if his last page view was within the last 5 minutes.')
-
-    _sql_constraints = [
-        ('access_token_unique', 'unique(access_token)', 'Access token should be unique.'),
-        ('partner_uniq', 'unique(partner_id)', 'A partner is linked to only one visitor.'),
-    ]
 
     @api.depends('name')
     def name_get(self):

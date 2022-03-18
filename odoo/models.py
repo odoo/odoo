@@ -2926,6 +2926,7 @@ class BaseModel(metaclass=MetaModel):
                 # constraint exists but its definition may have changed
                 tools.drop_constraint(cr, self._table, conname)
 
+            print("WILL ADD CONSTRAINT IN DB: ", message)
             if foreign_key_re.match(definition):
                 self.pool.post_init(tools.add_constraint, cr, self._table, conname, definition)
             else:

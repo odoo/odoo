@@ -117,6 +117,7 @@ class Field(MetaField('DummyField', (object,), {})):
         The possible values are:
 
         * ``"btree"`` or ``True``: standard index, good for many2one
+        * ``"unique"``: unique btree index, force the unique constraint
         * ``"btree_not_null"``: BTREE index without NULL values (useful when most
                                 values are NULL, or when NULL is never searched for)
         * ``"trigram"``: Generalized Inverted Index (GIN) with trigrams (good for full-text search)
@@ -366,7 +367,14 @@ class Field(MetaField('DummyField', (object,), {})):
         if not self.args.get('related'):
             self._direct = True
         if self._direct or self._toplevel:
+            should_add_constraints = self.index == "unique"
             self._setup_attrs(owner, name)
+            if should_add_constraints:
+                owner._sql_constraints.append((
+                    f'{self.name}_unique',
+                    f'unique({self.name})',
+                    f'{self.string} of {owner._description} should be unique!',
+                ))
             if self._toplevel:
                 # free memory, self.args and self._base_fields are no longer useful
                 self.__dict__.pop('args', None)

@@ -121,7 +121,7 @@ class MaintenanceEquipment(models.Model):
     partner_ref = fields.Char('Vendor Reference')
     location = fields.Char('Location')
     model = fields.Char('Model')
-    serial_no = fields.Char('Serial Number', copy=False)
+    serial_no = fields.Char('Serial Number', copy=False, index="unique")
     assign_date = fields.Date('Assigned Date', tracking=True)
     effective_date = fields.Date('Effective Date', default=fields.Date.context_today, required=True, help="Date at which the equipment became effective. This date will be used to compute the Mean Time Between Failure.")
     cost = fields.Float('Cost')
@@ -195,10 +195,6 @@ class MaintenanceEquipment(models.Model):
     @api.onchange('category_id')
     def _onchange_category_id(self):
         self.technician_user_id = self.category_id.technician_user_id
-
-    _sql_constraints = [
-        ('serial_no', 'unique(serial_no)', "Another asset already exists with this serial number!"),
-    ]
 
     @api.model_create_multi
     def create(self, vals_list):

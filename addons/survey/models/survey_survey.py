@@ -87,7 +87,7 @@ class Survey(models.Model):
         ('public', 'Anyone with the link'),
         ('token', 'Invited people only')], string='Access Mode',
         default='public', required=True)
-    access_token = fields.Char('Access Token', default=lambda self: self._get_default_access_token(), copy=False)
+    access_token = fields.Char('Access Token', index="unique", default=lambda self: self._get_default_access_token(), copy=False)
     users_login_required = fields.Boolean('Require Login', help="If checked, users have to login before answering even with a valid token.")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
@@ -140,7 +140,7 @@ class Survey(models.Model):
         ('ready', 'Ready'),
         ('in_progress', 'In Progress'),
         ], string="Session State", copy=False)
-    session_code = fields.Char('Session Code', default=lambda self: self._get_default_session_code(), copy=False,
+    session_code = fields.Char('Session Code', index="unique", default=lambda self: self._get_default_session_code(), copy=False,
         help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!")
     session_link = fields.Char('Session Link', compute='_compute_session_link')
     # live sessions - current question fields
@@ -159,8 +159,6 @@ class Survey(models.Model):
     has_conditional_questions = fields.Boolean("Contains conditional questions", compute="_compute_has_conditional_questions")
 
     _sql_constraints = [
-        ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
-        ('session_code_unique', 'unique(session_code)', 'Session code should be unique'),
         ('certification_check', "CHECK( scoring_type!='no_scoring' OR certification=False )",
             'You can only create certifications for surveys that have a scoring mechanism.'),
         ('scoring_success_min_check', "CHECK( scoring_success_min IS NULL OR (scoring_success_min>=0 AND scoring_success_min<=100) )",

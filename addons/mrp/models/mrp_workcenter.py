@@ -290,20 +290,14 @@ class MrpWorkcenter(models.Model):
 
 class WorkcenterTag(models.Model):
     _name = 'mrp.workcenter.tag'
-    _description = 'Add tag for the workcenter'
+    _description = 'Workcenter Tag'
     _order = 'name'
 
     def _get_default_color(self):
         return randint(1, 11)
 
-    name = fields.Char("Tag Name", required=True)
+    name = fields.Char("Tag Name", required=True, index="unique")
     color = fields.Integer("Color Index", default=_get_default_color)
-
-    _sql_constraints = [
-        ('tag_name_unique', 'unique(name)',
-         'The tag name must be unique.'),
-    ]
-
 
 class MrpWorkcenterProductivityLossType(models.Model):
     _name = "mrp.workcenter.productivity.loss.type"

@@ -24,7 +24,7 @@ class Coupon(models.Model):
          """
         return str(random.getrandbits(64))
 
-    code = fields.Char(default=lambda self: self._generate_code(), required=True, readonly=True)
+    code = fields.Char(default=lambda self: self._generate_code(), required=True, readonly=True, index="unique")
     expiration_date = fields.Date('Expiration Date', compute='_compute_expiration_date')
     state = fields.Selection([
         ('reserved', 'Pending'),
@@ -38,10 +38,6 @@ class Coupon(models.Model):
     program_id = fields.Many2one('coupon.program', "Program")
     discount_line_product_id = fields.Many2one('product.product', related='program_id.discount_line_product_id', readonly=False,
         help='Product used in the sales order to apply the discount.')
-
-    _sql_constraints = [
-        ('unique_coupon_code', 'unique(code)', 'The coupon code must be unique!'),
-    ]
 
     @api.depends('create_date', 'program_id.validity_duration')
     def _compute_expiration_date(self):
