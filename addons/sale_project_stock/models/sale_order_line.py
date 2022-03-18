@@ -6,12 +6,10 @@ from odoo import fields, models
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    # FIXME: see if we move this computed field into sale_stock module.
     stock_move_count = fields.Integer(compute='_compute_stock_move_count')
 
-    @api.depends('move_ids')
     def _compute_stock_move_count(self):
-        stock_move_read_group = self.env['stock.move'].read_group([('sale_line_id', 'in', self.ids)], ['sale_line_id'], ['sale_line_id'])
+        stock_move_read_group = self.env['stock.move']._read_group([('sale_line_id', 'in', self.ids)], ['sale_line_id'], ['sale_line_id'])
         stock_move_count_per_sol = {res['sale_line_id'][0]: res['sale_line_id_count'] for res in stock_move_read_group}
         for sol in self:
             sol.stock_move_count = stock_move_count_per_sol.get(sol.id, 0)

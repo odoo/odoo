@@ -87,7 +87,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                 'costs': {
                     'data': [
                         {
-                            'id': 'billable_fixed',
+                            'id': 'billable_manual',
                             'billed': (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.timesheet_cost,
                             'to_bill': 0.0,
                         },

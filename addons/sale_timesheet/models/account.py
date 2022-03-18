@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
@@ -17,6 +17,8 @@ class AccountAnalyticLine(models.Model):
     timesheet_invoice_type = fields.Selection([
         ('billable_time', 'Billed on Timesheets'),
         ('billable_fixed', 'Billed at a Fixed price'),
+        ('billable_milestones', 'Billed on Milestones'),
+        ('billable_manual', 'Billed Manually'),
         ('non_billable', 'Non Billable Tasks'),
         ('timesheet_revenues', 'Timesheet Revenues'),
         ('service_revenues', 'Service Revenues'),
@@ -45,7 +47,8 @@ class AccountAnalyticLine(models.Model):
                         if timesheet.so_line.product_id.service_type == 'timesheet':
                             invoice_type = 'timesheet_revenues' if timesheet.amount > 0 else 'billable_time'
                         else:
-                            invoice_type = 'billable_fixed'
+                            service_type = timesheet.so_line.product_id.service_type
+                            invoice_type = f'billable_{service_type}' if service_type in ['milestones', 'manual'] else 'billable_fixed'
                     elif timesheet.so_line.product_id.invoice_policy == 'order':
                         invoice_type = 'billable_fixed'
                 timesheet.timesheet_invoice_type = invoice_type
