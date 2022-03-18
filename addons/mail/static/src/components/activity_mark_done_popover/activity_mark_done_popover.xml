@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ActivityMarkDonePopover" owl="1">
-        <div class="o_ActivityMarkDonePopover" t-attf-class="{{ className }}" t-on-keydown="activityMarkDonePopoverView and activityMarkDonePopoverView.onKeydown" t-ref="root">
-            <t t-if="activityMarkDonePopoverView">
+        <t t-if="activityMarkDonePopoverView">
+            <div class="o_ActivityMarkDonePopover" t-attf-class="{{ className }}" t-on-keydown="activityMarkDonePopoverView.onKeydown" t-ref="root">
                 <textarea class="form-control o_ActivityMarkDonePopover_feedback mb-2" rows="3" placeholder="Write Feedback" t-on-blur="activityMarkDonePopoverView.onBlur" t-ref="feedbackTextarea"/>
                 <div class="o_ActivityMarkDonePopover_buttons">
                     <button type="button" class="o_ActivityMarkDonePopover_doneScheduleNextButton btn btn-sm btn-primary" t-on-click="activityMarkDonePopoverView.onClickDoneAndScheduleNext">
@@ -18,8 +18,8 @@
                         Discard
                     </button>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
