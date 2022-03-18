@@ -4,6 +4,7 @@
 from odoo import _, api, fields, models
 from odoo.tools.float_utils import float_is_zero
 from odoo.osv.expression import AND
+from dateutil.relativedelta import relativedelta
 
 
 class StockWarehouseOrderpoint(models.Model):
@@ -13,6 +14,7 @@ class StockWarehouseOrderpoint(models.Model):
     bom_id = fields.Many2one(
         'mrp.bom', string='Bill of Materials', check_company=True,
         domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
+    manufacturing_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the manufacturing routes.")
 
     def _get_replenishment_order_notification(self):
         self.ensure_one()
@@ -44,6 +46,27 @@ class StockWarehouseOrderpoint(models.Model):
             manufacture_route.append(res['route_id'][0])
         for orderpoint in self:
             orderpoint.show_bom = orderpoint.route_id.id in manufacture_route
+
+    def _compute_visibility_days(self):
+        res = super()._compute_visibility_days()
+        for orderpoint in self:
+            if 'manufacture' in orderpoint.rule_ids.mapped('action'):
+                orderpoint.visibility_days = orderpoint.manufacturing_visibility_days
+        return res
+
+    def _set_visibility_days(self):
+        res = super()._set_visibility_days()
+        for orderpoint in self:
+            if 'manufacture' in orderpoint.rule_ids.mapped('action'):
+                orderpoint.manufacturing_visibility_days = orderpoint.visibility_days
+        return res
+
+    def _compute_days_to_order(self):
+        res = super()._compute_days_to_order()
+        for orderpoint in self:
+            if 'manufacture' in orderpoint.rule_ids.mapped('action'):
+                orderpoint.days_to_order = orderpoint.product_id.days_to_prepare_mo
+        return res
 
     def _quantity_in_progress(self):
         bom_kits = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')
@@ -108,6 +131,12 @@ class StockWarehouseOrderpoint(models.Model):
         if route_id and orderpoint_wh_bom:
             orderpoint_wh_bom.route_id = route_id[0].id
         return super()._set_default_route_id()
+
+    def _get_orderpoint_procurement_date(self):
+        date = super()._get_orderpoint_procurement_date()
+        if any(rule.action == 'manufacture' for rule in self.rule_ids):
+            date -= relativedelta(days=self.company_id.manufacturing_lead)
+        return date
 
     def _prepare_procurement_values(self, date=False, group=False):
         values = super()._prepare_procurement_values(date=date, group=group)

@@ -215,6 +215,7 @@ class Orderpoint(models.Model):
         'product.supplierinfo', string='Product Supplier', check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
     vendor_id = fields.Many2one(related='supplier_id.partner_id', string="Vendor", store=True)
+    purchase_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the purchase routes.")
 
     @api.depends('product_id.purchase_order_line_ids', 'product_id.purchase_order_line_ids.state')
     def _compute_qty(self):
@@ -225,6 +226,26 @@ class Orderpoint(models.Model):
     def _compute_lead_days(self):
         return super()._compute_lead_days()
 
+    def _compute_visibility_days(self):
+        res = super()._compute_visibility_days()
+        for orderpoint in self:
+            if 'buy' in orderpoint.rule_ids.mapped('action'):
+                orderpoint.visibility_days = orderpoint.purchase_visibility_days
+        return res
+
+    def _set_visibility_days(self):
+        res = super()._set_visibility_days()
+        for orderpoint in self:
+            if 'buy' in orderpoint.rule_ids.mapped('action'):
+                orderpoint.purchase_visibility_days = orderpoint.visibility_days
+        return res
+
+    def _compute_days_to_order(self):
+        res = super()._compute_days_to_order()
+        for orderpoint in self:
+            if 'buy' in orderpoint.rule_ids.mapped('action'):
+                orderpoint.days_to_order = orderpoint.company_id.days_to_purchase
+        return res
     @api.depends('route_id')
     def _compute_show_suppplier(self):
         buy_route = []

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from dateutil.relativedelta import relativedelta
 from odoo import api, Command, fields, models
 from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
@@ -547,3 +548,9 @@ class StockMove(models.Model):
         res = super()._prepare_procurement_values()
         res['bom_line_id'] = self.bom_line_id.id
         return res
+
+    def _get_mto_procurement_date(self):
+        date = super()._get_mto_procurement_date()
+        if 'manufacture' in self.product_id._get_rules_from_location(self.location_id).mapped('action'):
+            date -= relativedelta(days=self.company_id.manufacturing_lead)
+        return date

@@ -350,6 +350,7 @@ class StockRule(models.Model):
         :rtype: tuple[int, list[str, str]]
         """
         delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
+        days_to_order = values.get('days_to_order', 0)
         if self.env.context.get('bypass_delay_description'):
             delay_description = []
         else:
@@ -358,7 +359,8 @@ class StockRule(models.Model):
                 for rule in self
                 if rule.action in ['pull', 'pull_push'] and rule.delay
             ]
-        return delay, delay_description
+            delay_description.append((_('Days to Order'), _('+ %d day(s)', days_to_order)))
+        return delay + days_to_order, delay_description
 
 
 class ProcurementGroup(models.Model):

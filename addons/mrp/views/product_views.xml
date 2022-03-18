@@ -12,6 +12,10 @@
                     <div attrs="{'invisible':[('type','=','service')]}">
                         <field name="produce_delay" class="oe_inline"/> days
                     </div>
+                    <label for="days_to_prepare_mo" attrs="{'invisible':[('type','=','service')]}"/>
+                    <div attrs="{'invisible':[('type','=','service')]}">
+                        <field name="days_to_prepare_mo" class="oe_inline"/> days
+                    </div>
                 </xpath>
                 <xpath expr="//field[@name='product_variant_count']" position="after">
                     <field name="is_kits" invisible="1"/>
