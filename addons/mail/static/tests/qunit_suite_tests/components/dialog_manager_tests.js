@@ -2,18 +2,13 @@
 
 import { makeDeferred } from '@mail/utils/deferred';
 import {
-    beforeEach,
     nextAnimationFrame,
     start,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('dialog_manager_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('dialog_manager_tests.js');
 
 QUnit.test('[technical] messaging not created', async function (assert) {
     /**
@@ -28,7 +23,6 @@ QUnit.test('[technical] messaging not created', async function (assert) {
 
     const messagingBeforeCreationDeferred = makeDeferred();
     await start({
-        data: this.data,
         hasDialog: true,
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none',
@@ -53,10 +47,7 @@ QUnit.test('[technical] messaging not created', async function (assert) {
 QUnit.test('initial mount', async function (assert) {
     assert.expect(1);
 
-    await start({
-        data: this.data,
-        hasDialog: true,
-    });
+    await start({ hasDialog: true });
     assert.containsOnce(
         document.body,
         '.o_DialogManager',

@@ -2,7 +2,6 @@
 
 import { insert, insertAndReplace, link } from '@mail/model/model_field_command';
 import {
-    beforeEach,
     createRootMessagingComponent,
     start,
 } from '@mail/../tests/helpers/test_utils';
@@ -10,9 +9,7 @@ import {
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('message_seen_indicator_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.createMessageSeenIndicatorComponent = async ({ message, target, thread }, otherProps) => {
             const props = Object.assign(
                 { messageLocalId: message.localId, threadLocalId: thread.localId },
@@ -29,7 +26,7 @@ QUnit.module('message_seen_indicator_tests.js', {
 QUnit.test('rendering when just one has received the message', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
@@ -73,7 +70,7 @@ QUnit.test('rendering when just one has received the message', async function (a
 QUnit.test('rendering when everyone have received the message', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
@@ -118,7 +115,7 @@ QUnit.test('rendering when everyone have received the message', async function (
 QUnit.test('rendering when just one has seen the message', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
@@ -165,7 +162,7 @@ QUnit.test('rendering when just one has seen the message', async function (asser
 QUnit.test('rendering when just one has seen & received the message', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
@@ -211,7 +208,7 @@ QUnit.test('rendering when just one has seen & received the message', async func
 QUnit.test('rendering when just everyone has seen the message', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',

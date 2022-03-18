@@ -2,9 +2,9 @@
 
 import {
     afterNextRender,
-    beforeEach,
     nextAnimationFrame,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
@@ -12,13 +12,10 @@ import Bus from 'web.Bus';
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_inbox_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.start = async params => {
             return start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
-                data: this.data,
                 hasDiscuss: true,
             }));
         };
@@ -28,26 +25,24 @@ QUnit.module('discuss_inbox_tests.js', {
 QUnit.test('reply: discard on pressing escape', async function (assert) {
     assert.expect(9);
 
+    const pyEnv = await startServer();
     // partner expected to be found by mention
-    this.data['res.partner'].records.push({
+    pyEnv['res.partner'].create({
         email: "testpartnert@odoo.com",
-        id: 11,
         name: "TestPartner",
     });
-    // message expected to be found in inbox
-    this.data['mail.message'].records.push({
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
+        needaction_partner_ids: [pyEnv.currentPartnerId],
         res_id: 20,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -154,19 +149,20 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
 QUnit.test('reply: discard on discard button click', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 20,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -215,19 +211,20 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
 QUnit.test('reply: discard on reply button toggle', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 20,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -270,19 +267,20 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
 QUnit.test('reply: discard on click away', async function (assert) {
     assert.expect(7);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 20,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -357,20 +355,21 @@ QUnit.test('reply: discard on click away', async function (assert) {
 QUnit.test('"reply to" composer should log note if message replied to is a note', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         is_discussion: false,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 20,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         async mockRPC(route, args) {
@@ -429,20 +428,21 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
 QUnit.test('"reply to" composer should send message if message replied to is not a note', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         is_discussion: true,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 20,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         async mockRPC(route, args) {
@@ -501,19 +501,20 @@ QUnit.test('"reply to" composer should send message if message replied to is not
 QUnit.test('error notifications should not be shown in Inbox', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'mail.channel',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 20,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100, // id of related message
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1, // id of related message
         notification_status: 'exception',
         notification_type: 'email',
-        res_partner_id: this.data.currentPartnerId, // must be for current partner
+        res_partner_id: pyEnv.currentPartnerId, // must be for current partner
     });
     await this.start();
     assert.containsOnce(
@@ -536,19 +537,19 @@ QUnit.test('error notifications should not be shown in Inbox', async function (a
 QUnit.test('show subject of message in Inbox', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
-        model: 'mail.channel', // random existing model
+        model: 'mail.channel',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId], // not needed, for consistency
-        subject: "Salutations, voyageur", // will be asserted in the test
+        needaction_partner_ids: [pyEnv.currentPartnerId], // not needed, for consistency
+        subject: "Salutations, voyageur",
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -583,19 +584,19 @@ QUnit.test('show subject of message in Inbox', async function (assert) {
 QUnit.test('show subject of message in history', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
         history_partner_ids: [3], // not needed, for consistency
-        id: 100,
-        model: 'mail.channel', // random existing model
-        subject: "Salutations, voyageur", // will be asserted in the test
+        model: 'mail.channel',
+        subject: "Salutations, voyageur",
     });
-    this.data['mail.notification'].records.push({
+    pyEnv['mail.notification'].create({
         is_read: true,
-        mail_message_id: 100,
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         discuss: {
@@ -635,6 +636,21 @@ QUnit.test('show subject of message in history', async function (assert) {
 QUnit.test('click on (non-channel/non-partner) origin thread link should redirect to form view', async function (assert) {
     assert.expect(9);
 
+    const pyEnv = await startServer();
+    const resFakeId1 = pyEnv['res.fake'].create({ name: 'Some record' });
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        body: "not empty",
+        model: 'res.fake',
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resFakeId1,
+    });
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
+        notification_status: 'sent',
+        notification_type: 'inbox',
+        res_partner_id: pyEnv.currentPartnerId,
+    });
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         // Callback of doing an action (action manager).
@@ -653,29 +669,14 @@ QUnit.test('click on (non-channel/non-partner) origin thread link should redirec
         );
         assert.strictEqual(
             payload.action.res_model,
-            'some.model',
-            "action should open view with model 'some.model' (model of message origin thread)"
+            'res.fake',
+            "action should open view with model 'res.fake' (model of message origin thread)"
         );
         assert.strictEqual(
             payload.action.res_id,
-            10,
-            "action should open view with id 10 (id of message origin thread)"
+            resFakeId1,
+            "action should open view with id of resFake1 (id of message origin thread)"
         );
-    });
-    this.data['some.model'] = { fields: {}, records: [{ id: 10, name: "Some record" }] };
-    this.data['mail.message'].records.push({
-        body: "not empty",
-        id: 100,
-        model: 'some.model',
-        needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 10,
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
-        notification_status: 'sent',
-        notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
     });
     await this.start({
         env: {
@@ -716,23 +717,20 @@ QUnit.test('click on (non-channel/non-partner) origin thread link should redirec
 QUnit.test('subject should not be shown when subject is the same as the thread name', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: "Salutations, voyageur" });
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'mail.channel',
-        res_id: 100,
+        res_id: mailChannelId1,
         needaction: true,
         subject: "Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
-        id: 100,
-        name: "Salutations, voyageur",
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -757,23 +755,20 @@ QUnit.test('subject should not be shown when subject is the same as the thread n
 QUnit.test('subject should not be shown when subject is the same as the thread name and both have the same prefix', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: "Re: Salutations, voyageur" });
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'mail.channel',
-        res_id: 100,
+        res_id: mailChannelId1,
         needaction: true,
         subject: "Re: Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
-        id: 100,
-        name: "Re: Salutations, voyageur",
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -798,23 +793,20 @@ QUnit.test('subject should not be shown when subject is the same as the thread n
 QUnit.test('subject should not be shown when subject differs from thread name only by the "Re:" prefix', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: "Salutations, voyageur" });
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'mail.channel',
-        res_id: 100,
+        res_id: mailChannelId1,
         needaction: true,
         subject: "Re: Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
-        id: 100,
-        name: "Salutations, voyageur",
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -839,23 +831,20 @@ QUnit.test('subject should not be shown when subject differs from thread name on
 QUnit.test('subject should not be shown when subject differs from thread name only by the "Fw:" and "Re:" prefix', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: "Salutations, voyageur" });
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'mail.channel',
-        res_id: 100,
+        res_id: mailChannelId1,
         needaction: true,
         subject: "Fw: Re: Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
-        id: 100,
-        name: "Salutations, voyageur",
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -880,23 +869,20 @@ QUnit.test('subject should not be shown when subject differs from thread name on
 QUnit.test('subject should be shown when the thread name has an extra prefix compared to subject', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: "Re: Salutations, voyageur" });
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'mail.channel',
-        res_id: 100,
+        res_id: mailChannelId1,
         needaction: true,
         subject: "Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
-        id: 100,
-        name: "Re: Salutations, voyageur",
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -921,23 +907,20 @@ QUnit.test('subject should be shown when the thread name has an extra prefix com
 QUnit.test('subject should not be shown when subject differs from thread name only by the "fw:" prefix and both contain another common prefix', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: "Re: Salutations, voyageur" });
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'mail.channel',
-        res_id: 100,
+        res_id: mailChannelId1,
         needaction: true,
         subject: "fw: re: Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
-        id: 100,
-        name: "Re: Salutations, voyageur",
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {
@@ -962,23 +945,20 @@ QUnit.test('subject should not be shown when subject differs from thread name on
 QUnit.test('subject should not be shown when subject differs from thread name only by the "Re: Re:" prefix', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: "Salutations, voyageur" });
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 100,
         model: 'mail.channel',
-        res_id: 100,
+        res_id: mailChannelId1,
         needaction: true,
         subject: "Re: Re: Salutations, voyageur",
     });
-    this.data['mail.channel'].records.push({
-        id: 100,
-        name: "Salutations, voyageur",
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     await this.start({
         waitUntilEvent: {

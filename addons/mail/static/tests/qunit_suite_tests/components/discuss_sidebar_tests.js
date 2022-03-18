@@ -3,25 +3,21 @@
 import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
-    beforeEach,
     nextAnimationFrame,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_sidebar_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('discuss_sidebar_tests.js');
 
 QUnit.test('sidebar find shows channels matching search term', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         members: [],
         name: 'test',
         public: 'public',
@@ -29,7 +25,6 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
     const searchReadDef = makeDeferred();
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
         async mockRPC(route, args) {
             const res = await this._super(...arguments);
@@ -74,17 +69,16 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
 QUnit.test('sidebar find shows channels matching search term even when user is member', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
-        members: [this.data.currentPartnerId],
+        members: [pyEnv.currentPartnerId],
         name: 'test',
         public: 'public',
     });
     const searchReadDef = makeDeferred();
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
         async mockRPC(route, args) {
             const res = await this._super(...arguments);
@@ -129,15 +123,15 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
 QUnit.test('sidebar channels should be ordered case insensitive alphabetically', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push(
-        { id: 19, name: "Xyz" },
-        { id: 20, name: "abc" },
-        { id: 21, name: "Abc" },
-        { id: 22, name: "Xyz" }
-    );
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create([
+        { name: "Xyz" },
+        { name: "abc" },
+        { name: "Abc" },
+        { name: "Xyz" },
+    ]);
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
     const results = document.querySelectorAll('.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem_name');

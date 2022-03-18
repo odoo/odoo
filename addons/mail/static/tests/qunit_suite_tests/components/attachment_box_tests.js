@@ -2,10 +2,10 @@
 
 import {
     afterNextRender,
-    beforeEach,
     dragenterFiles,
     dropFiles,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import { file } from 'web.test_utils';
@@ -14,20 +14,17 @@ const { createFile } = file;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('attachment_box_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('attachment_box_tests.js');
 
 QUnit.test('base empty rendering', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { createChatterContainerComponent } = await start();
     const chatterContainerComponent = await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -54,25 +51,26 @@ QUnit.test('base empty rendering', async function (assert) {
 QUnit.test('base non-empty rendering', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['ir.attachment'].records.push(
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['ir.attachment'].create([
         {
             mimetype: 'text/plain',
             name: 'Blah.txt',
-            res_id: 100,
+            res_id: resPartnerId1,
             res_model: 'res.partner',
         },
         {
             mimetype: 'text/plain',
             name: 'Blu.txt',
-            res_id: 100,
+            res_id: resPartnerId1,
             res_model: 'res.partner',
-        }
-    );
-    const { createChatterContainerComponent } = await start({ data: this.data });
+        },
+    ]);
+    const { createChatterContainerComponent } = await start();
     const chatterContainerComponent = await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -99,11 +97,12 @@ QUnit.test('base non-empty rendering', async function (assert) {
 QUnit.test('attachment box: drop attachments', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     const files = [
@@ -174,33 +173,29 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
 QUnit.test('view attachments', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['ir.attachment'].records.push(
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const [irAttachmentId1] = pyEnv['ir.attachment'].create([
         {
-            id: 143,
             mimetype: 'text/plain',
             name: 'Blah.txt',
-            res_id: 100,
+            res_id: resPartnerId1,
             res_model: 'res.partner',
         },
         {
-            id: 144,
             mimetype: 'text/plain',
             name: 'Blu.txt',
-            res_id: 100,
+            res_id: resPartnerId1,
             res_model: 'res.partner',
         },
-    );
-    const { createChatterContainerComponent, messaging } = await start({
-        data: this.data,
-        hasDialog: true,
-    });
+    ]);
+    const { createChatterContainerComponent, messaging } = await start({ hasDialog: true });
     await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
-    const firstAttachment = messaging.models['Attachment'].findFromIdentifyingData({ id: 143 });
+    const firstAttachment = messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 });
 
     await afterNextRender(() =>
         document.querySelector(`
@@ -256,18 +251,18 @@ QUnit.test('view attachments', async function (assert) {
 QUnit.test('remove attachment should ask for confirmation', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['ir.attachment'].records.push({
-        id: 143,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['ir.attachment'].create({
         mimetype: 'text/plain',
         name: 'Blah.txt',
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data, hasDialog: true });
+    const { createChatterContainerComponent } = await start({ hasDialog: true });
     await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.containsOnce(

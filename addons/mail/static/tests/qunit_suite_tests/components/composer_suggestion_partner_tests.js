@@ -1,22 +1,19 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('composer_suggestion_partner_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('composer_suggestion_partner_tests.js');
 
 QUnit.test('partner mention suggestion displayed', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const { createComposerSuggestionComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const partner = messaging.models['Partner'].create({
@@ -40,10 +37,11 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
 QUnit.test('partner mention suggestion correct data', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const { createComposerSuggestionComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const partner = messaging.models['Partner'].create({
@@ -93,10 +91,11 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
 QUnit.test('partner mention suggestion active', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const { createComposerSuggestionComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const partner = messaging.models['Partner'].create({

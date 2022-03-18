@@ -2,19 +2,15 @@
 
 import {
     afterNextRender,
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import { makeTestPromise } from 'web.test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('messaging_menu_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('messaging_menu_tests.js');
 
 QUnit.test('[technical] messaging not created then becomes created', async function (assert) {
     /**
@@ -29,7 +25,6 @@ QUnit.test('[technical] messaging not created then becomes created', async funct
 
     const messagingBeforeCreationDeferred = makeTestPromise();
     const { createMessagingMenuComponent } = await start({
-        data: this.data,
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none',
     });
@@ -53,7 +48,6 @@ QUnit.test('messaging not initialized', async function (assert) {
     assert.expect(2);
 
     const { createMessagingMenuComponent } = await start({
-        data: this.data,
         async mockRPC(route) {
             if (route === '/mail/init_messaging') {
                 // simulate messaging never initialized
@@ -84,7 +78,6 @@ QUnit.test('messaging becomes initialized', async function (assert) {
     const messagingInitializedProm = makeTestPromise();
 
     const { createMessagingMenuComponent } = await start({
-        data: this.data,
         async mockRPC(route) {
             const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route === '/mail/init_messaging') {
@@ -113,7 +106,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 QUnit.test('basic rendering', async function (assert) {
     assert.expect(21);
 
-    const { createMessagingMenuComponent } = await start({ data: this.data });
+    const { createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     assert.strictEqual(
         document.querySelectorAll('.o_MessagingMenu').length,
@@ -238,23 +231,20 @@ QUnit.test('basic rendering', async function (assert) {
 QUnit.test('counter is taking into account failure notification', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
-        id: 31,
-        seen_message_id: 11,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        model: 'mail.channel',
+        res_id: mailChannelId1,
     });
-    // message that is expected to have a failure
-    this.data['mail.message'].records.push({
-        id: 11, // random unique id, will be used to link failure to message
-        model: 'mail.channel', // expected value to link message to channel
-        res_id: 31, // id of a random channel
-    });
+    pyEnv['mail.channel'].write([mailChannelId1], { seen_message_id: mailMessageId1 });
     // failure that is expected to be used in the test
-    this.data['mail.notification'].records.push({
-        mail_message_id: 11, // id of the related message
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1, // id of the related message
         notification_status: 'exception', // necessary value to have a failure
         notification_type: 'email',
     });
-    const { createMessagingMenuComponent } = await start({ data: this.data });
+    const { createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     assert.containsOnce(
@@ -272,7 +262,7 @@ QUnit.test('counter is taking into account failure notification', async function
 QUnit.test('switch tab', async function (assert) {
     assert.expect(15);
 
-    const { createMessagingMenuComponent } = await start({ data: this.data });
+    const { createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
@@ -380,7 +370,7 @@ QUnit.test('switch tab', async function (assert) {
 QUnit.test('new message', async function (assert) {
     assert.expect(3);
 
-    const { createMessagingMenuComponent } = await start({ data: this.data, hasChatWindow: true });
+    const { createMessagingMenuComponent } = await start({ hasChatWindow: true });
     await createMessagingMenuComponent();
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_toggler`).click()
@@ -408,7 +398,6 @@ QUnit.test('no new message when discuss is open', async function (assert) {
     assert.expect(3);
 
     const { discussWidget, createMessagingMenuComponent } = await start({
-        data: this.data,
         autoOpenDiscuss: true,
         hasDiscuss: true,
     });
@@ -443,23 +432,16 @@ QUnit.test('no new message when discuss is open', async function (assert) {
 QUnit.test('channel preview: basic rendering', async function (assert) {
     assert.expect(9);
 
-    this.data['res.partner'].records.push({
-        id: 7, // random unique id, to link message author
-        name: "Demo", // random name, will be asserted in the test
-    });
-    // channel that is expected to be found in the test
-    this.data['mail.channel'].records.push({
-        id: 20, // random unique id, will be used to link message to channel
-        name: "General", // random name, will be asserted in the test
-    });
-    // message that is expected to be displayed in the test
-    this.data['mail.message'].records.push({
-        author_id: 7, // not current partner, will be asserted in the test
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
+    pyEnv['mail.message'].create({
+        author_id: resPartnerId1, // not current partner, will be asserted in the test
         body: "<p>test</p>", // random body, will be asserted in the test
         model: 'mail.channel', // necessary to link message to channel
-        res_id: 20, // id of related channel
+        res_id: mailChannelId1, // id of related channel
     });
-    const { createMessagingMenuComponent } = await start({ data: this.data });
+    const { createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
@@ -542,22 +524,22 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
 QUnit.test('filtered previews', async function (assert) {
     assert.expect(12);
 
-    // chat and channel expected to be found in the menu
-    this.data['mail.channel'].records.push(
-        { channel_type: "chat", id: 10 },
-        { id: 20 },
-    );
-    this.data['mail.message'].records.push(
+    const pyEnv = await startServer();
+    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
+        { channel_type: "chat" },
+        { name: "mailChannel1" },
+    ]);
+    pyEnv['mail.message'].create([
         {
             model: 'mail.channel', // to link message to channel
-            res_id: 10, // id of related channel
+            res_id: mailChannelId1, // id of related channel
         },
         {
             model: 'mail.channel', // to link message to channel
-            res_id: 20, // id of related channel
+            res_id: mailChannelId2, // id of related channel
         },
-    );
-    const { createMessagingMenuComponent, messaging } = await start({ data: this.data });
+    ]);
+    const { createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
     await afterNextRender(() =>
@@ -573,7 +555,7 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
-                    id: 10,
+                    id: mailChannelId1,
                     model: 'mail.channel',
                 }).localId
             }"]
@@ -586,7 +568,7 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
-                    id: 20,
+                    id: mailChannelId2,
                     model: 'mail.channel',
                 }).localId
             }"]
@@ -608,7 +590,7 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
-                    id: 10,
+                    id: mailChannelId1,
                     model: 'mail.channel',
                 }).localId
             }"]
@@ -621,7 +603,7 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
-                    id: 20,
+                    id: mailChannelId2,
                     model: 'mail.channel',
                 }).localId
             }"]
@@ -646,7 +628,7 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
-                    id: 10,
+                    id: mailChannelId1,
                     model: 'mail.channel',
                 }).localId
             }"]
@@ -659,7 +641,7 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
-                    id: 20,
+                    id: mailChannelId2,
                     model: 'mail.channel',
                 }).localId
             }"]
@@ -681,7 +663,7 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
-                    id: 10,
+                    id: mailChannelId1,
                     model: 'mail.channel',
                 }).localId
             }"]
@@ -694,7 +676,7 @@ QUnit.test('filtered previews', async function (assert) {
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
-                    id: 20,
+                    id: mailChannelId2,
                     model: 'mail.channel',
                 }).localId
             }"]
@@ -707,9 +689,9 @@ QUnit.test('filtered previews', async function (assert) {
 QUnit.test('open chat window from preview', async function (assert) {
     assert.expect(1);
 
-    // channel expected to be found in the menu, only its existence matters, data are irrelevant
-    this.data['mail.channel'].records.push({});
-    const { createMessagingMenuComponent } = await start({ data: this.data, hasChatWindow: true });
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create();
+    const { createMessagingMenuComponent } = await start({ hasChatWindow: true });
     await createMessagingMenuComponent();
 
     await afterNextRender(() =>
@@ -728,13 +710,14 @@ QUnit.test('open chat window from preview', async function (assert) {
 QUnit.test('no code injection in message body preview', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    pyEnv['mail.message'].create({
         body: "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
         model: "mail.channel",
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    const { createMessagingMenuComponent } = await start({ data: this.data });
+    const { createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     await afterNextRender(() => {
@@ -771,13 +754,14 @@ QUnit.test('no code injection in message body preview', async function (assert) 
 QUnit.test('no code injection in message body preview from sanitized message', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    pyEnv['mail.message'].create({
         body: "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
         model: "mail.channel",
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    const { createMessagingMenuComponent } = await start({ data: this.data });
+    const { createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     await afterNextRender(() => {
@@ -814,13 +798,14 @@ QUnit.test('no code injection in message body preview from sanitized message', a
 QUnit.test('<br/> tags in message body preview are transformed in spaces', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    pyEnv['mail.message'].create({
         body: "<p>a<br/>b<br>c<br   />d<br     ></p>",
         model: "mail.channel",
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    const { createMessagingMenuComponent } = await start({ data: this.data });
+    const { createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     await afterNextRender(() => {
@@ -852,7 +837,6 @@ QUnit.test('rendering with OdooBot has a request (default)', async function (ass
     assert.expect(4);
 
     const { createMessagingMenuComponent } = await start({
-        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -892,7 +876,6 @@ QUnit.test('rendering without OdooBot has a request (denied)', async function (a
     assert.expect(2);
 
     const { createMessagingMenuComponent } = await start({
-        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -923,7 +906,6 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
     assert.expect(2);
 
     const { createMessagingMenuComponent } = await start({
-        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -954,7 +936,6 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
     assert.expect(4);
 
     const { createMessagingMenuComponent } = await start({
-        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -1007,12 +988,12 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
 QUnit.test('Group chat should be displayed inside the chat section of the messaging menu', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
-        id: 11,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'group',
         is_pinned: true,
     });
-    const { createMessagingMenuComponent, messaging } = await start({ data: this.data });
+    const { createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
     await afterNextRender(() =>
@@ -1026,7 +1007,7 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${messaging.models['Thread'].findFromIdentifyingData({
-                id: 11,
+                id: mailChannelId1,
                 model: 'mail.channel',
              }).localId}"]`).length,
         1,

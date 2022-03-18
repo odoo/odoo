@@ -4,26 +4,22 @@ import { insert, insertAndReplace, link, replace } from '@mail/model/model_field
 import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
-    beforeEach,
     createRootMessagingComponent,
     nextAnimationFrame,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('message_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('message_tests.js');
 
 QUnit.test('basic rendering', async function (assert) {
     assert.expect(12);
 
-    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const { createMessageComponent, messaging } = await start();
     const message = messaging.models['Message'].create({
         author: insert({ id: 7, display_name: "Demo User" }),
         body: "<p>Test</p>",
@@ -98,25 +94,24 @@ QUnit.test('basic rendering', async function (assert) {
 QUnit.test('Notification Sent', async function (assert) {
     assert.expect(9);
 
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Someone', partner_share: true });
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
-        id: 10,
         message_type: 'email',
         model: 'mail.channel',
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    this.data['mail.notification'].records.push({
-        id: 11,
-        mail_message_id: 10,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'email',
-        res_partner_id: 12,
+        res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 11,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -180,6 +175,21 @@ QUnit.test('Notification Sent', async function (assert) {
 QUnit.test('Notification Error', async function (assert) {
     assert.expect(8);
 
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Someone", partner_share: true });
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        body: 'not empty',
+        message_type: 'email',
+        model: 'mail.channel',
+        res_id: mailChannelId1,
+    });
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
+        notification_status: 'exception',
+        notification_type: 'email',
+        res_partner_id: resPartnerId1,
+    });
     const openResendActionDef = makeDeferred();
     const bus = new Bus();
     bus.on('do-action', null, payload => {
@@ -191,31 +201,14 @@ QUnit.test('Notification Error', async function (assert) {
         );
         assert.strictEqual(
             payload.options.additional_context.mail_message_to_resend,
-            10,
+            mailMessageId1,
             "action should have correct message id"
         );
         openResendActionDef.resolve();
     });
-
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
-        body: 'not empty',
-        id: 10,
-        message_type: 'email',
-        model: 'mail.channel',
-        res_id: 11,
-    });
-    this.data['mail.notification'].records.push({
-        id: 11,
-        mail_message_id: 10,
-        notification_status: 'exception',
-        notification_type: 'email',
-        res_partner_id: 12,
-    });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data, env: { bus } });
+    const { createThreadViewComponent, messaging } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 11,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -256,22 +249,19 @@ QUnit.test('Notification Error', async function (assert) {
 QUnit.test("'channel_fetch' notification received is correctly handled", async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
-        display_name: "Recipient",
-        id: 11,
-    });
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "Recipient" });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 11,
-        members: [this.data.currentPartnerId, 11],
+        members: [pyEnv.currentPartnerId, resPartnerId1],
     });
-    const { createThreadViewComponent, messaging, widget } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging, widget } = await start();
     const currentPartner = messaging.models['Partner'].insert({
         id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 11,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -304,9 +294,9 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/fetched',
             payload: {
-                channel_id: 11,
+                channel_id: mailChannelId1,
                 last_message_id: 100,
-                partner_id: 11,
+                partner_id: resPartnerId1,
             },
     }]);
     });
@@ -321,22 +311,19 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
 QUnit.test("'channel_seen' notification received is correctly handled", async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
-        display_name: "Recipient",
-        id: 11,
-    });
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "Recipient" });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 11,
-        members: [this.data.currentPartnerId, 11],
+        members: [pyEnv.currentPartnerId, resPartnerId1],
     });
-    const { createThreadViewComponent, messaging, widget } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging, widget } = await start();
     const currentPartner = messaging.models['Partner'].insert({
         id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 11,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -368,9 +355,9 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/seen',
             payload: {
-                channel_id: 11,
+                channel_id: mailChannelId1,
                 last_message_id: 100,
-                partner_id: 11,
+                partner_id: resPartnerId1,
             },
         }]);
     });
@@ -385,22 +372,19 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
 QUnit.test("'channel_fetch' notification then 'channel_seen' received  are correctly handled", async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({
-        display_name: "Recipient",
-        id: 11,
-    });
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "Recipient" });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 11,
-        members: [this.data.currentPartnerId, 11],
+        members: [pyEnv.currentPartnerId, resPartnerId1],
     });
-    const { createThreadViewComponent, messaging, widget } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging, widget } = await start();
     const currentPartner = messaging.models['Partner'].insert({
         id: messaging.currentPartner.id,
         display_name: "Demo User",
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 11,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -432,9 +416,9 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/fetched',
             payload: {
-                channel_id: 11,
+                channel_id: mailChannelId1,
                 last_message_id: 100,
-                partner_id: 11,
+                partner_id: resPartnerId1,
             }
         }]);
     });
@@ -449,9 +433,9 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/seen',
             payload: {
-                channel_id: 11,
+                channel_id: mailChannelId1,
                 last_message_id: 100,
-                partner_id: 11,
+                partner_id: resPartnerId1,
             },
         }]);
     });
@@ -466,7 +450,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
 QUnit.test('do not show messaging seen indicator if not authored by me', async function (assert) {
     assert.expect(2);
 
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const author = messaging.models['Partner'].create({
         id: 100,
         display_name: "Demo User"
@@ -514,7 +498,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
 QUnit.test('do not show messaging seen indicator if before last seen by all message', async function (assert) {
     assert.expect(3);
 
-    const { env, messaging, widget } = await start({ data: this.data });
+    const { env, messaging, widget } = await start();
     const currentPartner = messaging.models['Partner'].insert({
         id: messaging.currentPartner.id,
         display_name: "Demo User",
@@ -581,7 +565,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
 QUnit.test('only show messaging seen indicator if authored by me, after last seen by all message', async function (assert) {
     assert.expect(3);
 
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const currentPartner = messaging.models['Partner'].insert({
         id: messaging.currentPartner.id,
         display_name: "Demo User"
@@ -639,7 +623,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 QUnit.test('allow attachment delete on authored message', async function (assert) {
     assert.expect(5);
 
-    const { createMessageComponent, messaging } = await start({ data: this.data, hasDialog: true });
+    const { createMessageComponent, messaging } = await start({ hasDialog: true });
     const message = messaging.models['Message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
@@ -689,7 +673,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
 QUnit.test('prevent attachment delete on non-authored message in channels', async function (assert) {
     assert.expect(2);
 
-    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const { createMessageComponent, messaging } = await start();
     const message = messaging.models['Message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
@@ -722,7 +706,7 @@ QUnit.test('prevent attachment delete on non-authored message in channels', asyn
 QUnit.test('subtype description should be displayed if it is different than body', async function (assert) {
     assert.expect(2);
 
-    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const { createMessageComponent, messaging } = await start();
     const message = messaging.models['Message'].create({
         body: "<p>Hello</p>",
         id: 100,
@@ -744,7 +728,7 @@ QUnit.test('subtype description should be displayed if it is different than body
 QUnit.test('subtype description should not be displayed if it is similar to body', async function (assert) {
     assert.expect(2);
 
-    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const { createMessageComponent, messaging } = await start();
     const message = messaging.models['Message'].create({
         body: "<p>Hello</p>",
         id: 100,
@@ -785,7 +769,7 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         );
         assert.step('do-action:openFormView_some.model_250');
     });
-    const { createMessageComponent, messaging } = await start({ data: this.data, env: { bus } });
+    const { createMessageComponent, messaging } = await start({ env: { bus } });
     const message = messaging.models['Message'].create({
         body: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
         id: 100,
@@ -812,14 +796,12 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
 QUnit.test('chat with author should be opened after clicking on his avatar', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 10 });
-    this.data['res.users'].records.push({ partner_id: 10 });
-    const { createMessageComponent, messaging } = await start({
-        data: this.data,
-        hasChatWindow: true,
-    });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+    const { createMessageComponent, messaging } = await start({ hasChatWindow: true });
     const message = messaging.models['Message'].create({
-        author: insert({ id: 10 }),
+        author: insert({ id: resPartnerId1 }),
         id: 10,
     });
     await createMessageComponent(message);
@@ -852,14 +834,12 @@ QUnit.test('chat with author should be opened after clicking on his avatar', asy
 QUnit.test('chat with author should be opened after clicking on his im status icon', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 10 });
-    this.data['res.users'].records.push({ partner_id: 10 });
-    const { createMessageComponent, messaging } = await start({
-        data: this.data,
-        hasChatWindow: true,
-    });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+    const { createMessageComponent, messaging } = await start({ hasChatWindow: true });
     const message = messaging.models['Message'].create({
-        author: insert({ id: 10, im_status: 'online' }),
+        author: insert({ id: resPartnerId1, im_status: 'online' }),
         id: 10,
     });
     await createMessageComponent(message);
@@ -892,26 +872,22 @@ QUnit.test('chat with author should be opened after clicking on his im status ic
 QUnit.test('open chat with author on avatar click should be disabled when currently chatting with the author', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({
-        id: 11,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        members: [this.data.currentPartnerId, 10],
+        members: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
-    this.data['res.partner'].records.push({ id: 10 });
-    this.data['res.users'].records.push({ partner_id: 10 });
-    this.data['mail.message'].records.push({
-        author_id: 10,
+    pyEnv['mail.message'].create({
+        author_id: resPartnerId1,
         body: 'not empty',
-        id: 10,
         model: 'mail.channel',
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    const { createThreadViewComponent, messaging } = await start({
-        data: this.data,
-        hasChatWindow: true,
-    });
-    const correspondent = messaging.models['Partner'].insert({ id: 10 });
+    const { createThreadViewComponent, messaging } = await start({ hasChatWindow: true });
+    const correspondent = messaging.models['Partner'].insert({ id: resPartnerId1 });
     const thread = await correspondent.getChat();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
@@ -942,7 +918,7 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
 QUnit.test('message should not be considered as "clicked" after clicking on its author name', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const { createMessageComponent, messaging } = await start();
     const message = messaging.models['Message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
         body: "<p>Test</p>",
@@ -961,7 +937,7 @@ QUnit.test('message should not be considered as "clicked" after clicking on its 
 QUnit.test('message should not be considered as "clicked" after clicking on its author avatar', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const { createMessageComponent, messaging } = await start();
     const message = messaging.models['Message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
         body: "<p>Test</p>",
@@ -980,25 +956,24 @@ QUnit.test('message should not be considered as "clicked" after clicking on its 
 QUnit.test('message should not be considered as "clicked" after clicking on notification failure icon', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 10 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
-        id: 10,
         model: 'mail.channel',
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    this.data['mail.notification'].records.push({
-        id: 11,
-        mail_message_id: 10,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'exception',
         notification_type: 'email',
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
