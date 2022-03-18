@@ -326,7 +326,7 @@ class Channel(models.Model):
         })
         return result
 
-    def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, post_joined_message=True):
+    def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
         """ Adds the given partner_ids and guest_ids as member of self channels. """
         self.check_access_rights('write')
         self.check_access_rule('write')
@@ -377,6 +377,7 @@ class Channel(models.Model):
                     notifications.append((channel_partner.partner_id, 'mail.channel/joined', {
                         'channel': channel_partner.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).sudo().channel_info()[0],
                         'invited_by_user_id': self.env.user.id,
+                        'open_chat_window': open_chat_window,
                     }))
 
                 if post_joined_message:
