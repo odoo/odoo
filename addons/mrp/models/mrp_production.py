@@ -6,7 +6,7 @@ from collections import defaultdict
 from itertools import groupby
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import date_utils, float_compare, float_round, float_is_zero
 
 
@@ -495,6 +495,13 @@ class MrpProduction(models.Model):
         self.move_raw_ids.update({'picking_type_id': self.picking_type_id})
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
+
+    @api.constrains('product_id', 'move_raw_ids')
+    def _check_production_lines(self):
+        for production in self:
+            for move in production.move_raw_ids:
+                if production.product_id == move.product_id:
+                    raise ValidationError(_("The component %s should not be the same as the product to produce.") % production.product_id.display_name)
 
     def write(self, vals):
         res = super(MrpProduction, self).write(vals)
