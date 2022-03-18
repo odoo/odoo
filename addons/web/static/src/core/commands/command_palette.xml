@@ -4,7 +4,8 @@
   <t t-name="web.CommandPalette" owl="1">
     <div>
       <div class="o_command_palette_search">
-        <input type="text" t-model="state.searchValue" t-on-input="onSearchInput" t-ref="autofocus" t-att-placeholder="state.placeholder"/>
+        <span t-if="state.namespace !== 'default'" class="o_namespace" t-esc="state.namespace"/>
+        <input type="text" t-att-value="state.searchValue"  t-ref="autofocus" t-att-placeholder="state.placeholder" t-on-input="onSearchInput" t-on-keydown="onKeyDown"/>
         <i  t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="fa fa-search"></i>
       </div>
 
@@ -16,7 +17,7 @@
               <t t-foreach="category.commands" t-as="command"  t-key="command.keyId">
                 <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
                 <div t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="() => this.onCommandClicked(commandIndex)" t-on-mouseenter="() => this.onCommandMouseEnter(commandIndex)" t-on-close="() => this.props.closeMe()">
-                  <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="clearSearchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
+                  <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="state.searchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
                     <t t-set-slot="name">
                         <span class="o_command_name">
                           <t t-foreach="command.splitName" t-as="name" t-key="name_index">
@@ -37,7 +38,7 @@
       </div>
 
       <div t-if="state.FooterComponent" class="o_command_palette_footer">
-        <t t-component="state.FooterComponent" switchNamespace="(namespace) => this.switchNamespace(namespace)"/>
+        <t t-component="state.FooterComponent" switchNamespace="(namespace) => this.debounceSearch(namespace.concat(this.state.searchValue))"/>
       </div>
 
     </div>
