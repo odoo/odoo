@@ -32,7 +32,7 @@ class IrConfigParameter(models.Model):
     _rec_name = 'key'
     _order = 'key'
 
-    key = fields.Char(required=True, index=True)
+    key = fields.Char(required=True)
     value = fields.Text(required=True)
 
     _sql_constraints = [
