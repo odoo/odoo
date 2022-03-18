@@ -112,8 +112,8 @@ class PortalMixin(models.AbstractModel):
                     access_uid=access_uid, force_website=force_website
                 )
             user = self.env['res.users'].sudo().browse(access_uid)
-        if user.share or force_website:
             record = self.with_user(user)
+        if user.share or force_website:
             try:
                 record.check_access_rights('read')
                 record.check_access_rule('read')
