@@ -716,6 +716,13 @@ class MrpProduction(models.Model):
             if sum(order.move_byproduct_ids.mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a manufacturing order's by-products cannot exceed 100."))
 
+    @api.constrains('product_id', 'move_raw_ids')
+    def _check_production_lines(self):
+        for production in self:
+            for move in production.move_raw_ids:
+                if production.product_id == move.product_id:
+                    raise ValidationError(_("The component %s should not be the same as the product to produce.") % production.product_id.display_name)
+
     def write(self, vals):
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
