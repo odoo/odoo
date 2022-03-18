@@ -1282,9 +1282,12 @@ class HolidaysRequest(models.Model):
                     if holiday.employee_id == current_employee:
                         raise UserError(_('Only a Time Off Manager can approve/refuse its own requests.'))
 
-                    if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager') and holiday.holiday_type == 'employee':
+                    if (state == 'validate1' and val_type == 'both') and holiday.holiday_type == 'employee':
                         if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
                             raise UserError(_('You must be either %s\'s manager or Time off Manager to approve this leave') % (holiday.employee_id.name))
+
+                    if (state == 'validate' and val_type == 'manager') and self.env.user != holiday.employee_id.leave_manager_id:
+                        raise UserError(_('You must be %s\'s Manager to approve this leave', holiday.employee_id.name))
 
                     if not is_officer and (state == 'validate' and val_type == 'hr') and holiday.holiday_type == 'employee':
                         raise UserError(_('You must either be a Time off Officer or Time off Manager to approve this leave'))
