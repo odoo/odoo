@@ -150,9 +150,12 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
+        if self.env.su:
+            self = self.with_user(SUPERUSER_ID)
+
         for order in self:
             if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
-                order.sale_order_template_id.mail_template_id.with_user(SUPERUSER_ID).send_mail(order.id)
+                order.sale_order_template_id.mail_template_id.send_mail(order.id)
         return res
 
     def get_access_action(self, access_uid=None):
