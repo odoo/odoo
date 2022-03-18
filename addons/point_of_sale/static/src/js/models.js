@@ -390,7 +390,7 @@ class PosGlobalState extends PosModel {
         }
         for (var i = 0; i < jsons.length; i++) {
             var json = jsons[i];
-            if (json.pos_session_id !== this.pos_session.id && json.lines.length > 0) {
+            if (json.pos_session_id !== this.pos_session.id && (json.lines.length > 0 || json.statement_ids.length > 0)) {
                 orders.push(this.createAutomaticallySavedOrder(json));
             } else if (json.pos_session_id !== this.pos_session.id) {
                 this.db.remove_unpaid_order(jsons[i]);
