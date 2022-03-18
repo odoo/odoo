@@ -7,6 +7,9 @@
     'summary': 'Create lead from livechat conversation',
     'data': [
         'data/utm_data.xml',
+        'data/crm_livechat_chatbot_data.xml',
+        'views/chatbot_script_views.xml',
+        'views/chatbot_script_step_views.xml',
     ],
     'depends': [
         'crm',
