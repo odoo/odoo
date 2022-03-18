@@ -44,6 +44,12 @@ registerModel({
                 this.threadView.handleVisibleMessage(this.message);
             }
         },
+        onMouseenter() {
+            this.update({ isHovered: true });
+        },
+        onMouseleave() {
+            this.update({ isHovered: false });
+        },
         /**
          * Action to initiate reply to current messageView.
          */
@@ -245,6 +251,13 @@ registerModel({
          * be set through @see highlight()
          */
         isHighlighted: attr(),
+        /**
+         * Determine whether the message is hovered. When message is hovered
+         * it displays message actions.
+         */
+        isHovered: attr({
+            default: false,
+        }),
         /**
          * Tells whether the message is selected in the current thread viewer.
          */

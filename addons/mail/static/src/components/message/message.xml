@@ -17,7 +17,7 @@
                     'o-squashed': messageView.isSquashed,
                     'o-starred': messageView.message.isStarred,
                     'mt-3': !messageView.isSquashed and messageView.threadView,
-                }" t-attf-class="{{ messageView.extraClass }} {{ className }}" t-on-click="_onClick" t-on-mouseenter="() => state.isHovered = true" t-on-mouseleave="() => state.isHovered = false" t-att-data-message-local-id="messageView.message.localId"
+                }" t-attf-class="{{ messageView.extraClass }} {{ className }}" t-on-click="_onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-message-local-id="messageView.message.localId"
                 t-ref="root"
             >
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" messageInReplyToViewLocalId="messageView.messageInReplyToView.localId"/>
