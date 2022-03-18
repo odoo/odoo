@@ -389,6 +389,8 @@ class Project(models.Model):
             **super()._get_profitability_labels(),
             'billable_fixed': _lt('Timesheets (Fixed Price)'),
             'billable_time': _lt('Timesheets (Billed on Timesheets)'),
+            'billable_milestones': _lt('Timesheets (Billed on Milestones)'),
+            'billable_manual': _lt('Timesheets (Billed Manually)'),
             'non_billable': _lt('Timesheets (Non Billable)'),
         }
 
@@ -404,7 +406,7 @@ class Project(models.Model):
             total_invoiced = total_to_invoice = 0.0
             revenue_data = []
             for revenue in profitability_items['revenues']['data']:
-                if revenue['id'] in ['billable_fixed', 'billable_time', 'billable_milestones']:
+                if revenue['id'] in ['billable_fixed', 'billable_time', 'billable_milestones', 'billable_manual']:
                     continue
                 total_invoiced += revenue['invoiced']
                 total_to_invoice += revenue['to_invoice']
