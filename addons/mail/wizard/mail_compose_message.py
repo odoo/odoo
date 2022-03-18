@@ -473,6 +473,9 @@ class MailComposer(models.TransientModel):
         blacklist_ids = self._get_blacklist_record_ids(mail_values_dict)
         optout_emails = self._get_optout_emails(mail_values_dict)
         done_emails = self._get_done_emails(mail_values_dict)
+        mailing_contact_based = False
+        if 'mass_mailing_id' in self._fields and self.mass_mailing_id:
+            mailing_contact_based = True
 
         for record_id, mail_values in mail_values_dict.items():
             recipients = recipients_info[record_id]
@@ -495,7 +498,7 @@ class MailComposer(models.TransientModel):
             elif optout_emails and mail_to in optout_emails:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_optout'
-            elif done_emails and mail_to in done_emails:
+            elif mailing_contact_based and done_emails and mail_to in done_emails:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_dup'
             # void of falsy values -> error
@@ -505,7 +508,7 @@ class MailComposer(models.TransientModel):
             elif not mail_to_normalized or not email_re.findall(mail_to):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
-            elif done_emails is not None:
+            elif mailing_contact_based and done_emails is not None:
                 done_emails.append(mail_to)
 
         return mail_values_dict
