@@ -255,7 +255,10 @@ class Website(Home):
             return request.redirect('/')
         if request.env.lang != website_id.default_lang_id.code:
             return request.redirect('/%s%s' % (website_id.default_lang_id.url_code, request.httprequest.path))
-        return request.render('website.website_configurator')
+        action_url = '/web#action=website.website_configurator&menu_id=%s' % request.env.ref('website.menu_website_configuration').id
+        if step > 1:
+            action_url += '&step=' + str(step)
+        return request.redirect(action_url)
 
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
     def social(self, social, **kwargs):

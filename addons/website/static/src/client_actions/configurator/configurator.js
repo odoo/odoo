@@ -2,14 +2,13 @@
 
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
-import session from 'web.session';
 import {ColorpickerWidget} from 'web.Colorpicker';
-import {_t, _lt} from 'web.core';
+import {_t, _lt, qweb} from 'web.core';
 import {svgToPNG} from 'website.utils';
-import {useService} from "@web/core/utils/hooks";
-import {renderToString} from "@web/core/utils/render";
+import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
 
-const { App, Component, onMounted, reactive, useEnv, useRef, useState, whenReady } = owl;
+const { Component, onMounted, reactive, useEnv, useRef, useState, useSubEnv, onWillStart } = owl;
 
 const ROUTES = {
     descriptionScreen: 2,
@@ -61,28 +60,20 @@ const PALETTE_NAMES = [
 // from CSS and added in each palette.
 const CUSTOM_BG_COLOR_ATTRS = ['menu', 'footer'];
 
-const SESSION_STORAGE_ITEM_NAME = 'websiteConfigurator' + session.website_id;
-
 //------------------------------------------------------------------------------
 // Components
 //------------------------------------------------------------------------------
 
-class SkipButton extends Component {
-    async skip() {
-        await skipConfigurator(Component.env.services);
-    }
-}
-
+class SkipButton extends Component {}
 SkipButton.template = 'website.Configurator.SkipButton';
 
 class WelcomeScreen extends Component {
     setup() {
         this.state = useStore();
-        this.router = useRouter();
     }
 
     goToDescription() {
-        this.router.navigate(ROUTES.descriptionScreen);
+        this.props.navigate(ROUTES.descriptionScreen);
     }
 }
 
@@ -95,7 +86,6 @@ class DescriptionScreen extends Component {
     setup() {
         this.industrySelection = useRef('industrySelection');
         this.state = useStore();
-        this.router = useRouter();
         this.labelToId = {};
         this.autocompleteHasResults = true;
 
@@ -278,7 +268,7 @@ class DescriptionScreen extends Component {
     checkDescriptionCompletion() {
         const {selectedType, selectedPurpose, selectedIndustry} = this.state;
         if (selectedType && selectedPurpose && selectedIndustry) {
-            this.router.navigate(ROUTES.paletteSelectionScreen);
+            this.props.navigate(ROUTES.paletteSelectionScreen);
         }
     }
 }
@@ -291,10 +281,10 @@ Object.assign(DescriptionScreen, {
 class PaletteSelectionScreen extends Component {
     setup() {
         this.state = useStore();
-        this.router = useRouter();
         this.logoInputRef = useRef('logoSelectionInput');
         this.notification = useService("notification");
         this.rpc = useService("rpc");
+        this.orm = useService('orm');
 
         onMounted(() => {
             if (this.state.logo) {
@@ -312,13 +302,10 @@ class PaletteSelectionScreen extends Component {
         if (logoSelectInput.files.length === 1) {
             const file = logoSelectInput.files[0];
             const data = await utils.getDataURLFromFile(file);
-            const attachment = await this.rpc({
-                route: '/web_editor/attachment/add_data',
-                params: {
-                    'name': 'logo',
-                    'data': data.split(',')[1],
-                    'is_image': true,
-                },
+            const attachment = await this.rpc('/web_editor/attachment/add_data', {
+                'name': 'logo',
+                'data': data.split(',')[1],
+                'is_image': true,
             });
             if (!attachment.error) {
                 this.state.changeLogo(data, attachment.id);
@@ -338,18 +325,17 @@ class PaletteSelectionScreen extends Component {
             img = await svgToPNG(img);
         }
         img = img.split(',')[1];
-        const [color1, color2] = await this.rpc({
-            model: 'base.document.layout',
-            method: 'extract_image_primary_secondary_colors',
-            args: [img],
-            kwargs: {mitigate: 255},
-        });
+        const [color1, color2] = await this.orm.call('base.document.layout',
+            'extract_image_primary_secondary_colors',
+            [img],
+            {mitigate: 255},
+        );
         this.state.setRecommendedPalette(color1, color2);
     }
 
     selectPalette(paletteName) {
         this.state.selectPalette(paletteName);
-        this.router.navigate(ROUTES.featuresSelectionScreen);
+        this.props.navigate(ROUTES.featuresSelectionScreen);
     }
 }
 
@@ -358,32 +344,78 @@ Object.assign(PaletteSelectionScreen, {
     template: 'website.Configurator.PaletteSelectionScreen',
 });
 
-class FeaturesSelectionScreen extends Component {
+class ApplyConfiguratorScreen extends Component {
+    async applyConfigurator(themeName) {
+        if (!this.state.selectedIndustry) {
+            return this.props.navigate(ROUTES.descriptionScreen);
+        }
+        if (!this.state.selectedPalette) {
+            return this.props.navigate(ROUTES.paletteSelectionScreen);
+        }
+        if (themeName !== undefined) {
+            $('body').append(qweb.render('website.ThemePreview.Loader', {showTips: true}));
+            const selectedFeatures = Object.values(this.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
+            let selectedPalette = this.state.selectedPalette.name;
+            if (!selectedPalette) {
+                selectedPalette = [
+                    this.state.selectedPalette.color1,
+                    this.state.selectedPalette.color2,
+                    this.state.selectedPalette.color3,
+                    this.state.selectedPalette.color4,
+                    this.state.selectedPalette.color5,
+                ];
+            }
+
+            const resp = await this.orm.silent.call('website',
+                'configurator_apply',
+                [],
+                {
+                    'selected_features': selectedFeatures,
+                    'industry_id': this.state.selectedIndustry.id,
+                    'selected_palette': selectedPalette,
+                    'theme_name': themeName,
+                    'website_purpose': WEBSITE_PURPOSES[this.state.selectedPurpose].name,
+                    'website_type': WEBSITE_TYPES[this.state.selectedType].name,
+                    'logo_attachment_id': this.state.logoAttachmentId,
+                });
+
+            this.props.clearStorage();
+
+            // Here the website service goToWebsite method is not used because
+            // the web client needs to be reloaded after the new modules have
+            // been installed.
+            window.location.replace(`/web#action=website.website_preview&website_id=${resp.website_id}&enable_editor=1`);
+        }
+    }
+}
+
+class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
     setup() {
+        super.setup();
+
+        this.orm = useService("orm");
         this.state = useStore();
-        this.router = useRouter();
-        this.rpc = useService("rpc");
     }
 
     async buildWebsite() {
         const industryId = this.state.selectedIndustry && this.state.selectedIndustry.id;
         if (!industryId) {
-            return this.router.navigate(ROUTES.descriptionScreen);
+            return this.props.navigate(ROUTES.descriptionScreen);
         }
-        const themes = await this.rpc({
-            model: 'website',
-            method: 'configurator_recommended_themes',
-            kwargs: {
+        const themes = await this.orm.call('website',
+            'configurator_recommended_themes',
+            [],
+            {
                 'industry_id': industryId,
                 'palette': this.state.selectedPalette,
             },
-        });
+        );
 
         if (!themes.length) {
-            await applyConfigurator(this, 'theme_default');
+            await this.applyConfigurator('theme_default');
         } else {
             this.state.updateRecommendedThemes(themes);
-            this.router.navigate(ROUTES.themeSelectionScreen);
+            this.props.navigate(ROUTES.themeSelectionScreen);
         }
     }
 }
@@ -393,11 +425,12 @@ Object.assign(FeaturesSelectionScreen, {
     template: 'website.Configurator.FeatureSelection',
 });
 
-class ThemeSelectionScreen extends Component {
+class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     setup() {
+        super.setup();
+
+        this.orm = useService('orm');
         this.state = useStore();
-        this.router = useRouter();
-        this.rpc = useService('rpc');
         this.themeSVGPreviews = [useRef('ThemePreview1'), useRef('ThemePreview2'), useRef('ThemePreview3')];
 
         onMounted(() => {
@@ -408,56 +441,19 @@ class ThemeSelectionScreen extends Component {
     }
 
     async chooseTheme(themeName) {
-        await applyConfigurator(this, themeName);
+        await this.applyConfigurator(themeName);
     }
 }
 
 ThemeSelectionScreen.template = 'website.Configurator.ThemeSelectionScreen';
-
-class Configurator extends Component {
-    setup() {
-        this.router = useRouter();
-    }
-}
-
-Object.assign(Configurator, {
-    components: {
-        WelcomeScreen,
-        DescriptionScreen,
-        PaletteSelectionScreen,
-        FeaturesSelectionScreen,
-        ThemeSelectionScreen,
-    },
-    template: 'website.Configurator.Configurator',
-});
-
-//------------------------------------------------------------------------------
-// Router
-//------------------------------------------------------------------------------
-
-class Router {
-    constructor() {
-        this.location = window.location.pathname;
-    }
-
-    navigate(id) {
-        this.location = `/website/configurator${id ? '/' + id : ''}`;
-        history.pushState({}, '', window.location.origin + this.location);
-    }
-}
-
-function useRouter() {
-    const env = useEnv();
-    return useState(env.router);
-}
 
 //------------------------------------------------------------------------------
 // Store
 //------------------------------------------------------------------------------
 
 class Store {
-    async start() {
-        Object.assign(this, await getInitialState(Component.env.services));
+    async start(getInitialState) {
+        Object.assign(this, await getInitialState());
     }
 
     //-------------------------------------------------------------------------
@@ -572,193 +568,174 @@ class Store {
     }
 }
 
-async function getInitialState(services) {
-    // Load values from python and iap
-    var results = await services.rpc({
-        model: 'website',
-        method: 'configurator_init',
-    });
-    const r = {
-        industries: results.industries,
-        logo: results.logo ? 'data:image/png;base64,' + results.logo : false,
-    };
-    r.industries = r.industries.map((industry, index) => ({
-        ...industry,
-        wordCount: industry.label.split(" ").length,
-        hitCountOrder: index,
-    }));
-
-    // Load palettes from the current CSS
-    const palettes = {};
-    const style = window.getComputedStyle(document.documentElement);
-
-    PALETTE_NAMES.forEach((paletteName) => {
-        const palette = {
-            name: paletteName
-        };
-        for (let j = 1; j <= 5; j += 1) {
-            palette[`color${j}`] = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${j}`, style);
-        }
-        CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
-            palette[attr] = weUtils.getCSSVariableValue(`o-palette-${paletteName}-${attr}-bg`, style);
-        });
-        palettes[paletteName] = palette;
-    });
-
-    const localState = JSON.parse(window.sessionStorage.getItem(SESSION_STORAGE_ITEM_NAME));
-    if (localState) {
-        let themes = [];
-        if (localState.selectedIndustry && localState.selectedPalette) {
-            themes = await services.rpc({
-                model: 'website',
-                method: 'configurator_recommended_themes',
-                kwargs: {
-                    'industry_id': localState.selectedIndustry.id,
-                    'palette': localState.selectedPalette,
-                },
-            });
-        }
-        return Object.assign(r, {...localState, palettes, themes});
-    }
-
-    const features = {};
-    results.features.forEach(feature => {
-        features[feature.id] = Object.assign({}, feature, {selected: feature.module_state === 'installed'});
-        const wtp = features[feature.id]['website_config_preselection'];
-        features[feature.id]['website_config_preselection'] = wtp ? wtp.split(',') : [];
-    });
-
-    // Palette color used by default as background color for menu and footer.
-    // Needed to build the recommended palette.
-    const defaultColors = {};
-    CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
-        const color = weUtils.getCSSVariableValue(`o-default-${attr}-bg`, style);
-        const match = color.match(/o-color-(?<idx>[1-5])/);
-        const colorIdx = parseInt(match.groups['idx']);
-        defaultColors[attr] = `color${colorIdx}`;
-    });
-
-    return Object.assign(r, {
-        selectedType: undefined,
-        selectedPurpose: undefined,
-        selectedIndustry: undefined,
-        selectedPalette: undefined,
-        recommendedPalette: undefined,
-        defaultColors: defaultColors,
-        palettes: palettes,
-        features: features,
-        themes: [],
-        logoAttachmentId: undefined,
-    });
-}
-
 function useStore() {
     const env = useEnv();
-    return useState(env.state);
+    return useState(env.store);
 }
 
-//------------------------------------------------------------------------------
-// Helpers
-//------------------------------------------------------------------------------
+class Configurator extends Component {
+    setup() {
+        this.orm = useService('orm');
+        this.action = useService('action');
+        this.router = useService('router');
 
-async function skipConfigurator(services) {
-    await services.rpc({
-        model: 'website',
-        method: 'configurator_skip',
-    });
-    window.sessionStorage.removeItem(SESSION_STORAGE_ITEM_NAME);
-    window.location = '/web#action=website.theme_install_kanban_action';
-}
+        const initialStep = this.props.action.context.params && this.props.action.context.params.step;
+        const store = reactive(new Store(), () => this.updateStorage(store));
 
-async function applyConfigurator(self, themeName) {
-    if (!self.state.selectedIndustry) {
-        return self.router.navigate(ROUTES.descriptionScreen);
+        this.state = useState({
+            currentStep: initialStep,
+        });
+
+        useSubEnv({ store });
+
+        onWillStart(async () => {
+            this.websiteId = (await this.orm.call('website', 'get_current_website')).match(/\d+/)[0];
+
+            await store.start(() => this.getInitialState());
+            this.updateStorage(store);
+            if (!store.industries) {
+                await this.skipConfigurator();
+            }
+        });
+
+        // This is a hack to overwrite the history state, modified by the
+        // router service after executing an action. Ideally, the router
+        // service would let us push a state with a new pathname.
+        onMounted(() => {
+            setTimeout(() => {
+                this.router.cancelPushes();
+                this.updateBrowserUrl();
+            });
+        });
     }
-    if (!self.state.selectedPalette) {
-        return self.router.navigate(ROUTES.paletteSelectionScreen);
+
+    get pathname() {
+        return `/website/configurator${this.state.currentStep ? `/${this.state.currentStep}` : ''}`;
     }
-    if (themeName !== undefined) {
-        const loader = renderToString('website.ThemePreview.Loader', {showTips: true});
-        $('body').append(loader);
-        const selectedFeatures = Object.values(self.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
-        let selectedPalette = self.state.selectedPalette.name;
-        if (!selectedPalette) {
-            selectedPalette = [
-                self.state.selectedPalette.color1,
-                self.state.selectedPalette.color2,
-                self.state.selectedPalette.color3,
-                self.state.selectedPalette.color4,
-                self.state.selectedPalette.color5,
-            ];
+
+    get storageItemName() {
+        return `websiteConfigurator${this.websiteId}`;
+    }
+
+    updateBrowserUrl() {
+        history.pushState({}, '', this.pathname);
+    }
+
+    navigate(step) {
+        this.state.currentStep = step;
+        this.updateBrowserUrl();
+    }
+
+    clearStorage() {
+        window.sessionStorage.removeItem(this.storageItemName);
+    }
+
+    async getInitialState() {
+        // Load values from python and iap
+        var results = await this.orm.call('website', 'configurator_init');
+        const r = {
+            industries: results.industries,
+            logo: results.logo ? 'data:image/png;base64,' + results.logo : false,
+        };
+        r.industries = r.industries.map((industry, index) => ({
+            ...industry,
+            wordCount: industry.label.split(" ").length,
+            hitCountOrder: index,
+        }));
+
+        // Load palettes from the current CSS
+        const palettes = {};
+        const style = window.getComputedStyle(document.documentElement);
+
+        PALETTE_NAMES.forEach((paletteName) => {
+            const palette = {
+                name: paletteName
+            };
+            for (let j = 1; j <= 5; j += 1) {
+                palette[`color${j}`] = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${j}`, style);
+            }
+            CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
+                palette[attr] = weUtils.getCSSVariableValue(`o-palette-${paletteName}-${attr}-bg`, style);
+            });
+            palettes[paletteName] = palette;
+        });
+
+        const localState = JSON.parse(window.sessionStorage.getItem(this.storageItemName));
+        if (localState) {
+            let themes = [];
+            if (localState.selectedIndustry && localState.selectedPalette) {
+                themes = await this.orm.call('website', 'configurator_recommended_themes', [], {
+                    'industry_id': localState.selectedIndustry.id,
+                    'palette': localState.selectedPalette,
+                });
+            }
+            return Object.assign(r, {...localState, palettes, themes});
         }
-        const resp = await self.rpc({
-            model: 'website',
-            method: 'configurator_apply',
-            kwargs: {
-                'selected_features': selectedFeatures,
-                'industry_id': self.state.selectedIndustry.id,
-                'selected_palette': selectedPalette,
-                'theme_name': themeName,
-                'website_purpose': WEBSITE_PURPOSES[self.state.selectedPurpose].name,
-                'website_type': WEBSITE_TYPES[self.state.selectedType].name,
-                'logo_attachment_id': self.state.logoAttachmentId,
-            },
+
+        const features = {};
+        results.features.forEach(feature => {
+            features[feature.id] = Object.assign({}, feature, {selected: feature.module_state === 'installed'});
+            const wtp = features[feature.id]['website_config_preselection'];
+            features[feature.id]['website_config_preselection'] = wtp ? wtp.split(',') : [];
         });
-        window.sessionStorage.removeItem(SESSION_STORAGE_ITEM_NAME);
-        window.location = resp.url;
+
+        // Palette color used by default as background color for menu and footer.
+        // Needed to build the recommended palette.
+        const defaultColors = {};
+        CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
+            const color = weUtils.getCSSVariableValue(`o-default-${attr}-bg`, style);
+            const match = color.match(/o-color-(?<idx>[1-5])/);
+            const colorIdx = parseInt(match.groups['idx']);
+            defaultColors[attr] = `color${colorIdx}`;
+        });
+
+        return Object.assign(r, {
+            selectedType: undefined,
+            selectedPurpose: undefined,
+            selectedIndustry: undefined,
+            selectedPalette: undefined,
+            recommendedPalette: undefined,
+            defaultColors: defaultColors,
+            palettes: palettes,
+            features: features,
+            themes: [],
+            logoAttachmentId: undefined,
+        });
+    }
+
+    updateStorage(state) {
+        const newState = JSON.stringify({
+            defaultColors: state.defaultColors,
+            features: state.features,
+            logo: state.logo,
+            logoAttachmentId: state.logoAttachmentId,
+            selectedIndustry: state.selectedIndustry,
+            selectedPalette: state.selectedPalette,
+            selectedPurpose: state.selectedPurpose,
+            selectedType: state.selectedType,
+            recommendedPalette: state.recommendedPalette,
+        });
+        window.sessionStorage.setItem(this.storageItemName, newState);
+    }
+
+    async skipConfigurator() {
+        await this.orm.call('website', 'configurator_skip');
+        this.clearStorage();
+        this.action.doAction('website.theme_install_kanban_action', {
+            clearBreadcrumbs: true,
+        });
     }
 }
 
-function updateStorage(state) {
-    const newState = JSON.stringify({
-        defaultColors: state.defaultColors,
-        features: state.features,
-        logo: state.logo,
-        logoAttachmentId: state.logoAttachmentId,
-        selectedIndustry: state.selectedIndustry,
-        selectedPalette: state.selectedPalette,
-        selectedPurpose: state.selectedPurpose,
-        selectedType: state.selectedType,
-        recommendedPalette: state.recommendedPalette,
-    });
-    window.sessionStorage.setItem(SESSION_STORAGE_ITEM_NAME, newState);
-}
+Object.assign(Configurator, {
+    components: {
+        WelcomeScreen,
+        DescriptionScreen,
+        PaletteSelectionScreen,
+        FeaturesSelectionScreen,
+        ThemeSelectionScreen,
+    },
+    template: 'website.Configurator.Configurator',
+});
 
-async function makeEnvironment() {
-    const state = reactive(new Store(), () => updateStorage(state));
-    await state.start();
-    updateStorage(state);
-    const env = {
-        state,
-        router: reactive(new Router()),
-        services: Component.env.services,
-    };
-    await session.is_bound;
-    return env;
-}
-
-//------------------------------------------------------------------------------
-// Setup
-//------------------------------------------------------------------------------
-
-async function setup() {
-    const env = await makeEnvironment();
-    if (!env.state.industries) {
-        await skipConfigurator(env.services);
-    } else {
-        const templates = await (await fetch('/website/static/src/client_actions/configurator/configurator.xml')).text();
-        const app = new App(Configurator, {
-            env,
-            dev: env.debug,
-            templates,
-            translatableAttributes: ["data-tooltip"],
-            translateFn: _t,
-        });
-        const loaderTemplate = await (await fetch('/website/static/src/xml/theme_preview.xml')).text();
-        app.addTemplates(loaderTemplate);
-        renderToString.app = app;
-        await app.mount(document.body);
-    }
-}
-
-whenReady(setup);
+registry.category('actions').add('website_configurator', Configurator);

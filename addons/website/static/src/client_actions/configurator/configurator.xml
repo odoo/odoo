@@ -3,7 +3,7 @@
 
     <t t-name="website.Configurator.SkipButton" owl="1">
         <div class="container-fluid py-2 pb-md-3 text-right pr-lg-5">
-            <button class="btn btn-link" t-on-click="skip">Skip and start from scratch</button>
+            <button class="btn btn-link" t-on-click="this.props.skip">Skip and start from scratch</button>
         </div>
     </t>
 
@@ -22,7 +22,7 @@
                 <button class="o_configurator_show btn btn-primary btn-lg px-4 py-2" t-on-click="goToDescription">Let's do it</button>
             </div>
         </div>
-        <SkipButton/>
+        <SkipButton skip="this.props.skip"/>
     </div>
 </t>
 
@@ -83,7 +83,7 @@
                 </div>
             </div>
         </div>
-        <SkipButton/>
+        <SkipButton skip="this.props.skip"/>
     </div>
 </t>
 
@@ -145,7 +145,7 @@
                 </div>
             </div>
         </div>
-        <SkipButton/>
+        <SkipButton skip="this.props.skip"/>
     </div>
 </t>
 
@@ -187,7 +187,7 @@
                 </div>
             </div>
         </div>
-        <SkipButton/>
+        <SkipButton skip="this.props.skip"/>
     </div>
 </t>
 
@@ -238,11 +238,11 @@
 
 <t t-name="website.Configurator.Configurator" owl="1">
     <div class="o_configurator_container">
-        <DescriptionScreen t-if="router.location === '/website/configurator/2'"/>
-        <PaletteSelectionScreen t-elif="router.location === '/website/configurator/3'"/>
-        <FeaturesSelectionScreen t-elif="router.location === '/website/configurator/4'"/>
-        <ThemeSelectionScreen t-elif="router.location === '/website/configurator/5'"/>
-        <WelcomeScreen t-else=""/>
+        <DescriptionScreen t-if="state.currentStep === 2" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>
+        <PaletteSelectionScreen t-elif="state.currentStep === 3" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>
+        <FeaturesSelectionScreen t-elif="state.currentStep === 4" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator" clearStorage.bind="clearStorage"/>
+        <ThemeSelectionScreen t-elif="state.currentStep === 5" navigate="(screen) => this.navigate(screen)" clearStorage.bind="clearStorage"/>
+        <WelcomeScreen t-else="" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>
     </div>
 </t>
 

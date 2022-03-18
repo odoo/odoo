@@ -583,15 +583,15 @@
             action="website.website_preview"/>
 
         <!-- Configurator actions -->
-        <record id="start_configurator_act_url" model="ir.actions.act_url">
+        <record id="website_configurator" model="ir.actions.client">
             <field name="name">Website Configurator</field>
-            <field name="url">/website/configurator</field>
-            <field name="target">self</field>
+            <field name="tag">website_configurator</field>
+            <field name="target">fullscreen</field>
         </record>
 
         <record id="website_configurator_todo" model="ir.actions.todo">
             <field name="name">Start Website Configurator</field>
-            <field name="action_id" ref="start_configurator_act_url"/>
+            <field name="action_id" ref="website_configurator"/>
             <field name="sequence">0</field>
         </record>
     </data>
