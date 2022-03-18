@@ -205,7 +205,7 @@
             <field name="inherit_id" ref="base.view_users_simple_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='mobile']" position="after">
-                    <field name="create_employee" force_save="1" string="Create Employee"/>
+                    <field name="create_employee" force_save="1" string="Create Employee" attrs="{'invisible': [('id', '>', 0)]}"/>
                     <field name="create_employee_id" force_save="1" invisible="1"/>
                 </xpath>
             </field>
