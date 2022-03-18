@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.AttachmentCard" owl="1">
-        <div t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="attachmentCard">
+        <t t-if="attachmentCard">
+            <div t-attf-class="{{ className }}" t-ref="root">
                 <div class="o_AttachmentCard o-has-card-details d-flex rounded bg-300"
                      t-att-class="{
                             'o-downloadable': !attachmentCard.attachmentList.composerViewOwner,
@@ -57,7 +57,7 @@
                         </div>
                     </t>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 </templates>
