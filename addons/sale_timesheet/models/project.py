@@ -39,7 +39,7 @@ class Project(models.Model):
         "By extension, it defines the rate at which an employee's time on the project is billed.")
     allow_billable = fields.Boolean("Billable", help="Invoice your time and material from tasks.")
     billable_percentage = fields.Integer(
-        compute='_compute_billable_percentage',
+        compute='_compute_billable_percentage', groups='hr_timesheet.group_hr_timesheet_approver',
         help="% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit.")
     display_create_order = fields.Boolean(compute='_compute_display_create_order')
     timesheet_product_id = fields.Many2one(
@@ -52,7 +52,7 @@ class Project(models.Model):
         help='Select a Service product with which you would like to bill your time spent on tasks.',
         compute="_compute_timesheet_product_id", store=True, readonly=False,
         default=_default_timesheet_product_id)
-    warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
+    warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True)
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
 
     @api.depends('sale_line_id', 'sale_line_employee_ids', 'allow_billable')
