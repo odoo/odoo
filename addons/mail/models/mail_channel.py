@@ -320,7 +320,7 @@ class Channel(models.Model):
         })
         return result
 
-    def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False):
+    def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, post_joined_message=True):
         """ Adds the given partner_ids and guest_ids as member of self channels. """
         self.check_access_rights('write')
         self.check_access_rule('write')
@@ -359,27 +359,30 @@ class Channel(models.Model):
             members_data = []
             guest_members_data = []
             for channel_partner in new_members.filtered(lambda channel_partner: channel_partner.partner_id):
-                user = channel_partner.partner_id.user_ids[0] if channel_partner.partner_id.user_ids else self.env['res.users']
-                # notify invited members through the bus
-                if user:
-                    notifications.append((channel_partner.partner_id, 'mail.channel/joined', {
-                        'channel': channel_partner.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).sudo().channel_info()[0],
-                        'invited_by_user_id': self.env.user.id,
-                    }))
-                # notify existing members with a new message in the channel
-                if channel_partner.partner_id == self.env.user.partner_id:
-                    notification = _('<div class="o_mail_notification">joined the channel</div>')
-                else:
-                    notification = _(
-                        '<div class="o_mail_notification">invited %s to the channel</div>',
-                        channel_partner.partner_id._get_html_link(),
-                    )
-                channel_partner.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
                 members_data.append({
                     'id': channel_partner.partner_id.id,
                     'im_status': channel_partner.partner_id.im_status,
                     'name': channel_partner.partner_id.name,
                 })
+
+                # notify invited members through the bus
+                user = channel_partner.partner_id.user_ids[0] if channel_partner.partner_id.user_ids else self.env['res.users']
+                if user:
+                    notifications.append((channel_partner.partner_id, 'mail.channel/joined', {
+                        'channel': channel_partner.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).sudo().channel_info()[0],
+                        'invited_by_user_id': self.env.user.id,
+                    }))
+
+                if post_joined_message:
+                    # notify existing members with a new message in the channel
+                    if channel_partner.partner_id == self.env.user.partner_id:
+                        notification = _('<div class="o_mail_notification">joined the channel</div>')
+                    else:
+                        notification = _(
+                            '<div class="o_mail_notification">invited %s to the channel</div>',
+                            channel_partner.partner_id._get_html_link(),
+                        )
+                    channel_partner.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
             for channel_partner in new_members.filtered(lambda channel_partner: channel_partner.guest_id):
                 channel_partner.channel_id.message_post(body=_('<div class="o_mail_notification">joined the channel</div>'), message_type="notification", subtype_xmlid="mail.mt_comment")
                 guest_members_data.append({
