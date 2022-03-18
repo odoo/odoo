@@ -434,7 +434,9 @@ ALLOWED_KEYWORD = frozenset(['False', 'None', 'True', 'and', 'as', 'elif', 'else
 # regexpr for string formatting and extract ( ruby-style )|( jinja-style  ) used in `_compile_format`
 FORMAT_REGEX = re.compile(r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})')
 RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
+FISRT_RSTRIP_REGEXP = re.compile(r'^(\n[ \t]*)+(\n[ \t])')
 VARNAME_REGEXP = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
+TO_VARNAME_REGEXP = re.compile(r'[^A-Za-z0-9_]+')
 # Attribute name used outside the context of the QWeb.
 SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title'}
 # Name of the variable to insert the content in t-call in the template.
@@ -506,8 +508,6 @@ class IrQWeb(models.AbstractModel):
 
     _name = 'ir.qweb'
     _description = 'Qweb'
-
-    _name_gen = count()
 
     @QwebTracker.wrap_render
     @api.model
@@ -582,7 +582,7 @@ class IrQWeb(models.AbstractModel):
         except (ValueError, UserError) as e:
             message = str(e)
             ClassError = e.__class__
-            def not_found_template(self, values):
+            def not_found_template(self, values, gen0=None):
                 if self.env.context.get('raise_if_not_found', True):
                     raise ClassError(message)
                 _logger.warning('Cannot load template %s: %s', template, message)
@@ -615,19 +615,24 @@ class IrQWeb(models.AbstractModel):
 
         # generate code
 
-        def_name = f'template_{ref}' if isinstance(ref, int) else 'template'
+        compile_context['qweb_name_gen'] = count()
+
+        def_name = self._make_name(TO_VARNAME_REGEXP.sub(r'_', f'template_{ref}'), compile_context)
 
         try:
             if element.text:
-                element.text = re.compile(r'^(\n[ \t]*)+(\n[ \t])').sub(r'\2', element.text)
+                element.text = FISRT_RSTRIP_REGEXP.sub(r'\2', element.text)
 
+            compile_context['_all_def'] = []
             compile_context['_text_concat'] = []
             self._append_text("", compile_context) # To ensure the template function is a generator and doesn't become a regular function
             code_lines = (
-                [f'def {def_name}(self, values, log):']
+                [f'def {def_name}(self, values, gen0, log):']
                 + self._compile_node(element, compile_context, 1)
                 + self._flush_text(compile_context, 1, rstrip=True)
             )
+            for lines in compile_context['_all_def']:
+                code_lines.extend(lines)
         except QWebException:
             raise
         except Exception as e:
@@ -657,13 +662,15 @@ class IrQWeb(models.AbstractModel):
 
         # return the wrapped function
 
-        def render_template(self, values):
+        def render_template(self, values, gen0=None):
             try:
                 if not values.get('xmlid'):
-                    values['xmlid'] = compile_context['ref_name']
-                    values['viewid'] = compile_context['ref']
+                    values['xmlid'] = options['ref_name']
+                    values['viewid'] = options['ref']
                 log = {'last_path_node': None}
-                yield from compiled_fn(self, values, log)
+                if gen0 is None:
+                    gen0 = []
+                yield from compiled_fn(self, values, gen0, log)
             except (QWebException, TransactionRollbackError) as e:
                 raise
             except Exception as e:
@@ -857,9 +864,9 @@ class IrQWeb(models.AbstractModel):
         text_concat.clear()
         return [f"{'    ' * level}yield {text!r}"]
 
-    def _make_name(self, prefix='var'):
+    def _make_name(self, prefix, compile_context):
         """Generates a unique name."""
-        return f"{prefix}_{next(self._name_gen)}"
+        return f"{prefix}_{next(compile_context['qweb_name_gen'])}"
 
     def _is_static_node(self, el, compile_context):
         """ Test whether the given element is purely static, i.e. (there
@@ -1517,17 +1524,19 @@ class IrQWeb(models.AbstractModel):
                 code.append(indent_code(f"values.update({self._compile_expr(varname)})", level))
             else:
                 # set the content as value
-                def_name = self._make_name("qweb_t_set")
                 content = (
-                    self._compile_directive(el, compile_context, 'inner-content', level + 1) +
-                    self._flush_text(compile_context, level + 1))
+                    self._compile_directive(el, compile_context, 'inner-content', 1) +
+                    self._flush_text(compile_context, 1))
                 if content:
-                    code.append(indent_code(f"def {def_name}(self, values, log):", level))
-                    code.extend(content)
-                    expr = f"Markup(''.join({def_name}(self, values, log)))"
+                    def_name = self._make_name('t_set', compile_context)
+                    compile_context['_all_def'].append([f"def {def_name}(self, values, gen0, log):"] + content)
+                    expr = f"Markup(''.join({def_name}(self, values, gen0, log)))"
                 else:
                     expr = "''"
-                code.append(indent_code(f"values[{varname!r}] = {expr}", level))
+                if varname == T_CALL_SLOT:
+                    code.append(indent_code(f"gen0 = {expr}", level))
+                else:
+                    code.append(indent_code(f"values[{varname!r}] = {expr}", level))
 
         for key in list(el.attrib):
             if key.startswith('t-set-') or key.startswith('t-setf-'):
@@ -1732,9 +1741,9 @@ class IrQWeb(models.AbstractModel):
             self._compile_directives(el, compile_context, level + 1) +
             self._flush_text(compile_context, level + 1, rstrip=True))
 
-        t_foreach = self._make_name('t_foreach')
-        size = self._make_name('size')
-        has_value = self._make_name('has_value')
+        t_foreach = self._make_name('t_foreach', compile_context)
+        size = self._make_name('size', compile_context)
+        has_value = self._make_name('has_value', compile_context)
 
         if expr_foreach.isdigit():
             code.append(indent_code(f"""
@@ -1839,7 +1848,7 @@ class IrQWeb(models.AbstractModel):
         if expr == T_CALL_SLOT and code_options != 'True':
             code.append(indent_code("if True:", level))
             code.extend(tag_open)
-            code.append(indent_code("yield from values.get('0', [])", level + 1))
+            code.append(indent_code("yield from gen0", level + 1))
             code.extend(tag_close)
             return code
         elif ttype == 't-field':
@@ -1857,7 +1866,7 @@ class IrQWeb(models.AbstractModel):
             force_display_dependent = True
         else:
             if expr == T_CALL_SLOT:
-                code.append(indent_code("content = Markup(''.join(values.get('0', [])))", level))
+                code.append(indent_code("content = Markup(''.join(gen0))", level))
             else:
                 code.append(indent_code(f"content = {self._compile_expr(expr)}", level))
 
@@ -2007,14 +2016,18 @@ class IrQWeb(models.AbstractModel):
             code.append(indent_code(f"t_call_options.update(nsmap={{{', '.join(nsmap)}}})", level))
 
         # values (t-out="0" from content and variables from t-set and t-set-*)
-        def_name = self._make_name("t_call_values")
-        code.append(indent_code(f"def {def_name}(self, values, log):", level))
-        code.extend(self._compile_directive(el, compile_context, 'inner-content', level + 1))
-        code.extend(self._compile_directive(el, compile_context, 'set', level + 1))
+        def_name = self._make_name('t_call', compile_context)
+
+        # values from content (t-out="0" and t-set inside the content)
+        code_content = [f"def {def_name}(self, values, gen0, log):"]
+        code_content.extend(self._compile_directive(el, compile_context, 'inner-content', 1))
+        code_content.extend(self._compile_directive(el, compile_context, 'set', 1))
         self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
-        code.extend(self._flush_text(compile_context, level + 1, rstrip=True))
+        code_content.extend(self._flush_text(compile_context, 1, rstrip=True))
+        compile_context['_all_def'].append(code_content)
+
         code.append(indent_code("t_call_values = values.copy()", level))
-        code.append(indent_code(f"t_call_values['0'] = Markup(''.join({def_name}(self, t_call_values, log)))", level))
+        code.append(indent_code(f"t_call_gen0 = Markup(''.join({def_name}(self, t_call_values, gen0, log)))", level))
 
         template = self._compile_format(expr)
 
@@ -2022,7 +2035,7 @@ class IrQWeb(models.AbstractModel):
         code.append(indent_code(f"""
             irQweb = self.with_context(**t_call_options)
             render_template = irQweb._compile({template})
-            yield from render_template(irQweb, t_call_values)
+            yield from render_template(irQweb, t_call_values, t_call_gen0)
             """, level))
 
         return code
