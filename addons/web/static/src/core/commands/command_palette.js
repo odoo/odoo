@@ -81,7 +81,6 @@ export class CommandPalette extends Component {
         this.keepLast = new KeepLast();
         this.DefaultCommandItem = DefaultCommandItem;
         this.activeElement = useService("ui").activeElement;
-        this.defaultDebounceSearch = debounce.apply(this, [this.search, 0]);
         useAutofocus();
 
         useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
@@ -98,6 +97,7 @@ export class CommandPalette extends Component {
          * @type {{ commands: CommandItem[],
          *          emptyMessage: string,
          *          FooterComponent: Component,
+         *          namespace: string,
          *          placeholder: string,
          *          searchValue: string,
          *          selectedCommand: CommandItem }}
@@ -131,7 +131,6 @@ export class CommandPalette extends Component {
      */
     async setCommandPaletteConfig(config) {
         this.configByNamespace = config.configByNamespace || {};
-        this.debounceSearchByNamespace = {};
         this.state.FooterComponent = config.FooterComponent;
         this.state.placeholder = config.placeholder || DEFAULT_PLACEHOLDER.toString();
 
@@ -144,8 +143,10 @@ export class CommandPalette extends Component {
                 this.providersByNamespace[namespace] = [provider];
             }
         }
-        this.namespaces = Object.keys(this.providersByNamespace);
-        await this.search(config.searchValue || "");
+
+        const { namespace, searchValue } = this.processSearchValue(config.searchValue || "");
+        this.switchNamespace(namespace);
+        await this.search(searchValue);
     }
 
     /**
@@ -258,40 +259,53 @@ export class CommandPalette extends Component {
         }
     }
 
-    async search(value) {
-        this.state.searchValue = value;
-        const { namespace, searchValue } = this.processSearchValue(value);
-        await this.setCommands(namespace, {
+    async search(searchValue) {
+        this.state.searchValue = searchValue;
+        await this.setCommands(this.state.namespace, {
             searchValue,
             activeElement: this.activeElement,
         });
     }
 
     debounceSearch(value) {
-        const { namespace } = this.processSearchValue(value);
-        const namespaceConfig = this.configByNamespace[namespace] || {};
-        if (this.namespace !== namespace) {
-            if (this.lastDebounceSearch) {
-                this.lastDebounceSearch.cancel();
-            }
-            this.lastDebounceSearch = debounce(
-                (value) => this.search(value),
-                namespaceConfig.debounceDelay || 0
-            );
-            this.namespace = namespace;
+        const { namespace, searchValue } = this.processSearchValue(value);
+        if (namespace !== "default" && this.state.namespace !== namespace) {
+            this.switchNamespace(namespace);
         }
-        this.searchValuePromise = this.lastDebounceSearch(value).catch(() => {
+        this.searchValuePromise = this.lastDebounceSearch(searchValue).catch(() => {
             this.searchValuePromise = null;
         });
+        return searchValue;
     }
 
     onSearchInput(ev) {
-        this.debounceSearch(ev.target.value);
+        ev.target.value = this.debounceSearch(ev.target.value);
+    }
+
+    onKeyDown(ev) {
+        if (ev.key.toLowerCase() === "backspace" && !ev.target.value.length && !ev.repeat) {
+            this.switchNamespace("default");
+            this.searchValuePromise = this.lastDebounceSearch("").catch(() => {
+                this.searchValuePromise = null;
+            });
+        }
+    }
+
+    switchNamespace(namespace) {
+        if (this.lastDebounceSearch) {
+            this.lastDebounceSearch.cancel();
+        }
+        const namespaceConfig = this.configByNamespace[namespace] || {};
+        this.lastDebounceSearch = debounce(
+            (value) => this.search(value),
+            namespaceConfig.debounceDelay || 0
+        );
+        this.state.namespace = namespace;
     }
 
     processSearchValue(searchValue) {
         let namespace = "default";
-        if (searchValue.length && this.namespaces.includes(searchValue[0])) {
+        if (searchValue.length && this.providersByNamespace[searchValue[0]]) {
             namespace = searchValue[0];
             searchValue = searchValue.slice(1);
         }
