@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Activity" owl="1">
-        <div class="o_Activity d-flex p-2" t-attf-class="{{ className }}" t-on-click="activityView and activityView.onClickActivity" t-ref="root">
-            <t t-if="activityView">
+        <t t-if="activityView">
+            <div class="o_Activity d-flex p-2" t-attf-class="{{ className }}" t-on-click="activityView.onClickActivity" t-ref="root">
                 <div class="o_Activity_sidebar mr-3">
                     <div class="o_Activity_user position-relative h-100 w-100">
                         <t t-if="activityView.activity.assignee">
@@ -144,8 +144,8 @@
                         </div>
                     </t>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
