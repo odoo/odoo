@@ -4,7 +4,7 @@
 from json import dumps
 from datetime import datetime, time
 
-from odoo import api, fields, models, SUPERUSER_ID
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv.expression import AND
 from odoo.tools import get_month, subtract, format_date
 
@@ -19,6 +19,17 @@ class StockReplenishmentInfo(models.TransientModel):
     qty_to_order = fields.Float(related='orderpoint_id.qty_to_order')
     json_lead_days = fields.Char(compute='_compute_json_lead_days')
     json_replenishment_history = fields.Char(compute='_compute_json_replenishment_history')
+
+    warehouseinfo_ids = fields.One2many(related='orderpoint_id.warehouse_id.resupply_route_ids')
+    wh_replenishment_option_ids = fields.One2many('stock.replenishment.option', 'replenishment_info_id', compute='_compute_wh_replenishment_options')
+
+    @api.depends('orderpoint_id')
+    def _compute_wh_replenishment_options(self):
+        for replenishment_info in self:
+            replenishment_info.wh_replenishment_option_ids = self.env['stock.replenishment.option'].create([
+                {'product_id': replenishment_info.product_id.id, 'route_id': route_id.id, 'replenishment_info_id': replenishment_info.id}
+                for route_id in replenishment_info.warehouseinfo_ids
+            ])
 
     @api.depends('orderpoint_id')
     def _compute_json_lead_days(self):
@@ -78,3 +89,63 @@ class StockReplenishmentInfo(models.TransientModel):
                 'template': 'stock.replenishmentHistory',
                 'replenishment_history': replenishment_history
             })
+
+
+class StockReplenishmentOption(models.TransientModel):
+    _name = 'stock.replenishment.option'
+    _description = 'Stock warehouse replenishment option'
+
+    route_id = fields.Many2one('stock.route')
+    product_id = fields.Many2one('product.product')
+    replenishment_info_id = fields.Many2one('stock.replenishment.info')
+
+    location_id = fields.Many2one('stock.location', related='warehouse_id.lot_stock_id')
+    warehouse_id = fields.Many2one('stock.warehouse', related='route_id.supplier_wh_id')
+    uom = fields.Char(related='product_id.uom_name')
+    qty_to_order = fields.Float(related='replenishment_info_id.qty_to_order')
+
+    free_qty = fields.Float(compute='_compute_free_qty')
+    lead_time = fields.Char(compute='_compute_lead_time')
+
+    warning_message = fields.Char(compute='_compute_warning_message')
+
+    @api.depends('product_id', 'route_id')
+    def _compute_free_qty(self):
+        for record in self:
+            record.free_qty = record.product_id.with_context(location=record.location_id.id).free_qty
+
+    @api.depends('replenishment_info_id')
+    def _compute_lead_time(self):
+        for record in self:
+            lead_time = record.route_id.rule_ids._get_lead_days(record.product_id)[0]
+            record.lead_time = str(lead_time) + " days"
+
+    @api.depends('warehouse_id', 'free_qty', 'uom', 'qty_to_order')
+    def _compute_warning_message(self):
+        for record in self:
+            self.warning_message = _('{0} can only provide {1} {2}, while the quantity to order is {3} {2}.').format(
+                record.warehouse_id.name,
+                record.free_qty,
+                record.uom,
+                record.qty_to_order
+            )
+
+    def select_route(self):
+        if self.free_qty < self.qty_to_order:
+            return {
+                "type": "ir.actions.act_window",
+                "res_model": "stock.replenishment.option",
+                "res_id": self.id,
+                "views": [[self.env.ref('stock.replenishment_option_warning_view').id, "form"]],
+                "target": "new",
+                "name": _("Quantity available too low")
+            }
+        return self.order_all()
+
+    def order_avbl(self):
+        self.replenishment_info_id.orderpoint_id.qty_to_order = self.free_qty
+        return self.order_all()
+
+    def order_all(self):
+        self.replenishment_info_id.orderpoint_id.route_id = self.route_id
+        return {'type': 'ir.actions.act_window_close'}
