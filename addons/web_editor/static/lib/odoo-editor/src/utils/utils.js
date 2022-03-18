@@ -477,6 +477,7 @@ export function setSelection(
     focusOffset = anchorOffset,
     normalize = true,
 ) {
+    console.warn('set selection', anchorNode, anchorNode?.outerHTML, anchorOffset)
     if (
         !anchorNode ||
         !anchorNode.parentNode ||
@@ -1499,12 +1500,12 @@ export function moveNodes(
     startIndex = 0,
     endIndex = sourceEl.childNodes.length,
 ) {
-    console.warn('moveNodes');
-    console.log("destinationEl", destinationEl, destinationEl.outerHTML);
-    console.log("destinationOffset", destinationOffset);
-    console.log("sourceEl", sourceEl, sourceEl.outerHTML);
-    console.log("startIndex", startIndex);
-    console.log("endIndex", endIndex);
+    // console.warn('moveNodes');
+    // console.log("destinationEl", destinationEl, destinationEl.outerHTML);
+    // console.log("destinationOffset", destinationOffset);
+    // console.log("sourceEl", sourceEl, sourceEl.outerHTML);
+    // console.log("startIndex", startIndex);
+    // console.log("endIndex", endIndex);
     if (selfClosingElementTags.includes(destinationEl.nodeName)) {
         throw new Error(`moveNodes: Invalid destination element ${destinationEl.nodeName}`);
     }
@@ -1522,6 +1523,7 @@ export function moveNodes(
         );
         const fragment = document.createDocumentFragment();
         nodes.forEach(node => fragment.appendChild(node));
+
         const posRightNode = destinationEl.childNodes[destinationOffset];
         if (posRightNode) {
             destinationEl.insertBefore(fragment, posRightNode);
@@ -1534,8 +1536,28 @@ export function moveNodes(
 
     if (!nodeSize(sourceEl)) {
         const restoreOrigin = prepareUpdate(...boundariesOut(sourceEl));
-        sourceEl.remove();
+        // console.log('bef remove', destinationEl.outerHTML);
+        // console.log('sourceEl.nextSibling', sourceEl.nextSibling, sourceEl.nextSibling?.nodeType);
+        // console.log('sourceEl.previousSibling', sourceEl.previousSibling, sourceEl.previousSibling?.nodeType);
+        if (isBlock(sourceEl) &&
+            isBlock(destinationEl) &&
+            //destinationEl.contains(sourceEl) &&
+            false &&
+            sourceEl.nextSibling &&
+            sourceEl.previousSibling &&
+            sourceEl.nextSibling.nodeType === Node.TEXT_NODE &&
+            sourceEl.previousSibling.nodeType === Node.TEXT_NODE
+        ) {
+            // When moving a block element in another block element,
+            // We need to keep br to preserve the Line break
+            // which would otherwise be lost when we remove the source block element.
+            // console.warn("replace with a BR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+            sourceEl.replaceWith(document.createElement('br'));
+        } else {
+            sourceEl.remove();
+        }
         restoreOrigin();
+        // console.log('aft restoreOrigin', destinationEl.outerHTML);
     }
 
     // Return cursor position, but don't change it
@@ -1863,7 +1885,6 @@ export function enforceWhitespace(el, offset, direction, rule) {
         domPath = rightLeafOnlyNotBlockPath(el, offset);
         expr = /^[^\S\u00A0]+/;
     }
-
     const invisibleSpaceTextNodes = [];
     let foundVisibleSpaceTextNode = null;
     for (const node of domPath) {

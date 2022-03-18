@@ -43,11 +43,12 @@ import {
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
 const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/g;
 
-function insert(editor, data, isText = true) {
+function insert(editor, data, isText = true, shouldForceDeleteFoward = false) {
     const selection = editor.document.getSelection();
     const range = selection.getRangeAt(0);
     let startNode;
     let insertBefore = false;
+    // console.warn('insert', editor, data, isText = true, shouldForceDeleteFoward = false);
     if (selection.isCollapsed) {
         if (range.startContainer.nodeType === Node.TEXT_NODE) {
             insertBefore = !range.startOffset;
@@ -73,33 +74,59 @@ function insert(editor, data, isText = true) {
     } else {
         fakeEl.innerHTML = data;
     }
+    console.log('fake Element outerHtml', fakeEl.outerHTML);
     let nodeToInsert;
     const insertedNodes = [...fakeEl.childNodes];
+    let nodeToInsertId = 0;
+    for(const node of fakeEl.childNodes) {
+        console.log('Child node xx : ', node?.textContent, node?.outerHTML);
+    }
     while ((nodeToInsert = fakeEl.childNodes[0])) {
+        // let nextInsertIntoParent = false;
+        console.log('--->');
+        console.log('startNode', startNode?.tagName, startNode?.textContent, startNode?.outerHTML);
+        console.log('nodeToInsert', nodeToInsert?.tagName, nodeToInsert?.textContent, nodeToInsert?.outerHTML);
         if (isBlock(nodeToInsert) && !allowsParagraphRelatedElements(startNode)) {
-            // Split blocks at the edges if inserting new blocks (preventing
-            // <p><p>text</p></p> scenarios).
-            while (
-                startNode.parentElement !== editor.editable &&
-                !allowsParagraphRelatedElements(startNode.parentElement)
-            ) {
-                if (isUnbreakable(startNode.parentElement)) {
-                    makeContentsInline(fakeEl);
-                    nodeToInsert = fakeEl.childNodes[0];
-                    break;
-                }
-                let offset = childNodeIndex(startNode);
-                if (!insertBefore) {
-                    offset += 1;
-                }
-                if (offset) {
-                    const [left, right] = splitElement(startNode.parentElement, offset);
-                    startNode = insertBefore ? right : left;
-                } else {
-                    startNode = startNode.parentElement;
+            if (nodeToInsertId === 0) {
+                makeContentsInline(nodeToInsert);
+                const tempNode = nodeToInsert.childNodes[0];
+                nodeToInsert.remove();
+                nodeToInsert = tempNode;
+                // nextInsertIntoParent = true;
+            // } else if (fakeEl.childNodes.length === 1) { // last node in fakeEl
+            //     console.log('IF     v');
+            //     console.log('startNode', startNode?.tagName, startNode?.textContent, startNode?.outerHTML);
+            //     console.log('nodeToInsert', nodeToInsert?.tagName, nodeToInsert?.textContent, nodeToInsert?.outerHTML);
+            //     makeContentsInline(nodeToInsert);
+            //     nodeToInsert = nodeToInsert.childNodes[0];
+            } else {
+                // Split blocks at the edges if inserting new blocks (preventing
+                // <p><p>text</p></p> scenarios).
+                while (
+                    startNode.parentElement !== editor.editable &&
+                    !allowsParagraphRelatedElements(startNode.parentElement)
+                ) {
+                    if (isUnbreakable(startNode.parentElement)) {
+                        makeContentsInline(fakeEl);
+                        nodeToInsert = fakeEl.childNodes[0];
+                        break;
+                    }
+                    let offset = childNodeIndex(startNode);
+                    if (!insertBefore) {
+                        offset += 1;
+                    }
+                    if (offset) {
+                        const [left, right] = splitElement(startNode.parentElement, offset);
+                        startNode = insertBefore ? right : left;
+                    } else {
+                        startNode = startNode.parentElement;
+                    }
                 }
             }
         }
+        nodeToInsertId++;
+        // console.log('startNode', isBlock(startNode), startNode?.tagName, startNode?.outerHTML);
+        // console.log('nodeToInsert', isBlock(nodeToInsert), nodeToInsert?.tagName, nodeToInsert?.outerHTML);
         if (insertBefore) {
             startNode.before(nodeToInsert);
             insertBefore = false;
@@ -109,6 +136,8 @@ function insert(editor, data, isText = true) {
         if (startNode.tagName !== 'BR' && isShrunkBlock(startNode)) {
             startNode.remove();
         }
+        // console.log('nextInsertIntoParent', nextInsertIntoParent, nodeToInsert.parentElement);
+        // startNode = nextInsertIntoParent ? nodeToInsert.parentElement : nodeToInsert;
         startNode = nodeToInsert;
     }
 
@@ -118,6 +147,16 @@ function insert(editor, data, isText = true) {
     newRange.setStart(lastPosition[0], lastPosition[1]);
     newRange.setEnd(lastPosition[0], lastPosition[1]);
     selection.addRange(newRange);
+
+    console.log('data.shouldForceDeleteFoward', shouldForceDeleteFoward);
+    if (shouldForceDeleteFoward) {
+        // In some case when pasting a <p> inside another <p>,
+        // we need to merge them instead of creating a line break
+        // this force DeleteForward achieve this.
+        console.log('this.editable.innerHTML', editor.editable.innerHTML);
+        editor._applyCommand('oDeleteForward');
+    }
+
     return insertedNodes;
 }
 function align(editor, mode) {
@@ -309,8 +348,9 @@ function deleteTable(editor, table) {
 // absence of a strong test suite, so the whitelist stays for now.
 export const editorCommands = {
     // Insertion
-    insertHTML: (editor, data) => {
-        return insert(editor, data, false);
+    insertHTML: (editor, data, shouldForceDeleteFoward) => {
+        console.log('insertHTML data', data, shouldForceDeleteFoward);
+        return insert(editor, data, false, shouldForceDeleteFoward);
     },
     insertText: (editor, data) => {
         return insert(editor, data);

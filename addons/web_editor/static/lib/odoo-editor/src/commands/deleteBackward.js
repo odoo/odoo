@@ -66,7 +66,7 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     setSelection(parentNode, firstSplitOffset);
 };
 
-HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, maxSizeNodeToMove = null) {
     console.warn("html oDeleteBackward", this, this.outerHTML, offset);
     console.log('>>', document.querySelector('.odoo-editor-editable').innerHTML + '');
     const contentIsZWS = this.textContent === '\u200B';
@@ -118,7 +118,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
         const parentEl = this.parentNode;
 
         if (!isBlock(this) || isVisibleEmpty(this)) {
-            console.log('----', document.querySelector('.odoo-editor-editable').innerHTML);
+            // console.log('----', document.querySelector('.odoo-editor-editable').innerHTML);
             /**
              * Backspace at the beginning of an inline node, nothing has to be
              * done: propagate the backspace. If the node was empty, we remove
@@ -146,7 +146,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
                     return;
                 }
             }
-            console.log('----', document.querySelector('.odoo-editor-editable').innerHTML);
+            // console.log('----', document.querySelector('.odoo-editor-editable').innerHTML);
             parentEl.oDeleteBackward(parentOffset, alreadyMoved);
             return;
         }
@@ -167,16 +167,29 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
         moveDest = leftPos(this);
     }
 
-    console.log('*** 2', document.querySelector('.odoo-editor-editable').innerHTML + '');
+    // console.log('*** 2', document.querySelector('.odoo-editor-editable').innerHTML + '');
     let node = this.childNodes[offset];
     let firstBlockIndex = offset;
-    while (node && !isBlock(node)) {
+    // console.log('maxSizeNodeToMove', maxSizeNodeToMove);
+    // console.log('node + maxSizeNodeToMove ', offset + maxSizeNodeToMove);
+    // console.log('firstBlockIndex', firstBlockIndex);
+    // console.log('cond', node + maxSizeNodeToMove > firstBlockIndex);
+    // console.log('this ', this.outerHTML);
+    // console.log('this is block', isBlock(this));
+    while (
+        node &&
+        !isBlock(node) &&
+        (
+            maxSizeNodeToMove === null ||
+            offset + maxSizeNodeToMove > firstBlockIndex
+        )) {
+        // console.log('=====> while from ', firstBlockIndex, 'to', firstBlockIndex + 1);
         node = node.nextSibling;
         firstBlockIndex++;
     }
     let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, firstBlockIndex);
     setSelection(cursorNode, cursorOffset);
-    console.log('*** 3', document.querySelector('.odoo-editor-editable').innerHTML + '');
+    // console.log('*** 3', document.querySelector('.odoo-editor-editable').innerHTML + '');
 
     // Propagate if this is still a block on the left of where the nodes were
     // moved.
@@ -194,7 +207,17 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
         console.log('alreadyMoved', alreadyMoved);
         if (cType & CTGROUPS.BLOCK && (!alreadyMoved || cType === CTYPES.BLOCK_OUTSIDE)) {
             console.log('propagate');
-            cursorNode.oDeleteBackward(cursorOffset, alreadyMoved);
+            cursorNode.oDeleteBackward(cursorOffset, alreadyMoved, firstBlockIndex - offset);
+        } else if (!alreadyMoved) {
+            const cursorNodeRightNode = cursorNode.childNodes[cursorOffset] ? cursorNode.childNodes[cursorOffset].nextSibling : undefined;
+            if (cursorNodeRightNode && Node.TEXT_NODE === cursorNodeRightNode.nodeType) {
+                console.log('\n\nadd BR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                console.log('cursorNode', cursorNode.outerHTML);
+                console.log('cursorNode child nodes', cursorNode.childNodes);
+                console.log('cursorNode child nodes', cursorNode.childNodes[cursorOffset]);
+                console.log('CursorNodeRightNode', cursorNodeRightNode);
+                moveDest[0].insertBefore(document.createElement('br'), cursorNodeRightNode);
+            }
         }
     }
 };

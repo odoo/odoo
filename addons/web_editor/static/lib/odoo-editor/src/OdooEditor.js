@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 'use strict';
 
 import './commands/deleteBackward.js';
@@ -46,8 +47,8 @@ import {
     YOUTUBE_URL_GET_VIDEO_ID,
     unwrapContents,
     peek,
-    rightPos,
-} from './utils/utils.js';
+    rightPos, parentsGet
+} from "./utils/utils.js";
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
 import { TablePicker } from './tablepicker/TablePicker.js';
@@ -1254,13 +1255,15 @@ export class OdooEditor extends EventTarget {
             correctTripleClick: true,
         });
         if (!range) return;
+        console.log("----------------------------------------- ");
+        console.log("----------------------------------------- ");
         console.log("before delete range : ");
         console.log(this.editable.innerHTML);
         console.log("----- ");
         let start = range.startContainer;
         let end = range.endContainer;
         // Let the DOM split and delete the range.
-        const doJoin = closestBlock(start) !== closestBlock(range.commonAncestorContainer);
+        const doJoin = closestBlock(start) !== closestBlock(end);
         let next = nextLeaf(end, this.editable);
         const splitEndTd = closestElement(end, 'td') && end.nextSibling;
         const contents = range.extractContents();
@@ -1289,7 +1292,7 @@ export class OdooEditor extends EventTarget {
             currentFragmentTr = parentFragmentTr;
             td.textContent = '';
         });
-        console.log(this.editable.innerHTML, '1');
+        // console.log(this.editable.innerHTML, '1');
         this.observerFlush();
         this._toRollback = false; // Errors caught with observerFlush were already handled.
         // If the end container was fully selected, extractContents may have
@@ -1302,7 +1305,7 @@ export class OdooEditor extends EventTarget {
             end.remove();
             end = parent;
         }
-        console.log(this.editable.innerHTML, '2');
+        // console.log(this.editable.innerHTML, '2');
         // Same with the start container
         while (
             start &&
@@ -1317,7 +1320,7 @@ export class OdooEditor extends EventTarget {
         if (start) {
             fillEmpty(closestBlock(start));
         }
-        console.log(this.editable.innerHTML, '3');
+        // console.log(this.editable.innerHTML, '3');
         fillEmpty(closestBlock(range.endContainer));
         // Ensure trailing space remains visible.
         const joinWith = range.endContainer;
@@ -1329,11 +1332,11 @@ export class OdooEditor extends EventTarget {
             joinWith.textContent = oldText.replace(/ $/, '\u00A0');
             setSelection(joinWith, nodeSize(joinWith));
         }
-        console.log(this.editable.innerHTML, '4');
-        console.log("doJoin", doJoin);
-        console.log("next", next);
-        console.log("next.previousSibling", next?.previousSibling);
-        console.log("joinWith", joinWith);
+        // console.log(this.editable.innerHTML, '4');
+        // console.log("doJoin", doJoin);
+        // console.log("next", next);
+        // console.log("next.previousSibling", next?.previousSibling);
+        // console.log("joinWith", joinWith);
         // Rejoin blocks that extractContents may have split in two.
         while (
             doJoin &&
@@ -1343,25 +1346,25 @@ export class OdooEditor extends EventTarget {
         ) {
             const restore = preserveCursor(this.document);
             this.observerFlush();
-            console.log(this.editable.innerHTML, '5.x.1');
+            // console.log(this.editable.innerHTML, '5.x.1');
             const res = this._protect(() => {
-                console.log(this.editable.innerHTML, '5.x.x.1');
+                // console.log(this.editable.innerHTML, '5.x.x.1');
                 next.oDeleteBackward();
-                console.log(this.editable.innerHTML, '5.x..x.2');
+                // console.log(this.editable.innerHTML, '5.x..x.2');
                 if (!this.editable.contains(joinWith)) {
                     this._toRollback = UNREMOVABLE_ROLLBACK_CODE; // tried to delete too far -> roll it back.
                 } else {
                     next = firstLeaf(next);
                 }
             }, this._currentStep.mutations.length);
-            console.log(this.editable.innerHTML, '5.x.2');
+            // console.log(this.editable.innerHTML, '5.x.2');
             if ([UNBREAKABLE_ROLLBACK_CODE, UNREMOVABLE_ROLLBACK_CODE].includes(res)) {
                 restore();
                 break;
             }
-            console.log(this.editable.innerHTML, '5.x.3');
+            // console.log(this.editable.innerHTML, '5.x.3');
         }
-        console.log(this.editable.innerHTML, '5');
+        // console.log(this.editable.innerHTML, '5');
         next = joinWith && joinWith.nextSibling;
         if (
             shouldPreserveSpace &&
@@ -1371,14 +1374,15 @@ export class OdooEditor extends EventTarget {
             joinWith.textContent = oldText;
             setSelection(joinWith, nodeSize(joinWith));
         }
-        console.log(this.editable.innerHTML, '6');
+        // console.log(this.editable.innerHTML, '6');
         if (joinWith) {
             const el = closestElement(joinWith);
             fillEmpty(el);
         }
         console.log("after delete range : ");
         console.log(this.editable.innerHTML);
-        console.log("----- ");
+        console.log("----------------------------------------------- ");
+        console.log("----------------------------------------------- ");
     }
 
     /**
@@ -1515,10 +1519,12 @@ export class OdooEditor extends EventTarget {
      * @returns {?}
      */
     _applyCommand(...args) {
+        console.log('_applyCommand args', ...args);
         this._recordHistorySelection(true);
         const result = this._protect(() => this._applyRawCommand(...args));
         this.sanitize();
         this.historyStep();
+        console.log('_applyCommand result', result);
         return result;
     }
     /**
@@ -2051,16 +2057,44 @@ export class OdooEditor extends EventTarget {
      *
      * @private
      * @param {string} clipboardData
+     * @param {object} options
      * @returns {string}
      */
-    _cleanHtmlClipboardData(clipboardData) {
+    _cleanHtmlClipboardData(clipboardData, options) {
         const container = document.createElement('fake-container');
         container.innerHTML = clipboardData;
         for (const child of [...container.childNodes]) {
             this._cleanForPaste(child);
         }
+        let clipboardHtml = container.innerHTML
+        console.log('html to clean : ', clipboardHtml);
+        if(options && (!options.selectionStartInP || !options.selectionEndInP)) {
 
-        return container.innerHTML;
+            // if selection start in a <p>
+            // we need to keep the first </p> closing tag
+            if (options.selectionStartInP && clipboardHtml.match(/^<p>/)) {
+                clipboardHtml = clipboardHtml.replace('</p><p>','</keepThisPTag><p>');
+                clipboardHtml = clipboardHtml.replace(/^<p>/,'<keepThisPTag>');
+            }
+
+            // if selection end in a <p>
+            // we need to keep the last <p> opening tag
+            if (options.selectionEndInP) {
+                clipboardHtml = clipboardHtml.replace(/<p>(?!.*<p>)/,'<keepThisPTag>');
+
+            }
+            console.log('before clean with keep : ', clipboardHtml);
+            // clean, the rest
+            clipboardHtml = clipboardHtml.replaceAll('</p><p>','<br>');
+            clipboardHtml = clipboardHtml.replaceAll(/<\/?p>/g,'');
+            clipboardHtml = clipboardHtml.replaceAll('keepThisPTag>','p>');
+            console.log('before clean after keep : ', clipboardHtml);
+
+        }
+
+
+
+        return clipboardHtml;
     }
     /**
      * Clean a node for safely pasting. Cleaning an element involves unwrapping
@@ -2796,6 +2830,10 @@ export class OdooEditor extends EventTarget {
         ev.preventDefault();
 
         const sel = this.document.getSelection();
+        const cleanHtmlOptions = {
+            selectionStartInP: !!closestElement(sel.anchorNode, 'p'),
+            selectionEndInP: !!closestElement(sel.focusNode, 'p')
+        };
         if (!sel.isCollapsed) {
             this.deleteRange(sel);
             this.historyStep();
@@ -2808,16 +2846,16 @@ export class OdooEditor extends EventTarget {
         console.log('     text data', plainTextData);
 
         if (htmlClipboardData) {
-            cleanHtmlData = this._cleanHtmlClipboardData(htmlClipboardData);
+            cleanHtmlData = this._cleanHtmlClipboardData(htmlClipboardData, cleanHtmlOptions);
             console.log('clean HTML data', cleanHtmlData);
 
             const paragraphRegex = /^<p>(.+)<\/p>$/;
-
             // Avoid inserting the opening and closing paragraph tags
             // in order to ensure we don't add unwanted line breaks
             if (cleanHtmlData.match(paragraphRegex)) {
                 shouldForceDeleteFoward = true;
-                cleanHtmlData = cleanHtmlData.replace(paragraphRegex, "$1");
+                // cleanHtmlData = cleanHtmlData.replace(paragraphRegex, "$1");
+                // cleanHtmlData = cleanHtmlData.replace('</p><p>', '<p>');
             }
             console.log('clean HTML data 2', cleanHtmlData);
         }
@@ -2825,10 +2863,13 @@ export class OdooEditor extends EventTarget {
         if (cleanHtmlData && plainTextData !== cleanHtmlData) {
             this.historyPauseSteps();
             console.warn("pasted html : ", cleanHtmlData);
-            this.execCommand('insertHTML', cleanHtmlData);
-            if (shouldForceDeleteFoward) {
-                this._applyCommand('oDeleteForward');
-            }
+            console.log('shouldForceDeleteFoward', shouldForceDeleteFoward)
+            this.execCommand('insertHTML', cleanHtmlData, shouldForceDeleteFoward);
+            // if (shouldForceDeleteFoward) {
+            //     console.log('this.editable.innerHTML', this.editable.innerHTML);
+            //     this._applyCommand('oDeleteForward');
+            // }
+            console.log('this.editable.innerHTML', this.editable.innerHTML);
             this.historyUnpauseSteps();
             this.historyStep();
         } else {

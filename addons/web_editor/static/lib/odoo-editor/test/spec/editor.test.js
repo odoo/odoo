@@ -85,6 +85,27 @@ describe('Editor', () => {
                         contentAfter: '<p>[]abc</p>',
                     });
                 });
+                it('should merge P node correctly ', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div>a<p>b[]</p><p>c</p>d</div>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<div>a<p>b[]c</p>d</div>',
+                    });
+                });
+                it('should merge SPAN node correctly ', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div>a<span>bc[]</span><span>de</span>f</div>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<div>a<span>bc[]e</span>f</div>',
+                    });
+                });
+                it('should merge diferent element correctly', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div>a<span>b[]</span><p>c</p>d</div>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<div>a<span>b[]</span>c<br>d</div>',
+                    });
+                });
                 it('should ignore ZWS', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab[]\u200Bc</p>',
@@ -1102,6 +1123,13 @@ X[]
                         contentAfter: '<p>[]abc</p>',
                     });
                 });
+                it('should merge node correctly', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div>a<span>b</span><p>[]c</p>d</div>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<div>a<span>b[]</span>c<br>d</div>',
+                    });
+                });
                 it('should ignore ZWS', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab\u200B[]c</p>',
@@ -1763,7 +1791,7 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: 'ab<p>[]cd</p>ef',
                         stepFunction: deleteBackward,
-                        contentAfter: 'ab[]cdef', // FIXME for me this is wrong, I would expect ab[]cd<p>ef</p> or something like that ?
+                        contentAfter: 'ab[]cd<br>ef',
                     });
                 });
             });
