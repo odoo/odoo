@@ -84,14 +84,15 @@ function insert(editor, data, isText = true, shouldForceDeleteFoward = false) {
     while ((nodeToInsert = fakeEl.childNodes[0])) {
         // let nextInsertIntoParent = false;
         console.log('--->');
+        console.log('editable', editor.editable.innerHTML);
         console.log('startNode', startNode?.tagName, startNode?.textContent, startNode?.outerHTML);
         console.log('nodeToInsert', nodeToInsert?.tagName, nodeToInsert?.textContent, nodeToInsert?.outerHTML);
         if (isBlock(nodeToInsert) && !allowsParagraphRelatedElements(startNode)) {
             if (nodeToInsertId === 0) {
                 makeContentsInline(nodeToInsert);
-                const tempNode = nodeToInsert.childNodes[0];
-                nodeToInsert.remove();
-                nodeToInsert = tempNode;
+                nodeToInsert = nodeToInsert.childNodes[0];
+                // nodeToInsert.remove();
+                // nodeToInsert = tempNode;
                 // nextInsertIntoParent = true;
             // } else if (fakeEl.childNodes.length === 1) { // last node in fakeEl
             //     console.log('IF     v');
@@ -124,6 +125,7 @@ function insert(editor, data, isText = true, shouldForceDeleteFoward = false) {
                 }
             }
         }
+        console.log('editable2', editor.editable.innerHTML);
         nodeToInsertId++;
         // console.log('startNode', isBlock(startNode), startNode?.tagName, startNode?.outerHTML);
         // console.log('nodeToInsert', isBlock(nodeToInsert), nodeToInsert?.tagName, nodeToInsert?.outerHTML);

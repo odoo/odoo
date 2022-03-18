@@ -167,15 +167,17 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
         moveDest = leftPos(this);
     }
 
-    // console.log('*** 2', document.querySelector('.odoo-editor-editable').innerHTML + '');
+    console.log('*** 2', document.querySelector('.odoo-editor-editable').innerHTML + '');
     let node = this.childNodes[offset];
+    const nextSibblings = this.nextSibling;
     let firstBlockIndex = offset;
-    // console.log('maxSizeNodeToMove', maxSizeNodeToMove);
-    // console.log('node + maxSizeNodeToMove ', offset + maxSizeNodeToMove);
-    // console.log('firstBlockIndex', firstBlockIndex);
-    // console.log('cond', node + maxSizeNodeToMove > firstBlockIndex);
-    // console.log('this ', this.outerHTML);
-    // console.log('this is block', isBlock(this));
+    console.log('maxSizeNodeToMove', maxSizeNodeToMove);
+    console.log('node + maxSizeNodeToMove ', offset + maxSizeNodeToMove);
+    console.log('firstBlockIndex', firstBlockIndex);
+    console.log('cond', node + maxSizeNodeToMove > firstBlockIndex);
+    console.log('this ', this.outerHTML);
+    console.log('this.next sibblings ', nextSibblings);
+    console.log('this is block', isBlock(this));
     while (
         node &&
         !isBlock(node) &&
@@ -189,7 +191,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
     }
     let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, firstBlockIndex);
     setSelection(cursorNode, cursorOffset);
-    // console.log('*** 3', document.querySelector('.odoo-editor-editable').innerHTML + '');
+    console.log('*** 3', document.querySelector('.odoo-editor-editable').innerHTML + '');
 
     // Propagate if this is still a block on the left of where the nodes were
     // moved.
@@ -210,7 +212,11 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
             cursorNode.oDeleteBackward(cursorOffset, alreadyMoved, firstBlockIndex - offset);
         } else if (!alreadyMoved) {
             const cursorNodeRightNode = cursorNode.childNodes[cursorOffset] ? cursorNode.childNodes[cursorOffset].nextSibling : undefined;
-            if (cursorNodeRightNode && Node.TEXT_NODE === cursorNodeRightNode.nodeType) {
+            if (
+                cursorNodeRightNode &&
+                Node.TEXT_NODE === cursorNodeRightNode.nodeType &&
+                nextSibblings === cursorNodeRightNode
+            ) {
                 console.log('\n\nadd BR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                 console.log('cursorNode', cursorNode.outerHTML);
                 console.log('cursorNode child nodes', cursorNode.childNodes);

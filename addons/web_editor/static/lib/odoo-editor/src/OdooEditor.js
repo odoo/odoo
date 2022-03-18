@@ -2079,10 +2079,10 @@ export class OdooEditor extends EventTarget {
 
             // if selection end in a <p>
             // we need to keep the last <p> opening tag
-            if (options.selectionEndInP) {
-                clipboardHtml = clipboardHtml.replace(/<p>(?!.*<p>)/,'<keepThisPTag>');
-
-            }
+            // if (options.selectionEndInP && ) {
+            //     clipboardHtml = clipboardHtml.replace(/<p>(?!.*<p>)/,'<keepThisPTag>');
+            //
+            // }
             console.log('before clean with keep : ', clipboardHtml);
             // clean, the rest
             clipboardHtml = clipboardHtml.replaceAll('</p><p>','<br>');
@@ -2852,7 +2852,7 @@ export class OdooEditor extends EventTarget {
             const paragraphRegex = /^<p>(.+)<\/p>$/;
             // Avoid inserting the opening and closing paragraph tags
             // in order to ensure we don't add unwanted line breaks
-            if (cleanHtmlData.match(paragraphRegex)) {
+            if (cleanHtmlData.match(/^<p>/)) {
                 shouldForceDeleteFoward = true;
                 // cleanHtmlData = cleanHtmlData.replace(paragraphRegex, "$1");
                 // cleanHtmlData = cleanHtmlData.replace('</p><p>', '<p>');
