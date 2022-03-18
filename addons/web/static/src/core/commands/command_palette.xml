@@ -8,7 +8,7 @@
         <i  t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="fa fa-search"></i>
       </div>
 
-      <div t-ref="listbox" class="o_command_palette_listbox">
+      <div t-ref="listbox" class="o_command_palette_listbox o_cursor_default">
         <div t-if="!state.commands.length" class="o_command_palette_listbox_empty" t-esc="state.emptyMessage"/>
         <t t-if="!isFuzzySearch">
           <t t-foreach="commandsByCategory" t-as="category" t-key="category.keyId">

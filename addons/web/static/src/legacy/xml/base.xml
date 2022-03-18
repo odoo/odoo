@@ -1190,12 +1190,12 @@
     <t t-set="disabled" t-value="!clickable"/>
     <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-checked="true"
         t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
-        t-attf-class="btn o_arrow_button btn-primary disabled #{is_dropdown ? 'dropdown-item bg-primary text-white': ''}" t-if="i.selected" aria-current="step">
+        t-attf-class="btn o_arrow_button btn-primary disabled o_cursor_default #{is_dropdown ? 'dropdown-item bg-primary text-white': ''}" t-if="i.selected" aria-current="step">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is current state"/>
     </button>
     <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-checked="false"
         t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
-        t-attf-class="btn o_arrow_button btn-secondary disabled #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and disabled">
+        t-attf-class="btn o_arrow_button btn-secondary disabled o_cursor_default #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and disabled">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is not current state"/>
     </button>
     <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-checked="false"
