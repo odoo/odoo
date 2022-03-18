@@ -19,7 +19,7 @@
                                         <t t-esc="formatLineAmount(line)" />
                                 </t>
                             </div>
-                            <t t-if="!line.payment_status or !['done', 'reversed'].includes(line.payment_status)">
+                            <t t-if="!line.payment_status or !['done', 'reversed', 'waitingCard', 'waitingCapture'].includes(line.payment_status)">
                                 <div class="delete-button"
                                     t-on-click="() => this.trigger('delete-payment-line', { cid: line.cid })"
                                     aria-label="Delete" title="Delete">
@@ -61,7 +61,7 @@
                                         Cancel
                                     </div>
                                 </t>
-                                <t t-elif="['waiting', 'waitingCancel'].includes(line.payment_status)">
+                                <t t-elif="['waiting', 'waitingCancel', 'waitingCapture'].includes(line.payment_status)">
                                     <div>
                                         Request sent
                                     </div>
