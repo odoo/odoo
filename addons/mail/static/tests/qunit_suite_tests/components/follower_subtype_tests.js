@@ -3,7 +3,6 @@
 import { insert, link } from '@mail/model/model_field_command';
 import {
     afterNextRender,
-    beforeEach,
     createRootMessagingComponent,
     start,
 } from '@mail/../tests/helpers/test_utils';
@@ -11,9 +10,7 @@ import {
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('follower_subtype_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.createFollowerSubtypeComponent = async ({ follower, followerSubtype, target }) => {
             const props = {
                 followerLocalId: follower.localId,
@@ -30,7 +27,7 @@ QUnit.module('follower_subtype_tests.js', {
 QUnit.test('simplest layout of a followed subtype', async function (assert) {
     assert.expect(5);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
 
     const thread = messaging.models['Thread'].create({
         id: 100,
@@ -90,7 +87,7 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
 QUnit.test('simplest layout of a not followed subtype', async function (assert) {
     assert.expect(5);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
 
     const thread = messaging.models['Thread'].create({
         id: 100,
@@ -147,7 +144,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
 QUnit.test('toggle follower subtype checkbox', async function (assert) {
     assert.expect(5);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
 
     const thread = messaging.models['Thread'].create({
         id: 100,

@@ -1,23 +1,16 @@
 /** @odoo-module **/
 
 import { link } from '@mail/model/model_field_command';
-import {
-    beforeEach,
-    start,
-} from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('attachment_image_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('attachment_image_tests.js');
 
 QUnit.test('auto layout with image', async function (assert) {
     assert.expect(3);
 
-    const { createMessageComponent, messaging } = await start({ data: this.data });
+    const { createMessageComponent, messaging } = await start();
     const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,

@@ -2,38 +2,31 @@
 
 import {
     afterNextRender,
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import { datetime_to_str } from 'web.time';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_sidebar_category_item_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('discuss_sidebar_category_item_tests.js');
 
 QUnit.test('channel - avatar: should have correct avatar', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
-        avatarCacheKey: '100111',
-        id: 20,
-    });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ avatarCacheKey: '100111' });
 
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
 
     const channelItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 20,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]
@@ -46,7 +39,7 @@ QUnit.test('channel - avatar: should have correct avatar', async function (asser
 
     assert.strictEqual(
         channelItem.querySelector(`:scope .o_DiscussSidebarCategoryItem_image`).dataset.src,
-        '/web/image/mail.channel/20/avatar_128?unique=100111',
+        `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=100111`,
         'should link to the correct picture source'
     );
 });
@@ -54,21 +47,18 @@ QUnit.test('channel - avatar: should have correct avatar', async function (asser
 QUnit.test('channel - avatar: should update avatar url from bus', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
-        avatarCacheKey: '101010',
-        id: 20,
-     });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ avatarCacheKey: '101010' });
 
-     const { env, messaging } = await start({
+    const { env, messaging } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
 
     const channelItemAvatar = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 20,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"] .o_DiscussSidebarCategoryItem_image
@@ -76,49 +66,44 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
 
     assert.strictEqual(
         channelItemAvatar.dataset.src,
-        '/web/image/mail.channel/20/avatar_128?unique=101010',
+        `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=101010`,
     );
 
     await afterNextRender(() => {
         env.services.rpc({
             model: 'mail.channel',
             method: 'write',
-            args: [[20], { image_128: 'This field does not matter' }],
+            args: [[mailChannelId1], { image_128: 'This field does not matter' }],
         });
     });
-    const result = await env.services.rpc({
-        model: 'mail.channel',
-        method: 'read',
-        args: [[20], ['avatarCacheKey']],
-    });
+    const result = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]]);
     const newCacheKey = result[0]['avatarCacheKey'];
 
     assert.strictEqual(
         channelItemAvatar.dataset.src,
-        `/web/image/mail.channel/20/avatar_128?unique=${newCacheKey}`,
+        `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=${newCacheKey}`,
     );
 });
 
 QUnit.test('chat - avatar: should have correct avatar', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({ id: 15, name: "Demo", im_status: 'offline' });
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo", im_status: 'offline' });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 10,
-        members: [this.data.currentPartnerId, 15],
+        members: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
 
     const chatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 10,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]
@@ -131,7 +116,7 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
 
     assert.strictEqual(
         chatItem.querySelector(`:scope .o_DiscussSidebarCategoryItem_image`).dataset.src,
-        '/web/image/res.partner/15/avatar_128',
+        `/web/image/res.partner/${resPartnerId1}/avatar_128`,
         'should link to the partner avatar'
     );
 });
@@ -139,29 +124,30 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
 QUnit.test('chat - sorting: should be sorted by last activity time', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.channel'].records.push({
-        channel_type: 'chat',
-        id: 10,
-        public: 'private',
-        last_interest_dt: datetime_to_str(new Date(2021, 0, 1)), // less recent one
-    }, {
-        channel_type: 'chat',
-        id: 20,
-        public: 'private',
-        last_interest_dt: datetime_to_str(new Date(2021, 0, 2)), // more recent one
-    });
+    const pyEnv = await startServer();
+    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
+        {
+            channel_type: 'chat',
+            public: 'private',
+            last_interest_dt: datetime_to_str(new Date(2021, 0, 1)), // less recent one
+        },
+        {
+            channel_type: 'chat',
+            public: 'private',
+            last_interest_dt: datetime_to_str(new Date(2021, 0, 2)), // more recent one
+        },
+    ]);
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
 
-    const chat10 = messaging.models['Thread'].findFromIdentifyingData({
-        id: 10,
+    const chat1 = messaging.models['Thread'].findFromIdentifyingData({
+        id: mailChannelId1,
         model: 'mail.channel',
     });
-    const chat20 = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+    const chat2 = messaging.models['Thread'].findFromIdentifyingData({
+        id: mailChannelId2,
         model: 'mail.channel',
     });
     const initialChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem');
@@ -172,12 +158,12 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     );
     assert.strictEqual(
         initialChats[0].dataset.threadLocalId,
-        chat20.localId,
+        chat2.localId,
         "first livechat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
         initialChats[1].dataset.threadLocalId,
-        chat10.localId,
+        chat1.localId,
         "second chat should be the one with the less recent last activity time"
     );
 
@@ -193,12 +179,12 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     );
     assert.strictEqual(
         newChats[0].dataset.threadLocalId,
-        chat10.localId,
+        chat1.localId,
         "first chat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
         newChats[1].dataset.threadLocalId,
-        chat20.localId,
+        chat2.localId,
         "second chat should be the one with the less recent last activity time"
     );
 });

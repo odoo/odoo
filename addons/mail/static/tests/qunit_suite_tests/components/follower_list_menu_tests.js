@@ -3,9 +3,9 @@
 import { insert, link } from '@mail/model/model_field_command';
 import {
     afterNextRender,
-    beforeEach,
     createRootMessagingComponent,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
@@ -13,9 +13,7 @@ import Bus from 'web.Bus';
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('follower_list_menu_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.createFollowerListMenuComponent = async (thread, target, otherProps = {}) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
             await createRootMessagingComponent(thread.env, "FollowerListMenu", {
@@ -29,7 +27,7 @@ QUnit.module('follower_list_menu_tests.js', {
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
@@ -66,7 +64,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(5);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
@@ -107,6 +105,19 @@ QUnit.test('base rendering editable', async function (assert) {
 QUnit.test('click on "add followers" button', async function (assert) {
     assert.expect(15);
 
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
+        { name: 'resPartner1'},
+        { name: 'resPartner2' },
+    ]);
+    const mailFollowerId1 = pyEnv['mail.followers'].create({
+        partner_id: resPartnerId2,
+        email: "bla@bla.bla",
+        is_active: true,
+        name: "François Perusse",
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+    });
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('action:open_view');
@@ -117,7 +128,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
         );
         assert.strictEqual(
             payload.action.context.default_res_id,
-            100,
+            resPartnerId1,
             "The 'add followers' action should contain thread id in context"
         );
         assert.strictEqual(
@@ -130,26 +141,13 @@ QUnit.test('click on "add followers" button', async function (assert) {
             "ir.actions.act_window",
             "The 'add followers' action should be of type 'ir.actions.act_window'"
         );
-        const partner = this.data['res.partner'].records.find(
-            partner => partner.id === payload.action.context.default_res_id
-        );
-        partner.message_follower_ids.push(1);
+        pyEnv['res.partner'].write([payload.action.context.default_res_id], { message_follower_ids: [mailFollowerId1] });
         payload.options.on_close();
     });
-    this.data['res.partner'].records.push({ id: 100 }, { id: 42 });
-    this.data['mail.followers'].records.push({
-        partner_id: 42,
-        email: "bla@bla.bla",
-        id: 1,
-        is_active: true,
-        name: "François Perusse",
-        res_id: 100,
-        res_model: 'res.partner',
-    });
-    const { messaging, widget } = await start({ data: this.data, env: { bus } });
+    const { messaging, widget } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].create({
         hasWriteAccess: true,
-        id: 100,
+        id: resPartnerId1,
         model: 'res.partner',
     });
     await this.createFollowerListMenuComponent(thread, widget.el);
@@ -219,15 +217,15 @@ QUnit.test('click on "add followers" button', async function (assert) {
 QUnit.test('click on remove follower', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({ id: 100 });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
     const { messaging, widget } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('message_unsubscribe');
                 assert.deepEqual(
                     args.args,
-                    [[100], [messaging.currentPartner.id]],
+                    [[resPartnerId1], [messaging.currentPartner.id]],
                     "message_unsubscribe should be called with right argument"
                 );
             }
@@ -235,7 +233,7 @@ QUnit.test('click on remove follower', async function (assert) {
         },
     });
     const thread = messaging.models['Thread'].create({
-        id: 100,
+        id: resPartnerId1,
         model: 'res.partner',
     });
     await messaging.models['Follower'].create({
@@ -281,26 +279,25 @@ QUnit.test('click on remove follower', async function (assert) {
 QUnit.test('Hide "Add follower" and subtypes edition/removal buttons except own user on read only record', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({ id: 100 }, { id: 11 });
-    this.data['mail.followers'].records.push(
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([{ name: "resPartner1" }, { name: "resPartner2" }]);
+    pyEnv['mail.followers'].create([
         {
-            id: 1,
             name: "Jean Michang",
             is_active: true,
-            partner_id: this.data.currentPartnerId,
-            res_id: 100,
-            res_model: 'res.partner',
-        }, {
-            id: 2,
-            name: "Eden Hazard",
-            is_active: true,
-            partner_id: 11,
-            res_id: 100,
+            partner_id: pyEnv.currentPartnerId,
+            res_id: resPartnerId1,
             res_model: 'res.partner',
         },
-    );
+        {
+            name: "Eden Hazard",
+            is_active: true,
+            partner_id: resPartnerId2,
+            res_id: resPartnerId1,
+            res_model: 'res.partner',
+        },
+    ]);
     const { click, createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/thread/data') {
                 // mimic user with no write access
@@ -312,7 +309,7 @@ QUnit.test('Hide "Add follower" and subtypes edition/removal buttons except own 
         },
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -348,26 +345,25 @@ QUnit.test('Hide "Add follower" and subtypes edition/removal buttons except own 
 QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({ id: 100 }, { id: 11 });
-    this.data['mail.followers'].records.push(
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([{ name: "resPartner1" }, { name: "resPartner2" }]);
+    pyEnv['mail.followers'].create([
         {
-            id: 1,
             name: "Jean Michang",
             is_active: true,
-            partner_id: this.data.currentPartnerId,
-            res_id: 100,
-            res_model: 'res.partner',
-        }, {
-            id: 2,
-            name: "Eden Hazard",
-            is_active: true,
-            partner_id: 11,
-            res_id: 100,
+            partner_id: pyEnv.currentPartnerId,
+            res_id: resPartnerId1,
             res_model: 'res.partner',
         },
-    );
+        {
+            name: "Eden Hazard",
+            is_active: true,
+            partner_id: resPartnerId2,
+            res_id: resPartnerId1,
+            res_model: 'res.partner',
+        },
+    ]);
     const { click, createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
@@ -379,7 +375,7 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
         },
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -415,7 +411,7 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
 QUnit.test('Show "No Followers" dropdown-item if there are no followers and user dose not have write access', async function (assert) {
     assert.expect(1);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',

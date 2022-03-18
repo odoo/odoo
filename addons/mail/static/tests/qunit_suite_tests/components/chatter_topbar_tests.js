@@ -1,24 +1,21 @@
 /** @odoo-module **/
 
-import { afterNextRender, beforeEach, nextAnimationFrame, start } from '@mail/../tests/helpers/test_utils';
+import { afterNextRender, nextAnimationFrame, start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import { makeTestPromise } from 'web.test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('chatter_topbar_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('chatter_topbar_tests.js');
 
 QUnit.test('base rendering', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -67,7 +64,7 @@ QUnit.test('base rendering', async function (assert) {
 QUnit.test('base disabled rendering', async function (assert) {
     assert.expect(8);
 
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadModel: 'res.partner',
     }, { waitUntilMessagesLoaded: false });
@@ -112,9 +109,9 @@ QUnit.test('base disabled rendering', async function (assert) {
 QUnit.test('attachment loading is delayed', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
     const { createChatterContainerComponent, env } = await start({
-        data: this.data,
         hasTimeControl: true,
         loadingBaseDelayDuration: 100,
         async mockRPC(route) {
@@ -125,7 +122,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
         }
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -156,9 +153,9 @@ QUnit.test('attachment loading is delayed', async function (assert) {
 QUnit.test('attachment counter while loading attachments', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
     const { createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route) {
             if (route.includes('/mail/thread/data')) {
                 await makeTestPromise(); // simulate long loading
@@ -167,7 +164,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
         }
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -196,10 +193,10 @@ QUnit.test('attachment counter while loading attachments', async function (asser
 QUnit.test('attachment counter transition when attachments become loaded)', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 100 });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
     const attachmentPromise = makeTestPromise();
     const { createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route) {
             const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route.includes('/mail/thread/data')) {
@@ -209,7 +206,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
         },
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -255,10 +252,11 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
 QUnit.test('attachment counter without attachments', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -287,24 +285,25 @@ QUnit.test('attachment counter without attachments', async function (assert) {
 QUnit.test('attachment counter with attachments', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['ir.attachment'].records.push(
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['ir.attachment'].create([
         {
             mimetype: 'text/plain',
             name: 'Blah.txt',
-            res_id: 100,
+            res_id: resPartnerId1,
             res_model: 'res.partner',
         },
         {
             mimetype: 'text/plain',
             name: 'Blu.txt',
-            res_id: 100,
+            res_id: resPartnerId1,
             res_model: 'res.partner',
-        }
-    );
-    const { createChatterContainerComponent } = await start({ data: this.data });
+        },
+    ]);
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -333,10 +332,11 @@ QUnit.test('attachment counter with attachments', async function (assert) {
 QUnit.test('composer state conserved when clicking on another topbar button', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -392,31 +392,29 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
 QUnit.test('rendering with multiple partner followers', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push(
-        { id: 11 },
-        { id: 12 },
-        { id: 100, message_follower_ids: [1, 2] },
-    );
-    this.data['mail.followers'].records.push(
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2, resPartnerId3] = pyEnv['res.partner'].create([
+        { name: 'resPartner1' },
+        { name: 'resPartner2' },
+        { message_follower_ids: [1, 2] },
+    ]);
+    pyEnv['mail.followers'].create([
         {
-            // simulate real return from RPC
-            id: 1,
             name: "Jean Michang",
-            partner_id: 12,
-            res_id: 100,
-            res_model: 'res.partner',
-        }, {
-            // simulate real return from RPC
-            id: 2,
-            name: "Eden Hazard",
-            partner_id: 11,
-            res_id: 100,
+            partner_id: resPartnerId2,
+            res_id: resPartnerId3,
             res_model: 'res.partner',
         },
-    );
-    const { createChatterContainerComponent } = await start({ data: this.data });
+        {
+            name: "Eden Hazard",
+            partner_id: resPartnerId1,
+            res_id: resPartnerId3,
+            res_model: 'res.partner',
+        },
+    ]);
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId3,
         threadModel: 'res.partner',
     });
 
@@ -466,10 +464,11 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
 QUnit.test('log note/send message switching', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.containsOnce(
@@ -525,10 +524,11 @@ QUnit.test('log note/send message switching', async function (assert) {
 QUnit.test('log note toggling', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.containsOnce(
@@ -564,10 +564,11 @@ QUnit.test('log note toggling', async function (assert) {
 QUnit.test('send message toggling', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.containsOnce(

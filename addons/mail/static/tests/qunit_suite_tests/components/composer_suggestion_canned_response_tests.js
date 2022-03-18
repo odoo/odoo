@@ -1,22 +1,19 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('composer_suggestion_canned_response_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('composer_suggestion_canned_response_tests.js');
 
 QUnit.test('canned response suggestion displayed', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const { createComposerSuggestionComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const cannedResponse = messaging.models['CannedResponse'].create({
@@ -40,10 +37,11 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
 QUnit.test('canned response suggestion correct data', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const { createComposerSuggestionComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const cannedResponse = messaging.models['CannedResponse'].create({
@@ -87,10 +85,11 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
 QUnit.test('canned response suggestion active', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    const { createComposerSuggestionComponent, messaging } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const { createComposerSuggestionComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const cannedResponse = messaging.models['CannedResponse'].create({

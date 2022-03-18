@@ -1,31 +1,27 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('activity_mark_done_popover_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('activity_mark_done_popover_tests.js');
 
 QUnit.test('activity mark done popover simplest layout', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({ data: this.data });
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     await click('.o_Activity_markDoneButton');
@@ -65,18 +61,18 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
 QUnit.test('activity with force next mark done popover simplest layout', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
         chaining_type: 'trigger',
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({ data: this.data });
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     await click('.o_Activity_markDoneButton');
@@ -116,22 +112,21 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
 QUnit.test('activity mark done popover mark done without feedback', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailActivityId1 = pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const { click, createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 12);
+                assert.strictEqual(args.args[0][0], mailActivityId1);
                 assert.strictEqual(args.kwargs.attachment_ids.length, 0);
                 assert.notOk(args.kwargs.feedback);
                 return;
@@ -144,7 +139,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
         },
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     await click('.o_Activity_markDoneButton');
@@ -158,22 +153,21 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
 QUnit.test('activity mark done popover mark done with feedback', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailActivityId1 = pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const { click, createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 12);
+                assert.strictEqual(args.args[0][0], mailActivityId1);
                 assert.strictEqual(args.kwargs.attachment_ids.length, 0);
                 assert.strictEqual(args.kwargs.feedback, 'This task is done');
                 return;
@@ -186,7 +180,7 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
         },
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     await click('.o_Activity_markDoneButton');
@@ -209,22 +203,21 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         assert.step('activity_action');
         throw new Error("The do-action event should not be triggered when the route doesn't return an action");
     });
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailActivityId1 = pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const { click, createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 assert.step('action_feedback_schedule_next');
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 12);
+                assert.strictEqual(args.args[0][0], mailActivityId1);
                 assert.strictEqual(args.kwargs.feedback, 'This task is done');
                 return false;
             }
@@ -237,7 +230,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         env: { bus },
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     await click('.o_Activity_markDoneButton');
@@ -264,16 +257,15 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
             "The content of the action should be correct"
         );
     });
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const { click, createChatterContainerComponent } = await start({
-        data: this.data,
         env: { bus },
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
@@ -283,7 +275,7 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
         },
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     await click('.o_Activity_markDoneButton');
