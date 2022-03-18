@@ -2,17 +2,15 @@
 
 import {
     afterNextRender,
-    beforeEach,
     createRootMessagingComponent,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_icon_tests.js', {
     async beforeEach() {
-        await beforeEach(this);
-
         this.createThreadIcon = async (thread, target) => {
             await createRootMessagingComponent(thread.env, "ThreadIcon", {
                 props: { threadLocalId: thread.localId },
@@ -25,19 +23,18 @@ QUnit.module('thread_icon_tests.js', {
 QUnit.test('chat: correspondent is typing', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({
-        id: 17,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         im_status: 'online',
         name: 'Demo',
     });
-    this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 20,
-        members: [this.data.currentPartnerId, 17],
+        members: [pyEnv.currentPartnerId, resPartnerId1],
     });
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     await this.createThreadIcon(thread, widget.el);
@@ -58,9 +55,9 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: true,
-                partner_id: 17,
+                partner_id: resPartnerId1,
                 partner_name: "Demo",
             },
         }]);
@@ -81,9 +78,9 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: false,
-                partner_id: 17,
+                partner_id: resPartnerId1,
                 partner_name: "Demo",
             },
         }]);

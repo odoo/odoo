@@ -2,25 +2,20 @@
 
 import {
     afterNextRender,
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_mobile_mailbox_selection', {}, function () {
-QUnit.module('discuss_mobile_mailbox_selection_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('discuss_mobile_mailbox_selection_tests.js');
 
 QUnit.test('select another mailbox', async function (assert) {
     assert.expect(7);
 
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         env: {
             browser: {
                 innerHeight: 640,
@@ -80,14 +75,14 @@ QUnit.test('select another mailbox', async function (assert) {
 QUnit.test('auto-select "Inbox" when discuss had channel as active thread', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({ id: 20 });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
 
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         discuss: {
             context: {
-                active_id: 20,
+                active_id: mailChannelId1,
             },
         },
         env: {

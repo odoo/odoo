@@ -2,41 +2,33 @@
 
 import {
     afterNextRender,
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('channel_invitation_form_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('channel_invitation_form_tests.js');
 
 QUnit.test('should display the channel invitation form after clicking on the invite button of a chat', async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        id: 11,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    this.data['res.users'].records.push({
-        partner_id: 11,
-    });
-    this.data['mail.channel'].records.push({
+    pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 13,
-        members: [this.data.currentPartnerId, 11],
+        members: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         discuss: {
             context: {
-                active_id: 13,
+                active_id: mailChannelId1,
             },
         },
         hasDiscuss: true,
@@ -52,34 +44,27 @@ QUnit.test('should display the channel invitation form after clicking on the inv
 QUnit.test('should be able to search for a new user to invite from an existing chat', async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        id: 11,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    this.data['res.partner'].records.push({
-        id: 12,
+    const resPartnerId2 = pyEnv['res.partner'].create({
         email: "testpartner2@odoo.com",
         name: "TestPartner2",
     });
-    this.data['res.users'].records.push({
-        partner_id: 11,
-    });
-    this.data['res.users'].records.push({
-        partner_id: 12,
-    });
-    this.data['mail.channel'].records.push({
+    pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+    pyEnv['res.users'].create({ partner_id: resPartnerId2 });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 13,
-        members: [this.data.currentPartnerId, 11],
+        members: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         discuss: {
             context: {
-                active_id: 13,
+                active_id: mailChannelId1,
             },
         },
         hasDiscuss: true,
@@ -96,34 +81,27 @@ QUnit.test('should be able to search for a new user to invite from an existing c
 QUnit.test('should be able to create a new group chat from an existing chat', async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        id: 11,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    this.data['res.partner'].records.push({
-        id: 12,
+    const resPartnerId2 = pyEnv['res.partner'].create({
         email: "testpartner2@odoo.com",
         name: "TestPartner2",
     });
-    this.data['res.users'].records.push({
-        partner_id: 11,
-    });
-    this.data['res.users'].records.push({
-        partner_id: 12,
-    });
-    this.data['mail.channel'].records.push({
+    pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+    pyEnv['res.users'].create({ partner_id: resPartnerId2 });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 13,
-        members: [this.data.currentPartnerId, 11],
+        members: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         discuss: {
             context: {
-                active_id: 13,
+                active_id: mailChannelId1,
             },
         },
         hasDiscuss: true,

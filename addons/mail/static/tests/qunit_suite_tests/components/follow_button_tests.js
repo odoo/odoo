@@ -2,17 +2,15 @@
 
 import {
     afterNextRender,
-    beforeEach,
     createRootMessagingComponent,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('follow_button_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.createFollowButtonComponent = async (thread, target, otherProps = {}) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
             await createRootMessagingComponent(thread.env, "FollowButton", {
@@ -26,7 +24,7 @@ QUnit.module('follow_button_tests.js', {
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
@@ -51,7 +49,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
@@ -76,17 +74,17 @@ QUnit.test('base rendering editable', async function (assert) {
 QUnit.test('hover following button', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.followers'].records.push({
-        id: 1,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.followers'].create({
         is_active: true,
-        partner_id: this.data.currentPartnerId,
-        res_id: 100,
+        partner_id: pyEnv.currentPartnerId,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
-        id: 100,
+        id: resPartnerId1,
         model: 'res.partner',
     });
     thread.follow();
@@ -143,16 +141,15 @@ QUnit.test('hover following button', async function (assert) {
 QUnit.test('click on "follow" button', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.followers'].records.push({
-        id: 1,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.followers'].create({
         is_active: true,
-        partner_id: this.data.currentPartnerId,
-        res_id: 100,
+        partner_id: pyEnv.currentPartnerId,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const { messaging, widget } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route.includes('message_subscribe')) {
                 assert.step('rpc:message_subscribe');
@@ -161,7 +158,7 @@ QUnit.test('click on "follow" button', async function (assert) {
         },
     });
     const thread = messaging.models['Thread'].create({
-        id: 100,
+        id: resPartnerId1,
         model: 'res.partner',
     });
     await this.createFollowButtonComponent(thread, widget.el);
@@ -197,16 +194,15 @@ QUnit.test('click on "follow" button', async function (assert) {
 QUnit.test('click on "unfollow" button', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.followers'].records.push({
-        id: 1,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.followers'].create({
         is_active: true,
-        partner_id: this.data.currentPartnerId,
-        res_id: 100,
+        partner_id: pyEnv.currentPartnerId,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const { messaging, widget } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('rpc:message_unsubscribe');
@@ -215,7 +211,7 @@ QUnit.test('click on "unfollow" button', async function (assert) {
         },
     });
     const thread = messaging.models['Thread'].create({
-        id: 100,
+        id: resPartnerId1,
         model: 'res.partner',
     });
     thread.follow();

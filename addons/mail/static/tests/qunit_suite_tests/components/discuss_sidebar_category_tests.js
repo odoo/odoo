@@ -2,20 +2,17 @@
 
 import {
     afterNextRender,
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_sidebar_category_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.start = async params => {
             return start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
-                data: this.data,
                 hasDiscuss: true,
             }));
         };
@@ -25,7 +22,8 @@ QUnit.module('discuss_sidebar_category_tests.js', {
 QUnit.test('channel - counter: should not have a counter if the category is unfolded and without needaction messages', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create();
 
     await this.start();
     assert.strictEqual(
@@ -38,30 +36,32 @@ QUnit.test('channel - counter: should not have a counter if the category is unfo
 QUnit.test('channel - counter: should not have a counter if the category is unfolded and with needaction messagens', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push(
-        { id: 20 },
-        { id: 30 },
-    );
-    this.data['mail.message'].records.push({
-        body: "message 1",
-        id: 100,
-        model: "mail.channel",
-        res_id: 20,
-    }, {
-        body: "message_2",
-        id: 200,
-        model: "mail.channel",
-        res_id: 30,
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
-        notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
-    }, {
-        mail_message_id: 200,
-        notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
-    });
+    const pyEnv = await startServer();
+    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel2' }]);
+    const [mailMessageId1, mailMessageId2] = pyEnv['mail.message'].create([
+        {
+            body: "message 1",
+            model: "mail.channel",
+            res_id: mailChannelId1,
+        },
+        {
+            body: "message_2",
+            model: "mail.channel",
+            res_id: mailChannelId2,
+        },
+    ]);
+    pyEnv['mail.notification'].create([
+        {
+            mail_message_id: mailMessageId1,
+            notification_type: 'inbox',
+            res_partner_id: pyEnv.currentPartnerId,
+        },
+        {
+            mail_message_id: mailMessageId2,
+            notification_type: 'inbox',
+            res_partner_id: pyEnv.currentPartnerId,
+        },
+    ]);
     await this.start();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_counter`).length,
@@ -73,9 +73,10 @@ QUnit.test('channel - counter: should not have a counter if the category is unfo
 QUnit.test('channel - counter: should not have a counter if category is folded and without needaction messages', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
 
@@ -91,32 +92,34 @@ QUnit.test('channel - counter: should not have a counter if category is folded a
 QUnit.test('channel - counter: should have correct value of needaction threads if category is folded and with needaction messages', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push(
-        { id: 20 },
-        { id: 30 },
-    );
-    this.data['mail.message'].records.push({
-        body: "message 1",
-        id: 100,
-        model: "mail.channel",
-        res_id: 20,
-    }, {
-        body: "message_2",
-        id: 200,
-        model: "mail.channel",
-        res_id: 30,
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 100,
-        notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
-    }, {
-        mail_message_id: 200,
-        notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
-    });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel2' }]);
+    const [mailMessageId1, mailMessageId2] = pyEnv['mail.message'].create([
+        {
+            body: "message 1",
+            model: "mail.channel",
+            res_id: mailChannelId1,
+        },
+        {
+            body: "message_2",
+            model: "mail.channel",
+            res_id: mailChannelId2,
+        },
+    ]);
+    pyEnv['mail.notification'].create([
+        {
+            mail_message_id: mailMessageId1,
+            notification_type: 'inbox',
+            res_partner_id: pyEnv.currentPartnerId,
+        },
+        {
+            mail_message_id: mailMessageId2,
+            notification_type: 'inbox',
+            res_partner_id: pyEnv.currentPartnerId,
+        },
+    ]);
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
     await this.start();
@@ -143,8 +146,9 @@ QUnit.test('channel - command: should have view command when category is unfolde
 QUnit.test('channel - command: should have view command when category is folded', async function (assert) {
     assert.expect(1);
 
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
     await this.start();
@@ -174,8 +178,9 @@ QUnit.test('channel - command: should have add command when category is unfolded
 QUnit.test('channel - command: should not have add command when category is folded', async function (assert) {
     assert.expect(1);
 
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
     await this.start();
@@ -190,9 +195,10 @@ QUnit.test('channel - command: should not have add command when category is fold
 QUnit.test('channel - states: close manually by clicking the title', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
     });
     const { messaging } = await this.start();
@@ -204,7 +210,7 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 20,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -215,9 +221,10 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
 QUnit.test('channel - states: open manually by clicking the title', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
     const { messaging } = await this.start();
@@ -229,7 +236,7 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 20,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -240,12 +247,13 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
 QUnit.test('channel - states: close should update the value on the server', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
     });
-    const currentUserId = this.data.currentUserId;
+    const currentUserId = pyEnv.currentUserId;
     const { env } = await this.start();
 
     const initalSettings = await env.services.rpc({
@@ -277,12 +285,13 @@ QUnit.test('channel - states: close should update the value on the server', asyn
 QUnit.test('channel - states: open should update the value on the server', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    const currentUserId = this.data.currentUserId;
+    const currentUserId = pyEnv.currentUserId;
     const { env } = await this.start();
 
     const initalSettings = await env.services.rpc({
@@ -314,9 +323,10 @@ QUnit.test('channel - states: open should update the value on the server', async
 QUnit.test('channel - states: close from the bus', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
     });
     const { messaging, env } = await this.start();
@@ -333,7 +343,7 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 20,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -344,9 +354,10 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
 QUnit.test('channel - states: open from the bus', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
     const { env, messaging } = await this.start();
@@ -363,7 +374,7 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 20,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -374,14 +385,15 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
 QUnit.test('channel - states: the active category item should be visble even if the category is closed', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.channel'].records.push({ id: 20 });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
     const { messaging } = await this.start();
 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 20,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`
@@ -389,7 +401,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
 
     const channel = document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
         messaging.models['Thread'].findFromIdentifyingData({
-            id: 20,
+            id: mailChannelId1,
             model: 'mail.channel',
         }).localId
     }"]`);
@@ -406,7 +418,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 20,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -423,7 +435,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 20,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -434,9 +446,9 @@ QUnit.test('channel - states: the active category item should be visble even if 
 QUnit.test('chat - counter: should not have a counter if the category is unfolded and without unread messages', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 10,
         message_unread_counter: 0,
         public: 'private',
     });
@@ -452,9 +464,9 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
 QUnit.test('chat - counter: should not have a counter if the category is unfolded and with unread messagens', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 10,
         message_unread_counter: 10,
         public: 'private',
     });
@@ -469,9 +481,9 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
 QUnit.test('chat - counter: should not have a counter if category is folded and without unread messages', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 10,
         message_unread_counter: 0,
         public: 'private',
     });
@@ -491,17 +503,19 @@ QUnit.test('chat - counter: should not have a counter if category is folded and 
 QUnit.test('chat - counter: should have correct value of unread threads if category is folded and with unread messages', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
-        channel_type: 'chat',
-        id: 10,
-        message_unread_counter: 10,
-        public: 'private',
-    }, {
-        channel_type: 'chat',
-        id: 20,
-        message_unread_counter: 20,
-        public: 'private',
-    });
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create([
+        {
+            channel_type: 'chat',
+            message_unread_counter: 10,
+            public: 'private',
+        },
+        {
+            channel_type: 'chat',
+            message_unread_counter: 20,
+            public: 'private',
+        },
+    ]);
     await this.start();
 
     await afterNextRender(() => {
@@ -528,8 +542,9 @@ QUnit.test('chat - command: should have add command when category is unfolded', 
 QUnit.test('chat - command: should not have add command when category is folded', async function (assert) {
     assert.expect(1);
 
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
     await this.start();
@@ -544,14 +559,14 @@ QUnit.test('chat - command: should not have add command when category is folded'
 QUnit.test('chat - states: close manually by clicking the title', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 10,
         message_unread_counter: 0,
         public: 'private',
     });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
     });
     const { messaging } = await this.start();
@@ -563,7 +578,7 @@ QUnit.test('chat - states: close manually by clicking the title', async function
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 10,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -574,14 +589,14 @@ QUnit.test('chat - states: close manually by clicking the title', async function
 QUnit.test('chat - states: open manually by clicking the title', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 10,
         message_unread_counter: 0,
         public: 'private',
     });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
     const { messaging } = await this.start();
@@ -593,7 +608,7 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 10,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -604,12 +619,13 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
 QUnit.test('chat - states: close should call update server data', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
     });
-    const currentUserId = this.data.currentUserId;
+    const currentUserId = pyEnv.currentUserId;
     const { env } = await this.start();
 
     const initalSettings = await env.services.rpc({
@@ -641,18 +657,18 @@ QUnit.test('chat - states: close should call update server data', async function
 QUnit.test('chat - states: open should call update server data', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    const pyEnv = await startServer();
+    pyEnv['mail.channel'].create();
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    const currentUserId = this.data.currentUserId;
     const { env } = await this.start();
 
     const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
-        args: [[currentUserId]],
+        args: [[pyEnv.currentUserId]],
     });
     assert.strictEqual(
         initalSettings.is_discuss_sidebar_category_chat_open,
@@ -666,7 +682,7 @@ QUnit.test('chat - states: open should call update server data', async function 
     const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
-        args: [[currentUserId]],
+        args: [[pyEnv.currentUserId]],
     });
     assert.strictEqual(
         newSettings.is_discuss_sidebar_category_chat_open,
@@ -678,14 +694,14 @@ QUnit.test('chat - states: open should call update server data', async function 
 QUnit.test('chat - states: close from the bus', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 10,
         message_unread_counter: 0,
         public: 'private',
     });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
     });
     const { env, messaging } = await this.start();
@@ -702,7 +718,7 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 10,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -713,14 +729,14 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
 QUnit.test('chat - states: open from the bus', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 10,
         message_unread_counter: 0,
         public: 'private',
     });
-    this.data['res.users.settings'].records.push({
-        user_id: this.data.currentUserId,
+    pyEnv['res.users.settings'].create({
+        user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
     const { env, messaging } = await this.start();
@@ -737,7 +753,7 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 10,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -748,9 +764,9 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
 QUnit.test('chat - states: the active category item should be visble even if the category is closed', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 10,
         message_unread_counter: 0,
         public: 'private',
     });
@@ -760,7 +776,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 10,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`
@@ -768,7 +784,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
 
     const chat = document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
         messaging.models['Thread'].findFromIdentifyingData({
-            id: 10,
+            id: mailChannelId1,
             model: 'mail.channel',
         }).localId
     }"]`);
@@ -785,7 +801,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 10,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,
@@ -802,7 +818,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 10,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]`,

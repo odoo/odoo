@@ -1,31 +1,20 @@
 /** @odoo-module **/
 
-import { afterNextRender, beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('chatter_suggested_recipients_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('chatter_suggested_recipients_tests.js');
 
 QUnit.test("suggest recipient on 'Send message' composer", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        display_name: "John Jane",
-        email: "john@jane.be",
-        id: 100,
-    });
-    this.data['res.fake'].records.push({
-        id: 10,
-        email_cc: "john@test.be",
-        partner_ids: [100],
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
+    const resFakeId1 = pyEnv['res.fake'].create({ email_cc: "john@test.be", partner_ids: [resPartnerId1] });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 10,
+        threadId: resFakeId1,
         threadModel: 'res.fake',
     });
     await afterNextRender(() =>
@@ -41,19 +30,12 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
 QUnit.test("with 3 or less suggested recipients: no 'show more' button", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        display_name: "John Jane",
-        email: "john@jane.be",
-        id: 100,
-    });
-    this.data['res.fake'].records.push({
-        id: 10,
-        email_cc: "john@test.be",
-        partner_ids: [100],
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
+    const resFakeId1 = pyEnv['res.fake'].create({ email_cc: "john@test.be", partner_ids: [resPartnerId1] });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 10,
+        threadId: resFakeId1,
         threadModel: 'res.fake',
     });
     await afterNextRender(() =>
@@ -69,24 +51,18 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
 QUnit.test("display reason for suggested recipient on mouse over", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        display_name: "John Jane",
-        email: "john@jane.be",
-        id: 100,
-    });
-    this.data['res.fake'].records.push({
-        id: 10,
-        partner_ids: [100],
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
+    const resFakeId1 = pyEnv['res.fake'].create({ partner_ids: [resPartnerId1] });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 10,
+        threadId: resFakeId1,
         threadModel: 'res.fake',
     });
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
     );
-    const partnerTitle = document.querySelector('.o_ComposerSuggestedRecipient[data-partner-id="100"]').getAttribute('title');
+    const partnerTitle = document.querySelector(`.o_ComposerSuggestedRecipient[data-partner-id="${resPartnerId1}"]`).getAttribute('title');
     assert.strictEqual(
         partnerTitle,
         "Add as recipient and follower (reason: Email partner)",
@@ -97,13 +73,11 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
 QUnit.test("suggested recipient without partner are unchecked by default", async function (assert) {
     assert.expect(1);
 
-    this.data['res.fake'].records.push({
-        id: 10,
-        email_cc: "john@test.be",
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resFakeId1 = pyEnv['res.fake'].create({ email_cc: "john@test.be" });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 10,
+        threadId: resFakeId1,
         threadModel: 'res.fake',
     });
     await afterNextRender(() =>
@@ -119,24 +93,18 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
 QUnit.test("suggested recipient with partner are checked by default", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        display_name: "John Jane",
-        email: "john@jane.be",
-        id: 100,
-    });
-    this.data['res.fake'].records.push({
-        id: 10,
-        partner_ids: [100],
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
+    const resFakeId1 = pyEnv['res.fake'].create({ partner_ids: [resPartnerId1] });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 10,
+        threadId: resFakeId1,
         threadModel: 'res.fake',
     });
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
     );
-    const checkboxChecked = document.querySelector('.o_ComposerSuggestedRecipient[data-partner-id="100"] input[type=checkbox]');
+    const checkboxChecked = document.querySelector(`.o_ComposerSuggestedRecipient[data-partner-id="${resPartnerId1}"] input[type=checkbox]`);
     assert.ok(
         checkboxChecked.checked,
         "suggested recipient with partner must be checked by default",
@@ -146,33 +114,19 @@ QUnit.test("suggested recipient with partner are checked by default", async func
 QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' button", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        display_name: "John Jane",
-        email: "john@jane.be",
-        id: 100,
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4] = pyEnv['res.partner'].create([
+        { display_name: "John Jane", email: "john@jane.be" },
+        { display_name: "Jack Jone", email: "jack@jone.be" },
+        { display_name: "jack sparrow", email: "jsparrow@blackpearl.bb" },
+        { display_name: "jolly Roger", email: "Roger@skullflag.com" },
+    ]);
+    const resFakeId1 = pyEnv['res.fake'].create({
+        partner_ids: [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4],
     });
-    this.data['res.partner'].records.push({
-        display_name: "Jack Jone",
-        email: "jack@jone.be",
-        id: 1000,
-    });
-    this.data['res.partner'].records.push({
-        display_name: "jolly Roger",
-        email: "Roger@skullflag.com",
-        id: 1001,
-    });
-    this.data['res.partner'].records.push({
-        display_name: "jack sparrow",
-        email: "jsparrow@blackpearl.bb",
-        id: 1002,
-    });
-    this.data['res.fake'].records.push({
-        id: 10,
-        partner_ids: [100, 1000, 1001, 1002],
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 10,
+        threadId: resFakeId1,
         threadModel: 'res.fake',
     });
 
@@ -189,33 +143,19 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
 QUnit.test("more than 3 suggested recipients: show all of them on click 'show more' button", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        display_name: "John Jane",
-        email: "john@jane.be",
-        id: 100,
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4] = pyEnv['res.partner'].create([
+        { display_name: "John Jane", email: "john@jane.be" },
+        { display_name: "Jack Jone", email: "jack@jone.be" },
+        { display_name: "jack sparrow", email: "jsparrow@blackpearl.bb" },
+        { display_name: "jolly Roger", email: "Roger@skullflag.com" },
+    ]);
+    const resFakeId1 = pyEnv['res.fake'].create({
+        partner_ids: [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4],
     });
-    this.data['res.partner'].records.push({
-        display_name: "Jack Jone",
-        email: "jack@jone.be",
-        id: 1000,
-    });
-    this.data['res.partner'].records.push({
-        display_name: "jolly Roger",
-        email: "Roger@skullflag.com",
-        id: 1001,
-    });
-    this.data['res.partner'].records.push({
-        display_name: "jack sparrow",
-        email: "jsparrow@blackpearl.bb",
-        id: 1002,
-    });
-    this.data['res.fake'].records.push({
-        id: 10,
-        partner_ids: [100, 1000, 1001, 1002],
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 10,
+        threadId: resFakeId1,
         threadModel: 'res.fake',
     });
 
@@ -236,33 +176,19 @@ QUnit.test("more than 3 suggested recipients: show all of them on click 'show mo
 QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less' button", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        display_name: "John Jane",
-        email: "john@jane.be",
-        id: 100,
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4] = pyEnv['res.partner'].create([
+        { display_name: "John Jane", email: "john@jane.be" },
+        { display_name: "Jack Jone", email: "jack@jone.be" },
+        { display_name: "jack sparrow", email: "jsparrow@blackpearl.bb" },
+        { display_name: "jolly Roger", email: "Roger@skullflag.com" },
+    ]);
+    const resFakeId1 = pyEnv['res.fake'].create({
+        partner_ids: [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4],
     });
-    this.data['res.partner'].records.push({
-        display_name: "Jack Jone",
-        email: "jack@jone.be",
-        id: 1000,
-    });
-    this.data['res.partner'].records.push({
-        display_name: "jolly Roger",
-        email: "Roger@skullflag.com",
-        id: 1001,
-    });
-    this.data['res.partner'].records.push({
-        display_name: "jack sparrow",
-        email: "jsparrow@blackpearl.bb",
-        id: 1002,
-    });
-    this.data['res.fake'].records.push({
-        id: 10,
-        partner_ids: [100, 1000, 1001, 1002],
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 10,
+        threadId: resFakeId1,
         threadModel: 'res.fake',
     });
 
@@ -282,33 +208,19 @@ QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less'
 QUnit.test("suggested recipients list display 3 suggested recipient and 'show more' button when 'show less' button is clicked", async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({
-        display_name: "John Jane",
-        email: "john@jane.be",
-        id: 100,
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4] = pyEnv['res.partner'].create([
+        { display_name: "John Jane", email: "john@jane.be" },
+        { display_name: "Jack Jone", email: "jack@jone.be" },
+        { display_name: "jack sparrow", email: "jsparrow@blackpearl.bb" },
+        { display_name: "jolly Roger", email: "Roger@skullflag.com" },
+    ]);
+    const resFakeId1 = pyEnv['res.fake'].create({
+        partner_ids: [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4],
     });
-    this.data['res.partner'].records.push({
-        display_name: "Jack Jone",
-        email: "jack@jone.be",
-        id: 1000,
-    });
-    this.data['res.partner'].records.push({
-        display_name: "jolly Roger",
-        email: "Roger@skullflag.com",
-        id: 1001,
-    });
-    this.data['res.partner'].records.push({
-        display_name: "jack sparrow",
-        email: "jsparrow@blackpearl.bb",
-        id: 1002,
-    });
-    this.data['res.fake'].records.push({
-        id: 10,
-        partner_ids: [100, 1000, 1001, 1002],
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 10,
+        threadId: resFakeId1,
         threadModel: 'res.fake',
     });
 
@@ -337,17 +249,10 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
 QUnit.test("suggested recipients should not be notified when posting an internal note", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
-        display_name: "John Jane",
-        email: "john@jane.be",
-        id: 100,
-    });
-    this.data['res.fake'].records.push({
-        id: 10,
-        partner_ids: [100],
-    });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
+    const resFakeId1 = pyEnv['res.fake'].create({ partner_ids: [resPartnerId1] });
     const { createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.strictEqual(
@@ -360,7 +265,7 @@ QUnit.test("suggested recipients should not be notified when posting an internal
         },
     });
     await createChatterContainerComponent({
-        threadId: 10,
+        threadId: resFakeId1,
         threadModel: 'res.fake',
     });
     await afterNextRender(() =>

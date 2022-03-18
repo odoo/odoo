@@ -1,37 +1,32 @@
 /** @odoo-module **/
 
-import { afterNextRender, beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('notification_list_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('notification_list_tests.js');
 
 QUnit.test('marked as read thread notifications are ordered by last message date', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push(
-        { id: 100, name: "Channel 2019" },
-        { id: 200, name: "Channel 2020" }
-    );
-    this.data['mail.message'].records.push(
+    const pyEnv = await startServer();
+    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
+        { name: "Channel 2019" },
+        { name: "Channel 2020" },
+    ]);
+    pyEnv['mail.message'].create([
         {
             date: "2019-01-01 00:00:00",
-            id: 42,
             model: 'mail.channel',
-            res_id: 100,
+            res_id: mailChannelId1,
         },
         {
             date: "2020-01-01 00:00:00",
-            id: 43,
             model: 'mail.channel',
-            res_id: 200,
-        }
-    );
-    const { createNotificationListComponent } = await start({ data: this.data });
+            res_id: mailChannelId2,
+        },
+    ]);
+    const { createNotificationListComponent } = await start();
     await createNotificationListComponent({ filter: 'all' });
     assert.containsN(
         document.body,
@@ -55,25 +50,24 @@ QUnit.test('marked as read thread notifications are ordered by last message date
 QUnit.test('thread notifications are re-ordered on receiving a new message', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.channel'].records.push(
-        { id: 100, name: "Channel 2019" },
-        { id: 200, name: "Channel 2020" }
-    );
-    this.data['mail.message'].records.push(
+    const pyEnv = await startServer();
+    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
+        { name: "Channel 2019" },
+        { name: "Channel 2020" },
+    ]);
+    pyEnv['mail.message'].create([
         {
             date: "2019-01-01 00:00:00",
-            id: 42,
             model: 'mail.channel',
-            res_id: 100,
+            res_id: mailChannelId1,
         },
         {
             date: "2020-01-01 00:00:00",
-            id: 43,
             model: 'mail.channel',
-            res_id: 200,
-        }
-    );
-    const { createNotificationListComponent, widget } = await start({ data: this.data });
+            res_id: mailChannelId2,
+        },
+    ]);
+    const { createNotificationListComponent, widget } = await start();
     await createNotificationListComponent({ filter: 'all' });
     assert.containsN(
         document.body,
@@ -86,7 +80,7 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel/new_message',
             payload: {
-                id: 100,
+                id: mailChannelId1,
                 message: {
                     author_id: [7, "Demo User"],
                     body: "<p>New message !</p>",
@@ -95,7 +89,7 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
                     message_type: 'comment',
                     model: 'mail.channel',
                     record_name: 'Channel 2019',
-                    res_id: 100,
+                    res_id: mailChannelId1,
                 },
             },
         }]);

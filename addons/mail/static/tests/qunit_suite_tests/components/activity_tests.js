@@ -1,30 +1,26 @@
 /** @odoo-module **/
 
-import { afterNextRender, beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 import { date_to_str } from 'web.time';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('activity_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('activity_tests.js');
 
 QUnit.test('activity simplest layout', async function (assert) {
     assert.expect(12);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
-        id: 12,
-        res_id: 100,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -92,16 +88,16 @@ QUnit.test('activity simplest layout', async function (assert) {
 QUnit.test('activity with note layout', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
-        id: 12,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
         note: 'There is no good or bad note',
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -127,17 +123,17 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
     const today = new Date();
     const fiveDaysFromNow = new Date();
     fiveDaysFromNow.setDate(today.getDate() + 5);
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
         date_deadline: date_to_str(fiveDaysFromNow),
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
         state: 'planned',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -167,17 +163,17 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
         date_deadline: date_to_str(tomorrow),
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
         state: 'planned',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -204,17 +200,17 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
 QUnit.test('activity info layout when planned today', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
         date_deadline: date_to_str(new Date()),
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
         state: 'today',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -244,17 +240,17 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
         date_deadline: date_to_str(yesterday),
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
         state: 'overdue',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -284,17 +280,17 @@ QUnit.test('activity info layout when planned before yesterday', async function 
     const today = new Date();
     const fiveDaysBeforeNow = new Date();
     fiveDaysBeforeNow.setDate(today.getDate() - 5);
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
         date_deadline: date_to_str(fiveDaysBeforeNow),
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
         state: 'overdue',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -321,16 +317,16 @@ QUnit.test('activity info layout when planned before yesterday', async function 
 QUnit.test('activity with a summary layout', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
-        id: 12,
-        res_id: 100,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
+        res_id: resPartnerId1,
         res_model: 'res.partner',
         summary: 'test summary',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -358,16 +354,16 @@ QUnit.test('activity with a summary layout', async function (assert) {
 QUnit.test('activity without summary layout', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.activity'].create({
         activity_type_id: 1,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -403,18 +399,19 @@ QUnit.test('activity details toggle', async function (assert) {
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resUsersId1 = pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+    pyEnv['mail.activity'].create({
         create_date: date_to_str(today),
-        create_uid: 1,
+        create_uid: resUsersId1,
         date_deadline: date_to_str(tomorrow),
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -458,25 +455,23 @@ QUnit.test('activity details layout', async function (assert) {
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    this.data['res.users'].records.push({
-        id: 10,
-        name: 'Pauvre pomme',
-    });
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
-        activity_type_id: 1,
+    const pyEnv = await startServer();
+    const resUsersId1 = pyEnv['res.users'].create({ name: 'Pauvre pomme' });
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    pyEnv['mail.activity'].create({
+        activity_type_id: emailActivityTypeId,
         create_date: date_to_str(today),
-        create_uid: 2,
+        create_uid: resUsersId1,
         date_deadline: date_to_str(tomorrow),
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
         state: 'planned',
-        user_id: 10,
+        user_id: resUsersId1,
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -543,21 +538,19 @@ QUnit.test('activity details layout', async function (assert) {
 QUnit.test('activity with mail template layout', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.template'].records.push({
-        id: 1,
-        name: "Dummy mail template",
-    });
-    this.data['mail.activity'].records.push({
-        activity_type_id: 1,
-        id: 12,
-        mail_template_ids: [1],
-        res_id: 100,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailTemplateId1 = pyEnv['mail.template'].create({ name: "Dummy mail template" });
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    pyEnv['mail.activity'].create({
+        activity_type_id: emailActivityTypeId,
+        mail_template_ids: [mailTemplateId1],
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -605,12 +598,22 @@ QUnit.test('activity with mail template layout', async function (assert) {
 QUnit.test('activity with mail template: preview mail', async function (assert) {
     assert.expect(10);
 
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailTemplateId1 = pyEnv['mail.template'].create({ name: "Dummy mail template" });
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    pyEnv['mail.activity'].create({
+        activity_type_id: emailActivityTypeId,
+        mail_template_ids: [mailTemplateId1],
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+    });
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
         assert.strictEqual(
             payload.action.context.default_res_id,
-            42,
+            resPartnerId1,
             'Action should have the activity res id as default res id in context'
         );
         assert.strictEqual(
@@ -624,7 +627,7 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
         );
         assert.strictEqual(
             payload.action.context.default_template_id,
-            1,
+            mailTemplateId1,
             'Action should have the selected mail template id as default template id in context'
         );
         assert.strictEqual(
@@ -638,22 +641,9 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
             'Action should have "mail.compose.message" as res_model'
         );
     });
-
-    this.data['res.partner'].records.push({ id: 42 });
-    this.data['mail.template'].records.push({
-        id: 1,
-        name: "Dummy mail template",
-    });
-    this.data['mail.activity'].records.push({
-        activity_type_id: 1,
-        id: 12,
-        mail_template_ids: [1],
-        res_id: 42,
-        res_model: 'res.partner',
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data, env: { bus } });
+    const { createChatterContainerComponent } = await start({ env: { bus } });
     await createChatterContainerComponent({
-        threadId: 42,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -677,26 +667,23 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
 QUnit.test('activity with mail template: send mail', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 42 });
-    this.data['mail.template'].records.push({
-        id: 1,
-        name: "Dummy mail template",
-    });
-    this.data['mail.activity'].records.push({
-        activity_type_id: 1,
-        id: 12,
-        mail_template_ids: [1],
-        res_id: 42,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailTemplateId1 = pyEnv['mail.template'].create({ name: "Dummy mail template" });
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    pyEnv['mail.activity'].create({
+        activity_type_id: emailActivityTypeId,
+        mail_template_ids: [mailTemplateId1],
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const { createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (args.method === 'activity_send_mail') {
                 assert.step('activity_send_mail');
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 42);
-                assert.strictEqual(args.args[1], 1);
+                assert.strictEqual(args.args[0][0], resPartnerId1);
+                assert.strictEqual(args.args[1], mailTemplateId1);
                 return;
             } else {
                 return this._super(...arguments);
@@ -704,7 +691,7 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
         },
     });
     await createChatterContainerComponent({
-        threadId: 42,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -728,18 +715,19 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
 QUnit.test('activity upload document is available', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({ id: 100, });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const uploadActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Upload Document']])[0];
+    pyEnv['mail.activity'].create({
         activity_category: 'upload_file',
-        activity_type_id: 28,
+        activity_type_id: uploadActivityTypeId,
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     const chatterContainerComponent = await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -761,18 +749,19 @@ QUnit.test('activity upload document is available', async function (assert) {
 QUnit.test('activity click on mark as done', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    pyEnv['mail.activity'].create({
         activity_category: 'default',
-        activity_type_id: 1,
+        activity_type_id: emailActivityTypeId,
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -808,18 +797,19 @@ QUnit.test('activity click on mark as done', async function (assert) {
 QUnit.test('activity mark as done popover should focus feedback input on open [REQUIRE FOCUS]', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    pyEnv['mail.activity'].create({
         activity_category: 'default',
-        activity_type_id: 1,
+        activity_type_id: emailActivityTypeId,
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.containsOnce(
@@ -846,12 +836,23 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
 QUnit.test('activity click on edit', async function (assert) {
     assert.expect(9);
 
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailTemplateId1 = pyEnv['mail.template'].create({ name: "Dummy mail template" });
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    const mailActivityId1 = pyEnv['mail.activity'].create({
+        activity_type_id: emailActivityTypeId,
+        can_write: true,
+        mail_template_ids: [mailTemplateId1],
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+    });
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
         assert.strictEqual(
             payload.action.context.default_res_id,
-            42,
+            resPartnerId1,
             'Action should have the activity res id as default res id in context'
         );
         assert.strictEqual(
@@ -871,27 +872,13 @@ QUnit.test('activity click on edit', async function (assert) {
         );
         assert.strictEqual(
             payload.action.res_id,
-            12,
+            mailActivityId1,
             'Action should have activity id as res_id'
         );
     });
-
-    this.data['res.partner'].records.push({ id: 42 });
-    this.data['mail.template'].records.push({
-        id: 1,
-        name: "Dummy mail template",
-    });
-    this.data['mail.activity'].records.push({
-        activity_type_id: 1,
-        can_write: true,
-        id: 12,
-        mail_template_ids: [1],
-        res_id: 42,
-        res_model: 'res.partner',
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data, env: { bus } });
+    const { createChatterContainerComponent } = await start({ env: { bus } });
     await createChatterContainerComponent({
-        threadId: 42,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -915,12 +902,12 @@ QUnit.test('activity click on edit', async function (assert) {
 QUnit.test('activity edition', async function (assert) {
     assert.expect(14);
 
-    this.data['res.partner'].records.push({ id: 42 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailActivityId1 = pyEnv['mail.activity'].create({
         can_write: true,
         icon: 'fa-times',
-        id: 12,
-        res_id: 42,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const bus = new Bus();
@@ -928,7 +915,7 @@ QUnit.test('activity edition', async function (assert) {
         assert.step('do_action');
         assert.strictEqual(
             payload.action.context.default_res_id,
-            42,
+            resPartnerId1,
             'Action should have the activity res id as default res id in context'
         );
         assert.strictEqual(
@@ -948,15 +935,15 @@ QUnit.test('activity edition', async function (assert) {
         );
         assert.strictEqual(
             payload.action.res_id,
-            12,
+            mailActivityId1,
             'Action should have activity id as res_id'
         );
-        this.data['mail.activity'].records[0].icon = 'fa-check';
+        pyEnv['mail.activity'].write([mailActivityId1], { icon: 'fa-check' });
         payload.options.on_close();
     });
-    const { createChatterContainerComponent } = await start({ data: this.data, env: { bus } });
+    const { createChatterContainerComponent } = await start({ env: { bus } });
     await createChatterContainerComponent({
-        threadId: 42,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.containsOnce(
@@ -1007,21 +994,21 @@ QUnit.test('activity edition', async function (assert) {
 QUnit.test('activity click on cancel', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
-        activity_type_id: 1,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    const mailActivityId1 = pyEnv['mail.activity'].create({
+        activity_type_id: emailActivityTypeId,
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const { createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 assert.step('unlink');
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 12);
+                assert.strictEqual(args.args[0][0], mailActivityId1);
                 return;
             } else {
                 return this._super(...arguments);
@@ -1029,7 +1016,7 @@ QUnit.test('activity click on cancel', async function (assert) {
         },
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.strictEqual(
@@ -1061,18 +1048,19 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
     // This test is not in activity_mark_done_popover_tests.js as it requires the activity mark done
     // component to have a parent in order to allow testing interactions the popover.
     assert.expect(2);
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    pyEnv['mail.activity'].create({
         activity_category: 'default',
-        activity_type_id: 1,
+        activity_type_id: emailActivityTypeId,
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -1101,18 +1089,19 @@ QUnit.test('activity mark done popover click on discard', async function (assert
     // component to have a parent in order to allow testing interactions the popover.
     assert.expect(3);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    pyEnv['mail.activity'].create({
         activity_category: 'default',
-        activity_type_id: 1,
+        activity_type_id: emailActivityTypeId,
         can_write: true,
-        id: 12,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ data: this.data });
+    const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
@@ -1161,20 +1150,20 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         );
         assert.step('do-action:openFormView_some.model_250');
     });
-
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    pyEnv['mail.activity'].create({
         activity_category: 'default',
-        activity_type_id: 1,
+        activity_type_id: emailActivityTypeId,
         can_write: true,
-        id: 12,
         note: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const { createChatterContainerComponent } = await start({ data: this.data, env: { bus } });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     assert.containsOnce(
@@ -1198,34 +1187,31 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
 QUnit.test('button related to file uploading is replaced when updating activity type from "Upload Document" to "Email"', async function (assert) {
     assert.expect(2);
 
-    const activityId = 513;
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const uploadActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Upload document']])[0];
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    const mailActivityId1 = pyEnv['mail.activity'].create({
         activity_category: 'upload_file',
-        activity_type_id: 28,
+        activity_type_id: uploadActivityTypeId,
         can_write: true,
-        id: activityId,
-        res_id: 100,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent, env, messaging } = await start({ data: this.data });
+    const { createChatterContainerComponent, messaging } = await start();
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
     // Update the record server side then fetch updated data in order to
     // emulate what happens when using the form view.
-    await env.services.rpc({
-        model: 'mail.activity',
-        method: 'write',
-        args: [[activityId], {
-            activity_category: 'default',
-            activity_type_id: 1,
-        }],
+    pyEnv['mail.activity'].write([mailActivityId1], {
+        activity_category: 'default',
+        activity_type_id: emailActivityTypeId,
     });
     await afterNextRender(async () => {
-        const activity = messaging.models['Activity'].findFromIdentifyingData({ id: activityId });
+        const activity = messaging.models['Activity'].findFromIdentifyingData({ id: mailActivityId1 });
         await activity.fetchAndUpdate();
     });
     assert.containsOnce(

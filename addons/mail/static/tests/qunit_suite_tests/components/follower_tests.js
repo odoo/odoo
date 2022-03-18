@@ -4,9 +4,9 @@ import { insert, link } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
-    beforeEach,
     createRootMessagingComponent,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
@@ -14,9 +14,7 @@ import Bus from 'web.Bus';
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('follower_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.createFollowerComponent = async (follower, target) => {
             await createRootMessagingComponent(follower.env, "Follower", {
                 props: { followerLocalId: follower.localId },
@@ -29,7 +27,7 @@ QUnit.module('follower_tests.js', {
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
 
     const thread = messaging.models['Thread'].create({
         hasWriteAccess: false,
@@ -76,7 +74,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(6);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         hasWriteAccess: true,
         id: 100,
@@ -148,10 +146,11 @@ QUnit.test('click on partner follower details', async function (assert) {
         );
         openFormDef.resolve();
     });
-    this.data['res.partner'].records.push({ id: 100 });
-    const { messaging, widget } = await start({ data: this.data, env: { bus } });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { messaging, widget } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].create({
-        id: 100,
+        id: resPartnerId1,
         model: 'res.partner',
     });
     const follower = await messaging.models['Follower'].create({
@@ -187,16 +186,15 @@ QUnit.test('click on partner follower details', async function (assert) {
 QUnit.test('click on edit follower', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.followers'].records.push({
-        id: 2,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['mail.followers'].create({
         is_active: true,
-        partner_id: this.data.currentPartnerId,
-        res_id: 100,
+        partner_id: pyEnv.currentPartnerId,
+        res_id: resPartnerId1,
         res_model: 'res.partner',
     });
     const { messaging, widget } = await start({
-        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
@@ -206,7 +204,7 @@ QUnit.test('click on edit follower', async function (assert) {
         },
     });
     const thread = messaging.models['Thread'].create({
-        id: 100,
+        id: resPartnerId1,
         model: 'res.partner',
     });
     await thread.fetchData(['followers']);
@@ -237,9 +235,9 @@ QUnit.test('click on edit follower', async function (assert) {
 QUnit.test('edit follower and close subtype dialog', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({ id: 100 });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
     const { messaging, widget } = await start({
-        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
@@ -257,7 +255,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         },
     });
     const thread = messaging.models['Thread'].create({
-        id: 100,
+        id: resPartnerId1,
         model: 'res.partner',
     });
     const follower = await messaging.models['Follower'].create({
