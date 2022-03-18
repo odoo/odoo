@@ -24,7 +24,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module('Actions in target="new"');
 
-    QUnit.skipWOWL('can execute act_window actions in target="new"', async function (assert) {
+    QUnit.test('can execute act_window actions in target="new"', async function (assert) {
         assert.expect(8);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -43,7 +43,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
         assert.containsOnce(
             document.body,
-            ".o_technical_modal .o_form_view o_form_editable",
+            ".o_technical_modal .o_form_view .o_form_editable",
             "form view should be in edit mode"
         );
         assert.verifySteps([
