@@ -33,8 +33,6 @@
         'data/digest_data.xml',
         'views/assets.xml',
         'views/website_templates.xml',
-        'views/website_navbar_templates.xml',
-        'views/website_configurator_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_title.xml',
         'views/snippets/s_cover.xml',
@@ -156,6 +154,7 @@
             'website/static/tests/tours/**/*',
         ],
         'web.assets_backend': [
+            'website/static/src/scss/color_palettes.scss',
             'website/static/src/scss/view_hierarchy.scss',
             'website/static/src/scss/website.backend.scss',
             'website/static/src/scss/website_visitor_views.scss',
@@ -291,15 +290,6 @@
             'http://test.external.link/javascript2.js',
             'http://test.external.link/style2.css',
         ],
-        'website.website_configurator_assets_js': [
-            '/website/static/src/client_actions/configurator/configurator.js',
-        ],
-        'website.website_configurator_assets_scss': [
-            ('include', 'web.assets_frontend'),
-            '/website/static/src/client_actions/configurator/configurator.scss',
-            '/website/static/src/scss/website.theme_install.scss',
-            '/website/static/src/scss/website.wysiwyg.scss'
-        ]
     },
     'license': 'LGPL-3',
 }
