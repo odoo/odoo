@@ -71,7 +71,6 @@
                     <field name="total_amount_company" optional="show" sum="Total Company Currency" widget='monetary' options="{'currency_field': 'company_currency_id'}" decoration-bf="True"/>
                     <field name="total_amount" optional="hide" decoration-bf="True" groups="base.group_multi_currency"/>
                     <field name="currency_id" optional="hide" groups="base.group_multi_currency"/>
-                    <field name="message_unread" invisible="1"/>
                     <field name="state" optional="show" readonly="1" decoration-info="state == 'draft'" decoration-success="state in ['reported', 'approved', 'done']" decoration-danger="state in 'refused'" widget="badge"/>
                 </tree>
             </field>
@@ -632,7 +631,6 @@
                     <field name="journal_id" optional="hide"/>
                     <field name="state" optional="show" decoration-info="state == 'draft'" decoration-success="state in ['submit', 'approve', 'post', 'done']" decoration-danger="state == 'cancel'" widget="badge"/>
                     <field name="payment_state" optional="show" decoration-info="payment_state in ('partial','in_payment')" decoration-success="payment_state == 'paid'" decoration-danger="payment_state in ('reversed','not_paid')" widget="badge"/>
-                    <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -762,8 +760,7 @@
                                     <field name="reference" optional="hide" readonly="True"/>
                                     <field name="analytic_account_id" optional="show" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
-                                    <field name="account_id" optional="hide"/>
-                                    <field name="message_unread" invisible="1"/>
+                                    <field name="account_id" optional="hide" readonly="True"/>
                                     <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-right pr-0" readonly="True"/>
                                     <field name="attachment_number" class="text-right pl-0 pr-4" width="1" nolabel="1"/>
                                     <field name="product_has_cost" invisible="True"/>

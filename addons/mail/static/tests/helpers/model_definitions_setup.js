@@ -53,6 +53,7 @@ insertModelFields('mail.channel', {
         string: "Members",
         type: 'many2many'
     },
+    message_unread_counter: { string: 'Unread counter', type: 'integer' },
     seen_message_id:  { relation: 'mail.message', string: "Last Seen", type: 'many2one' },
     state: { default: 'open', string: "FoldState", type: "char" },
     uuid: { default: () => _.uniqueId('mail.channel_uuid-') },

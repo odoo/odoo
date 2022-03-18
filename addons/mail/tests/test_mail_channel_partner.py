@@ -30,6 +30,10 @@ class TestMailChannelMembers(MailCommon):
             cls.env, login='user_2',
             name='User 2',
             groups='base.group_user,mail.secret_group')
+        cls.user_3 = mail_new_test_user(
+            cls.env, login='user_3',
+            name='User 3',
+            groups='base.group_user,mail.secret_group')
         cls.user_portal = mail_new_test_user(
             cls.env, login='user_portal',
             name='User Portal',
@@ -222,3 +226,54 @@ class TestMailChannelMembers(MailCommon):
             self.public_channel.with_user(self.user_portal).add_members(self.user_portal.partner_id.ids)
         with self.assertRaises(AccessError):
             self.public_channel.with_user(self.user_public).add_members(self.user_public.partner_id.ids)
+
+    # ------------------------------------------------------------
+    # UNREAD COUNTER TESTS
+    # ------------------------------------------------------------
+
+    def test_unread_counter_with_message_post(self):
+        channel_as_user_1 = self.env['mail.channel'].with_user(self.user_1).create({
+            'name': 'Secret channel',
+            'public': 'public',
+            'channel_type': 'channel',
+        })
+        channel_as_user_1.with_user(self.user_1).add_members(self.user_1.partner_id.ids)
+        channel_as_user_1.with_user(self.user_1).add_members(self.user_2.partner_id.ids)
+        channel_1_rel_user_2 = self.env['mail.channel.partner'].search([
+            ('channel_id', '=', channel_as_user_1.id),
+            ('partner_id', '=', self.user_2.partner_id.id)
+        ])
+        self.assertEqual(channel_1_rel_user_2.message_unread_counter, 0, "should not have unread message initially as notification type is ignored")
+
+        channel_as_user_1.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
+        channel_1_rel_user_2 = self.env['mail.channel.partner'].search([
+            ('channel_id', '=', channel_as_user_1.id),
+            ('partner_id', '=', self.user_2.partner_id.id)
+        ])
+        self.assertEqual(channel_1_rel_user_2.message_unread_counter, 1, "should have 1 unread message after someone else posted a message")
+
+    def test_unread_counter_with_message_post_multi_channel(self):
+        channel_1_as_user_1 = self.env['mail.channel'].with_user(self.user_1).create({
+            'name': 'wololo channel',
+            'public': 'public',
+            'channel_type': 'channel',
+        })
+        channel_2_as_user_2 = self.env['mail.channel'].with_user(self.user_2).create({
+            'name': 'walala channel',
+            'public': 'public',
+            'channel_type': 'channel',
+        })
+        channel_1_as_user_1.add_members(self.user_2.partner_id.ids)
+        channel_2_as_user_2.add_members(self.user_1.partner_id.ids)
+        channel_2_as_user_2.add_members(self.user_3.partner_id.ids)
+        channel_1_as_user_1.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
+        channel_1_as_user_1.message_post(body='Test 2', message_type='comment', subtype_xmlid='mail.mt_comment')
+        channel_2_as_user_2.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
+        members = self.env['mail.channel.partner'].search([('channel_id', 'in', (channel_1_as_user_1 + channel_2_as_user_2).ids)], order="id")
+        self.assertEqual(members.mapped('message_unread_counter'), [
+            0,  # channel 1 user 1: posted last message
+            0,  # channel 2 user 2: posted last message
+            2,  # channel 1 user 2: received 2 messages (from message post)
+            1,  # channel 2 user 1: received 1 message (from message post)
+            1,  # channel 2 user 3: received 1 message (from message post)
+        ])

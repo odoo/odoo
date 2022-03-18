@@ -770,11 +770,10 @@ class Channel(models.Model):
             # find the channel partner state, if logged user
             if self.env.user and self.env.user.partner_id:
                 info['message_needaction_counter'] = channel.message_needaction_counter
-                info['message_unread_counter'] = channel.message_unread_counter
-                partner_channel = member_of_current_user_by_channel.get(channel, self.env['mail.channel.partner'])
+                partner_channel = member_of_current_user_by_channel.get(channel, self.env['mail.channel.partner']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
                 if partner_channel:
-                    partner_channel = partner_channel[0]
                     info['state'] = partner_channel.fold_state or 'open'
+                    info['message_unread_counter'] = partner_channel.message_unread_counter
                     info['is_minimized'] = partner_channel.is_minimized
                     info['seen_message_id'] = partner_channel.seen_message_id.id
                     info['custom_channel_name'] = partner_channel.custom_channel_name
