@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ActivityBox" owl="1">
-        <div class="o_ActivityBox" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="activityBoxView">
+        <t t-if="activityBoxView">
+            <div class="o_ActivityBox" t-attf-class="{{ className }}" t-ref="root">
                 <a role="button" class="o_ActivityBox_title btn d-flex align-items-center mt-4 p-0 w-100 font-weight-bold" t-on-click="activityBoxView.onClickActivityBoxTitle">
                     <hr class="o_ActivityBox_titleLine w-auto flex-grow-1 me-3" />
                     <span class="o_ActivityBox_titleText">
@@ -38,8 +38,8 @@
                         </t>
                     </div>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
