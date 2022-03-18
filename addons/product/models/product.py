@@ -419,10 +419,10 @@ class ProductProduct(models.Model):
             args.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super(ProductProduct, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
-    @api.depends_context('display_default_code')
+    @api.depends_context('display_default_code', 'seller_id')
     def _compute_display_name(self):
         # `display_name` is calling `name_get()`` which is overidden on product
-        # to depend on `display_default_code`
+        # to depend on `display_default_code` and `seller_id`
         return super()._compute_display_name()
 
     def name_get(self):
@@ -474,8 +474,8 @@ class ProductProduct(models.Model):
             variant = product.product_template_attribute_value_ids._get_combination_name()
 
             name = variant and "%s (%s)" % (product.name, variant) or product.name
-            sellers = []
-            if partner_ids:
+            sellers = self.env['product.supplierinfo'].sudo().browse(self.env.context.get('seller_id')) or []
+            if not sellers and partner_ids:
                 product_supplier_info = supplier_info_by_template.get(product.product_tmpl_id, [])
                 sellers = [x for x in product_supplier_info if x.product_id and x.product_id == product]
                 if not sellers:

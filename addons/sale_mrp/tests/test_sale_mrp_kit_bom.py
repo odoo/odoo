@@ -210,3 +210,69 @@ class TestSaleMrpKitBom(TransactionCase):
 
         # Checks the delivery amount (must be 10).
         self.assertEqual(so.order_line.qty_delivered, 10)
+
+    def test_qty_delivered_with_bom_using_kit(self):
+        """Check the quantity delivered, when one product is a kit
+        and his bom uses another product that is also a kit"""
+
+        self.kitA = self._create_product('Kit A', 'consu', 0.00)
+        self.kitB = self._create_product('Kit B', 'consu', 0.00)
+        self.compA = self._create_product('ComponentA', 'consu', 0.00)
+        self.compB = self._create_product('ComponentB', 'consu', 0.00)
+
+        # Create BoM for KitB
+        bom_product_formA = Form(self.env['mrp.bom'])
+        bom_product_formA.product_id = self.kitB
+        bom_product_formA.product_tmpl_id = self.kitB.product_tmpl_id
+        bom_product_formA.product_qty = 1.0
+        bom_product_formA.type = 'phantom'
+        with bom_product_formA.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.compA
+            bom_line.product_qty = 1
+        with bom_product_formA.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.compB
+            bom_line.product_qty = 1
+        self.bomA = bom_product_formA.save()
+
+        # Create BoM for KitA
+        bom_product_formB = Form(self.env['mrp.bom'])
+        bom_product_formB.product_id = self.kitA
+        bom_product_formB.product_tmpl_id = self.kitA.product_tmpl_id
+        bom_product_formB.product_qty = 1.0
+        bom_product_formB.type = 'phantom'
+        with bom_product_formB.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.compA
+            bom_line.product_qty = 1
+        with bom_product_formB.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.kitB
+            bom_line.product_qty = 1
+        self.bomB = bom_product_formB.save()
+
+        self.customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.kitA.name,
+                    'product_id': self.kitA.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.kitA.uom_id.id,
+                    'price_unit': 1,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        self.assertTrue(so.picking_ids)
+        self.assertEqual(so.order_line.qty_delivered, 0)
+
+        picking = so.picking_ids
+        action = picking.button_validate()
+        wizard = self.env[action['res_model']].browse(action['res_id'])
+        wizard.process()
+
+        # Checks the delivery amount (must be 1).
+        self.assertEqual(so.order_line.qty_delivered, 1)
