@@ -848,6 +848,8 @@ class StockMove(models.Model):
         moves_to_unlink = self.env['stock.move']
         # Moves successfully merged
         merged_moves = self.env['stock.move']
+        # Emptied moves
+        moves_to_cancel = self.env['stock.move']
 
         moves_by_neg_key = defaultdict(lambda: self.env['stock.move'])
         # Need to check less fields for negative moves as some might not be set.
@@ -884,15 +886,21 @@ class StockMove(models.Model):
                     })
                     merged_moves |= pos_move
                     moves_to_unlink |= neg_move
+                    if float_is_zero(pos_move.product_uom_qty, precision_rounding=pos_move.product_uom.rounding):
+                        moves_to_cancel |= pos_move
                     break
                 neg_move.product_uom_qty += pos_move.product_uom_qty
                 pos_move.product_uom_qty = 0
+                moves_to_cancel |= pos_move
 
         if moves_to_unlink:
             # We are using propagate to False in order to not cancel destination moves merged in moves[0]
             moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
             moves_to_unlink.sudo().unlink()
+
+        if moves_to_cancel:
+            moves_to_cancel._action_cancel()
 
         return (self | merged_moves) - moves_to_unlink
 
