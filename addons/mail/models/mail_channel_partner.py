@@ -23,6 +23,7 @@ class ChannelPartner(models.Model):
     custom_channel_name = fields.Char('Custom channel name')
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
+    message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True, help='Number of unread messages')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
@@ -30,6 +31,28 @@ class ChannelPartner(models.Model):
     # RTC
     rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='mail.channel.rtc.session', inverse_name='channel_partner_id')
     rtc_inviting_session_id = fields.Many2one('mail.channel.rtc.session', string='Ringing session')
+
+    @api.depends('channel_id.message_ids', 'seen_message_id')
+    def _compute_message_unread(self):
+        self.flush()
+        self.env.cr.execute("""
+                 SELECT count(mail_message.id) AS count,
+                        mail_channel_partner.id
+                   FROM mail_message
+             INNER JOIN mail_channel_partner
+                     ON mail_channel_partner.channel_id = mail_message.res_id
+                  WHERE mail_message.model = 'mail.channel'
+                    AND mail_message.message_type NOT IN ('notification', 'user_notification')
+                    AND (
+                        mail_message.id > mail_channel_partner.seen_message_id
+                     OR mail_channel_partner.seen_message_id IS NULL
+                    )
+                    AND mail_channel_partner.id IN %(ids)s
+               GROUP BY mail_channel_partner.id
+        """, {'ids': tuple(self.ids)})
+        unread_counter_by_channel_partner = {res['id']: res['count'] for res in self.env.cr.dictfetchall()}
+        for channel_partner in self:
+            channel_partner.message_unread_counter = unread_counter_by_channel_partner.get(channel_partner.id)
 
     def name_get(self):
         return [(record.id, record.partner_id.name or record.guest_id.name) for record in self]
