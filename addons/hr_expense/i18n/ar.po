@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Paul Andrawes, 2021
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr ""
 #, python-format
 msgid ""
 "%(user)s confirms this expense is not a duplicate with similar expense."
-msgstr ""
+msgstr "يؤكد %(user)s بأن هذه النفقة ليست نسخة مكررة من نفقة أخرى. "
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
@@ -34,12 +34,14 @@ msgid ""
 "'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'النفقات - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"'')) "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
-msgstr ""
+msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -47,6 +49,8 @@ msgid ""
 "<i class=\"text-muted oe_edit_only\">Use this reference as a subject prefix "
 "when submitting by email.</i>"
 msgstr ""
+"<i class=\"text-muted oe_edit_only\">استخدم هذا المرجع كبادئة كائن عنت "
+"الإرسال عن طريق البريد الإلكتروني.</i> "
 
 #. module: hr_expense
 #. openerp-web
@@ -56,8 +60,8 @@ msgid ""
 "<p>Approve the report here.</p><p>Tip: if you refuse, don’t forget to give "
 "the reason thanks to the hereunder message tool</p>"
 msgstr ""
-"<p> اعتمد التقرير من هنا.</p><p>تلميح: إذا رفضت الاعتماد، لا تنسَ ذكر السبب "
-"في أداة الرسالة أدناه</p>"
+"<p> قم بالموافقة على التقرير من هنا. </p><p>تلميح: إذا قمت بالرفض، لا تنسَ "
+"ذكر السبب في أداة كتابة الرسائل أدناه</p> "
 
 #. module: hr_expense
 #. openerp-web
@@ -67,7 +71,7 @@ msgid ""
 "<p>Click on <b> Action Create Report </b> to submit selected expenses to "
 "your manager</p>"
 msgstr ""
-"<p>اضغط على <b>إجراء إنشاء تقرير</b> لإرسال المصروفات المحددة لمديرك</p>"
+"<p>اضغط على <b>إجراء إنشاء تقرير</b> لإرسال النفقات المحددة لمديرك</p> "
 
 #. module: hr_expense
 #. openerp-web
@@ -81,14 +85,14 @@ msgstr "<p>اضغط على <b>إنشاء تقرير</b> لإنشاء التقر�
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "<p>Once your <b> Expense </b> is ready, you can save it.</p>"
-msgstr "<p>بمجرد إتمام <b>مصروفاتك</b>، يمكنك حفظها.</p>"
+msgstr "<p>بمجرد أن تصبح <b>نفقتك</b> جاهزة، سيسعك حفظها.</p> "
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "<p>Select expenses to submit them to your manager</p>"
-msgstr "<p>اختر المصروفات التي تريد تقديمها لمديرك</p>"
+msgstr "<p>قم بتحديد النفقات لترسلها لمديرك</p> "
 
 #. module: hr_expense
 #. openerp-web
@@ -98,8 +102,8 @@ msgid ""
 "<p>The accountant receive approved expense reports.</p><p>He can post "
 "journal entries in one click if taxes and accounts are right.</p>"
 msgstr ""
-"<p>يتلقى المحاسب تقارير المصروفات المعتمدة.</p><p>يمكنه ترحيل قيود دفتر "
-"اليومية بنقرة واحدة إذا كانت الضرائب والحسابات صحيحة.</p>"
+"<p>يتلقى المحاسب تقارير النفقات التي تمت الموافقة عليها.</p><p> بإمكانه "
+"ترحيل قيود دفتر اليومية بنقرة واحدة إذا كانت الضرائب والحسابات صحيحة.</p> "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -113,7 +117,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "<span>@</span>"
-msgstr ""
+msgstr "<span>@</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -133,7 +137,7 @@ msgstr "<strong>الموظف:</strong>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Payment By:</strong>"
-msgstr "<strong>دفعت بواسطة:</strong>"
+msgstr "<strong>تم الدفع بواسطة:</strong> "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -143,13 +147,13 @@ msgstr "<strong>الإجمالي</strong>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Validated By:</strong>"
-msgstr "<strong>اعتمدت بواسطة:</strong>"
+msgstr "<strong>تم التصديق بواسطة:</strong> "
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.accomodation_expense_product
 #: model:product.template,name:hr_expense.accomodation_expense_product_product_template
 msgid "Accomodation"
-msgstr ""
+msgstr "المسكن "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -159,19 +163,19 @@ msgstr "حساب"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Accounting"
-msgstr "الحسابات"
+msgstr "المحاسبة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Accounting Date"
-msgstr "التاريخ المحاسبي"
+msgstr "تاريخ المحاسبة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction
 msgid "Action Needed"
-msgstr "إجراء مطلوب"
+msgstr "يتطلب اتخاذ إجراء "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_ids
@@ -201,7 +205,7 @@ msgstr "أيقونة نوع النشاط"
 #: model:ir.actions.act_window,name:hr_expense.mail_activity_type_action_config_hr_expense
 #: model:ir.ui.menu,name:hr_expense.hr_expense_menu_config_activity_type
 msgid "Activity Types"
-msgstr "أنواع النشاطات"
+msgstr "أنواع الأنشطة "
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_manager
@@ -211,7 +215,7 @@ msgstr "مدير"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Alias"
-msgstr "لقب"
+msgstr "اللقب "
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_user
@@ -221,19 +225,19 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr "كافة تقارير المصروفات"
+msgstr "كافة تقارير النفقات "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_all
 msgid "All My Expenses"
-msgstr ""
+msgstr "كافة نفقاتي "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all
 msgid "All Reports"
-msgstr ""
+msgstr "كافة التقارير "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
@@ -246,25 +250,25 @@ msgstr "المبلغ المستحق"
 #: code:addons/hr_expense/static/src/js/upload_mixin.js:0
 #, python-format
 msgid "An error occurred during the upload"
-msgstr ""
+msgstr "حدث خطأ أثناء عملية الرفع "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
 msgid "An expense account is expected"
-msgstr "يُتوقع وجود حساب مصروفات"
+msgstr "من المتوقع وجود حساب نفقات "
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #, python-format
 msgid "An expense of same category, amount and date already exists."
-msgstr ""
+msgstr "هناك نفقة من نفس الفئة والمبلغ والتاريخ موجودة بالفعل. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "An expense report must contain only lines from the same company."
-msgstr ""
+msgstr "يجب أن يحتوي تقرير النفقات على بنود من نفس الشركة. "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_account_id
@@ -275,13 +279,13 @@ msgstr "الحساب التحليلي"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "الوسوم التحليلية"
+msgstr "علامات التصنيف التحليلية "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Apple App Store"
-msgstr "متجر آبل"
+msgstr "متجر تطبيقات Apple "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__approval_date
@@ -297,34 +301,36 @@ msgstr "موافقة"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Approve Report"
-msgstr ""
+msgstr "الموافقة على التقرير "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 msgid "Approve the new expense reports submitted by the employees you manage."
 msgstr ""
+"قم بالموافقة على تقارير النفقات الجديدة المرسلة من قِبَل الموظفين الذين "
+"تديرهم. "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__approved
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__approve
 #: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 msgid "Approved"
-msgstr "معتمد"
+msgstr "تمت الموافقة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approved_by
 msgid "Approved By"
-msgstr ""
+msgstr "تمت الموافقة بواسطة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Approved Expenses"
-msgstr "المصروفات المعتمدة"
+msgstr "النفقات الحاصلة على الموافقة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approved_on
 msgid "Approved On"
-msgstr ""
+msgstr "تمت الموافقة في "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -334,7 +340,7 @@ msgstr "مؤرشف"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Receipt"
-msgstr ""
+msgstr "إرفاق الإيصال "
 
 #. module: hr_expense
 #. openerp-web
@@ -357,12 +363,12 @@ msgstr "دفتر يومية البنك"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__reference
 msgid "Bill Reference"
-msgstr "رقم إشارة الفاتورة"
+msgstr "مرجع الفاتورة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_approve
 msgid "Can Approve"
-msgstr "بإمكانه قبول"
+msgstr "بإمكانه الموافقة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_reset
@@ -374,7 +380,7 @@ msgstr "بإمكانه إعادة تعيين"
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_template_search_view_inherit_hr_expense
 msgid "Can be Expensed"
-msgstr "يمكن اعتباره مصروفًا"
+msgstr "يمكن تقييده كنفقة "
 
 #. module: hr_expense
 #. openerp-web
@@ -383,7 +389,7 @@ msgstr "يمكن اعتباره مصروفًا"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 #, python-format
 msgid "Cancel"
-msgstr "الغاء"
+msgstr "إلغاء "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -393,12 +399,12 @@ msgstr "فئة"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Category:"
-msgstr ""
+msgstr "الفئة: "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Category: not found"
-msgstr ""
+msgstr "الفئة: غير موجودة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -412,22 +418,22 @@ msgstr "اعتبرت صحيحة ومطابقة،<br>(التاريخ والتوق
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Company"
-msgstr "شركة"
+msgstr "الشركة "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
 msgid "Config Settings"
-msgstr "ضبط الاعدادات"
+msgstr "تهيئة الإعدادات "
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
 msgid "Configuration"
-msgstr "إعدادات التكوين"
+msgstr "التهيئة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Confirmed Expenses"
-msgstr "المصروفات المؤكدة"
+msgstr "النفقات المؤكدة "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__product_uom_category_id
@@ -455,24 +461,24 @@ msgstr "إنشاء تقرير"
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
 msgid "Create a new expense report"
-msgstr "إنشاء تقرير مصروفات جديد"
+msgstr "إنشاء تقرير نفقات جديد "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
-msgstr ""
+msgstr "أنشئ نفقات من رسائل البريد الإلكتروني الواردة "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create new expenses to get statistics."
-msgstr ""
+msgstr "أنشئ نفقات جديدة للحصول على الإحصاءات. "
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
 #, python-format
 msgid "Create record"
-msgstr ""
+msgstr "إنشاء سجل "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -500,7 +506,7 @@ msgstr "العملة"
 #: model:product.product,name:hr_expense.allowance_expense_product
 #: model:product.template,name:hr_expense.allowance_expense_product_product_template
 msgid "Daily Allowance"
-msgstr ""
+msgstr "المصروف اليومي "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -512,17 +518,17 @@ msgstr "التاريخ"
 #: model:product.product,uom_name:hr_expense.allowance_expense_product
 #: model:product.template,uom_name:hr_expense.allowance_expense_product_product_template
 msgid "Days"
-msgstr "الأيام"
+msgstr "أيام "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Dear"
-msgstr "عزيزنا"
+msgstr "عزيزي "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_alias_prefix
 msgid "Default Alias Name for Expenses"
-msgstr "اللقب الافتراضي للمصروفات"
+msgstr "اللقب الافتراضي للنفقات "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -540,12 +546,13 @@ msgstr "الوصف"
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Did you try the mobile app?"
-msgstr ""
+msgstr "هل جربت تطبيق الهاتف المحمول؟ "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Digitalize your receipts with OCR and Artificial Intelligence"
 msgstr ""
+"قم برقمنة إيصالاتك باستخدام تقنية تمييز الرموز ضوئياً والذكاء الاصطناعي "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__display_name
@@ -553,7 +560,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__display_name
 msgid "Display Name"
-msgstr "الاسم المعروض"
+msgstr "اسم العرض "
 
 #. module: hr_expense
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
@@ -562,6 +569,9 @@ msgid ""
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
+"لن تضطر إلى حمل تذاكر نفقاتك في جيوبك بعد الآن. فقط قم بالتقاط صورة من "
+"الإيصال، وسيقوم أودو برقمنته من أجلك. سوف تقوم خاصية تمييز الرموز ضوئياً "
+"والذكاء الاصطناعي بملء البيانات تلقائياً. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -571,7 +581,7 @@ msgstr "المستندات"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__done
 msgid "Done"
-msgstr "المنتهية"
+msgstr "منتهي "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__draft
@@ -583,7 +593,7 @@ msgstr "مسودة"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__duplicate_expense_ids
 #, python-format
 msgid "Duplicate Expense"
-msgstr ""
+msgstr "نفقة مكررة "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -597,13 +607,13 @@ msgstr "الموظف"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
 msgid "Employee (to reimburse)"
-msgstr "الموظف (لسداد مديونية)"
+msgstr "الموظف (لرد الأموال) "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_account_employee_expenses
 msgid "Employee Expenses"
-msgstr "مصروفات الموظف"
+msgstr "نفقات الموظف "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__address_id
@@ -620,12 +630,12 @@ msgstr "عنوان منزل الموظف"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Expense"
-msgstr "المصروف"
+msgstr "النفقة "
 
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
 msgid "Expense Approval"
-msgstr "الموافقة على المصروف"
+msgstr "الموافقة على النفقة "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_approve_duplicate
@@ -635,50 +645,50 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Expense Approver"
-msgstr ""
+msgstr "المُوافق على النفقات "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expense Date"
-msgstr "تاريخ المصروف"
+msgstr "تاريخ النفقة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expense Digitalization (OCR)"
-msgstr ""
+msgstr "رقمنة النفقات (تمييز الرموز ضوئياً) "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
 msgid "Expense Journal"
-msgstr "دفتر يومية المصروف"
+msgstr "دفتر يومية النفقات "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_line_ids
 msgid "Expense Lines"
-msgstr "بنود المصروف"
+msgstr "بنود النفقات "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
 msgid "Expense Lines Are Editable By Current User"
-msgstr ""
+msgstr "يمكن تحرير بنود النفقات من قِبَل المستخدم الحالي "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
-msgstr ""
+msgstr "مدير النفقات "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Products"
-msgstr "منتجات المصروف"
+msgstr "منتجات النفقات "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Expense Refuse Reason Wizard"
-msgstr "معالج سبب رفض المصروف"
+msgstr "معالج سبب رفض النفقات "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet
@@ -686,17 +696,17 @@ msgstr "معالج سبب رفض المصروف"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Report"
-msgstr "تقرير المصروف"
+msgstr "تقرير النفقات "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__state
 msgid "Expense Report State"
-msgstr "حالة تقرير المصروف"
+msgstr "حالة تقرير النفقة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
 msgid "Expense Report Summary"
-msgstr "ملخص تقرير المصروف"
+msgstr "ملخص تقرير النفقة "
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
@@ -704,28 +714,28 @@ msgstr "ملخص تقرير المصروف"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Reports"
-msgstr "تقارير المصروف"
+msgstr "تقارير النفقات "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr "تحليل تقارير المصروف"
+msgstr "تحليل تقارير النفقات "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
 msgid "Expense Reports To Pay"
-msgstr "تقارير المصروفات المطلوب سدادها"
+msgstr "تقارير النفقات المطلوب سدادها "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_post
 msgid "Expense Reports To Post"
-msgstr "تقارير المصروفات المطلوب ترحيلها"
+msgstr "تقارير النفقات المطلوب ترحيلها "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr "تقارير المصروفات المطلوب الموافقة عليها"
+msgstr "تقارير النفقات المطلوب الموافقة عليها "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -735,38 +745,39 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense products can be reinvoiced to your customers."
-msgstr ""
+msgstr "يمكن إعادة فوترة منتجات النفقات إلى عملائك. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
-msgstr "سبب رفض المصروف"
+msgstr "سبب رفض النفقة "
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved"
-msgstr "تم اعتماد تقرير المصروف"
+msgstr "تمت الموافقة على تقرير النفقة "
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr "تم سداد قيمة تقرير المصروف"
+msgstr "تم سداد قيمة تقرير النفقة "
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "تم رفض تقرير المصروف"
+msgstr "تم رفض تقرير النفقة "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid ""
 "Expense reports regroup all the expenses incurred during a specific event."
 msgstr ""
+"تقوم تقارير النفقات بإعادة تجميع كافة النفقات الناجمة عن فعالية محددة. "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line__expense_id
 msgid "Expense where the move line come from"
-msgstr "المصروف الذي نشأ منه بند التحرك"
+msgstr "النفقة التي نشأت عنها حركة البند "
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -779,7 +790,7 @@ msgstr "المصروف الذي نشأ منه بند التحرك"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expenses"
-msgstr "المصروفات"
+msgstr "النفقات "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
@@ -789,80 +800,80 @@ msgstr "المصروفات"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_graph
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_pivot
 msgid "Expenses Analysis"
-msgstr "تحليل المصروفات"
+msgstr "تحليل النفقات "
 
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr "تقرير المصروفات"
+msgstr "تقرير النفقات "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr "تقارير المصروفات المطلوب اعتمادها"
+msgstr "تقارير النفقات بانتظار الموافقة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Expenses by Date"
-msgstr "المصروفات حسب التاريخ"
+msgstr "النفقات حسب التاريخ "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expenses must be paid by the same entity (Company or employee)."
-msgstr "يجب أن يقوم الكيان نفسه (المؤسسة أو الموظف) بسداد قيمة المصروفات."
+msgstr "يجب أن يقوم الكيان نفسه (الشركة أو الموظف) بسداد قيمة النفقات. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expenses of Your Team Member"
-msgstr "مصروفات عضو فريقك"
+msgstr "نفقات عضو فريقك "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Expenses to Invoice"
-msgstr "المصروفات المطلوب فوترتها"
+msgstr "النفقات المطلوب فوترتها "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
 msgid "Expenses to Process"
-msgstr "المصروفات المطلوب معالجتها"
+msgstr "النفقات المطلوب معالجتها "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_refused
 msgid "Explicitly Refused by manager or accountant"
-msgstr ""
+msgstr "تم الرفض بشكل صريح من قِبَل المدير أو المحاسب "
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.trans_expense_product
 #: model:product.template,name:hr_expense.trans_expense_product_product_template
 msgid "Flights, train, bus, taxi, parking"
-msgstr ""
+msgstr "رحلات الطيران، القطار، الحافلة، سيارة الأجرة، المواقف "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_follower_ids
 msgid "Followers"
-msgstr "المتابعون"
+msgstr "المتابعين "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_partner_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "المتابعون (الشركاء)"
+msgstr "المتابعين (الشركاء) "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icon e.g. fa-tasks"
+msgstr "أيقونة Font awesome مثال: fa-tasks "
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.food_expense_product
 #: model:product.template,name:hr_expense.food_expense_product_product_template
 msgid "Food & beverages"
-msgstr ""
+msgstr "الأطعمة والمشروبات "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -885,19 +896,19 @@ msgstr "المعلومات العامة"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generated Expenses"
-msgstr ""
+msgstr "النفقات العامة "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Google Play Store"
-msgstr "متجر جوجل بلاي"
+msgstr "متجر Google Play "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Group By"
-msgstr "تجميع حسب"
+msgstr "التجميع حسب "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_multiple_currency
@@ -908,17 +919,17 @@ msgstr "التعامل مع البنود مختلفة العملة"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__has_message
 msgid "Has Message"
-msgstr "توجد رسالة "
+msgstr "يهتوي على رسالة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_ids
 msgid "Hr Expense"
-msgstr "مصروفات الموارد البشرية"
+msgstr "نفقة الموارد البشرية "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_sheet_id
 msgid "Hr Expense Sheet"
-msgstr "ورقة مصروفات الموارد البشرية"
+msgstr "ورقة نفقات الموارد البشرية "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
@@ -963,6 +974,11 @@ msgid "In Payment"
 msgstr "في دفعة"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "Included in price taxes"
+msgstr "الضرائب المشمولة في السعر "
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Incoming Emails"
 msgstr "رسائل البريد الإلكتروني الواردة"
@@ -971,7 +987,7 @@ msgstr "رسائل البريد الإلكتروني الواردة"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Invalid attachments!"
-msgstr ""
+msgstr "المرفقات غير صالحة! "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__invoicing_legacy
@@ -981,7 +997,7 @@ msgstr "Invoicing App Legacy"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
 msgid "Is Editable By Current User"
-msgstr ""
+msgstr "يمكن تحريره من قِبَل المستخدم الحالي "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
@@ -992,12 +1008,12 @@ msgstr "متابع"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_currency
 msgid "Is currency_id different from the company_currency_id"
-msgstr ""
+msgstr " currency_id مختلف عن company_currency_id "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
 msgid "Is product with non zero cost selected"
-msgstr ""
+msgstr "المنتج المحدد تكلفته ليست صفراً "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
@@ -1020,7 +1036,7 @@ msgstr "عنصر اليومية"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
 msgid "Label Convert Rate"
-msgstr ""
+msgstr "معدل تحويل بطاقة العنوان "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_total_amount_company
@@ -1060,7 +1076,7 @@ msgstr "الأنشطة المتأخرة"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__use_mailgateway
 msgid "Let your employees record expenses by email"
-msgstr "السماح لموظفيك بتسجيل المصروفات بالبريد الإلكتروني"
+msgstr "أتح لموظفيك تسجيل النفقات عن طريق البريد الإلكتروني "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
@@ -1078,7 +1094,8 @@ msgstr "المدير"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can get all reports to approve from this menu."
-msgstr "يمكن للمديرين تصفح كافة التقارير المطلوب اعتمادها من هذه القائمة."
+msgstr ""
+"بإمكان المدراء تصفح كافة التقارير المطلوب الموافقة عليها من هذه القائمة. "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error
@@ -1096,7 +1113,7 @@ msgstr "الرسائل"
 #: model:product.product,name:hr_expense.mileage_expense_product
 #: model:product.template,name:hr_expense.mileage_expense_product_product_template
 msgid "Mileage"
-msgstr ""
+msgstr "المسافات المقطوعة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
@@ -1108,13 +1125,13 @@ msgstr "نهاية الوقت المعين للنشاط"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "My Expenses"
-msgstr "مصروفاتي"
+msgstr "نفقاتي "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
 msgid "My Expenses to Report"
-msgstr ""
+msgstr "نفقاتي بانتظار إعداد التقرير "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -1138,7 +1155,7 @@ msgstr "الاسم"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Report"
-msgstr "تقرير مصروف جديد"
+msgstr "تقرير نفقة جديد "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1164,19 +1181,20 @@ msgstr "نوع النشاط التالي"
 msgid ""
 "No Expense account found for the product %s (or for its category), please "
 "configure one."
-msgstr "لم يُعثر على حساب مصروفات للمنتج %s (أو لفئته)، برجاء إعداد واحد."
+msgstr ""
+"لم يتم العثور على حساب نفقات للمنتج %s (أو لفئته)، الرجاء تهيئة واحد. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
-msgstr "لم يُعثر على عنوان منزل للموظف %s, برجاء إعداد واحد."
+msgstr "لم يتم العثور على عنوان منزل للموظف %s، الرجاء تهيئة واحد. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "No attachment was provided"
-msgstr "لم يتم توفير مرفق"
+msgstr "لم يتم تقديم مرفق "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_department_filtered
@@ -1187,29 +1205,29 @@ msgstr "لا توجد أي بيانات بعد! "
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense products found. Let's create one!"
-msgstr ""
+msgstr "لم يتم العثور على منتجات نفقات. فلنقم بإنشاء واحد! "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "No expense report found. Let's create one!"
-msgstr ""
+msgstr "لم يتم العثور على تقرير نفقات. فلنقم بإنشاء واحد! "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
 msgid "No expense reports found"
-msgstr ""
+msgstr "لم يتم العثور على تقرير نفقات "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid "No expense reports found. Let's create one!"
-msgstr ""
+msgstr "لم يتم العثور على تقارير نفقات. فلنقم بإنشاء واحد! "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__not_paid
 msgid "Not Paid"
-msgstr "لم يدفع"
+msgstr "غير مدفوع "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__description
@@ -1233,7 +1251,7 @@ msgstr "عدد المرفقات"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error_counter
 msgid "Number of errors"
-msgstr "عدد الاخطاء"
+msgstr "عدد الأخطاء "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
@@ -1251,7 +1269,7 @@ msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_unread_counter
 msgid "Number of unread messages"
-msgstr "عدد الرسائل الجديدة"
+msgstr "عدد الرسائل غير المقروءة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1265,7 +1283,7 @@ msgstr "أودو"
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr "بمجرد إنشاء مصروفك، قم بإرساله لمشرفك لاعتماده."
+msgstr "بمجرد إنشاء نفقتك، قم بإرسالها لمديرك للموافقة عليها. "
 
 #. module: hr_expense
 #. openerp-web
@@ -1275,28 +1293,29 @@ msgid ""
 "Once your <b>Expense report</b> is ready, you can submit it to your manager "
 "and wait for the approval from your manager."
 msgstr ""
-"بمجرد تجهيز <b>تقرير مصروفاتك</b>، يمكنك إرساله لمشرفك وانتظار اعتماده."
+"بمجرد تجهيز <b>تقرير نفقاتك</b>، يمكنك إرساله لمديرك وانتظار موافقته. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Only HR Officers or the concerned employee can reset to draft."
 msgstr ""
-"يمكن لموظفي الموارد البشرية أو الموظف المعني فقط إعادة تعيين المصروف لحالة "
-"المسودة."
+"وحدهم موظفو الموارد البشرية أو الموظف المعني يسعهم إعادة تعيين النفقة إلى "
+"حالة المسودة. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
-msgstr "يمكن للمديرين وموظفي الموارد البشرية فقط اعتماد المصروفات"
+msgstr ""
+"وحدهم موظفو الموارد البشرية أو الموظف المعني يسعهم الموافقة على النفقات "
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.other_expense_product
 #: model:product.template,name:hr_expense.other_expense_product_product_template
 msgid "Other expenses"
-msgstr ""
+msgstr "النفقات الأخرى "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__done
@@ -1320,18 +1339,18 @@ msgstr "جزئي"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__partial
 msgid "Partially Paid"
-msgstr "Partially Paid"
+msgstr "مدفوع جزئياً "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid "Payment Cancelled"
-msgstr ""
+msgstr "تم إلغاء الدفع "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_state
 msgid "Payment Status"
-msgstr "حالة الدفعة"
+msgstr "حالة الدفع "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1340,11 +1359,13 @@ msgid ""
 "Please configure Default Expense account for Category expense: "
 "`property_account_expense_categ_id`."
 msgstr ""
+"يرجى تهيئة حساب النفقات الافتراضي لفئة النفقات: "
+"`property_account_expense_categ_id`. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Post Entries"
-msgstr ""
+msgstr "ترحيل القيود "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1357,6 +1378,8 @@ msgid ""
 "Post the journal entries of the new expense reports approved by the "
 "employees' manager."
 msgstr ""
+"قم بترحيل قيود اليومية لتقارير النفقات الجديدة التي تمت الموافقة عليها من "
+"قِبَل مدير الموظف. "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
@@ -1366,7 +1389,7 @@ msgstr "مُرحل"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
 msgid "Powered by"
-msgstr "يعمل بواسطة"
+msgstr "مشغل بواسطة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1376,7 +1399,7 @@ msgstr "السعر"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Price in Company Currency"
-msgstr "السعر بعملة المؤسسة"
+msgstr "السعر بعملة الشركة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1401,7 +1424,7 @@ msgstr "قالب المنتج"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
 msgid "Product Variants"
-msgstr "موديلات المنتج"
+msgstr "متغيرات المنتج "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_public
@@ -1431,7 +1454,7 @@ msgstr "السبب:"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr "سبب رفض المصروف"
+msgstr "سبب رفض النفقة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1441,12 +1464,12 @@ msgstr "الإيصالات"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Ref."
-msgstr "رقم الإشارة."
+msgstr "المرجع "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_ref_editable
 msgid "Reference Is Editable By Current User"
-msgstr ""
+msgstr "المرجع قابل للتحرير من قِبَل المستخدم الحالي "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1458,7 +1481,7 @@ msgstr "رفض"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr "رفض المصروف"
+msgstr "رفض النفقة "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__refused
@@ -1472,7 +1495,7 @@ msgstr "مرفوض"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Refused Expenses"
-msgstr "المصروفات المرفوضة"
+msgstr "النفقات المرفوضة "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1486,17 +1509,17 @@ msgstr "تسجيل دفعة"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
-msgstr ""
+msgstr "استرداد النفقات في إيصال الدفع "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse expenses in payslips"
-msgstr ""
+msgstr "استرداد النفقات في إيصالات الدفع "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse in Payslip"
-msgstr ""
+msgstr "الاسترداد في إيصال الدفع "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
@@ -1504,6 +1527,8 @@ msgid ""
 "Reimburse the employees who incurred these costs or simply register the "
 "corresponding payments."
 msgstr ""
+"قم برد الأموال للموظفين الذين نجمت عنهم هذه التكاليف أو قم بتسجيل المدفوعات "
+"المقابلة بكل بساطة. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1513,17 +1538,17 @@ msgstr "التقرير"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_currency_id
 msgid "Report Company Currency"
-msgstr "الإبلاغ عن عملة المؤسسة"
+msgstr "تقرير عملة المؤسسة "
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
 msgid "Reporting"
-msgstr "التقارير"
+msgstr "إعداد التقارير "
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_approve
 msgid "Reports to Approve"
-msgstr "التقارير المطلوب اعتمادها"
+msgstr "التقارير المطلوب الموافقة عليها "
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_pay
@@ -1550,7 +1575,7 @@ msgstr "المستخدم المسؤول"
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__reversed
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Reversed"
-msgstr "Reversed"
+msgstr "معكوس "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_sms_error
@@ -1568,7 +1593,7 @@ msgstr "عينة"
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #, python-format
 msgid "Save Anyways"
-msgstr ""
+msgstr "الحفظ بأي حال "
 
 #. module: hr_expense
 #. openerp-web
@@ -1584,7 +1609,7 @@ msgstr "مسح"
 #: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
-msgstr ""
+msgstr "امسح رمز QR للحصول على تطبيق أودو: "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1593,6 +1618,8 @@ msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
+"قم بتحديد المستخدم المسؤول عن الموافقة على \"نفقات\" هذا الموظف. \n"
+"إذا كان فارغاً، تتم الموافقة بواسطة مدير أو مانح الموافقة (يحدد في الإعدادات/المستخدمين). "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1601,6 +1628,8 @@ msgid ""
 "Selected Unit of Measure for expense %(expense)s does not belong to the same"
 " category as the Unit of Measure of product %(product)s."
 msgstr ""
+"لا تنتمي وحدة قياس النفقة %(expense)s إلى نفس فئة وحدة قياس المنتج "
+"%(product)s. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1611,11 +1640,15 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
+"أرسل بريداً إلكترونياً إلى لقب البريد الإلكتروني هذا مرفقاً الإيصال لإنشاء "
+"نفقة بضغطة زر. إذا كانت الكلمة الأولى من موضوع البريد الإلكتروني تحتوي على "
+"المرجع الداخلي للفئة أو اسم الفئة، سوف يتم تعيين الفئة المقابلة تلقائياً. "
+"اكتب مبلغ النفقة في موضوع البريد الإلكتروني لتعيينه في النفقة أيضاً. "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
-msgstr ""
+msgstr "أرسل الفواتير لتمييز الرموز ضوئياً وإنشاء النفقات "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -1645,19 +1678,19 @@ msgstr "عرض كافة السجلات المُعين لها تاريخ إجرا
 msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
 "expenses for you."
-msgstr ""
+msgstr "التقط صورة لإيصالاتك ودع أودو <br> ينشئ النفقات تلقائياً من أجلك. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Specify expense journal to generate accounting entries."
-msgstr ""
+msgstr "حدد دفتر يومية النفقات لإنشاء القيود المحاسبية. "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
 msgid "Specify whether the product can be selected in an expense."
-msgstr "تحديد إمكانية اختيار المنتج في المصروفات."
+msgstr "تحديد ما إذا كان بالإمكان اختيار المنتج في النفقات. "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -1684,12 +1717,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__state
 msgid "Status of the expense."
-msgstr "حالة المصروف."
+msgstr "حالة النفقة. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Submit to Manager"
-msgstr "إرساله للمدير"
+msgstr "إرسال إلى المدير "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__reported
@@ -1719,19 +1752,19 @@ msgstr "معتمد الفريق"
 #, python-format
 msgid ""
 "The accountant can register a payment to reimburse the employee directly."
-msgstr "يمكن للمحاسب تسجيل دفعة لتسديد مستحقات موظف مباشرةً."
+msgstr "بإمكان المحاسب تسجيل دفعة لرد أموال الموظف مباشرةً. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "The current user has no related employee. Please, create one."
-msgstr ""
+msgstr "لا يوجد للمستخدم الحالي موظف مرتبط به. يرجى إنشاء واحد. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "The expense reports were successfully approved."
-msgstr ""
+msgstr "تمت الموافقة على تقارير النفقات بنجاح. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1739,6 +1772,8 @@ msgid ""
 "The first word of the email subject did not correspond to any category code."
 " You'll have to set the category manually on the expense."
 msgstr ""
+"لم تتوافق أول كلمة من موضوع البريد الإلكتروني مع أي رمز فئة. سيتوجب عليك "
+"تعيين الفئة يدوياً في النفقة. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1747,38 +1782,45 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
+"لدى النفقات التالية الموافق عليها نفس الموظف والمبلغ والفئة لنفقات أخرى في "
+"هذا التقرير. يرجى التحقق من أن هذا التقرير لا يحتوي على بيانات مكررة. "
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
-msgstr ""
+msgstr "يجب تعيين دفتر اليومية للنفقة المُرحلة. "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
 msgid "The journal used when the expense is done."
-msgstr "دفتر اليومية المستخدم عند إتمام المصروفات."
+msgstr "دفتر اليومية المستخدم عند إتمام النفقات. "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr "طريقة السداد المستخدمة عند سداد المؤسسة للمصروفات."
+msgstr "طريقة الدفع المستخدمة عند سداد الشركة للنفقات. "
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
+msgid "The taxes should be \"Included In Price\""
+msgstr "يجب أن تكون الضرائب \"مشمولة في السعر\" "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "There are no expense reports to approve."
-msgstr ""
+msgstr "لا توجد تقارير نفقات للموافقة عليها. "
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid "Tip: Snap pictures of your receipts with the remote app"
-msgstr ""
+msgstr "نصيحة: التقط صوراً لإيصالاتك باستخدام تطبيق التحكم عن بعد "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "To Approve"
-msgstr "للاعتماد"
+msgstr "للموافقة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1793,7 +1835,7 @@ msgstr "للترحيل"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Report"
-msgstr ""
+msgstr "لإعداد التقارير "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -1804,7 +1846,7 @@ msgstr "للإرسال"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Today Activities"
-msgstr "نشاطات اليوم"
+msgstr "أنشطة اليوم "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1827,12 +1869,12 @@ msgstr "المبلغ الإجمالي"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 msgid "Total Company Currency"
-msgstr ""
+msgstr "إجمالي عملة الشركة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
 msgid "Total In Currency"
-msgstr ""
+msgstr "الإجمالي بالعملة "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
@@ -1869,13 +1911,13 @@ msgstr "الوحدات"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_unread
 msgid "Unread Messages"
-msgstr "الرسائل الجديدة"
+msgstr "الرسائل فير المقروءة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "عدد الرسائل الجديدة"
+msgstr "عدد الرسائل غير المقروءة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
@@ -1892,12 +1934,12 @@ msgstr "رفع"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_users
 msgid "Users"
-msgstr "المستخدمون"
+msgstr "المستخدمين "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action
 msgid "Validate Duplicate Expenses"
-msgstr ""
+msgstr "تصديق النفقات المكررة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1907,7 +1949,7 @@ msgstr "عرض المرفقات"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
-msgstr ""
+msgstr "عرض النفقة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1920,19 +1962,19 @@ msgstr "عرض التقرير"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Want to manage your expenses? It starts here."
-msgstr "أتريد إدارة مصروفاتك؟ ابدأ من هنا."
+msgstr "أتريد إدارة نفقاتك؟ ابدأ من هنا. "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__website_message_ids
 msgid "Website Messages"
-msgstr "رسائل الموقع"
+msgstr "رسائل الموقع الإلكتروني "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__website_message_ids
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__website_message_ids
 msgid "Website communication history"
-msgstr "سجل تواصل الموقع"
+msgstr "سجل تواصل الموقع الإلكتروني "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1943,83 +1985,87 @@ msgid ""
 "company at fixed cost like allowances for mileage, per diem, accomodation or"
 " meal."
 msgstr ""
+"عندما تختلف تكلفة منتج نفقة عن 0، لن يتمكن الشخص الذي يستخدم هذا المنتج من "
+"تغيير مبلغ النفقة، وإنما الكمية فقط. استخدم تكلفة تختلف عن 0 لفئات النفقات "
+"الممولة من قِبَل الشركة بتكلفة ثابتة كمصروف مسافات السيارة والبدل اليومي "
+"والمسكن والوجبات. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit the reference of this expense report."
-msgstr ""
+msgstr "لا يسمح لك بتحرير مرجع تقرير النفقة. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense report."
-msgstr ""
+msgstr "لا يسمح لك بتحرير تقرير النفقة. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without category."
-msgstr ""
+msgstr "لا يمكنك إنشاء تقويو دون الفئة. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "You can now submit it to the manager from the following link."
-msgstr ""
+msgstr "بإمكانك الآن إرساله إلى المدير من الرابط التالي. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only approve your department expenses"
-msgstr "يمكنك اعتماد مصروفات قسمك فقط"
+msgstr "يمكنك الموافقة على نفقات قسمك فقط "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
-msgstr "يمكنك إنشاء قيود محاسبية للمصروفات المعتمدة فقط."
+msgstr "يمكنك إنشاء قيود محاسبية للنفقات التي تمت الموافقة عليها فقط. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only refuse your department expenses"
-msgstr "يمكنك رفض مصروفات قسمك فقط"
+msgstr "يمكنك رفض نفقات قسمك فقط "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can't mix sample expenses and regular ones"
-msgstr ""
+msgstr "لا يمكنك مزج عينات النفقات مع النفقات العادية "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot add expenses of another employee."
-msgstr "لا يمكنك إضافة مصروفات موظف آخر."
+msgstr "لا يمكنك إضافة نفقات موظف آخر. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot approve your own expenses"
-msgstr "لا يمكنك اعتماد مصروفاتك بنفسك"
+msgstr "لا يمكنك الموافقة على نفقاتك بنفسك "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or approved expense."
-msgstr "لا يمكنك حذف مصروف تم ترحيله أو اعتماده."
+msgstr "لا يمكنك حذف نفقة تم ترحيلها أو الموافقة عليها. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr "لا يمكنك حذف مصروف تم ترحيله أو سداد قيمته."
+msgstr "لا يمكنك حذف نفقة تم ترحيلها أو سداد قيمتها. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot refuse your own expenses"
-msgstr "لا يمكنك رفض مصروفاتك بنفسك"
+msgstr "لا يمكنك رفض نفقاتك بنفسك "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -2040,16 +2086,18 @@ msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
 msgstr ""
+"يجب أن تكون لديك فئة واحدة على الأقل يمكن تقييدها كنفقات في قاعدة بياناتك "
+"للاستمرار! "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr "مصروفك"
+msgstr "نفقتك "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Your expense has been successfully registered."
-msgstr ""
+msgstr "لقد تم تسجيل نفقتك بنجاح. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2081,21 +2129,21 @@ msgstr "كم"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to be reimbursed"
-msgstr ""
+msgstr "لرد الأموال "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to report"
-msgstr ""
+msgstr "لإعداد التقرير "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "under validation"
-msgstr ""
+msgstr "قيد التصديق "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
-msgstr ""
+msgstr "استخدم تمييز الرموز ضوئياً لملء البيانات من صورة لفاتورة "

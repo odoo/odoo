@@ -3,7 +3,7 @@
 # 	* sale
 # 
 # Translators:
-# hed shefetr <hed@laylinetech.com>, 2021
+# hed shefer <hed@laylinetech.com>, 2021
 # Adi Sharashov <Adi@laylinetech.com>, 2021
 # Ofir Blum <ofir.blum@gmail.com>, 2021
 # yotam linder <linder@laylinetech.com>, 2021
@@ -15,11 +15,10 @@
 # דודי מלכה <Dudimalka6@gmail.com>, 2021
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Amit Spilman <amit@laylinetech.com>, 2021
-# yotam katzuni, 2021
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # david danilov, 2021
 # Jonathan Spier, 2021
 # Yihya Hugirat <hugirat@gmail.com>, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2022\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +39,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/sale.js:0
 #, python-format
 msgid " / Month"
-msgstr ""
+msgstr "/ חודש אחד"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
@@ -50,7 +49,7 @@ msgstr "הנתונים נאספו"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr ""
+msgstr "# הזמנות לקוח"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -93,14 +92,14 @@ msgstr "160X80 ס\"מ, עם רגליים גדולות."
 #, python-format
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr "שלח לעצמך את הצעת המחיר ובדוק מה הלקוח יקבל."
+msgstr "<b>שלח</b> לעצמך את הצעת המחיר ובדוק מה הלקוח יקבל."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "<b>Set a price</b>."
-msgstr "קבע.י מחיר"
+msgstr "<b>קבע.י מחיר</b>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -376,7 +375,7 @@ msgstr "<i class=\"fa fa-times\"/> דחה"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires on</b></small>"
-msgstr "תוקף ההצעה הזה יפוג בתאריך"
+msgstr "<small><b class=\"text-muted\">תוקף ההצעה הזה יפוג בתאריך</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -389,6 +388,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
 "'percentage')]}\" class=\"oe_inline\">%</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
+"'percentage')]}\" class=\"oe_inline\">%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -447,7 +448,7 @@ msgstr "<span class=\"o_stat_text\">נמכר</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"oe_read_only\">/ Month</span>"
-msgstr ""
+msgstr "<span class=\"oe_read_only\"> /חודש</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -464,8 +465,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"סכום מחיר\n"
-" כולל"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">סכום מחיר</span>\n"
+" <span groups=\"account.group_show_line_subtotals_tax_included\">כולל</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -908,7 +909,7 @@ msgstr "בטל"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel Sales Order"
-msgstr ""
+msgstr "בטל הזמנת לקוח"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1271,7 +1272,7 @@ msgstr "התאם אישית את מראה הצעות המחיר שלך."
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
-msgstr ""
+msgstr "התאם אישית את הצעות המחיר וההזמנות שלך."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -1353,7 +1354,7 @@ msgstr "כמות שנשלחה"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Delivered Quantity: %s"
-msgstr ""
+msgstr "כמות שנשלחה %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
@@ -1457,7 +1458,7 @@ msgstr "סוג תצוגה"
 #: code:addons/sale/static/src/js/sale_order_view.js:0
 #, python-format
 msgid "Do you want to apply this discount to all order lines?"
-msgstr ""
+msgstr "האם ברצונך להחיל הנחה זו על כל מרכיבי (שורות) ההזמנה?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1485,7 +1486,7 @@ msgstr "סכום המקדמה"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "סכום מקדמה (קבוע)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
@@ -1502,7 +1503,7 @@ msgstr "מקדמה: %s"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Down Payments"
-msgstr ""
+msgstr "מקדמות"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1542,7 +1543,7 @@ msgstr "טיוטת הצעת מחיר"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Draft invoices for this order will be cancelled."
-msgstr ""
+msgstr "טיוטת חשבוניות עבור הזמנה זו תבוטל."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -1631,7 +1632,7 @@ msgstr "ערכים נוספים"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
-msgstr ""
+msgstr "שורת נוספת עם %s "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
@@ -1726,7 +1727,7 @@ msgstr "קבל אזהרות בהזמנות על מוצרים או לקוחות"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
-msgstr ""
+msgstr "כל הכבוד, בואו נמשיך."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1810,7 +1811,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr ""
+msgstr "אם זה נכון, ניתן להשתמש באריזה להזמנות מכירה"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -1905,7 +1906,7 @@ msgstr "סטטוס חשבונית"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
-msgstr ""
+msgstr "חשבונית לאחר משלוח, לפי כמויות שנמסרו, לא אלו שהוזמנו."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -1941,7 +1942,7 @@ msgstr "כמות שחויבה"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
-msgstr ""
+msgstr "כמות שחויבה: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2114,7 +2115,7 @@ msgstr "אפשר ללקוחות שלך להתחבר כדי לראות את המ�
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
-msgstr ""
+msgstr "בוא נשלח את הצעת המחיר."
 
 #. module: sale
 #. openerp-web
@@ -2127,7 +2128,7 @@ msgstr "בוא נשמור לעת עתה את החתימה האלקטרונית."
 #: model_terms:product.product,website_description:sale.product_product_4e
 #: model_terms:product.product,website_description:sale.product_product_4f
 msgid "Locally handmade"
-msgstr ""
+msgstr "ייצור מקומי"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2152,13 +2153,14 @@ msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
 msgstr ""
+"מחפשים כתם במבוק בהתאמה אישית לריהוט הקיים? צור איתנו קשר לקבלת הצעת מחיר."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Looks good. Let's continue."
-msgstr ""
+msgstr "נראה טוב, בואו נמשיך."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -2264,7 +2266,7 @@ msgstr "שיטה לעדכון הכמות שנשלחה"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr "Missing required fields on accountable sale order line."
+msgstr "חסרים שדות חובה בשורת הזמנת מכירה."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -2737,7 +2739,7 @@ msgstr "כתובת גישה לפורטל"
 msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
-msgstr ""
+msgstr "לחץ על כפתור וצפה במחשב שלך גולש ללא מאמץ מישיבה לגובה עמידה בשניות."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
@@ -3175,7 +3177,7 @@ msgstr "אזהרות בהזמנת לקוח"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr "Sale Payment acquire onboarding wizard"
+msgstr "אשף תהליך תשלום"
 
 #. module: sale
 #: model:utm.source,name:sale.utm_source_sale_order_0
@@ -3190,7 +3192,7 @@ msgstr "אזהרות מכירה"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr "Sale onboarding selected payment method"
+msgstr "אנא בחר אמצעי תשלום."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -3206,7 +3208,7 @@ msgstr "מכירות"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "Sales Advance Payment Invoice"
+msgstr "חשבונית מכירה מראש"
 
 #. module: sale
 #: code:addons/sale/models/crm_team.py:0
@@ -3291,7 +3293,7 @@ msgstr "שורות הזמנת לקוח הקשורות להזמנת לקוח של
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr "הזמנות לקוח"
+msgstr "הזמנה(ות) לקוח"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
@@ -3639,17 +3641,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr "State of the onboarding confirmation order step"
+msgstr "מצב שלב אישור רישום הזמנה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr "State of the onboarding sample quotation step"
+msgstr "מצב שלב אישור רישום הצעת מחיר"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr "State of the sale onboarding panel"
+msgstr "מצב תהליך ההטמעה של המכירה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -3694,12 +3696,12 @@ msgstr "סיכום ביניים"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Total"
-msgstr ""
+msgstr "סך סכומי הביניים"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr ""
+msgstr "סכום כולל ללא מע\"מ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -3710,7 +3712,7 @@ msgstr "תגיות"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
-msgstr ""
+msgstr "מס לפי ארץ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3780,7 +3782,7 @@ msgstr "פורמט תנאים והגדרות"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "תנאים והגבלות: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4096,7 +4098,7 @@ msgstr "כמות לחיוב"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr "מכירה"
+msgstr "שדרוג מכירה"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4356,6 +4358,8 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
+"אנו מקדישים תשומת לב מיוחדת לפרטים, וזו הסיבה ששולחנות הכתיבה שלנו הם באיכות"
+" מעולה."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
@@ -4372,7 +4376,7 @@ msgstr "היסטורית התקשרויות מאתר האינטרנט"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
-msgstr ""
+msgstr "כתוב שם חברה כדי ליצור אחד, או ראה המלצות."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
@@ -4474,7 +4478,7 @@ msgstr ""
 #: model:ir.cron,cron_name:sale.send_invoice_cron
 #: model:ir.cron,name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "חשבונית אוטומטית: שלח חשבונית מוכנה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -4511,6 +4515,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'ממתין') ו-'הזמנה בהמתנה' או 'הזמנה' }} (ע\"פ {{ object.name or 'n/a' } "
+"})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4519,3 +4526,6 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('טיוטה, 'שלח') "
+"ו-(ctx.get('proforma') and 'Proforma' או 'Quotation') or 'Order' }} ( Ref {{"
+" object.name or 'n/a' }})"

@@ -24,7 +24,7 @@ msgstr ""
 #: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
 msgid "Incorrect amount: received %(received).2f, expected %(expected).2f"
-msgstr ""
+msgstr "Невірна сума: отримано %(received).2f, очікувано %(expected).2f"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
@@ -60,7 +60,7 @@ msgstr "Платіжна операція"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
 msgid "Production URL"
-msgstr ""
+msgstr "URL виробництва"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
@@ -70,7 +70,7 @@ msgstr "Провайдер"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
 msgid "SIPS Secret Key"
-msgstr ""
+msgstr "Секретний ключ SIPS"
 
 #. module: payment_sips
 #: model_terms:ir.ui.view,arch_db:payment_sips.payment_acquirer_form
@@ -91,12 +91,14 @@ msgstr "Sips"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
 msgid "Test URL"
-msgstr ""
+msgstr "Тестова URL-адреса"
 
 #. module: payment_sips
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "The ID solely used to identify the merchant account with Sips"
 msgstr ""
+"Ідентифікатор використовується виключно для ідентифікації облікового запису "
+"продавця за допомогою Sips"
 
 #. module: payment_sips
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer__provider
@@ -107,10 +109,10 @@ msgstr "Постачальник платіжних послуг для вико
 #: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
 msgid "This currency is not supported: %s."
-msgstr ""
+msgstr "Ця валюта не підтримується: %s."
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
 msgid "Unrecognized response received from the payment provider."
-msgstr ""
+msgstr "Від постачальника платежів отримано нерозпізнану відповідь."

@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Odoo Thaidev <odoothaidev@gmail.com>, 2021
 # Wichanon Jamwutthipreecha, 2022
 # 
 msgid ""
@@ -27,6 +26,8 @@ msgid ""
 ".\n"
 "            <span>Manual actions may be needed.</span>"
 msgstr ""
+" \n"
+"            <span>การดำเนินการด้วยตนเองอาจจำเป็น</span>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -36,14 +37,14 @@ msgstr "<span class=\"o_stat_text\">การขาย</span>"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "<span>Registration modification for attendee:</span>"
-msgstr ""
+msgstr "<span>แก้ไขการลงทะเบียนสำหรับผู้เข้าร่วม:</span>"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket__description
 #: model:ir.model.fields,help:event_sale.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr ""
+msgstr "คำอธิบายของทิกเก็ตที่คุณต้องการสื่อสารกับลูกค้าของคุณ"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product__detailed_type
@@ -53,19 +54,19 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
+"สินค้าที่จัดเก็บได้คือสินค้าที่ทคุณจัดการสต๊อก จำเป็นต้องติดตั้งแอปคลังสินค้า\n"
+"สินค้าบริโภคคือสินค้าที่ไม่มีการจัดการสต๊อก\n"
+"บริการคือสินค้าที่ไม่ใช่วัตถุที่คุณจัดหา"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
 msgid "All sale order lines pointing to this event"
-msgstr ""
+msgstr "ไลน์คำสั่งขายทั้งหมดที่ชี้ไปที่อีเวนต์นี้"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order__attendee_count
 msgid "Attendee Count"
-msgstr ""
+msgstr "จำนวนผู้เข้าร่วม"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
@@ -75,7 +76,7 @@ msgstr "ผู้เข้าร่วม"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Before confirming"
-msgstr ""
+msgstr "ก่อนการยืนยัน"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_campaign_id
@@ -93,7 +94,7 @@ msgstr "ยกเลิก"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr ""
+msgstr "เลือกอีเวนต์และจะสร้างการลงทะเบียนสำหรับอีเวนต์นี้โดยอัตโนมัติ"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -101,11 +102,12 @@ msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
 msgstr ""
+"เลือกทิกเก็ตอีเวนต์และสร้างการลงทะเบียนสำหรับทิกเก็ตอีเวนต์นี้โดยอัตโนมัติ"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_configurator_action
 msgid "Configure an event"
-msgstr ""
+msgstr "กำหนดค่าอีเวนต์"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -142,17 +144,17 @@ msgstr "รายละเอียด"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
-msgstr "ชื่อที่ใช้แสดง"
+msgstr "แสดงชื่อ"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
 msgid "Edit Attendee Details on Sales Confirmation"
-msgstr ""
+msgstr "แก้ไขรายละเอียดผู้เข้าร่วมในการยืนยันการขาย"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "Edit Attendee Line on Sales Confirmation"
-msgstr ""
+msgstr "แก้ไขรายละเอียดผู้เข้าร่วมในการยืนยันการขาย"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
@@ -170,17 +172,17 @@ msgstr "อีเมล"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_id
 msgid "Event"
-msgstr "เหตุการณ์"
+msgstr "อีเวนต์"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_configurator
 msgid "Event Configurator"
-msgstr ""
+msgstr "ตัวกำหนดค่าอีเวนต์"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Event Ok"
-msgstr ""
+msgstr "อีเวนต์โอเค"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -196,7 +198,7 @@ msgstr "การลงทะเบียนอีเวนต์"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_type_ticket
 msgid "Event Template Ticket"
-msgstr ""
+msgstr "ทิกเก็ตเทมเพลตอีเวนต์"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
@@ -205,7 +207,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
 #: model:ir.model.fields.selection,name:event_sale.selection__product_template__detailed_type__event
 msgid "Event Ticket"
-msgstr ""
+msgstr "ทิกเก็ตอีเวนต์"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
@@ -215,7 +217,7 @@ msgstr "ทิกเก็ตอีเวนต์"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "Exception:"
-msgstr ""
+msgstr "ข้อยกเว้น:"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__free
@@ -227,7 +229,7 @@ msgstr "ฟรี"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
 msgid "ID"
-msgstr "รหัส"
+msgstr "ไอดี"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__is_paid
@@ -244,26 +246,26 @@ msgstr "รายการบันทึกบัญชี"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
 msgid "Last Modified on"
-msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
+msgstr "แก้ไขครั้งล่าสุดเมื่อ"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
 msgid "Last Updated by"
-msgstr "อัพเดทครั้งสุดท้ายโดย"
+msgstr "อัปเดตครั้งล่าสุดโดย"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
 msgid "Last Updated on"
-msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
 msgid "Medium"
-msgstr "ปานกลาง"
+msgstr "สื่อกลาง"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__mobile
@@ -288,23 +290,23 @@ msgstr "ตกลง"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
 msgid "Order Date"
-msgstr "วันที่สั่งซื้อ"
+msgstr "วันที่สั่ง"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
 msgid "Order Ref"
-msgstr ""
+msgstr "อ้างอิงคำสั่ง"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
-msgstr ""
+msgstr "การลงทะเบียนเดิม"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__paid
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "Paid"
-msgstr "ชำระเงินแล้ว"
+msgstr "ชำระแล้ว"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__payment_status
@@ -327,7 +329,7 @@ msgstr "ราคา"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price_reduce
 msgid "Price Reduce"
-msgstr "ราคาลด"
+msgstr "ลดราคา"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
@@ -345,7 +347,7 @@ msgstr "สินค้า"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
 msgid "Product Template"
-msgstr "รูปแบบสินค้า"
+msgstr "เทมเพลตสินค้า"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product__detailed_type
@@ -361,7 +363,7 @@ msgstr "การลงทะเบียน"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
-msgstr ""
+msgstr "การลงทะเบียนเพื่อแก้ไข"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
@@ -376,51 +378,51 @@ msgstr "ขาย"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_subtotal
 msgid "Sales (Tax Excluded)"
-msgstr ""
+msgstr "การขาย (ไม่รวมภาษี)"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
 msgid "Sales End"
-msgstr ""
+msgstr "การขายสิ้นสุด"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 msgid "Sales Order"
-msgstr "ใบสั่งขาย"
+msgstr "คำสั่งขาย"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "รายการคำสั่งขาย"
+msgstr "ไลน์คำสั่งขาย"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
 msgid "Sales Start"
-msgstr ""
+msgstr "การขายเริ่มต้น"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_source_id
 msgid "Source"
-msgstr "ต้นฉบับ"
+msgstr "แหล่งที่มา"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "Ticket changed from"
-msgstr ""
+msgstr "ทิกเก็ตถูกเปลี่ยนจาก"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Total sales for this event"
-msgstr ""
+msgstr "ยอดขายรวมของอีเวนต์นี้"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "Transaction"
-msgstr "Balance as calculated based on Opening Balance and transaction lines"
+msgstr "ธุรกรรม"
 
 #. module: event_sale
 #: model:product.product,uom_name:event_sale.product_product_event
@@ -430,7 +432,7 @@ msgstr "หน่วย"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
-msgstr ""
+msgstr "กรุณาให้รายละเอียดเกี่ยวกับการลงทะเบียน"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception

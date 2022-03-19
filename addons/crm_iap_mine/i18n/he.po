@@ -10,7 +10,7 @@
 # דודי מלכה <Dudimalka6@gmail.com>, 2021
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Ofir Blum <ofir.blum@gmail.com>, 2021
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,11 +63,13 @@ msgid ""
 "request did not return any result (no credits were used). Try removing some "
 "filters.</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">הבקשה שלך"
+" לא החזירה שום תוצאה (לא נעשה שימוש בזיכויים). נסה להסיר כמה מסננים.</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
-msgstr ""
+msgstr "<span class=\"col-md-6\">אנשי קשר נוספים לכל חברה</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -87,27 +89,27 @@ msgstr "מכוניות ורכיבים"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
 msgid "Available State"
-msgstr ""
+msgstr "מצב זמין"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_69_157
 msgid "Banks & Insurance"
-msgstr ""
+msgstr "בנקים וביטוח"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "Buy credits."
-msgstr ""
+msgstr "לקנות נקודות זכות."
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_1
 msgid "CEO"
-msgstr ""
+msgstr "מנכ\"ל"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_industry
 msgid "CRM IAP Lead Industry"
-msgstr ""
+msgstr "CRM IAP תעשיית לידים"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
@@ -212,7 +214,7 @@ msgstr "תגיות ברירת מחדל"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_lead_label
 msgid "Display Lead Label"
-msgstr ""
+msgstr "הצגת תווית לידים"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__display_name
@@ -226,7 +228,7 @@ msgstr "שם לתצוגה"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_158_159
 msgid "Diversified Financials & Financial Services"
-msgstr ""
+msgstr "פיננסים ושירותים פיננסיים מגוונים"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
@@ -248,7 +250,7 @@ msgstr "דוא\"ל"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_138_156
 msgid "Energy & Utilities "
-msgstr ""
+msgstr "אנרגיה ושירותים"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__error
@@ -259,7 +261,7 @@ msgstr "שגיאה"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__error_type
 msgid "Error Type"
-msgstr ""
+msgstr "סוג שגיאה"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_filter_type
@@ -314,7 +316,7 @@ msgstr "ציוד שירותי בריאות"
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_helpers
 msgid "Helper methods for crm_iap_mine modules"
-msgstr ""
+msgstr "שיטות עזר עבור מודולי crm_iap_mine"
 
 #. module: crm_iap_mine
 #: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
@@ -349,12 +351,12 @@ msgstr "תעשייה"
 #. module: crm_iap_mine
 #: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_industry_name_uniq
 msgid "Industry name already exists!"
-msgstr ""
+msgstr "שם התעשייה כבר קיים!"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__credits
 msgid "Insufficient Credits"
-msgstr ""
+msgstr "יתרת נק זכות לא מספקת"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers____last_update
@@ -429,7 +431,7 @@ msgstr "לידים"
 #. module: crm_iap_mine
 #: model:ir.model.fields,help:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
 msgid "List of available states based on selected countries"
-msgstr ""
+msgstr "רשימה של מדינות זמינות על סמך מדינות נבחרות"
 
 #. module: crm_iap_mine
 #. openerp-web
@@ -437,7 +439,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
-msgstr ""
+msgstr "מחפש הזדמנויות נוספות? <br>נסה את <b>הכלי ליצירת לידים </b>."
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_148
@@ -472,14 +474,14 @@ msgstr "חדש"
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__no_result
 msgid "No Result"
-msgstr ""
+msgstr "אין תוצאה"
 
 #. module: crm_iap_mine
 #. openerp-web
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
 msgid "Now, just let the magic happen!"
-msgstr ""
+msgstr "עכשיו, רק תן לקסם לקרות!"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_number
@@ -652,7 +654,7 @@ msgstr "שירותי טלקומוניקציה"
 #. module: crm_iap_mine
 #: model:ir.model.fields,help:crm_iap_mine.field_crm_iap_lead_industry__reveal_ids
 msgid "The list of reveal_ids for this industry, separated with ','"
-msgstr ""
+msgstr "רשימת ה reveal_ids עבור התעשייה הזו, מופרדת עם ','"
 
 #. module: crm_iap_mine
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
@@ -682,25 +684,25 @@ msgstr "עד ל%d נקודות זכות נוספות ייצרכו  לזיהוי 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "What do you need ?"
-msgstr ""
+msgstr "מה אתה צריך?"
 
 #. module: crm_iap_mine
 #. openerp-web
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
 msgid "Which Industry do you want to target?"
-msgstr ""
+msgstr "באיזה תעשייה אתה רוצה להתמקד?"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "You do not have enough credits to submit this request."
-msgstr ""
+msgstr "אין לך מספיק קרדיטים להגשת בקשה זו."
 
 #. module: crm_iap_mine
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Your request could not be executed: %s"
-msgstr ""
+msgstr "לא ניתן היה לבצע את הבקשה שלך: %s"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_2

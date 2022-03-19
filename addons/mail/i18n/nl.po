@@ -1019,6 +1019,13 @@ msgstr ""
 "deze e-mails later niet opnieuw verzenden!"
 
 #. module: mail
+#: code:addons/mail/models/mail_blacklist.py:0
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Email Address?"
+msgstr "Weet je zeker dat je dit e-mailadres op de blacklist wilt zetten?"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/m2x_avatar_user.js:0
 #: code:addons/mail/static/src/js/m2x_avatar_user.js:0
@@ -5995,6 +6002,13 @@ msgid "Restrict mail templates and Jinja rendering."
 msgstr "Beperk e-mailsjablonen en Jinja-weergave."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Restrict mail templates edition and QWEB placeholders usage."
+msgstr ""
+"Beperk het gebruik van de e-mailsjablonen en het gebruik van tijdelijke "
+"aanduidingen voor QWEB."
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Retry"
@@ -7864,6 +7878,16 @@ msgid ""
 msgstr ""
 "Je kunt niets anders gebruiken dan Latijnse tekens zonder accent in het "
 "aliasadres (%s)."
+
+#. module: mail
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid ""
+"You do not have the access right to unblacklist emails. Please contact your "
+"administrator."
+msgstr ""
+"Je heeft geen toegangsrechten om e-mails op de blacklist te zetten. Neem "
+"contact op met de beheerderer."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

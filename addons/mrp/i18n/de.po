@@ -107,7 +107,7 @@ msgstr "%s (neu) %s"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
-msgstr ""
+msgstr "%s untergeordnete Fertigungsaufträge"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -229,7 +229,7 @@ msgstr "<span class=\"o_stat_text\">Rückstände</span> "
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Untergeordneter Fertigungsauftrag</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -739,13 +739,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr ""
+msgstr "Backorder Bestätigungszeile"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
-msgstr ""
+msgstr "Backorder Fertigungsauftrag"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -1241,7 +1241,7 @@ msgstr "Verbrauch"
 #: model:ir.actions.act_window,name:mrp.action_mrp_consumption_warning
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Consumption Warning"
-msgstr ""
+msgstr "Verbrauchswarnung"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_category_id
@@ -1287,7 +1287,7 @@ msgstr "Kosten Informationen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
-msgstr ""
+msgstr "Anzahl verknüpfter Backorders"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -3232,7 +3232,7 @@ msgstr "Mutterstückliste"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__parent_product_tmpl_id
 msgid "Parent Product Template"
-msgstr ""
+msgstr "Vorlage für übergeordnetes Produkt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__mrp_consumption_warning_id
@@ -4053,7 +4053,7 @@ msgstr "Sequenzkommissionierung vor der Fertigung"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence production"
-msgstr ""
+msgstr "Fertigungsablauf"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -4064,7 +4064,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Serial Mass Produce"
-msgstr ""
+msgstr "Serielle Massenproduktion"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
@@ -4127,7 +4127,7 @@ msgstr "Alle Datensätze mit vor heute geplanten Aktionen anzeigen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
-msgstr ""
+msgstr "Backorderzeilen anzeigen"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
@@ -4430,6 +4430,8 @@ msgstr "Technisches Feld zur Anzeige der Schaltfläche \"Anwenden\""
 #: model:ir.model.fields,help:mrp.field_stock_assign_serial__show_backorders
 msgid "Technical field to show the Create Backorder and No Backorder buttons"
 msgstr ""
+"Technisches Feld zur Anzeige der Schaltflächen \"Backorder (nicht) "
+"erstellen\""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__costs_hour
@@ -4615,6 +4617,8 @@ msgstr "Der Tag-Name muss eindeutig sein."
 #, python-format
 msgid "The total cost share for a BoM's by-products cannot exceed 100."
 msgstr ""
+"Der Gesamtkostenanteil für die Nebenprodukte einer Stückliste darf 100 nicht"
+" überschreiten."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
