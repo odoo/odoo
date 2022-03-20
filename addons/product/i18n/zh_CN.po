@@ -3,21 +3,16 @@
 # 	* product
 # 
 # Translators:
-# Ted Wang <feiyuwang2012@gmail.com>, 2017
+# Ted Wang <feiyuwang2012@gmail.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2017
-# niulin lnc. <admin@niulin.net>, 2018
-# e2f <projects@e2f.com>, 2018
 # liulixia <liu.lixia@elico-corp.com>, 2018
-# bf2549c5415a9287249cba2b8a5823c7, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
-# JZH-Odoo <jzh@odoo.com>, 2018
 # keecome <7017511@qq.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
 # Maie <m@maie.name>, 2019
 # F4NNIU <sparkamax@gmail.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
-# Felix Yang <felixyangsh@aliyun.com>, 2019
 # rsh <263737@qq.com>, 2019
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
@@ -28,12 +23,12 @@
 # v2exerer <9010446@qq.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # diaojiaolou <124412206@qq.com>, 2020
+# 稀饭~~ <wangwhai@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # snow wang <147156565@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
-# 稀饭~~ <wangwhai@qq.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2021
 # xu aaron, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
@@ -78,7 +73,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr "%(percentage)s %% 折扣 %(price)s 额外费用"
+msgstr "%(percentage)s %% 折扣与%(price)s 额外费用"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -117,10 +112,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
 msgstr ""
-"- 即时: 只要为产品创建了规格，所有规格的变体都会马上创建。\n"
-"        - 动态: 只有当该规格被加入销售订单时，该变体才会自动创建.\n"
-"        - 从不: 即使设定了规格，相关变体也不会创建。\n"
-"        注意: 一旦有相关变体已被创建，则此变体创建模式将不可改变。"
+"- 即时: 只要为产品创建了产品变体，所有产品变体的产品变体都会马上创建。\n"
+"        - 动态: 只有当该产品变体被加入销售订单时，该产品变体才会自动创建.\n"
+"        - 从不: 即使设定了产品变体，相关产品变体也不会创建。\n"
+"        注意: 一旦有相关产品变体已被创建，则此产品变体创建模式将不可改变。"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
@@ -192,7 +187,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr "<span>有关此产品的所有常规设置都在</span>"
+msgstr "<span>有关此产品的所有基本设置都在</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -220,7 +215,7 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
-"<strong>警告</strong>：添加或删除属性将删除\n"
+"<strong>警告</strong>：添加或删除变体将删除\n"
 "并重新创建现有变体，\n"
 "并导致其可能的自定义的丢失。"
 
@@ -236,7 +231,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
-msgstr "您想与客户沟通的产品说明。 此说明将被复制到每个销售订单，交货订单和客户发票/信用单"
+msgstr "您想与客户沟通的产品说明。 此说明将被复制到每个销售订单，交货订单和客户结算单/信用单"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -263,7 +258,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr "需要采取行动"
+msgstr "需要行动"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__active
@@ -275,7 +270,7 @@ msgstr "需要采取行动"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Active"
-msgstr "有效"
+msgstr "启用"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
@@ -287,7 +282,7 @@ msgstr "活动"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "活动例外勋章"
+msgstr "活动异常勋章"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
@@ -435,7 +430,7 @@ msgstr "属性和变型"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Availability"
-msgstr "可用量"
+msgstr "可用性"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -472,13 +467,13 @@ msgstr "基于"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Basic Pricelists"
-msgstr "基本价目表"
+msgstr "基本价格表"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr "可放大缩小的1024图片"
+msgstr "1024图可被缩放"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
@@ -490,14 +485,14 @@ msgstr "可放大缩小的1024变体图片"
 #: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Purchased"
-msgstr "采购"
+msgstr "可采购"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Sold"
-msgstr "销售"
+msgstr "可销售"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -552,7 +547,7 @@ msgstr "列"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr "组合规格值"
+msgstr "组合指数"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -613,7 +608,7 @@ msgstr "确认"
 #: model:ir.model.fields.selection,name:product.selection__product_template__detailed_type__consu
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
 msgid "Consumable"
-msgstr "可消耗"
+msgstr "能消耗"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -654,12 +649,12 @@ msgstr "成本"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr "成本货币"
+msgstr "成本币种"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
 msgid "Country Group"
-msgstr "国家群组"
+msgstr "国家/地区组"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__country_group_ids
@@ -669,7 +664,7 @@ msgstr "国家分组"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr "创建一个新的价目表"
+msgstr "创建新价目表"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
@@ -899,12 +894,12 @@ msgstr "每个产品的每个属性只能定义一次。"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_end
 msgid "End Date"
-msgstr "结束日期"
+msgstr "终止日期"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
 msgid "End date for this vendor price"
-msgstr "此供应商价格的结束日期"
+msgstr "此供应商价格的终止日期"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
@@ -941,7 +936,8 @@ msgstr "额外费用"
 msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200"
 " price extra, 1000 + 200 = 1200."
-msgstr "价格附加: 变体的销售价格随着附加价格进行变化,如:原销售价格是1000,额外收费是200,当前售价是1200 = 1000 + 200."
+msgstr ""
+"累加单价: 变体的销售价格随着累加单价进行变化,如:原销售单价是1000,累加单价是200,则该变体售价是1200 = 1000 + 200."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__priority
@@ -1004,7 +1000,7 @@ msgstr "未来活动"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "General Information"
-msgstr "一般信息"
+msgstr "基本信息"
 
 #. module: product
 #: model:ir.actions.server,name:product.action_product_price_list_report
@@ -1092,7 +1088,7 @@ msgstr "图标"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "表示一个例外活动的图标。"
+msgstr "表示异常活动的图标。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
@@ -1100,19 +1096,19 @@ msgstr "表示一个例外活动的图标。"
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
 #: model:ir.model.fields,help:product.field_product_template__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "如果勾选此项，有新消息会提醒你。"
+msgstr "确认后, 出现提示消息."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "如果勾选此项， 某些信息将会产生传递错误。"
+msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
-msgstr "如果没有设置，供应商的价格将适用于所有产品的变体。"
+msgstr "如果没有设置，供应商的价格将适用于所有产品的产品变体。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -1193,7 +1189,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Inactive"
-msgstr "无效"
+msgstr "未启用"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
@@ -1225,7 +1221,7 @@ msgstr "库存"
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template__message_is_follower
 msgid "Is Follower"
-msgstr "是关注者"
+msgstr "关注者"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
@@ -1270,7 +1266,7 @@ msgstr "千克"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line____last_update
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
@@ -1311,7 +1307,7 @@ msgstr "最后更新时间"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Late Activities"
-msgstr "后期的活动"
+msgstr "最近的活动"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
@@ -1337,19 +1333,19 @@ msgstr "物流"
 #: model:ir.model.fields,field_description:product.field_product_product__message_main_attachment_id
 #: model:ir.model.fields,field_description:product.field_product_template__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "附件"
+msgstr "主要附件"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
 msgid ""
 "Make this attribute value not compatible with other values of the product or"
 " some attribute values of optional and accessory products."
-msgstr "设置此规格值，不可用于与指定产品的某规格值。或者不可用于指定推荐产品的某规格值。"
+msgstr "设置此属性值，不可用于与指定产品的某属性值。或者不可用于指定推荐产品的某属性值。"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "管理产品包装"
+msgstr "管理产品包装形式"
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
@@ -1375,7 +1371,7 @@ msgstr "最大价格毛利"
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error
 msgid "Message Delivery error"
-msgstr "消息递送错误"
+msgstr "消息传递错误"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_ids
@@ -1401,7 +1397,7 @@ msgstr "最小数量"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
 msgid "Multiple prices per product"
-msgstr "每个产品多个售价"
+msgstr "每个产品多个价格表"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__product_pricelist_setting
@@ -1459,12 +1455,12 @@ msgstr "下一活动类型"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr "未找到供应商价格表"
+msgstr "没找到供应商价格表"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__priority__0
 msgid "Normal"
-msgstr "一般"
+msgstr "正常"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -1482,7 +1478,7 @@ msgstr "数字相关产品"
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction_counter
 msgid "Number of Actions"
-msgstr "行动数量"
+msgstr "动作个数"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
@@ -1494,25 +1490,25 @@ msgstr "错误数"
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "需要行动消息的数量"
+msgstr "需要作业消息数量"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "递送错误的消息数量"
+msgstr "发送错误的消息数量"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_count
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_item_count
 msgid "Number of price rules"
-msgstr "价格规则数量"
+msgstr "价格规则的号码"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_unread_counter
 #: model:ir.model.fields,help:product.field_product_template__message_unread_counter
 msgid "Number of unread messages"
-msgstr "未读消息的数量"
+msgstr "未读消息数量"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -1520,7 +1516,7 @@ msgstr "未读消息的数量"
 msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
-msgstr "在此产品 %s 你不可使用规格值 %s ，在相关规格 %s 上，他们有互斥排除关系."
+msgstr "在此产品 %s 你不可使用属性值 %s ，在相关属性 %s 上，他们有互斥排除关系."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -1528,7 +1524,7 @@ msgstr "在此产品 %s 你不可使用规格值 %s ，在相关规格 %s 上，
 msgid ""
 "On the product %s you cannot transform the attribute %s into the attribute "
 "%s."
-msgstr "在此产品 %s 你不可将规格 %s 转换成 另一规格 %s"
+msgstr "在此产品 %s 你不可将属性 %s 转换成 另一属性 %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -1547,7 +1543,7 @@ msgstr "包装"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
-msgstr "上级类别"
+msgstr "上级品类"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
@@ -1588,7 +1584,7 @@ msgstr "请指定产品适用此规则"
 #, python-format
 msgid ""
 "Please specify the product variant for which this rule should be applied"
-msgstr "请指定变体适用于此规则"
+msgstr "请指定产品变体适用于此规则"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
@@ -1685,7 +1681,7 @@ msgstr "价目表报告"
 #: model:ir.model,name:product.model_product_pricelist_item
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Pricelist Rule"
-msgstr "价目表规则"
+msgstr "价格表规则"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
@@ -1723,7 +1719,7 @@ msgstr "价格表被管理在"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Pricing"
-msgstr "定价"
+msgstr "价格"
 
 #. module: product
 #. openerp-web
@@ -1781,7 +1777,7 @@ msgstr "产品属性值"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr "产品属性以及值"
+msgstr "产品属性和值"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
@@ -1806,7 +1802,7 @@ msgstr "产品类别"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Product Category"
-msgstr "产品种类"
+msgstr "产品类别"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_configurator
@@ -2035,14 +2031,14 @@ msgstr "单选"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
 msgid "Reference"
-msgstr "参照"
+msgstr "参考"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
-msgstr "根据数量和期间，记录供应商要求的每种产品的价格。"
+msgstr "根据数量和时期，记录供应商要求的每种产品的价格。"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2067,7 +2063,7 @@ msgstr "删除数量"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_user_id
 msgid "Responsible User"
-msgstr "责任用户"
+msgstr "负责用户"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2099,7 +2095,7 @@ msgstr "销售说明"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
 msgid "Sales Grid Entry"
-msgstr "表格化输入"
+msgstr "销售表格录入"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
@@ -2163,7 +2159,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Show all records which has next action date is before today"
-msgstr "显示所有下一个活动日期在今天之前的记录"
+msgstr "显示所有的在今天之前的下一个行动日期的记录"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
@@ -2189,7 +2185,7 @@ msgstr "如果规则只适用一个产品，就指定一个产品，否则留空
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr "如果这条规则只能用于一个产品模版，则指定一个模版。否则留空。"
+msgstr "如果这条规则只能用于一个产品模板模版，则指定一个模版。否则留空。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
@@ -2240,7 +2236,7 @@ msgstr ""
 "基于活动的状态 \n"
 " 逾期：已经超过截止日期 \n"
 " 现今：活动日期是当天 \n"
-" 计划：未来的活动。"
+" 计划：未来活动。"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -2277,14 +2273,14 @@ msgstr "该产品的类型与详细类型不符"
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
-msgstr "规格 %s 必须包含至少1个规格值，用于产品 %s"
+msgstr "属性 %s 必须包含至少1个属性值，用于产品 %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
 msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
-msgstr "规格将不可变更，一旦其被用于某个产品，"
+msgstr "属性将不可变更，一旦其被用于某个产品，"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2334,9 +2330,7 @@ msgid ""
 "generate variants for each combination or generate them on demand from the "
 "sales order. To do so, open the form view of attributes and change the mode "
 "of *Create Variants*."
-msgstr ""
-"要生成的变体数量太多。 您不应为每个组合生成变体，也不应根据销售订单生成变量。 为此，请打开属性的表单视图并更改* Create Variants "
-"*的模式。"
+msgstr "要生成的变体数量太多。 您不应为每个组合生成变体，也不应根据销售订单生成变体。 为此，请打开变体的表单视图并更改* 创建变体 *的模式。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -2362,31 +2356,31 @@ msgstr "供应商要求的最小采购数量。如果不设定单位，将会使
 msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
 " Variants' button to set the extra attribute prices."
-msgstr "销售价格由产品模板管理。点击“可变配置”按钮来设置额外的属性价格。"
+msgstr "销售价格由产品模板管理。点击“可变配置”按钮来设置额外的产品变体价格。"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
-msgstr "规格值 %s 未被定义，请检查规格 %s 的相关产品 %s"
+msgstr "属性值 %s 未被定义，请检查属性 %s 的相关产品 %s"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no possible combination."
-msgstr "没有可用的组合"
+msgstr "没有可能组合。"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no remaining closest combination."
-msgstr "没有接近的组合"
+msgstr "没有余下的最佳组合。"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no remaining possible combination."
-msgstr "没有可用的组合"
+msgstr "没有余下的可能组合"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
@@ -2410,12 +2404,12 @@ msgstr "这是所有属性额外价格的总和"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr "备注将被自动加入至销售单及收据中"
+msgstr "此备注添加到销售订单以及结算单。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr "这张备注只用于内部用途。"
+msgstr "本说明仅供内部使用。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
@@ -2466,7 +2460,7 @@ msgstr "类型"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "记录的例外活动类型。"
+msgstr "记录的异常活动类型。"
 
 #. module: product
 #: code:addons/product/wizard/product_label_layout.py:0
@@ -2491,7 +2485,7 @@ msgstr "计量单位"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
-msgstr "单位名称"
+msgstr "计量单位名称"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -2509,7 +2503,7 @@ msgstr "未读消息"
 #: model:ir.model.fields,field_description:product.field_product_product__message_unread_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "未读消息计数器"
+msgstr "未读消息数"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -2524,19 +2518,19 @@ msgstr "超卖和交叉销售"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
 msgid "Used on Products"
-msgstr "用于产品"
+msgstr "使用在产品"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr "验证产品规格值"
+msgstr "有效产品属性明细行"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr "验证"
+msgstr "有效"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__name
@@ -2580,22 +2574,22 @@ msgstr "变体图像"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr "变体图片 1024"
+msgstr "变体图片1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr "变体图片 128"
+msgstr "变体图片128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr "变体图片 256"
+msgstr "变体l图片256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr "变体图片512"
+msgstr "变体l图片512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2605,13 +2599,13 @@ msgstr "变体信息"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
 msgid "Variant Price Extra"
-msgstr "变体价格额外"
+msgstr "变体累加价格"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
 msgid "Variant Seller"
-msgstr "变种卖家"
+msgstr "变体卖家"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
@@ -2636,7 +2630,7 @@ msgstr "变体"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variants Creation Mode"
-msgstr "Sku创建模式"
+msgstr "变体创建模式"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__partner_id
@@ -2648,7 +2642,7 @@ msgstr "供应商"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendor Bills"
-msgstr "供应商帐单"
+msgstr "供应商账单"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2693,13 +2687,13 @@ msgstr "体积"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
 msgid "Volume unit of measure"
-msgstr "体积计量单位"
+msgstr "体积单位"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr "体积计量单位标签"
+msgstr "体积单位标签"
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:0
@@ -2729,7 +2723,7 @@ msgstr "重量单位"
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "重量单位计量标签"
+msgstr "重量单位标签"
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:0
@@ -2756,14 +2750,14 @@ msgstr "你可以通过设置一个负的折扣来应用加价。"
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
-msgstr "你可以给你的客户分配价目表，或者在创建一个新的销售报价时选择一个。"
+msgstr "您可以为客户分配价目表，也可以在创建新的销售报价时选择一个。"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr "不能将主价目表作为价目表中的其他价目表指定。"
+msgstr "您不能将主要价目表分配为PriceList项目中的其他价格表"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2772,7 +2766,7 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
-"不可变更Sku创建模式，此规格 %s 已被用于以下产品:\n"
+"不可变更产品变体创建模式，此产品变体 %s 已被用于以下产品:\n"
 "%s"
 
 #. module: product
@@ -2782,20 +2776,20 @@ msgid ""
 "You cannot change the attribute of the value %s because it is used on the "
 "following products:%s"
 msgstr ""
-"不可变更规格值，此规格值 %s 已被用于以下产品:\n"
+"不可变更属性值，此属性值 %s 已被用于以下产品:\n"
 "%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
-msgstr "不可变更该规格值 %s 的产品，该值已被用于产品 %s"
+msgstr "不可变更该属性值 %s 的产品，该值已被用于产品 %s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
-msgstr "不可变更该规格值 %s ，该值已被用于产品 %s"
+msgstr "不可变更该属性值 %s ，该值已被用于产品 %s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -2807,7 +2801,7 @@ msgstr "不能创建递归的类别"
 #: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
 msgid ""
 "You cannot create two values with the same name for the same attribute."
-msgstr "不可在同一规格中创建2个相同的规格值。"
+msgstr "不可在同一属性中创建2个相同的属性值。"
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:0
@@ -2815,7 +2809,7 @@ msgstr "不可在同一规格中创建2个相同的规格值。"
 msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
-msgstr "您不能将“帐户”的小数精度定义为大于公司主要货币的舍入因子"
+msgstr "您不能将“账户”的小数精度定义为大于公司主要货币的舍入因子"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2824,7 +2818,7 @@ msgid ""
 "You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
-"不能删除规格 %s ，因为该规格已被用于以下产品:\n"
+"不能删除属性 %s ，因为该属性已被用于以下产品:\n"
 "%s"
 
 #. module: product
@@ -2864,14 +2858,14 @@ msgstr ""
 msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
-msgstr "您不能禁用价目表规则，请将其删除或存档其价目表。"
+msgstr "您不能禁用价目表规则，请将其删除或存档其价目表."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
-msgstr "不能将规格 %s 从产品 %s 调整至产品 %s"
+msgstr "不能将属性 %s 从产品 %s 调整至产品 %s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2880,7 +2874,7 @@ msgstr "不能将规格 %s 从产品 %s 调整至产品 %s"
 msgid ""
 "You cannot update related variants from the values. Please update related "
 "values from the variants."
-msgstr "不能直接在变体中更新规格值。请在规格管理中进行相关更新。"
+msgstr "不能直接在变体中更新变体值。请在变体管理中进行相关更新。"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -2888,7 +2882,9 @@ msgstr "不能直接在变体中更新规格值。请在规格管理中进行相
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
-msgstr "你必须一个用来销售或采购的产品，不论它是可库存的产品，可消耗的产品或者服务产品。"
+msgstr ""
+"你必须一个用来销售或采购的产品，\n"
+"不论它是可库存的产品，可消耗的产品或者服务产品。"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -2901,7 +2897,7 @@ msgstr ""
 "必须定义所有的产品类型,\n"
 "                确定其是可库存产品，消耗品，或服务。\n"
 "                此产品类型将确定相关的销售流程:\n"
-"                价格，报价说明，财务数据，补货规则等。"
+"                价格，报价说明，会计数据，补货规则等。"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -2926,7 +2922,7 @@ msgstr "你需要设置一个正数。"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_view_kanban
 msgid "days"
-msgstr "天"
+msgstr "天数"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2968,9 +2964,9 @@ msgstr "上级公司"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr "产品"
+msgstr "产品模板"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
-msgstr "到"
+msgstr "按"

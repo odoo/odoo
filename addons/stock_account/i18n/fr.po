@@ -20,12 +20,11 @@
 # e2f <projects@e2f.com>, 2019
 # omaodoo <oma@odoo.com>, 2019
 # Xavier Belmere <Info@cartmeleon.com>, 2020
-# guillaume bauer <guillaume.bauer@syentys.fr>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Christophe Ricevuto <cri@nalios.be>, 2021
-# Martin Trigaux, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +81,7 @@ msgstr "<b>Définissez un autre comptre d'entrée/source</b>"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>Product</span>"
-msgstr "<span>Produit</span>"
+msgstr "<span>Article</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -102,7 +101,7 @@ msgstr "Modèle de plan comptable"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
 msgid "Account Move"
-msgstr "Écriture"
+msgstr "Écriture comptable"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -156,7 +155,7 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
-"Affecte les prix de revient effectifs pour les transactions (reçus) et les "
+"Affecte les prix de revient effectifs pour les transactions reçues et les "
 "répartit en fonction des produits pour mettre à jour leur prix coûtant."
 
 #. module: stock_account
@@ -167,7 +166,7 @@ msgstr "Ligne de Compte analytique"
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 msgid "Automated"
-msgstr "automatisé"
+msgstr "Automatisé"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
@@ -210,7 +209,8 @@ msgid ""
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
 "La modification de votre méthode de détermination du coût des stocks est un "
-"changement important qui Voulez-vous vraiment effectuer cette modification ?"
+"changement important qui influe sur la valorisation de votre inventaire. "
+"Voulez-vous vraiment effectuer cette modification ?"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -336,7 +336,7 @@ msgstr "Affichage des lots et des numéros de série sur les factures"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher Nom"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
@@ -379,7 +379,7 @@ msgstr "ID"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "Emplacements de stock"
+msgstr "Emplacements des stocks"
 
 #. module: stock_account
 #: code:addons/stock_account/__init__.py:0
@@ -426,7 +426,7 @@ msgstr "Coûts logistiques"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation____last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
@@ -493,7 +493,7 @@ msgstr "Nouvelle valeur par quantité"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
 msgid "On Hand Value"
-msgstr "Valeur Stock Disponible"
+msgstr "Valeur Disponible"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -581,7 +581,7 @@ msgstr "Valeur restante"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Retour de marchandise"
+msgstr "Retour à la cueillette"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
@@ -640,7 +640,7 @@ msgstr "Journal de stock"
 #: model:ir.model.fields,field_description:stock_account.field_account_payment__stock_move_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
-msgstr "Mouvement de stock"
+msgstr "Stock déplacer"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -742,7 +742,7 @@ msgid ""
 "are leaving the company."
 msgstr ""
 "Les lignes de mouvement ne sont pas cohérentes avec l'état: certaines "
-"entrent dans l'entreprise et d'autres en sortent."
+"entrent dans la société et d'autres en sortent."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -752,9 +752,9 @@ msgid ""
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
 msgstr ""
-"Les déplacements de lignes ne sont pas cohérents : ils effectuent un "
-"déplacement interentreprises en une seule étape alors qu'ils doivent passer "
-"par le lieu de transit interentreprises."
+"Les lignes de mouvements ne sont pas cohérentes : déplacement "
+"interentreprises en une seule étape au lieu de passer par le lieu de transit"
+" interentreprises."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -763,7 +763,7 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
-"Les déplacements de lignes ne sont pas cohérents : ils ne partagent pas la "
+"Les lignes de mouvements ne sont pas cohérentes : elles ne partagent pas la "
 "même entreprise d'origine ou de destination."
 
 #. module: stock_account
@@ -794,8 +794,8 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr ""
-"Déclencher une réduction de la quantité livrée/reçue dans l'ordre de "
-"vente/le bon de commande associé"
+"Déclencher une réduction de la quantité livrée/reçue dans la commande "
+"client/fournisseur associée"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
@@ -857,7 +857,7 @@ msgstr "Valorisation"
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
 msgstr ""
-"La méthode de valorisation de la catégorie de produit %s a changé: de %s à "
+"La méthode de valorisation de la catégorie d'articles %s a changé: de %s à "
 "%s."
 
 #. module: stock_account
@@ -902,7 +902,7 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Quand la valorisation d'invenaire est automatique, c'est le journal "
+"Quand la valorisation d'inventaire est automatique, c'est le journal "
 "comptable dans lequel les entrées seront automatiquement postées lorsque les"
 " mouvements de stock seront réalisés."
 
@@ -945,7 +945,7 @@ msgid ""
 " You must define one before processing this operation."
 msgstr ""
 "Vous n'avez pas de compte d'entrée de valorisation définit sur la catégorie "
-"de produit. Vous devez en définir un avant de réaliser l'opération."
+"d'article. Vous devez en définir un avant de réaliser l'opération."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

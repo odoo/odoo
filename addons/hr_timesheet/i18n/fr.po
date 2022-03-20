@@ -4,16 +4,14 @@
 # 
 # Translators:
 # Frédéric LIETART <stuff@tifred.fr>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017
 # Miguel Vidali <mvidali129@gmail.com>, 2017
 # Benedicte HANET <hanetb@gmail.com>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # e2f <projects@e2f.com>, 2018
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
 # 71728729ee5e25c3ecd8d7420ddb9ca7, 2018
 # Denis Leemann <denis.leemann@camptocamp.com>, 2018
-# f5f0a0dac17dde787a1d812a6989680e, 2018
 # Lucas Deliege <lud@odoo.com>, 2019
 # Marie Willemyns <mwi@odoo.com>, 2019
 # William Olhasque <william.olhasque@scopea.fr>, 2019
@@ -28,7 +26,6 @@
 # Cécile Collart <cco@odoo.com>, 2021
 # Alexandra Jubert <aju@odoo.com>, 2022
 # Geoffrey_GMF <gmf@odoo.com>, 2022
-# sakodoo <sak@odoo.com>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -226,7 +223,7 @@ msgstr "Toutes les feuilles de temps"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
 msgid "Allow timesheets"
-msgstr "Permettre les feuilles de temps"
+msgstr "Autoriser les feuilles de temps"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/__init__.py:0
@@ -292,7 +289,7 @@ msgstr "Par employé"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
 msgid "By Project"
-msgstr "Par Projet"
+msgstr "Par projet"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
@@ -351,7 +348,7 @@ msgstr "Devise"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 #, python-format
 msgid "Date"
-msgstr "Date "
+msgstr "Date"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -843,12 +840,12 @@ msgstr "Temps facturé restant"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
 msgid "Reporting"
-msgstr "Rapport"
+msgstr "Analyse"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
 msgid "Save"
-msgstr "Sauver"
+msgstr "Sauvegarder"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
@@ -872,25 +869,25 @@ msgstr "Chercher dans Tout"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Description"
-msgstr "Rechercher dans la description"
+msgstr "Chercher dans Description"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Employee"
-msgstr "Rechercher dans l'employé"
+msgstr "Chercher dans Employé"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr "Rechercher dans le projet"
+msgstr "Chercher dans Projet"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Task"
-msgstr "Rechercher dans la tâche"
+msgstr "Chercher dans Tâche"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -915,7 +912,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
 msgid "Settings"
-msgstr "Configuration"
+msgstr "Paramètres"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
@@ -999,7 +996,7 @@ msgid ""
 " these projects, you have to remove these timesheet entries."
 msgstr ""
 "Ces projets ont des feuilles de temps qui les référencent. Avant de retirer "
-"ces projets, vous devez retirer ces entrées de feuilles de temps."
+"ces projets, vous devez retirer ces entrées des feuilles de temps."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -1067,7 +1064,7 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
 "Cette option définit l'unité de mesure utilisée dans les projets et tâches.\n"
-"Si vous utilisez les feuilles de temps liées aux projets, n'oubliez pas de paramétrer la bonne unité dans la configuration des salariés."
+"Si vous utilisez les feuilles de temps liées aux projets, n'oubliez pas de paramétrer la bonne unité dans la configuration des employés."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__timesheet_encode_uom_id
@@ -1100,7 +1097,7 @@ msgstr "Encodage de temps"
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Off"
-msgstr "Temps libre"
+msgstr "Congés"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1122,7 +1119,7 @@ msgstr "Temps passé sur cette tâche, incluant ses sous-tâches."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time unit used to record your timesheets"
-msgstr "Unité de temps utilisée pour encoder vos feuilles de temps."
+msgstr "Unité de temps utilisée pour encoder vos feuilles de temps"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -1146,7 +1143,7 @@ msgstr "Activités de la feuille de temps"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr "Coûts de la feuille de temps"
+msgstr "Coût de la feuille de temps"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_count
@@ -1296,7 +1293,7 @@ msgstr "Total:"
 msgid "Track your time from anywhere, even offline, with our web/mobile apps"
 msgstr ""
 "Suivez votre temps de n'importe où, même hors-ligne, avec nos applications "
-"web/mobile."
+"web/mobile"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line

@@ -3,16 +3,14 @@
 # 	* account_check_printing
 # 
 # Translators:
-# 老窦 北京 <2662059195@qq.com>, 2017
-# Martin Trigaux, 2018
+# Jeffery CHEN <jeffery9@gmail.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# Felix Yuen <fyu@odoo.com>, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,12 +42,12 @@ msgstr " : 支票编号序列"
 msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
-msgstr "调整生成的空白以使其符合打印机的设置"
+msgstr "调整生成的检查页的边距以使其符合打印机的设置"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
 msgid "Amount in Words"
-msgstr "金额大写"
+msgstr "大写金额"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -104,7 +102,7 @@ msgstr "支票号码只能由数字组成"
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "勾选此选项如果你的预先印制支票是没有编号的。"
+msgstr "如果你的预先印制支票是没有编号的请勾选此选项。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -114,7 +112,7 @@ msgstr "待打印支票"
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "支票"
+msgstr "检查单"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -168,7 +166,7 @@ msgstr "显示名称"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "前去配置面板"
+msgstr "至配置面板"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
@@ -181,22 +179,22 @@ msgstr "ID"
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
-msgstr "为了一次打印多张支票，它们必须为相同的银行帐户。"
+msgstr "为了一次打印多张支票，它们必须是相同的银行账户。"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
-msgstr "分类账"
+msgstr "日记账"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_move
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -248,7 +246,7 @@ msgstr "下一个支票号码"
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr "下一个检查号码应该只包含数字。"
+msgstr "下一个支票号码应该只包含数字。"
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -270,7 +268,7 @@ msgstr "付款方式"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
-msgstr "付款"
+msgstr "支付"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -278,14 +276,14 @@ msgstr "付款"
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr "以支票方式付款要必须选择'支票'并且未被调节"
+msgstr "以支票方式付款要必须选择'支票'并且未被核对"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
-msgstr "请输入您将首次预先印制的支票的号码。"
+msgstr "请输入您要打印的第一张预先打印的支票的号码。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
@@ -330,7 +328,7 @@ msgstr "打印数据标签"
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr "打印预先印制支票"
+msgstr "打印预印制支票"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_register
@@ -350,12 +348,12 @@ msgid ""
 "In order to disable the printing feature, select 'None'."
 msgstr ""
 "选择你将要打印的适合支票纸张的格式\n"
-"为了禁用打印功能，请选择'None'"
+"为了禁用打印功能，请选择'没有'"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Sent"
-msgstr "发送"
+msgstr "已发送"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
@@ -386,7 +384,7 @@ msgstr ""
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
-msgstr "最后一张支票号码是%s。以防发票被银行拒收，你可以用一个稍大一点的号码"
+msgstr "最后一张支票号码是%s。以防支票被银行拒收，你可以用一个稍大一点的号码"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -394,7 +392,7 @@ msgid ""
 "The selected journal is configured to print check numbers. If your pre-"
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
-msgstr "被选的日记账被配置成打印支票号码。如果预先印制支票纸已经有号码或者当前的号码是错误的你可以在日记账配置页面改正"
+msgstr "选择的日记账配置上了打印支票号码。如果预先印制支票已经有号码或者当前的号码是错误的，你可以在日记账配置页面修改"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -428,7 +426,7 @@ msgstr "无标记送出"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr "虚空检查"
+msgstr "作废支票"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0

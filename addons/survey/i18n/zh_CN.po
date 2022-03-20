@@ -8,18 +8,15 @@
 # v2exerer <9010446@qq.com>, 2016
 # xiangye xiao, 2016
 # waveyeung <waveyeung@qq.com>, 2017
-# 卓忆科技 <zhanghao@jointd.com>, 2017
+# liulixia <liu.lixia@elico-corp.com>, 2017
 # e2f <projects@e2f.com>, 2018
-# liulixia <liu.lixia@elico-corp.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # xiaobin wu <bd5dml@gmail.com>, 2018
 # bf2549c5415a9287249cba2b8a5823c7, 2018
-# JZH-Odoo <jzh@odoo.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
-# roye w <159820@qq.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # jian liu <lj1989419@gmail.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2020
@@ -31,8 +28,8 @@
 # xu aaron, 2021
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
-# Martin Trigaux, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -40,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-07 12:07+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -550,13 +547,13 @@ msgstr ""
 #: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "A label must be attached to only one question."
-msgstr "一个标签必须而且只能附加到一个问题"
+msgstr "一个标签必须而且只能附加到一个问题。"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_positive_len_max
 #: model:ir.model.constraint,message:survey.constraint_survey_question_positive_len_min
 msgid "A length must be positive!"
-msgstr "长度必须是正数。"
+msgstr "长度必须是正数！"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_answer__answer_score
@@ -608,12 +605,12 @@ msgstr "访问记号应该是独一无二"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction
 msgid "Action Needed"
-msgstr "需要采取行动"
+msgstr "需要行动"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__active
 msgid "Active"
-msgstr "有效"
+msgstr "启用"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_ids
@@ -623,7 +620,7 @@ msgstr "活动"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "活动例外勋章"
+msgstr "活动异常勋章"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_state
@@ -640,7 +637,7 @@ msgstr "活动类型图表"
 msgid ""
 "Add a list of email of recipients (will not be converted into contacts). "
 "Separated by commas, semicolons or newline..."
-msgstr "添加电子邮件收件人列表（不会转化为联系人）。采用逗号、分号或新行分隔..."
+msgstr "添加EMail收件人列表（不会转换为联系人）。采用逗号、分号或新行分隔..."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -650,7 +647,7 @@ msgstr "添加一个问题"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Add a section"
-msgstr "添加部分"
+msgstr "添加节"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -905,7 +902,7 @@ msgstr "认证徽章"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id_dummy
 msgid "Certification Badge "
-msgstr "认证徽章"
+msgstr "认证徽章 "
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -1202,7 +1199,7 @@ msgstr "创建时间"
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating test token is not allowed for you."
-msgstr "您不允许创建测试符记"
+msgstr "您不允许创建测试令牌."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -1210,7 +1207,7 @@ msgstr "您不允许创建测试符记"
 msgid ""
 "Creating token for anybody else than employees is not allowed for internal "
 "surveys."
-msgstr "内部调查不允许为员工以外的任何人创建符记。"
+msgstr "内部调查不允许为员工以外的任何人创建令牌。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -1257,7 +1254,7 @@ msgstr "客户将收到一个新的令牌，并能够重新进行调查。"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Customers will receive the same token."
-msgstr "客户将收到相同的令牌"
+msgstr "客户将收到相同的令牌."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__date
@@ -1279,7 +1276,7 @@ msgstr "日期时间"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_datetime
 msgid "Datetime answer"
-msgstr "日期时间日期时间"
+msgstr "日期时间 答复"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
@@ -1304,7 +1301,7 @@ msgstr "通过菜单定义挑战的可见性"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Delete"
-msgstr "刪除"
+msgstr "删除"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
@@ -1371,7 +1368,7 @@ msgstr "Email"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__email_from
 msgid "Email address of the sender."
-msgstr "发件人的电子邮件。"
+msgstr "发件人的电子邮箱。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -1451,7 +1448,7 @@ msgstr "最终排行榜"
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr "最终的占位符表达式，可以复制粘贴到目标模版字段"
+msgstr "最终的占位符表达式，可以复制粘贴到目标模版字段."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
@@ -1491,7 +1488,7 @@ msgstr "从"
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_badge
 msgid "Gamification Badge"
-msgstr "积分制管理奖章"
+msgstr "游戏化奖章"
 
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_challenge
@@ -1540,7 +1537,7 @@ msgstr "分组"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_mode
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Handle existing"
-msgstr "Handle existing"
+msgstr "处理现有的"
 
 #. module: survey
 #. openerp-web
@@ -1613,12 +1610,12 @@ msgstr "图标"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "表示一个例外活动的图标。"
+msgstr "表示异常活动的图标。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__access_token
 msgid "Identification token"
-msgstr "识别标记"
+msgstr "标识令牌"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__progression_mode
@@ -1631,13 +1628,13 @@ msgstr "如果选择了数字，它将在要回答的问题总数中显示已回
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "如果勾选此项，有新消息会提醒你。"
+msgstr "确认后, 出现提示消息."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "如果勾选此项， 某些信息将会产生传递错误。"
+msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__save_as_email
@@ -1662,7 +1659,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back
 msgid "If checked, users can go back to previous pages."
-msgstr "如果选中，用户能够返回上页。"
+msgstr "如果勾选了，用户能够返回上页。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__survey_users_login_required
@@ -1675,14 +1672,14 @@ msgstr "如果勾选此项，用户必须在回答之前登录并使用有效的
 #: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "If other, please specify:"
-msgstr "如果是其它，请指定"
+msgstr "如果有其它，请指定:"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__questions_selection
 msgid ""
 "If randomized is selected, add the number of random questions next to the "
 "section."
-msgstr "如果选择随机随机，请在该部分旁边添加随机问题的数量。"
+msgstr "如果选择随机随机，请在该节旁边添加随机问题的数量。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__questions_selection
@@ -1744,7 +1741,7 @@ msgstr "不正确"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_email
 msgid "Input must be an email"
-msgstr "输入必须是电子邮件"
+msgstr "输入必须是EMail"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__invite_token
@@ -1764,7 +1761,7 @@ msgstr "编辑"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_is_follower
 msgid "Is Follower"
-msgstr "是关注者"
+msgstr "关注者"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification
@@ -1839,7 +1836,7 @@ msgstr "语言"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input____last_update
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__write_uid
@@ -1869,7 +1866,7 @@ msgstr "上次显示问题/页"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Late Activities"
-msgstr "逾期活动"
+msgstr "最近的活动"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -1941,7 +1938,7 @@ msgstr "邮件模板"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "附件"
+msgstr "主要附件"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_mandatory
@@ -1952,7 +1949,7 @@ msgstr "必答问题"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__matrix
 msgid "Matrix"
-msgstr "表格"
+msgstr "矩阵"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__matrix_row_ids
@@ -2012,7 +2009,7 @@ msgstr "也许你正在寻找"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
 msgid "Message Delivery error"
-msgstr "消息递送错误"
+msgstr "消息传递错误"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_ids
@@ -2089,7 +2086,7 @@ msgstr "多选：允许选择多个答案"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__simple_choice
 msgid "Multiple choice: only one answer"
-msgstr "多选：只允许选择一个答案"
+msgstr "选择题：只允许选择一个答案"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__matrix_subtype__multiple
@@ -2116,7 +2113,7 @@ msgstr "从不"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "New"
-msgstr "新的"
+msgstr "新建"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_invite__existing_mode__new
@@ -2204,7 +2201,7 @@ msgstr "号码"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction_counter
 msgid "Number of Actions"
-msgstr "行动数量"
+msgstr "动作个数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__attempts_limit
@@ -2226,17 +2223,17 @@ msgstr "错误数"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "需要行动消息的数量"
+msgstr "需要作业消息数量"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "递送错误的消息数量"
+msgstr "发送错误的消息数量"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread_counter
 msgid "Number of unread messages"
-msgstr "未读消息的数量"
+msgstr "未读消息数量"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__numerical_box
@@ -2290,7 +2287,7 @@ msgstr "每题一页"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_section
 msgid "One page per section"
-msgstr "每个部分一页"
+msgstr "每个节一页"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__one_page
@@ -2341,7 +2338,7 @@ msgstr "其他（见评论）"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__mail_server_id
 msgid "Outgoing mail server"
-msgstr "出向邮件服务器"
+msgstr "邮件发送服务器"
 
 #. module: survey
 #. openerp-web
@@ -2353,7 +2350,7 @@ msgstr "整体表现"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__page_id
 msgid "Page"
-msgstr "网页"
+msgstr "页"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__page_ids
@@ -2462,7 +2459,7 @@ msgstr "请至少输入一个可用的收件人。"
 msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
-msgstr "请确保你的调查中至少有一个问题。你还需要至少一个部分如果你选择“页面每节”布局。<br/>"
+msgstr "请确保你的调查中至少有一个问题。你还需要至少一个节如果你选择“页面每节”布局。<br/>"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__predefined_question_ids
@@ -2564,7 +2561,7 @@ msgstr "通过测验"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Quizz passed"
-msgstr "通过"
+msgstr "通过测验"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__random
@@ -2632,7 +2629,7 @@ msgstr "负责人"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_user_id
 msgid "Responsible User"
-msgstr "责任用户"
+msgstr "负责用户"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
@@ -2667,7 +2664,7 @@ msgstr "正确答案:"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__matrix_row_id
 msgid "Row answer"
-msgstr "没有答案"
+msgstr "答案行"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2742,7 +2739,7 @@ msgstr "评分类型"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers
 msgid "Scoring with answers at the end"
-msgstr "最后给出答案"
+msgstr "最后得分的答案"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_without_answers
@@ -2773,12 +2770,12 @@ msgstr "搜索用户输入行"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__page_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Section"
-msgstr "章节"
+msgstr "节"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_and_page_ids
 msgid "Sections and Questions"
-msgstr "部分和问题"
+msgstr "节和问题"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -2832,7 +2829,7 @@ msgstr "会话代码应该是唯一的"
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Share"
-msgstr "共享"
+msgstr "分享"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_allowed
@@ -2847,7 +2844,7 @@ msgstr "显示会话排行榜"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Show all records which has next action date is before today"
-msgstr "显示在今天之前的下一个行动日期的所有记录"
+msgstr "显示所有的在今天之前的下一个行动日期的记录"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__char_box
@@ -2864,12 +2861,12 @@ msgstr "忽略"
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Some emails you just entered are incorrect: %s"
-msgstr "Some emails 您刚输入的某些电子邮箱不正确：%s"
+msgstr "您刚输入的某些电子邮箱不正确：%s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "Sorry, no one answered this survey yet."
-msgstr "对不起，还没有人回答这个调查。"
+msgstr "抱歉，还没有人回答这个调查。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -2918,7 +2915,7 @@ msgstr ""
 "基于活动的状态 \n"
 " 逾期：已经超过截止日期 \n"
 " 现今：活动日期是当天 \n"
-" 计划：未来的活动。"
+" 计划：未来活动。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -3007,7 +3004,7 @@ msgstr "建议"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Survey"
-msgstr "问卷"
+msgstr "调查"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_view_tree
@@ -3223,7 +3220,7 @@ msgstr "以下电子邮箱已收到邀请"
 msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external signup in configuration."
-msgstr "以下收件人没有用户帐户： %s 您应该为它们创建用户帐户或允许在配置中进行外部注册。"
+msgstr "以下收件人没有用户账户： %s 您应该为它们创建用户账户或允许在配置中进行外部注册。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -3304,7 +3301,7 @@ msgstr "这些选项引用了 col-xx-[12|6|4|3|2] classes in Bootstrap 用于基
 #: code:addons/survey/tests/test_survey.py:0
 #, python-format
 msgid "This answer must be an email address"
-msgstr "答案必须为邮件地址"
+msgstr "此答案必须为邮件地址"
 
 #. module: survey
 #. openerp-web
@@ -3360,12 +3357,12 @@ msgstr "这不是一个数字"
 msgid ""
 "This list of emails of recipients will not be converted in contacts.        "
 "Emails must be separated by commas, semicolons or newline."
-msgstr "此电子邮件收件人列表不会转换为联系人。电子邮件必须由逗号、分号或新行分隔。"
+msgstr "此EMail收件人列表不会转换为联系人。EMail必须由逗号、分号或新行分隔。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description_done
 msgid "This message will be displayed when survey is completed"
-msgstr "此邮件将会在调查结束后显示。"
+msgstr "此讯息将会在调查结束后显示"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_tree
@@ -3385,7 +3382,7 @@ msgstr "此问题需要答案。"
 msgid ""
 "This survey does not allow external people to participate. You should create"
 " user accounts or update survey access mode accordingly."
-msgstr "此调查不允许外部人员参与。 您应该创建用户帐户或更新调查访问模式。"
+msgstr "此调查不允许外部人员参与。 您应该创建用户账户或更新调查访问模式。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
@@ -3462,7 +3459,7 @@ msgstr "类型"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "记录的例外活动类型。"
+msgstr "记录的异常活动类型。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__suggested_answer_ids
@@ -3492,7 +3489,7 @@ msgstr "未归类"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "Unfortunately, you have failed the test."
-msgstr " 好可惜，你没有通过测试。"
+msgstr "好可惜，你没有通过测试。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread
@@ -3502,7 +3499,7 @@ msgstr "未读消息"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "未读消息计数器"
+msgstr "未读消息数"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -3543,17 +3540,17 @@ msgstr "用户输入"
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date
 #: model_terms:ir.ui.view,arch_db:survey.question_result_text
 msgid "User Responses"
-msgstr "用户反馈"
+msgstr "用户回应"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_form
 msgid "User input line details"
-msgstr "用户输入明细详情"
+msgstr "用户输入行细节"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__user_input_ids
 msgid "User responses"
-msgstr "用户反馈"
+msgstr "用户回应"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__users_can_go_back
@@ -3592,12 +3589,12 @@ msgstr "我们已经注册了您的答案！请等待主持人进入下一个问
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
 msgid "Website Messages"
-msgstr "网站信息"
+msgstr "网站消息"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__website_message_ids
 msgid "Website communication history"
-msgstr "网站沟通记录"
+msgstr "网上沟通记录"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -3714,7 +3711,7 @@ msgstr "你获得了徽章"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "You scored"
-msgstr "您的得分"
+msgstr "你的得分"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3821,7 +3818,7 @@ msgstr "页"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "review your answers"
-msgstr "查看你的回答"
+msgstr "审查你的回答"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired

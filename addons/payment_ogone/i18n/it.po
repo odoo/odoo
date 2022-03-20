@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_ingenico
-#
+# 	* payment_ogone
+# 
 # Translators:
-# Martin Trigaux, 2019
-# SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
-# Paolo Valier, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-#
+# SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"PO-Revision-Date: 2021-05-11 12:35+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_ogone
@@ -90,19 +90,17 @@ msgstr "Dati ricevuti con stato di pagamento non valido: %s"
 #: code:addons/payment_ogone/controllers/main.py:0
 #, python-format
 msgid ""
-"Received data with invalid signature. expected: %(exp)s ; received: "
-"%(rec)s ; data:\n"
+"Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
 "%(data)s"
 msgstr ""
-"Dati ricevuti con firma non valida. atteso: %(exp)s ; ricevuto: %(rec)s ; "
-"dati:\n"
+"Dati ricevuti con firma non valida. atteso: %(exp)s ; ricevuto: %(rec)s ; dati:\n"
 "%(data)s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received feedback data with unknown type: %s"
-msgstr ""
+msgstr "Dati di feedback ricevuti con tipo sconosciuto: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
@@ -132,7 +130,8 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
-msgstr "L'ID utilizzato esclusivamente per identificare l'utente API con Ogone"
+msgstr ""
+"L'ID utilizzato esclusivamente per identificare l'utente API con Ogone"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
@@ -155,7 +154,7 @@ msgstr "Questa communicazione con l'API è fallita."
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "Il pagamento è stato rifiutato: %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0

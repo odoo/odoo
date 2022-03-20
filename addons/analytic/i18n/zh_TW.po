@@ -3,13 +3,10 @@
 # 	* analytic
 # 
 # Translators:
-# Michael Yeung, 2018
-# sejun huang <sejun.huang@gmail.com>, 2018
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
-# Martin Trigaux, 2019
 # Mandy Choy <mnc@odoo.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 12:56+0000\n"
-"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,24 +36,24 @@ msgstr "需要採取行動"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active
 msgid "Active"
-msgstr "有效"
+msgstr "啟用"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr "添加一個新的分析帳戶"
+msgstr "增加一個新的分析帳戶"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
 msgid "Add a new tag"
-msgstr "添加新標籤"
+msgstr "增加新標籤"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
-msgstr "金額"
+msgstr "總額"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
@@ -85,12 +82,12 @@ msgstr "分析帳戶組"
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "分析會計"
+msgstr "分析會計帳戶"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
-msgstr "分析會計標籤"
+msgstr "分析會計帳戶標籤"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
@@ -125,17 +122,17 @@ msgstr "分析分錄"
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
 msgid "Analytic Items"
-msgstr "分析專案"
+msgstr "分析項目"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "分析行"
+msgstr "分析明細"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__line_ids
 msgid "Analytic Lines"
-msgstr "分析行"
+msgstr "分析明細"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__name
@@ -156,7 +153,7 @@ msgstr "分析標籤"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
-msgstr "歸檔"
+msgstr "已歸檔封存"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -198,7 +195,7 @@ msgstr "下級"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr "按一下此處添加新的分析帳戶組。"
+msgstr "按一下此處增加新的分析帳戶組。"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -221,14 +218,14 @@ msgstr "完整名稱"
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_config_settings
 msgid "Config Settings"
-msgstr "設定"
+msgstr "組態設定"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "僅當度量單位屬於同一類別時，才能進行度量單位之間的轉換。轉換將根據比率進行。"
+msgstr "計量單位轉換只能在同一個類型之間進行。轉換根據比例."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -236,7 +233,7 @@ msgstr "僅當度量單位屬於同一類別時，才能進行度量單位之間
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
-msgstr "當您登記供應商發票、費用或者工時表的時候成本將會自動的生成。"
+msgstr "當您登記供應商應收帳單、費用或者工時表的時候成本將會自動的建立。"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -245,7 +242,7 @@ msgstr "當您登記供應商發票、費用或者工時表的時候成本將會
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__create_uid
 msgid "Created by"
-msgstr "創建者"
+msgstr "建立者"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_date
@@ -254,7 +251,7 @@ msgstr "創建者"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__create_date
 msgid "Created on"
-msgstr "創建時間"
+msgstr "建立於"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
@@ -266,7 +263,7 @@ msgstr "貸方"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__currency_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__currency_id
 msgid "Currency"
-msgstr "貨幣"
+msgstr "幣別"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__partner_id
@@ -277,13 +274,13 @@ msgstr "客戶"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__date
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Date"
-msgstr "日期   "
+msgstr "日期"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Debit"
-msgstr "借"
+msgstr "借方"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__description
@@ -308,7 +305,7 @@ msgstr "訂閱者"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "關注者(業務夥伴)"
+msgstr "訂閱者(業務夥伴)"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
@@ -319,7 +316,7 @@ msgstr "毛利"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__group_id
 msgid "Group"
-msgstr "群組"
+msgstr "組"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -345,19 +342,19 @@ msgstr "ID"
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "如果勾選此項，有新消息會提醒您。"
+msgstr "勾選代表有新訊息需要您留意."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
+msgstr "勾選代表有訊息發生傳送錯誤."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
-msgstr "如果活動字段設定為否，您將可以隱藏它而不在科目刪除它。"
+msgstr "如果有效欄位設定為否，您將可以隱藏它而不在分析帳戶刪除它."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -369,7 +366,7 @@ msgid ""
 msgstr ""
 "在 Odoo 中，使用分析帳戶實施銷售訂單和專案。\n"
 "                您可以追蹤成本和收入，輕鬆分析您的\n"
-"               利潤。"
+"                利潤."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -383,7 +380,7 @@ msgstr "是訂閱者"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line____last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag____last_update
 msgid "Last Modified on"
-msgstr "最後修改時間"
+msgstr "最後修改於"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
@@ -392,7 +389,7 @@ msgstr "最後修改時間"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__write_uid
 msgid "Last Updated by"
-msgstr "最後更新人"
+msgstr "最後更新者"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_date
@@ -401,7 +398,7 @@ msgstr "最後更新人"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__write_date
 msgid "Last Updated on"
-msgstr "最後更新時間"
+msgstr "最後更新於"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
@@ -411,12 +408,12 @@ msgstr "主要附件"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
 msgid "Message Delivery error"
-msgstr "郵件傳遞錯誤"
+msgstr "訊息遞送錯誤"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
 msgid "Messages"
-msgstr "消息"
+msgstr "訊息"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__name
@@ -433,32 +430,32 @@ msgstr "尚未啟用"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
-msgstr "此分析會計帳戶尚未啟用"
+msgstr "此分析帳戶尚未啟用"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
 msgid "Number of Actions"
-msgstr "行動數量"
+msgstr "動作數"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
 msgid "Number of errors"
-msgstr "錯誤數量"
+msgstr "錯誤數"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "需要行動消息的數量"
+msgstr "需要處理的訊息數"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "發送錯誤的郵件數"
+msgstr "有發送錯誤的郵件數"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
 msgid "Number of unread messages"
-msgstr "未讀消息的數量"
+msgstr "未讀的訊息數"
 
 #. module: analytic
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
@@ -499,7 +496,7 @@ msgstr "數量"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
 msgid "Reference"
-msgstr "參照"
+msgstr "參考單據"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -510,15 +507,15 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"創建客戶發票時將自動創建\n"
-"                收入。可根據銷售訂單 （固定價格發票）、\n"
+"建立客戶憑單時將自動建立\n"
+"                收入。可根據銷售訂單 （固定價格憑單）、\n"
 "                時間表（根據已完成工作）或費用（例如\n"
-"                差旅費的再開立發票）創建客戶發票。"
+"                差旅費的再開立憑單）建立客戶應收憑單."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "搜尋分析行"
+msgstr "搜尋分析明細"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
@@ -528,12 +525,12 @@ msgstr "搜尋分析標籤"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
-msgstr "將「有效」設定為 false 可隱藏分析標籤，而無需將其刪除。"
+msgstr "將「有效」設定為 false 可隱藏分析標籤，而無需將其刪除."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
 msgid "Tags"
-msgstr "摘要"
+msgstr "標籤"
 
 #. module: analytic
 #: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
@@ -547,17 +544,17 @@ msgstr "分析分配的百分比應該在0 與 100 之間."
 msgid ""
 "The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
-msgstr "所選科目屬於另一家公司，而不是您嘗試為其建立分析項目的公司"
+msgstr "所選項目屬於另一家公司，而不是您嘗試為其建立分析帳戶的公司"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "This allows you to classify your analytic accounts."
-msgstr "這使您可以對分析科目進行分類."
+msgstr "這使您可以對分析帳戶進行分類."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
-msgstr "合計"
+msgstr "總計"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
@@ -567,12 +564,12 @@ msgstr "單位"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread
 msgid "Unread Messages"
-msgstr "未讀消息"
+msgstr "未讀訊息"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "未讀消息計數器"
+msgstr "未讀訊息計數"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id

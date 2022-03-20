@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project_timesheet_holidays
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-#
+# Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"PO-Revision-Date: 2017-12-13 14:57+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_timesheet_holidays
@@ -40,8 +39,8 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
-"Per generare il foglio ore delle ferie %s sono richiesti il progetto interno "
-"e il lavoro. Se il foglio ore non è necessario, lasciarli vuoti."
+"Per generare il foglio ore delle ferie %s sono richiesti il progetto interno"
+" e il lavoro. Se il foglio ore non è necessario, lasciarli vuoti."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -51,7 +50,7 @@ msgstr "Aziende"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni configurazione"
+msgstr "Impostazioni di configurazione"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
@@ -85,6 +84,7 @@ msgstr ""
 "foglio ore nel progetto ferie dell'azienda."
 
 #. module: project_timesheet_holidays
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #, python-format
 msgid "Internal"
@@ -127,6 +127,7 @@ msgstr ""
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 #, python-format
 msgid "Time Off"
@@ -159,8 +160,8 @@ msgstr "Fogli ore"
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid ""
-"You cannot delete timesheets linked to time off. Please, cancel the time off "
-"instead."
+"You cannot delete timesheets linked to time off. Please, cancel the time off"
+" instead."
 msgstr ""
 "Non puoi cancellare i fogli di lavoro collegati alle ferie. Per favore, "
 "cancella le ferie invece."

@@ -6,17 +6,10 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2018
 # liulixia <liu.lixia@elico-corp.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
-# 0023d6d916c2d56e4d76ed7a6e80ad5b, 2018
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2018
-# HQ Shang <shanghq@pharmarise.com.cn>, 2018
-# diaojiaolou <124412206@qq.com>, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
-# v2exerer <9010446@qq.com>, 2018
-# 湘子 南 <1360857908@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# 黎伟杰 <674416404@qq.com>, 2019
 # ryan ryan <itechr@outlook.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2020
 # Jeffery CHEN <jeffery9@gmail.com>, 2020
@@ -29,8 +22,8 @@
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # Felix Yang <felixyangsh@aliyun.com>, 2021
-# Martin Trigaux, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -38,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2018-08-02 11:17+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +42,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On-Time Delivery"
-msgstr "% 准时交货率"
+msgstr "% 准时交货"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -66,7 +59,7 @@ msgid ""
 "Delivery Data</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', "
-"0)]}\">没有准时交货数据</span>"
+"0)]}\">没看见准时交货的数据</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -84,13 +77,13 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"此处设置的值是特定于公司的。\"  "
+"groups=\"base.group_multi_company\"/>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_text\">On-time Rate</span>"
-msgstr "<span class=\"o_stat_text\">准时交货率</span>"
+msgstr "<span class=\"o_stat_text\">准时率</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
@@ -213,7 +206,7 @@ msgstr "确认订单需要的时间，定义一个订单必须被验证。"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
 #, python-format
 msgid "Days to Purchase"
-msgstr "采购提前期"
+msgstr "采购确认时间"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
@@ -227,7 +220,7 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
-msgstr "根据所安装的模块，这将允许您定义路由产品:是否会购买，制造，补充订单，等。"
+msgstr "根据所安装的模块，这将允许您定义路线产品:是否会购买，制造，补充订单，等。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -253,7 +246,7 @@ msgstr "下游移动"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr "直运"
+msgstr "代发货"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -270,7 +263,7 @@ msgstr "去年生效日期"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "采购单出现异常"
+msgstr "采购单出现异常:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -323,7 +316,7 @@ msgstr "收获数量"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Incoming Shipments"
-msgstr "入库"
+msgstr "入向送货"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
@@ -350,12 +343,12 @@ msgstr "销售模块是否已安装"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
@@ -375,7 +368,7 @@ msgstr "批次/序列号"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
-msgstr "可能需要手动操作."
+msgstr "可能需要手动操作。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -383,7 +376,7 @@ msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
-msgstr "供应商提前期误差幅度。当系统生成重新订购产品的采购订单时，它们将被调度提前几天以应付意外的供应商延迟。"
+msgstr "供应商供货提前期。当系统生成重新订购产品的采购订单时，他们将提前几天调度，以应付意外的供应商延迟。"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -511,7 +504,7 @@ msgstr "采购订单"
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
 msgid "Purchase Order Line"
-msgstr "采购订单行"
+msgstr "采购订单明细"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
@@ -523,7 +516,7 @@ msgstr "采购订单"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
 msgid "Purchase Report"
-msgstr "采购报表"
+msgstr "采购报告"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -534,12 +527,12 @@ msgstr "采购安全前置时间"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr "采购单号"
+msgstr "采购单数"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "收货"
+msgstr "接收"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -576,7 +569,7 @@ msgstr "采购在途"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
 msgid "Reservation"
-msgstr "保留"
+msgstr "预留"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
@@ -614,7 +607,7 @@ msgstr "显示供应商栏"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "库存调拨"
+msgstr "库存移动"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
@@ -655,7 +648,7 @@ msgstr "供应商信息"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr "于显示直接发运地址的技术字段"
+msgstr "技术字段用于显示代发货地址"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__purchase_order_line_ids
@@ -694,13 +687,13 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"这增加一个直运路线来应用于产品，以请求您的供应商交付给您的客户。 一旦销售订单被确认，要直运的产品将会产生报价的采购申请。这是按需流量。 "
+"这增加一个直销路线来应用于产品，以请求您的供应商交付给您的客户。 一旦销售订单被确认，要直销的产品将会产生报价的采购申请。这是按需流量。 "
 "请求的送货地址将是客户送货地址，而不是您的仓库。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr "这将决定进货的操作类型。"
+msgstr "这将决定进货的作业类型。"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -762,7 +755,7 @@ msgstr "供应商前置时间"
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
 msgid "Vendor On-time Delivery analysis"
-msgstr "供应商准时交货统计"
+msgstr "供应商准时交货分析"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__vendor_id
@@ -807,7 +800,7 @@ msgstr "你必须为此合作伙伴设置一个供应商的位置%s"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "天"
+msgstr "天数"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -817,4 +810,4 @@ msgstr "的"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
-msgstr "替代采购"
+msgstr "已订购，替换"

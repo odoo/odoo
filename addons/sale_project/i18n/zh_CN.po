@@ -11,10 +11,9 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # Jeffery CHEN <jeffery9@gmail.com>, 2020
 # rsh <263737@qq.com>, 2020
-# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020
-# Martin Trigaux, 2021
 # snow wang <147156565@qq.com>, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2020-02-13 10:47+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,7 +139,7 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
-"        在销售订单确认时，该产品可以生成项目或任务。由此，你可以跟踪你正在销售的服务。\n"
+"在销售订单确认时，该产品可以生成项目或任务。由此，你可以跟踪你正在销售的服务。\n"
 "        “销售订单中的项目”:如果定义了，将使用销售订单配置的项目，或者根据选择的模板创建一个新项目。"
 
 #. module: sale_project
@@ -279,7 +278,7 @@ msgstr "项目关联单销售订单。"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr "任务所关联的销售订单。"
+msgstr "任务关联的销售订单。"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -336,7 +335,7 @@ msgstr "任务已创建 (%s): <a href=# data-oe-model=project.task data-oe-id=%d
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr "任务循环"
+msgstr "重新发起"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id
@@ -373,7 +372,7 @@ msgstr "产品%s不应该有一个全局项目，因为它将生成一个项目�
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
-msgstr "产品%s不应该有项目或项目模板，因为它不会生成项目。"
+msgstr "产品模板%s不应该有项目或项目模板，因为它不会生成项目。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -381,7 +380,7 @@ msgstr "产品%s不应该有项目或项目模板，因为它不会生成项目�
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr "产品%s不应具有项目模板，因为它将在全局项目中生成任务。"
+msgstr "产品模板%s不应具有项目模板，因为它将在全局项目中生成任务。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -394,7 +393,7 @@ msgstr "此任务已创建自：<a href=# data-oe-model=sale.order data-oe-id=%d
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
-msgstr "开发票"
+msgstr "开结算单"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0

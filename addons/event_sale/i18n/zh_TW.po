@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Michael Yeung, 2018
-# Martin Trigaux, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgstr "<span class=\"o_stat_text\">銷售</span>"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "<span>Registration modification for attendee:</span>"
-msgstr "<span>參會者報名修改：</span>"
+msgstr "<span>與會者報名修改：</span>"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket__description
@@ -55,8 +55,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"庫存產品是指在倉庫中受庫存管理的產品。 要使用此功能您必須安裝倉庫模組。\n"
-"消耗品是指不受庫存量管控的產品。\n"
+"可庫存商品是指在倉庫中受存量管控的產品。 要使用此功能您必須安裝倉庫模組。\n"
+"可消耗商品是指不受庫存量管控的產品。\n"
 "服務是指您提供的非產品類服務業務。"
 
 #. module: event_sale
@@ -72,7 +72,7 @@ msgstr "參加人數"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
 msgid "Attendees"
-msgstr "參會者"
+msgstr "與會者"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -95,14 +95,14 @@ msgstr "取消"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "選擇一個活動，它將會自動為此活動創建登記。"
+msgstr "選擇一個活動，它將會自動為此活動建立報名。"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "選譯活動入券場，它將自動生成該活動入場券的登記。"
+msgstr "選譯活動入場券，它將自動生成該活動入場券的報名。"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_configurator_action
@@ -119,14 +119,14 @@ msgstr "確認"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
 msgid "Created by"
-msgstr "創建者"
+msgstr "創立者"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
 msgid "Created on"
-msgstr "創建時間"
+msgstr "建立於"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__currency_id
@@ -149,7 +149,7 @@ msgstr "顯示名稱"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
 msgid "Edit Attendee Details on Sales Confirmation"
-msgstr "編輯銷售確認的與會者詳細信息"
+msgstr "編輯銷售確認的與會者詳細資訊"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
@@ -164,7 +164,7 @@ msgstr "編輯"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__email
 msgid "Email"
-msgstr "電子郵箱"
+msgstr "Email"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event
@@ -177,7 +177,7 @@ msgstr "活動"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_configurator
 msgid "Event Configurator"
-msgstr "事件配置器"
+msgstr "活動設置器"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
@@ -188,12 +188,12 @@ msgstr "活動OK"
 #: model:ir.model,name:event_sale.model_event_registration
 #: model:product.product,name:event_sale.product_product_event
 msgid "Event Registration"
-msgstr "活動登記"
+msgstr "活動報名"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
-msgstr "活動登記"
+msgstr "活動報名"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_type_ticket
@@ -246,21 +246,21 @@ msgstr "日記帳分錄"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
 msgid "Last Modified on"
-msgstr "最後修改時間"
+msgstr "最後修改於"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
 msgid "Last Updated by"
-msgstr "最後更新人"
+msgstr "最後更新者"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
 msgid "Last Updated on"
-msgstr "最後更新時間"
+msgstr "最後更新於"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
@@ -290,7 +290,7 @@ msgstr "確定"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
 msgid "Order Date"
-msgstr "訂單確認日期"
+msgstr "報價日期"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
@@ -300,13 +300,13 @@ msgstr "訂單編碼"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
-msgstr "原始登記"
+msgstr "原始報名"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__paid
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "Paid"
-msgstr "已付款"
+msgstr "已支付"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__payment_status
@@ -342,12 +342,12 @@ msgstr "減稅後價格"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__product_id
 msgid "Product"
-msgstr "產品"
+msgstr "商品"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
 msgid "Product Template"
-msgstr "產品模板"
+msgstr "商品模版"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product__detailed_type
@@ -358,12 +358,12 @@ msgstr "產品類型"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Registration"
-msgstr "登記"
+msgstr "報名"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
-msgstr "編輯登記"
+msgstr "待編輯報名"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
@@ -397,7 +397,7 @@ msgstr "銷售訂單"
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "銷售訂單行"
+msgstr "銷售訂單明細"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
@@ -432,7 +432,7 @@ msgstr "單位"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
-msgstr "請給出註冊的詳細信息"
+msgstr "請提供報名的詳細資訊"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception

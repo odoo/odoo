@@ -1,32 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2019
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
-# Simone Bernini <simone@aperturelabs.it>, 2019
-# Paolo Valier, 2019
-# Alberto Carollo <baba75@gmail.com>, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
-# mbo_odoo <mbo@odoo.com>, 2019
-# David Minneci <david@numeko.it>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
-#
+# Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
@@ -36,7 +28,7 @@ msgid ""
 "                Manual actions may be needed."
 msgstr ""
 ".\n"
-"            Potrebbero essere necessarie azioni manuali."
+"                Richieste possibili azioni manuali."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -46,19 +38,19 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparazione</b>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr "<i class=\"fa fa-fw fa-times\"/> <b>Annullato</b>"
+msgstr "<i class=\"fa fa-fw fa-times\"/> <b>Annullati</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
-msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>Spedito</b>"
+msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>Spediti</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" role=\"img\" aria-label=\"Values set here are company-specific."
-"\" groups=\"base.group_multi_company\"/>"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"I valori impostati qui sono "
 "specifici per azienda.\" role=\"img\" aria-label=\"Values set here are "
@@ -72,7 +64,7 @@ msgstr "<span class=\"o_stat_text\">Vendite</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr "<span class=\"o_stat_text\">Venduto</span>"
+msgstr "<span class=\"o_stat_text\">Vendute</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -98,36 +90,28 @@ msgstr "<strong>Termine di resa:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__product_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory "
-"app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un prodotto stoccabile è un prodotto per il quale gestisci lo stock. "
-"L'applicazione magazzino deve essere installata\n"
-"Un prodotto di consumo è un prodotto per il quale lo stock non è gestito.\n"
-"Un servizio è un prodotto non materiale che fornisci."
+"Un prodotto stoccabile è un prodotto per il quale vengono gestite le giacenze. Deve essere installata l'applicazione magazzino.\n"
+"Un prodotto di consumo è un prodotto per il quale non vengono gestite le giacenze.\n"
+"Un servizio è un prodotto fornito in modo immateriale."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be "
-"automatically computed by mechanism :\n"
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted "
-"expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
-"this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"In base alla configurazione del prodotto, la quantità consegnata può essere "
-"calcolata automaticamente con un meccanismo:\n"
-"  - Manuale: la quantità viene impostata manualmente sulla riga\n"
-"  - Calcolo analitico delle spese: la quantità è la somma delle spese "
-"registrate\n"
-"  - Foglio ore: la quantità è la somma delle ore registrate sulle attività "
-"collegate a questa riga di vendita\n"
-"  - Movimenti magazzino: la quantità proviene da prelievi confermati\n"
+"In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente tramite una procedura.\n"
+"  - Manuale: quantità impostata manualmente sulla riga\n"
+"  - Analitica da spese: quantità calcolata come somma delle spese confermate\n"
+"  - Foglio ore: quantità calcolata come somma delle ore registrate sui lavori collegati alla riga di vendita\n"
+"  - Movimenti di magazzino: quantità proveniente da prelievi confermati\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -139,7 +123,7 @@ msgstr "Post-vendita"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "All planned operations included"
-msgstr "Tutte le operazioni pianificate incluse"
+msgstr "Incluse tutte le operazioni pianificate"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
@@ -175,7 +159,7 @@ msgstr "Disponibile a magazzino"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr "Applicare rotte specifiche per ordine."
+msgstr "Scelta per applicare percorsi specifici per righe OdV."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -185,12 +169,12 @@ msgstr "Aziende"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr "Data di completamento del primo ordine di consegna."
+msgstr "Data di completamento del primo buono di consegna."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni configurazione"
+msgstr "Impostazioni di configurazione"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -210,7 +194,7 @@ msgstr "Consegna"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
 msgid "Delivery Alert"
-msgstr "Avviso di Consegna"
+msgstr "Avviso di consegna"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -225,25 +209,25 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Data di consegna che può essere promessa al cliente. Per i prodotti servizio "
-"viene calcolata dal tempo di risposta minimo delle righe ordine. in caso di "
-"spedizione, per la politica dell'ordine viene preso in considerazione il "
+"Data di consegna che può essere promessa al cliente. Per i prodotti servizio"
+" viene calcolata dal tempo di risposta minimo delle righe ordine. in caso di"
+" spedizione, per la politica dell'ordine viene preso in considerazione il "
 "tempo di risposta minimo o massimo delle righe ordine."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr "Widget Viaualizzazione Qta"
+msgstr "Widget visualizza q.tà"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr "Mostrare i termini di resa su ordine di vendita e relative fatture"
+msgstr "Mostrare termini di resa su ordine di vendita e relative fatture"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr "Mostrare i termini di resa su ordini e fatture"
+msgstr "Visualizza termini di resa su ordini e fatture"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -251,7 +235,7 @@ msgstr "Mostrare i termini di resa su ordini e fatture"
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
-"Non dimenticare di cambiare il contatto nei seguenti ordini di consegna: %s"
+"Non dimenticarsi di cambiare il partner nei seguenti ordini di consegna: %s"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -282,7 +266,7 @@ msgstr "Eccezioni:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr "Data prevista"
+msgstr "Data attesa"
 
 #. module: sale_stock
 #. openerp-web
@@ -311,12 +295,12 @@ msgstr "Giacenza prevista"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
-msgstr ""
+msgstr "Q.tà libera odierna"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr ""
+msgstr "Contiene prelievo in ritardo"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -325,14 +309,14 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Se si consegnano tutti i prodotti in una sola volta, l'ordine di consegna "
-"sarà pianificato in base al prodotto con il maggior tempo di consegna. In "
-"caso contrario, si baserà sul prodotto con il tempo più breve."
+"Se i prodotti vengono consegnati tutti in una volta, il buono di consegna "
+"viene programmato in base al tempo di risposta prodotto più lungo. In caso "
+"contrario, in base al più breve."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr "Trasferimenti influenzati:"
+msgstr "Trasferimenti coinvolti:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -351,18 +335,18 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"I termini di resa (Incoterms) sono una serie di termini commerciali "
-"predefiniti usati nelle transazioni internazionali."
+"Gli Incoterm sono una serie di termini commerciali predefiniti usati nelle "
+"transazioni internazionali."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
 msgid "Inventory"
-msgstr "Magazzino"
+msgstr "Inventario"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "Rotte di inventario"
+msgstr "Percorsi di inventario"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
@@ -372,12 +356,12 @@ msgstr "Fatturazione"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
 msgid "Is Mto"
-msgstr ""
+msgstr "È su ordine (MTO)"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
 msgid "JSON data for the popover widget"
-msgstr ""
+msgstr "Dati JSON per il widget Popover"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
@@ -398,12 +382,12 @@ msgstr "Lotto/Serie"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "Produzione su ordine"
+msgstr "Su ordine (MTO)"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr "Potrebbero essere necessarie azioni manuali."
+msgstr "Richieste possibili azioni manuali."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -412,9 +396,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
-"Margine di errore per le date promesse al cliente. Le consegne saranno "
-"programmate con tanti giorni di anticipo sulla data promessa, per compensare "
-"le scadenze inaspettate sulla catena di approvvigionamento."
+"Margine di errore per date promesse ai clienti. Per superare ritardi "
+"imprevisti nella catena di distribuzione, la consegna dei prodotti viene "
+"programmata con alcuni giorni di anticipo sull'attuale data promessa."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -422,12 +406,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
-"Margine di errore per le date promesse al cliente. Le consegne saranno "
-"programmate con tanti giorni di anticipo sulla data promessa, per compensare "
-"le scadenze inaspettate sulla catena di approvvigionamento."
+"Margine di errore per date promesse ai clienti. Per superare ritardi "
+"imprevisti nella catena di distribuzione, l'approvvigionamento e la consegna"
+" dei prodotti vengono programmate con alcuni giorni di anticipo sull'attuale"
+" data promessa."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -437,14 +422,14 @@ msgstr "Metodo per aggiornare le q.tà consegnate"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr "Anticipare le date di consegna previste di"
+msgstr "Anticipare le date di consegna attese di"
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No enough future availaibility"
-msgstr "Disponibilità futura insufficiente"
+msgstr "Disponibilità futura non sufficiente"
 
 #. module: sale_stock
 #. openerp-web
@@ -458,13 +443,13 @@ msgstr "Nessuna disponibilità futura"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "On"
-msgstr "Acceso"
+msgstr "Il"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "Quantità ordinata ridotta!"
+msgstr "È diminuita la quantità ordinata!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -485,7 +470,7 @@ msgstr "Modello prodotto"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_type
 msgid "Product Type"
-msgstr "Tipo prodotto"
+msgstr "Tipologia prodotto"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
@@ -495,7 +480,7 @@ msgstr "Q.tà disponibile oggi"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr "Quantità da consegnare"
+msgstr "Q.tà da consegnare"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
@@ -507,7 +492,7 @@ msgstr "Preventivi"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Remaining demand available at"
-msgstr "Domanda rimanente disponibile su"
+msgstr "Richiesta residua disponibile il"
 
 #. module: sale_stock
 #. openerp-web
@@ -519,12 +504,12 @@ msgstr "Prenotato"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
-msgstr "Rotta"
+msgstr "Percorso"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
-msgstr "Riga di vendita"
+msgstr "Riga vendita"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
@@ -544,7 +529,7 @@ msgstr "Numero ordini di vendita"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Analysis Report"
-msgstr "Resoconto di analisi delle vendite"
+msgstr "Resoconto di analisi vendite"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -575,42 +560,42 @@ msgstr "Ordini di vendita"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
-msgstr "Giorni di Sicurezza per la Vendita"
+msgstr "Giorni di sicurezza per vendite"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr "Pianifica le consegne prima per evitare i ritardi"
+msgstr "Programma in anticipo le consegne per evitare ritardi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
 msgid "Scheduled Date"
-msgstr "Data pianificata"
+msgstr "Data programmata"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr "Scadenza di sicurezza"
+msgstr "Tempo di risposta sicuro"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr "Scadenza di sicurezza per le vendite"
+msgstr "Tempo di risposta sicuro per vendite"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr "Selezionabile sulle righe dell'ordine di vendita"
+msgstr "Selezionabile nelle righe dell'ordine di vendita"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
 msgid "Ship all products at once"
-msgstr "Spedire tutti i prodotti in una sola operazione"
+msgstr "Spedire insieme tutti i prodotti"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr "Consegnare prodotti non appena sono disponibili con ordini arretrati"
+msgstr "Spedire prodotti non appena disponibili, con ordini residui"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -628,8 +613,8 @@ msgid ""
 "Some products have already been delivered. Returns can be created from the "
 "Delivery Orders."
 msgstr ""
-"Alcuni prodotti sono già stati consegnati. Le restituzioni possono essere "
-"create dagli ordini di consegna."
+"Alcuni prodotti sono già stati consegnati. I resi possono essere creati "
+"dagli ordini di consegna."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -650,38 +635,36 @@ msgstr "Resoconto rifornimenti di magazzino"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "Regola di magazzino"
+msgstr "Regola di giacenza"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr "Resoconto regole magazzino"
+msgstr "Resoconto regole di magazzino"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "Resoconto regola magazzino"
+msgstr "Resoconto regola di giacenza"
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "The delivery"
-msgstr "La consegna"
+msgstr "La consegna di"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
-"strong>,\n"
-"                        You should probably update the partner on this "
-"document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
+"                        You should probably update the partner on this document."
 msgstr ""
-"L'indirizzo di consegna è stato cambiato sull'ordine di vendita<br/>\n"
-"Da <strong>\"%s\"</strong> a <strong>\"%s\"</strong>,\n"
-"Probabilmente dovresti aggiornare il partner su questo documento."
+"L'indirizzo di consegna dell'ordine di vendita è stato cambiato<br/>\n"
+"                        da <strong>\"%s\"</strong> a <strong>\"%s\"</strong>,\n"
+"                        È probabile che sia necessario aggiornare il partner nel documento."
 
 #. module: sale_stock
 #. openerp-web
@@ -693,7 +676,7 @@ msgstr "Questo prodotto viene rifornito su richiesta."
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Trasferisci"
+msgstr "Trasferimento"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
@@ -715,7 +698,7 @@ msgstr "Vedi previsione"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
 msgid "Virtual Available At Date"
-msgstr ""
+msgstr "Disponibilità virtuale alla data"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -738,7 +721,7 @@ msgstr "Quando tutti i prodotti sono pronti"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr "Quando iniziare la consegna"
+msgstr "Avvio della spedizione"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -747,8 +730,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
-"Hai ridotto la quantità ordinata! Non dimenticare di aggiornare l'ordine di "
-"consegna se è necessario. "
+"Dopo la riduzione della quantità ordinata non dimenticarsi, se necessario, "
+"di aggiornare manualmente l'ordine di consegna."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -757,13 +740,13 @@ msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
-"La quantità ordinata non può essere inferiore alla quantità ricevuta.\n"
-"Creare prima un ritorno."
+"Impossibile ridurre la quantità ordinata al di sotto della quantità consegnata.\n"
+"Creare prima un reso."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr "cancellato"
+msgstr "annullati"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -779,16 +762,16 @@ msgstr "di"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr "ordinato al posto di"
+msgstr "ordinati al posto di"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr "Trattato al posto di"
+msgstr "elaborati al posto di"
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "will be late."
-msgstr "sarà in ritardo"
+msgstr "è in ritardo."

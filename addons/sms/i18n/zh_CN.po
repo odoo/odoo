@@ -19,9 +19,9 @@
 # 稀饭~~ <wangwhai@qq.com>, 2021
 # John An <johnxan@163.com>, 2021
 # xu aaron, 2021
-# Martin Trigaux, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2017-12-13 14:58+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +81,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">添加</span>\n"
-"                                <span class=\"o_stat_text\">上下文动作</span>"
+"                                <span class=\"o_stat_text\">上下文操作</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -90,7 +90,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">移除</span>\n"
-"                                <span class=\"o_stat_text\">上下文动作</span>"
+"                                <span class=\"o_stat_text\">上下文操作</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -111,12 +111,12 @@ msgstr "需要行动"
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
 #: model:ir.model.fields,field_description:sms.field_ir_cron__state
 msgid "Action To Do"
-msgstr "后置操作"
+msgstr "待办的行动"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__active_domain
 msgid "Active domain"
-msgstr "有效域名"
+msgstr "启用域名"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__active_domain_count
@@ -298,7 +298,7 @@ msgstr "丢弃短信发送失败"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
 msgid "Discard delivery failures"
-msgstr "丢弃发送失败"
+msgstr "放弃发送失败"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_cancel
@@ -354,7 +354,7 @@ msgstr "编辑伙伴"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
-msgstr "Email线程"
+msgstr "邮件主题"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -393,7 +393,7 @@ msgstr "用于存储已消毒的电话号码的字段。有助于加快搜索和
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr "最终的占位符表达式，可以复制粘贴到目标模版字段"
+msgstr "最终的占位符表达式，可以复制粘贴到目标模版字段."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
@@ -501,7 +501,7 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
-msgstr "存在于黑名单的电子邮件表示收件者不会再收到任何列表的群发邮件。"
+msgstr "如果已被列入的电话号码在黑名单中，则该联系人将不会再收到来自任何列表的群发短信"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -658,7 +658,7 @@ msgstr "消息通知"
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr "消息类型：EMail用于 邮件消息， 通知用户系统消息，评论用于其他消息，例如用户回复。"
+msgstr "消息类型：电子邮件用于邮件消息， 通知用户系统消息，评论用于其他消息，例如用户回复"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_ids
@@ -1290,7 +1290,7 @@ msgstr "使用模版"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_active_domain
 msgid "Use active domain"
-msgstr "使用有效域名"
+msgstr "使用启用域名"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_use_blacklist
@@ -1335,7 +1335,7 @@ msgstr "如果关系型字段被选为第一个字段，这个字段显示这个
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
 msgid "Whether this model supports messages and notifications through SMS"
-msgstr "该模型是否支持通过短信发送消息和通知。"
+msgstr "该模型是否支持通过短信发送消息和通知"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
@@ -1372,7 +1372,7 @@ msgstr "您的SMS短信必须至少包括一个非空格字符"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "are invalid."
-msgstr "无效"
+msgstr "无效。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

@@ -8,22 +8,20 @@
 # f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2016
 # Xavier Symons <xsy@openerp.com>, 2017
 # Florian Hatat, 2017
-# f5f0a0dac17dde787a1d812a6989680e, 2017
 # 6534c450c77b2549e41c52e2051f5839, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # Nancy Bolognesi <nb@microcom.ca>, 2018
 # Melanie Bernard <mbe@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
-# Nathan Grognet <ngr@odoo.com>, 2018
 # Xavier Brochard <xavier@alternatif.org>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2019
 # Marie Willemyns <mwi@odoo.com>, 2019
+# Rémi CAZENAVE, 2019
 # Antoine Lorence <antoine.lorence@gmail.com>, 2019
 # Clo <clo@odoo.com>, 2019
 # Lucas Deliege <lud@openerp.com>, 2019
-# Rémi CAZENAVE, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
 # omaodoo <oma@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2020
@@ -80,9 +78,10 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" role=\"img\" aria-label=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Les valeurs définies ici sont"
+" spécifiques à l'entreprise.\" role=\"img\" aria-label=\"Les valeurs "
+"définies ici sont spécifiques à l'entreprise.\" "
+"groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -97,7 +96,7 @@ msgstr "<span class=\"o_stat_text\">Vendu</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>Référence client :</strong>"
+msgstr "<strong>Référence client:</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -122,8 +121,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un produit stockable est un produit dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
-"Un produit consommable, d'un autre côté, est un produit pour lequel le stock n'est pas géré.\n"
+"Un article stockable est un article dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
+"Un article consommable, par contre, est un article pour lequel le stock n'est pas géré.\n"
 "Un service est un produit immatériel que vous fournissez."
 
 #. module: sale_stock
@@ -136,10 +135,10 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Selon la configuration du produit, la quantité livrée peut être automatiquement calculée par mécanisme:\n"
-"   - Manuel: la quantité est définie manuellement sur la ligne\n"
-"   - Analytique des dépenses: la quantité est la somme des dépenses enregistrées\n"
-"   - Feuilles de temps: la quantité est la somme des heures enregistrées sur les tâches liées à cette ligne de vente\n"
-"   - Mouvements de stock: la quantité provient des transferts confirmés\n"
+" - Manuel: la quantité est définie manuellement sur la ligne\n"
+" - Analytique des dépenses: la quantité est la somme des dépenses enregistrées\n"
+" - Feuilles de temps: la quantité est la somme des heures enregistrées sur les tâches liées à cette ligne de vente\n"
+" - Mouvements de stock: la quantité provient des transferts confirmés\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -330,7 +329,7 @@ msgstr "Qté Disponible aujourd'hui"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr "A un picking en retard"
+msgstr "A un transfert en retard"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -428,8 +427,7 @@ msgid ""
 msgstr ""
 "Marge d'erreur pour les dates annoncées aux clients. Permet de spécifier le "
 "décalage entre la date de livraison prévue et la date de livraison annoncée "
-"afin de faire face aux retards inattendus dans la chaîne "
-"d'approvisionnement."
+"afin de faire face aux retards inattendus de la chaîne d'approvisionnement."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -447,7 +445,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr "Appliquer des routes spécifiques"
+msgstr "Méthode de mise à jour des des quantités livrées"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -570,7 +568,7 @@ msgstr "Bon de commande"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "Annulation Bon de commande"
+msgstr "Annulation Commande"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -620,12 +618,12 @@ msgstr "Sélectionnable dans les lignes de ventes"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
 msgid "Ship all products at once"
-msgstr "Livrer tous les produits en une fois"
+msgstr "Livrer tous les articles en une fois"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr "Livrer les produits dès qu'ils sont disponibles, avec des reliquats"
+msgstr "Livrer les articles dès qu'ils sont disponibles, avec des reliquats"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -643,13 +641,13 @@ msgid ""
 "Some products have already been delivered. Returns can be created from the "
 "Delivery Orders."
 msgstr ""
-"Certains produits ont déjà été livrés. Des retours peuvent être créées "
+"Certains articles ont déjà été livrés. Des retours peuvent être créées "
 "depuis les Bons de livraison."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Mouvement de stock"
+msgstr "Mouvement d'inventaire"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids

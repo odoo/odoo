@@ -4,6 +4,7 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,8 @@ msgid ""
 "                Thanks,<br/>\n"
 "                <b>The Odoo Team</b>"
 msgstr ""
-"<br><br>謝謝<br>\n"
+"<br><br>\n"
+"                謝謝<br>\n"
 "                <b>Odoo 團隊</b>"
 
 #. module: payment_paypal
@@ -49,8 +51,11 @@ msgid ""
 "                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
 "                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
 msgstr ""
-"你好<br><br>您已收到通過PayPal付款。<br>請按照PayPal給出的說明創建您的帳戶。<br>然後，説明我們在 Odoo "
-"中完成您的Paypal 憑證。<br><br>"
+"你好\n"
+"<br><br>\n"
+"您已收到通過PayPal付款。<br>\n"
+"請按照PayPal給出的說明建立您的帳戶。<br>\n"
+"接下來，説明我們在 Odoo 中完成您的Paypal 憑證。<br><br>"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_acquirer_form
@@ -60,7 +65,7 @@ msgstr "如何設定您的Paypal帳戶？"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr "商家帐户ID"
+msgstr "商戶帳戶 ID"
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/models/payment_transaction.py:0
@@ -78,12 +83,12 @@ msgstr "沒有找到匹配參考 %s 的交易。"
 #: code:addons/payment_paypal/controllers/main.py:0
 #, python-format
 msgid "Notification data were not acknowledged."
-msgstr "未確認通知數據。"
+msgstr "未確認通知資料"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr "PDT 標識 Token"
+msgstr "PDT Identity Token"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
@@ -93,7 +98,7 @@ msgstr "PayPal 交易類型"
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "收單"
+msgstr "付款收單方"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_account_payment_method
@@ -125,7 +130,7 @@ msgstr "服務商"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr "收到的付款狀態無效的數據：%s"
+msgstr "收到的付款狀態無效的資料：%s"
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/controllers/main.py:0
@@ -138,7 +143,7 @@ msgstr "收到無法識別的驗證檢查響應代碼：收到 %s，預期為 VE
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
 msgid "Set Paypal credentials"
-msgstr "設置Paypal 憑據"
+msgstr "設置Paypal  credentials"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__provider

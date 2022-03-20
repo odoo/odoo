@@ -7,11 +7,11 @@
 # Eric Geens <ericgeens@yahoo.com>, 2018
 # e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2019
-# Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2017-02-15 10:48+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +51,7 @@ msgstr "Naam actie"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
 msgid "Action To Do"
-msgstr "Actie Te doen"
+msgstr "Uit te voeren actie"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__type
@@ -179,7 +179,7 @@ msgid ""
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
 "Vertraging na de aanroep datum. \n"
-"U kunt een negatieve waarde invoeren, indien u een actie wilt uitvoeren voor de aanroep datum, bijvoorbeeld een herinnering 15 minuten voor een afspraak."
+"Je kunt een negatieve waarde invoeren, als je een actie wilt uitvoeren voor de aanroep datum, bijvoorbeeld een herinnering 15 minuten voor een afspraak."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -216,7 +216,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Schermnaam"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
@@ -276,7 +276,7 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
-"Indien aanwezig, moet deze conditie zijn voldaan voordat de actie regel "
+"Indien aanwezig, moet deze conditie voldaan zijn voordat de actie regel "
 "wordt uitgevoerd."
 
 #. module: base_automation
@@ -326,7 +326,7 @@ msgstr "Minuten"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
-msgstr "Model"
+msgstr "Type"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -339,7 +339,7 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"Model voor creatie / update van record. Stel dit veld enkel in voor een "
+"Model voor aanmaken/updaten van record. Stel dit veld enkel in voor een "
 "ander model dan de base module."
 
 #. module: base_automation
@@ -367,7 +367,7 @@ msgstr "Deze actie zal binnen %d minuten worden uitgevoerd."
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr "On change veld trigger"
+msgstr "Bij wijziging veld trigger"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
@@ -410,7 +410,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
 msgid "Python Code"
-msgstr "Python Code"
+msgstr "Python code"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
@@ -482,7 +482,7 @@ msgid ""
 "The action will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
-"De actie gaat af wanneer, en enkel wanneer, een van deze velden geüpdatet "
+"De actie gaat af wanneer, en enkel wanneer, een van deze velden bijgewerkt "
 "wordt. Indien leeg wordt er naar alle velden gekeken."
 
 #. module: base_automation
@@ -566,7 +566,8 @@ msgid ""
 "                trigger an automatic reminder email."
 msgstr ""
 "Gebruik geautomatiseerde acties om acties automatisch te activeren\n"
-"voor verschillende schermen. Voorbeeld: een lead gemaakt door een specifieke gebruiker kan\n"
+"voor verschillende schermen. Voorbeeld: een lead gemaakt door een\n"
+"specifieke gebruiker kan\n"
 "automatisch worden ingesteld op een specifiek verkoopteam, of een\n"
 "verkoopkans die na 14 dagen nog een status in behandeling heeft\n"
 "triggert een automatische herinneringsmail."
@@ -603,7 +604,7 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
-"Wanneer u meerdere acties heeft zal de volgorde van uitvoering bepaald "
+"Wanneer je meerdere acties heeft zal de volgorde van uitvoering bepaald "
 "worden aan de hand van de sequentie. Een laag nummer betekent een hoge "
 "prioriteit."
 
@@ -640,8 +641,8 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
-"U kunt een beheerder vragen om deze geautomatiseerde actie uit te schakelen "
-"of te corrigeren."
+"Je kunt een beheerder vragen om deze geautomatiseerde actie uit te schakelen"
+" of te corrigeren."
 
 #. module: base_automation
 #. openerp-web
@@ -649,8 +650,8 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
-"U kunt deze geautomatiseerde actie uitschakelen of bewerken om het probleem "
-"op te lossen."
+"Je kunt deze geautomatiseerde actie uitschakelen of bewerken om het probleem"
+" op te lossen."
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0

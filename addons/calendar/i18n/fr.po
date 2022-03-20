@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Léa Geffroy <geffroylea@gmail.com>, 2016
 # Clo <clo@odoo.com>, 2016
 # Alexandre Laidin <alexandre.laidin@iris-solutions.fr>, 2016
 # Tony Galmiche <tony.galmiche@infosaone.com>, 2016
@@ -14,7 +13,6 @@
 # Xavier Symons <xsy@openerp.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
 # Florian Hatat, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Natys <support@natys.fr>, 2016
@@ -223,7 +221,7 @@ msgid ""
 "    <t t-set=\"target_responsible = object.partner_id == object.partner_id\"/>\n"
 "    <t t-set=\"target_customer = object.partner_id == customer\"/>\n"
 "    <t t-set=\"recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence'\"/>\n"
-"    <t t-set=\"mail_tz = ctx.get('mail_tz')\"/>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"/>\n"
 "    <div>\n"
 "        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n"
 "            <tr>\n"
@@ -318,7 +316,7 @@ msgid ""
 "        Hello <t t-out=\"object.common_name or ''\">Wood Corner</t>,<br/><br/>\n"
 "\n"
 "        <t t-if=\"is_online and target_customer\">\n"
-"            Your appointment <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> with <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t> has been booked.\n"
+"            Your appointment <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> <t t-if=\"object.event_id.appointment_type_id.category != 'custom'\"> with <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t></t> has been booked.\n"
 "        </t>\n"
 "        <t t-elif=\"is_online and target_responsible\">\n"
 "            <t t-if=\"customer\">\n"
@@ -651,7 +649,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__active
 msgid "Active"
-msgstr "Actif"
+msgstr "Active"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_ids
@@ -685,7 +683,7 @@ msgstr "Ajouter"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
 msgid "Additional Message"
-msgstr "Message Additionnel"
+msgstr "Message Supplémentaire"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
@@ -834,7 +832,7 @@ msgstr "Calendrier : Date mise à jour"
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr "Calendrier : rappel pour un événement"
+msgstr "Calendrier : rappel pour un événement"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
@@ -844,12 +842,12 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr "Calendrier : Invitation à une réunion"
+msgstr "Calendrier : Invitation à une réunion"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
 msgid "Calendar: Reminder"
-msgstr "Calendrier : Rappel"
+msgstr "Calendrier : Rappel"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -937,7 +935,7 @@ msgstr "Créé le"
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Date"
-msgstr "Date "
+msgstr "Date"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__day
@@ -1009,7 +1007,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher Nom"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1202,7 +1200,7 @@ msgstr "Quatrième"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Free"
-msgstr "Libre"
+msgstr "Original"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__fri
@@ -1345,7 +1343,7 @@ msgstr "Dernier"
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence____last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
@@ -1650,7 +1648,7 @@ msgstr "Organisé par"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
 msgid "Participant"
-msgstr "Participant(e)"
+msgstr "Participant"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
@@ -1871,7 +1869,7 @@ msgstr "Heure de début"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
 msgid "Status"
-msgstr "Statut"
+msgstr "État"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__state
@@ -2142,7 +2140,7 @@ msgstr "Années"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr "Oui je le fais"
+msgstr "Oui j'y vais"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0

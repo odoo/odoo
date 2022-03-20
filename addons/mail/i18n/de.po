@@ -1007,6 +1007,15 @@ msgstr ""
 "Sie können diese Mails später nicht erneut versenden!"
 
 #. module: mail
+#: code:addons/mail/models/mail_blacklist.py:0
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Email Address?"
+msgstr ""
+"Sind Sie sicher, dass Sie diese E-Mail-Adresse von der Liste streichen "
+"möchten?"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/m2x_avatar_user.js:0
 #: code:addons/mail/static/src/js/m2x_avatar_user.js:0
@@ -2190,7 +2199,7 @@ msgstr "Trennen"
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "Disconnected from the RTC call by the server"
-msgstr ""
+msgstr "Verbindung zum RTC-Call durch den Server unterbrochen"
 
 #. module: mail
 #. openerp-web
@@ -2755,7 +2764,7 @@ msgstr "QWeb-Vorlage konnte nicht gerendert werden : %s)"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render inline_template template : %s)"
-msgstr ""
+msgstr "Die Vorlage inline_template konnte nicht gerendert werden : %s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -2837,7 +2846,7 @@ msgstr "Feld Beschreibung"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_groups
 msgid "Field Groups"
-msgstr ""
+msgstr "Feldgruppen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_type
@@ -6004,6 +6013,12 @@ msgid "Restrict mail templates and Jinja rendering."
 msgstr "Mail-Vorlagen und Jinja-Rendering einschränken."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Restrict mail templates edition and QWEB placeholders usage."
+msgstr ""
+"Schränken Sie die Verwendung von E-Mail-Vorlagen und QWEB-Platzhaltern ein."
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Retry"
@@ -6777,6 +6792,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw)."
 msgstr ""
+"Das Rendern von Vorlagen unterstützt nur inline_template, qweb oder "
+"qweb_view (view oder raw)."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -6801,7 +6818,7 @@ msgstr "Der"
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
 msgid "The 'Due Date In' value can't be negative."
-msgstr ""
+msgstr "Der Wert \"Fälligkeitsdatum in\" kann nicht negativ sein."
 
 #. module: mail
 #. openerp-web
@@ -7891,6 +7908,16 @@ msgstr ""
 "verwenden."
 
 #. module: mail
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid ""
+"You do not have the access right to unblacklist emails. Please contact your "
+"administrator."
+msgstr ""
+"Sie haben keine Zugriffsrechte, um E-Mails aus der Blacklist zu entfernen. "
+"Bitte wenden Sie sich an Ihren Administrator."
+
+#. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "You have been assigned to %s"
@@ -8261,6 +8288,8 @@ msgstr ""
 #, python-format
 msgid "message_post partner_ids and must be integer list, not commands."
 msgstr ""
+"message_post partner_ids und muss eine ganzzahlige Liste sein, keine "
+"Befehle."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

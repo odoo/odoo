@@ -4,9 +4,8 @@
 # 
 # Translators:
 # sejun huang <sejun.huang@gmail.com>, 2019
-# 李振維, 2021
-# Martin Trigaux, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2016-08-05 12:56+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,14 +50,14 @@ msgstr "其他欄位"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Advanced"
-msgstr "進階"
+msgstr "高級"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Allow matching with subfields"
-msgstr "允許與子字段匹配"
+msgstr "允許與子欄位匹配"
 
 #. module: base_import
 #. openerp-web
@@ -70,7 +69,7 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
-"導入期間發生未知問題（可能丟失連接，超出數據限製或超出內存限制）。 如果問題是暫時的，請重試。 如果問題仍然存在，請嘗試拆分文件，而不是立即導入。"
+"匯入期間發生未知問題（可能連線中斷，超出資料現制或超出內存限制）。 如果問題是暫時的，請重試。 如果問題仍然存在，請嘗試拆分文件，而不是立即匯入。"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -80,12 +79,12 @@ msgstr "基礎"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr "基本導入"
+msgstr "基本匯入"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr "基本導入映射"
+msgstr "基本匯入對應"
 
 #. module: base_import
 #. openerp-web
@@ -113,19 +112,19 @@ msgstr "取消"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
-msgstr "點選\"重新開始\"繼續導入，系統將重新運作於行"
+msgstr "點選\"重新開始\"繼續匯入，系統將重新運作於行"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr "列 %s 包含非法數據(值: %s)"
+msgstr "列 %s 包含不正確資料(值: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "列 %s 包含非法數據. 錯誤在行%d: %s"
+msgstr "列 %s 包含不正確資料. 錯誤在%d: %s行"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -181,7 +180,7 @@ msgstr "建立新值"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_uid
 msgid "Created by"
-msgstr "創建者"
+msgstr "創立者"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
@@ -202,7 +201,7 @@ msgstr "創建者"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_date
 msgid "Created on"
-msgstr "創建時間"
+msgstr "建立於"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -222,7 +221,7 @@ msgstr "資料庫 ID"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Date Format:"
-msgstr "數據格式："
+msgstr "資料格式："
 
 #. module: base_import
 #. openerp-web
@@ -332,7 +331,7 @@ msgstr "外部 ID"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
 msgid "Field Name"
-msgstr "字段名稱"
+msgstr "欄位名稱"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file
@@ -369,7 +368,7 @@ msgstr "文件大小超出設定的最大值 (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "文件的審核或導入， 原始二進制編碼（不是base64編碼）"
+msgstr "文件的審核或匯入， 原始二進制編碼（不是base64編碼）"
 
 #. module: base_import
 #. openerp-web
@@ -398,7 +397,7 @@ msgstr "格式設定"
 msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
-msgstr "發現不正確圖像資料，圖像應作為 URL 或 base64 編碼資料導入。"
+msgstr "發現不正確圖像資料，圖像應作為 URL 或 base64 編碼資料匯入。"
 
 #. module: base_import
 #. openerp-web
@@ -419,7 +418,7 @@ msgstr "幫助"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr "下面是我們無法導入的起始文件："
+msgstr "下面是我們無法匯入的起始文件："
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
@@ -454,7 +453,7 @@ msgid ""
 msgstr ""
 "如果文件包含\n"
 "                    欄位名稱，Odoo 可以嘗試自動檢測\n"
-"                    字段對應的列。這使得資料匯入\n"
+"                    欄位對應的列。這使得資料匯入\n"
 "                    更簡單，尤其是當資料有很多列時。"
 
 #. module: base_import
@@ -464,7 +463,7 @@ msgstr ""
 msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
-msgstr "如果模型使用 openchatter，歷史記錄跟蹤將在導入期間設置訂閱併發送通知，但會導致導入速度變慢。"
+msgstr "如果模型使用 openchatter，歷史記錄跟蹤將在匯入期間設置訂閱併發送通知，但會導致匯入速度變慢。"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -478,21 +477,21 @@ msgstr "圖片尺寸過大，匯入圖片必須小於4200萬像素"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import"
-msgstr "導入"
+msgstr "匯入"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr "導入FAQ"
+msgstr "匯入FAQ"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Import a File"
-msgstr "導入文件"
+msgstr "匯入文件"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -505,7 +504,7 @@ msgstr "匯入文件沒有內容或已損壞"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import preview failed due to:"
-msgstr "導入預覽文件失敗"
+msgstr "匯入預覽文件失敗"
 
 #. module: base_import
 #. openerp-web
@@ -522,7 +521,7 @@ msgid ""
 "Import timed out. Please retry. If you still encounter this issue, the file "
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
-msgstr "導入超時。請重試。如果仍然遇到此問題，則該文件針對系統設定來說可能太大，請嘗試對其進行分割（每個文件導入更少的記錄）。"
+msgstr "匯入超時。請重試。如果仍然遇到此問題，則該文件針對系統配置來說可能太大，請嘗試對其進行分割（每個文件匯入更少的記錄）。"
 
 #. module: base_import
 #. openerp-web
@@ -570,7 +569,7 @@ msgstr "標籤"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
 msgid "Last Modified on"
-msgstr "最後修改時間"
+msgstr "最後修改於"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -591,7 +590,7 @@ msgstr "最後修改時間"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_uid
 msgid "Last Updated by"
-msgstr "最後更新人"
+msgstr "最後更新者"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
@@ -612,7 +611,7 @@ msgstr "最後更新人"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_date
 msgid "Last Updated on"
-msgstr "最後更新時間"
+msgstr "最後更新於"
 
 #. module: base_import
 #. openerp-web
@@ -716,7 +715,7 @@ msgstr "預覽"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Relation Fields"
-msgstr "關聯字段"
+msgstr "關聯欄位"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -872,77 +871,77 @@ msgstr "測試"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr "測試:基本導入模型預覽"
+msgstr "測試:基本匯入模型預覽"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr "測試:基本導入模型，字元"
+msgstr "測試:基本匯入模型，字元"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr "測試:基本導入模型，字元無只讀"
+msgstr "測試:基本匯入模型，字元非唯讀"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr "測試:基本導入模型，字元只讀"
+msgstr "測試:基本匯入模型，字元唯讀"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr "測試:基本導入模型，字元必選"
+msgstr "測試:基本匯入模型，字元必選"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr "測試:基本導入模型，字元狀態"
+msgstr "測試:基本匯入模型，字元狀態"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr "測試:基本導入模型，字元還是只讀"
+msgstr "測試:基本匯入模型，字元還是唯讀"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr "測試:基本導入模型，多對一"
+msgstr "測試:基本匯入模型，多對一"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr "測試:基本導入模型，多對一關係"
+msgstr "測試:基本匯入模型，多對一關係"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr "測試:基本導入模型，多對一必選"
+msgstr "測試:基本匯入模型，多對一必選"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr "測試:基本導入模型，多對一必選相關"
+msgstr "測試:基本匯入模型，多對一必選相關"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr "測試:基本導入模型，一對多"
+msgstr "測試:基本匯入模型，一對多"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr "測試:基本導入模型，一對多"
+msgstr "測試:基本匯入模型，一對多"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr "測試:基本導入模型複雜"
+msgstr "測試:基本匯入模型複雜"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr "測試:基本導入模型浮動"
+msgstr "測試:基本匯入模型浮動"
 
 #. module: base_import
 #. openerp-web
@@ -984,7 +983,7 @@ msgstr "此列將連接至欄位"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
-msgstr "此檔已成功導入到 %d 行。"
+msgstr "此檔已成功匯入到 %d 行。"
 
 #. module: base_import
 #. openerp-web
@@ -1005,14 +1004,14 @@ msgstr "要匯入多個值，請用逗號\",\"分隔它們"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "To import, select a field..."
-msgstr "運行匯入，請選擇一個字段..."
+msgstr "執行匯入，請選擇一個欄位..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Track history during import"
-msgstr "導入時追蹤導入歷史"
+msgstr "匯入時追蹤匯入歷史"
 
 #. module: base_import
 #. openerp-web
@@ -1032,7 +1031,7 @@ msgstr "無法裝載 \"{extension}\"  文件:需要Python 模組 \"{modname}\""
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "不支援的文件格式 \"{}\"，只支援導入CSV, ODS, XLS, XLSX格式"
+msgstr "不支援的文件格式 \"{}\"，只支援匯入CSV, ODS, XLS, XLSX格式"
 
 #. module: base_import
 #. openerp-web
@@ -1082,7 +1081,7 @@ msgstr "使用者"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__value
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__value
 msgid "Value"
-msgstr "價值"
+msgstr "值"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
@@ -1111,20 +1110,20 @@ msgstr "當一個值無法對應時："
 msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
-msgstr "不能通過URL導入圖像，請與管理員進行聯繫。"
+msgstr "不能通過URL匯入圖像，請與管理員進行聯繫。"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "You can test or reload your file before resuming the import."
-msgstr "在重新開始導入之前，可以測試或重新載入檔。"
+msgstr "在重新開始匯入之前，可以測試或重新載入檔。"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "您必須至少設定一個字段來導入"
+msgstr "您必須至少配置一個欄位來匯入"
 
 #. module: base_import
 #. openerp-web

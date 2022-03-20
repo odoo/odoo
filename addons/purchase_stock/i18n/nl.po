@@ -3,15 +3,13 @@
 # 	* purchase_stock
 # 
 # Translators:
+# Cas Vissers <casvissers@brahoo.nl>, 2018
 # Melroy van den Berg <webmaster1989@gmail.com>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2019
-# Cas Vissers <casvissers@brahoo.nl>, 2019
-# Eric Geens <ericgeens@yahoo.com>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2018-08-02 11:17+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +28,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On-Time Delivery"
-msgstr "% Op-Tijd geleverd"
+msgstr "% Op-tijd geleverd"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -46,8 +44,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
 "Delivery Data</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">Geen tijdige "
-"leveringsgegevens</span>"
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">Geen gegevens "
+"over leverbetrouwbaarheid</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -58,8 +56,7 @@ msgid ""
 msgstr ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Waardes die hier ingesteld "
 "staan zijn bedrijfsspecifiek.\" aria-label=\"Waardes die hier ingesteld "
-"staan zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" "
-"role=\"img\"/>"
+"staan zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\"/>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -67,8 +64,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"De waarden die hier worden "
+"ingesteld, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\"/>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -95,7 +92,7 @@ msgstr "<strong>Incoterm:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Verzendadres:</strong>"
+msgstr "<strong>Afleveradres:</strong>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
@@ -105,7 +102,7 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Volgens de productconfiguratie kan de ontvangen hoeveelheid automatisch worden berekend door het mechanisme:\n"
-"- Handmatig: het aantal wordt handmatig op de lijn ingesteld\n"
+"- Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
 "- Voorraadbewegingen: de hoeveelheid is afkomstig van bevestigde pickings\n"
 
 #. module: purchase_stock
@@ -148,7 +145,7 @@ msgstr "Koopregel"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "Buy to Resupply"
-msgstr "Kopen voor herbevoorrading"
+msgstr "Kopen voor bevoorrading"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_company
@@ -174,7 +171,7 @@ msgstr "Contact"
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Corresponding receipt not found."
-msgstr "Bijbehorend ontvangstbewijs niet gevonden."
+msgstr "Bijbehorend ontvangst niet gevonden."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
@@ -216,9 +213,9 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
-"Afhankelijk van de geïnstalleerde modules geeft u dit de mogelijkheid om de "
-"route van het product aan te geven: waar het gekocht worden, gemaakt wordt, "
-"aangevuld wordt op de order, enz."
+"Afhankelijk van de geïnstalleerde modules geeft je dit de mogelijkheid om de"
+" route van het product aan te geven: waar het gekocht worden, gemaakt wordt,"
+" aangevuld wordt op de order, enz."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -266,7 +263,7 @@ msgstr "Foutmelding(en) zijn opgetreden op de inkooporder(s):"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
-msgstr "Uitzondering(en):"
+msgstr "Foutmelding(en):"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -278,7 +275,7 @@ msgid ""
 msgstr ""
 "Voor het product %s is het magazijn van het bewerkingstype (%s) niet "
 "consistent met de locatie (%s) van de aanvulregel (%s). Wijzig het type "
-"bewerking of annuleer de offerteaanvraag."
+"bewerking of annuleer de inkoop offerteaanvraag."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -288,7 +285,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
 msgid "Forecasted Issue"
-msgstr "Voorspeld probleem"
+msgstr "Prognoseprobleem"
 
 #. module: purchase_stock
 #. openerp-web
@@ -372,7 +369,7 @@ msgstr "Partij/Serienummer"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
-msgstr "Manuele acties zijn mogelijk nodig"
+msgstr "Handmatige acties zijn mogelijk nodig."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -419,7 +416,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
 msgid "On-Time Delivery"
-msgstr "Op-tijd levering"
+msgstr "Leverbetrouwbaarheid"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__on_time_rate
@@ -427,7 +424,7 @@ msgstr "Op-tijd levering"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
 msgid "On-Time Delivery Rate"
-msgstr "Op-tijd leveringscore"
+msgstr "Leverbetrouwbaarheidsscore"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
@@ -438,7 +435,7 @@ msgstr "Op-tijd hoeveelheid"
 #: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "On-time Delivery"
-msgstr "Op-tijd levering"
+msgstr "Leverbetrouwbaarheid leverancier"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -471,7 +468,7 @@ msgstr "Verwerk alle ontvangsthoeveelheden."
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
-msgstr "Verwervingsgroep"
+msgstr "Aanvulgroep"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_product
@@ -528,7 +525,7 @@ msgstr "Inkooporders"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
 msgid "Purchase Report"
-msgstr "Inkoop rapport"
+msgstr "Inkooprapport"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -571,12 +568,12 @@ msgstr "Ontvangsten"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr "Vraag uw leveranciers om direct te leveren aan uw klanten"
+msgstr "Vraag je leveranciers om direct te leveren aan je klanten"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_product_product_replenishment
 msgid "Requests for quotation"
-msgstr "Offerteaanvraag"
+msgstr "Inkoop offerteaanvraag"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -616,18 +613,18 @@ msgstr "Toon leverancier instellen knop"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
 msgid "Show supplier column"
-msgstr "Gen leverancierkolom wer"
+msgstr "Geef leverancierkolom wer"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Voorraadmutatie"
+msgstr "Voorraadverplaatsing"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
-msgstr "Voorraadmutaties"
+msgstr "Voorraadverplaatsingen"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_product_product_replenishment
@@ -642,7 +639,7 @@ msgstr "Voorraadregel"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "Voorraadregel rapportage"
+msgstr "Voorraadregelrapportage"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_info
@@ -683,8 +680,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
 msgstr ""
-"De hoeveelheden op je bestelling geven minder aan dan gefactureerd. Je moet "
-"om terugbetaling vragen."
+"De hoeveelheden op je order geven minder aan dan gefactureerd. Je moet om "
+"terugbetaling vragen."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -709,10 +706,10 @@ msgid ""
 " address and not your warehouse."
 msgstr ""
 "Dit voegt een dropshipping-route toe, welke toegepast kan worden op "
-"producten om uw leveranciers te vragen om direct aan uw klanten te leveren. "
-"Een dropship product genereert een inkoopofferteaanvraag zodra de "
+"producten om je leveranciers te vragen om direct aan je klanten te leveren. "
+"Een dropship product genereert een inkoop offerteaanvraag zodra de "
 "verkooporder is bevestigd. Het proces is compleet gebaseerd op vraag. Het "
-"afleveradres is het afleveradres van de klant en niet van uw magazijn."
+"afleveradres is het afleveradres van de klant en niet van je magazijn."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -726,14 +723,14 @@ msgid ""
 "Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated."
 msgstr ""
-"Die datums konden niet dienovereenkomstig worden gewijzigd op de bon %s die "
-"al was gevalideerd."
+"Die datums konden niet worden gewijzigd op de ontvangst %s die al was "
+"bevestigd."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Those dates have been updated accordingly on the receipt %s."
-msgstr "Die data zijn dienovereenkomstig bijgewerkt op de bon %s."
+msgstr "Die data zijn ook bijgewerkt op de ontvangst %s."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
@@ -743,7 +740,7 @@ msgstr "Totale hoeveelheid"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Overplaatsing"
+msgstr "Verplaatsing"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -760,7 +757,7 @@ msgstr ""
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
-msgstr "Valideer de ontvangst van alle bestelde producten."
+msgstr "Bevestig de ontvangst van alle bestelde producten."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__vendor_id
@@ -778,12 +775,12 @@ msgstr "Leverancier vertragingsrapportage"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Vendor Lead Time"
-msgstr "Levertermijn van leverancier"
+msgstr "Levertijd van leverancier"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
 msgid "Vendor On-time Delivery analysis"
-msgstr "Leverancier opt-tijd leveranalyse"
+msgstr "Leverbetrouwbaarheidsanalyse"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__vendor_id
@@ -820,7 +817,7 @@ msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
-"U kan de bestelde hoeveelheid niet verminderen onder de ontvangen hoeveelheid.\n"
+"Je kunt de bestelde hoeveelheid niet verminderen onder de ontvangen hoeveelheid.\n"
 "Maak eerst een retour aan."
 
 #. module: purchase_stock
@@ -837,9 +834,9 @@ msgstr "dagen"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "of"
-msgstr "of"
+msgstr "van"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
-msgstr "geordend in plaats van"
+msgstr "besteld in plaats van"

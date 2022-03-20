@@ -3,18 +3,16 @@
 # 	* survey
 # 
 # Translators:
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Antonio Trueba, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2018
 # Manuel Vázquez Acosta <mva.led@gmail.com>, 2018
 # oihane <oihanecruce@gmail.com>, 2018
-# Javier Ramirez <elbomba887@gmail.com>, 2018
 # José Vicente <txusev@gmail.com>, 2018
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
-# Antonio Trueba, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Cristian Salamea <ovnicraft@gmail.com>, 2019
@@ -285,8 +283,8 @@ msgid ""
 "<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"Not checked\" "
 "title=\"Not checked\"/>"
 msgstr ""
-"<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"Not checked\" "
-"title=\"Not checked\"/>"
+"<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"No marcado\" "
+"title=\"No marcado\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -304,8 +302,8 @@ msgid ""
 "<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
 "title=\"Checked\"/>"
 msgstr ""
-"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
-"title=\"Checked\"/>"
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Marcad\" "
+"title=\"Marcado\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -554,7 +552,7 @@ msgstr "Se debe adjuntar una etiqueta a una sola pregunta."
 #: model:ir.model.constraint,message:survey.constraint_survey_question_positive_len_max
 #: model:ir.model.constraint,message:survey.constraint_survey_question_positive_len_min
 msgid "A length must be positive!"
-msgstr "Una duración debe ser positiva"
+msgstr "¡Una longitud debe ser positiva!"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_answer__answer_score
@@ -742,7 +740,7 @@ msgstr "Respuesta"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_type
 msgid "Answer Type"
-msgstr "Tipo respuesta"
+msgstr "Tipo de respuesta"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__deadline
@@ -757,7 +755,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "Answered"
-msgstr "Contestadas"
+msgstr "Respondida"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
@@ -792,7 +790,7 @@ msgstr "Archivado"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_attachment_count
 msgid "Attachment Count"
-msgstr "Conteo de archivos adjuntos"
+msgstr "Nº de archivos adjuntos"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__attachment_ids
@@ -908,7 +906,7 @@ msgstr "Cancelar"
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_tree
 #, python-format
 msgid "Certification"
-msgstr "Certificacion"
+msgstr "Certificación"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id
@@ -929,7 +927,7 @@ msgstr ""
 #. module: survey
 #: model:mail.template,report_name:survey.mail_template_certification
 msgid "Certification Document"
-msgstr "Documento de certificacion"
+msgstr "Documento de certificación"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
@@ -1058,7 +1056,7 @@ msgstr "Comentario"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comment_count_as_answer
 msgid "Comment Field is an Answer Choice"
-msgstr "El campo comentario es una opción de respuesta"
+msgstr "El campo de comentario es una opción de respuesta"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_message
@@ -1355,7 +1353,7 @@ msgstr "En desacuerdo"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__display_name
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
@@ -1489,7 +1487,7 @@ msgstr "Seguidores"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Empresas)"
+msgstr "Seguidores (Contactos)"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_type_icon
@@ -1509,7 +1507,7 @@ msgstr "Respuesta de texto libre"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__email_from
 msgid "From"
-msgstr "De"
+msgstr "Desde"
 
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_badge
@@ -1537,7 +1535,7 @@ msgstr "Dar insignia"
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
 msgid "Go to"
-msgstr "ir a"
+msgstr "Ir a"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -1812,7 +1810,7 @@ msgstr "Es una certificación"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_page
 msgid "Is a page?"
-msgstr "Es una pagina?"
+msgstr "¿Es una pagina?"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__is_session_answer
@@ -1878,7 +1876,7 @@ msgstr "Idioma"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input____last_update
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__write_uid
@@ -1935,7 +1933,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_attempts_limited
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__is_attempts_limited
 msgid "Limited number of attempts"
-msgstr "Número limitado de intentos."
+msgstr "Número limitado de intentos"
 
 #. module: survey
 #. openerp-web
@@ -2109,7 +2107,7 @@ msgstr "Pino de montaña"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__text_box
 msgid "Multiple Lines Text Box"
-msgstr "Cuadro de texto varias líneas"
+msgstr "Cuadro de texto de múltiples líneas"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2124,7 +2122,7 @@ msgstr "Opción múltiple con una respuesta"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__multiple_choice
 msgid "Multiple choice: multiple answers allowed"
-msgstr "Elección múltiple: permitidas respuestas múltiples"
+msgstr "Elección múltiple: respuestas múltiples permitidas"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__simple_choice
@@ -2335,7 +2333,7 @@ msgstr "Una página por sección"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__one_page
 msgid "One page with all the questions"
-msgstr "Una página con todas las preguntas."
+msgstr "Una página con todas las preguntas"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -2447,7 +2445,7 @@ msgstr "Participaciones"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__partner_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Partner"
-msgstr "Empresa"
+msgstr "Contacto"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -2498,7 +2496,7 @@ msgstr "Expresión de marcador"
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Please enter at least one valid recipient."
-msgstr "Introduzca al menos un destinatario válido"
+msgstr "Ingrese al menos un destinatario válido."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -2590,7 +2588,7 @@ msgstr ""
 #: model:ir.ui.menu,name:survey.menu_survey_question_form1
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Questions"
-msgstr "Preguntas"
+msgstr "Cuestionario"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.survey_menu_questions
@@ -3056,12 +3054,12 @@ msgstr "Sugerencia"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Survey"
-msgstr "Planificación"
+msgstr "Encuesta"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_view_tree
 msgid "Survey Answer Line"
-msgstr "Líne de respuesta encuesta"
+msgstr "Línea de respuesta de encuesta"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_gamification_badge__survey_ids
@@ -3575,7 +3573,7 @@ msgstr "Mensajes sin leer"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contador de mensajes sin leer"
+msgstr "Nº de mensajes sin leer"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search

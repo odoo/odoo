@@ -3,15 +3,14 @@
 # 	* hr_contract
 # 
 # Translators:
-# Melroy van den Berg <webmaster1989@gmail.com>, 2017
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Ernesto Le Chiffre, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +51,7 @@ msgid ""
 "                                        Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.\n"
 "                                    </span>"
 msgstr ""
-"<span attrs=\"{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}\" class=\"fa fa- uitroepteken-driehoek tekst-gevaar o_calendar_warning pl-3\">\n"
+"<span attrs=\"{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
 "                                    </span>\n"
 "                                    <span class=\"o_calendar_warning_tooltip text-danger\">\n"
 "                                        Kalender komt niet overeen: de kalender van de werknemer komt niet overeen met de kalender van dit contract. Dit kan leiden tot onverwacht gedrag.\n"
@@ -80,8 +79,8 @@ msgid ""
 "                                    In Contract Since\n"
 "                                </span>"
 msgstr ""
-"<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In contract sinds\">\n"
-"                                    In contract sinds\n"
+"<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In dienst sinds\">\n"
+"                                    In dienst sinds\n"
 "                                </span>"
 
 #. module: hr_contract
@@ -103,8 +102,8 @@ msgid ""
 "Contract Since</span>"
 msgstr ""
 "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
-"[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In "
-"contract sinds</span>"
+"[('contract_warning', '=', True)]}\" title=\" In contract sinds\"> In dienst"
+" sinds</span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -114,7 +113,7 @@ msgstr "<span>/ maand</span>"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
 msgid "Action Needed"
-msgstr "Vereist actie"
+msgstr "Actie gevraagd"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__active
@@ -257,7 +256,7 @@ msgstr "Contractgeschiedenis"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__name
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Contract Name"
-msgstr "Contractnaam:"
+msgstr "Contractnaam"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
@@ -443,7 +442,7 @@ msgstr "Dropdown menu"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Edit Contract"
-msgstr "Contact bewerken"
+msgstr "Contract bewerken"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -522,7 +521,7 @@ msgstr "Vervallen"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__first_contract_date
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__first_contract_date
 msgid "First Contract Date"
-msgstr "Eerste contract datum"
+msgstr "Eerste contractdatum"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_follower_ids
@@ -537,7 +536,7 @@ msgstr "Volgers (Relaties)"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icoon b.v. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -565,13 +564,13 @@ msgstr "Groepeer op"
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
 #: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
-msgstr "HR Contract: geüpdatet status"
+msgstr "HR Contract: bijwerken status"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__hr_responsible_id
 msgid "HR Responsible"
-msgstr "HR verantwoordelijk"
+msgstr "HR verantwoordelijke"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__has_message
@@ -581,7 +580,7 @@ msgstr "Heeft bericht"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_hired
 msgid "Hire Date"
-msgstr "Huur datum"
+msgstr "Aanneemdatum"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
@@ -605,7 +604,7 @@ msgstr "Icoon om uitzondering op activiteit aan te geven."
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
@@ -665,12 +664,12 @@ msgstr "Te late activiteiten"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hoofd bijlage"
+msgstr "Hoofdbijlage"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
 msgid "Message Delivery error"
-msgstr "Bericht aflever fout"
+msgstr "Bericht afleverfout"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_ids
@@ -737,7 +736,7 @@ msgstr "Niet onder contract"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Notes"
-msgstr "Opmerkingen"
+msgstr "Notities"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction_counter
@@ -773,7 +772,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
 msgid "Person responsible for validating the employee's contracts."
 msgstr ""
-"Persoon verantwoordelijk voor het valideren van de werknemer zijn "
+"Persoon verantwoordelijk voor het goedkeuren van de werknemer zijn "
 "contracten."
 
 #. module: hr_contract
@@ -910,7 +909,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "De ISO-landcode in twee letters.\n"
-"U kunt dit veld gebruiken voor snelzoeken."
+"Je kunt dit veld gebruiken voor snelzoeken."
 
 #. module: hr_contract
 #: code:addons/hr_contract/models/hr_contract.py:0

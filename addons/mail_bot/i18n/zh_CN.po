@@ -3,7 +3,6 @@
 # 	* mail_bot
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # snow wang <147156565@qq.com>, 2019
@@ -11,6 +10,7 @@
 # John An <johnxan@163.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2019-03-20 14:57+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +47,7 @@ msgstr "讨论频道"
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_mail_thread
 msgid "Email Thread"
-msgstr "EMail线程"
+msgstr "邮件主题"
 
 #. module: mail_bot
 #: code:addons/mail_bot/models/mail_bot.py:0
@@ -56,8 +56,8 @@ msgid ""
 "Great! 👍<br/>To access special commands, <b>start your sentence with</b> "
 "<span class=\"o_odoobot_command\">/</span>. Try getting help."
 msgstr ""
-"你真棒! 👍<br/>若使用表情包 <b>请使用特殊命令输入</b> <span "
-"class=\"o_odoobot_command\">/</span>. 尝试获取帮助。"
+"棒! 👍<br/>若使用表情包 <b>请使用特殊命令输入</b> <span class=\"o_odoobot_command\">/</span>."
+" 尝试获取帮助。"
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_ir_http
@@ -109,7 +109,7 @@ msgstr ""
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__idle
 msgid "Idle"
-msgstr "闲置"
+msgstr "空闲"
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_mail_bot
@@ -123,7 +123,7 @@ msgid ""
 "Not exactly. To continue the tour, send an emoji: <b>type</b> <span "
 "class=\"o_odoobot_command\">:)</span> and press enter."
 msgstr ""
-"你说的都对。 不过你想要继续操作的话，就发送笑脸表情emoji：  <b>输入</b> <span "
+"嗯对你说的都对。 不过你想要继续操作的话，就发送笑脸表情emoji：  <b>输入</b> <span "
 "class=\"o_odoobot_command\">:)</span> 然后按回车。"
 
 #. module: mail_bot
@@ -145,32 +145,32 @@ msgstr ""
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_state
 msgid "OdooBot Status"
-msgstr "OdooBot 状态"
+msgstr "小秘书状态"
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_failed
 msgid "Odoobot Failed"
-msgstr "Odoobot 谢了"
+msgstr "Odoobot 挂了"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_attachement
 msgid "Onboarding attachement"
-msgstr "Onboarding 附件"
+msgstr "入门教程 - 附件"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_command
 msgid "Onboarding command"
-msgstr "Onboarding 命令"
+msgstr "入门教程 - 命令"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_emoji
 msgid "Onboarding emoji"
-msgstr "Onboarding emoji"
+msgstr "入门教程 - 表情"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_ping
 msgid "Onboarding ping"
-msgstr "Onboarding ping"
+msgstr "入门教程 - ping"
 
 #. module: mail_bot
 #: code:addons/mail_bot/models/mail_bot.py:0
@@ -190,7 +190,7 @@ msgid ""
 "Sorry, I am not listening. To get someone's attention, <b>ping him</b>. "
 "Write <span class=\"o_odoobot_command\">@OdooBot</span> and select me."
 msgstr ""
-"对不起, 我走了个神. 抽根烟压压惊, <b>盘TA</b>. Write <span "
+"对不起, 我走了个神. 抽根烟压压惊, <b>ping 盘TA</b>. Write <span "
 "class=\"o_odoobot_command\">@OdooBot</span> 还是选我吧."
 
 #. module: mail_bot
@@ -242,7 +242,7 @@ msgid ""
 "attention. <b>Try to ping me using</b> <span "
 "class=\"o_odoobot_command\">@OdooBot</span> in a sentence."
 msgstr ""
-"哇，你真是个天才！<br/>Ping 艾特下 @username 撩一下TA。 <b>或者艾特我</b> <span "
+"哇，你真是个天才！<br/>艾特下 @某人 撩一下TA。 <b>或者艾特我</b> <span "
 "class=\"o_odoobot_command\">@OdooBot</span> 找我聊一下呗。"
 
 #. module: mail_bot
@@ -257,7 +257,7 @@ msgstr "是的老朋友, 是我! 🎉 <br/>现在, 请试试 <b>上传附件</b>
 #: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "fuck"
-msgstr "亲切问候"
+msgstr "操"
 
 #. module: mail_bot
 #: code:addons/mail_bot/models/mail_bot.py:0

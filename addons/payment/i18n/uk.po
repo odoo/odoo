@@ -123,6 +123,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment acquirer configuration."
 msgstr ""
+"<strong>Попередження!</strong> Є очікування повернення для цього платежу.\n"
+"                        Зачекайте хвилинку, поки воно буде оброблене. Якщо відшкодування все ще очікує на розгляд через\n"
+" кілька хвилин, перевірте конфігурацію еквайєра платежу."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -130,6 +133,8 @@ msgid ""
 "<strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
+"<strong>Попередження</strong> Створення платіжного еквайєра з кнопки <em>СТВОРИТИ</em> не підтримується.\n"
+"                        Натомість використовуйте дію <em>Дублювати</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -163,6 +168,8 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(acq_name)s)."
 msgstr ""
+"Запит на повернення %(amount)s надіслано. Платіж буже скоро створено. "
+"Референс тразакції повернення: %(ref)s (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -453,6 +460,9 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
+"Отримайте суму від Odoo, коли доставка буде завершена.\n"
+"Використовуйте це, якщо ви хочете стягувати плату з карток своїх клієнтів, лише \n"
+"коли ви впевнені, що можете відправити їм товари."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -741,6 +751,7 @@ msgstr "Ел. пошта"
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Enable credit &amp; debit card payments supported by Stripe"
 msgstr ""
+"Увімкніть платежі кредитових та дебетових карток, що підтримуються Stripe"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -911,7 +922,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inline_form_view_id
 msgid "Inline Form Template"
-msgstr ""
+msgstr "Вбудований шаблон форми"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -951,19 +962,19 @@ msgstr "Рахунки-фактури"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr ""
+msgstr "Підрахунок рахунків"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
 msgid "Is Post-processed"
-msgstr ""
+msgstr "Пост-обробляється"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "It is currently linked to the following documents:"
-msgstr ""
+msgstr "Наразі він пов’язаний з такими документами:"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_journal
@@ -983,7 +994,7 @@ msgstr "Щойно завершено"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
 msgid "Landing Route"
-msgstr ""
+msgstr "Посадковий маршрут"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1004,7 +1015,7 @@ msgstr "Остання модифікація"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
-msgstr ""
+msgstr "Дата останньої зміни стану"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
@@ -1041,7 +1052,7 @@ msgstr "Вручну"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "Максимально дозволене відшкодування"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1074,7 +1085,7 @@ msgstr "Mollie"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Multiple payment options selected"
-msgstr ""
+msgstr "Вибрано опцію декількох платежів"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1130,6 +1141,8 @@ msgid ""
 "Note that only tokens from acquirers allowing to capture the amount are "
 "available."
 msgstr ""
+"Зауважте, що доступні лише токени від еквайєрів, які дозволяють отримати "
+"суму."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_register__payment_token_id
@@ -1166,27 +1179,27 @@ msgstr "Гаразд"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Online Payments"
-msgstr ""
+msgstr "Онлайн платежі"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
 msgid "Online direct payment"
-msgstr ""
+msgstr "Прямі платежі онлайн"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_token
 msgid "Online payment by token"
-msgstr ""
+msgstr "Онлайн платіж за токеном"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
 msgid "Online payment with redirection"
-msgstr ""
+msgstr "Онлайн платіж з перенаправленням"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Online payments enabled"
-msgstr ""
+msgstr "Увімкнені онлайн-платежі"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1198,19 +1211,19 @@ msgstr "Доступ до цих даних можуть отримати лиш
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be captured."
-msgstr ""
+msgstr "Можуть бути отримані лише авторизовані транзакції."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be voided."
-msgstr ""
+msgstr "Лише санкціоновані транзакції можуть бути анульовані."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only confirmed transactions can be refunded."
-msgstr ""
+msgstr "Лише підтверджені транзакції можуть бути повернені."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
@@ -1295,7 +1308,7 @@ msgstr "Платіжні еквайєри"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_acquirer_ids
 msgid "Payment Acquirers Available"
-msgstr ""
+msgstr "Доступні платіжні еквайєри"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__payment_amount
@@ -1357,7 +1370,7 @@ msgstr "Референс платежу"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Помічник повернення платежу"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1369,7 +1382,7 @@ msgstr "Токен оплати"
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Payment Token Count"
-msgstr ""
+msgstr "Підрахунок токенів платежу"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_token
@@ -1402,7 +1415,7 @@ msgstr "Платіжні операції"
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
 msgid "Payment Transactions Linked To Token"
-msgstr ""
+msgstr "Транзакції платежу пов'язані з токеном"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
@@ -1454,14 +1467,14 @@ msgstr "Телефон"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select a payment option."
-msgstr ""
+msgstr "Оберіть опцію платежу."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select only one payment option."
-msgstr ""
+msgstr "Оберіть лише одну опцію оплати."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1584,22 +1597,22 @@ msgstr "Прямий дебет SEPA "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "ВСТАНОВИТИ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Save Payment Method"
-msgstr ""
+msgstr "Зберегти метод оплати"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Save my payment details"
-msgstr ""
+msgstr "Зберегти мої деталі оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Збережений токен оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_token_id
@@ -1642,42 +1655,42 @@ msgstr "Помилка сервера:"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_allow_tokenization
 msgid "Show Allow Tokenization"
-msgstr ""
+msgstr "Показати Дозволити такенізацію"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_auth_msg
 msgid "Show Auth Msg"
-msgstr ""
+msgstr "Показати Auth Msg"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_cancel_msg
 msgid "Show Cancel Msg"
-msgstr ""
+msgstr "Показати Скасувати Msg"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_credentials_page
 msgid "Show Credentials Page"
-msgstr ""
+msgstr "Показати сторінку облікових даних"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_done_msg
 msgid "Show Done Msg"
-msgstr ""
+msgstr "Показати Виконано Msg"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_payment_icon_ids
 msgid "Show Payment Icon"
-msgstr ""
+msgstr "Показати іконку оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_pending_msg
 msgid "Show Pending Msg"
-msgstr ""
+msgstr "Показати повідомлення очікування"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_pre_msg
 msgid "Show Pre Msg"
-msgstr ""
+msgstr "Показати попередній перегляд повідомлення"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
@@ -1687,12 +1700,12 @@ msgstr "Набирає"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Джерело оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
 msgid "Source Transaction"
-msgstr ""
+msgstr "Джерело транзакції"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_method_line__payment_acquirer_state
@@ -1734,7 +1747,7 @@ msgstr "Секретний ключ Stripe"
 #: model:ir.model.fields,field_description:payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Відповідний платіжний токен"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
@@ -1746,6 +1759,8 @@ msgstr "Підтримувані значки платежу"
 #: model:ir.model.fields,help:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Technical field used to hide or show the payment_token_id if needed."
 msgstr ""
+"Технічне поле, яке використовується для приховування або відображення "
+"pay_token_id, якщо потрібно."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_test
@@ -1771,17 +1786,17 @@ msgstr "Постачальник платіжних послуг для вико
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Токен доступу недійсний."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__acquirer_ref
 msgid "The acquirer reference of the token of the transaction"
-msgstr ""
+msgstr "Референс еквайєра токена транзакції"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "The acquirer reference of the transaction"
-msgstr ""
+msgstr "Референс еквайєра транзакції"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_refund_wizard.py:0
@@ -1789,21 +1804,23 @@ msgstr ""
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
+"Сума, яка підлягає відшкодуванню, має бути додатною і не може перевищувати "
+"%s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
 msgid "The anonymized acquirer reference of the payment method"
-msgstr ""
+msgstr "Референс анонімного еквайєру способу оплати"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__color
 msgid "The color of the card in kanban view"
-msgstr ""
+msgstr "Колір картки у перегляді канбану"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
 msgid "The complementary information message about the state"
-msgstr ""
+msgstr "Додаткове інформаційне повідомлення про державу"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1811,48 +1828,52 @@ msgid ""
 "The countries for which this payment acquirer is available.\n"
 "If none is set, it is available for all countries."
 msgstr ""
+"Країни, для яких доступний цей платіжний еквайєр.\n"
+"Якщо жодного не встановлено, він доступний для всіх країн."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__description
 msgid "The description shown in the card in kanban view "
-msgstr ""
+msgstr "Опис, показаний на картці в режимі канбан"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the acquirer"
-msgstr ""
+msgstr "Розмір зборів; встановлюється системою, оскільки залежить від покупця"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The following fields must be filled: %s"
-msgstr ""
+msgstr "Наступні поля повинні бути заповнені: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "The internal reference of the transaction"
-msgstr ""
+msgstr "Внутрішній референс транзакції"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
 msgid "The journal in which the successful transactions are posted"
-msgstr ""
+msgstr "Журнал, у якому оприлюднюються успішні операції"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "The list of acquirers supporting this payment icon"
-msgstr ""
+msgstr "Список еквайєрів, які підтримують цю іконку платежу"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__auth_msg
 msgid "The message displayed if payment is authorized"
-msgstr ""
+msgstr "Повідомлення відображається, якщо платіж авторизовано"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid ""
 "The message displayed if the order is canceled during the payment process"
 msgstr ""
+"Повідомлення відображається, якщо замовлення скасовано під час процесу "
+"оплати"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
@@ -1860,16 +1881,20 @@ msgid ""
 "The message displayed if the order is successfully done after the payment "
 "process"
 msgstr ""
+"Повідомлення відображається, якщо замовлення успішно виконано після процесу "
+"оплати"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
 msgid "The message displayed if the order pending after the payment process"
 msgstr ""
+"Повідомлення відображається, якщо замовлення очікує на розгляд після процесу"
+" оплати"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "The message displayed to explain and help the payment process"
-msgstr ""
+msgstr "Відображається повідомлення, щоб пояснити та допомогти процесу оплати"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -1877,27 +1902,29 @@ msgstr ""
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
 msgstr ""
+"Платіж має бути або прямим, з перенаправленням, або здійснюватися за "
+"допомогою токена."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "The related payment is posted: %s"
-msgstr ""
+msgstr "Пов'язаний платіж опубліковано: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
 msgid "The route the user is redirected to after the transaction"
-msgstr ""
+msgstr "Маршрут, на який користувач перенаправляється після транзакції"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "Джерело платежу пов'язаних платежів повернення"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of related refund transactions"
-msgstr ""
+msgstr "Джерело транзакції пов'язаних транзакцій повернення"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__redirect_form_view_id
@@ -1905,12 +1932,16 @@ msgid ""
 "The template rendering a form submitted to redirect the user when making a "
 "payment"
 msgstr ""
+"Шаблон, що відображає форму, надіслану для переспрямування користувача під "
+"час здійснення платежу"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__inline_form_view_id
 msgid ""
 "The template rendering the inline payment form when making a direct payment"
 msgstr ""
+"Шаблон відтворення форми вбудованого платежу під час здійснення прямого "
+"платежу"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1919,6 +1950,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(acq_name)s)."
 msgstr ""
+"Транзакція з референсом %(ref)s для %(amount)s викликала помилку "
+"(%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1927,6 +1960,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(acq_name)s)."
 msgstr ""
+"Транзакція з референсом %(ref)s для %(amount)s авторизована (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1935,6 +1969,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(acq_name)s)."
 msgstr ""
+"Транзакцію з референсом %(ref)s для %(amount)s підтверджено (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1943,6 +1978,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s is canceled "
 "(%(acq_name)s)."
 msgstr ""
+"Транзакція з референсом %(ref)s для %(amount)s скасвана (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1951,6 +1987,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s is pending "
 "(%(acq_name)s)."
 msgstr ""
+"Транзакція з референсом %(ref)s для %(amount)s в очікуванні (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1961,12 +1998,12 @@ msgstr "Значення суми платежу повинне бути поз�
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "There are no transactions to show"
-msgstr ""
+msgstr "Немає транзакції для показу"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
-msgstr ""
+msgstr "Немає нічого для оплати."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__allow_tokenization
@@ -1975,6 +2012,9 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "acquirer's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
+"Це визначає, чи можуть клієнти зберігати свої способи оплати як платіжні токени.\n"
+"Платіжний токен — це анонімне посилання на відомості про спосіб оплати, збережені в базі даних покупця, що\n"
+" дозволяє клієнту повторно використовувати його для наступної покупки."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1982,6 +2022,8 @@ msgstr ""
 msgid ""
 "This field holds the image used for this payment icon, limited to 64x64 px"
 msgstr ""
+"У цьому полі міститься зображення, використане для цієї іконки платежу, "
+"розміром не більше 64x64 пікселів"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -1997,17 +2039,17 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "This payment has not been processed yet."
-msgstr ""
+msgstr "Цей платіж ще не оброблено."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has been verified by our system."
-msgstr ""
+msgstr "Цей спосіб оплати перевірено нашою системою."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has not been verified by our system."
-msgstr ""
+msgstr "Цей метод оплати не підтверджений нашою системою."
 
 #. module: payment
 #. openerp-web
@@ -2019,7 +2061,7 @@ msgstr "Цю операцію було скасовано."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_tokenization
 msgid "Tokenization Supported"
-msgstr ""
+msgstr "Токенізація підтримується"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -2028,6 +2070,7 @@ msgid ""
 "Transaction authorization is not supported by the following payment "
 "acquirers: %s"
 msgstr ""
+"Авторизація транзакції не підтримується такими еквайєрами платежів: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__transaction_ids
@@ -2040,7 +2083,7 @@ msgstr "Операції"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_refund
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "Тип повернення підтримується"
 
 #. module: payment
 #. openerp-web
@@ -2059,12 +2102,12 @@ msgstr "Оновлення"
 #: model:ir.model.fields,field_description:payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Використовуйте електронний метод оплати"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
 msgid "Validation of the payment method"
-msgstr ""
+msgstr "Підтвердження методу оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
@@ -2075,7 +2118,7 @@ msgstr "Вартісні внутрішні збори оплати (у відс
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Variable fees must always be positive and below 100%."
-msgstr ""
+msgstr "Змінні комісійні завжди мають бути додатними та не нижче 100%."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_var
@@ -2118,7 +2161,7 @@ msgstr "Увага!"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method."
-msgstr ""
+msgstr "Ми не можемо видалити ваш спосіб оплати."
 
 #. module: payment
 #. openerp-web
@@ -2139,7 +2182,7 @@ msgstr "Ми не можемо обробити цей платіж."
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to save your payment method."
-msgstr ""
+msgstr "Ми не можемо зберегти ваш спосіб оплати."
 
 #. module: payment
 #. openerp-web
@@ -2160,12 +2203,12 @@ msgstr "Ми очікуємо платіжний еквайєр для підт�
 msgid ""
 "Whether a payment token should be created when post-processing the "
 "transaction"
-msgstr ""
+msgstr "Чи потрібно створювати токен платежу під час постобробки транзакції"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
 msgid "Whether the callback has already been executed"
-msgstr ""
+msgstr "Чи був уже виконаний зворотний виклик"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -2187,12 +2230,16 @@ msgid ""
 "You can't delete a payment method that is linked to an acquirer in the enabled or test state.\n"
 "Linked acquirer(s): %s"
 msgstr ""
+"Ви не можете видалити спосіб оплати, пов’язаний з еквайером у ввімкненому або тестовому стані.\n"
+"Пов'язані еквайєри: %s"
 
 #. module: payment
 #: code:addons/payment/models/ir_ui_view.py:0
 #, python-format
 msgid "You cannot delete a view that is used by a payment acquirer."
 msgstr ""
+"Ви не можете видалити представлення даних, яке використовується одержувачем "
+"платежу."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -2346,17 +2393,17 @@ msgstr "Індекс"
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
-msgstr ""
+msgstr "платіж: операції після обробки"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show less"
-msgstr ""
+msgstr "показувати менше"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show more"
-msgstr ""
+msgstr "показувати більше"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form

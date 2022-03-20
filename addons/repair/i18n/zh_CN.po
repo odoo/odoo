@@ -4,26 +4,21 @@
 # 
 # Translators:
 # mrshelly <mrshelly@hotmail.com>, 2018
-# niulin lnc. <admin@niulin.net>, 2018
 # v2exerer <9010446@qq.com>, 2018
 # 苏州远鼎 <tiexinliu@126.com>, 2018
 # waveyeung <waveyeung@qq.com>, 2018
+# liulixia <liu.lixia@elico-corp.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # zpq001 <zpq001@live.com>, 2018
 # fausthuang, 2018
 # lttlsnk <lttlsnk@gmail.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
-# e2f <projects@e2f.com>, 2018
-# liulixia <liu.lixia@elico-corp.com>, 2018
 # bf2549c5415a9287249cba2b8a5823c7, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
-# JZH-Odoo <jzh@odoo.com>, 2018
 # keecome <7017511@qq.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
-# roye w <159820@qq.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # 李赋 <fu792659@163.com>, 2019
 # Felix Yang <felixyangsh@aliyun.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
@@ -34,8 +29,8 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2021
 # xu aaron, 2021
-# Martin Trigaux, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -43,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2018-03-22 16:02+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,7 +147,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Invoices</span>"
 msgstr ""
 "<span class=\"o_stat_text\">1</span>\n"
-"                                <span class=\"o_stat_text\">Invoices</span>"
+"                                <span class=\"o_stat_text\">发票</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
@@ -162,7 +157,7 @@ msgstr "<span class=\"o_stat_text\">维修</span>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr "<strong>批次/序列号</strong>"
+msgstr "<strong>批次/序列号:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -197,7 +192,7 @@ msgstr "<strong>不含税总计</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total</strong>"
-msgstr "<strong>合计</strong>"
+msgstr "<strong>总计</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -212,7 +207,7 @@ msgstr "？这可能会导致库存不一致。"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
 msgid "Action Needed"
-msgstr "需要采取行动"
+msgstr "需要行动"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
@@ -222,7 +217,7 @@ msgstr "活动"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "活动例外勋章"
+msgstr "活动异常勋章"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
@@ -292,7 +287,7 @@ msgstr "类别"
 msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
-msgstr "选择将为其开具发票和交付订单的合作伙伴。您可以通过名称，TIN，EMail或内部参考找到合作伙伴。"
+msgstr "选择将为其开具结算单和交付订单的合作伙伴。您可以通过名称，TIN，EMail或内部参考找到合作伙伴。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -347,12 +342,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
-msgstr "创建发票"
+msgstr "创建结算单"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr "创建批量发票 (修理)"
+msgstr "创建批量结算单 (修理)"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -363,7 +358,7 @@ msgstr "创建一个新标签"
 #: model:ir.actions.act_window,name:repair.act_repair_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Create invoices"
-msgstr "创建发票"
+msgstr "创建结算单"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__create_uid
@@ -373,7 +368,7 @@ msgstr "创建发票"
 #: model:ir.model.fields,field_description:repair.field_repair_tags__create_uid
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__create_date
@@ -406,14 +401,14 @@ msgstr "默认地址"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__address_id
 msgid "Delivery Address"
-msgstr "收货地址"
+msgstr "送货地址"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__name
 #: model:ir.model.fields,field_description:repair.field_repair_line__name
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Description"
-msgstr "描述"
+msgstr "说明"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_dest_id
@@ -438,7 +433,7 @@ msgstr "您确认要维修吗"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "你真的要创建发票吗 ？"
+msgstr "你真的要创建结算单吗 ？"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
@@ -500,12 +495,12 @@ msgstr "未来活动"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Group By"
-msgstr "分组按"
+msgstr "分组"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
 msgid "Group by partner invoice address"
-msgstr "分组，按业务伙伴发票地址"
+msgstr "分组，按业务伙伴结算单地址"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__has_message
@@ -535,19 +530,19 @@ msgstr "图标"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "表示一个例外活动的图标。"
+msgstr "表示异常活动的图标。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "如果勾选此项，有新消息会提醒你。"
+msgstr "确认后, 出现提示消息."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "如果勾选此项， 某些信息将会产生传递错误。"
+msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__priority
@@ -582,13 +577,13 @@ msgstr "库存移动"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
 msgid "Invoice"
-msgstr "发票"
+msgstr "结算单"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoice_line_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__invoice_line_id
 msgid "Invoice Line"
-msgstr "发票明细"
+msgstr "结算单明细"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_method
@@ -598,17 +593,17 @@ msgstr "开票方式"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_state
 msgid "Invoice State"
-msgstr "发票状态"
+msgstr "结算单状态"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice address:"
-msgstr "发票寄送地址:"
+msgstr "结算单寄送地址:"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice and shipping address:"
-msgstr "发票和送货地址:"
+msgstr "结算单和送货地址:"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -632,12 +627,12 @@ msgstr "开票地址"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
 msgid "Is Follower"
-msgstr "是关注者"
+msgstr "关注者"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move_line
@@ -677,13 +672,13 @@ msgstr "最后更新时间"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Late Activities"
-msgstr "后期的活动"
+msgstr "最近的活动"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
 msgid "Location"
-msgstr "地点"
+msgstr "位置"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_production_lot
@@ -695,12 +690,12 @@ msgstr "批次/序列号"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "附件"
+msgstr "主要附件"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
 msgid "Message Delivery error"
-msgstr "消息递送错误"
+msgstr "消息传递错误"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
@@ -710,7 +705,7 @@ msgstr "消息"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_id
 msgid "Move"
-msgstr "移动"
+msgstr "凭证"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__move_id
@@ -784,7 +779,7 @@ msgstr "正常"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
 msgid "Number of Actions"
-msgstr "行动数量"
+msgstr "动作个数"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
@@ -794,17 +789,17 @@ msgstr "错误数"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "需要行动消息的数量"
+msgstr "需要作业消息数量"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "递送错误的消息数量"
+msgstr "发送错误的消息数量"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
 msgid "Number of unread messages"
-msgstr "未读消息的数量"
+msgstr "未读消息数量"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -828,7 +823,7 @@ msgstr "零件"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Please define an accounting sales journal for the company %s (%s)."
-msgstr "请为公司%s（%s）定义会计销售日记帐。"
+msgstr "请为公司%s（%s）定义会计销售日记账。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -871,7 +866,7 @@ msgstr "产品移动"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
 msgid "Product Quantity"
-msgstr "数量"
+msgstr "产品数量"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__tracking
@@ -884,7 +879,7 @@ msgstr "产品追溯"
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_uom
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_uom
 msgid "Product Unit of Measure"
-msgstr "产品量度单位"
+msgstr "产品计量单位"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_id
@@ -899,7 +894,7 @@ msgstr "维修的产品全属于此批次"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
 msgid "Quant"
-msgstr "份"
+msgstr "即时库存"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_qty
@@ -1102,7 +1097,7 @@ msgstr "维修单"
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_reporting
 msgid "Reporting"
-msgstr "报表"
+msgstr "报告"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__user_id
@@ -1112,7 +1107,7 @@ msgstr "负责人"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
 msgid "Responsible User"
-msgstr "责任用户"
+msgstr "负责用户"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_sms_error
@@ -1145,7 +1140,7 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr "选择“维修前”或“维修后”选项来确定在维修前后生产发票。“无发票”则代表此维修单无需生成发票。"
+msgstr "选择“维修前”或“维修后”选项来确定在维修前后生产结算单。“无结算单”则代表此维修单无需生成结算单。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1166,7 +1161,7 @@ msgstr "设为草稿"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
-msgstr "显示所有下一个活动日期在今天之前的记录"
+msgstr "显示所有的在今天之前的下一个行动日期的记录"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
@@ -1196,7 +1191,7 @@ msgstr ""
 "基于活动的状态 \n"
 " 逾期：已经超过截止日期 \n"
 " 现今：活动日期是当天 \n"
-" 计划：未来的活动。"
+" 计划：未来活动。"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
@@ -1212,7 +1207,7 @@ msgstr "小计"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__name
 msgid "Tag Name"
-msgstr "标签名称"
+msgstr "标签名"
 
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_tags_name_uniq
@@ -1230,7 +1225,7 @@ msgstr "标签"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Tax"
-msgstr "税"
+msgstr "税金"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__tax_id
@@ -1238,7 +1233,7 @@ msgstr "税"
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_tax
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Taxes"
-msgstr "税"
+msgstr "税金设置"
 
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_order_name
@@ -1263,12 +1258,12 @@ msgstr "修复线的状态自动设置为链接修复顺序之一。"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr "这是待维修的产品存放的位置或库位"
+msgstr "这是待维修的产品存放的位置或位置"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
 msgid "To be Invoiced"
-msgstr "要开发票的"
+msgstr "要开结算单的"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1300,7 +1295,7 @@ msgstr "类型"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "记录的例外活动类型。"
+msgstr "记录的异常活动类型。"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
@@ -1319,13 +1314,13 @@ msgstr "单价"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Unit of Measure"
-msgstr "量度单位"
+msgstr "计量单位"
 
 #. module: repair
 #: model:product.product,uom_name:repair.product_service_order_repair
 #: model:product.template,uom_name:repair.product_service_order_repair_product_template
 msgid "Units"
-msgstr "单位"
+msgstr "件"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
@@ -1335,7 +1330,7 @@ msgstr "未读消息"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "未读消息计数器"
+msgstr "未读消息数"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
@@ -1345,7 +1340,7 @@ msgstr "未税金额"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Untaxed amount"
-msgstr "不含税金额"
+msgstr "未税金额"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1377,12 +1372,12 @@ msgstr "质保到期"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
 msgid "Website Messages"
-msgstr "网站信息"
+msgstr "网站消息"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
 msgid "Website communication history"
-msgstr "网站沟通记录"
+msgstr "网上沟通记录"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1418,7 +1413,7 @@ msgstr "您必须在维修表单中选择一个价目表！ 在选择产品之�
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr "你必须在维修单上选择发票地址。"
+msgstr "你必须在维修单上选择结算单地址。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view

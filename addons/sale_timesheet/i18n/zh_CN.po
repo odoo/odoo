@@ -6,30 +6,25 @@
 # waveyeung <waveyeung@qq.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Rangy Chen <rangychen@163.com>, 2018
-# mrshelly <mrshelly@hotmail.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
-# 老窦 北京 <2662059195@qq.com>, 2018
 # bf2549c5415a9287249cba2b8a5823c7, 2018
-# Felix Yuen <fyu@odoo.com>, 2018
+# mrshelly <mrshelly@hotmail.com>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
 # niulin lnc. <admin@niulin.net>, 2019
 # diaojiaolou <124412206@qq.com>, 2019
 # keecome <7017511@qq.com>, 2019
-# Allen Xie <xfz@forisen.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # rsh <263737@qq.com>, 2020
-# 稀饭~~ <wangwhai@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2020
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
 # guohuadeng <guohuadeng@hotmail.com>, 2021
-# Mandy Choy <mnc@odoo.com>, 2021
 # e2f <projects@e2f.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
-# Martin Trigaux, 2021
 # snow wang <147156565@qq.com>, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -37,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,11 +57,11 @@ msgid ""
 msgstr ""
 "\n"
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"记录时间表\n"
+"工时表记录\n"
 "</p><p>\n"
-"你可以通过每一个项目来记录和跟踪你的工作时间。\n"
-"一天。每一次花在一个项目上都会成为成本，并且可以重新发票给\n"
-"客户如有需要。</p>"
+"你可以登记和跟踪每天在项目上花费的时间。\n"
+"每一次花在一个项目上都会成为成本，并且如果有需要的话可以重新开票给客户。</p>\n"
+"            "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
@@ -166,7 +161,7 @@ msgid ""
 msgstr ""
 "根据产品配置，交货数量可以通过机制自动计算：\n"
 " - 手动：在线手动输入数量\n"
-" - 费用分析：数量是来自过帐费用的数量总和\n"
+" - 费用分析：数量是来自过账费用的数量总和\n"
 " - 时间表：数量是与此销售线相关联的任务记录的时数\n"
 " - 库存变动：数量来自已确认的选择\n"
 
@@ -208,12 +203,12 @@ msgstr "待开票金额"
 msgid ""
 "An employee cannot be selected more than once in the mapping. Please remove "
 "duplicate(s) and try again."
-msgstr "在一个映射中不能多次选择同一个雇员，请删除重复项再试."
+msgstr "在一个映射中不能多次选择同一个雇员，请移除重复项再试."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__analytic_account_id
 msgid "Analytic Account"
-msgstr "分析科目"
+msgstr "分析账户"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -283,7 +278,7 @@ msgstr "基于工时表计费"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Billing"
-msgstr "账单"
+msgstr "发票"
 
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
@@ -358,12 +353,12 @@ msgstr "成本和收入"
 #: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_invoice
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Invoice"
-msgstr "创建发票"
+msgstr "创建结算单"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_invoice
 msgid "Create Invoice from project"
-msgstr "从项目创建发票"
+msgstr "从项目创建结算单"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
@@ -401,7 +396,7 @@ msgstr "创建销售订单"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__create_uid
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_date
@@ -513,7 +508,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
 msgid "End Date"
-msgstr "结束日期"
+msgstr "终止日期"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -523,7 +518,7 @@ msgstr "固定价格服务"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Group By"
-msgstr "分组按"
+msgstr "分组"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__has_displayed_warning_upsell
@@ -571,7 +566,7 @@ msgstr "发票信息"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, python-format
 msgid "Invoice"
-msgstr "发票"
+msgstr "结算单"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__invoice_policy
@@ -613,7 +608,7 @@ msgstr "根据工时表（交付数量）开具发票，并为订单创建一个
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 msgid "Invoice created from the timesheet"
-msgstr "根据工时表创建的发票"
+msgstr "根据工时表创建的结算单"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__allow_billable
@@ -630,7 +625,7 @@ msgstr "向客户开具你的时间和材料的发票"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Invoices"
-msgstr "发票"
+msgstr "结算单"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -665,7 +660,7 @@ msgstr "是销售订单行手动编辑"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_line
@@ -710,8 +705,8 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"手动设置订单数量：基于手动输入数量的发票，不创建分析帐户。\n"
-"时间表：在合同的基础上对相关发票跟踪小时时间表。\n"
+"手动设置订单数量：基于手动输入数量的结算单，不创建分析账户。\n"
+"时间表：在合同的基础上对相关结算单跟踪小时时间表。\n"
 "创建任务和跟踪时间：在销售订单验证上创建任务并跟踪工作时间。"
 
 #. module: sale_timesheet
@@ -759,7 +754,7 @@ msgstr "找不到活动！"
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid "No data yet!"
-msgstr "还没有数据！"
+msgstr "还没有数据耶！"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
@@ -867,7 +862,7 @@ msgstr "产品模板"
 msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
-msgstr "销售订单项的产品。必须带有基于任务工时表的服务发票。"
+msgstr "销售订单项的产品。必须带有基于任务工时表的服务结算单。"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_graph
@@ -905,13 +900,13 @@ msgstr "项目所属公司"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__currency_id
 msgid "Project Currency"
-msgstr "项目币种"
+msgstr "项目币别"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__user_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Project Manager"
-msgstr "项目经理"
+msgstr "项目管理员"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
@@ -1028,7 +1023,7 @@ msgstr "销售明细行/员工地图"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "销售预付款发票"
+msgstr "销售预付款结算单"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
@@ -1157,7 +1152,7 @@ msgstr "选择可以在其上创建任务的非计费项目。"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Sell services and invoice time spent"
-msgstr "销售服务，并针对所用时间开发票"
+msgstr "销售服务，并针对所用时间开结算单"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
@@ -1236,7 +1231,7 @@ msgstr "任务"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr "任务循环"
+msgstr "重新发起"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
@@ -1298,7 +1293,7 @@ msgstr "无法创建销售订单，因为该项目的某些工时表已经链接
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
-msgstr "选定的销售订单应包含发票的内容。"
+msgstr "选定的销售订单应包含结算单的内容。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
@@ -1361,7 +1356,7 @@ msgstr "工时表"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_cost
 msgid "Timesheet Cost"
-msgstr "工时单成本"
+msgstr "工时表成本"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
@@ -1403,12 +1398,12 @@ msgstr "工时表总持续时间"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
 msgid "Timesheet activities"
-msgstr "工时单活动"
+msgstr "工时表活动"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr "与此销售相关的工时单活动"
+msgstr "与此销售相关的工时表活动"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account_move.py:0
@@ -1447,7 +1442,7 @@ msgstr "时间表项目（一个票价每/项目）"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Timesheets taken into account when invoicing your time"
-msgstr "在为你的时间开具发票时考虑到工时表"
+msgstr "在为你的时间开具发票时考虑到了时间表"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
@@ -1471,7 +1466,7 @@ msgstr "总销售量"
 msgid ""
 "Total amount to invoice on the sales order, including all items (services, "
 "storables, expenses, ...)"
-msgstr "销售订单发票总额，包括所有项目（服务，仓储，费用，…）"
+msgstr "销售订单结算单总额，包括所有项目（服务，仓储，费用，…）"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration
@@ -1510,7 +1505,7 @@ msgstr "单价"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
 msgid "Unit price of the sales order item."
-msgstr "销售订单项的单价"
+msgstr "销售订单行的单价"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0

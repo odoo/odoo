@@ -1197,7 +1197,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__backorder_confirmation_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr ""
+msgstr "Backorder Bestätigungszeile"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2170,6 +2170,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Definiert die Standardmethode, die verwendet wird, um den genauen Standort (Regal) vorzuschlagen, aus dem die Produkte entnommen werden sollen, welches Los usw. für diesen Standort. Diese Methode kann auf der Ebene der Produktkategorie erzwungen werden, und es wird auf die übergeordneten Standorte zurückgegriffen, wenn hier nichts festgelegt ist.\n"
+"\n"
+"FIFO: Produkte/Lose, die zuerst eingelagert wurden, werden zuerst ausgelagert.\n"
+"LIFO: Produkte/Lose, die zuletzt eingelagert wurden, werden zuerst ausgelagert.\n"
+"Schrankplatz: Die Produkte/Lose, die dem Zielplatz am nächsten sind, werden zuerst ausgelagert.\n"
+"FEFO: Produkte/Lose mit dem nächstgelegenen Auslagerungsdatum werden zuerst ausgelagert (die Verfügbarkeit dieser Methode hängt von der Einstellung \"Verfallsdatum\" ab)."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -6148,7 +6154,7 @@ msgstr "Empfangsbericht"
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking
 msgid "Reception Report Label"
-msgstr ""
+msgstr "Empfangsbericht Etikett"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__name
@@ -6885,6 +6891,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Legen Sie eine bestimmte Auslagerungsstrategie fest, die unabhängig vom Quellort für diese Produktkategorie verwendet wird.\n"
+"\n"
+"FIFO: Produkte/Lose, die zuerst eingelagert wurden, werden zuerst ausgelagert.\n"
+"LIFO: Produkte/Lose, die zuletzt eingelagert wurden, werden zuerst ausgelagert.\n"
+"Schrankplatz: Die Produkte/Lose, die dem Zielplatz am nächsten sind, werden zuerst ausgelagert.\n"
+"FEFO: Produkte/Lose mit dem nächstgelegenen Auslagerungsdatum werden zuerst ausgelagert (die Verfügbarkeit dieser Methode hängt von der Einstellung \"Verfallsdatum\" ab)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

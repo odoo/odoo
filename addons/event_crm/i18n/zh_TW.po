@@ -4,6 +4,7 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2020-12-11 11:03+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +24,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
 #: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_count
 msgid "# Leads"
-msgstr "# 線索"
+msgstr "# 潛在商機"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_count
 msgid "# Registrations"
-msgstr "# 註冊"
+msgstr "# 報名"
 
 #. module: event_crm
 #: code:addons/event_crm/models/event_registration.py:0
@@ -45,7 +46,7 @@ msgstr "<span class=\"o_stat_text\"> 出席者</span>"
 #: model_terms:ir.ui.view,arch_db:event_crm.event_registration_view_form
 #: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
-msgstr "<span class=\"o_stat_text\"> 線索</span>"
+msgstr "<span class=\"o_stat_text\"> 潛在商機</span>"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
@@ -66,7 +67,7 @@ msgstr "出席者已確認"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__create
 msgid "Attendees are created"
-msgstr "出席者已創建"
+msgstr "出席者已建立"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
@@ -76,17 +77,17 @@ msgstr "出席者已出席"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_tag_ids
 msgid "Automatically add these tags to the created leads."
-msgstr "自動將這些標籤添加到創建的線索"
+msgstr "自動將這些標籤添加到建立的潛在商機"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
 msgid "Automatically assign the created leads to this Sales Team."
-msgstr "自動將創建的線索分配給此銷售團隊"
+msgstr "自動將建立的潛在商機分配給此銷售團隊"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
 msgid "Automatically assign the created leads to this Salesperson."
-msgstr "自動將創建的線索分配給此銷售人員"
+msgstr "自動將建立的潛在商機分配給此銷售人員"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -96,47 +97,47 @@ msgstr "公司"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__lead_count
 msgid "Counter for the leads linked to this event"
-msgstr "連結到此活動的線索的計數器"
+msgstr "連結到此活動的潛在商機的計數器"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_registration__lead_count
 msgid "Counter for the leads linked to this registration"
-msgstr "連結到此註冊的線索計數器"
+msgstr "連結到此報名的潛在商機數量"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
 msgid "Counter for the registrations linked to this lead"
-msgstr "連結到此線索的註冊計數器"
+msgstr "連結到此潛在商機的報名數量"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
 msgid "Create"
-msgstr "創建"
+msgstr "建立"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Create a Lead Generation Rule"
-msgstr "創建線索生成規則"
+msgstr "建立潛在商機生成規則"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
 msgid "Created Leads"
-msgstr "已創建線索"
+msgstr "已建立潛在商機"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創立者"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_date
 msgid "Created on"
-msgstr "創建時間"
+msgstr "建立時間"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Creation Type"
-msgstr "創建類型"
+msgstr "建立類型"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_trigger
@@ -145,14 +146,14 @@ msgid ""
 "Confirmation: when attendee is confirmed, manually or automatically;\n"
 "Attended: when attendance is confirmed and registration set to done;"
 msgstr ""
-"創建:在出席者創建;\n"
+"建立:在出席者建立;\n"
 "確認:當出席者得到確認時,手動或自動確認;\n"
 "出席:確認出勤並登記完成;"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
 msgid "Default lead type when this rule is applied."
-msgstr "應用此規則時預設線索類型"
+msgstr "應用此規則時預設潛在商機類型"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
@@ -173,22 +174,22 @@ msgstr "活動類別"
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
 msgid "Event Lead Rules"
-msgstr "活動線索規則"
+msgstr "活動潛在商機規則"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_registration
 msgid "Event Registration"
-msgstr "活動登記"
+msgstr "活動報名"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
 msgid "Event registrations"
-msgstr "活動註冊"
+msgstr "活動報名"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_id
 msgid "Event triggering the rule that created this lead"
-msgstr "活動觸發創建此線索的規則"
+msgstr "活動觸發建立此潛在商機的規則"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
@@ -198,7 +199,7 @@ msgstr ""
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
 msgid "Filter the attendees that will or not generate leads."
-msgstr "篩選將生成或不會生成線索的出席者。"
+msgstr "篩選將生成或不會生成潛在商機的出席者。"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_type_ids
@@ -247,33 +248,33 @@ msgstr "最後更新於"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
 msgid "Lead"
-msgstr "線索"
+msgstr "潛在商機"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Creation Type"
-msgstr "線索創建類型"
+msgstr "潛在商機建立類型"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Default Values"
-msgstr "線索預設值"
+msgstr "潛在商機預設值"
 
 #. module: event_crm
 #: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
 msgid "Lead Generation"
-msgstr "線索生成"
+msgstr "潛在商機生成"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Generation Rule"
-msgstr "線索生成規則"
+msgstr "潛在商機建立規則"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Generation Rules"
-msgstr "線索生成規則"
+msgstr "潛在商機生成規則"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
@@ -283,7 +284,7 @@ msgstr "提前類型"
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "線索/商機"
+msgstr "潛在商機/商機"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_event
@@ -291,17 +292,17 @@ msgstr "線索/商機"
 #: model:ir.model.fields,field_description:event_crm.field_event_event__lead_ids
 #: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_ids
 msgid "Leads"
-msgstr "線索"
+msgstr "潛在商機"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_registration__lead_ids
 msgid "Leads generated from the registration."
-msgstr "從註冊生成的線索"
+msgstr "從報名生成的潛在商機"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__lead_ids
 msgid "Leads generated from this event"
-msgstr "從此活動生成的線索"
+msgstr "從此活動生成的潛在商機"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -312,18 +313,18 @@ msgstr "名稱"
 #: code:addons/event_crm/models/event_lead_rule.py:0
 #, python-format
 msgid "New registrations"
-msgstr "新註冊"
+msgstr "新報名"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_event
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_registration
 msgid "No leads found"
-msgstr "未找到線索"
+msgstr "未找到潛在商機"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
 msgid "No registration found"
-msgstr "未找到註冊"
+msgstr "未找到報名"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
@@ -348,8 +349,8 @@ msgid ""
 "Per Attendee : A Lead is created for each Attendee (B2C).\n"
 "Per Order : A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
-"每個出席者:為每個出席者 (B2C) 創建一個線索\n"
-"每張訂單 : 為每個票證批次 /銷售訂單 (B2B) 創建一個線索"
+"每個出席者:為每個出席者 (B2C) 建立一個潛在商機\n"
+"每張訂單 : 為每個票證批次 /銷售訂單 (B2B) 建立一個潛在商機"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
@@ -359,7 +360,7 @@ msgstr "每張訂單"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
 msgid "Registration Rule"
-msgstr "註冊規則"
+msgstr "報名規則"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
@@ -369,12 +370,12 @@ msgstr ""
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_registration_filter
 msgid "Registrations Domain"
-msgstr "註冊域"
+msgstr "報名篩選條件"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
 msgid "Registrations triggering the rule that created this lead"
-msgstr "註冊觸發創建此線索的規則"
+msgstr "報名觸發建立此潛在商機的規則"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
@@ -393,7 +394,7 @@ msgstr "規則名稱"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
 msgid "Rule that created this lead"
-msgstr "創建此線索的規則"
+msgstr "建立此潛在商機的規則"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_sales_team_id
@@ -408,7 +409,7 @@ msgstr "銷售員"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Search Lead Generation Rules"
-msgstr "搜索線索生成規則"
+msgstr "搜索潛在商機生成規則"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -418,7 +419,7 @@ msgstr "來源活動"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_ids
 msgid "Source Registrations"
-msgstr "來源註冊"
+msgstr "來源報名"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_tag_ids
@@ -428,7 +429,7 @@ msgstr "標籤"
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Those automatically create leads when attendees register."
-msgstr "這些在出席者註冊時會自動創建線索"
+msgstr "這些在出席者註冊時會自動建立潛在商機"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -440,7 +441,7 @@ msgstr "觸發類型"
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Updated registrations"
-msgstr "更新的註冊"
+msgstr "更新的報名"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger

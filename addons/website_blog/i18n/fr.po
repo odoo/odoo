@@ -9,7 +9,6 @@
 # Florian Hatat, 2016
 # Frédéric LIETART <stuff@tifred.fr>, 2016
 # Fabien Bourgeois <fabien@yaltik.com>, 2016
-# e2f <projects@e2f.com>, 2018
 # 6534c450c77b2549e41c52e2051f5839, 2018
 # bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Olivier Dony <odo@odoo.com>, 2018
@@ -30,8 +29,8 @@
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # anthony chaussin <chaussin.anthony@gmail.com>, 2021
 # Alexandra Jubert <aju@odoo.com>, 2021
-# Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -39,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:11+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +90,7 @@ msgstr "<b>Cliquez sur Sauvegarder</b> pour enregistrer vos changements."
 #, python-format
 msgid "<b>Publish your blog post</b> to make it visible to your visitors."
 msgstr ""
-"<b>Publier votre article</b> pour le rendre visible auprès de vos visiteurs."
+"<b>Publiez votre article</b> pour le rendre visible auprès de vos visiteurs."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_comment
@@ -117,7 +116,11 @@ msgid ""
 "<b>Write your story here.</b> Use the top toolbar to style your text: add an"
 " image or table, set bold or italic, etc. Drag and drop building blocks for "
 "more graphical blogs."
-msgstr "<b/>"
+msgstr ""
+"<b>Écrivez votre histoire ici.</b> Utilisez la barre d'outils supérieure "
+"pour définir le style de votre texte : ajoutez une image ou un tableau, "
+"mettez le texte en gras ou en italique, etc. Glissez et déposez des blocs de"
+" construction pour obtenir des blogs plus graphiques."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
@@ -222,7 +225,7 @@ msgstr "Un nouvel article"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.sidebar_blog_index
 msgid "About us"
-msgstr "À propos de nous"
+msgstr "À propos"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
@@ -239,7 +242,7 @@ msgstr "Nécessite une action"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__active
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__active
 msgid "Active"
-msgstr "Actif"
+msgstr "Active"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
@@ -429,7 +432,7 @@ msgstr "Titre du Blog"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 msgid "Blog's Title"
-msgstr "Titre du blog"
+msgstr "Titre du Blog"
 
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
@@ -550,7 +553,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher Nom"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_edit_options
@@ -683,7 +686,7 @@ msgstr "Dernier contributeur"
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag____last_update
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category____last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__write_uid
@@ -1006,7 +1009,7 @@ msgstr "Séparez chaque mot-clé par une virgule"
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Set a blog post <b>cover</b>."
-msgstr "<b/>"
+msgstr "Définissez une <b>couverture<b> pour l'article de blog."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -1076,7 +1079,7 @@ msgstr "Catégories d'étiquette"
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_tag_category
 msgid "Tag Category"
-msgstr "Catégories d'étiquette"
+msgstr "Catégorie d'étiquette"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_category_form
@@ -1136,12 +1139,12 @@ msgid ""
 "website if it is set as published."
 msgstr ""
 "Si l'article de blog est défini comme étant publié, vos visiteurs pourront "
-"le consulter à compter de cette date de publication."
+"le consulter sur le site Web à compter de cette date de publication."
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_url
 msgid "The full URL to access the document through the website."
-msgstr "Adresse complète d'accès au document via le site."
+msgstr "L'URL complète afin d'accéder au document à travers le site web."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1361,7 +1364,7 @@ msgstr "pour laisser un commentaire."
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "unpublished"
-msgstr "Non publiés"
+msgstr "Non publié"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover

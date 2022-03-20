@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_coupon
-#
+# 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-# Paolo Valier, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
-#
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
+"PO-Revision-Date: 2017-02-15 11:47+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_coupon
@@ -47,7 +47,7 @@ msgstr "Programma buoni sconto"
 #: model:ir.ui.menu,name:website_sale_coupon.menu_coupon_type_config
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.res_config_settings_view_form
 msgid "Coupon Programs"
-msgstr "Programmi buono sconto"
+msgstr "Programmi buoni sconto"
 
 #. module: website_sale_coupon
 #: model:ir.model,name:website_sale_coupon.model_coupon_share
@@ -73,7 +73,7 @@ msgstr "Sconto:"
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.cart_discount
 msgid "Discounted amount"
-msgstr "Importo ribassato "
+msgstr "Importo scontato "
 
 #. module: website_sale_coupon
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_share__display_name
@@ -83,7 +83,7 @@ msgstr "Nome visualizzato"
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_share_view_form
 msgid "Done"
-msgstr "Completata"
+msgstr "Completato"
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_share_view_form
@@ -166,6 +166,7 @@ msgstr "Condividi"
 
 #. module: website_sale_coupon
 #: code:addons/website_sale_coupon/wizard/sale_coupon_share.py:0
+#: code:addons/website_sale_coupon/wizard/sale_coupon_share.py:0
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_share_view_form
 #, python-format
 msgid "Share Coupon"
@@ -180,7 +181,8 @@ msgstr "Condivisione link"
 #: code:addons/website_sale_coupon/controllers/main.py:0
 #, python-format
 msgid ""
-"The coupon will be automatically applied when you add something in your cart."
+"The coupon will be automatically applied when you add something in your "
+"cart."
 msgstr ""
 "Il coupon sarà applicato automaticamente quando aggiungi qualcosa al tuo "
 "carrello."
@@ -194,7 +196,7 @@ msgstr "Il seguente codice promozionale è stato applicato al tuo ordine:"
 #: code:addons/website_sale_coupon/models/sale_coupon_program.py:0
 #, python-format
 msgid "The program code must be unique by website!"
-msgstr "Il codice del programma deve essere unico per ogni sito web."
+msgstr "Il codice del programma deve essere univoco per sito web."
 
 #. module: website_sale_coupon
 #: code:addons/website_sale_coupon/wizard/sale_coupon_share.py:0
@@ -212,8 +214,7 @@ msgstr "Sito web"
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.coupon_share_view_form
 msgid ""
 "You can share this promotion with your customers.\n"
-"                            It will be applied at checkout when the customer "
-"uses this link."
+"                            It will be applied at checkout when the customer uses this link."
 msgstr ""
 "Puoi condividere questa promozione con i tuoi clienti.\n"
 "Se il cliente usa questo link, sarà applicato alla cassa."
@@ -221,14 +222,15 @@ msgstr ""
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
 msgid "You have successfully applied following promo code:"
-msgstr "Hai applicato il seguente codice promozionale:"
+msgstr "Codice promozionale applicato con successo:"
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
 msgid "Your reward"
-msgstr "La tua ricompensa"
+msgstr "Il riconoscimento"
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
 msgid "is available on a next order with this promo code:"
-msgstr "è disponibile per un prossimo ordine con questo codice promozionale:"
+msgstr ""
+"è disponibile per un ordine successivo con questo codice promozionale:"

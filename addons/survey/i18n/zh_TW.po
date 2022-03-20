@@ -6,10 +6,10 @@
 # Michael Yeung, 2018
 # sejun huang <sejun.huang@gmail.com>, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
-# Martin Trigaux, 2020
 # Mandy Choy <mnc@odoo.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-07 12:07+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgstr "已完成"
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr "%s(副本)"
+msgstr "%s (副本)"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -102,7 +102,7 @@ msgstr "1324"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "403: Forbidden"
-msgstr "403: 禁止"
+msgstr "403: 禁止存取"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -396,8 +396,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&lt;', 2)]}\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&gt;', 1)]}\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&lt;', 2)]}\">認書</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&gt;', 1)]}\">鑒定</span>"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&lt;', 2)]}\">認證</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&gt;', 1)]}\">認證</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -405,8 +405,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">認書</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">鑒定</span>"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">認證</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">認證</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -570,27 +570,27 @@ msgstr "關於你"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_access_mode
 #: model:ir.model.fields,field_description:survey.field_survey_survey__access_mode
 msgid "Access Mode"
-msgstr "訪問模式"
+msgstr "存取模式"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__access_token
 msgid "Access Token"
-msgstr "訪問指示物"
+msgstr "存取代碼(token)"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_access_token_unique
 msgid "Access token should be unique"
-msgstr "訪問記號應該是獨一無二"
+msgstr "存取代碼(token)應該是唯一值"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction
 msgid "Action Needed"
-msgstr "需要採取行動"
+msgstr "需採取行動"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__active
 msgid "Active"
-msgstr "有效"
+msgstr "啟用"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_ids
@@ -610,14 +610,14 @@ msgstr "活動狀態"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動類型圖標"
+msgstr "活動類型圖示"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid ""
 "Add a list of email of recipients (will not be converted into contacts). "
 "Separated by commas, semicolons or newline..."
-msgstr "添加電子信件收件人列表（不會轉換為聯繫人）。採用逗號、分號或新行分隔..."
+msgstr "添加電子信件收件人列表（不會轉換為聯絡人）。採用逗號、分號或新行分隔..."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -632,7 +632,7 @@ msgstr "添加小節"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Add existing contacts..."
-msgstr "添加現有聯繫人..."
+msgstr "添加現有聯絡人..."
 
 #. module: survey
 #. openerp-web
@@ -690,7 +690,7 @@ msgstr "阿蒙霍特普"
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_user_input_unique_token
 msgid "An access token must be unique!"
-msgstr "訪問令牌必須是唯一的！"
+msgstr "存取代碼(token)必須是唯一的！"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_positive_answer_score
@@ -743,7 +743,7 @@ msgstr "回答數量"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__access_mode__public
 msgid "Anyone with the link"
-msgstr "任何有鏈接的人"
+msgstr "任何有連結的人"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_gamification_challenge__challenge_category
@@ -755,7 +755,7 @@ msgstr "出現在"
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Archived"
-msgstr "歸檔"
+msgstr "已歸檔"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_attachment_count
@@ -803,7 +803,7 @@ msgstr "作者"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__author_id
 msgid "Author of the message."
-msgstr "信息的作者。"
+msgstr "訊息的作者。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__certification_mail_template_id
@@ -847,7 +847,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
 msgid "Badge"
-msgstr "證書號碼"
+msgstr "圖章"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -877,12 +877,12 @@ msgstr "證照"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id
 msgid "Certification Badge"
-msgstr "證書號碼"
+msgstr "認證圖章"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id_dummy
 msgid "Certification Badge "
-msgstr "證書號碼"
+msgstr "認證圖章"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -1022,7 +1022,7 @@ msgstr "評論"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comment_count_as_answer
 msgid "Comment Field is an Answer Choice"
-msgstr "評論字段是答案選項"
+msgstr "評論欄位是答案選項"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_message
@@ -1044,7 +1044,7 @@ msgstr "已完成"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Compose Email"
-msgstr "撰寫電子信件"
+msgstr "撰寫信件"
 
 #. module: survey
 #: code:addons/survey/models/survey_user_input.py:0
@@ -1070,7 +1070,7 @@ msgstr "限制"
 #. module: survey
 #: model:ir.model,name:survey.model_res_partner
 msgid "Contact"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__has_conditional_questions
@@ -1148,7 +1148,7 @@ msgstr "正確的數字答案"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Create Live Session"
-msgstr "創建實時會話"
+msgstr "建立實時會話"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -1163,7 +1163,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__create_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__create_uid
 msgid "Created by"
-msgstr "創建者"
+msgstr "創立者"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_date
@@ -1173,13 +1173,13 @@ msgstr "創建者"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__create_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__create_date
 msgid "Created on"
-msgstr "創建時間"
+msgstr "建立於"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating test token is not allowed for you."
-msgstr "您不允許創建測試指示物"
+msgstr "您不允許建立測試代碼(token)"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -1187,13 +1187,13 @@ msgstr "您不允許創建測試指示物"
 msgid ""
 "Creating token for anybody else than employees is not allowed for internal "
 "surveys."
-msgstr "內部調查不允許為員工以外的任何人創建指示物。"
+msgstr "內部調查不允許為員工以外的任何人建立代碼(token)。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating token for closed/archived surveys is not allowed."
-msgstr "不允許為已關閉/存檔的調查創建金鑰"
+msgstr "不允許為已關閉/存檔的調查建立金鑰"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -1202,7 +1202,7 @@ msgstr "不允許為已關閉/存檔的調查創建金鑰"
 msgid ""
 "Creating token for external people is not allowed for surveys requesting "
 "authentication."
-msgstr "對於請求身份驗證的調查，不允許為外部人員指定指示物。"
+msgstr "對於請求身份驗證的調查，不允許為外部人員指定代碼(token)。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_id
@@ -1229,18 +1229,18 @@ msgstr "目前僅支持實時會話。"
 msgid ""
 "Customers will receive a new token and be able to completely retake the "
 "survey."
-msgstr "客戶將收到一個新的指示物，並能夠重新進行調查。"
+msgstr "客戶將收到一個新的代碼(token)，並能夠重新進行調查。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Customers will receive the same token."
-msgstr "客戶將收到相同的指示物"
+msgstr "客戶將收到相同的代碼(token)"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__date
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__date
 msgid "Date"
-msgstr "日期   "
+msgstr "日期"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_date
@@ -1266,7 +1266,7 @@ msgstr "日期時間 客戶可以打開調查並提交答案"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
 msgid "Deadline"
-msgstr "截止日"
+msgstr "截止日期"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__null_value
@@ -1289,7 +1289,7 @@ msgstr "刪除"
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Description"
-msgstr "描述"
+msgstr "說明"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.survey_user_input_line_action
@@ -1343,7 +1343,7 @@ msgstr "在後台編輯"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__email
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Email"
-msgstr "電子郵箱"
+msgstr "Email"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__email_from
@@ -1359,7 +1359,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description_done
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "End Message"
-msgstr "結束信息"
+msgstr "結束訊息"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__end_datetime
@@ -1408,7 +1408,7 @@ msgstr "反饋表"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__model_object_field
 msgid "Field"
-msgstr "字段"
+msgstr "欄位"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
@@ -1428,7 +1428,7 @@ msgstr "最終排行榜"
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr "最終的佔位符表達式，可以複製粘貼到目標模板字段。"
+msgstr "最終的佔位符表達式，可以複製粘貼到目標模板欄位。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
@@ -1438,17 +1438,17 @@ msgstr "完成的問券"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_follower_ids
 msgid "Followers"
-msgstr "訂閱者"
+msgstr "關注人"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "關注者(業務夥伴)"
+msgstr "關注人（業務夥伴）"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome 圖標，例如，fa-task"
+msgstr "Font awesome 圖示，例如，fa-task"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
@@ -1463,7 +1463,7 @@ msgstr "自由文本答案"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__email_from
 msgid "From"
-msgstr "從"
+msgstr "來自"
 
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_badge
@@ -1485,7 +1485,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_give_badge
 msgid "Give Badge"
-msgstr "提供證書號碼"
+msgstr "贈送徽章"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -1511,7 +1511,7 @@ msgstr "圖形"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Group By"
-msgstr "分組"
+msgstr "分組依據"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_mode
@@ -1595,7 +1595,7 @@ msgstr "用於指示異常活動的圖示。"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__access_token
 msgid "Identification token"
-msgstr "標識指示物"
+msgstr "標識代碼(token)"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__progression_mode
@@ -1608,24 +1608,24 @@ msgstr "如果選擇了數字，它將在要回答的問題總數中顯示已回
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "如果勾選此項，有新消息會提醒您。"
+msgstr "勾選代表有新訊息需要您留意。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
+msgstr "勾選代表有訊息發生傳送錯誤。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__save_as_email
 msgid ""
 "If checked, this option will save the user's answer as its email address."
-msgstr "如果選中，此選項會將用戶的答案保存為其電子郵件地址。"
+msgstr "如果選中，此選項會將用戶的答案儲存為其電子郵件地址。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__save_as_nickname
 msgid "If checked, this option will save the user's answer as its nickname."
-msgstr "如果選中，此選項會將用戶的答案保存為其暱稱。"
+msgstr "如果選中，此選項會將用戶的答案儲存為其暱稱。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_conditional
@@ -1646,7 +1646,7 @@ msgstr "如果勾選了，使用者能夠返回上頁。"
 #: model:ir.model.fields,help:survey.field_survey_survey__users_login_required
 msgid ""
 "If checked, users have to login before answering even with a valid token."
-msgstr "如果勾選此項，使用者必須在回答之前登錄並使用有效的指示物。"
+msgstr "如果勾選此項，使用者必須在回答之前登入並使用有效的代碼(token)。"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
@@ -1726,7 +1726,7 @@ msgstr "輸入必須是電子信件"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__invite_token
 msgid "Invite token"
-msgstr "邀請指示物"
+msgstr "邀請代碼(token)"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__access_mode__token
@@ -1741,7 +1741,7 @@ msgstr "是編輯器"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_is_follower
 msgid "Is Follower"
-msgstr "是訂閱者"
+msgstr "是關注人"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification
@@ -1816,7 +1816,7 @@ msgstr "語言"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input____last_update
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line____last_update
 msgid "Last Modified on"
-msgstr "最後修改時間"
+msgstr "最後修改於"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__write_uid
@@ -1826,7 +1826,7 @@ msgstr "最後修改時間"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__write_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__write_uid
 msgid "Last Updated by"
-msgstr "最後更新人"
+msgstr "最後更新者"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__write_date
@@ -1836,17 +1836,17 @@ msgstr "最後更新人"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__write_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__write_date
 msgid "Last Updated on"
-msgstr "最後更新時間"
+msgstr "最後更新於"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__last_displayed_page_id
 msgid "Last displayed question/page"
-msgstr "上次顯示問題/頁"
+msgstr "上次顯示題目/頁"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Late Activities"
-msgstr "晚活動"
+msgstr "逾期活動"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -1908,12 +1908,12 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "Login required"
-msgstr "需要登錄"
+msgstr "需要登入"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__template_id
 msgid "Mail Template"
-msgstr "信件模板"
+msgstr "信件範本"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_main_attachment_id
@@ -1989,12 +1989,12 @@ msgstr "也許您正在尋找"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
 msgid "Message Delivery error"
-msgstr "郵件傳遞錯誤"
+msgstr "訊息遞送錯誤"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_ids
 msgid "Messages"
-msgstr "消息"
+msgstr "訊息"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_date
@@ -2046,7 +2046,7 @@ msgstr "山松"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__text_box
 msgid "Multiple Lines Text Box"
-msgstr "多行文本框"
+msgstr "多行文字方塊"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2093,7 +2093,7 @@ msgstr "從不"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "New"
-msgstr "新建"
+msgstr "新增"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_invite__existing_mode__new
@@ -2181,7 +2181,7 @@ msgstr "號碼"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction_counter
 msgid "Number of Actions"
-msgstr "行動數量"
+msgstr "動作數量"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__attempts_limit
@@ -2203,17 +2203,17 @@ msgstr "錯誤數量"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "需要行動消息的數量"
+msgstr "需要處理的消息數量"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "發送錯誤的郵件數"
+msgstr "有發送錯誤的郵件數量"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread_counter
 msgid "Number of unread messages"
-msgstr "未讀消息的數量"
+msgstr "未讀訊息的數量"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__numerical_box
@@ -2300,7 +2300,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__null_value
 msgid "Optional value to use if the target field is empty"
-msgstr "如果目標字段為空則使用此可選值"
+msgstr "如果目標欄位為空則使用此可選值"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2318,7 +2318,7 @@ msgstr "其他（見評論）"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__mail_server_id
 msgid "Outgoing mail server"
-msgstr "出向信件伺服器"
+msgstr "發信信件伺服器"
 
 #. module: survey
 #. openerp-web
@@ -2330,7 +2330,7 @@ msgstr "整體表現"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__page_id
 msgid "Page"
-msgstr "頁"
+msgstr "頁面"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__page_ids
@@ -2609,7 +2609,7 @@ msgstr "負責人"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_user_id
 msgid "Responsible User"
-msgstr "責任用戶"
+msgstr "責任使用者"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
@@ -2769,8 +2769,8 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
-"從相關單據模型中選擇目標字段。\n"
-"如果這是個關係型字段，您將可以在關係字段目的地選擇目標字段。"
+"從相關單據模型中選擇目標欄位。\n"
+"如果這是個關係型欄位，您將可以在關係欄位目的地選擇目標欄位。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -2781,7 +2781,7 @@ msgstr "發送"
 #: model:ir.model.fields,field_description:survey.field_survey_question__sequence
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_sequence
 msgid "Sequence"
-msgstr "序列"
+msgstr "序號"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_code
@@ -2793,7 +2793,7 @@ msgstr "會話代碼"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_link
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Session Link"
-msgstr "會話鏈接"
+msgstr "會話連結"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_state
@@ -2814,7 +2814,7 @@ msgstr "分享"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_allowed
 msgid "Show Comments Field"
-msgstr "顯示評論字段"
+msgstr "顯示評論欄位"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_show_leaderboard
@@ -2824,12 +2824,12 @@ msgstr "顯示會話排行榜"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Show all records which has next action date is before today"
-msgstr "顯示所有下一個活動日期在今天之前的記錄"
+msgstr "顯示在今天之前的下一個行動日期的所有記錄"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__char_box
 msgid "Single Line Text Box"
-msgstr "單行文本框"
+msgstr "單行文字方塊"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__skipped
@@ -2895,7 +2895,7 @@ msgstr ""
 "根據活動的狀態 \n"
 " 逾期：已經超過截止日期 \n"
 " 現今：活動日期是當天 \n"
-" 計劃：未來的活動。"
+" 計劃：未來活動。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -2912,7 +2912,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__sub_model_object_field
 msgid "Sub-field"
-msgstr "子字段"
+msgstr "子欄位"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__sub_object
@@ -2922,7 +2922,7 @@ msgstr "子模型"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__subject
 msgid "Subject"
-msgstr "主題"
+msgstr "來源"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -2999,7 +2999,7 @@ msgstr "調查Ids"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_invite
 msgid "Survey Invitation Wizard"
-msgstr "調查邀請操作視窗"
+msgstr "調查邀請嚮導"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question_answer
@@ -3153,7 +3153,7 @@ msgstr "如果調查的嘗試次數有限，則嘗試次數限制必須為正數
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
 msgid "The badge for each survey should be unique!"
-msgstr "每個考試的證書號碼應該是獨一無二的!"
+msgstr "每個調查的圖章應該是獨一無二的!"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_question_id
@@ -3200,7 +3200,7 @@ msgstr "以下電子郵箱已收到邀請"
 msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external signup in configuration."
-msgstr "以下收件人沒有使用者帳戶： %s 您應該為它們創建使用者帳戶或允許在配置中進行外部註冊。"
+msgstr "以下收件人沒有使用者帳戶： %s 您應該為它們建立使用者帳戶或允許在配置中進行外部註冊。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -3211,7 +3211,7 @@ msgstr "新的佈局和設計是新鮮的和最新的"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "The page you were looking for could not be authorized."
-msgstr "您正在查找的網頁可能未被授權。"
+msgstr "您想找的頁面未被授權。"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_scoring_success_min_check
@@ -3307,7 +3307,7 @@ msgstr "該證書頒發給<br/>"
 msgid ""
 "This code will be used by your attendees to reach your session. Feel free to"
 " customize it however you like!"
-msgstr "您的與會者將使用此代碼來參加您的會議。隨意定制你喜歡的！"
+msgstr "您的與會者將使用此代碼來參加您的會議。隨意自訂為你喜歡的！"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -3335,7 +3335,7 @@ msgstr "這不是一個數字"
 msgid ""
 "This list of emails of recipients will not be converted in contacts.        "
 "Emails must be separated by commas, semicolons or newline."
-msgstr "此電子信件收件人列表不會轉換為聯繫人。電子信件必須由逗號、分號或新行分隔。"
+msgstr "此電子信件收件人列表不會轉換為聯絡人。電子信件必須由逗號、分號或新行分隔。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description_done
@@ -3360,7 +3360,7 @@ msgstr "此問題為必答題。"
 msgid ""
 "This survey does not allow external people to participate. You should create"
 " user accounts or update survey access mode accordingly."
-msgstr "此調查不允許外部人員參與。 您應該創建使用者帳戶或更新調查訪問模式。"
+msgstr "此調查不允許外部人員參與。 您應該建立使用者帳戶或更新調查存取模式。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
@@ -3400,7 +3400,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__title
 msgid "Title"
-msgstr "稱謂"
+msgstr "標題"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
@@ -3448,7 +3448,7 @@ msgstr "答案類型"
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
-msgstr "無法發佈信件，請設定發件人的EMail地址。"
+msgstr "無法發佈信件，請配置發件人的EMail地址。"
 
 #. module: survey
 #. openerp-web
@@ -3489,7 +3489,7 @@ msgstr "即將開始的活動"
 msgid ""
 "Use this field to add additional explanations about your question or to "
 "illustrate it with pictures or a video"
-msgstr "使用此字段添加有關您的問題的其他解釋或用圖片或視頻對其進行說明"
+msgstr "使用此欄位添加有關您的問題的其他解釋或用圖片或影片對其進行說明"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__random_questions_count
@@ -3549,7 +3549,7 @@ msgstr "驗證文本"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_error_msg
 msgid "Validation Error message"
-msgstr "信息：驗證錯誤"
+msgstr "驗證錯誤消息"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -3567,7 +3567,7 @@ msgstr "我們已經註冊了您的答案！請等待主持人進入下一個問
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
 msgid "Website Messages"
-msgstr "網站信息"
+msgstr "網站資訊"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__website_message_ids
@@ -3598,14 +3598,14 @@ msgstr ""
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
-msgstr "如果首先選擇了一個關係型字段，這個字段允許您選擇目的地單據模型（子模型）內的目標字段。"
+msgstr "如果首先選擇了一個關係型欄位，這個欄位允許您選擇目的地單據模型（子模型）內的目標欄位。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__sub_object
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr "如果關係型字段被選為第一個字段，這個字段顯示這個關係指向的單據模型。"
+msgstr "如果關係型欄位被選為第一個欄位，這個欄位顯示這個關係指向的單據模型。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -3644,7 +3644,7 @@ msgstr ""
 msgid ""
 "You can only create certifications for surveys that have a scoring "
 "mechanism."
-msgstr "您只能為具有評分機制的調查創建證書。"
+msgstr "您只能為具有評分機制的調查建立證書。"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
@@ -3684,7 +3684,7 @@ msgstr "不能為已關閉的調查發送邀請。"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "You received the badge"
-msgstr "您獲得了證書號碼"
+msgstr "您獲得了徽章"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -3749,7 +3749,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "log in"
-msgstr "登錄"
+msgstr "登入"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

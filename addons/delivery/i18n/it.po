@@ -1,31 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-#
+# 
 # Translators:
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
-# Martin Trigaux, 2019
-# Massimo Bianchi <bianchi.massimo@gmail.com>, 2019
-# Paolo Valier, 2019
-# Paolo Caruccio <paolo.caruccio66@gmail.com>, 2019
-# David Minneci <david@numeko.it>, 2019
-# Niccolò Lubello <nlubello@gmail.com>, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-#
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -60,8 +53,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</"
-"span>"
+"                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr "Test Ambiente"
 
 #. module: delivery
@@ -78,12 +70,10 @@ msgstr "<span class=\"text-success\">Richieste debug</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</"
-"span>"
+"                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
 "<span class=\"text-success\">Ambiente</span>\n"
-"                                    <span class=\"o_stat_text\">di "
-"produzione</span>"
+"                                    <span class=\"o_stat_text\">di produzione</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
@@ -189,7 +179,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "Archiviato"
+msgstr "In archivio"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
@@ -235,7 +225,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__carrier_id
 msgid "Choose the method to deliver your goods"
-msgstr "Scegliere il metodo di consegna della merce"
+msgstr "Scegliere il metodo di consegna delle merci"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -278,7 +268,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__currency_id
@@ -343,7 +333,7 @@ msgstr "Procedura di selezione imballaggio di consegna"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr ""
+msgstr "Tipo di pacchetto di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -420,13 +410,11 @@ msgstr "Elenco link tracciabilità"
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
 "Ogni vettore (es. UPS) può avere diversi metodi di consegna \n"
-"                (es. UPS Express, UPS Standard) con un insieme di tariffe "
-"legate\n"
+"                (es. UPS Express, UPS Standard) con un insieme di tariffe legate\n"
 "                a ogni metodo."
 
 #. module: delivery
@@ -445,15 +433,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the "
-"shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the "
-"cost of the shipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of the shipping will be updated on the SO after the delivery."
 msgstr ""
-"Costo stimato: al cliente viene fatturato il costo stimato della "
-"spedizione.\n"
-"Costo reale: al cliente viene fatturato il costo reale della spedizione, che "
-"viene aggiornato nell'OdV dopo la consegna."
+"Costo stimato: al cliente viene fatturato il costo stimato della spedizione.\n"
+"Costo reale: al cliente viene fatturato il costo reale della spedizione, che viene aggiornato nell'OdV dopo la consegna."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -636,8 +620,8 @@ msgstr "Nessuna integrazione con il vettore"
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
-"Impossibile calcolare le spese di consegna ordine, nessuna regola tariffaria "
-"corrisponde."
+"Impossibile calcolare le spese di consegna ordine, nessuna regola tariffaria"
+" corrisponde."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
@@ -659,7 +643,7 @@ msgstr "Operatore"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__order_id
 msgid "Order"
-msgstr "Ordine"
+msgstr "Ordina"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -704,7 +688,7 @@ msgstr "Regole tariffarie"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr "Definizione prezzi"
+msgstr "Tariffazione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
@@ -940,14 +924,12 @@ msgstr "Regole di consegna non corrispondenti."
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "These methods allow to automatically compute the delivery price\n"
-"                according to your settings; on the sales order (based on "
-"the\n"
+"                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Questo metodo consente il calcolo automatico delle spese di consegna,\n"
 "                secondo le impostazioni dell'ordine di vendita (basato sul\n"
-"                preventivo) o della fattura (basato sugli ordini di "
-"consegna)."
+"                preventivo) o della fattura (basato sui buoni di consegna)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -963,8 +945,8 @@ msgstr "Peso totale di tutti i prodotti contenuti nel collo."
 #: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
 msgid ""
 "Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This "
-"is the weight used to compute the cost of the shipping."
+"shipping weight specified will default to their products' total weight. This"
+" is the weight used to compute the cost of the shipping."
 msgstr ""
 
 #. module: delivery
@@ -990,7 +972,7 @@ msgstr "Indirizzi codici tracciabilità"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr "Tracciare"
+msgstr "Tracciabilità"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_ref
@@ -1010,7 +992,7 @@ msgstr "Tracking:"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr "Trasferisci"
+msgstr "Trasferimento"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
@@ -1087,17 +1069,14 @@ msgstr "Etichetta unità di misura del peso"
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
-"You can not update the shipping costs on an order where it was already "
-"invoiced!\n"
+"You can not update the shipping costs on an order where it was already invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have "
-"already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
 msgstr ""
 "Impossibile aggiornare i costi di spedizione di un ordine già fatturato.\n"
 "\n"
-"Le seguenti righe di spedizione (prodotto, quantità fatturata e prezzo) sono "
-"già state elaborate:\n"
+"Le seguenti righe di spedizione (prodotto, quantità fatturata e prezzo) sono già state elaborate:\n"
 "\n"
 
 #. module: delivery
@@ -1112,8 +1091,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Impossibile tracciare l'ordine, nel metodo di consegna manca il collegamento "
-"al sito web del corriere."
+"Impossibile tracciare l'ordine, nel metodo di consegna manca il collegamento"
+" al sito web del corriere."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from

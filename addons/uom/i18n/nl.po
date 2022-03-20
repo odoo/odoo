@@ -4,11 +4,10 @@
 # 
 # Translators:
 # Cas Vissers <casvissers@brahoo.nl>, 2018
-# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2018
-# Martin Trigaux, 2019
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2018-06-25 08:30+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +58,7 @@ msgstr "Voeg een nieuwe maateenheid toe"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr "Voeg een nieuwe maateenheid categorie toe"
+msgstr "Voeg een nieuwe maateenheidcategorie toe"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -122,7 +121,7 @@ msgstr "Dagen"
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
@@ -205,7 +204,7 @@ msgstr "Maateenheid product"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr "Product UoS categorieën"
+msgstr "Product maateenheidcategorieën"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -221,7 +220,7 @@ msgstr "Referentie maateenheid voor deze categorie"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
 msgid "Reference UoM"
-msgstr "Referentie hoeveelheidseenheid"
+msgstr "Referentie maateenheid"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -236,7 +235,7 @@ msgstr "Zoek maateenheid"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
 msgid "Search UoM Category"
-msgstr "Zoek hoeveelheidseenheid categorie"
+msgstr "Zoek maateenheidcategorie"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
@@ -259,7 +258,7 @@ msgstr ""
 "Houd er rekening mee dat bestaande gegevens door deze wijziging NIET worden bijgewerkt.\n"
 "\n"
 "Aangezien meeteenheden van invloed zijn op het hele systeem, kan dit kritieke problemen veroorzaken.\n"
-"bijv. het wijzigen van de afronding kan uw voorraadbalans verstoren.\n"
+"bijv. het wijzigen van de afronding kan de voorraadstand verstoren.\n"
 "\n"
 "Daarom wordt het niet aanbevolen om kerneenheden in een actieve database te wijzigen."
 
@@ -290,7 +289,7 @@ msgid ""
 "You can archive them instead."
 msgstr ""
 "De volgende maateenheden worden door het systeem gebruikt en kunnen niet worden verwijderd: %s\n"
-"U kunt ze in plaats daarvan archiveren."
+"je kunt ze in plaats daarvan archiveren."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
@@ -319,7 +318,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
 msgid "Type"
-msgstr "Type"
+msgstr "Soort"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -347,7 +346,7 @@ msgstr "Maateenheidcategorie"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "Eenheden"
+msgstr "Stuks"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -366,7 +365,7 @@ msgstr "Maateenheidcategorieën"
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
 msgid "Units of Measure categories"
-msgstr "Maateenheden categorieën"
+msgstr "Maateenheidcategorieën"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -378,7 +377,7 @@ msgid ""
 msgstr ""
 "Maateenheden die behoren tot dezelfde categorie kunnen\n"
 "geconverteerd worden naar maateenheden binnen dezelfde categorie. Bijvoorbeeld,\n"
-"in de categorie <i>'Tijd'</i> heeft u de maateenheden:\n"
+"in de categorie <i>'Tijd'</i> heb je de maateenheden:\n"
 "Uren, dagen."
 
 #. module: uom
@@ -391,18 +390,18 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
-msgstr "UoM-categorie %s moet een referentie-eenheid hebben."
+msgstr "Maateenheidcategorie %s moet een referentie-eenheid hebben."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr "UoM categorie %sheeft slechts één referentie maateenheid."
+msgstr "Maateenheidcategorie %sheeft slechts één referentie maateenheid."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
 msgid "Uom"
-msgstr "Uom"
+msgstr "Maateenheid"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
@@ -431,7 +430,7 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
-"U moet een conversie ratio definiëren tussen verschillende maateenheden \n"
+"Je moet een conversie ratio definiëren tussen verschillende maateenheden \n"
 "van dezelfde categorie."
 
 #. module: uom

@@ -3,12 +3,11 @@
 # 	* sale_stock
 # 
 # Translators:
-# sejun huang <sejun.huang@gmail.com>, 2018
 # bluce Lan <bluce.lan@gmail.com>, 2019
-# Martin Trigaux, 2020
 # dott.dev <dottdot.dev@gmail.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,17 +35,17 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"></i><b>準備</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>準備</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr "<i class=\"fa fa-fw fa-times\"></i><b>已取消</b>"
+msgstr "<i class=\"fa fa-fw fa-times\"/> <b>已取消</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
-msgstr "<i class=\"fa fa-fw fa-truck\"></i><b>已發貨</b>"
+msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>已發貨</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -72,7 +71,7 @@ msgstr "<span class=\"o_stat_text\">已售</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>客戶參考:</strong>"
+msgstr "<strong>客戶編碼:</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -97,7 +96,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"可庫存商品是指在倉庫中受存量管控的產品。 要使用此項目您必須安裝倉庫模組。\n"
+"可庫存商品是指在倉庫中受存量管控的產品。 要使用此專案您必須安裝倉庫模組。\n"
 "可消耗商品是指不受庫存量管控的產品。\n"
 "服務是指您提供的非產品類服務業務。"
 
@@ -110,7 +109,7 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"根據產品設定，交貨數量可以通過機制自動計算：\n"
+"根據產品配置，交貨數量可以通過機制自動計算：\n"
 " - 手動：線上手動輸入數量\n"
 " - 費用分析：數量是來自過帳費用的數量總和\n"
 " - 時間表：數量是與此銷售線相關聯的任務記錄的時數\n"
@@ -177,7 +176,7 @@ msgstr "第一個交貨訂單的完成日期."
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "設定"
+msgstr "配置設定"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -254,18 +253,18 @@ msgstr "揀貨出現異常："
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr "銷售訂單發生例外情況："
+msgstr "銷售訂單發生異常:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr "例外："
+msgstr "異常:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr "期望交貨日期"
+msgstr "預計交貨日期"
 
 #. module: sale_stock
 #. openerp-web
@@ -330,7 +329,7 @@ msgstr "貿易條款"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "國際商業條款是一系列用於國際交易的商業條款。"
+msgstr "國際商業條款是一系列用於國際交易的事先定義的商業條款。"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
@@ -345,7 +344,7 @@ msgstr "庫存路線"
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
 msgid "Invoicing"
-msgstr "開立發票"
+msgstr "會計"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -381,7 +380,7 @@ msgstr "接單生產"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr "可能需要手動操作。"
+msgstr "可能需要手動操作."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -532,7 +531,7 @@ msgstr "銷售訂單取消"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "銷售訂單行"
+msgstr "銷售訂單明細"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
@@ -599,7 +598,7 @@ msgstr "已在過去365天內出售"
 msgid ""
 "Some products have already been delivered. Returns can be created from the "
 "Delivery Orders."
-msgstr "部分產品已經發貨。可以從交貨單創建退貨。"
+msgstr "部分產品已經發貨。可以從交貨單建立退貨。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -666,7 +665,7 @@ msgstr "調撥"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Transfers"
-msgstr "轉帳"
+msgstr "調撥"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users
@@ -724,17 +723,17 @@ msgid ""
 "Create a return first."
 msgstr ""
 "您不能減少訂購數量低於接收數量。\n"
-"     首先創建一個退貨。"
+"     首先建立一個退貨。"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr "取消"
+msgstr "已取消"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "天"
+msgstr "天數"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -745,12 +744,12 @@ msgstr "的"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr "訂購而不是"
+msgstr "替代採購"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr "處理替代"
+msgstr "已做替代處理"
 
 #. module: sale_stock
 #. openerp-web

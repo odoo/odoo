@@ -5,7 +5,7 @@
 # Translators:
 # Fabri Yohann <psn@fabri.pw>, 2016
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
 # Tony Galmiche <tony.galmiche@infosaone.com>, 2016
 # Simon CARRIER <carrier.sim@gmail.com>, 2016
@@ -14,7 +14,6 @@
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
 # Clo <clo@odoo.com>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
 # Fabien Bourgeois <fabien@yaltik.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2017
 # Xavier Belmere <Info@cartmeleon.com>, 2017
@@ -24,13 +23,11 @@
 # e2f <projects@e2f.com>, 2018
 # 31c77b784710e4a287a92d851a40e039, 2018
 # f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2018
-# Lucas Deliege <lud@openerp.com>, 2018
 # 6534c450c77b2549e41c52e2051f5839, 2018
 # Olivier Dony <odo@odoo.com>, 2018
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2018
 # Nancy Bolognesi <nb@microcom.ca>, 2018
-# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2018
 # Bertrand LATOUR <divoir@gmail.com>, 2019
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2019
 # Marie Willemyns <mwi@odoo.com>, 2019
@@ -247,7 +244,7 @@ msgstr "<strong/>"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_product_barcode_uniq
 msgid "A barcode can only be assigned to one product !"
-msgstr "Un code-barre ne peut être assigné qu'à un seul produit!"
+msgstr "Un code-barre ne peut être assigné qu'à un seul produit !"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -298,7 +295,7 @@ msgstr "Nécessite une action"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Active"
-msgstr "Actif"
+msgstr "Active"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
@@ -316,7 +313,7 @@ msgstr "Activité d'exception de décoration"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
 #: model:ir.model.fields,field_description:product.field_product_template__activity_state
 msgid "Activity State"
-msgstr "Status de l'Activité"
+msgstr "Status de l'activité"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
@@ -421,7 +418,7 @@ msgstr "Compte des pièces jointes"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
 msgid "Attribute"
-msgstr "Attribut"
+msgstr "Caractéristique"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
@@ -471,7 +468,7 @@ msgstr "Disponibilité"
 #: model:ir.model.fields,field_description:product.field_product_product__barcode
 #: model:ir.model.fields,field_description:product.field_product_template__barcode
 msgid "Barcode"
-msgstr "Code Barre"
+msgstr "Code-barres"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__barcode
@@ -894,7 +891,7 @@ msgstr "Remises"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__display_name
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher Nom"
 
 #. module: product
 #. openerp-web
@@ -1084,7 +1081,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Group By"
-msgstr "Grouper par"
+msgstr "Regrouper par"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
@@ -1210,7 +1207,7 @@ msgstr "Image 512"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Import Template for Pricelists"
-msgstr "Import du template pour les listes de prix"
+msgstr "Import du modèle pour les listes de prix"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -1264,7 +1261,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
-msgstr "Inventaire"
+msgstr "Stock"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
@@ -1315,7 +1312,7 @@ msgstr "Kilogrammes"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line____last_update
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value____last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
@@ -1493,7 +1490,7 @@ msgstr "Activité suivante de l'événement du calendrier"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Date limite de l'Activité à Venir"
+msgstr "Date limite de l'activité à venir"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_summary
@@ -1505,7 +1502,7 @@ msgstr "Résumé d'activité suivant"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
-msgstr "Type d'Activités à Venir"
+msgstr "Type d'activités à venir"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -1638,7 +1635,7 @@ msgstr ""
 #, python-format
 msgid "Please specify the product for which this rule should be applied"
 msgstr ""
-"Veuillez spécifier le produit pour lequel cette règle doit être appliquée"
+"Veuillez spécifier l'article pour lequel cette règle doit être appliquée"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -1825,7 +1822,7 @@ msgstr "Article"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr "Attribut de l'article"
+msgstr "Caractéristique de l'article"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
@@ -1882,7 +1879,7 @@ msgstr "Etiquette d'Articles (PDF)"
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr "Rapport d'Etiquettes Article"
+msgstr "Rapport d'Etiquettes produit"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1907,7 +1904,7 @@ msgstr "Emballage des produits"
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr "Product Packaging (PDF)"
+msgstr "Emballage du produit (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
@@ -1992,7 +1989,7 @@ msgstr "Variantes d'article"
 #: code:addons/product/report/product_label_report.py:0
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
-msgstr "Modèle d'article non défini, veuillez contacter votre administrateur."
+msgstr "Modèle de produit non défini, veuillez contacter votre administrateur"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -2148,7 +2145,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales"
-msgstr "Ventes"
+msgstr "Vente"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description_sale
@@ -2226,7 +2223,7 @@ msgstr ""
 msgid "Show all records which has next action date is before today"
 msgstr ""
 "Montrez toutes les enregistrements pour lesquelles la date des prochaines "
-"actions est pour aujourd'hui ou avant. "
+"actions est pour aujourd'hui ou avant"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
@@ -2500,7 +2497,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr "Cette note est ajoutée aux commandes clients et aux factures."
+msgstr "Cette note est ajoutée aux bons de commande et aux factures."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2648,7 +2645,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Value Price Extra"
-msgstr "Lignes d'attributs de produit valides"
+msgstr "Supplément pour cette valeur"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -2744,7 +2741,7 @@ msgstr "Fournisseur"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendor Bills"
-msgstr "Factures fournisseur"
+msgstr "Factures fournisseurs"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2931,7 +2928,7 @@ msgid ""
 "You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
-"Vous ne pouvez pas supprimer l'attribut %s car il est utilisé sur les produits suivants:\n"
+"Vous ne pouvez pas supprimer l'attribut %s car il est utilisé sur les produits suivants :\n"
 "%s"
 
 #. module: product

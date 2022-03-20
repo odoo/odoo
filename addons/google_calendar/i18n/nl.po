@@ -6,8 +6,8 @@
 # Thomas Pot <thomas@open2bizz.nl>, 2019
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +75,7 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
-"Een administrator moet Google Synchronizatie configureren voor u het kan "
+"Een administrator moet Google Synchronisatie configureren voor je het kan "
 "gebruiken!"
 
 #. module: google_calendar
@@ -107,13 +107,13 @@ msgstr "Agenda deelnemer informatie"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr "Agenda gebeurtenis"
+msgstr "Agenda-afspraak"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "Kalender ID"
+msgstr "Agenda ID"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
@@ -151,7 +151,7 @@ msgstr "Configuratie instellingen"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Configuration"
-msgstr "Instellingen"
+msgstr "Configuratie"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
@@ -197,7 +197,7 @@ msgstr "Verwijderen van beide"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
 msgid "Delete from the current Google Calendar account"
-msgstr "Verwijderen uit het huidige Google Agenda-account."
+msgstr "Verwijderen uit het huidige Google agenda-account."
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
@@ -247,7 +247,7 @@ msgstr "Google agenda-account opnieuw instellen"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
 msgid "Google Calendar Event Id"
-msgstr "Google kalender gebeurtenis ID"
+msgstr "Google agenda afspraak ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__google_id
@@ -286,7 +286,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Als het actief veld niet is aangevinkt, heeft u de mogelijkheid om het "
+"Als het actief veld niet is aangevinkt, heb je de mogelijkheid om het "
 "evenement alarm te verbergen zonder deze te verwijderen."
 
 #. module: google_calendar
@@ -296,8 +296,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
-"Laatste kalender ID dat is gesynchroniseerd. Als dit veranderd is "
-"verwijderen we alle links tussen het Google ID en Odoo Google intern ID"
+"Laatste agenda ID dat is gesynchroniseerd. Als dit veranderd is verwijderen "
+"we alle links tussen het Google ID en Odoo Google intern ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset____last_update
@@ -384,12 +384,12 @@ msgstr "Synchroniseer een record met Google agenda."
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
 msgid "Synchronize all existing events"
-msgstr "Synchroniseer alle bestaande evenementen."
+msgstr "Synchroniseer alle bestaande afspraken."
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
 msgid "Synchronize only new events"
-msgstr "Synchroniseer alleen nieuwe evenementen."
+msgstr "Synchroniseer alleen nieuwe afspraken."
 
 #. module: google_calendar
 #. openerp-web
@@ -399,8 +399,8 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
-"De Google Synchronisatie moet geconfigureerd worden voordat u het kan "
-"gebruiken. Wilt u dit nu doen?"
+"De Google synchronisatie moet geconfigureerd worden voordat je deze kan "
+"gebruiken. Wil je dit nu doen?"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_credentials.py:0
@@ -435,7 +435,7 @@ msgstr "De gebruiker heeft al een Google-account"
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
 msgstr ""
-"Dit heeft alleen gevolgen voor evenementen waarvan de gebruiker de eigenaar "
+"Dit heeft alleen gevolgen voor afspraken waarvan de gebruiker de eigenaar "
 "is."
 
 #. module: google_calendar
@@ -459,7 +459,7 @@ msgstr "Gebruikerstoken"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "User's Existing Events"
-msgstr "Bestaande gebeurtenissen van de gebruiker."
+msgstr "Bestaande afspraken van de gebruiker."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
@@ -474,7 +474,7 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Google. Are "
 "you sure you want to continue?"
 msgstr ""
-"U staat op het punt de synchronisatie van uw agenda met Google te stoppen. "
+"Je staat op het punt de synchronisatie van je agenda met Google te stoppen. "
 "Weet je zeker dat je door wilt gaan?"
 
 #. module: google_calendar
@@ -483,7 +483,7 @@ msgstr ""
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr ""
-"U wordt nu doorverwezen naar Google om toegang toe te staan tot uw kalender!"
+"Je wordt nu doorverwezen naar Google om toegang toe te staan tot je agenda!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0

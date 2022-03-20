@@ -8,7 +8,6 @@
 # Olivier Dony <odo@odoo.com>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2016
-# Shark McGnark <peculiarcheese@gmail.com>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 # Nicolas Martinelli, 2016
 # Sylvain GROS-DESORMEAUX <sylvain.grodes@gmail.com>, 2016
@@ -22,19 +21,15 @@
 # Nancy Bolognesi <nb@microcom.ca>, 2017
 # Hubert TETARD <htetard@apik-conseils.com>, 2017
 # ShevAbam, 2017
-# Lixon Jean-Yves <jy.lixon@ls-development.net>, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2017
 # Arthur Latour <arl@odoo.com>, 2017
-# Lucas Deliege <lud@openerp.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
-# Bertrand LATOUR <divoir@gmail.com>, 2017
 # 31c77b784710e4a287a92d851a40e039, 2017
 # 6534c450c77b2549e41c52e2051f5839, 2017
 # e2f <projects@e2f.com>, 2018
 # bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Christophe Dubuit <cdubuit@yahoo.com>, 2018
 # Miguel Vidali <mvidali129@gmail.com>, 2018
-# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2018
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2019
@@ -76,7 +71,6 @@
 # Geoffrey_GMF <gmf@odoo.com>, 2021
 # Sebastien LANGE, 2021
 # Camille Dantinne <cmd@odoo.com>, 2021
-# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -117,14 +111,14 @@ msgstr ""
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
-msgstr "%(activity_name)s%(summary)s vous a été attribué"
+msgstr "%(activity_name)s: %(summary)s vous a été attribué"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 msgstr ""
-"%(user_name)s vous a invité à suivre le document %(document)s: %(title)s"
+"%(user_name)s vous a invité a suivre le document %(document)s: %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -640,7 +634,7 @@ msgstr "Activé par défaut lors de l'abonnement."
 #: model:ir.model.fields,field_description:mail.field_mail_channel__active
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Active"
-msgstr "Actif"
+msgstr "Active"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__active_domain
@@ -703,7 +697,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_state
 msgid "Activity State"
-msgstr "Status de l'Activité"
+msgstr "Status de l'activité"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_type
@@ -800,7 +794,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/text_emojis.xml:0
 #, python-format
 msgid "Add an emoji"
-msgstr "Ajouter un emoticône"
+msgstr "Ajouter un émoticône"
 
 #. module: mail
 #. openerp-web
@@ -1014,6 +1008,13 @@ msgstr ""
 "pourrez plus renvoyer ces emails par la suite!"
 
 #. module: mail
+#: code:addons/mail/models/mail_blacklist.py:0
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Email Address?"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/m2x_avatar_user.js:0
 #: code:addons/mail/static/src/js/m2x_avatar_user.js:0
@@ -1102,7 +1103,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__partners
 msgid "Authenticated Partners"
-msgstr "Partenaires Authentifiés"
+msgstr "Partenaires authentifiés"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_id
@@ -1132,7 +1133,7 @@ msgstr "Avatar de l'auteur"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_public_id
 msgid "Authorized Group"
-msgstr "Groupe Autorisé"
+msgstr "Groupe autorisé"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__auto_delete
@@ -1247,12 +1248,12 @@ msgstr "Bien à vous,"
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Blacklist"
-msgstr "Liste Noire"
+msgstr "Blacklist"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr "Date de la Liste Noire"
+msgstr "Date de la liste noire"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_bl
@@ -1294,7 +1295,7 @@ msgstr "Rebond"
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__bounce
 #, python-format
 msgid "Bounced"
-msgstr "Rebondi"
+msgstr "Rejeté"
 
 #. module: mail
 #. openerp-web
@@ -1307,7 +1308,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread_cc.py:0
 #, python-format
 msgid "CC Email"
-msgstr "Courriel cc"
+msgstr "Email cc"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
@@ -1532,7 +1533,7 @@ msgstr "Canal/partenaire"
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__chat
 #, python-format
 msgid "Chat"
-msgstr "Messagerie"
+msgstr "Messagerie instantanée"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -1677,7 +1678,7 @@ msgstr "Sociétés"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Compose Email"
-msgstr "Rédiger un courriel"
+msgstr "Rédiger un email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
@@ -1973,7 +1974,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__date
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Date"
-msgstr "Date "
+msgstr "Date"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
@@ -1987,7 +1988,7 @@ msgstr "Jours"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #, python-format
 msgid "Deadline"
-msgstr "Echéance"
+msgstr "Date limite"
 
 #. module: mail
 #. openerp-web
@@ -2254,7 +2255,7 @@ msgstr "Rejeter la notification de renvoi par modèle"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher Nom"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2335,7 +2336,7 @@ msgstr "Terminé & lancer la suite"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr "Terminé et planifier le prochain"
+msgstr "Terminer et planifier le prochain"
 
 #. module: mail
 #. openerp-web
@@ -2394,7 +2395,7 @@ msgstr "Dû dans %d jours"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "Due in %d days:"
-msgstr "Dû dans %d days :"
+msgstr "Dû dans %d jours:"
 
 #. module: mail
 #. openerp-web
@@ -2485,7 +2486,7 @@ msgstr "Alias courriel"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr "Incorporer les alias courriel"
+msgstr "Incorporer les alias email"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
@@ -2544,7 +2545,7 @@ msgstr "Modèles de courriels"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr "Discussion par courriel"
+msgstr "Discussion par email"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
@@ -2601,7 +2602,7 @@ msgstr "Email cc"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Assistant de composition de courriel"
+msgstr "Assistant de composition d'emails"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -2811,13 +2812,13 @@ msgstr "Champ"
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Activity\" cannot be changed to \"False\"."
-msgstr "Le champ \"Mail Thread\" ne peut être remis à \"Faux\""
+msgstr "Le champ \"Activité par e-mail\" ne peut être remis à \"Faux\""
 
 #. module: mail
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Blacklist\" cannot be changed to \"False\"."
-msgstr "Le champ \"Activité Email\" ne peut être remis à \"Faux\""
+msgstr "Le champ \"Mail Blacklist\" ne peut être remis à \"Faux\""
 
 #. module: mail
 #: code:addons/mail/models/ir_model.py:0
@@ -2960,7 +2961,7 @@ msgstr "Icône Font Awesome e.g. fa-tasks"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
-msgstr "Courriel mis en forme"
+msgstr "Email mis en forme"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -2995,7 +2996,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:0
 #, python-format
 msgid "Future"
-msgstr "Future"
+msgstr "Futur"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -3779,7 +3780,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users_settings____last_update
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes____last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_last_seen_partner_ids
@@ -3874,7 +3875,7 @@ msgstr "Agencement"
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 #, python-format
 msgid "Leave"
-msgstr "Congé"
+msgstr "Quitter"
 
 #. module: mail
 #. openerp-web
@@ -4010,7 +4011,7 @@ msgstr "Courriel"
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_activity
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Activity"
-msgstr "Activité Email"
+msgstr "Activité par e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__mail_activity_type_id
@@ -4155,7 +4156,7 @@ msgstr "Tout marquer comme lu"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Mark as Done"
-msgstr "Marquer comme fait"
+msgstr "Marqué comme fait"
 
 #. module: mail
 #. openerp-web
@@ -4184,7 +4185,7 @@ msgstr "Marquer comme fait"
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 msgid "Meeting"
-msgstr "Rendez-vous"
+msgstr "Réunion"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__member_count
@@ -4657,7 +4658,7 @@ msgstr "Activité suivante"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Date limite de l'Activité à Venir"
+msgstr "Date limite de l'activité à venir"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_summary
@@ -4671,7 +4672,7 @@ msgstr "Résumé d'activité suivant"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
-msgstr "Type d'Activités à Venir"
+msgstr "Type d'activités à venir"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
@@ -5404,10 +5405,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Politique de publication d'un message sur le document via la passerelle de courriel.\n"
-"- tout le monde : tout le monde peut publier\n"
-"- partenaires : seulement les partenaires authentifiés\n"
-"- abonnés : seulement les abonnés au canaux de suivi\n"
+"Politique pour poster un message sur le document en utilisant la passerelle de messagerie.\n"
+"- tout le monde: tout le monde peut poster\n"
+"- partenaires: partenaires authentifiés uniquement\n"
+"- abonnés: seuls les abonnés du document concerné ou les membres des chaînes suivantes\n"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:0
@@ -5485,7 +5486,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #, python-format
 msgid "Preview"
-msgstr "Prévisualiser"
+msgstr "Aperçu"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -5962,6 +5963,11 @@ msgid "Restrict mail templates and Jinja rendering."
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Restrict mail templates edition and QWEB placeholders usage."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Retry"
@@ -6048,7 +6054,7 @@ msgstr "Planifier une activité"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
-msgstr "Planifiez des activités pour vous aider à faire les choses."
+msgstr "Planifier des activités pour vous aider à faire les choses."
 
 #. module: mail
 #. openerp-web
@@ -6127,7 +6133,7 @@ msgstr "Vu par %s"
 #: code:addons/mail/static/src/components/message_seen_indicator/message_seen_indicator.js:0
 #, python-format
 msgid "Seen by %s and %s"
-msgstr "Envoyé par %s et %s"
+msgstr "Vu par %s et %s"
 
 #. module: mail
 #. openerp-web
@@ -6293,7 +6299,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Settings"
-msgstr "Configuration"
+msgstr "Paramètres"
 
 #. module: mail
 #. openerp-web
@@ -6370,7 +6376,7 @@ msgstr ""
 msgid "Show all records which has next action date is before today"
 msgstr ""
 "Montrez toutes les enregistrements pour lesquelles la date des prochaines "
-"actions est pour aujourd'hui ou avant. "
+"actions est pour aujourd'hui ou avant"
 
 #. module: mail
 #. openerp-web
@@ -6501,7 +6507,7 @@ msgstr "État"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Status"
-msgstr "Statut"
+msgstr "État"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_state
@@ -6911,7 +6917,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr "Ce"
+msgstr "Ce(tte)"
 
 #. module: mail
 #. openerp-web
@@ -7012,7 +7018,7 @@ msgstr "Fuseau horaire"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_to
 msgid "To"
-msgstr "A"
+msgstr "Vers"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_to
@@ -7554,7 +7560,7 @@ msgstr "Vidéo"
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
-msgstr "Voir"
+msgstr "Vue"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -7827,6 +7833,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid ""
+"You do not have the access right to unblacklist emails. Please contact your "
+"administrator."
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "You have been assigned to %s"
@@ -7947,7 +7961,7 @@ msgstr "Agrandir"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Zoom In (+)"
-msgstr "Zoom avant (+)"
+msgstr "Zoomer (+)"
 
 #. module: mail
 #. openerp-web
@@ -8301,7 +8315,7 @@ msgid ""
 "reply to model %s that does not accept document update, fall back on "
 "document creation"
 msgstr ""
-"réponse à un document %s qui n'accepte pas la mise à jour de documents, "
+"réponse à un modèle %s qui n'accepte pas la mise à jour de documents, "
 "revenez à la création de document"
 
 #. module: mail

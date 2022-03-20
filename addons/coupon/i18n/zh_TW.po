@@ -3,13 +3,12 @@
 # 	* coupon
 # 
 # Translators:
-# Martin Trigaux, 2020
 # gogobook <O968041428@gmail.com>, 2020
 # Andy Cheng <andy.cheng@richsoda.com>, 2020
-# 曾逸民 <suncombo@gmail.com>, 2020
 # bluce Lan <bluce.lan@gmail.com>, 2020
 # Benson <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2020-08-21 13:31+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,7 +120,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Minimum purchase of</span>"
-msgstr "<span>最低購買量</span>"
+msgstr "<span>最低採購量</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -142,7 +141,7 @@ msgstr "<strong style=\"font-size: 55px; color: #875A7B\">免運費</strong>"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
 msgid "<strong>Active</strong>"
-msgstr "<strong>主動</strong>"
+msgstr "<strong>執行中</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
@@ -152,7 +151,7 @@ msgstr " <strong>優惠券</strong>"
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__active
 msgid "A program is available for the customers when active"
-msgstr "一個程序在啟動的時候可有效的給客戶用"
+msgstr "在執行中的計畫可被客戶使用"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__promo_code
@@ -172,20 +171,20 @@ msgid ""
 "                A coupon program generates coupons with a code that can be used to generate a discount on the current\n"
 "                order or create a coupon for a next order."
 msgstr ""
-"促銷計劃可以是一個有限的促銷沒有代碼（自動申請）\n"
+"促銷計畫可以是一個有限的促銷沒有代碼（自動申請）\n"
 "\n"
 "或用一個代碼（例如在雜誌上顯示），可能會對目前的折扣。\n"
 "\n"
-"訂購或創建下一個訂單的優惠券。\n"
+"訂購或建立下一個訂單的優惠券。\n"
 "\n"
 "優惠券程序生成優惠券，其中的代碼可以用來產生目前的折扣。\n"
 "\n"
-"訂購或創建下一個訂單的優惠券。"
+"訂購或建立下一個訂單的優惠券。"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__active
 msgid "Active"
-msgstr "啟用"
+msgstr "執行"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_applicability
@@ -195,7 +194,7 @@ msgstr "適用範圍"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Apply Discount"
-msgstr "應用折扣"
+msgstr "套用折扣"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_current_order
@@ -212,7 +211,7 @@ msgstr "適用於第一"
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_search
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
 msgid "Archived"
-msgstr "封存"
+msgstr "已歸檔"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__no_code_needed
@@ -225,9 +224,9 @@ msgid ""
 "Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulative)\n"
 "Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
 msgstr ""
-"自動應用-不需要代碼，如果滿足程序規則，則應用獎勵（除非整單折扣或免費送貨獎勵不累計）。\n"
+"自動應用-不需要代碼，如果滿足程序規則，則應用獎勵（除非全球折扣或免費送貨獎勵不累計）。\n"
 "\n"
-"使用代碼-如果滿足了程序規則，則必須為應用程序提供有效的代碼。\n"
+"使用代碼-如果滿足了程序規則，則必須為模組提供有效的代碼。\n"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_partners_domain
@@ -247,7 +246,7 @@ msgid ""
 "Build up promotion programs to attract more customers with discounts, free products, free delivery, etc.\n"
 "                You can share promotion codes or grant the promotions automatically if some conditions are met."
 msgstr ""
-"制定促銷計劃，通過折扣，免費產品，免費送貨等吸引更多客戶。\n"
+"制定促銷計畫，通過折扣，免費產品，免費送貨等吸引更多客戶。\n"
 " 如果滿足某些條件，您可以共享促銷代碼或自動授予促銷。"
 
 #. module: coupon
@@ -318,12 +317,12 @@ msgstr "息數"
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__coupon_program
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Coupon Program"
-msgstr "優惠券計劃"
+msgstr "優惠券計畫"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
 msgid "Coupon Programs"
-msgstr "優惠券計畫"
+msgstr "優惠券規劃"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
@@ -364,7 +363,7 @@ msgstr "如果多個程序在相同條件下定義（最小數量），則將根
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_partners_domain
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_partners_domain
 msgid "Coupon program will work for selected customers only"
-msgstr "優惠券計劃將只為選定的客戶"
+msgstr "優惠券計畫將只為選定的客戶"
 
 #. module: coupon
 #: model:ir.actions.server,name:coupon.expire_coupon_cron_ir_actions_server
@@ -385,12 +384,12 @@ msgstr "優惠券"
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
 msgid "Create a new coupon program"
-msgstr "創建一個新的優惠計劃"
+msgstr "建立一個新的優惠計畫"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
 msgid "Create a new promotion program"
-msgstr "創建一個新的促銷計劃。"
+msgstr "建立一個新的促銷計畫。"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_uid
@@ -399,7 +398,7 @@ msgstr "創建一個新的促銷計劃。"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_uid
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創立者"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_date
@@ -413,7 +412,7 @@ msgstr "建立時間"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__currency_id
 msgid "Currency"
-msgstr "幣種"
+msgstr "幣別"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__partners_domain
@@ -483,7 +482,7 @@ msgstr "顯示名稱"
 #. module: coupon
 #: model:ir.model,name:coupon.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "信件撰寫操作視窗"
+msgstr "信件撰寫嚮導"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_to
@@ -494,7 +493,7 @@ msgstr "結束日期"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__expiration_date
 msgid "Expiration Date"
-msgstr "到期日期"
+msgstr "過期日期"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__expired
@@ -604,7 +603,7 @@ msgstr "無效的合作夥伴。"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward____last_update
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule____last_update
 msgid "Last Modified on"
-msgstr "最後更改日"
+msgstr "最後修改於"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__write_uid
@@ -622,12 +621,12 @@ msgstr "最後更新者"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__write_date
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__write_date
 msgid "Last Updated on"
-msgstr "更新時間"
+msgstr "最後更新於"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Logo"
-msgstr "徽標"
+msgstr "Logo"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -653,7 +652,7 @@ msgstr "對於提供最大的銷售訂單號可以獎勵的"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Minimum Purchase Of"
-msgstr "最低購買"
+msgstr "最低採購"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_min_quantity
@@ -665,7 +664,7 @@ msgstr "最小數量"
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "Minimum purchased amount should be greater than 0"
-msgstr "最低購買量應該大於０"
+msgstr "最低採購量應該大於０"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_rules.py:0
@@ -776,7 +775,7 @@ msgstr "用銷售訂單中應用折扣產品。"
 msgid ""
 "Product used in the sales order to apply the discount. Each coupon program "
 "has its own reward product for reporting purpose"
-msgstr "用銷售訂單中應用折扣產品。每個優惠券計劃呈報其目的本身的獎勵品"
+msgstr "用銷售訂單中應用折扣產品。每個優惠券計畫呈報其目的本身的獎勵品"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_specific_product_ids
@@ -795,18 +794,18 @@ msgstr "如果對特定產品使用折扣，用作打折的產品"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__program_id
 msgid "Program"
-msgstr "計劃"
+msgstr "計畫"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Program Name"
-msgstr "計劃名稱"
+msgstr "計畫名稱"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
 msgid "Program Type"
-msgstr "計劃類型"
+msgstr "計畫類型"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code_usage
@@ -826,7 +825,7 @@ msgstr "促銷規劃"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__promotion_program
 msgid "Promotional Program"
-msgstr "推廣計劃"
+msgstr "推廣計畫"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_quantity
@@ -954,7 +953,7 @@ msgstr "某些選定的客戶沒有電子郵件地址，因此不會收到優惠
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Specify a mail template to send the generated coupons as email."
-msgstr "指定郵件模板以將生成的優惠券作為電子郵件發送。"
+msgstr "指定信件範本以將生成的優惠券作為電子郵件發送。"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
@@ -970,7 +969,7 @@ msgstr "狀態"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
 msgid "Tax Excluded"
-msgstr "未稅"
+msgstr "不含稅"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_included
@@ -991,7 +990,7 @@ msgstr "優惠券代碼必須是唯一的！"
 #: code:addons/coupon/models/coupon.py:0
 #, python-format
 msgid "The coupon program for %s is in draft or closed state"
-msgstr "%s 優惠券計劃草案或是關閉狀態"
+msgstr "%s 優惠券計畫草案或是關閉狀態"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_fixed_amount
@@ -1021,7 +1020,7 @@ msgstr "開始日期必須在結束日期之前。"
 #: code:addons/coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon %s exists but the origin sales order is not validated yet."
-msgstr " 此優惠券存%s在但源來的銷售訂單不驗證。"
+msgstr "此優惠券存%s在但原來的銷售訂單沒驗證."
 
 #. module: coupon
 #: code:addons/coupon/models/coupon.py:0
@@ -1105,7 +1104,7 @@ msgstr "在其生成的優惠券有效期"
 #: code:addons/coupon/models/coupon_program.py:0
 #, python-format
 msgid "You can not delete a program in active state"
-msgstr "不能刪除處於活動狀態的程序。"
+msgstr "不能刪除處於執行狀態的計畫。"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form

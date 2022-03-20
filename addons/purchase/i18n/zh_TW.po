@@ -4,16 +4,13 @@
 # 
 # Translators:
 # Michael Yeung, 2018
-# sejun huang <sejun.huang@gmail.com>, 2018
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
 # Ying <acc.tou@gmail.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
-# Martin Trigaux, 2020
-# gogobook <O968041428@gmail.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2021
-# Jack N <j.a.ckqueli.neb.a.net.mp@gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -181,7 +178,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<i class=\"fa fa-comment\"/> Send message"
-msgstr "<i class=\"fa fa-comment\"/>發送信息"
+msgstr "<i class=\"fa fa-comment\"/>發送訊息"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -292,7 +289,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "<span class=\"o_stat_text\">Purchased</span>"
-msgstr "<span class=\"o_stat_text\"> 已購買 </span>"
+msgstr "<span class=\"o_stat_text\"> 已採購 </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -329,17 +326,17 @@ msgstr "<span> 天以前</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span>Ask confirmation</span>"
-msgstr "<span>確認供貨日期</span>"
+msgstr "<span>向供應商確認供貨日期</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<span>Taxes</span>"
-msgstr "<span>稅金</span>"
+msgstr "<span>稅</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong class=\"d-block mb-1\">From:</strong>"
-msgstr "<strong class=\"d-block mb-1\">自從:</strong>"
+msgstr "<strong class=\"d-block mb-1\">來自:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -360,7 +357,7 @@ msgstr "<strong class=\"text-muted\">採購人員</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Amount</strong>"
-msgstr "<strong>數量</strong>"
+msgstr "<strong>小計</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -370,7 +367,7 @@ msgstr "<strong>確認日期:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
-msgstr "<strong>申請日期</strong>"
+msgstr "<strong>預計到貨日</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -403,7 +400,7 @@ msgstr "<strong>數量</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Receipt Date:</strong>"
-msgstr "<strong>預計送貨日:</strong>"
+msgstr "<strong>收貨日:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -449,13 +446,13 @@ msgstr "<strong>於此更新</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference:</strong>"
-msgstr "<strong>您的訂單參考：</strong>"
+msgstr "<strong>您的訂單編碼：</strong>"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "A sample email has been sent to %s."
-msgstr "已寄送範例信件模板至 %s信箱"
+msgstr "已寄送範例信件範本至 %s信箱"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
@@ -464,14 +461,14 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"可庫存商品是指在倉庫中受存量管控的產品。 要使用此專案您必須安裝倉庫模組。\n"
+"可庫存商品是指在倉庫中受存量管控的產品。 要使用此功能您必須安裝倉庫模組。\n"
 "可消耗商品是指不受庫存量管控的產品。\n"
 "服務是指您提供的非產品類服務業務。"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
-msgstr "可以為產品和客戶（採購）設定警告信息"
+msgstr "可以為產品和客戶（採購）設定警告資訊"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -483,7 +480,7 @@ msgstr "能夠在採購訂單中選擇包裝類型並強制使用每個包裝單
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
 msgid "Access warning"
-msgstr "訪問警告"
+msgstr "存取警告"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
@@ -504,7 +501,7 @@ msgstr "應計費用分錄"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
 msgid "Action Needed"
-msgstr "需要採取行動"
+msgstr "需採取行動"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_ids
@@ -524,7 +521,7 @@ msgstr "活動狀態"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動類型圖標"
+msgstr "活動類型圖示"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -562,7 +559,7 @@ msgstr "管理員"
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "All"
-msgstr "全部"
+msgstr "所有"
 
 #. module: purchase
 #. openerp-web
@@ -576,7 +573,7 @@ msgstr "所有草稿詢價單"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "All Late RFQs"
-msgstr "所有延遲詢價單"
+msgstr "所有過期詢價單"
 
 #. module: purchase
 #. openerp-web
@@ -605,7 +602,7 @@ msgstr "允許修改採購訂單"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
 msgid "Amount"
-msgstr "金額"
+msgstr "總額"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay_pass
@@ -658,7 +655,7 @@ msgstr "屬性"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Auto-Complete"
-msgstr "自動填充"
+msgstr "自動計算"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
@@ -684,7 +681,7 @@ msgstr "從過去的採購訂單自動完成。"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
-msgstr "自動鎖定已確認的訂單以防止編輯"
+msgstr "自動鎖定已確認的訂單以防止不正確之更動"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -709,7 +706,7 @@ msgstr "平均價格"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__avg_days_to_purchase
 msgid "Average Days to Purchase"
-msgstr "平均購買天數"
+msgstr "平均採購天數"
 
 #. module: purchase
 #. openerp-web
@@ -736,27 +733,27 @@ msgstr "帳單計數"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
 msgid "Bill Lines"
-msgstr "帳單明細行"
+msgstr "帳單明細"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Billed"
-msgstr "取得帳單"
+msgstr "已取得帳單"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
 msgid "Billed Qty"
-msgstr "開單數量"
+msgstr "已收帳單數量"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Billed Quantity"
-msgstr "帳單數量"
+msgstr "已收帳單數量"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Billed Quantity:"
-msgstr "帳單數量："
+msgstr "已收帳單數量："
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_status
@@ -777,7 +774,7 @@ msgstr "帳單已收到"
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__block
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__block
 msgid "Blocking Message"
-msgstr "阻止消息"
+msgstr "受阻消息"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -792,7 +789,7 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
-"當您想為一組給定的產品生成報價給幾個供應商的報價時，就需要招標。如果您直接向一個供應商報價，或者您想要一個招標來比較幾個供應商的報價，您可以設定每個產品的設定。"
+"當您想為一組給定的產品生成報價給幾個供應商的報價時，就需要招標。如果您直接向一個供應商報價，或者您想要一個招標來比較幾個供應商的報價，您可以配置每個產品的配置。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -816,7 +813,7 @@ msgstr "取消的採購訂單 #"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr "無法刪除處於'%s'狀態的採購訂單行。"
+msgstr "無法刪除處於'%s'狀態的採購訂單。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_category_id
@@ -845,24 +842,24 @@ msgstr "公司"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__company_currency_id
 msgid "Company Currency"
-msgstr "公司幣別"
+msgstr "公司貨幣"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Compose Email"
-msgstr "撰寫電子信件"
+msgstr "撰寫信件"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_config_settings
 msgid "Config Settings"
-msgstr "設定"
+msgstr "配置設定"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
 msgid "Configuration"
-msgstr "設定"
+msgstr "配置"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -877,7 +874,7 @@ msgstr "確認訂單"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Confirm Receipt Date"
-msgstr "供貨日期確認"
+msgstr "確認收貨日期"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__one_step
@@ -907,7 +904,7 @@ msgstr "確認日期-去年"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__lock
 msgid "Confirmed purchase orders are not editable"
-msgstr "確認過的採購訂單是不可編輯的"
+msgstr "已確認之採購訂單無法編輯(請先解鎖)"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -931,35 +928,35 @@ msgstr "計量單位轉換只能在同一個類型之間進行。轉換根據比
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Create Bill"
-msgstr "創建帳單"
+msgstr "建立帳單"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Create Bills"
-msgstr "建立應收憑單"
+msgstr "建立應付帳單"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_batch_bills
 msgid "Create Vendor Bills"
-msgstr "建立應收憑單"
+msgstr "建立應付帳單"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
 msgid "Create a new product variant"
-msgstr "創建新產品變體"
+msgstr "建立新產品變體"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_uid
 msgid "Created by"
-msgstr "創建者"
+msgstr "創立者"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_date
 msgid "Created on"
-msgstr "創建時間"
+msgstr "建立於"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__currency_id
@@ -967,7 +964,7 @@ msgstr "創建時間"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__currency_id
 msgid "Currency"
-msgstr "貨幣"
+msgstr "幣別"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_rate
@@ -982,7 +979,7 @@ msgstr "客戶網站入口網址"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
 msgid "Date"
-msgstr "日期   "
+msgstr "日期"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
@@ -1006,7 +1003,7 @@ msgstr "日期:"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "Days"
-msgstr "天"
+msgstr "天數"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__reminder_date_before_receipt
@@ -1067,7 +1064,7 @@ msgstr "供應商報價截止日，應於此期限前進行訂單確認"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
 msgid "Description"
-msgstr "描述"
+msgstr "說明"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
@@ -1120,7 +1117,7 @@ msgstr "直運地址"
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "信件撰寫操作視窗"
+msgstr "信件撰寫嚮導"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1142,17 +1139,17 @@ msgstr "財政狀況"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
 msgid "Followers"
-msgstr "訂閱者"
+msgstr "關注人"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "關注者(業務夥伴)"
+msgstr "關注人（業務夥伴）"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome 圖標，例如，fa-task"
+msgstr "Font awesome 圖示，例如，fa-task"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
@@ -1168,7 +1165,7 @@ msgstr "取得全額帳單"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Future Activities"
-msgstr "未來的活動"
+msgstr "未來活動"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
@@ -1191,7 +1188,7 @@ msgstr "毛重"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Group By"
-msgstr "分組"
+msgstr "分組依據"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__has_message
@@ -1201,7 +1198,7 @@ msgstr "有訊息"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr "隱藏已已取消的明細行"
+msgstr "隱藏已已取消的明細項目"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1230,27 +1227,27 @@ msgstr "用於指示異常活動的圖示。"
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "如果勾選此項，有新消息會提醒您。"
+msgstr "勾選代表有新訊息需要您留意。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
+msgstr "勾選代表有訊息發生傳送錯誤。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
-msgstr "如果啟用，激活三重供應商帳單：專案必須收到才可以支付發票。"
+msgstr "如果啟用，啟動三重供應商帳單：必須收到明細才可以支付應付憑單。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
-msgstr "如果已安裝，產品變型將通過網格條目添加到採購訂單中。"
+msgstr "如果安裝，產品變體將通過矩陣網格添加到採購訂單中。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
@@ -1266,7 +1263,7 @@ msgstr "如果您有任何問題，請隨時與我們聯繫。"
 #: code:addons/purchase/models/product.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "導入模板-產品"
+msgstr "匯入用範本-產品"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -1296,17 +1293,17 @@ msgstr "國際商業條款是一系列用於國際交易的事先定義的商業
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Invoices and Incoming Shipments"
-msgstr "發票和入庫"
+msgstr "應付憑單和入庫"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Invoicing"
-msgstr "開立發票"
+msgstr "會計"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
 msgid "Is Follower"
-msgstr "是訂閱者"
+msgstr "是關注人"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1316,7 +1313,7 @@ msgstr "日記帳分錄"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move_line
 msgid "Journal Item"
-msgstr "日記帳專案"
+msgstr "日記帳明細"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union____last_update
@@ -1324,19 +1321,19 @@ msgstr "日記帳專案"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line____last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_report____last_update
 msgid "Last Modified on"
-msgstr "最後修改時間"
+msgstr "最後修改於"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_uid
 msgid "Last Updated by"
-msgstr "最後更新人"
+msgstr "最後更新者"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_date
 msgid "Last Updated on"
-msgstr "最後更新時間"
+msgstr "最後更新於"
 
 #. module: purchase
 #. openerp-web
@@ -1349,7 +1346,7 @@ msgstr "過往"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
-msgstr "晚活動"
+msgstr "逾期活動"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1368,7 +1365,7 @@ msgstr "採購前置天數"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Let's create your first request for quotation."
-msgstr "讓我們創建您的第一個詢價單"
+msgstr "讓我們建立您的第一個詢價單"
 
 #. module: purchase
 #. openerp-web
@@ -1431,7 +1428,7 @@ msgstr "手動"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Manual Invoices"
-msgstr "手工發票"
+msgstr "手工應付憑單"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
@@ -1458,7 +1455,7 @@ msgstr "供應商提前期誤差幅度。當系統生成重新訂購產品的採
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
 msgid "Message Delivery error"
-msgstr "郵件傳遞錯誤"
+msgstr "訊息遞送錯誤"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
@@ -1475,12 +1472,12 @@ msgstr "採購訂單明細的消息"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
 msgid "Messages"
-msgstr "消息"
+msgstr "訊息"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
-msgstr "最小數量"
+msgstr "最小金額"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
@@ -1515,7 +1512,7 @@ msgstr "我的過期詢價單"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "My Orders"
-msgstr "我的採購訂單"
+msgstr "我的訂單"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1545,7 +1542,7 @@ msgstr "名稱"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr "名稱、統一編號、電子郵件或參考"
+msgstr "名稱、統一編號、電子郵件或編碼"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -1629,7 +1626,7 @@ msgstr "備註"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Notes"
-msgstr "便簽"
+msgstr "備註"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__no
@@ -1639,7 +1636,7 @@ msgstr "無需開單"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction_counter
 msgid "Number of Actions"
-msgstr "行動數量"
+msgstr "動作數量"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__reminder_date_before_receipt
@@ -1656,17 +1653,17 @@ msgstr "錯誤數量"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "需要行動消息的數量"
+msgstr "需要處理的消息數量"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "發送錯誤的郵件數"
+msgstr "有發送錯誤的郵件數量"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_unread_counter
 msgid "Number of unread messages"
-msgstr "未讀消息的數量"
+msgstr "未讀訊息的數量"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__purchase
@@ -1718,7 +1715,7 @@ msgstr "訂單"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Date"
-msgstr "訂購日期"
+msgstr "報價日期"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
@@ -1729,14 +1726,14 @@ msgstr "訂單截止日"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
 msgid "Order Lines"
-msgstr "訂單行"
+msgstr "訂單明細"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__order_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Order Reference"
-msgstr "訂單參照"
+msgstr "訂單關聯"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -1757,7 +1754,7 @@ msgstr "訂單"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Other Information"
-msgstr "其他信息"
+msgstr "其他資訊"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
@@ -1788,12 +1785,12 @@ msgstr "業務夥伴國家"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__payment_term_id
 msgid "Payment Terms"
-msgstr "付款條款"
+msgstr "付款條件"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Payment terms"
-msgstr "付款條款"
+msgstr "付款條件"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -1847,7 +1844,7 @@ msgstr "優先級"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product"
-msgstr "產品"
+msgstr "商品"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_attribute_action
@@ -1864,7 +1861,7 @@ msgstr "產品類別"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__category_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
-msgstr "產品類別"
+msgstr "產品分類"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_packaging
@@ -1916,7 +1913,7 @@ msgstr "採購"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
 msgid "Purchase Agreements"
-msgstr "購買協議"
+msgstr "採購協議"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2012,7 +2009,7 @@ msgstr "採購訂單計數"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
-msgstr "採購訂單明細行"
+msgstr "採購訂單項目"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
@@ -2029,7 +2026,7 @@ msgstr "採購訂單明細"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lock
 msgid "Purchase Order Modification"
-msgstr "銷售訂單修改"
+msgstr "採購訂單修改"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lock
@@ -2084,27 +2081,27 @@ msgstr "採購報告"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Representative"
-msgstr "銷售代表"
+msgstr "採購人員"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
 msgid "Purchase Warnings"
-msgstr "購買警告"
+msgstr "採購警告"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that have been invoiced."
-msgstr "已經開立發票的採購訂單。"
+msgstr "已經開立應付憑單的採購訂單。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
-msgstr "包含未開立發票明細的採購單。"
+msgstr "包含未開立應付憑單明細的採購單。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase products by multiple of unit # per package"
-msgstr "按每包單位 # 的倍數購買產品"
+msgstr "按每包單位 # 的倍數採購產品"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2116,7 +2113,7 @@ msgstr "採購提醒"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
-msgstr "使用屬性（尺寸、顏色等）購買產品的變體"
+msgstr "使用屬性（尺寸、顏色等）採購產品的變體"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
@@ -2135,7 +2132,7 @@ msgstr "7天內採購訂單 ("
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "Purchased in the last 365 days"
-msgstr "在過去365天內購買的"
+msgstr "在過去365天內採購的"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
@@ -2177,7 +2174,7 @@ msgstr "等待帳單數量"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
-msgstr "供應商開具發票的數量"
+msgstr "供應商開具應付憑單的數量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -2251,7 +2248,7 @@ msgstr "通過電子郵件重新發送"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
 msgid "Receipt Date"
-msgstr "收據日期"
+msgstr "承諾供貨日期"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_send_reminder
@@ -2304,7 +2301,7 @@ msgstr "接收確認"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Record a new vendor bill"
-msgstr "登記一張新的供應商應付憑單"
+msgstr "登記一張新的供應商帳單"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
@@ -2313,24 +2310,24 @@ msgstr "登記一張新的供應商應付憑單"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Reference"
-msgstr "參照"
+msgstr "編號"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
 msgid "Reference Document"
-msgstr "參考文檔"
+msgstr "編碼文檔"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_uom
 msgid "Reference Unit of Measure"
-msgstr "參考計量單位"
+msgstr "編碼計量單位"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__origin
 msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
-msgstr "生成此採購訂單請求的文檔的參考（例如：銷售訂單）"
+msgstr "生成此採購訂單請求的文件的編碼（例如：銷售訂單）"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
@@ -2338,7 +2335,7 @@ msgid ""
 "Reference of the sales order or bid sent by the vendor. It's used to do the "
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
-msgstr "供應商會發送銷售訂單或投標的參考。當您收到貨物後，這是作為參考來匹配，而且它通常寫在您的供應商發來的送貨單。"
+msgstr "供應商會發送銷售訂單或投標的編碼。當您收到貨物後，這是作為編碼來匹配，而且它通常寫在您的供應商發來的送貨單。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
@@ -2348,7 +2345,7 @@ msgstr "提醒已確認"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report_main
 msgid "Reporting"
-msgstr "報告"
+msgstr "報表"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -2392,13 +2389,13 @@ msgid ""
 "Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
 msgstr ""
-"詢價單將發送給您的供應商來請求您考慮購買的不同產品的價格之文件。\n"
+"詢價單將發送給您的供應商來請求您考慮採購的不同產品的價格之文件。\n"
 "                一旦與供應商達成協議，他們將被確認並變成採購訂單。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
 msgid "Responsible User"
-msgstr "責任用戶"
+msgstr "責任使用者"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_sms_error
@@ -2420,14 +2417,14 @@ msgstr "搜尋採購訂單"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Search Reference Document"
-msgstr "搜索參考文檔"
+msgstr "搜索編碼文檔"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Search a vendor name, or create one on the fly."
-msgstr "搜索供應商名稱，或即時創建一個。"
+msgstr "搜索供應商名稱，或即時建立一個。"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
@@ -2447,14 +2444,14 @@ msgstr "安全交貨時間"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
 msgid "Security Token"
-msgstr "安全指示物"
+msgstr "安全代碼(token)"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
-msgstr "選擇一個產品，或者直接創建"
+msgstr "選擇一個產品，或者直接建立"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -2470,10 +2467,7 @@ msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
-msgstr ""
-"選擇此「警告「選項，將通知使用者此消息。\n"
-"選擇「阻止消息「選項，將在流程受阻時將拋出一個消息。\n"
-"消息寫入下一個字段。"
+msgstr "選擇此 \"警告\" 選項，將通知使用者此消息, 選擇 \"受阻消息\" 選項，將在流程受阻時將拋出一個消息. 消息寫入下一個欄位."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2493,7 +2487,7 @@ msgstr "發送自動提醒電子郵件以確認供應商供貨狀況"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send by Email"
-msgstr "通過電子信件發送"
+msgstr "通過信件發送"
 
 #. module: purchase
 #. openerp-web
@@ -2506,7 +2500,7 @@ msgstr "將詢價單發送給您的供應商。"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
 msgid "Sequence"
-msgstr "序列"
+msgstr "序號"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2528,7 +2522,7 @@ msgstr "分享"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr "顯示所有下一個活動日期在今天之前的記錄"
+msgstr "顯示在今天之前的下一個行動日期的所有記錄"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
@@ -2566,7 +2560,7 @@ msgstr ""
 "根據活動的狀態 \n"
 " 逾期：已經超過截止日期 \n"
 " 現今：活動日期是當天 \n"
-" 計劃：未來的活動。"
+" 計劃：未來活動。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -2607,12 +2601,12 @@ msgstr "供應商貨幣"
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "供應商價目表"
+msgstr "供應商價格表"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax
 msgid "Tax"
-msgstr "稅"
+msgstr "稅金"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id
@@ -2628,7 +2622,7 @@ msgstr "稅收總額 Json"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__taxes_id
 msgid "Taxes"
-msgstr "稅"
+msgstr "稅金"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
@@ -2666,7 +2660,7 @@ msgid ""
 "                    of the products and the vendor bill."
 msgstr ""
 "詢價單是採購流程的第一步。一旦\n"
-"轉換為採購訂單，您就能操作相關的收貨單和供應商發票。"
+"轉換為採購訂單，您就能操作相關的收貨單和供應商應付帳單。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -2735,7 +2729,7 @@ msgstr "此產品由 %(pack_size).2f %(pack_name)s 包裝。您應該購買 %(qu
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr "該供應商帳單已經從：%s創建"
+msgstr "該供應商帳單已經從：%s建立"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:0
@@ -2746,7 +2740,7 @@ msgstr "此供應商帳單已從%s修改："
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
-msgstr "此供應商沒有採購訂單。創建新詢價"
+msgstr "此供應商沒有採購訂單。建立新詢價"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
@@ -2794,7 +2788,7 @@ msgstr "今天的活動"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 #, python-format
 msgid "Total"
-msgstr "合計"
+msgstr "總計"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
@@ -2857,7 +2851,7 @@ msgstr "單位"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr "測量單位"
+msgstr "計量單位"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
@@ -2919,7 +2913,7 @@ msgstr "使用者"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__company_currency_id
 msgid "Utility field to express amount currency"
-msgstr "表示貨幣金額的工具字段"
+msgstr "表示貨幣數量的工具欄位"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2941,7 +2935,7 @@ msgstr "供應商"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
 msgid "Vendor Bill"
-msgstr "供應商帳單"
+msgstr "供應商應付憑單"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -2949,7 +2943,7 @@ msgstr "供應商帳單"
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
-msgstr "供應商帳單"
+msgstr "供應商應付憑單"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -2964,7 +2958,7 @@ msgstr "供應商價格表"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_ref
 msgid "Vendor Reference"
-msgstr "供應商參照"
+msgstr "供應商編碼"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
@@ -3042,7 +3036,7 @@ msgstr "警告"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
 msgid "Website Messages"
-msgstr "網站信息"
+msgstr "網站資訊"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
@@ -3059,8 +3053,8 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
-"創建採購訂單時，請查看供應商的<i>準時交貨</i>率：準時發貨的產品百分比。如果太低，請激活<i>自動提醒</i>。在到期發貨前幾天，Odoo "
-"將向供應商發送一封電子郵件，要求確認發貨日期，並在出現任何延誤時通知您。要獲取供應商的性能統計信息，請單擊 OTD 率。"
+"建立採購訂單時，請查看供應商的<i>準時交貨</i>率：準時發貨的產品百分比。如果太低，請激活<i>自動提醒</i>。在到期發貨前幾天，Odoo "
+"將向供應商發送一封電子郵件，要求確認發貨日期，並在出現任何延誤時通知您。要獲取供應商的性能統計資料，請單擊 OTD 率。"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3082,7 +3076,7 @@ msgstr "是"
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr "你可以找到一個供應商的名稱, 錫, 電子郵件或內部參考。"
+msgstr "你可以找到一個供應商的名稱, 錫, 電子郵件或內部編碼。"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -3090,7 +3084,7 @@ msgstr "你可以找到一個供應商的名稱, 錫, 電子郵件或內部參�
 msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
-msgstr "無法修改採購訂單項目類別. 請刪除此項目重新創建正確類別之項目."
+msgstr "無法修改採購訂單項目類別. 請刪除此項目重新建立正確類別之項目."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -3098,7 +3092,7 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"您必須為您銷售或購買的所有產品定義產品，\n"
+"您必須為您銷售或採購的所有產品定義產品，\n"
 "                無論是可庫存產品、消耗品還是服務。"
 
 #. module: purchase
@@ -3107,7 +3101,7 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "            whether it's a storable product, a consumable or a service."
 msgstr ""
-"您必須為您銷售或購買的所有產品定義產品，\n"
+"您必須為您銷售或採購的所有產品定義產品，\n"
 "            無論是可庫存產品、消耗品或是服務。"
 
 #. module: purchase

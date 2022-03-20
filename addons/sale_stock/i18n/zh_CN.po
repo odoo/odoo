@@ -9,11 +9,8 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # v2exerer <9010446@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
-# 卓忆科技 <zhanghao@jointd.com>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
 # diaojiaolou <124412206@qq.com>, 2019
-# 稀饭~~ <wangwhai@qq.com>, 2019
-# JZH-Odoo <jzh@odoo.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
 # roye w <159820@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
@@ -73,8 +70,9 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"未翻译的字符\n"
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -129,7 +127,7 @@ msgid ""
 msgstr ""
 "根据产品配置，交货数量可以通过机制自动计算：\n"
 " - 手动：在线手动输入数量\n"
-" - 费用分析：数量是来自过帐费用的数量总和\n"
+" - 费用分析：数量是来自过账费用的数量总和\n"
 " - 时间表：数量是与此销售线相关联的任务记录的时数\n"
 " - 库存变动：数量来自已确认的选择\n"
 
@@ -143,7 +141,7 @@ msgstr "售后"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "All planned operations included"
-msgstr "包括所有计划的操作"
+msgstr "包括所有计划的作业"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
@@ -160,7 +158,7 @@ msgstr "尽快"
 #: code:addons/sale_stock/static/src/js/qty_at_date_widget.js:0
 #, python-format
 msgid "Availability"
-msgstr "可用量"
+msgstr "可用性"
 
 #. module: sale_stock
 #. openerp-web
@@ -239,12 +237,12 @@ msgstr "显示数量挂件"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr "在销售订单和发票中显示国际贸易术语"
+msgstr "在销售订单和相关结算单中显示国际贸易术语"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr "国际贸易术语解释通则显示我们的订单和发票；"
+msgstr "国际贸易术语解释通则显示订单和结算单"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -261,7 +259,7 @@ msgstr "文档"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
-msgstr "生效日期"
+msgstr "实际日期"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -340,14 +338,14 @@ msgstr "国际贸易术语"
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
-msgstr "贸易术语"
+msgstr "贸易条款"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "国际商业条款是一系列预定义的用于国际贸易的商业条款。"
+msgstr "国际商业条款是一系列用于国际交易的事先定义的商业条款。"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
@@ -377,7 +375,7 @@ msgstr "弹出式窗口小部件的JSON数据"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
@@ -393,12 +391,12 @@ msgstr "批次/序列号"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "按订单生成"
+msgstr "按订单产生"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr "可能需要手动操作."
+msgstr "可能需要手动操作。"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -433,7 +431,7 @@ msgstr "将预期交货日期提前"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No enough future availaibility"
-msgstr "将来无可用数量"
+msgstr "无足够的将来可用数量"
 
 #. module: sale_stock
 #. openerp-web
@@ -554,7 +552,7 @@ msgstr "销售订单行"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
-msgstr "销售订单明细"
+msgstr "销售订单行"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_ids
@@ -564,7 +562,7 @@ msgstr "销售订单"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
-msgstr "销售送货安全期"
+msgstr "销售安全天数"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -579,7 +577,7 @@ msgstr "安排的日期"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr "安全时间"
+msgstr "安全提前时间"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
@@ -594,12 +592,12 @@ msgstr "在销售订单行上可选"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
 msgid "Ship all products at once"
-msgstr "立即装运所有产品"
+msgstr "一次运送所有产品"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr "船舶产品，尽快，与回订单"
+msgstr "尽快运送产品，并退回订单"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -678,7 +676,7 @@ msgstr "此产品根据需求补货。"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "转账"
+msgstr "调拨"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
@@ -723,7 +721,7 @@ msgstr "当所有产品就绪时"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr "何时开始装运"
+msgstr "何时开始送货"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -751,7 +749,7 @@ msgstr "已取消"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "天"
+msgstr "天数"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -762,12 +760,12 @@ msgstr "的"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr "替代采购"
+msgstr "已订购，替换"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr "已做替代处理"
+msgstr "已处理，替换"
 
 #. module: sale_stock
 #. openerp-web

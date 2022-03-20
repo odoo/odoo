@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_payment
-#
+# 	* website_payment
+# 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
-#
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_payment
@@ -24,15 +26,13 @@ msgstr ""
 msgid ""
 ".\n"
 "                        <br/>\n"
-"                        We appreciate your support for our organization as "
-"such.\n"
+"                        We appreciate your support for our organization as such.\n"
 "                        <br/>\n"
 "                        Regards."
 msgstr ""
 ".\n"
 "                        <br/>\n"
-"                        Apprezziamo il tuo sostegno alla nostra "
-"organizzazione.\n"
+"                        Apprezziamo il tuo sostegno alla nostra organizzazione.\n"
 "                        <br/>\n"
 "                        Tanti saluti!"
 
@@ -70,8 +70,7 @@ msgstr "<b>Metodo di Pagamento:</b>"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please "
-"contact the website administrator."
+"                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
 "<strong>Non è stata trovata un'opzione di pagamento adatta.</strong><br/>\n"
 "Se credi che si tratti di un errore, contatta l'amministratore del sito."
@@ -85,7 +84,7 @@ msgstr "<strong>Attenzione</strong> La valuta manca o non è corretta."
 #: code:addons/website_payment/models/payment_transaction.py:0
 #, python-format
 msgid "A donation has been made on your website"
-msgstr ""
+msgstr "È stata fatta una donazione sul tuo sito web"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
@@ -108,6 +107,7 @@ msgstr ""
 
 #. module: website_payment
 #. openerp-web
+#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
 #, python-format
 msgid "Amount"
@@ -165,6 +165,7 @@ msgstr "Nazione..."
 #. module: website_payment
 #. openerp-web
 #: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 #, python-format
@@ -174,7 +175,7 @@ msgstr "importo individuale"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Dear"
-msgstr "Spett.le"
+msgstr "Gentile"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -271,7 +272,7 @@ msgstr "È donazione"
 #: model:ir.model.fields,help:website_payment.field_account_payment__is_donation
 #: model:ir.model.fields,help:website_payment.field_payment_transaction__is_donation
 msgid "Is the payment a donation"
-msgstr ""
+msgstr "Se il pagamento è una donazione"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation

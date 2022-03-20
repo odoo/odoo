@@ -6,7 +6,6 @@
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # b7db2840ea95169a8b66b2e8c18d323d_52caf48 <e188a842d22a1f8229ec8e1ab8414c94_389188>, 2017
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
@@ -24,11 +23,11 @@
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
-# Martin Trigaux, 2021
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2022
 # David Ramia, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -36,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: David Ramia, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,8 +93,8 @@ msgid ""
 " contact us directly for this operation.</small>"
 msgstr ""
 "<small class=\"form-text text-muted\">Cambiar el nombre de la empresa o el "
-"NIF no se permite una vez que se emitieron documentos para su cuenta.<br/> "
-"Contáctenos directamente para esta operación.</small>"
+"NIF no se permite una vez que se emitieron documento(s) para su cuenta.<br/>"
+" Contáctenos directamente para esta operación.</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -227,7 +226,7 @@ msgstr ""
 "                        Estimado <t t-out=\"object.user_id.name or ''\">Marc Demo</t>,<br/> <br/>\n"
 "                        ¡Bienvenido al portal de <t t-out=\"object.user_id.company_id.name\">SuEmpresa</t>!<br/><br/>\n"
 "                        Se creó una cuenta para usted y puede iniciar sesión con: <t t-out=\"object.user_id.login\">demo</t><br/><br/>\n"
-"                        De clic en el siguiente botón para elegir una contraseña y activar su cuenta.\n"
+"                        Dé clic en el siguiente botón para elegir una contraseña y activar su cuenta.\n"
 "                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Activar cuenta</strong>\n"
@@ -236,7 +235,7 @@ msgstr ""
 "                                <strong>Iniciar sesión</strong>\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <t t-out=\"object.wizard_id.welcome_message or ''\">Bienvenido al portal de su empresa.</t>\n"
+"                        <t t-out=\"object.wizard_id.welcome_message or ''\">Bienvenido al portal de nuestra empresa.</t>\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -482,7 +481,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
-msgstr "URL para portal"
+msgstr "URL del portal de cliente"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -507,7 +506,7 @@ msgstr "Detalles"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
@@ -623,7 +622,7 @@ msgstr "Es portal"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -893,7 +892,7 @@ msgstr "Mostrar como herencia opcional"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_sign_in
 msgid "Sign in"
-msgstr "Registrar entrada"
+msgstr "Identificarse"
 
 #. module: portal
 #. openerp-web
@@ -1188,7 +1187,7 @@ msgstr "Escribir un mensaje..."
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
-msgstr "Le han invitado a acceder a %s"
+msgstr "Usted está invitado a acceder a %s"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0

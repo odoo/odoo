@@ -2242,7 +2242,7 @@ msgstr "Alle gebuchten Positionen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
 msgid "All Users Lock Date"
-msgstr ""
+msgstr "Alle Benutzer Sperrdatum"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -5114,7 +5114,7 @@ msgstr "Standard-Account"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_type
 msgid "Default Account Type"
-msgstr ""
+msgstr "Standard-Kontotyp"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5258,6 +5258,15 @@ msgid ""
 " 10 with an existing carryover of 50 will create a new carryover line of "
 "-40, so that the total carryover becomes 10."
 msgstr ""
+"Legt fest, wie diese Berichtszeile bei der Durchführung des "
+"Steuerabschlusses Übertragszeilen erstellt. Bei true werden die übertragenen"
+" Beträge immer addiert: Eine Berichtszeile mit einem Saldo von 10 und einem "
+"bestehenden Übertrag von 50 wird beim Abschluss um weitere 10 erhöht, so "
+"dass sich ein Gesamtübertrag von 60 ergibt. Ist der Wert false, wird der "
+"übertragene Gesamtbetrag zwangsweise auf den Gesamtbetrag dieser "
+"Berichtszeile addiert: eine Berichtszeile mit einem Saldo von 10 und einem "
+"bestehenden Übertrag von 50 erzeugt eine neue Übertragszeile von -40, so "
+"dass der Gesamtübertrag 10 beträgt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -7469,6 +7478,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"Die Rechnungs- und Gutschriftsaufteilung sollte mindestens eine Zeile für "
+"die Steueraufteilung enthalten."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -7528,6 +7539,8 @@ msgid ""
 "Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
 " and '_draft' or '' }}"
 msgstr ""
+"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
+" and '_draft' or '' }}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -8631,6 +8644,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manuell: Bezahlen oder bezahlt werden mit einer beliebigen Methode außerhalb von Odoo.\n"
+"Acquirer für Zahlungen: Jeder Acquirer hat seine eigene Zahlungsmethode. Beantragen Sie eine Transaktion auf eine Karte dank eines Zahlungs-Tokens, das der Partner beim Online-Kauf oder -Abonnement gespeichert hat.\n"
+"Scheck: Bezahlen Sie Rechnungen per Scheck und drucken Sie aus Odoo heraus aus.\n"
+"Batch Deposit: Sammeln Sie mehrere Kundenschecks auf einmal, indem Sie eine Batch-Einzahlung erstellen und an Ihre Bank übermitteln. Das Modul account_batch_payment ist erforderlich.\n"
+"SEPA-Überweisung: Zahlen Sie im SEPA-Raum, indem Sie eine SEPA-Überweisungsdatei an Ihre Bank übermitteln. Das Modul account_sepa ist erforderlich.\n"
+"SEPA-Lastschrift: Bezahlen Sie in der SEPA-Zone dank eines Mandats, das Ihnen Ihr Partner erteilt hat. Das Modul account_sepa ist erforderlich.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -12128,6 +12147,8 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also"
 " be named using this prefix by default."
 msgstr ""
+"Kürzere Bezeichnung, die für die Anzeige verwendet wird. Die Journaleinträge"
+" dieses Journals werden standardmäßig ebenfalls mit diesem Präfix benannt."
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
