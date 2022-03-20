@@ -120,6 +120,12 @@ class StockMove(models.Model):
         for move in self:
             move.order_finished_lot_ids = move.raw_material_production_id.lot_producing_id
 
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        distinct_fields = super()._prepare_merge_moves_distinct_fields()
+        distinct_fields.append('bom_line_id')
+        return distinct_fields
+
     @api.depends('raw_material_production_id.bom_id')
     def _compute_allowed_operation_ids(self):
         for move in self:
