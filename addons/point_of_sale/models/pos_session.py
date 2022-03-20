@@ -494,11 +494,7 @@ class PosSession(models.Model):
                     invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_total}, order.date_order)
                 # side loop to gather receivable lines by account for reconciliation
                 for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable' and not aml.reconciled):
-                    # NOTE: Negative (Positive) amount in the order's invoice's receivable line, will be paired to
-                    # the respective positive (negative) balance in session's invoice receivable lines. That's why the comparator to
-                    # calculate `key`s for `invoice_receivable_lines` in `_create_invoice_receivable_lines` is inverted.
-                    # The key ensures we don't reconcile invoice receivable lines with opposite sign together
-                    key = (order.partner_id.commercial_partner_id.id, order.amount_total < 0, move_line.account_id.id)
+                    key = (order.partner_id.commercial_partner_id.id, move_line.account_id.id)
                     order_account_move_receivable_lines[key] |= move_line
             else:
                 order_taxes = defaultdict(tax_amounts)
@@ -695,7 +691,7 @@ class PosSession(models.Model):
             receivable_lines = MoveLine.create(vals)
             for receivable_line in receivable_lines:
                 if (not receivable_line.reconciled):
-                    key = (commercial_partner.id, receivable_line.balance > 0, account_id)
+                    key = (commercial_partner.id, account_id)
                     if key not in invoice_receivable_lines:
                         invoice_receivable_lines[key] = receivable_line
                     else:
