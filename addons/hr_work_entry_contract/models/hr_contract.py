@@ -52,6 +52,16 @@ class HrContract(models.Model):
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
 
+    def _get_leave_domain(self, start_dt, end_dt):
+        return [
+            ('time_type', '=', 'leave'),
+            ('calendar_id', 'in', [False] + self.resource_calendar_id.ids),
+            ('resource_id', 'in', [False] + self.employee_id.resource_id.ids),
+            ('date_from', '<=', end_dt),
+            ('date_to', '>=', start_dt),
+            ('company_id', 'in', [False, self.company_id.id]),
+        ]
+
     def _get_contract_work_entries_values(self, date_start, date_stop):
         start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
         end_dt = pytz.utc.localize(date_stop) if not date_stop.tzinfo else date_stop
@@ -63,8 +73,6 @@ class HrContract(models.Model):
         for contract in self:
             employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
 
-        all_resources = self.employee_id.resource_id
-
         attendances_by_calendar = {
             calendar: calendar._attendance_intervals_batch(
                 start_dt,
@@ -73,14 +81,7 @@ class HrContract(models.Model):
                 tz=pytz.timezone(calendar.tz)
             ) for calendar, employees in employees_by_calendar.items()}
 
-        resource_calendar_leaves = self.env['resource.calendar.leaves'].search([
-            ('time_type', '=', 'leave'),
-            # ('calendar_id', '=', self.id), --> Get all the time offs
-            ('resource_id', 'in', [False] + all_resources.ids),
-            ('date_from', '<=', datetime_to_string(end_dt)),
-            ('date_to', '>=', datetime_to_string(start_dt)),
-            ('company_id', '=', self.env.company.id),
-        ])
+        resource_calendar_leaves = self.env['resource.calendar.leaves'].search(self._get_leave_domain(start_dt, end_dt))
         # {resource: resource_calendar_leaves}
         leaves_by_resource = defaultdict(lambda: self.env['resource.calendar.leaves'])
         for leave in resource_calendar_leaves:
@@ -103,6 +104,9 @@ class HrContract(models.Model):
             result = defaultdict(lambda: [])
             for leave in itertools.chain(leaves_by_resource[False], leaves_by_resource[resource.id]):
                 for resource in resources_list:
+                    # Global time off is not for this calendar, can happen with multiple calendars in self
+                    if resource and leave.calendar_id != calendar and not leave.resource_id:
+                        continue
                     tz = tz if tz else pytz.timezone((resource or contract).tz)
                     if (tz, start_dt) in tz_dates:
                         start = tz_dates[(tz, start_dt)]
