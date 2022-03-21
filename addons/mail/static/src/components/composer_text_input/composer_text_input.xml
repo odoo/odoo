@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ComposerTextInput" owl="1">
-        <div class="o_ComposerTextInput" t-attf-class="{{ className }}" t-on-paste="props.onPaste" t-ref="root">
-            <t t-if="composerView">
+        <t t-if="composerView">
+            <div class="o_ComposerTextInput" t-attf-class="{{ className }}" t-on-paste="props.onPaste" t-ref="root">
                 <t t-if="composerView.hasSuggestions">
                     <ComposerSuggestionList
                         composerViewLocalId="composerView.localId"
@@ -17,8 +17,8 @@
                      the textarea properly without flicker.
                 -->
                 <textarea class="o_ComposerTextInput_mirroredTextarea o_ComposerTextInput_textareaStyle" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }" t-esc="composerView.composer.textInputContent" t-ref="mirroredTextarea" disabled="1"/>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
