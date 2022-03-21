@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChannelInvitationForm" owl="1">
-        <div class="o_ChannelInvitationForm d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="channelInvitationForm">
+        <t t-if="channelInvitationForm">
+            <div class="o_ChannelInvitationForm d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
                 <h3 class="mx-3 mt-3 mb-2">Invite people</h3>
                 <t t-if="!messaging.isCurrentUserGuest">
                     <div class="mx-3 my-2">
@@ -71,8 +71,8 @@
                         </div>
                     </div>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
