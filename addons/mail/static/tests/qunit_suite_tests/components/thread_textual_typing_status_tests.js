@@ -6,7 +6,7 @@ import {
     createRootMessagingComponent,
     nextAnimationFrame,
     start,
-} from '@mail/utils/test_utils';
+} from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {

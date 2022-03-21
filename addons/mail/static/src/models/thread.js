@@ -4,8 +4,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
-import throttle from '@mail/utils/throttle/throttle';
-import Timer from '@mail/utils/timer/timer';
+import throttle from '@mail/utils/throttle';
+import Timer from '@mail/utils/timer';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 

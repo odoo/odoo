@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
+import { afterNextRender, beforeEach, start } from '@mail/../tests/helpers/test_utils';
 import { editSearchBar } from '@web/../tests/core/commands/command_service_tests';
 import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { browser } from '@web/core/browser/browser';

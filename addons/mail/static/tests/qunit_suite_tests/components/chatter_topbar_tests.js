@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterNextRender, beforeEach, nextAnimationFrame, start } from '@mail/utils/test_utils';
+import { afterNextRender, beforeEach, nextAnimationFrame, start } from '@mail/../tests/helpers/test_utils';
 
 import { makeTestPromise } from 'web.test_utils';
 

@@ -6,7 +6,7 @@ import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
 import { RelationSet } from '@mail/model/model_field_relation_set';
 import { Listener } from '@mail/model/model_listener';
 import { followRelations } from '@mail/model/model_utils';
-import { makeDeferred } from '@mail/utils/deferred/deferred';
+import { makeDeferred } from '@mail/utils/deferred';
 
 /**
  * Object that manage models and records, notably their update cycle: whenever

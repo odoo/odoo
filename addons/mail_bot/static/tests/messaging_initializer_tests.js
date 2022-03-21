@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail_bot', {}, function () {
 QUnit.module('messaging_initializer_tests.js', {

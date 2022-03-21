@@ -7,7 +7,7 @@ import {
     nextAnimationFrame,
     start,
     startServer,
-} from '@mail/utils/test_utils';
+} from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 import { makeTestPromise, file } from 'web.test_utils';

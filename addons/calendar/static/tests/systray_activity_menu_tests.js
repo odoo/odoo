@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
 import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 
 import testUtils from 'web.test_utils';

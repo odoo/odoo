@@ -84,9 +84,7 @@
             'mail/static/src/models/*.js',
             'mail/static/src/public/*',
             'mail/static/src/services/messaging/messaging.js',
-            'mail/static/src/utils/*/*.js',
-            'mail/static/src/utils/messaging_component.js',
-            'mail/static/src/utils/utils.js',
+            'mail/static/src/utils/*.js',
             # Framework JS
             'bus/static/src/js/*.js',
             'bus/static/src/js/services/bus_service.js',
@@ -116,9 +114,7 @@
             # defines mixins and variables used by multiple components
             'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/js/**/*.js',
-            'mail/static/src/utils/*/*.js',
-            'mail/static/src/utils/messaging_component.js',
-            'mail/static/src/utils/utils.js',
+            'mail/static/src/utils/*.js',
             'mail/static/src/scss/*.scss',
             'mail/static/src/component_hooks/*.js',
             'mail/static/src/components/*/*.js',
@@ -141,7 +137,6 @@
         ],
         'web.tests_assets': [
             'mail/static/src/env/test_env.js',
-            'mail/static/src/utils/test_utils.js',
             'mail/static/tests/helpers/*.js',
             'mail/static/tests/models/*.js',
         ],

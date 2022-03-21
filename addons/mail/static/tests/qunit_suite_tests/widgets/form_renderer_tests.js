@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { makeDeferred } from '@mail/utils/deferred/deferred';
+import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
     start,
-} from '@mail/utils/test_utils';
+} from '@mail/../tests/helpers/test_utils';
 
 import config from 'web.config';
 import fieldRegistry from 'web.field_registry';

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { insert, insertAndReplace, link } from '@mail/model/model_field_command';
-import { beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
 
 import { str_to_datetime } from 'web.time';
 

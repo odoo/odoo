@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { makeDeferred } from '@mail/utils/deferred/deferred';
+import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
     start,
-} from '@mail/utils/test_utils';
+} from '@mail/../tests/helpers/test_utils';
 
 import { file, dom } from 'web.test_utils';
 const { createFile, inputFiles } = file;
@@ -226,7 +226,7 @@ QUnit.test('chat window new message: fold', async function (assert) {
 QUnit.test('open chat from "new message" chat window should open chat in place of this "new message" chat window', async function (assert) {
     /**
      * InnerWith computation uses following info:
-     * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
+     * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 325px
@@ -860,7 +860,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
 QUnit.test('focus next visible chat window when closing current chat window with ESCAPE [REQUIRE FOCUS]', async function (assert) {
     /**
      * computation uses following info:
-     * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
+     * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 325px
@@ -1054,7 +1054,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
 QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]', async function (assert) {
     /**
      * computation uses following info:
-     * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
+     * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 325px
@@ -1657,7 +1657,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
 QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', async function (assert) {
     /**
      * InnerWith computation uses following info:
-     * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
+     * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 325px
