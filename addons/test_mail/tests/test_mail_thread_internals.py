@@ -4,7 +4,7 @@
 from werkzeug.urls import url_parse, url_decode
 
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
-from odoo.tests.common import tagged, HttpCase
+from odoo.tests.common import tagged, HttpCase, users
 from odoo.tools import mute_logger
 
 
@@ -189,6 +189,23 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         # and the failure from employee's message should not be taken into account for admin
         threads_admin = self.test_record.with_user(self.user_admin).search([('message_has_error', '=', True)])
         self.assertEqual(len(threads_admin), 0)
+
+    @users("employee")
+    def test_unlink_notification_message(self):
+        channel = self.env['mail.channel'].create({'name': 'testChannel'})
+        channel.message_notify(
+            body='test',
+            message_type='user_notification',
+            partner_ids=[self.partner_2.id],
+            author_id=2
+        )
+
+        channel_message = self.env['mail.message'].sudo().search([('model', '=', 'mail.channel'), ('res_id', 'in', channel.ids)])
+        self.assertEqual(len(channel_message), 1, "Test message should have been posted")
+
+        channel.unlink()
+        remaining_message = channel_message.exists()
+        self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
 
 
 @tagged('-at_install', 'post_install')
