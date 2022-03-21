@@ -316,7 +316,7 @@ class QwebTracker():
             if not options.get('profile') or directive in ('inner-content', 'tag-open', 'tag-close'):
                 return method_compile_directive(self, el, options, directive, level)
             enter = f"{' ' * 4 * level}self.env.context['qweb_tracker'].enter_directive({directive!r}, {el.attrib!r}, {options['last_path_node']!r})"
-            leave = f"{' ' * 4 * level}self.env.context['qweb_tracker'].leave_directive()"
+            leave = f"{' ' * 4 * level}self.env.context['qweb_tracker'].leave_directive({directive!r}, {el.attrib!r}, {options['last_path_node']!r})"
             code_directive = method_compile_directive(self, el, options, directive, level)
             return [enter, *code_directive, leave] if code_directive else []
         return _tracked_compile_directive
@@ -368,12 +368,12 @@ class QwebTracker():
         for hook in self.qweb_hooks:
             hook('enter', self.cr.sql_log_count, view_id=self.view_id, xpath=xpath, directive=directive, attrib=attrib)
 
-    def leave_directive(self):
+    def leave_directive(self, directive, attrib, xpath):
         if self.execution_context_enabled:
             self.context_stack.pop().__exit__()
 
         for hook in self.qweb_hooks:
-            hook('leave', self.cr.sql_log_count)
+            hook('leave', self.cr.sql_log_count, view_id=self.view_id, xpath=xpath, directive=directive, attrib=attrib)
 
 
 class QwebCollector(Collector):
@@ -453,19 +453,21 @@ class QwebCollector(Collector):
             last_event_time = time
             last_event_query = sql_count
 
-            if event == 'enter':
-                data = {
-                    'view_id': kwargs['view_id'],
-                    'xpath': kwargs['xpath'],
-                    'directive': self._get_directive_profiling_name(kwargs['directive'], kwargs['attrib']),
-                    'delay': 0,
-                    'query': 0,
-                }
-                results.append(data)
-                stack.append(data)
-            else:
-                assert event == "leave"
-                data = stack.pop()
+            directive = self._get_directive_profiling_name(kwargs['directive'], kwargs['attrib'])
+            if directive:
+                if event == 'enter':
+                    data = {
+                        'view_id': kwargs['view_id'],
+                        'xpath': kwargs['xpath'],
+                        'directive': directive,
+                        'delay': 0,
+                        'query': 0,
+                    }
+                    results.append(data)
+                    stack.append(data)
+                else:
+                    assert event == "leave"
+                    data = stack.pop()
 
         self.add({'results': {'archs': archs, 'data': results}})
         super().post_process()
