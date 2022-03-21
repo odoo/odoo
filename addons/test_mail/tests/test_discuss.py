@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, TestRecipients, MockEmails
+from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
@@ -130,3 +131,20 @@ class TestDiscuss(BaseFunctionalTest, TestRecipients, MockEmails):
             (False, 'cc1@example.com', 'CC Email'),
             (False, 'cc2@example.com', 'CC Email'),
         ], 'cc should be in suggestions')
+
+    @users("employee")
+    def test_unlink_notification_message(self):
+        channel = self.env['mail.channel'].create({'name': 'testChannel'})
+        channel.message_notify(
+            body='test',
+            message_type='user_notification',
+            partner_ids=[self.partner_2.id],
+            author_id=2
+        )
+
+        channel_message = self.env['mail.message'].sudo().search([('model', '=', 'mail.channel'), ('res_id', 'in', channel.ids)])
+        self.assertEqual(len(channel_message), 1, "Test message should have been posted")
+
+        channel.unlink()
+        remaining_message = channel_message.exists()
+        self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
