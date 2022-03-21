@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf, escape } from "@web/core/utils/strings";
 import { standardFieldProps } from "./standard_field_props";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { SelectCreateDialog } from "../views/view_dialogs/select_create_dialog";
 
 const { Component, onWillUpdateProps, useState } = owl;
 
@@ -76,10 +77,8 @@ export class Many2OneField extends Component {
         if (this.props.searchLimit < records.length) {
             options.push({
                 label: this.env._t("Search More..."),
-                classList: "o_m2o_dropdown_option",
-                action: () => {
-                    console.log("search more");
-                },
+                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
+                action: this.onSearchMore.bind(this),
             });
         }
 
@@ -88,10 +87,8 @@ export class Many2OneField extends Component {
             if (this.props.canQuickCreate && !records.some((record) => record[1] === request)) {
                 options.push({
                     label: sprintf(this.env._t(`Create "%s"`), escape(request)),
-                    classList: "o_m2o_dropdown_option",
-                    action: () => {
-                        console.log("create");
-                    },
+                    classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
+                    action: this.onCreate.bind(this),
                 });
             }
 
@@ -99,10 +96,8 @@ export class Many2OneField extends Component {
             if (this.props.canCreateEdit) {
                 options.push({
                     label: this.env._t(`Create and Edit...`),
-                    classList: "o_m2o_dropdown_option",
-                    action: () => {
-                        console.log("create and edit");
-                    },
+                    classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
+                    action: this.onCreateEdit.bind(this),
                 });
             }
 
@@ -157,6 +152,29 @@ export class Many2OneField extends Component {
                 this.props.record.activeFields[this.props.name].string
             ),
         });
+    }
+
+    onSearchMore() {
+        this.dialog.add(SelectCreateDialog, {
+            parent: this,
+            resModel: this.props.relation,
+            domain: this.getDomain(),
+            title: sprintf(
+                this.env._t("Search: %s"),
+                this.props.record.activeFields[this.props.name].string
+            ),
+            multiSelect: false,
+            onSelected: ([resId]) => {
+                this.props.update([resId]);
+            },
+            searchViewId: false,
+        });
+    }
+    onCreate() {
+        console.log("create");
+    }
+    onCreateEdit() {
+        console.log("create edit");
     }
 
     onClick() {

@@ -3834,7 +3834,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_widget[name=trululu] input");
     });
 
-    QUnit.skipWOWL("search more in many2one: no text in input", async function (assert) {
+    QUnit.test("search more in many2one: no text in input", async function (assert) {
         // when the user clicks on 'Search More...' in a many2one dropdown, and there is no text
         // in the input (i.e. no value to search on), we bypass the name_search that is meant to
         // return a list of preselected ids to filter on in the list view (opened in a dialog)
@@ -3861,11 +3861,11 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu" />
                 </form>
             `,
-            mockRPC(route, { domain, method }) {
+            mockRPC(route, { kwargs, method }) {
                 assert.step(method || route);
-                if (route === "/web/dataset/search_read") {
+                if (method === "web_search_read") {
                     assert.deepEqual(
-                        domain,
+                        kwargs.domain,
                         [],
                         "should not preselect ids as there as nothing in the m2o input"
                     );
@@ -3873,16 +3873,18 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await testUtils.fields.many2one.searchAndClickItem("trululu", {
-            item: "Search More",
-            search: "",
-        });
+        const field = target.querySelector(`.o_field_widget[name="trululu"] input`);
+        field.value = "";
+        await triggerEvent(field, null, "change");
+
+        await click(target, `.o_field_widget[name="trululu"] input`);
+        await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
         assert.verifySteps([
             "onchange",
             "name_search", // to display results in the dropdown
             "load_views", // list view in dialog
-            "/web/dataset/search_read", // to display results in the dialog
+            "web_search_read", // to display results in the dialog
         ]);
     });
 
@@ -3915,19 +3917,21 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu" />
                 </form>
             `,
-            mockRPC(route, { domain, method }) {
+            mockRPC(route, { kwargs, method }) {
                 assert.step(method || route);
-                if (route === "/web/dataset/search_read") {
-                    assert.deepEqual(domain, expectedDomain);
+                if (method === "web_search_read") {
+                    assert.deepEqual(kwargs.domain, expectedDomain);
                 }
             },
         });
 
         expectedDomain = [["id", "in", [100, 101, 102, 103, 104, 105, 106, 107]]];
-        await testUtils.fields.many2one.searchAndClickItem("trululu", {
-            item: "Search More",
-            search: "test",
-        });
+        const field = target.querySelector(`.o_field_widget[name="trululu"] input`);
+        field.value = "test";
+        await triggerEvent(field, null, "change");
+
+        await click(target, `.o_field_widget[name="trululu"] input`);
+        await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
         assert.containsOnce(document.body, ".modal .o_list_view");
         assert.containsOnce(

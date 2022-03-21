@@ -35,16 +35,19 @@ export class SelectCreateDialog extends Dialog {
                 this.state.selectedRecords = selectedRecords;
             },
             noBreadcrumbs: true,
+            searchViewId: this.props.searchViewId,
         };
 
         onWillStart(async () => {
-            const { search } = await this.viewService.loadViews({
-                resModel: this.props.resModel,
-                context: this.props.context || {},
-                views: [[false, "search"]],
-            });
-            this.propsView.searchViewId =
-                search.name !== this.props.resModel + " search" ? search.name : undefined;
+            if (!("searchViewId" in this.props)) {
+                const { search } = await this.viewService.loadViews({
+                    resModel: this.props.resModel,
+                    context: this.props.context || {},
+                    views: [[false, "search"]],
+                });
+                this.propsView.searchViewId =
+                    search.name !== this.props.resModel + " search" ? search.name : undefined;
+            }
         });
     }
 
