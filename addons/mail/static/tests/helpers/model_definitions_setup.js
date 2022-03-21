@@ -22,7 +22,7 @@ addModelNamesToFetch([
 addFakeModel('res.fake', {
     activity_ids: { string: "Activities", type: 'one2many', relation: 'mail.activity' },
     email_cc: { type: 'char' },
-    partner_ids: { relation: 'res.partner', string: "Related partners", type: 'many2one', },
+    partner_ids: { relation: 'res.partner', string: "Related partners", type: 'one2many' },
 });
 
 //--------------------------------------------------------------------------
