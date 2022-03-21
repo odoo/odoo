@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { useUpdate } from '@mail/component_hooks/use_update';
 import emojis from '@mail/js/emojis';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { LegacyComponent } from '@web/legacy/legacy_component';
 
 export class EmojiList extends LegacyComponent {

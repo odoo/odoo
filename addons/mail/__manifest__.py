@@ -74,7 +74,7 @@
             'web/static/src/core/utils/*.scss',
             # Dependency of notification_group, notification_request, thread_needaction_preview and thread_preview
             'mail/static/src/components/notification_list/notification_list_item.scss',
-            'mail/static/src/component_hooks/*/*.js',
+            'mail/static/src/component_hooks/*.js',
             'mail/static/src/components/*/*',
             # Unused by guests and depends on ViewDialogs, better to remove it instead of pulling the whole view dependency tree
             ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
@@ -120,7 +120,7 @@
             'mail/static/src/utils/messaging_component.js',
             'mail/static/src/utils/utils.js',
             'mail/static/src/scss/*.scss',
-            'mail/static/src/component_hooks/*/*.js',
+            'mail/static/src/component_hooks/*.js',
             'mail/static/src/components/*/*.js',
             'mail/static/src/components/*/*.scss',
             'mail/static/src/model/*.js',

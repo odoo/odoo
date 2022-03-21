@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 import { FormViewDialog } from 'web.view_dialogs';
 import { ComponentAdapter } from 'web.OwlCompatibility';
