@@ -199,7 +199,7 @@
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                    <field name="analytic_tag_ids" optional="hide" readonly="1" groups="analytic.group_analytic_tags"/>
+                    <field name="analytic_tag_ids" optional="hide" readonly="1" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="amount_currency" readonly="1" groups="base.group_multi_currency"/>
                     <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
