@@ -110,14 +110,10 @@
             <b t-esc="company.name"/><br/>
             <div style="color: #999999;">
                 <t t-esc="company.phone"/>
-                <t t-if="company.email"> |
-                    <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-esc="company.email"/></a>
-                </t>
-                <t t-if="company.website"> |
-                    <a t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;">
-                        <t t-esc="company.website"/>
-                    </a>
-                </t>
+                <t t-if="company.email and company.phone"> |</t>
+                <a t-if="company.email" t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;" t-esc="company.email"/>
+                <t t-if="company.website and (company.phone or company.email)"> |</t>
+                <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;" t-esc="company.website"/>
             </div>
         </td>
     </tr>
@@ -211,14 +207,10 @@
             <b t-esc="company.name"/><br/>
             <div style="color: #999999; padding-top:2px">
                 <t t-esc="company.phone"/>
-                <t t-if="company.email"> |
-                    <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-esc="company.email"/></a>
-                </t>
-                <t t-if="company.website"> |
-                    <a t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;">
-                        <t t-esc="company.website"/>
-                    </a>
-                </t>
+                <t t-if="company.email and company.phone"> |</t>
+                <a t-if="company.email" t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;" t-esc="company.email"/>
+                <t t-if="company.website and (company.phone or company.email)"> |</t>
+                <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;" t-esc="company.website"/>
             </div>
         </td>
     </tr>
