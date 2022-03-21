@@ -2737,14 +2737,13 @@ export class OdooEditor extends EventTarget {
         // editable zones.
         const link = closestElement(ev.target, 'a');
         this.resetContenteditableLink();
+        this._activateContenteditable();
         if (
             link && link.isContentEditable &&
             !link.querySelector('div') &&
             !closestElement(ev.target, '.o_not_editable')
         ) {
             this.setContenteditableLink(link);
-        } else {
-            this._activateContenteditable();
         }
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
