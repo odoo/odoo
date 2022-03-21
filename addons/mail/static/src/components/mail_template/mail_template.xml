@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MailTemplate" owl="1">
-        <div class="o_MailTemplate" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="mailTemplate">
+        <t t-if="mailTemplate">
+            <div class="o_MailTemplate" t-attf-class="{{ className }}" t-ref="root">
                 <i class="fa fa-envelope-o" title="Mail" role="img"/>
                 <span class="o_MailTemplate_name" t-esc="mailTemplate.name"/>
                 <span>:</span>
@@ -22,8 +22,8 @@
                 >
                     Send Now
                 </button>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
