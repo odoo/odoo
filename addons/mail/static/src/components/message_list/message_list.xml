@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageList" owl="1">
-        <div class="o_MessageList" t-att-class="{ 'o-empty': messageListView and messageListView.threadViewOwner.messages.length === 0 }" t-attf-class="{{ className }}" t-on-scroll="onScroll" t-ref="root">
-            <t t-if="messageListView">
+        <t t-if="messageListView">
+            <div class="o_MessageList" t-att-class="{ 'o-empty': messageListView.threadViewOwner.messages.length === 0 }" t-attf-class="{{ className }}" t-on-scroll="onScroll" t-ref="root">
                 <!-- No result messages -->
                 <t t-if="messageListView.threadViewOwner.threadCache.orderedNonEmptyMessages.length === 0">
                     <div class="o_MessageList_empty o_MessageList_item">
@@ -68,8 +68,8 @@
                 <t t-if="!messageListView.threadViewOwner.threadCache.hasLoadingFailed and messageListView.threadViewOwner.order === 'desc'">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
     <t t-name="mail.MessageList.loadMore" owl="1">
