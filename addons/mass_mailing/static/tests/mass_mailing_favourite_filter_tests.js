@@ -151,6 +151,8 @@ QUnit.module('favorite filter widget', {
             "should have option to remove filter if filter is already set");
         assert.isNotVisible(form.$('.o_mass_mailing_save_filter_container'),
             "should not have option to save filter if filter is already set");
+        // Ensures input is not focussed otherwise clicking on it will just close the dropdown instead of opening it
+        form.$('.o_field_many2one[name="mailing_filter_id"] .o_input_dropdown input').blur();
         await testUtils.dom.click('.o_field_many2one[name="mailing_filter_id"] input');
         assert.containsN($dropdown, 'li.ui-menu-item', 2,
             "there should be two existing filters");
