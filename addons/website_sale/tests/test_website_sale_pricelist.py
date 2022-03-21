@@ -456,13 +456,24 @@ class TestWebsitePriceListMultiCompany(TransactionCase):
         self.company2 = self.env['res.company'].create({'name': 'Test Company'})
         self.demo_user.company_ids += self.company2
         # Set company2 as current company for demo user
-        self.website = self.env['website'].browse(1)
+        Website = self.env['website']
+        self.website = Website.browse(1)
         self.website.company_id = self.company2
+        # Delete unused website, it will make PL manipulation easier, avoiding
+        # UserError being thrown when a website wouldn't have any PL left.
+        Website.search([('id', '!=', self.website.id)]).unlink()
+        self.website2 = Website.create({
+            'name': 'Website 2',
+            'company_id': self.company1.id,
+        })
 
         # Create a company pricelist for each company and set it to demo user
         self.c1_pl = self.env['product.pricelist'].create({
             'name': 'Company 1 Pricelist',
             'company_id': self.company1.id,
+            # The `website_id` field will default to the company's website,
+            # in this case `self.website2`.
+
         })
         self.c2_pl = self.env['product.pricelist'].create({
             'name': 'Company 2 Pricelist',
@@ -490,7 +501,6 @@ class TestWebsitePriceListMultiCompany(TransactionCase):
             ('value_reference', '=', 'product.pricelist,%s' % self.c2_pl.id),
         ])
         self.assertEqual(len(irp1 + irp2), 2, "Ensure there is an `ir.property` for demo partner for every company, and that the pricelist is the company specific one.")
-        simulate_frontend_context(self)
         # ---------------------------------- IR.PROPERTY -------------------------------------
         # id |            name              |     res_id    | company_id |   value_reference
         # ------------------------------------------------------------------------------------
@@ -510,6 +520,8 @@ class TestWebsitePriceListMultiCompany(TransactionCase):
             for the company1 as we should get the website's company pricelist
             and not the demo user's current company pricelist.
         '''
+        simulate_frontend_context(self, self.website.id)
+
         # First check: It should return ir.property,4 as company_id is
         # website.company_id and not env.user.company_id
         company_id = self.website.company_id.id
@@ -522,3 +534,28 @@ class TestWebsitePriceListMultiCompany(TransactionCase):
         # also read a pricelist from another company if that company is the one
         # from the currently visited website.
         self.env(user=self.env.ref('base.user_demo'))['product.pricelist'].browse(demo_pl.id).name
+
+    def test_archive_pricelist_1(self):
+        ''' Test that when a pricelist is archived, the check that verify that
+            all website have at least one pricelist have access to all
+            pricelists (considering all companies).
+        '''
+
+        self.c2_pl.website_id = self.website
+        c2_pl2 = self.c2_pl.copy({'name': 'Copy of c2_pl'})
+        self.env['product.pricelist'].search([
+            ('id', 'not in', (self.c2_pl + self.c1_pl + c2_pl2).ids)
+        ]).write({'active': False})
+
+        # ---------------- PRICELISTS ----------------
+        #    name    |   website_id  |  company_id   |
+        # --------------------------------------------
+        # self.c1_pl | self.website2 | self.company1 |
+        # self.c2_pl | self.website  | self.company2 |
+        # c2_pl2     | self.website  | self.company2 |
+
+        self.demo_user.groups_id += self.env.ref('sales_team.group_sale_manager')
+
+        # The test is here: while having access only to self.company2 records,
+        # archive should not raise an error
+        self.c2_pl.with_user(self.demo_user).with_context(allowed_company_ids=self.company2.ids).write({'active': False})
