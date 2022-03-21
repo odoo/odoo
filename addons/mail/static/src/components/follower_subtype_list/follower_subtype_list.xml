@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.FollowerSubtypeList" owl="1">
-        <div class="o_FollowerSubtypeList modal-dialog" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="followerSubtypeList">
+        <t t-if="followerSubtypeList">
+            <div class="o_FollowerSubtypeList modal-dialog" t-attf-class="{{ className }}" t-ref="root">
                 <div class="modal-content">
                     <header class="modal-header">
                         <h4 class="modal-title">
@@ -31,8 +31,8 @@
                         </button>
                     </div>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
