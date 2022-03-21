@@ -308,6 +308,7 @@ class StockMove(models.Model):
         elif self.production_id:
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_finished').id, 'form')]
             action['context']['show_source_location'] = False
+            action['context']['show_reserved_quantity'] = False
         return action
 
     def _action_cancel(self):
