@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { nextAnimationFrame } from '@mail/utils/test_utils';
+import { nextAnimationFrame } from '@mail/../tests/helpers/test_utils';
 
 import MockServer from 'web.MockServer';
 import { datetime_to_str } from 'web.time';

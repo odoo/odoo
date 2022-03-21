@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
+import { afterNextRender, beforeEach, start } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 import { date_to_str } from 'web.time';

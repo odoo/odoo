@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { TEST_USER_IDS } from '@mail/utils/test_utils';
+import { TEST_USER_IDS } from '@mail/../tests/helpers/test_utils';
 import {
     addFakeModel,
     addModelNamesToFetch,

@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
 import { insertAndReplace, link, unlink } from '@mail/model/model_field_command';
-import { makeDeferred } from '@mail/utils/deferred/deferred';
+import { makeDeferred } from '@mail/utils/deferred';
 
 const { EventBus } = owl;
 

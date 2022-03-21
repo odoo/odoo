@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { beforeEach, nextTick, start } from '@mail/utils/test_utils';
-import Timer from '@mail/utils/timer/timer';
+import { beforeEach, nextTick, start } from '@mail/../tests/helpers/test_utils';
+import Timer from '@mail/utils/timer';
 
 const { TimerClearedError } = Timer;
 

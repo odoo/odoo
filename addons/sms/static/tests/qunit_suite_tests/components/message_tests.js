@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
 import { insert, insertAndReplace } from '@mail/model/model_field_command';
-import { makeDeferred } from '@mail/utils/deferred/deferred';
+import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
     beforeEach,
     start,
-} from '@mail/utils/test_utils';
+} from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 

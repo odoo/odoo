@@ -6,7 +6,7 @@ import {
     dragenterFiles,
     dropFiles,
     start,
-} from '@mail/utils/test_utils';
+} from '@mail/../tests/helpers/test_utils';
 
 import { file } from 'web.test_utils';
 

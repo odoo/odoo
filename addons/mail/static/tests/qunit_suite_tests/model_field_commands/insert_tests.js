@@ -4,7 +4,7 @@ import { insert, insertAndReplace } from '@mail/model/model_field_command';
 import {
     beforeEach,
     start,
-} from '@mail/utils/test_utils';
+} from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model_field_commands', {}, function () {
