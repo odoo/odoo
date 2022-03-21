@@ -2,12 +2,12 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web.SearchPanel" owl="1">
-    <div class="o_search_panel" t-att-class="env.searchModel.searchPanelInfo.className" t-ref="root">
+    <div class="o_search_panel flex-grow-0 flex-shrink-0 border-end pe-2 pb-5 ps-4 h-100 bg-white overflow-auto" t-att-class="env.searchModel.searchPanelInfo.className" t-ref="root">
         <section t-foreach="sections" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
-            <header class="o_search_panel_section_header text-uppercase o_cursor_default">
-                <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{section.type === 'category' &amp;&amp; !section.color ? 'text-odoo' : ''}} me-2"
+            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default">
+                <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-odoo': ''}} me-2"
                     t-att-style="section.color and ('color: ' + section.color)"
                 />
                 <b t-esc="section.description"/>
@@ -20,14 +20,16 @@
                     <t t-set="values" t-value="section.rootIds"/>
                 </t>
                 <t t-elif="section.groups">
-                    <li t-foreach="section.sortedGroupIds" t-as="groupId" t-key="groupId"
-                        class="o_search_panel_filter_group list-group-item border-0"
+                    <li
+                        t-foreach="section.sortedGroupIds" t-as="groupId" t-key="groupId"
+                        class="o_search_panel_filter_group list-group-item p-0 border-0"
+                        t-att-class="groupId_last? 'mb-0' : 'mb-3'"
                         >
                         <!-- TODO: this is a workaround for issue https://github.com/odoo/owl/issues/695 (remove when solved) -->
                         <t t-set="_section" t-value="section"/>
                         <t t-set="group" t-value="section.groups.get(groupId)"/>
-                        <header class="o_search_panel_group_header">
-                            <div class="custom-control form-check">
+                        <header class="o_search_panel_group_header pb-1">
+                            <div class="form-check w-100">
                                 <!-- TODO: "indeterminate" could not be set in the template and had to be set in
                                      JS manually. See https://github.com/odoo/owl/issues/713 (adapt when solved)
                                 -->
@@ -36,12 +38,13 @@
                                     t-attf-id="{{ section.id }}_input_{{ groupId }})"
                                     t-on-click="() => this.toggleFilterGroup(section.id, group)"
                                 />
-                                <label t-attf-for="{{ section.id }}_input_{{ groupId }})"
-                                    class="o_search_panel_label form-check-label"
+                                <label
+                                    t-attf-for="{{ section.id }}_input_{{ groupId }})"
+                                    class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 o_cursor_pointer"
                                     t-att-class="{ o_with_counters: group.enableCounters }"
                                     t-att-title="group.tooltip or false"
                                     >
-                                    <span class="o_search_panel_label_title">
+                                    <span class="o_search_panel_label_title text-truncate">
                                         <span t-if="group.hex_color" class="me-1" t-attf-style="color: {{ group.hex_color }};">●</span>
                                         <t t-esc="group.name"/>
                                     </span>
@@ -51,6 +54,7 @@
                         <ul class="list-group d-block">
                             <t t-call="{{ constructor.subTemplates.filtersGroup }}">
                                 <t t-set="values" t-value="group.values"/>
+                                <t t-set="isChildList" t-value="true"/>
                                 <!-- TODO: this is a workaround for issue https://github.com/odoo/owl/issues/695 (remove when solved) -->
                                 <t t-set="section" t-value="_section"/>
                             </t>
@@ -76,28 +80,45 @@
 <t t-name="web.SearchPanel.Category" owl="1">
     <t t-foreach="values" t-as="valueId" t-key="valueId">
         <t t-set="value" t-value="section.values.get(valueId)"/>
-        <li class="o_search_panel_category_value list-group-item border-0">
-            <header class="list-group-item-action"
-                t-att-class="{ active: state.active[section.id] === valueId }"
+        <li class="o_search_panel_category_value list-group-item py-1 o_cursor_pointer border-0"
+            t-att-class="isChildList ? 'o_treeEntry ps-4 pr-0' : 'ps-0 pe-2'"
+            >
+            <header
+                class="list-group-item list-group-item-action d-flex align-items-center p-0 border-0"
+                t-att-class="{'active text-900 font-weight-bold': state.active[section.id] === valueId}"
                 t-on-click="() => this.toggleCategory(section, value)"
                 >
-                <label class="o_search_panel_label mb0" t-att-class="{ o_with_counters: section.enableCounters }">
-                    <div class="o_toggle_fold">
-                        <i t-if="value.childrenIds.length"
-                            t-attf-class="fa fa-caret-{{ state.expanded[section.id][valueId] ? 'down' : 'right' }}"
+                <div
+                    class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 o_cursor_pointer mb-0"
+                    t-att-class="{'o_with_counters': section.enableCounters }"
+                    >
+                    <button class="o_toggle_fold btn p-0 flex-shrink-0 text-center">
+                        <i
+                            t-if="value.childrenIds.length"
+                            class="fa"
+                            t-att-class="{
+                                'fa-caret-down' : state.expanded[section.id][valueId],
+                                'fa-caret-right ms-1':  !state.expanded[section.id][valueId]
+                            }"
+                            />
+                    </button>
+                    <span
+                        class="o_search_panel_label_title text-truncate"
+                        t-att-class="{'font-weight-bold' : value.bold}"
+                        t-esc="value.display_name"
                         />
-                    </div>
-                    <b t-if="value.bold" class="o_search_panel_label_title" t-esc="value.display_name"/>
-                    <span t-else="" class="o_search_panel_label_title" t-esc="value.display_name"/>
-                </label>
-                <span t-if="section.enableCounters and value.__count gt 0"
-                    class="o_search_panel_counter text-muted ms-2 small"
+                </div>
+                <small t-if="section.enableCounters and value.__count gt 0"
+                    class="o_search_panel_counter text-muted mx-2 font-weight-bold"
                     t-esc="value.__count"
                 />
             </header>
-            <ul t-if="value.childrenIds.length and state.expanded[section.id][valueId]" class="list-group d-block">
+            <ul t-if="value.childrenIds.length and state.expanded[section.id][valueId]"
+                class="list-group d-block"
+                >
                 <t t-call="{{ constructor.subTemplates.category }}">
                     <t t-set="values" t-value="value.childrenIds"/>
+                    <t t-set="isChildList" t-value="true"/>
                 </t>
             </ul>
         </li>
@@ -106,7 +127,8 @@
 
 <t t-name="web.SearchPanel.FiltersGroup" owl="1">
     <li t-foreach="[...values.keys()]" t-as="valueId" t-key="valueId"
-        class="o_search_panel_filter_value list-group-item border-0"
+        class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer"
+        t-att-class="{ 'ps-2' : isChildList }"
         >
         <t t-set="value" t-value="values.get(valueId)"/>
         <div class="custom-control form-check w-100">
@@ -116,12 +138,12 @@
                 class="form-check-input"
                 t-on-click="ev => this.toggleFilterValue(section.id, valueId, ev)"
             />
-            <label class="o_search_panel_label form-check-label"
+            <label class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 o_cursor_pointer"
                 t-attf-for="{{ section.id }}_input_{{ valueId }}"
                 t-att-title="(group and group.tooltip) or false">
-                <span class="o_search_panel_label_title" t-esc="value.display_name"/>
+                <span class="o_search_panel_label_title text-truncate" t-esc="value.display_name"/>
                 <span t-if="section.enableCounters and value.__count gt 0"
-                    class="o_search_panel_counter text-muted ms-2 small"
+                    class="o_search_panel_counter text-muted mx-2 small"
                     t-esc="value.__count"
                 />
             </label>

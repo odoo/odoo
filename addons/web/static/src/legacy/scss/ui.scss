@@ -66,6 +66,48 @@
     animation: catchAttention 200ms ease 0s infinite normal;
 }
 
+// ----------------------------------------------------------------------------
+// Render a "tree-view" design on a set of vertical elements
+
+// @param {number} --treeEntry-padding-h - Entry's horizzontal padding.
+// @param {number} --treeEntry-padding-v - Entry's vertical padding.
+// @param {number} --treeEntry--before-top - Vertical-line top position.
+// @param {string} --treeEntry--after-display - Horizzontal-line display mode.
+// @param {color}  --treeEntry--beforeAfter-color - Lines color
+// @param {color}  --treeEntry--beforeAfter-left - Lines left position
+// ----------------------------------------------------------------------------
+.o_treeEntry {
+    $-padding-h: var(--treeEntry-padding-h, #{map-get($spacers, 4)});
+    $-padding-v: var(--treeEntry-padding-v, #{map-get($spacers, 2)});
+
+    padding-left: $-padding-h;
+    position: relative;
+
+    &:before, &:after {
+        position: absolute;
+        left: var(--treeEntry--beforeAfter-left, calc(#{$-padding-h} * .5));
+        background: var(--treeEntry--beforeAfter-color, #{$border-color});
+        content: '';
+    }
+
+    &:before {
+        top: var(--treeEntry--before-top, 0);
+        width: 1px;
+        height: 100%;
+    }
+
+    &:after {
+        display: var(--treeEntry--after-display, initial);
+        top: calc(.5em + #{$-padding-v});
+        width: calc(#{$-padding-h} * .5);
+        height: 1px;
+    }
+
+    &:last-of-type:before {
+        height: calc(.5em + #{$-padding-v});
+    }
+}
+
 // bounce effect
 @keyframes catchAttention {
     0%, 20%, 40%, 60%, 80%, 100% {

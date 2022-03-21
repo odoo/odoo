@@ -378,7 +378,7 @@ QUnit.module('Views', {
         });
 
         assert.deepEqual(
-            [...kanban.el.querySelectorAll('.o_search_panel_category_value header.active label')].map(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header.active .o_search_panel_label')].map(
                 el => el.innerText
             ),
             ['All', 'GHI']
@@ -387,7 +387,7 @@ QUnit.module('Views', {
         // select 'ABC' in the category 'state'
         await testUtils.dom.click(kanban.el.querySelectorAll('.o_search_panel_category_value header')[4]);
         assert.deepEqual(
-            [...kanban.el.querySelectorAll('.o_search_panel_category_value header.active label')].map(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header.active .o_search_panel_label')].map(
                 el => el.innerText
             ),
             ['All', 'ABC']
@@ -4125,7 +4125,7 @@ QUnit.module('Views', {
             'search_panel_select_range',
         ]);
         assert.deepEqual(
-            [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header .o_search_panel_label')].map(el => el.innerText),
             ['All', 'ABC', 'DEF', 'GHI']
         );
 
@@ -4134,7 +4134,7 @@ QUnit.module('Views', {
 
         assert.verifySteps([]);
         assert.deepEqual(
-            [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header .o_search_panel_label')].map(el => el.innerText),
             ['All', 'ABC', 'DEF', 'GHI']
         );
 
@@ -4146,7 +4146,7 @@ QUnit.module('Views', {
             'search_panel_select_range',
         ]);
         assert.deepEqual(
-            [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header .o_search_panel_label')].map(el => el.innerText),
             ['All', 'DEF']
         );
 
