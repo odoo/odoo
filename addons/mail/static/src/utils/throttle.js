@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { makeDeferred } from '@mail/utils/deferred/deferred';
+import { makeDeferred } from '@mail/utils/deferred';
 
 /**
  * This module define an utility function that enables throttling calls on a

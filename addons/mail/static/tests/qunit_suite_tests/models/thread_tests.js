@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { insert } from '@mail/model/model_field_command';
-import { beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {

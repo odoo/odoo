@@ -9,7 +9,7 @@ import {
     nextAnimationFrame,
     pasteFiles,
     start,
-} from '@mail/utils/test_utils';
+} from '@mail/../tests/helpers/test_utils';
 
 import FormView from 'web.FormView';
 import {

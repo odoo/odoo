@@ -5,8 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, unlink } from '@mail/model/model_field_command';
-
-import { monitorAudio } from '@mail/utils/media_monitoring/media_monitoring';
+import { monitorAudio } from '@mail/utils/media_monitoring';
 
 /**
  * The order in which transceivers are added, relevant for RTCPeerConnection.getTransceivers which returns

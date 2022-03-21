@@ -3,7 +3,7 @@
 import {
     beforeEach,
     start,
-} from '@mail/utils/test_utils';
+} from '@mail/../tests/helpers/test_utils';
 
 import FormView from 'web.FormView';
 import testUtils from 'web.test_utils';

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/utils/test_utils';
-import throttle from '@mail/utils/throttle/throttle';
+import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import throttle from '@mail/utils/throttle';
 import { nextTick } from '@mail/utils/utils';
 
 const { ThrottleReinvokedError, ThrottleCanceledError } = throttle;

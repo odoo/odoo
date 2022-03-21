@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Many2OneAvatarUser } from '@mail/js/m2x_avatar_user';
-import { beforeEach, start } from '@mail/utils/test_utils';
+import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { doAction } from '@web/../tests/webclient/helpers';
 import { registry } from "@web/core/registry";

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { makeDeferred } from '@mail/utils/deferred/deferred';
+import { makeDeferred } from '@mail/utils/deferred';
 
 //------------------------------------------------------------------------------
 // Errors
