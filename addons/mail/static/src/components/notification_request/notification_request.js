@@ -20,6 +20,13 @@ export class NotificationRequest extends Component {
         );
     }
 
+    /**
+     * @returns {NotificationRequestView}
+     */
+    get notificationRequestView() {
+        return this.messaging && this.messaging.models['NotificationRequestView'].get(this.props.localId);
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
