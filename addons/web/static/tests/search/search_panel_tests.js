@@ -507,7 +507,7 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(
                 [
                     ...target.querySelectorAll(
-                        ".o_search_panel_category_value header.active label"
+                        ".o_search_panel_category_value header.active .o_search_panel_label"
                     ),
                 ].map((el) => el.innerText),
                 ["All", "GHI"]
@@ -520,7 +520,7 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(
                 [
                     ...target.querySelectorAll(
-                        ".o_search_panel_category_value header.active label"
+                        ".o_search_panel_category_value header.active .o_search_panel_label"
                     ),
                 ].map((el) => el.innerText),
                 ["All", "ABC"]
