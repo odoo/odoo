@@ -1204,11 +1204,7 @@ class IrQWeb(models.AbstractModel):
                 if directive in el.attrib:
                     code.extend(self._compile_directive(el, options, directive, level))
             elif directive == 'att':
-                if any(name.startswith('t-att-') or
-                        name.startswith('t-attf-') or
-                        not name.startswith('t-')
-                        for name in el.attrib):
-                    code.extend(self._compile_directive(el, options, directive, level))
+                code.extend(self._compile_directive(el, options, directive, level))
             elif directive == 'options':
                 if any(name.startswith('t-options-') for name in el.attrib):
                     code.extend(self._compile_directive(el, options, directive, level))
@@ -1509,6 +1505,7 @@ class IrQWeb(models.AbstractModel):
 
         if el.text is not None:
             self._append_text(el.text, options)
+
         body = []
         for item in el:
             if isinstance(item, etree._Comment):
