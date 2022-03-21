@@ -1304,11 +1304,7 @@ class IrQWeb(models.AbstractModel):
                 if directive in el.attrib:
                     code.extend(self._compile_directive(el, compile_context, directive, level))
             elif directive == 'att':
-                if any(name.startswith('t-att-') or
-                        name.startswith('t-attf-') or
-                        not name.startswith('t-')
-                        for name in el.attrib):
-                    code.extend(self._compile_directive(el, compile_context, directive, level))
+                code.extend(self._compile_directive(el, compile_context, directive, level))
             elif directive == 'options':
                 if any(name.startswith('t-options-') for name in el.attrib):
                     code.extend(self._compile_directive(el, compile_context, directive, level))
