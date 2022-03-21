@@ -2,18 +2,20 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NotificationPopover" owl="1">
-        <div class="o_NotificationPopover" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="messageView and messageView.message">
-                <t t-foreach="messageView.message.notifications" t-as="notification" t-key="notification.localId">
-                    <div class="o_NotificationPopover_notification">
-                        <i class="o_NotificationPopover_notificationIcon" t-att-class="notification.iconClass" t-att-title="notification.iconTitle" role="img"/>
-                        <t t-if="notification.partner">
-                            <span class="o_NotificationPopover_notificationPartnerName" t-esc="notification.partner.nameOrDisplayName"/>
-                        </t>
-                    </div>
+        <t t-if="messageView">
+            <div class="o_NotificationPopover" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="messageView.message">
+                    <t t-foreach="messageView.message.notifications" t-as="notification" t-key="notification.localId">
+                        <div class="o_NotificationPopover_notification">
+                            <i class="o_NotificationPopover_notificationIcon" t-att-class="notification.iconClass" t-att-title="notification.iconTitle" role="img"/>
+                            <t t-if="notification.partner">
+                                <span class="o_NotificationPopover_notificationPartnerName" t-esc="notification.partner.nameOrDisplayName"/>
+                            </t>
+                        </div>
+                    </t>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
