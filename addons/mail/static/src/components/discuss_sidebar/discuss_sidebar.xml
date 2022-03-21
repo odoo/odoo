@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DiscussSidebar" owl="1">
-        <div name="root" class="o_DiscussSidebar" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="discussView">
+        <t t-if="discussView">
+            <div name="root" class="o_DiscussSidebar" t-attf-class="{{ className }}" t-ref="root">
                 <div class="d-flex justify-content-center">
                     <button class="o_DiscussSidebar_startAMeetingButton btn btn-primary rounded" title="Start a meeting" t-on-click="discussView.discuss.onClickStartAMeetingButton">
                         Start a meeting
@@ -30,8 +30,8 @@
                     className="'o_DiscussSidebar_category o_DiscussSidebar_categoryChat'"
                     localId="discussView.discuss.categoryChat.localId"
                 />
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
