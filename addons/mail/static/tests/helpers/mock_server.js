@@ -1215,7 +1215,7 @@ MockServer.include({
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel/insert',
             payload: {
-                id: 20,
+                id,
                 avatarCacheKey: avatarCacheKey,
             },
         }]);
