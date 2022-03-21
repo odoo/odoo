@@ -16,6 +16,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const { useBus } = require("@web/core/utils/hooks");
     const { debounce } = require("@web/core/utils/timing");
     const { Transition } = require("@web/core/transition");
+    const { renderToString } = require('@web/core/utils/render');
 
     const {
         onError,
@@ -48,6 +49,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             useListener('show-notification', this._onShowNotification);
             useListener('close-notification', this._onCloseNotification);
             useListener('connect-to-proxy', this.connect_to_proxy);
+            useListener('print-sale-details', this.printSaleDetailsReport);
             useBus(this.env.posbus, 'start-cash-control', this.openCashControl);
             NumberBuffer.activate();
 
@@ -411,6 +413,28 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 });
                 this.env.pos.db.add_categories(result['categories']);
                 this.env.pos._loadProductProduct(result['products']);
+            }
+        }
+
+        async printSaleDetailsReport() {
+            const saleDetails = await this.rpc({
+                model: 'report.point_of_sale.report_saledetails',
+                method: 'get_sale_details',
+                args: [false, false, false, [this.env.pos.pos_session.id]],
+            });
+            const report = renderToString(
+                'SaleDetailsReport',
+                Object.assign({}, saleDetails, {
+                    date: new Date().toLocaleString(),
+                    pos: this.env.pos,
+                })
+            );
+            const printResult = await this.env.proxy.printer.print_receipt(report);
+            if (!printResult.successful) {
+                await this.showPopup('ErrorPopup', {
+                    title: printResult.message.title,
+                    body: printResult.message.body,
+                });
             }
         }
 

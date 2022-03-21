@@ -18,7 +18,12 @@
                     <div class="search-bar-portal" />
                     <div class="status-buttons" t-if="state.uiState === 'READY'" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }">
                         <CashierName />
-                        <SaleDetailsButton t-if="env.proxy.printer" />
+                        <div t-if="env.proxy.printer" class="oe_status">
+                            <div class="js_connected oe_icon">
+                                <i class="fa fa-fw fa-print" role="img" aria-label="Print" t-on-click="() => this.trigger('print-sale-details')"
+                                title="Print a report with all the sales of the current PoS Session"></i>
+                            </div>
+                        </div>
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
                         <CustomerFacingDisplayButton t-if="customerFacingDisplayButtonIsShown" />
                         <SyncNotification />
