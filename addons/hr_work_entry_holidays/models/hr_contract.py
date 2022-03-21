@@ -67,3 +67,15 @@ class HrContract(models.Model):
         if rc_leave:
             return self._get_leave_work_entry_type_dates(rc_leave, interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
+
+    def _get_leave_domain(self, start_dt, end_dt):
+        # Complete override, compare over holiday_id.employee_id instead of calendar_id
+        return [
+            ('time_type', '=', 'leave'),
+            '|', ('calendar_id', 'in', [False] + self.resource_calendar_id.ids),
+                 ('holiday_id.employee_id', 'in', self.employee_id.ids), # see https://github.com/odoo/enterprise/pull/15091
+            ('resource_id', 'in', [False] + self.employee_id.resource_id.ids),
+            ('date_from', '<=', end_dt),
+            ('date_to', '>=', start_dt),
+            ('company_id', 'in', [False, self.company_id.id]),
+        ]
