@@ -2,16 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindow" owl="1">
-        <div class="o_ChatWindow bg-white" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow ? chatWindow.visibleIndex : undefined"
-            t-att-class="{
-                'o-focused': chatWindow and chatWindow.isFocused,
-                'o-folded': chatWindow and chatWindow.isFolded,
-                'o-fullscreen': props.isFullscreen,
-                'o-mobile': messaging and messaging.device.isMobile,
-                'o-new-message': chatWindow and !chatWindow.thread,
-            }" t-att-style="chatWindow ? chatWindow.componentStyle : undefined" t-on-keydown="_onKeydown" t-on-focusout="_onFocusout" t-att-data-chat-window-local-id="chatWindow ? chatWindow.localId : undefined" t-att-data-thread-local-id="chatWindow ? (chatWindow.thread ? chatWindow.thread.localId : '') : undefined" t-ref="root"
-        >
-            <t t-if="chatWindow">
+        <t t-if="chatWindow">
+            <div class="o_ChatWindow bg-white" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow.visibleIndex"
+                t-att-class="{
+                    'o-focused': chatWindow.isFocused,
+                    'o-folded': chatWindow.isFolded,
+                    'o-fullscreen': props.isFullscreen,
+                    'o-mobile': messaging.device.isMobile,
+                    'o-new-message': !chatWindow.thread,
+                }" t-att-style="chatWindow.componentStyle" t-on-keydown="_onKeydown" t-on-focusout="_onFocusout" t-att-data-chat-window-local-id="chatWindow.localId" t-att-data-thread-local-id="chatWindow.thread ? chatWindow.thread.localId : ''" t-ref="root"
+            >
                 <ChatWindowHeader
                     className="'o_ChatWindow_header'"
                     chatWindowLocalId="chatWindow.localId"
@@ -49,8 +49,8 @@
                         />
                     </div>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
