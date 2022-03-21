@@ -2,21 +2,21 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Composer" owl="1">
-        <div class="o_Composer"
-            t-att-class="{
-                'o-focused': composerView and composerView.isFocused,
-                'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
-                'o-has-footer': composerView and composerView.hasFooter,
-                'o-has-header': hasHeader,
-                'o-is-in-thread-view': composerView and composerView.threadView,
-                'o-is-compact': composerView and composerView.isCompact,
-                'o-messaging-in-editing': composerView and composerView.messageViewInEditing,
-            }"
-            t-attf-class="{{ className }}"
-            t-on-keydown="_onKeydown"
-            t-ref="root"
-        >
-            <t t-if="composerView">
+        <t t-if="composerView">
+            <div class="o_Composer"
+                t-att-class="{
+                    'o-focused': composerView.isFocused,
+                    'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
+                    'o-has-footer': composerView.hasFooter,
+                    'o-has-header': hasHeader,
+                    'o-is-in-thread-view': composerView.threadView,
+                    'o-is-compact': composerView.isCompact,
+                    'o-messaging-in-editing': composerView.messageViewInEditing,
+                }"
+                t-attf-class="{{ className }}"
+                t-on-keydown="_onKeydown"
+                t-ref="root"
+            >
                 <t t-if="isDropZoneVisible.value">
                     <DropZone
                         className="'o_Composer_dropZone'"
@@ -135,8 +135,8 @@
                         </t>
                     </div>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
     <t t-name="mail.Composer.actionButtons" owl="1">
