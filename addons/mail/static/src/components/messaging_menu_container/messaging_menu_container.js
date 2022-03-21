@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useModels } from "@mail/component_hooks/use_models/use_models";
+import { useModels } from '@mail/component_hooks/use_models';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 const { Component, useSubEnv } = owl;

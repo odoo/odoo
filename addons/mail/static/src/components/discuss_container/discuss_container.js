@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { useModels } from "@mail/component_hooks/use_models/use_models";
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { useModels } from '@mail/component_hooks/use_models';
+import { useUpdate } from '@mail/component_hooks/use_update';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 const { Component, onWillUnmount } = owl;

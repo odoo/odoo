@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
-import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { isEventHandled } from '@mail/utils/utils';
 
