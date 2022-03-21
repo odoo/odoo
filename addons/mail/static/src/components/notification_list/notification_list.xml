@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NotificationList" owl="1">
-        <div class="o_NotificationList" t-att-class="{ 'o-empty': notificationListView and notificationListView.notificationViews.length === 0 }" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="notificationListView">
+        <t t-if="notificationListView">
+            <div class="o_NotificationList" t-att-class="{ 'o-empty': notificationListView.notificationViews.length === 0 }" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="notificationListView.notificationViews.length === 0">
                     <div class="o_NotificationList_noConversation">
                         No conversation yet...
@@ -43,8 +43,8 @@
                         </t>
                     </t>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
