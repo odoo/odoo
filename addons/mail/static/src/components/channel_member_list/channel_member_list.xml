@@ -2,31 +2,33 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChannelMemberList" owl="1">
-        <div class="o_ChannelMemberList d-flex flex-column overflow-auto bg-light" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="channel.orderedOnlineMembers.length > 0">
-                <t t-call="mail.ChannelMemberList_memberList">
-                    <t t-set="members" t-value="channel.orderedOnlineMembers"/>
-                    <t t-set="title">Online</t>
+        <t t-if="channel">
+            <div class="o_ChannelMemberList d-flex flex-column overflow-auto bg-light" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="channel.orderedOnlineMembers.length > 0">
+                    <t t-call="mail.ChannelMemberList_memberList">
+                        <t t-set="members" t-value="channel.orderedOnlineMembers"/>
+                        <t t-set="title">Online</t>
+                    </t>
                 </t>
-            </t>
-            <t t-if="channel.orderedOfflineMembers.length > 0">
-                <t t-call="mail.ChannelMemberList_memberList">
-                    <t t-set="members" t-value="channel.orderedOfflineMembers"/>
-                    <t t-set="title">Offline</t>
+                <t t-if="channel.orderedOfflineMembers.length > 0">
+                    <t t-call="mail.ChannelMemberList_memberList">
+                        <t t-set="members" t-value="channel.orderedOfflineMembers"/>
+                        <t t-set="title">Offline</t>
+                    </t>
                 </t>
-            </t>
-            <t t-if="channel.unknownMemberCount === 1">
-                <span class="mx-2 mt-2">And 1 other member.</span>
-            </t>
-            <t t-if="channel.unknownMemberCount > 1">
-                <span class="mx-2 mt-2">And <t t-esc="channel.unknownMemberCount"/> other members.</span>
-            </t>
-            <t t-if="channel.unknownMemberCount > 0">
-                <div class="mx-2 my-1">
-                    <button class="btn btn-secondary" t-on-click="channel.onClickLoadMoreMembers">Load more</button>
-                </div>
-            </t>
-        </div>
+                <t t-if="channel.unknownMemberCount === 1">
+                    <span class="mx-2 mt-2">And 1 other member.</span>
+                </t>
+                <t t-if="channel.unknownMemberCount > 1">
+                    <span class="mx-2 mt-2">And <t t-esc="channel.unknownMemberCount"/> other members.</span>
+                </t>
+                <t t-if="channel.unknownMemberCount > 0">
+                    <div class="mx-2 my-1">
+                        <button class="btn btn-secondary" t-on-click="channel.onClickLoadMoreMembers">Load more</button>
+                    </div>
+                </t>
+            </div>
+        </t>
     </t>
 
     <t t-name="mail.ChannelMemberList_memberList" owl="1">
