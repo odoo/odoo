@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ComposerSuggestedRecipient" owl="1">
-        <div class="o_ComposerSuggestedRecipient" t-attf-class="{{ className }}" t-att-data-partner-id="suggestedRecipientInfo and suggestedRecipientInfo.partner and suggestedRecipientInfo.partner.id ? suggestedRecipientInfo.partner.id : false" t-att-title="suggestedRecipientInfo and suggestedRecipientInfo.titleText" t-ref="root">
-            <t t-if="suggestedRecipientInfo">
+        <t t-if="suggestedRecipientInfo">
+            <div class="o_ComposerSuggestedRecipient" t-attf-class="{{ className }}" t-att-data-partner-id="suggestedRecipientInfo.partner and suggestedRecipientInfo.partner.id ? suggestedRecipientInfo.partner.id : false" t-att-title="suggestedRecipientInfo.titleText" t-ref="root">
                 <div class="custom-control custom-checkbox">
                     <input t-attf-id="{{ id }}_checkbox" class="custom-control-input" type="checkbox" t-att-checked="suggestedRecipientInfo.isSelected ? 'checked' : undefined" t-on-change="_onChangeCheckbox" t-ref="checkbox" />
                     <label class="custom-control-label" t-attf-for="{{ id }}_checkbox">
@@ -36,7 +36,7 @@
                         }"
                     />
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 </templates>
