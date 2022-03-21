@@ -36,11 +36,19 @@ tour.register('website_event_booth_tour', {
     trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact(200.00)',
     run: function () {},
 }, {
+    content: 'Check if the tax is correct',
+    trigger: 'tr#order_total_taxes .oe_currency_value:containsExact(20.00)',
+    run: function () {},
+}, {
     content: 'Click confirm to continue',
     trigger: 'a[role="button"] span:contains("Confirm")',
 }, {
     content: 'Check if the price is correct',
     trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact(200.00)',
+    run: function () {},
+}, {
+    content: 'Check if the total price is correct',
+    trigger: 'tr#order_total .oe_currency_value:containsExact(220.00)',
     run: function () {},
 },
 ]);
