@@ -2,9 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.RtcCallViewer" owl="1">
-    <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer and rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer and rtcCallViewer.isMinimized }" t-attf-class="{{ className }}" t-ref="root">
-        <t t-if="rtcCallViewer">
-
+    <t t-if="rtcCallViewer">
+        <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer.isMinimized }" t-attf-class="{{ className }}" t-ref="root">
             <!-- Used to make the component depend on the window size and trigger an update when the window size changes. -->
             <t t-set="dummy" t-value="messaging and messaging.device and messaging.device.globalWindowInnerHeight and messaging.device.globalWindowInnerWidth"/>
 
@@ -58,7 +57,7 @@
                     </t>
                 </Dialog>
             </t>
-            <t t-if="rtcCallViewer and rtcCallViewer.rtcLayoutMenu">
+            <t t-if="rtcCallViewer.rtcLayoutMenu">
                 <Dialog size="'small'" title="rtcCallViewer.layoutSettingsTitle" onClosed="rtcCallViewer.onLayoutSettingsDialogClosed">
                     <RtcLayoutMenu localId="rtcCallViewer.rtcLayoutMenu.localId"/>
                     <t t-set-slot="buttons">
@@ -66,8 +65,8 @@
                     </t>
                 </Dialog>
             </t>
-        </t>
-    </div>
+        </div>
+    </t>
 </t>
 
 </templates>
