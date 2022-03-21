@@ -103,7 +103,7 @@ const FieldMailingFilter = FieldMany2One.extend({
     _onFavoriteFilterDropdownShown(ev) {
         const filterInput = ev.target.querySelector('input.o_mass_mailing_filter_name');
         filterInput.value = '';
-        filterInput.focus();
+        filterInput.focus({ preventScroll: true });
     },
 
     /**
