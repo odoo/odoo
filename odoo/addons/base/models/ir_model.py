@@ -201,7 +201,7 @@ class IrModel(models.Model):
         self.count = 0
         for model in self:
             records = self.env[model.model]
-            if not records._abstract:
+            if not records._abstract and records._auto:
                 cr.execute(sql.SQL('SELECT COUNT(*) FROM {}').format(sql.Identifier(records._table)))
                 model.count = cr.fetchone()[0]
 
