@@ -22,14 +22,19 @@ export class KanbanColumnQuickCreate extends Component {
             // has been initiated from the quickcreate root element (mouse selection in an input...)
             this.mousedownTarget = ev.target;
         });
-        useExternalListener(window, "click", (/** @type {MouseEvent} */ ev) => {
-            const target = this.mousedownTarget || ev.target;
-            const gotClickedInside = this.root.el.contains(target);
-            if (!gotClickedInside) {
-                this.fold();
-            }
-            this.mousedownTarget = null;
-        });
+        useExternalListener(
+            window,
+            "click",
+            (/** @type {MouseEvent} */ ev) => {
+                const target = this.mousedownTarget || ev.target;
+                const gotClickedInside = this.root.el.contains(target);
+                if (!gotClickedInside) {
+                    this.fold();
+                }
+                this.mousedownTarget = null;
+            },
+            { capture: true }
+        );
 
         // Key Navigation
         // FIXME ? Maybe it will also validate even if enter is pressed outside of the quick create machin

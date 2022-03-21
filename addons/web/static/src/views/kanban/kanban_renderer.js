@@ -519,8 +519,8 @@ export class KanbanRenderer extends Component {
     // Handlers
     // ------------------------------------------------------------------------
 
-    onGroupClick(group, ev) {
-        if (!ev.target.closest(".dropdown") && group.isFolded) {
+    onGroupClick(group) {
+        if (group.isFolded) {
             group.toggle();
         }
     }
