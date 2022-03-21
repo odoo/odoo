@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatterTopbar" owl="1">
-        <div class="o_ChatterTopbar" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="chatter">
+        <t t-if="chatter">
+            <div class="o_ChatterTopbar" t-attf-class="{{ className }}" t-ref="root">
                 <div class="o_ChatterTopbar_actions" t-att-class="{'o-has-active-button': chatter.composerView }">
                     <t t-if="chatter.threadView">
                         <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonSendMessage"
@@ -71,8 +71,8 @@
                         <i class="fa fa-times"/>
                     </div>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
