@@ -2,15 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageSeenIndicator" owl="1">
-        <span class="o_MessageSeenIndicator" t-att-class="{ 'o-all-seen': messageSeenIndicator and messageSeenIndicator.hasEveryoneSeen }" t-attf-class="{{ className }}" t-att-title="indicatorTitle" t-ref="root">
-            <t t-if="messageSeenIndicator and !messageSeenIndicator.isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone">
-                <t t-if="messageSeenIndicator.hasSomeoneFetched or messageSeenIndicator.hasSomeoneSeen">
-                    <i class="o_MessageSeenIndicator_icon o-first fa fa-check"/>
+        <t t-if="messageSeenIndicator">
+            <span class="o_MessageSeenIndicator" t-att-class="{ 'o-all-seen': messageSeenIndicator.hasEveryoneSeen }" t-attf-class="{{ className }}" t-att-title="indicatorTitle" t-ref="root">
+                <t t-if="!messageSeenIndicator.isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone">
+                    <t t-if="messageSeenIndicator.hasSomeoneFetched or messageSeenIndicator.hasSomeoneSeen">
+                        <i class="o_MessageSeenIndicator_icon o-first fa fa-check"/>
+                    </t>
+                    <t t-if="messageSeenIndicator.hasSomeoneSeen">
+                        <i class="o_MessageSeenIndicator_icon o-second fa fa-check"/>
+                    </t>
                 </t>
-                <t t-if="messageSeenIndicator.hasSomeoneSeen">
-                    <i class="o_MessageSeenIndicator_icon o-second fa fa-check"/>
-                </t>
-            </t>
-        </span>
+            </span>
+        </t>
     </t>
 </templates>
