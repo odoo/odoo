@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { useUpdate } from '@mail/component_hooks/use_update';
 import { link } from '@mail/model/model_field_command';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { markEventHandled } from '@mail/utils/utils';
 
 const { Component, useRef } = owl;

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRenderedValues } from '@mail/component_hooks/use_rendered_values';
+import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
-import { useRenderedValues } from '@mail/component_hooks/use_rendered_values/use_rendered_values';
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 import { Transition } from "@web/core/transition";
 

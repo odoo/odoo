@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { LegacyComponent } from '@web/legacy/legacy_component';
 

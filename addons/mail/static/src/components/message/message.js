@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model/use_update_to_model';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useUpdate } from '@mail/component_hooks/use_update';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { _lt } from 'web.core';
