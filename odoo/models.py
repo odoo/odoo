@@ -1700,6 +1700,10 @@ class BaseModel(metaclass=MetaModel):
             view_ref_key = view_type + '_view_ref'
             view_ref = self._context.get(view_ref_key)
             if view_ref:
+                # Do not propagate <view_type>_view_ref
+                context = dict(self._context)
+                context.pop(view_ref_key)
+                View = View.with_context(context)
                 if '.' in view_ref:
                     module, view_ref = view_ref.split('.', 1)
                     query = "SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s"
@@ -1880,7 +1884,7 @@ class BaseModel(metaclass=MetaModel):
         """
         names = dict(self.name_get())
         for record in self:
-            record.display_name = names.get(record.id) or False
+            record.display_name = names.get(record.id, False)
 
     def name_get(self):
         """Returns a textual representation for the records in ``self``, with
@@ -1901,7 +1905,7 @@ class BaseModel(metaclass=MetaModel):
         if name in self._fields:
             convert = self._fields[name].convert_to_display_name
             for record in self:
-                result.append((record.id, convert(record[name], record) or ""))
+                result.append((record.id, convert(record[name], record)))
         else:
             for record in self:
                 result.append((record.id, "%s,%s" % (record._name, record.id)))
