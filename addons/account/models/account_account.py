@@ -48,11 +48,14 @@ class AccountAccount(models.Model):
     @api.constrains('user_type_id')
     def _check_user_type_id_unique_current_year_earning(self):
         data_unaffected_earnings = self.env.ref('account.data_unaffected_earnings')
-        result = self._read_group([('user_type_id', '=', data_unaffected_earnings.id)], ['company_id'], ['company_id'])
+        result = self._read_group(
+            domain=[('user_type_id', '=', data_unaffected_earnings.id)],
+            fields=['company_id', 'ids:array_agg(id)'],
+            groupby=['company_id'],
+        )
         for res in result:
             if res.get('company_id_count', 0) >= 2:
-                account_unaffected_earnings = self.search([('company_id', '=', res['company_id'][0]),
-                                                           ('user_type_id', '=', data_unaffected_earnings.id)])
+                account_unaffected_earnings = self.browse(res['ids'])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True)
