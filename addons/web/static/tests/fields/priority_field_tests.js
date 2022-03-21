@@ -8,7 +8,13 @@ let serverData;
 let target;
 
 // WOWL remove after adapting tests
-let makeLegacyCommandService, createWebClient, triggerHotkey, legacyExtraNextTick, doAction, core, makeTestEnvironment;
+let makeLegacyCommandService,
+    createWebClient,
+    triggerHotkey,
+    legacyExtraNextTick,
+    doAction,
+    core,
+    makeTestEnvironment;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -248,13 +254,13 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("PriorityField tooltip", async function (assert) {
+    QUnit.test("PriorityField tooltip", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
+            serverData,
             type: "form",
             resModel: "partner",
-            data: this.data,
             arch: `<form string="Partners">
                     <sheet>
                         <group>
@@ -262,23 +268,21 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            res_id: 1,
+            resId: 1,
         });
 
-        // check title attribute (for basic html tooltip on all the stars)
-        const $stars = form.$(".o_field_widget.o_priority").find("a.o_priority_star");
+        // check data-tooltip attribute (used by the tooltip service)
+        const stars = target.querySelectorAll(".o_field_widget .o_priority a.o_priority_star");
         assert.strictEqual(
-            $stars[0].title,
+            stars[0].dataset["tooltip"],
             "Selection: Blocked",
             "Should set field label and correct selection label as title attribute (tooltip)"
         );
         assert.strictEqual(
-            $stars[1].title,
+            stars[1].dataset["tooltip"],
             "Selection: Done",
             "Should set field label and correct selection label as title attribute (tooltip)"
         );
-
-        form.destroy();
     });
 
     QUnit.test("PriorityField in form view", async function (assert) {
@@ -464,7 +468,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("PriorityField in editable list view", async function (assert) {
+    QUnit.test("PriorityField in editable list view", async function (assert) {
         assert.expect(25);
 
         await makeView({

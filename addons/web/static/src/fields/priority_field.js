@@ -26,18 +26,31 @@ export class PriorityField extends Component {
         return this.props.record.fields[this.props.name].selection;
     }
 
+    getTooltip(value) {
+        return this.props.tooltipLabel ? `${this.props.tooltipLabel}: ${value}` : value;
+    }
     /**
      * @param {string} value
      */
     onStarClicked(value) {
-        const actualValue = this.props.value === value ? this.selection[0][0] : value;
-        this.props.update(actualValue);
+        if (this.props.value === value) {
+            this.state.index = -1;
+            this.props.update(this.selection[0][0]);
+        } else {
+            this.props.update(value);
+        }
     }
 }
 
 PriorityField.template = "web.PriorityField";
 PriorityField.props = {
     ...standardFieldProps,
+    tooltipLabel: { type: String, optional: true },
+};
+PriorityField.extractProps = (fieldName, record) => {
+    return {
+        tooltipLabel: record.fields[fieldName].string,
+    };
 };
 PriorityField.displayName = _lt("Priority");
 PriorityField.supportedTypes = ["selection"];

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PriorityField" owl="1">
-        <div class="o-priority-field o_priority" role="radiogroup" name="priority" aria-label="Priority">
+        <div class="o_priority" role="radiogroup" name="priority" aria-label="Priority">
             <t t-foreach="selection" t-as="value" t-key="value">
                 <t t-if="!value_first">
                     <t t-if="props.record.activeFields[props.name].modifiers.readonly">
@@ -11,7 +11,7 @@
                             role="radio"
                             t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o'"
                             t-att-tabindex="value_index === state.index ? 0 : -1"
-                            t-att-data-tooltip="value[1]"
+                            t-att-data-tooltip="getTooltip(value[1])"
                             t-att-aria-checked="value_index lte index"
                             t-att-aria-label="value[1]"
                         />
@@ -23,7 +23,7 @@
                             role="radio"
                             t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o'"
                             t-att-tabindex="value_index === state.index ? 0 : -1"
-                            t-att-data-tooltip="value[1]"
+                            t-att-data-tooltip="getTooltip(value[1])"
                             t-att-aria-checked="value_index lte index"
                             t-att-aria-label="value[1]"
                             t-on-click.prevent.stop="() => this.onStarClicked(value[0])"
