@@ -250,7 +250,7 @@ export class MockModels {
                     email_cc: { type: 'char' },
                     partner_ids: {
                         string: "Related partners",
-                        type: 'many2one',
+                        type: 'one2many',
                         relation: 'res.partner'
                     },
                 },
