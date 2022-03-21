@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Discuss" owl="1">
-        <div class="o_Discuss" t-attf-class="{{ className }}"
-            t-att-class="{
-                'o-adding-item': discussView ? discussView.discuss.isAddingChannel or discussView.discuss.isAddingChat : false,
-                'o-mobile': messaging ? messaging.device.isMobile : false,
-            }"
-            t-ref="root"
-        >
-            <t t-if="discussView">
+        <t t-if="discussView">
+            <div class="o_Discuss" t-attf-class="{{ className }}"
+                t-att-class="{
+                    'o-adding-item': discussView.discuss.isAddingChannel or discussView.discuss.isAddingChat,
+                    'o-mobile': messaging.device.isMobile,
+                }"
+                t-ref="root"
+            >
                 <t t-if="!messaging.device.isMobile">
                     <DiscussSidebar className="'o_Discuss_sidebar bg-light border-right'" localId="discussView.localId"/>
                 </t>
@@ -19,8 +19,8 @@
                         <t t-call="mail.Discuss.content"/>
                     </div>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
     <t t-name="mail.Discuss.content" owl="1">
