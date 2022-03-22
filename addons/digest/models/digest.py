@@ -7,7 +7,7 @@ import pytz
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from werkzeug.urls import url_join
+from werkzeug.urls import url_encode, url_join
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -192,8 +192,14 @@ class Digest(models.Model):
             },
         )
         # create a mail_mail based on values, without attachments
-        unsub_url = url_join(self.get_base_url(),
-                             f'/digest/{self.id}/unsubscribe?token={unsubscribe_token}&user_id={user.id}&one_click=1')
+        unsub_params = url_encode({
+            "token": unsubscribe_token,
+            "user_id": user.id,
+        })
+        unsub_url = url_join(
+            self.get_base_url(),
+            f'/digest/{self.id}/unsubscribe_oneclik?{unsub_params}'
+        )
         mail_values = {
             'auto_delete': True,
             'author_id': self.env.user.partner_id.id,
