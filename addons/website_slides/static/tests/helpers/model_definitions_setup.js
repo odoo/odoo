@@ -2,4 +2,4 @@
 
 import { addModelNamesToFetch } from '@mail/../tests/helpers/model_definitions_helpers';
 
-addModelNamesToFetch(['slide.channel', 'note.note']);
+addModelNamesToFetch(['slide.channel']);
