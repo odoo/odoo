@@ -14,13 +14,6 @@ export class MessageAuthorPrefix extends Component {
     }
 
     /**
-     * @returns {Message}
-     */
-    get message() {
-        return this.messaging && this.messaging.models['Message'].get(this.props.messageLocalId);
-    }
-
-    /**
      * @returns {Thread|undefined}
      */
     get thread() {
@@ -32,7 +25,6 @@ export class MessageAuthorPrefix extends Component {
 Object.assign(MessageAuthorPrefix, {
     props: {
         localId: String,
-        messageLocalId: String,
         threadLocalId: {
             type: String,
             optional: true,
