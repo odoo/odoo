@@ -13,7 +13,9 @@
         </div>
     </xpath>
     <xpath expr="//div[@id='snippets_menu']" position="inside">
-        <button type="button" class="o_we_select_template text-uppercase"><span>Select a template</span></button>
+        <button type="button" tabindex="3" class="o_we_customize_design_btn text-uppercase" accesskey="2">
+            <span>Design</span>
+        </button>
     </xpath>
     <xpath expr="//t[@id='default_snippets']" position="replace">
         <t id="default_snippets">
@@ -531,6 +533,10 @@
                        data-select-class="align-items-stretch"
                        data-img="/mass_mailing/static/src/img/snippets_options/align_stretch.svg"/>
         </we-button-group>
+    </div>
+
+    <!-- DESIGN OPTIONS -->
+    <div data-js="DesignTab" data-selector="design-options" data-no-check="true">
     </div>
 </template>
 </odoo>

@@ -1545,6 +1545,20 @@ body.editor_enable.editor_has_snippets {
             &.o_we_full_row > div {
                 flex: 1 1 auto;
             }
+
+            &.o_short_title we-title, .o_short_title we-title {
+                width: unset !important;
+                padding-right: 0 !important;
+            }
+            &.o_long_title we-title, .o_long_title we-title {
+                width: fit-content !important;
+                padding-right: 10px !important;
+            }
+            &.o_design_tab_title {
+                we-title {
+                    font-weight: 600;
+                }
+            }
         }
 
         %o-we-inline {
