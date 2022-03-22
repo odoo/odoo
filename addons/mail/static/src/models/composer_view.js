@@ -591,6 +591,17 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeHasHeader() {
+            return Boolean(
+                (this.hasThreadName && this.composer.thread) ||
+                (this.hasFollowers && !this.composer.isLog) ||
+                this.threadView && this.threadView.replyingToMessageView
+            );
+        },
+        /**
+         * @private
          * @return {boolean}
          */
         _computeHasSuggestions() {
@@ -1062,6 +1073,12 @@ registerModel({
          */
         hasFooter: attr({
             compute: '_computeHasFooter',
+        }),
+        /**
+         * Determine whether the composer should display a header.
+         */
+        hasHeader: attr({
+            compute: '_computeHasHeader',
         }),
         /**
          * States whether there is any result currently found for the current
