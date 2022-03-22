@@ -1390,6 +1390,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>
                     <field name="date" string="Period"/>
+                    <field name="line_ids" string="Invoice Line"/>
                     <filter domain="[('invoice_user_id', '=', uid)]" name="myinvoices" help="My Invoices"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
