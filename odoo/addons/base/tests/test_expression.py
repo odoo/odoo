@@ -1487,7 +1487,7 @@ class TestOne2many(TransactionCase):
                     SELECT "res_partner_bank"."partner_id"
                     FROM "res_partner_bank"
                     WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
-                ))
+                )) AND "res_partner"."parent_id" IS NOT NULL
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1627,6 +1627,30 @@ class TestOne2many(TransactionCase):
             ORDER BY "res_partner"."display_name"
         ''']):
             self.Partner.search([('bank_ids', 'like', '12')])
+
+    def test_empty(self):
+        self.Partner.search([('bank_ids', '!=', False)], order='id')
+        self.Partner.search([('bank_ids', '=', False)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" IN (
+                SELECT "partner_id" FROM "res_partner_bank" WHERE "partner_id" IS NOT NULL
+            ))
+            ORDER BY "res_partner"."id"
+        ''']):
+            self.Partner.search([('bank_ids', '!=', False)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" NOT IN (
+                SELECT "partner_id" FROM "res_partner_bank" WHERE "partner_id" IS NOT NULL
+            ))
+            ORDER BY "res_partner"."id"
+        ''']):
+            self.Partner.search([('bank_ids', '=', False)], order='id')
 
 
 class TestMany2many(TransactionCase):
