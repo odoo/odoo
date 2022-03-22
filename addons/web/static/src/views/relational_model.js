@@ -261,8 +261,24 @@ class DataPoint {
         this.setup(params, state);
     }
 
+    // -------------------------------------------------------------------------
+    // Getters
+    // -------------------------------------------------------------------------
+
     get fieldNames() {
         return Object.keys(this.activeFields);
+    }
+
+    // -------------------------------------------------------------------------
+    // Public
+    // -------------------------------------------------------------------------
+
+    exportState() {
+        return {};
+    }
+
+    async load() {
+        throw new Error("load must be implemented");
     }
 
     /**
@@ -272,13 +288,9 @@ class DataPoint {
      */
     setup() {}
 
-    exportState() {
-        return {};
-    }
-
-    async load() {
-        throw new Error("load must be implemented");
-    }
+    // -------------------------------------------------------------------------
+    // Protected
+    // -------------------------------------------------------------------------
 
     _parseServerValue(field, value) {
         switch (field.type) {
@@ -363,6 +375,10 @@ export class Record extends DataPoint {
         this._setRequiredFields();
     }
 
+    // -------------------------------------------------------------------------
+    // Getters
+    // -------------------------------------------------------------------------
+
     get evalContext() {
         if (!this.data) {
             return {};
@@ -396,11 +412,6 @@ export class Record extends DataPoint {
         return evalContext;
     }
 
-    get isDirty() {
-        // to change (call isDirty on x2many children...) (maybe not)
-        return this._changes ? Object.keys(this._changes).length > 0 : true;
-    }
-
     /**
      * Since the ORM can support both `active` and `x_active` fields for
      * the archiving mechanism, check if any such field exists and prioritize
@@ -419,36 +430,148 @@ export class Record extends DataPoint {
         return true;
     }
 
-    get isVirtual() {
-        return !this.resId;
+    get isDirty() {
+        // to change (call isDirty on x2many children...) (maybe not)
+        return this._changes ? Object.keys(this._changes).length > 0 : true;
     }
 
     get isInEdition() {
         return this.mode === "edit";
     }
 
-    /**
-     * @param {"edit" | "readonly"} mode
-     * @returns {Promise<void>}
-     */
-    async switchMode(mode) {
-        if (this.mode === mode) {
-            return;
+    get isVirtual() {
+        return !this.resId;
+    }
+
+    // -------------------------------------------------------------------------
+    // Public
+    // -------------------------------------------------------------------------
+
+    async archive() {
+        await archiveOrUnarchiveRecords(this.model, this.resModel, [this.resId]);
+        await this.load();
+        this.model.notify();
+    }
+
+    async delete() {
+        const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], this.context);
+        if (!unlinked) {
+            return false;
         }
-        await this._onWillSwitchMode(this, mode);
-        if (mode === "readonly") {
-            for (const fieldName in this.activeFields) {
-                const field = this.fields[fieldName];
-                if (isX2Many(field)) {
-                    const editedRecord = this.data[fieldName] && this.data[fieldName].editedRecord;
-                    if (editedRecord) {
-                        editedRecord.switchMode("readonly");
-                    }
-                }
+        const index = this.resIds.indexOf(this.resId);
+        this.resIds.splice(index, 1);
+        this.resId = this.resIds[Math.min(index, this.resIds.length - 1)] || false;
+        if (this.resId) {
+            await this.load();
+            this.model.notify();
+        } else {
+            this.data = {};
+            this._values = {};
+            this._changes = {};
+            this.preloadedData = {};
+        }
+    }
+
+    discard() {
+        clearObject(this._changes);
+        clearObject(this._domains);
+        for (const fieldName in this.activeFields) {
+            // activeFields should be changed
+            const field = this.fields[fieldName];
+            if (isX2Many(field)) {
+                this.data[fieldName].discard();
+            } else if (fieldName in this._values) {
+                this.data[fieldName] = this._values[fieldName];
             }
         }
-        this.mode = mode;
+        if (!this.isVirtual) {
+            this.switchMode("readonly");
+        }
         this.model.notify();
+    }
+
+    // FIXME AAB: to discuss: not sure we want to keep resIds in the model (this concerns
+    // "duplicate" and "delete"). Alternative: handle this in form_view (but then what's the
+    // point of calling a Record method to do the operation?)
+    async duplicate() {
+        const kwargs = { context: this.context };
+        const index = this.resIds.indexOf(this.resId);
+        this.resId = await this.model.orm.call(this.resModel, "copy", [this.resId], kwargs);
+        this.resIds.splice(index + 1, 0, this.resId);
+        await this.load();
+        this.switchMode("edit");
+        this.model.notify();
+    }
+
+    exportState() {
+        return {
+            mode: this.mode,
+            resId: this.resId,
+            resIds: this.resIds,
+        };
+    }
+
+    getChanges(allFields = false) {
+        const changes = { ...(allFields ? this.data : this._changes) };
+        for (const fieldName in changes) {
+            const fieldType = this.fields[fieldName].type;
+            if (["one2many", "many2many"].includes(fieldType)) {
+                const staticList = this._cache[fieldName];
+                changes[fieldName] = staticList.getCommands(); // always ask
+                if (!changes[fieldName]) {
+                    delete changes[fieldName];
+                }
+            } else if (fieldType === "many2one") {
+                changes[fieldName] = changes[fieldName] ? changes[fieldName][0] : false;
+            } else if (fieldType === "date") {
+                changes[fieldName] = changes[fieldName] ? serializeDate(changes[fieldName]) : false;
+            } else if (fieldType === "datetime") {
+                changes[fieldName] = changes[fieldName]
+                    ? serializeDateTime(changes[fieldName])
+                    : false;
+            }
+        }
+        return changes;
+    }
+
+    getFieldContext(fieldName) {
+        return makeContext([this.context, this.activeFields[fieldName].context], this.evalContext);
+    }
+
+    getFieldDomain(fieldName) {
+        return Domain.and([
+            this._domains[fieldName] || [],
+            this.activeFields[fieldName].domain || [],
+        ]);
+    }
+
+    isInvalid(fieldName) {
+        for (const invalid of this._invalidFields) {
+            if (invalid.fieldName === fieldName) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * FIXME: memoize this at some point?
+     * @param {string} fieldName
+     * @returns {boolean}
+     */
+    isInvisible(fieldName) {
+        const activeField = this.activeFields[fieldName];
+        if (!activeField.modifiers) {
+            return false;
+        }
+        const { invisible } = activeField.modifiers;
+        if (typeof invisible === "boolean") {
+            return invisible;
+        } else if (!invisible) {
+            return false;
+        } else {
+            return evalDomain(invisible, this.evalContext);
+        }
     }
 
     /**
@@ -479,93 +602,6 @@ export class Record extends DataPoint {
         return false;
     }
 
-    /**
-     * FIXME: memoize this at some point?
-     * @param {string} fieldName
-     * @returns {boolean}
-     */
-    isInvisible(fieldName) {
-        const activeField = this.activeFields[fieldName];
-        if (!activeField.modifiers) {
-            return false;
-        }
-        const { invisible } = activeField.modifiers;
-        if (typeof invisible === "boolean") {
-            return invisible;
-        } else if (!invisible) {
-            return false;
-        } else {
-            return evalDomain(invisible, this.evalContext);
-        }
-    }
-
-    setInvalidField(fieldName) {
-        this._invalidFields.add({ fieldName });
-        this.model.notify();
-    }
-
-    _removeInvalidField(fieldName) {
-        for (const field of this._invalidFields) {
-            if (field.fieldName === fieldName) {
-                this._invalidFields.delete(field);
-                break;
-            }
-        }
-    }
-
-    isInvalid(fieldName) {
-        for (const invalid of this._invalidFields) {
-            if (invalid.fieldName === fieldName) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param {Object} params
-     * @param {Object} values
-     * @param {Object} changes
-     */
-    async _loadABC(params) {
-        clearObject(this._values);
-        clearObject(this._changes);
-        clearObject(this.data);
-
-        Object.assign(this._values, params.values);
-        Object.assign(this._changes, params.changes);
-
-        if (this.resId) {
-            this.data.id = this.resId;
-        }
-
-        const defaultValues = this._getDefaultValues();
-        for (const fieldName in this.activeFields) {
-            const field = this.fields[fieldName];
-            if (isX2Many(field)) {
-                const resIds = this._values[fieldName];
-                const commands = this._changes[fieldName];
-                const staticList = this._cache[fieldName];
-                staticList.setCurrentIds(resIds, commands);
-                this.data[fieldName] = staticList;
-            } else {
-                // smth is wrong here for many2one maybe
-                this.data[fieldName] =
-                    this._changes[fieldName] !== undefined
-                        ? this._changes[fieldName]
-                        : fieldName in this._values
-                        ? this._values[fieldName]
-                        : defaultValues[fieldName];
-            }
-        }
-        // every field value should be correct here
-        this._invalidFields.clear();
-
-        // Relational data
-        await this.loadRelationalData();
-        await this.loadPreloadedData();
-    }
-
     async load(params) {
         if (!this.data) {
             // replace by firstLoad?
@@ -593,36 +629,17 @@ export class Record extends DataPoint {
         }
 
         if (params) {
-            await this._loadABC(params);
+            await this._load(params);
         } else if (this.isVirtual) {
             await this.model.mutex.exec(async () => {
                 const changes = await this._onChange();
-                await this._loadABC({ changes });
+                await this._load({ changes });
             });
         } else {
             //mutex here?
             const values = await this._read();
-            await this._loadABC({ values });
+            await this._load({ values });
         }
-    }
-
-    exportState() {
-        return {
-            mode: this.mode,
-            resId: this.resId,
-            resIds: this.resIds,
-        };
-    }
-
-    getFieldContext(fieldName) {
-        return makeContext([this.context, this.activeFields[fieldName].context], this.evalContext);
-    }
-
-    getFieldDomain(fieldName) {
-        return Domain.and([
-            this._domains[fieldName] || [],
-            this.activeFields[fieldName].domain || [],
-        ]);
     }
 
     async loadPreloadedData() {
@@ -662,32 +679,6 @@ export class Record extends DataPoint {
             }
         }
         await Promise.all(proms);
-    }
-
-    async update(fieldName, value) {
-        this.onChanges();
-        await this._applyChange(fieldName, value);
-        const activeField = this.activeFields[fieldName];
-        if (activeField && activeField.onChange) {
-            await this.model.mutex.exec(async () => {
-                const changes = await this._onChange(fieldName);
-                for (const [fieldName, value] of Object.entries(changes)) {
-                    const field = this.fields[fieldName];
-                    // for x2many fields, the onchange returns commands, not ids, so we need to process them
-                    // for now, we simply return an empty list
-                    if (isX2Many(field)) {
-                        this._changes[fieldName] = value;
-                        this.data[fieldName].applyCommands(value);
-                    } else {
-                        this._changes[fieldName] = value;
-                        this.data[fieldName] = this._changes[fieldName];
-                    }
-                }
-            });
-        }
-        await this.loadPreloadedData();
-        this._removeInvalidField(fieldName);
-        this.model.notify();
     }
 
     /**
@@ -785,48 +776,33 @@ export class Record extends DataPoint {
         });
     }
 
-    async archive() {
-        await archiveOrUnarchiveRecords(this.model, this.resModel, [this.resId]);
-        await this.load();
+    setInvalidField(fieldName) {
+        this._invalidFields.add({ fieldName });
         this.model.notify();
     }
 
-    async unarchive() {
-        await archiveOrUnarchiveRecords(this.model, this.resModel, [this.resId], true);
-        await this.load();
-        this.model.notify();
-    }
-
-    // FIXME AAB: to discuss: not sure we want to keep resIds in the model (this concerns
-    // "duplicate" and "delete"). Alternative: handle this in form_view (but then what's the
-    // point of calling a Record method to do the operation?)
-    async duplicate() {
-        const kwargs = { context: this.context };
-        const index = this.resIds.indexOf(this.resId);
-        this.resId = await this.model.orm.call(this.resModel, "copy", [this.resId], kwargs);
-        this.resIds.splice(index + 1, 0, this.resId);
-        await this.load();
-        this.switchMode("edit");
-        this.model.notify();
-    }
-
-    async delete() {
-        const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], this.context);
-        if (!unlinked) {
-            return false;
+    /**
+     * @param {"edit" | "readonly"} mode
+     * @returns {Promise<void>}
+     */
+    async switchMode(mode) {
+        if (this.mode === mode) {
+            return;
         }
-        const index = this.resIds.indexOf(this.resId);
-        this.resIds.splice(index, 1);
-        this.resId = this.resIds[Math.min(index, this.resIds.length - 1)] || false;
-        if (this.resId) {
-            await this.load();
-            this.model.notify();
-        } else {
-            this.data = {};
-            this._values = {};
-            this._changes = {};
-            this.preloadedData = {};
+        await this._onWillSwitchMode(this, mode);
+        if (mode === "readonly") {
+            for (const fieldName in this.activeFields) {
+                const field = this.fields[fieldName];
+                if (isX2Many(field)) {
+                    const editedRecord = this.data[fieldName] && this.data[fieldName].editedRecord;
+                    if (editedRecord) {
+                        editedRecord.switchMode("readonly");
+                    }
+                }
+            }
         }
+        this.mode = mode;
+        this.model.notify();
     }
 
     toggleSelection(selected) {
@@ -838,66 +814,41 @@ export class Record extends DataPoint {
         this.model.notify();
     }
 
-    discard() {
-        clearObject(this._changes);
-        clearObject(this._domains);
-        for (const fieldName in this.activeFields) {
-            // activeFields should be changed
-            const field = this.fields[fieldName];
-            if (isX2Many(field)) {
-                this.data[fieldName].discard();
-            } else if (fieldName in this._values) {
-                this.data[fieldName] = this._values[fieldName];
-            }
-        }
-        if (!this.isVirtual) {
-            this.switchMode("readonly");
-        }
+    async unarchive() {
+        await archiveOrUnarchiveRecords(this.model, this.resModel, [this.resId], true);
+        await this.load();
         this.model.notify();
     }
 
-    getChanges(allFields = false) {
-        const changes = { ...(allFields ? this.data : this._changes) };
-        for (const fieldName in changes) {
-            const fieldType = this.fields[fieldName].type;
-            if (["one2many", "many2many"].includes(fieldType)) {
-                const staticList = this._cache[fieldName];
-                changes[fieldName] = staticList.getCommands(); // always ask
-                if (!changes[fieldName]) {
-                    delete changes[fieldName];
+    async update(fieldName, value) {
+        this.onChanges();
+        await this._applyChange(fieldName, value);
+        const activeField = this.activeFields[fieldName];
+        if (activeField && activeField.onChange) {
+            await this.model.mutex.exec(async () => {
+                const changes = await this._onChange(fieldName);
+                for (const [fieldName, value] of Object.entries(changes)) {
+                    const field = this.fields[fieldName];
+                    // for x2many fields, the onchange returns commands, not ids, so we need to process them
+                    // for now, we simply return an empty list
+                    if (isX2Many(field)) {
+                        this._changes[fieldName] = value;
+                        this.data[fieldName].applyCommands(value);
+                    } else {
+                        this._changes[fieldName] = value;
+                        this.data[fieldName] = this._changes[fieldName];
+                    }
                 }
-            } else if (fieldType === "many2one") {
-                changes[fieldName] = changes[fieldName] ? changes[fieldName][0] : false;
-            } else if (fieldType === "date") {
-                changes[fieldName] = changes[fieldName] ? serializeDate(changes[fieldName]) : false;
-            } else if (fieldType === "datetime") {
-                changes[fieldName] = changes[fieldName]
-                    ? serializeDateTime(changes[fieldName])
-                    : false;
-            }
+            });
         }
-        return changes;
+        await this.loadPreloadedData();
+        this._removeInvalidField(fieldName);
+        this.model.notify();
     }
 
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------
-
-    async _loadMany2OneData(fieldName, value) {
-        const relation = this.fields[fieldName].relation;
-        const activeField = this.activeFields[fieldName];
-        if (
-            activeField &&
-            !this.isInvisible(fieldName) &&
-            value &&
-            (!value[1] || activeField.options.always_reload)
-        ) {
-            const context = this.getFieldContext(fieldName);
-            const result = await this.model.orm.nameGet(relation, [value[0]], context);
-            return result[0];
-        }
-        return value;
-    }
 
     async _applyChange(fieldName, value) {
         const field = this.fields[fieldName];
@@ -982,6 +933,66 @@ export class Record extends DataPoint {
         return specs;
     }
 
+    /**
+     * @param {Object} params
+     * @param {Object} values
+     * @param {Object} changes
+     */
+    async _load(params) {
+        clearObject(this._values);
+        clearObject(this._changes);
+        clearObject(this.data);
+
+        Object.assign(this._values, params.values);
+        Object.assign(this._changes, params.changes);
+
+        if (this.resId) {
+            this.data.id = this.resId;
+        }
+
+        const defaultValues = this._getDefaultValues();
+        for (const fieldName in this.activeFields) {
+            const field = this.fields[fieldName];
+            if (isX2Many(field)) {
+                const resIds = this._values[fieldName];
+                const commands = this._changes[fieldName];
+                const staticList = this._cache[fieldName];
+                staticList.setCurrentIds(resIds, commands);
+                this.data[fieldName] = staticList;
+            } else {
+                // smth is wrong here for many2one maybe
+                this.data[fieldName] =
+                    this._changes[fieldName] !== undefined
+                        ? this._changes[fieldName]
+                        : fieldName in this._values
+                        ? this._values[fieldName]
+                        : defaultValues[fieldName];
+            }
+        }
+        // every field value should be correct here
+        this._invalidFields.clear();
+
+        // Relational data
+        await this.loadRelationalData();
+        await this.loadPreloadedData();
+    }
+
+    async _loadMany2OneData(fieldName, value) {
+        const relation = this.fields[fieldName].relation;
+        const activeField = this.activeFields[fieldName];
+        if (
+            activeField &&
+            !this.isInvisible(fieldName) &&
+            value &&
+            (!value[1] || activeField.options.always_reload)
+        ) {
+            const context = this.getFieldContext(fieldName);
+            const result = await this.model.orm.nameGet(relation, [value[0]], context);
+            return result[0];
+        }
+        return value;
+    }
+
     async _loadX2ManyData(fieldName) {
         if (this.isInvisible(fieldName)) {
             return Promise.resolve();
@@ -1028,6 +1039,15 @@ export class Record extends DataPoint {
             }
         );
         return this._parseServerValues(serverValues);
+    }
+
+    _removeInvalidField(fieldName) {
+        for (const field of this._invalidFields) {
+            if (field.fieldName === fieldName) {
+                this._invalidFields.delete(field);
+                break;
+            }
+        }
     }
 
     _sanitizeValues(values) {
@@ -1088,6 +1108,10 @@ class DynamicList extends DataPoint {
         };
     }
 
+    // -------------------------------------------------------------------------
+    // Getters
+    // -------------------------------------------------------------------------
+
     get firstGroupBy() {
         return this.groupBy[0] || false;
     }
@@ -1112,6 +1136,22 @@ class DynamicList extends DataPoint {
         return this.records.filter((r) => r.selected);
     }
 
+    // -------------------------------------------------------------------------
+    // Public
+    // -------------------------------------------------------------------------
+
+    /**
+     * @param {boolean} [isSelected]
+     * @returns {Promise<number[]>}
+     */
+    async archive(isSelected) {
+        const resIds = await this.getResIds(isSelected);
+        await archiveOrUnarchiveRecords(this.model, this.resModel, resIds);
+        await this.model.load();
+        return resIds;
+        //todo fge _invalidateCache
+    }
+
     canQuickCreate() {
         return (
             this.groupByField &&
@@ -1119,6 +1159,12 @@ class DynamicList extends DataPoint {
             (isAllowedDateField(this.groupByField) ||
                 QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type))
         );
+    }
+
+    exportState() {
+        return {
+            limit: this.limit,
+        };
     }
 
     /**
@@ -1141,36 +1187,6 @@ class DynamicList extends DataPoint {
         return resIds;
     }
 
-    /**
-     * @param {boolean} [isSelected]
-     * @returns {Promise<number[]>}
-     */
-    async archive(isSelected) {
-        const resIds = await this.getResIds(isSelected);
-        await archiveOrUnarchiveRecords(this.model, this.resModel, resIds);
-        await this.model.load();
-        return resIds;
-        //todo fge _invalidateCache
-    }
-
-    /**
-     * @param {boolean} [isSelected]
-     * @returns {Promise<number[]>}
-     */
-    async unarchive(isSelected) {
-        const resIds = await this.getResIds(isSelected);
-        await archiveOrUnarchiveRecords(this.model, this.resModel, resIds, true);
-        await this.model.load();
-        return resIds;
-        //todo fge _invalidateCache
-    }
-
-    exportState() {
-        return {
-            limit: this.limit,
-        };
-    }
-
     selectDomain(value) {
         this.isDomainSelected = value;
         this.model.notify();
@@ -1190,6 +1206,22 @@ class DynamicList extends DataPoint {
         await this.load();
         this.model.notify();
     }
+
+    /**
+     * @param {boolean} [isSelected]
+     * @returns {Promise<number[]>}
+     */
+    async unarchive(isSelected) {
+        const resIds = await this.getResIds(isSelected);
+        await archiveOrUnarchiveRecords(this.model, this.resModel, resIds, true);
+        await this.model.load();
+        return resIds;
+        //todo fge _invalidateCache
+    }
+
+    // -------------------------------------------------------------------------
+    // Protected
+    // -------------------------------------------------------------------------
 
     /**
      * Calls the method 'resequence' on the current resModel.
@@ -1229,16 +1261,35 @@ export class DynamicRecordList extends DynamicList {
         this.data = params.data;
     }
 
+    // -------------------------------------------------------------------------
+    // Getters
+    // -------------------------------------------------------------------------
+
     get quickCreateRecord() {
         return this.records.find((r) => r.isInQuickCreation);
     }
 
-    async load() {
-        this.records = await this._loadRecords();
+    // -------------------------------------------------------------------------
+    // Public
+    // -------------------------------------------------------------------------
+
+    /**
+     * @param {Record} record
+     * @param {number} [index]
+     * @returns {Record}
+     */
+    addRecord(record, index) {
+        this.records.splice(Number.isInteger(index) ? index : this.records.length, 0, record);
+        this.count++;
+        this.model.notify();
+        return record;
     }
 
-    async resequence() {
-        this.records = await this._resequence(this.records, "resId", ...arguments);
+    async cancelQuickCreate(force = false) {
+        const record = this.quickCreateRecord;
+        if (record && (force || !record.isDirty)) {
+            this.removeRecord(record);
+        }
     }
 
     /**
@@ -1290,16 +1341,29 @@ export class DynamicRecordList extends DynamicList {
         return resIds;
     }
 
-    /**
-     * @param {Record} record
-     * @param {number} [index]
-     * @returns {Record}
-     */
-    addRecord(record, index) {
-        this.records.splice(Number.isInteger(index) ? index : this.records.length, 0, record);
-        this.count++;
-        this.model.notify();
-        return record;
+    empty() {
+        this.records = [];
+        this.count = 0;
+    }
+
+    async load() {
+        this.records = await this._loadRecords();
+    }
+
+    async loadMore() {
+        this.offset = this.records.length;
+        const nextRecords = await this._loadRecords();
+        for (const record of nextRecords) {
+            this.addRecord(record);
+        }
+    }
+
+    async quickCreate(activeFields, context) {
+        const record = this.quickCreateRecord;
+        if (record) {
+            this.removeRecord(record);
+        }
+        return this.createRecord({ activeFields, context, isInQuickCreation: true }, true);
     }
 
     /**
@@ -1317,32 +1381,8 @@ export class DynamicRecordList extends DynamicList {
         return record;
     }
 
-    async loadMore() {
-        this.offset = this.records.length;
-        const nextRecords = await this._loadRecords();
-        for (const record of nextRecords) {
-            this.addRecord(record);
-        }
-    }
-
-    empty() {
-        this.records = [];
-        this.count = 0;
-    }
-
-    async cancelQuickCreate(force = false) {
-        const record = this.quickCreateRecord;
-        if (record && (force || !record.isDirty)) {
-            this.removeRecord(record);
-        }
-    }
-
-    async quickCreate(activeFields, context) {
-        const record = this.quickCreateRecord;
-        if (record) {
-            this.removeRecord(record);
-        }
-        return this.createRecord({ activeFields, context, isInQuickCreation: true }, true);
+    async resequence() {
+        this.records = await this._resequence(this.records, "resId", ...arguments);
     }
 
     // -------------------------------------------------------------------------
@@ -1403,6 +1443,10 @@ export class DynamicGroupList extends DynamicList {
         this.quickCreateInfo = null; // Lazy loaded;
     }
 
+    // -------------------------------------------------------------------------
+    // Getters
+    // -------------------------------------------------------------------------
+
     get commonGroupParams() {
         return {
             fields: this.fields,
@@ -1426,6 +1470,80 @@ export class DynamicGroupList extends DynamicList {
             .filter((group) => !group.isFolded)
             .map((group) => group.list.records)
             .flat();
+    }
+
+    // -------------------------------------------------------------------------
+    // Public
+    // -------------------------------------------------------------------------
+
+    /**
+     * @param {Group} group
+     * @param {number} [index]
+     * @returns {Group}
+     */
+    addGroup(group, index) {
+        this.groups.splice(Number.isInteger(index) ? index : this.count, 0, group);
+        this.count++;
+        this.model.notify();
+        return group;
+    }
+
+    canQuickCreate() {
+        return super.canQuickCreate() && this.groups.length;
+    }
+
+    /**
+     * @param {any} value
+     * @returns {Promise<Group>}
+     */
+    async createGroup(value) {
+        const [id, displayName] = await this.model.mutex.exec(() =>
+            this.model.orm.call(this.groupByField.relation, "name_create", [value], {
+                context: this.context,
+            })
+        );
+        const group = this.model.createDataPoint("group", {
+            ...this.commonGroupParams,
+            count: 0,
+            value: id,
+            displayName,
+            aggregates: {},
+            groupByField: this.groupByField,
+            // FIXME
+            // groupDomain: this.groupDomain,
+        });
+        group.isFolded = false;
+        return this.addGroup(group);
+    }
+
+    /**
+     * @param {Group[]} groups
+     * @returns {Promise<void>}
+     */
+    async deleteGroups(groups) {
+        let shouldReload = false;
+        await Promise.all(
+            groups.map(async (group) => {
+                await group.delete();
+                if (!this.model.useSampleModel && group.list.records.length) {
+                    shouldReload = true;
+                }
+            })
+        );
+        if (shouldReload) {
+            await this.model.load();
+        } else {
+            for (const group of groups) {
+                this.removeGroup(group);
+            }
+        }
+    }
+
+    exportState() {
+        return {
+            ...super.exportState(),
+            groups: this.groups,
+        };
     }
 
     /**
@@ -1459,48 +1577,9 @@ export class DynamicGroupList extends DynamicList {
         return false;
     }
 
-    exportState() {
-        return {
-            ...super.exportState(),
-            groups: this.groups,
-        };
-    }
-
-    canQuickCreate() {
-        return super.canQuickCreate() && this.groups.length;
-    }
-
     async load() {
         this.groups = await this._loadGroups();
         await Promise.all(this.groups.map((group) => group.load()));
-    }
-
-    async resequence() {
-        this.groups = await this._resequence(this.groups, "value", ...arguments);
-    }
-
-    /**
-     * @param {any} value
-     * @returns {Promise<Group>}
-     */
-    async createGroup(value) {
-        const [id, displayName] = await this.model.mutex.exec(() =>
-            this.model.orm.call(this.groupByField.relation, "name_create", [value], {
-                context: this.context,
-            })
-        );
-        const group = this.model.createDataPoint("group", {
-            ...this.commonGroupParams,
-            count: 0,
-            value: id,
-            displayName,
-            aggregates: {},
-            groupByField: this.groupByField,
-            // FIXME
-            // groupDomain: this.groupDomain,
-        });
-        group.isFolded = false;
-        return this.addGroup(group);
     }
 
     async quickCreate(group) {
@@ -1520,41 +1599,6 @@ export class DynamicGroupList extends DynamicList {
     }
 
     /**
-     * @param {Group[]} groups
-     * @returns {Promise<void>}
-     */
-    async deleteGroups(groups) {
-        let shouldReload = false;
-        await Promise.all(
-            groups.map(async (group) => {
-                await group.delete();
-                if (!this.model.useSampleModel && group.list.records.length) {
-                    shouldReload = true;
-                }
-            })
-        );
-        if (shouldReload) {
-            await this.model.load();
-        } else {
-            for (const group of groups) {
-                this.removeGroup(group);
-            }
-        }
-    }
-
-    /**
-     * @param {Group} group
-     * @param {number} [index]
-     * @returns {Group}
-     */
-    addGroup(group, index) {
-        this.groups.splice(Number.isInteger(index) ? index : this.count, 0, group);
-        this.count++;
-        this.model.notify();
-        return group;
-    }
-
-    /**
      * @param {Group} group
      * @returns {Group}
      */
@@ -1564,6 +1608,10 @@ export class DynamicGroupList extends DynamicList {
         this.count--;
         this.model.notify();
         return group;
+    }
+
+    async resequence() {
+        this.groups = await this._resequence(this.groups, "value", ...arguments);
     }
 
     // ------------------------------------------------------------------------
@@ -1734,17 +1782,46 @@ export class Group extends DataPoint {
         this.list = this.model.createDataPoint("list", listParams, state.listState);
     }
 
-    exportState() {
-        return {
-            isFolded: this.isFolded,
-            listState: this.list.exportState(),
-        };
+    // ------------------------------------------------------------------------
+    // Public
+    // ------------------------------------------------------------------------
+
+    /**
+     * @see DynamicRecordList.addRecord
+     */
+    addRecord(record, index) {
+        this.count++;
+        this.isFolded = false;
+        return this.list.addRecord(record, index);
+    }
+
+    async delete() {
+        this.deleted = true;
+        if (this.record) {
+            return this.record.delete();
+        } else {
+            return this.model.orm.unlink(this.resModel, [this.value], this.context);
+        }
+    }
+
+    /**
+     * @see DynamicRecordList.deleteRecords
+     */
+    async deleteRecords() {
+        return this.list.deleteRecords(...arguments);
     }
 
     empty() {
         this.count = 0;
         this.aggregates = {};
         this.list.empty();
+    }
+
+    exportState() {
+        return {
+            isFolded: this.isFolded,
+            listState: this.list.exportState(),
+        };
     }
 
     getAggregableRecords() {
@@ -1811,35 +1888,12 @@ export class Group extends DataPoint {
         });
     }
 
-    async toggle() {
-        this.isFolded = !this.isFolded;
-        await this.model.keepLast.add(this.load());
-        this.model.notify();
-    }
-
-    async delete() {
-        this.deleted = true;
-        if (this.record) {
-            return this.record.delete();
-        } else {
-            return this.model.orm.unlink(this.resModel, [this.value], this.context);
-        }
-    }
-
-    /**
-     * @see DynamicRecordList.deleteRecords
-     */
-    async deleteRecords() {
-        return this.list.deleteRecords(...arguments);
-    }
-
-    /**
-     * @see DynamicRecordList.addRecord
-     */
-    addRecord(record, index) {
-        this.count++;
-        this.isFolded = false;
-        return this.list.addRecord(record, index);
+    quickCreate(activeFields, context) {
+        const ctx = {
+            ...context,
+            [`default_${this.groupByField.name}`]: this.getServerValue(),
+        };
+        return this.list.quickCreate(activeFields, ctx);
     }
 
     /**
@@ -1850,12 +1904,10 @@ export class Group extends DataPoint {
         return this.list.removeRecord(record);
     }
 
-    quickCreate(activeFields, context) {
-        const ctx = {
-            ...context,
-            [`default_${this.groupByField.name}`]: this.getServerValue(),
-        };
-        return this.list.quickCreate(activeFields, ctx);
+    async toggle() {
+        this.isFolded = !this.isFolded;
+        await this.model.keepLast.add(this.load());
+        this.model.notify();
     }
 
     async validateQuickCreate() {
@@ -1946,7 +1998,7 @@ export class StaticList extends DataPoint {
     }
 
     //--------------------------------------------------------------------------
-    // Public
+    // Getters
     //--------------------------------------------------------------------------
 
     /**
@@ -1958,6 +2010,10 @@ export class StaticList extends DataPoint {
         }
         return this.currentIds.length;
     }
+
+    // ------------------------------------------------------------------------
+    // Public
+    // ------------------------------------------------------------------------
 
     /**
      * Add a true record in relation
@@ -2122,7 +2178,7 @@ export class StaticList extends DataPoint {
             });
         }
 
-        await this._completeCache();
+        await this._loadRecords();
 
         if (!hasSeveralPages && orderFieldNames.length) {
             this.currentIds.sort((id1, id2) => {
@@ -2202,24 +2258,9 @@ export class StaticList extends DataPoint {
     }
 
     /**
-     * Add missing records to cache
+     * @param {Object} params
+     * @returns {Record}
      */
-    async _completeCache() {
-        const displayedIds = this._getDisplayedIds();
-        const proms = [];
-        for (const id of displayedIds) {
-            const recordId = this._mapping[id];
-            if (!recordId) {
-                const key = typeof id === "number" ? "resId" : "virtualId";
-                proms.push(this._createRecord({ [key]: id }));
-            } else {
-                const record = this._cache[recordId];
-                proms.push(record.load());
-            }
-        }
-        await Promise.all(proms);
-    }
-
     async _createRecord(params) {
         const record = this.model.createDataPoint("record", {
             resModel: this.resModel,
@@ -2243,10 +2284,13 @@ export class StaticList extends DataPoint {
                 this.evalContext
             ),
         });
-        const id = record.resId || record.virtualId; // is resId sometimes changed after record creation?
+        const id = record.resId || record.virtualId; // is resId sometimes changed after record creation? (for a record in a staticList)
+
         this._mapping[id] = record.id;
         this._cache[record.id] = record;
+
         await record.load();
+
         return record;
     }
 
@@ -2400,7 +2444,27 @@ export class StaticList extends DataPoint {
      * @returns {Record[]}
      */
     _getRecords() {
-        return this._getDisplayedIds().map((id) => this._cache[this._mapping[id]]);
+        const displayedIds = this._getDisplayedIds();
+        return displayedIds.map((id) => this._cache[this._mapping[id]]);
+    }
+
+    /**
+     * Add missing records to cache and load records to display
+     */
+    async _loadRecords() {
+        const displayedIds = this._getDisplayedIds();
+        const proms = [];
+        for (const id of displayedIds) {
+            const recordId = this._mapping[id];
+            if (!recordId) {
+                const key = typeof id === "number" ? "resId" : "virtualId";
+                proms.push(this._createRecord({ [key]: id }));
+            } else {
+                const record = this._cache[recordId];
+                proms.push(record.load());
+            }
+        }
+        await Promise.all(proms);
     }
 }
 
