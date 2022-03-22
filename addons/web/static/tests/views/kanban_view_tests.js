@@ -50,6 +50,7 @@ const patchDialog = (addDialog) => {
 };
 
 // Kanban
+// WOWL remove this helper and user the control panel instead
 const reload = async (kanban, params = {}) => {
     kanban.env.searchModel.reload(params);
     kanban.env.searchModel.search();
@@ -6749,7 +6750,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["6"], "the other categories should not be fetched");
     });
 
-    QUnit.skipWOWL("update buttons after column creation", async (assert) => {
+    QUnit.test("update buttons after column creation", async (assert) => {
         assert.expect(2);
 
         serverData.models.partner.records = [];
@@ -6768,28 +6769,29 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".o-kanban-button-new");
 
-        await createColumn();
         await editColumnName("new column");
         await validateColumn();
 
         assert.containsOnce(target, ".o-kanban-button-new");
     });
 
-    QUnit.skipWOWL("group_by_tooltip option when grouping on a many2one", async (assert) => {
-        assert.expect(12);
+    QUnit.test("group_by_tooltip option when grouping on a many2one", async (assert) => {
+        assert.expect(14);
         delete serverData.models.partner.records[3].product_id;
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                '<kanban default_group_by="bar">' +
-                '<field name="bar"/>' +
-                '<field name="product_id" ' +
-                'options=\'{"group_by_tooltip": {"name": "Kikou"}}\'/>' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
-                "</t></templates></kanban>",
+            arch: `
+                <kanban default_group_by="bar">
+                    <field name="bar"/>
+                    <field name="product_id" options='{"group_by_tooltip": {"name": "Kikou"}}'/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
             async mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/product/read") {
                     assert.strictEqual(args.args[0].length, 2, "read on two groups");
@@ -6807,46 +6809,57 @@ QUnit.module("Views", (hooks) => {
             "o_kanban_grouped",
             "should have classname 'o_kanban_grouped'"
         );
-        assert.containsN(target, ".o_kanban_group", 2, "should have " + 2 + " columns");
+        assert.containsN(target, ".o_kanban_group", 2, "should have 2 columns");
 
         // simulate an update coming from the searchview, with another groupby given
         await reload(kanban, { groupBy: ["product_id"] });
 
-        assert.containsN(target, ".o_kanban_group", 3, "should have " + 3 + " columns");
+        assert.containsN(target, ".o_kanban_group", 3, "should have 3 columns");
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+            target.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record").length,
             1,
             "column should contain 1 record(s)"
         );
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+            target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record").length,
             2,
             "column should contain 2 record(s)"
         );
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(3) .o_kanban_record").length,
+            target.querySelectorAll(".o_kanban_group:nth-child(3) .o_kanban_record").length,
             1,
             "column should contain 1 record(s)"
         );
-        assert.ok(
-            target.querySelector(".o_kanban_group:first-child span.o_column_title:contains(None)")
-                .length,
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:first-child span.o_column_title").textContent,
+            "None",
             "first column should have a default title for when no value is provided"
         );
         assert.ok(
             !target.querySelector(".o_kanban_group:first-child .o_kanban_header_title").dataset
-                .tooltip,
+                .tooltipInfo,
             "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value"
         );
         assert.ok(
-            target.querySelector(".o_kanban_group:nth-child(2) span.o_column_title:contains(hello)")
-                .length,
+            !target.querySelector(".o_kanban_group:first-child .o_kanban_header_title").dataset
+                .tooltipTemplate,
+            "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(2) span.o_column_title").textContent,
+            "hello",
             "second column should have a title with a value from the many2one"
         );
         assert.strictEqual(
             target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title").dataset
-                .tooltip,
-            "<div>Kikou</br>hello</div>",
+                .tooltipInfo,
+            `["Kikou","hello"]`,
+            "second column should have a tooltip with the group_by_tooltip title and many2one field value"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title").dataset
+                .tooltipTemplate,
+            "web.KanbanGroupTooltip",
             "second column should have a tooltip with the group_by_tooltip title and many2one field value"
         );
     });

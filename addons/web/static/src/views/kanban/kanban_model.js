@@ -167,6 +167,30 @@ class KanbanGroup extends Group {
         return super.quickCreate(activeFields, ctx);
     }
 
+    async load() {
+        await super.load();
+        const groupName = this.groupByField.name;
+        if (
+            this.groupByField.type === "many2one" &&
+            this.value &&
+            groupName in this.model.tooltipInfo
+        ) {
+            const resModel = this.groupByField.relation;
+            const tooltipInfo = this.model.tooltipInfo[groupName];
+            const fieldNames = Object.keys(tooltipInfo);
+            // This read will be batched for all groups
+            const [tooltipData] = await this.model.orm.read(
+                resModel,
+                [this.value],
+                ["display_name", ...fieldNames]
+            );
+            this.tooltipLines = fieldNames.flatMap((fieldName) => [
+                tooltipInfo[fieldName],
+                tooltipData[fieldName],
+            ]);
+        }
+    }
+
     /**
      * Checks if the current active progress bar value contains records, and
      * deactivates it if not.
@@ -505,6 +529,7 @@ export class KanbanModel extends RelationalModel {
         super.setup(...arguments);
 
         this.progressAttributes = params.progressAttributes;
+        this.tooltipInfo = params.tooltipInfo;
         this.transaction = useTransaction();
     }
 

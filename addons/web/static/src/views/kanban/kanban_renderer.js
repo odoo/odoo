@@ -622,6 +622,16 @@ export class KanbanRenderer extends Component {
         const div = Object.assign(document.createElement("div"), { innerHTML });
         return div.innerText.trim() === "";
     }
+
+    tooltipAttributes(group) {
+        if (!group.tooltipLines) {
+            return {};
+        }
+        return {
+            "data-tooltip-template": "web.KanbanGroupTooltip",
+            "data-tooltip-info": JSON.stringify(group.tooltipLines),
+        };
+    }
 }
 
 KanbanRenderer.template = "web.KanbanRenderer";

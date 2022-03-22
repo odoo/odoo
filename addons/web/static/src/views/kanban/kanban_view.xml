@@ -21,7 +21,7 @@
 
     <t t-name="web.KanbanView.Buttons" owl="1">
         <div class="o_kanban_buttons d-flex" role="toolbar" aria-label="Main actions">
-            <t t-if="archInfo.activeActions['create']">
+            <t t-if="canCreate">
                 <button type="button" class="btn btn-primary o-kanban-button-new" data-tooltip="Create record" aria-label="Create record" accesskey="c" t-on-click="() => this.createRecord(null)" data-bounce-button="">
                     Create
                 </button>

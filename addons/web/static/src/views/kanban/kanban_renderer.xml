@@ -16,8 +16,8 @@
                         t-on-click="(ev) => this.onGroupClick(group, ev)"
                     >
                         <div class="o_kanban_header">
-                            <div class="o_kanban_header_title">
-                                <span class="o_column_title" t-esc="getGroupName(group)" />
+                            <div class="o_kanban_header_title" t-att="tooltipAttributes(group)">
+                                <span class="o_column_title" t-esc="getGroupName(group)"/>
                                 <t t-if="!group.isFolded">
                                     <Dropdown class="'o_kanban_config'" togglerClass="'btn p-0'">
                                         <t t-set-slot="toggler">
@@ -186,6 +186,15 @@
                 <button class="btn btn-secondary" t-on-click="dialog.close">Discard</button>
             </t>
         </SimpleDialog>
+    </t>
+
+    <t t-name="web.KanbanGroupTooltip" owl="1">
+        <div>
+            <t t-foreach="info" t-as="line" t-key="line_index">
+                <t t-esc="line"/>
+                <br t-if="!line_last"/>
+            </t>
+        </div>
     </t>
 
 </templates>

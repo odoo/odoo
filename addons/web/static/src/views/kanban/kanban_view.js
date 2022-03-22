@@ -107,7 +107,7 @@ export class KanbanArchParser extends XMLParser {
             isTruthy(xmlDoc.getAttribute("quick_create"), true) &&
             (xmlDoc.getAttribute("on_create") || "quick_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
-        const tooltips = {};
+        const tooltipInfo = {};
         let kanbanBoxTemplate = createElement("t");
         let colorField = "color";
         let cardColorField = null;
@@ -126,7 +126,9 @@ export class KanbanArchParser extends XMLParser {
                 const fieldInfo = Field.parseFieldNode(node, fields, "kanban");
                 const name = fieldInfo.name;
                 activeFields[name] = fieldInfo;
-                Object.assign(tooltips, fieldInfo.options.group_by_tooltip);
+                if (fieldInfo.options.group_by_tooltip) {
+                    tooltipInfo[name] = fieldInfo.options.group_by_tooltip;
+                }
                 if (!fieldInfo.widget) {
                     // Fields without a specified widget are rendered as simple
                     // spans in kanban records.
@@ -291,7 +293,7 @@ export class KanbanArchParser extends XMLParser {
             cardColorField,
             xmlDoc: applyDefaultAttributes(kanbanBox),
             fields: activeFields,
-            tooltips,
+            tooltipInfo,
             examples: xmlDoc.getAttribute("examples"),
         };
     }
@@ -316,6 +318,7 @@ export class KanbanView extends Component {
             defaultGroupBy: this.props.searchMenuTypes.includes("groupBy") && defaultGroupBy,
             viewMode: "kanban",
             openGroupsByDefault: true,
+            tooltipInfo: this.archInfo.tooltipInfo,
         });
         useViewButtons(this.model);
         useSetupView({
@@ -353,6 +356,13 @@ export class KanbanView extends Component {
         } else {
             await this.props.createRecord();
         }
+    }
+
+    get canCreate() {
+        if (!this.model.root.isGrouped) {
+            return this.archInfo.activeActions.create;
+        }
+        return !this.archInfo.activeActions.groupCreate || this.model.root.groups.length > 0;
     }
 }
 
