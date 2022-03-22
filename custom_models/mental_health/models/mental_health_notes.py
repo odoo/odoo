@@ -6,12 +6,12 @@ class MentalHealthNotes(models.Model):
 
     name = fields.Char(string='Client Name', required=True)
     mode_of_therapy = fields.Selection(string='Mode of Therapy', required=True,
-                                       selection=[('in person', 'In Person'),
-                                                  ('by phone', 'By Phone'),
-                                                  ('video conference online', 'Video Conference Online'),
+                                       selection=[('in_person', 'In Person'),
+                                                  ('by_phone', 'By Phone'),
+                                                  ('video_conference_online', 'Video Conference Online'),
                                                   ('email', 'Email'),
                                                   ('text', 'Text')],
-                                       default='in person',
+                                       default='in_person',
                                        help='Select the mode of therapy.')
 
     date = fields.Date(string='Date Recorded', required=True, default=lambda self: fields.Date.today(), copy=False)
