@@ -9,11 +9,11 @@ class MentalHealthNotes(models.Model):
     description = fields.Text(string='Meeting Notes', copy=False)
     date = fields.Date(string='Date Recorded', required=True, default=lambda self: fields.Date.today(), copy=False)
     arrival_status = fields.Selection(string='Arrival Status', required=True,
-                                    selection=[('on time', 'On Time'),
+                                    selection=[('on_time', 'On Time'),
                                                ('late', 'Late'),
-                                               ('no show', 'No Show'),
+                                               ('no_show', 'No Show'),
                                                ('cancelled', 'Cancelled')],
-                                    default='on time',
+                                    default='on_time',
                                     help='Select the arrival status of the client.')
     icd10_codes = fields.Selection(string='ICD10 Code', required=False, copy=False,
                                    selection=[('f40.00', 'F40.00 - Agoraphobia unspecified'),
