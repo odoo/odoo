@@ -336,10 +336,6 @@ function classToStyle($editable, cssRules) {
                 writes.push(() => { node.style[styleName] = ''; });
             }
         }
-        // Ignore font-family (mail-safe font declared in <head>)
-        if ('font-family' in css) {
-            delete css['font-family'];
-        }
 
         // Do not apply css that would override inline styles (which are prioritary).
         let style = node.getAttribute('style') || '';
@@ -444,6 +440,9 @@ function toInline($editable, cssRules, $iframe) {
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
+
+    // Styles were applied inline, we don't need a style element anymore.
+    $editable.find('style').remove();
 
     for (const [node, displayValue] of displaysToRestore) {
         node.style.setProperty('display', displayValue);
