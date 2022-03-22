@@ -4,19 +4,21 @@
 import itertools
 import random
 
+from ast import literal_eval
 from contextlib import contextmanager
 from freezegun import freeze_time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from lxml import html
 from unittest.mock import patch
-from werkzeug.urls import url_encode
+from werkzeug.urls import url_encode, url_join
 
 from odoo import fields, SUPERUSER_ID
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mail.tests import common as mail_test
 from odoo.tests import tagged
 from odoo.tests.common import users
+from odoo.tools import mute_logger
 
 
 class TestDigest(mail_test.MailCommon):
@@ -311,8 +313,8 @@ class TestDigest(mail_test.MailCommon):
                 self.env['res.users.log'].sudo().search([]).unlink()
 
 
-@tagged('-at_install', 'post_install')
-class TestUnsubscribe(HttpCaseWithUserDemo):
+@tagged("digest", "mail_mail", "-at_install", "post_install")
+class TestUnsubscribe(mail_test.MailCommon, HttpCaseWithUserDemo):
 
     def setUp(self):
         super(TestUnsubscribe, self).setUp()
@@ -327,6 +329,24 @@ class TestUnsubscribe(HttpCaseWithUserDemo):
         self.test_digest._action_subscribe_users(self.user_demo)
         self.base_url = self.test_digest.get_base_url()
         self.user_demo_unsubscribe_token = self.test_digest._get_unsubscribe_token(self.user_demo.id)
+
+    def test_mail_mail_headers(self):
+        """ Test mail generated for digest contains unsubscribe headers """
+        digest = self.env['digest.digest'].browse(self.test_digest.ids)
+        digest._action_subscribe_users(self.user_employee)
+
+        with self.mock_mail_gateway():
+            digest.action_send()
+
+        # find outgoing mail, click on unsubscribe link
+        for user in self.user_employee + self.user_demo:
+            mail = self._find_mail_mail_wemail(user.email_formatted, "outgoing")
+            headers = literal_eval(mail.headers)
+            unsubscribe_url = headers.get("List-Unsubscribe", "").strip("<>")
+            self.assertTrue(unsubscribe_url)
+            self.opener.post(unsubscribe_url)
+
+        self.assertFalse(digest.user_ids, "Users should have been unsubscribed from digest")
 
     def test_unsubscribe(self):
         """ Test various combination of unsubscribe: logged, using token, ... """
@@ -355,16 +375,38 @@ class TestUnsubscribe(HttpCaseWithUserDemo):
                 self.assertEqual(response.status_code, exp_code)
                 self.assertNotIn(test_user, digest.user_ids)
 
-    def _url_unsubscribe(self, token=None, user_id=None):
+    def test_unsubscribe_token_one_click(self):
+        """ Test one-click: should be ok with POST, not GET to avoid link crawling """
+        self.assertIn(self.user_demo, self.test_digest.user_ids)
+        self.authenticate(None, None)
+
+        with mute_logger('odoo.addons.http_routing.models.ir_http'):
+            # Ensure we cannot unregister using GET method (method not allowed)
+            response = self._url_unsubscribe(token=self.user_demo_unsubscribe_token, user_id=self.user_demo.id,
+                                             one_click='1', method='GET')
+        self.assertEqual(response.status_code, 405, 'GET method is not allowed')
+        self.assertIn(self.user_demo, self.test_digest.user_ids)
+
+        # Ensure we can unregister with POST method
+        response = self._url_unsubscribe(token=self.user_demo_unsubscribe_token, user_id=self.user_demo.id,
+                                         one_click='1', method='POST')
+        self.assertEqual(response.status_code, 200, 'Valid one-click unsubscribe just returns an OK 200')
+        self.assertNotIn(self.user_demo, self.test_digest.user_ids)
+
+    def _url_unsubscribe(self, token=None, user_id=None, one_click=None, method='GET'):
         url_params = {}
         if token is not None:
             url_params['token'] = token
         if user_id is not None:
             url_params['user_id'] = user_id
+        if one_click is not None:
+            unsubscribe_route = "unsubscribe_oneclik"
+        else:
+            unsubscribe_route = "unsubscribe"
 
-        url = "%s/digest/%s/unsubscribe?%s" % (
-            self.base_url,
-            self.test_digest.id,
-            url_encode(url_params)
-        )
-        return self.url_open(url)
+        url = url_join(self.base_url, f'digest/{self.test_digest.id}/{unsubscribe_route}?{url_encode(url_params)}')
+        if method == 'GET':
+            return self.opener.get(url, timeout=10, allow_redirects=True)
+        if method == 'POST':
+            return self.opener.post(url, timeout=10, allow_redirects=True)
+        raise Exception(f'Invalid method {method}')
