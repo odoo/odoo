@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="snailmail.SnailmailError" owl="1">
-        <div class="o_SnailmailError card bg-white" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="snailmailErrorView">
+        <t t-if="snailmailErrorView">
+            <div class="o_SnailmailError card bg-white" t-attf-class="{{ className }}" t-ref="root">
                 <h4 class="m-3">Failed letter</h4>
                 <hr class="mt-0 mb-3"/>
                 <t t-if="snailmailErrorView.notification.failure_type === 'sn_credit'">
@@ -56,8 +56,8 @@
                     </button>
                     <button class="o_SnailmailError_closeButton btn btn-secondary me-2" t-on-click="snailmailErrorView.onClickClose">Close</button>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
