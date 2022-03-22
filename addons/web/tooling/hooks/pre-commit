@@ -1,6 +1,4 @@
 #!/bin/bash
-. "$(dirname "$0")/_/husky.sh"
-
 # run tooling only on branches that start with master to avoid linting noise in stable
 if [[ $(git branch --show-current) == master* ]]; then
     npm run format-staged
