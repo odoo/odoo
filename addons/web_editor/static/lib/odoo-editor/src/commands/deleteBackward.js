@@ -65,7 +65,7 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     setSelection(parentNode, firstSplitOffset);
 };
 
-HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, maxSizeNodeToMove = null) {
     const contentIsZWS = this.textContent === '\u200B';
     let moveDest;
     if (offset) {
@@ -163,8 +163,9 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
     }
 
     let node = this.childNodes[offset];
+    const nextSibblings = this.nextSibling;
     let firstBlockIndex = offset;
-    while (node && !isBlock(node)) {
+    while ( node && !isBlock(node) && (maxSizeNodeToMove === null || offset + maxSizeNodeToMove > firstBlockIndex)) {
         node = node.nextSibling;
         firstBlockIndex++;
     }
@@ -183,7 +184,15 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
     if (cursorNode.nodeType !== Node.TEXT_NODE) {
         const { cType } = getState(cursorNode, cursorOffset, DIRECTIONS.LEFT);
         if (cType & CTGROUPS.BLOCK && (!alreadyMoved || cType === CTYPES.BLOCK_OUTSIDE)) {
-            cursorNode.oDeleteBackward(cursorOffset, alreadyMoved);
+            cursorNode.oDeleteBackward(cursorOffset, alreadyMoved, firstBlockIndex - offset);
+        } else if (!alreadyMoved) {
+            const cursorNodeNode = cursorNode.childNodes[cursorOffset];
+            const cursorNodeRightNode = cursorNodeNode ? cursorNodeNode.nextSibling : undefined;
+            if (cursorNodeRightNode &&
+                cursorNodeRightNode.nodeType === Node.TEXT_NODE &&
+                nextSibblings === cursorNodeRightNode) {
+                moveDest[0].insertBefore(document.createElement('br'), cursorNodeRightNode);
+            }
         }
     }
 };

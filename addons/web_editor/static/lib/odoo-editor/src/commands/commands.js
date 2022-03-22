@@ -45,7 +45,7 @@ import {
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
 const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/g;
 
-function insert(editor, data, isText = true) {
+function insert(editor, data, isText = true, shouldForceDeleteFoward = false) {
     const selection = editor.document.getSelection();
     const range = selection.getRangeAt(0);
     let startNode;
@@ -77,31 +77,38 @@ function insert(editor, data, isText = true) {
     }
     let nodeToInsert;
     const insertedNodes = [...fakeEl.childNodes];
+    let nodeToInsertId = 0;
     while ((nodeToInsert = fakeEl.childNodes[0])) {
         if (isBlock(nodeToInsert) && !allowsParagraphRelatedElements(startNode)) {
-            // Split blocks at the edges if inserting new blocks (preventing
-            // <p><p>text</p></p> scenarios).
-            while (
-                startNode.parentElement !== editor.editable &&
-                !allowsParagraphRelatedElements(startNode.parentElement)
-            ) {
-                if (isUnbreakable(startNode.parentElement)) {
-                    makeContentsInline(fakeEl);
-                    nodeToInsert = fakeEl.childNodes[0];
-                    break;
-                }
-                let offset = childNodeIndex(startNode);
-                if (!insertBefore) {
-                    offset += 1;
-                }
-                if (offset) {
-                    const [left, right] = splitElement(startNode.parentElement, offset);
-                    startNode = insertBefore ? right : left;
-                } else {
-                    startNode = startNode.parentElement;
+            if (nodeToInsertId === 0) {
+                makeContentsInline(nodeToInsert);
+                nodeToInsert = nodeToInsert.childNodes[0];
+            } else {
+                // Split blocks at the edges if inserting new blocks
+                // (preventing <p><p>text</p></p> scenarios).
+                while (
+                    startNode.parentElement !== editor.editable &&
+                    !allowsParagraphRelatedElements(startNode.parentElement)
+                ) {
+                    if (isUnbreakable(startNode.parentElement)) {
+                        makeContentsInline(fakeEl);
+                        nodeToInsert = fakeEl.childNodes[0];
+                        break;
+                    }
+                    let offset = childNodeIndex(startNode);
+                    if (!insertBefore) {
+                        offset += 1;
+                    }
+                    if (offset) {
+                        const [left, right] = splitElement(startNode.parentElement, offset);
+                        startNode = insertBefore ? right : left;
+                    } else {
+                        startNode = startNode.parentElement;
+                    }
                 }
             }
         }
+        nodeToInsertId++;
         if (insertBefore) {
             startNode.before(nodeToInsert);
             insertBefore = false;
@@ -120,6 +127,13 @@ function insert(editor, data, isText = true) {
     newRange.setStart(lastPosition[0], lastPosition[1]);
     newRange.setEnd(lastPosition[0], lastPosition[1]);
     selection.addRange(newRange);
+
+    if (shouldForceDeleteFoward) {
+        // In some case when pasting a <p> inside another <p>,
+        // we need to merge them instead of creating a line break
+        // this force DeleteForward achieve this.
+        editor._applyCommand('oDeleteForward');
+    }
     return insertedNodes;
 }
 function align(editor, mode) {
@@ -443,8 +457,8 @@ function deleteTable(editor, table) {
 // absence of a strong test suite, so the whitelist stays for now.
 export const editorCommands = {
     // Insertion
-    insertHTML: (editor, data) => {
-        return insert(editor, data, false);
+    insertHTML: (editor, data, shouldForceDeleteFoward) => {
+        return insert(editor, data, false, shouldForceDeleteFoward);
     },
     insertText: (editor, data) => {
         return insert(editor, data);
