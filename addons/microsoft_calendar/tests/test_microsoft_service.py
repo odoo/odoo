@@ -27,11 +27,12 @@ class TestMicrosoftService(TransactionCase):
         self.fake_next_sync_token = "MY_NEXT_SYNC_TOKEN"
         self.fake_next_sync_token_url = f"https://graph.microsoft.com/v1.0/me/calendarView/delta?$deltatoken={self.fake_next_sync_token}"
 
+        self.header_prefer = 'outlook.body-content-type="text", odata.maxpagesize=50'
         self.header = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % self.fake_token}
         self.call_with_sync_token = call(
             "/v1.0/me/calendarView/delta",
             {"$deltatoken": self.fake_sync_token},
-            {**self.header, 'Prefer': 'odata.maxpagesize=50,outlook.body-content-type="text"'},
+            {**self.header, 'Prefer': self.header_prefer},
             method="GET", timeout=DEFAULT_TIMEOUT,
         )
         self.call_without_sync_token = call(
@@ -40,7 +41,7 @@ class TestMicrosoftService(TransactionCase):
                 'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
                 'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
             },
-            {**self.header, 'Prefer': 'odata.maxpagesize=50,outlook.body-content-type="text"'},
+            {**self.header, 'Prefer': self.header_prefer},
             method="GET", timeout=DEFAULT_TIMEOUT,
         )
 
@@ -165,13 +166,13 @@ class TestMicrosoftService(TransactionCase):
             call(
                 "link_1",
                 {},
-                {**self.header, 'Prefer': 'odata.maxpagesize=50,outlook.body-content-type="text"'},
+                {**self.header, 'Prefer': self.header_prefer},
                 preuri='', method="GET", timeout=DEFAULT_TIMEOUT
             ),
             call(
                 "link_2",
                 {},
-                {**self.header, 'Prefer': 'odata.maxpagesize=50,outlook.body-content-type="text"'},
+                {**self.header, 'Prefer': self.header_prefer},
                 preuri='', method="GET", timeout=DEFAULT_TIMEOUT
             ),
         ])
@@ -226,7 +227,8 @@ class TestMicrosoftService(TransactionCase):
                 'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
                 'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z"),
             },
-            self.header, method='GET', timeout=DEFAULT_TIMEOUT,
+            {**self.header, 'Prefer': self.header_prefer},
+            method='GET', timeout=DEFAULT_TIMEOUT,
         )
 
     def test_get_events_token_error(self):
